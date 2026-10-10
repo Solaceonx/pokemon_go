@@ -23,6 +23,7 @@ One core, low priority. Files go to runs/general-decide/ or runs/<team>-decide/.
 from __future__ import annotations
 
 import argparse
+import multiprocessing
 import os
 import random
 import sys
@@ -86,6 +87,42 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
             for head, (x, y) in data.items()}, battles
 
 
+def world(config: dict):
+    """The pool, our team, the source of teams and the source of opponents, from plain settings.
+
+    Kept separate so that worker processes can rebuild the same world for themselves.
+    """
+    gd = GameData()
+    pool = gd.meta(50)
+    team = [gd.default(sid) for sid in config["team"]] if config["team"] else None
+    if config["teams"]:
+        from pogo.teamlist import drawer
+        draw = drawer(gd, pool, config["teams"])
+    else:
+        draw = lambda rng: rng.sample(pool, 3)  # noqa: E731
+    rivals = [QNet.load(path) for path in config["opponents"]]
+    target = QNet.load(config["exploit"]) if config["exploit"] else None
+
+    def crowd(rng):
+        """An opponent: a variation of the Planner, and half the time one playing with our learned decisions."""
+        if target is not None:
+            return Learner(q=target, margin=0.02, seed=rng.getrandbits(32))  # always the bot being exploited
+        settings = varied_settings(rng, pool)
+        if rivals and rng.random() < 0.5:
+            return Learner(q=rng.choice(rivals), margin=rng.choice((0.02, 0.05, 0.1)), **settings)
+        return Planner(**settings)
+
+    return gd, pool, team, draw, crowd
+
+
+def collect_job(job):
+    """One worker's share of a round of collecting."""
+    config, q_params, margin, seconds, seed = job
+    os.nice(10)
+    _, pool, team, draw, crowd = world(config)
+    return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--team", nargs=3, metavar="SPECIES", help="train for this team only; the first one named leads")
@@ -99,41 +136,28 @@ def main() -> None:
     parser.add_argument("--run", help="name of the run folder under runs/")
     parser.add_argument("--minutes", type=float, default=30, help="time spent generating examples, over all rounds")
     parser.add_argument("--rounds", type=int, default=2)
+    parser.add_argument("--workers", type=int, default=1,
+                        help="processes generating examples at once; each uses one core, so 4 gives four times the examples in the same time")
     parser.add_argument("--val-battles", type=int, default=1000, help="battles used to choose how readily to overrule the Planner")
     parser.add_argument("--final-battles", type=int, default=3000)
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
 
     os.nice(10)
-    gd = GameData()
-    pool = gd.meta(50)
-    team = [gd.default(sid) for sid in args.team] if args.team else None
+    config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit}
+    gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
-    if args.teams:
-        from pogo.teamlist import drawer
-        draw = drawer(gd, pool, args.teams)
-    else:
-        draw = lambda rng: rng.sample(pool, 3)  # noqa: E731
-    rivals = [QNet.load(path) for path in args.opponents]
-    target = QNet.load(args.exploit) if args.exploit else None
+    rivals, target = args.opponents, args.exploit
     old_crowd = lambda rng: varied(rng, pool)  # noqa: E731
-
-    def crowd(rng):
-        """An opponent: a variation of the Planner, and half the time one playing with our learned decisions."""
-        if target is not None:
-            return Learner(q=target, margin=0.02, seed=rng.getrandbits(32))  # always the bot being exploited
-        settings = varied_settings(rng, pool)
-        if rivals and rng.random() < 0.5:
-            return Learner(q=rng.choice(rivals), margin=rng.choice((0.02, 0.05, 0.1)), **settings)
-        return Planner(**settings)
 
     print("team: " + (", ".join(b.name for b in team) if team else "any (random threes from the top 50)"))
     print("teams: " + (f"half from {args.teams}, half random" if args.teams else "random threes"))
-    if target is not None:
+    if target:
         print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
     else:
-        print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""), flush=True)
+        print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""))
+    print(f"workers: {args.workers}", flush=True)
 
     def versus_planner(q, margin, battles, seed, on_team, against=None):
         pilots = []
@@ -171,7 +195,16 @@ def main() -> None:
         args.seed += 1000 + sum(len(x) for x, _ in stored.values()) % 1000  # so new battles differ from the earlier ones
     for round_no in range(1, args.rounds + 1):
         t0 = time.time()
-        fresh, battles = collect(team, pool, q, margin, crowd, 60 * args.minutes / args.rounds, args.seed + round_no, draw)
+        seconds = 60 * args.minutes / args.rounds
+        if args.workers > 1:
+            jobs = [(config, q.params if q else None, margin, seconds, args.seed + round_no + 1000 * w) for w in range(args.workers)]
+            with multiprocessing.get_context("spawn").Pool(args.workers) as workers:
+                parts = workers.map(collect_job, jobs)
+            fresh = {head: (np.vstack([part[0][head][0] for part in parts]), np.vstack([part[0][head][1] for part in parts]))
+                     for head in Q_HEADS}
+            battles = sum(part[1] for part in parts)
+        else:
+            fresh, battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw)
         for head in Q_HEADS:
             stored[head] = (np.vstack([stored[head][0], fresh[head][0]]), np.vstack([stored[head][1], fresh[head][1]]))
         np.savez_compressed(folder / "examples.npz", **{f"{h}_{k}": a for h, xy in stored.items() for k, a in zip("xy", xy)})
@@ -195,7 +228,7 @@ def main() -> None:
 
     print(f"\nfinal test on {args.final_battles} fresh battles, overruling when ahead by {margin}")
     show("final", *versus_planner(q, margin, args.final_battles, args.seed + 999, team))
-    if rivals or target is not None:
+    if rivals or target:
         print("\nthe same test against the old crowd (Planner variations only), as a fixed yardstick")
         show("yardstick", *versus_planner(q, margin, args.final_battles, args.seed + 999, team, against=old_crowd))
     if args.also_test:

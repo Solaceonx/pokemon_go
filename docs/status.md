@@ -173,6 +173,14 @@ owner's; measurements are from `scripts/latency.py` on an Apple-silicon Mac, in 
 
 So the software brain uses about 1 ms of the budget. Speed is not a reason to change it.
 
+## Speed of training
+
+A profile of the training loop (2026-10-10) shows no single bottleneck: about a quarter of
+the time is in the engine's `step`, the rest is spread over many small calls in the
+players. `scripts/decide.py --workers 4` runs four collectors at once and produced 3.8
+times the examples in the same time. Making the engine itself faster is task 11 and has
+not been started.
+
 ## Endgames, measured
 
 In 600 simulated battles, 46% reached last Pokémon against last Pokémon: 32% of all

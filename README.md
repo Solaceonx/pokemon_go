@@ -113,7 +113,9 @@ Every script prints its options with `--help`.
 | `python3 scripts/arena.py --show 7` | One battle, seed 7, printed move by move |
 | `python3 scripts/team.py melmetal jellicent altaria --grid` | A report on one team piloted by the `Planner`: record, best lead, hardest opponents, every one-on-one |
 
-**Train** (unattended, one core, low priority; each ends with a test on fresh battles)
+**Train** (unattended, low priority, one core unless `--workers N` is given; each ends
+with a test on fresh battles). `--workers 4` generates examples on four cores at once,
+which gives about four times the examples in the same time.
 
 | Command | What it does |
 |---|---|
@@ -252,7 +254,8 @@ In order. `docs/status.md` has the reasoning.
 
 ## Working rules
 
-- Training and testing run unattended on one core, with no language model in the loop.
+- Training and testing run unattended, with no language model in the loop, on one core
+  by default.
 - After a result, update `docs/status.md`: add it to the results or to "Tried and did not
   help". That file is how the next agent avoids repeating work.
 - The owner is short on assistant usage. Prefer small, local changes that one command
