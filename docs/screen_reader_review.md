@@ -77,7 +77,6 @@ Two uses for the reader:
   measured at 40% must be yellow. A mismatch means the measurement or the bar's bounds
   are wrong, and the look should be marked unreadable instead of exported.
 - **The two-colour bar.** Since colour follows level, a bar that is one colour up to a
-  point and orange beyond it is not showing two health levels. The reviewer's reading,
-  not yet confirmed by the owner, is that the first part is the new health and the
-  orange part is damage still draining away. If the owner confirms, export the first
-  part as the health value the moment a hit lands.
+  point and orange beyond it is not showing two health levels. The first part is the
+  new health and the orange part is damage still draining away (confirmed by the owner,
+  2026-10-10). Export the first part as the health value the moment a hit lands.

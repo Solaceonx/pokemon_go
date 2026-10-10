@@ -167,6 +167,12 @@ A second stage, porting PvPoke's `TrainingAI.js` (team play and switching), foll
 
 ## 7. Opponent stats from CP, move priority and damage
 
+**Read first.** `scripts/ivs.py` and the "IVs" section of `status.md`: a first look found
+that CP leaves 92 to 433 combinations and that fast-move clues barely narrow them. The
+enumeration this task needs already exists (`GameData.spreads`, `cp_at`, `with_ivs`). The
+part worth doing is charged-move damage as a clue, and predicting the damage values that
+matter rather than the IVs themselves.
+
 **Why.** We assume typical stats for the opponent. The screen gives clues to the real ones.
 
 **Do.** Write `pogo/stats_guess.py`. Given a species and the CP shown, list every level

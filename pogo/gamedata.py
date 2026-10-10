@@ -185,6 +185,49 @@ class GameData:
             self._defaults[key] = self.build(species_id, entry["moveset"], league)
         return self._defaults[key]
 
+    def cp_at(self, species_id: str, level: float, ivs: tuple[int, int, int]) -> int:
+        base = self.species[species_id]["baseStats"]
+        a, d, s = ivs
+        c = self.cpm(level)
+        return max(10, int((base["atk"] + a) * math.sqrt(base["def"] + d) * math.sqrt(base["hp"] + s) * c * c / 10))
+
+    def level_for(self, species_id: str, ivs: tuple[int, int, int], league: int = 1500, max_level: float = 50.0) -> float | None:
+        """The highest level, in half steps, at which these IVs stay within the league's CP cap."""
+        best = None
+        for i in range(int((max_level - 1) * 2) + 1):
+            level = 1 + i / 2
+            if self.cp_at(species_id, level, ivs) > league:
+                break
+            best = level
+        return best
+
+    def spreads(self, species_id: str, league: int = 1500, max_level: float = 50.0) -> list[dict]:
+        """Every IV combination at its best level for the league, best stat product first.
+
+        Stat product (attack x defence x HP) is the usual measure of a spread; rank 1 is the highest.
+        """
+        base = self.species[species_id]["baseStats"]
+        out = []
+        for a in range(16):
+            for d in range(16):
+                for s in range(16):
+                    level = self.level_for(species_id, (a, d, s), league, max_level)
+                    if level is None:
+                        continue
+                    c = self.cpm(level)
+                    atk, de, hp = (base["atk"] + a) * c, (base["def"] + d) * c, max(int((base["hp"] + s) * c), 10)
+                    out.append({"ivs": (a, d, s), "level": level, "atk": atk, "def": de, "hp": hp,
+                                "product": atk * de * hp, "cp": self.cp_at(species_id, level, (a, d, s))})
+        out.sort(key=lambda e: -e["product"])
+        for rank, entry in enumerate(out, start=1):
+            entry["rank"] = rank
+        return out
+
+    def with_ivs(self, build: Build, ivs: tuple[int, int, int], league: int = 1500) -> Build:
+        """The same Pokémon and moves with different IVs, at the best level those IVs allow."""
+        level = self.level_for(build.species_id, ivs, league)
+        return self.build(build.species_id, [build.fast.id, *(m.id for m in build.charged)], league, level=level, ivs=ivs)
+
     def meta(self, n: int = 50, league: int = 1500) -> list[Build]:
         """The n highest-ranked supported Pokémon in the league, each with its recommended moveset."""
         out = []

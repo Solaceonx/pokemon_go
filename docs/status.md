@@ -216,6 +216,37 @@ final one-on-one lasted a median of 6 fighting turns, so it holds few decisions.
 library of solved one-on-ones for every pair, health and energy would be enormous;
 solving one from the actual position is small (about 32,000 positions with no shields).
 
+## IVs
+
+Measured 2026-10-10 with `scripts/ivs.py melmetal jellicent altaria`. Opponents have
+PvPoke's default IVs. Stat product is attack x defence x HP; rank 1 is the highest.
+
+How much they matter, the whole team on one kind of spread, best bot piloting, 3,000
+battles (the same battles for every row):
+
+| Spread | Win share | Against default |
+|---|---|---|
+| Best (rank 1: 1/15/14, 1/14/14, 0/14/15) | 84.4% ± 1.3 | +2.9 ± 1.5 |
+| PvPoke default (ranks 33, 31, 103) | 81.5% ± 1.4 | |
+| 15/15/15 | 74.4% ± 1.6 | -7.1 ± 1.9 |
+| Most attack | 75.1% ± 1.5 | -6.4 ± 1.9 |
+| Worst stat product | 68.3% ± 1.7 | -13.2 ± 2.0 |
+| Random IVs (ten teams) | | -6.3 ± 1.2 |
+
+So about 16 points separate the best spread from the worst, although the stat product
+differs by only about 10%. Breakpoints explain why attack does not pay: against the 49
+other top-50 Pokémon, the most-attack spread makes our fast move do one more damage to
+10, 16 and 7 of them (Melmetal, Jellicent, Altaria) but lets 10, 15 and 10 of them do one
+more to us, and it has less HP besides.
+
+Working out an opponent's IVs: the CP shown fits between 92 and 433 combinations for the
+five species tried, with attack uncertain by 7 to 10 points. Their fast move's damage on
+us, our fast move's share of their bar, and who throws first barely narrow that (for
+example 433 to 341, 168 to 167; Tinkaton 101 to 34 was the best case). Fast-move damage
+is too small a number to pin stats. The practical route is not to recover IVs but to
+learn the damage numbers themselves from the first hits (task 4); charged-move damage,
+being a much larger number, should narrow attack far more and has not been tried.
+
 ## Screen reader
 
 A first reader for recorded video exists on the `screen-reader-video-pipeline` branch.
