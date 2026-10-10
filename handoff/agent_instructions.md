@@ -183,8 +183,10 @@ opponent
 
 Each Pokémon has `species`, `hp`, `hp_max`, `hp_share`, `energy`, `fainted`, stat stages,
 its `fast_move` and `charged_moves`, and `known_from`: `"team_sheet"` (you told it),
-`"seen"` (shown on screen) or `"guessed"` (the usual choice for the species). The
-opponent's `energy_range` is the lowest and highest their energy can be.
+`"seen"` (shown on screen), `"guessed"` (the usual choice for the species) or, for an
+opponent's fast move, `"inferred"` (worked out from the size and rhythm of the steps in
+our health bar). The opponent's `energy_range` is the lowest and highest their energy can
+be by counting hits; `energy_by_clock` is a second estimate that assumes they never pause.
 
 ## Extra checks with the tracker
 

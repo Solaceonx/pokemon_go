@@ -285,22 +285,48 @@ Measured on this recording:
 
 What is not right yet:
 
-- **Opponent energy.** At 2 of their 5 charged moves the tracker believed they could not
-  afford the move. Oinkologne was assumed to have Take Down; the steps in our health bar
-  (2 every half-second) fit Tackle. The opponent's fast move has to be worked out from the
-  size and rhythm of the steps, not assumed.
-- Hits taken while the bars are hidden arrive as one lump, and after a charged move the bar
-  sometimes shows the old health for one more look (18 and 22 health arrived a look late).
 - Hit flashes shift a reading by up to 3 pixels of 138 and now and then read the bar as empty
   or full. Taking the commonest reading in each half-second and refusing any rise deals with
-  it (12 readings set aside), but the reader itself should not emit them.
+  it (10 readings set aside), but the reader itself should not emit them.
 - A yellow bar (25 to 50%) and the orange part that is draining get the same colour label.
 - Not read at all: our energy and move buttons, the switch timer.
 - The phase templates do not fit this phone's layout, so the start of the fight and our team
   were given by hand, and the text reader stood in for them.
+- The text reader missed one "BLOCKED!"; the shield counter in the header did not, so shield
+  counts now come from the header.
+- Cramorant's "spits out its prey" (22 damage to our Altaria and a defence drop when it was hit
+  by a charged move) is not modelled, so it shows up as an unexplained loss of health.
+
+Timing within a charged move, from the cue ("Get Ready!" or "Attack incoming!"): the shield
+counter changes at about 8.5 s, the damage lands at about 9.5 s, fighting resumes at 10 s.
+The health bar comes back before the damage lands, so a look taken then shows the old health.
+
+**Opponent's fast move and energy.** The first pass assumed the usual fast move for each
+opponent and, at 2 of their 5 charged moves, believed they could not afford the move.
+Oinkologne was assumed to have Take Down; the steps in our health bars (about 13 on Melmetal
+and 3 on Altaria, every 1.5 s) fit only Mud Slap. The tracker now works the fast move out
+from the size and rhythm of those steps (`Tracker._fit_fast`): it kept Peck and Incinerate,
+and replaced Take Down with Mud Slap 19 s into the battle, recounting the energy. With that,
+its count says they could afford all 5 charged moves:
+
+| Their charged move | Energy by counting hits | Energy by the clock | Cost |
+|---|---|---|---|
+| Oinkologne, Body Slam | 50 | 40 | 40 |
+| Cramorant, Dive | 40 | 56 | 40 |
+| Cramorant, Dive | 48 | 72 | 40 |
+| Talonflame, Flame Charge | 80 | 100 | 50 |
+| Talonflame, Flame Charge | 70 | 70 | 50 |
+
+"By the clock" is a second estimate that assumes they never pause between fast moves
+(`energy_by_clock` in the state file). The two differ by up to 24 and the true number is
+not on screen, so which is closer is open; frame-by-frame step detection in the reader
+would settle it. In simulation, with a perfect camera, the fast move was worked out 148
+times in 60 battles and never wrongly; with the rough camera, 1 of 140 was wrong.
 
 Changes made to the tracker for this: it follows Pokémon that change form (Cramorant), learns
-a named charged move it had not assumed, and carries a part-hit from one look to the next.
+a named charged move it had not assumed, carries a part-hit from one look to the next, works
+out the opponent's fast move, never counts more fast moves than the time allows, and takes a
+charged move's damage off by the rules when the bar has not caught up yet.
 
 ## Known gaps in the simulator
 

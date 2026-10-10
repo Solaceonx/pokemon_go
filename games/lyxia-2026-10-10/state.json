@@ -1,6 +1,6 @@
 {
-  "t": 152.5,
-  "fighting_turns": 132,
+  "t": 158.33,
+  "fighting_turns": 117,
   "warnings": 8,
   "matchup": {
     "ours": {
@@ -136,7 +136,7 @@
   },
   "me": {
     "active": 2,
-    "shields": 1,
+    "shields": 0,
     "left": 1,
     "switch_ready_in": 0.0,
     "pokemon": [
@@ -159,7 +159,7 @@
         "hp": 0,
         "hp_max": 146,
         "hp_share": 0.0,
-        "energy": 100,
+        "energy": 18,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -210,7 +210,7 @@
         "hp": 0,
         "hp_max": 138,
         "hp_share": 0.0,
-        "energy": 40,
+        "energy": 32,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -258,9 +258,9 @@
           15,
           14
         ],
-        "hp": 111,
+        "hp": 113,
         "hp_max": 156,
-        "hp_share": 0.712,
+        "hp_share": 0.724,
         "energy": 7,
         "fainted": false,
         "attack_stage": 0,
@@ -297,10 +297,10 @@
   "opponent": {
     "active": 2,
     "shields": 0,
-    "left": 1,
+    "left": 0,
     "unseen": 0,
     "switch_ready_in": 0.0,
-    "fast_move_turns_left": 4,
+    "fast_move_turns_left": 0,
     "pokemon": [
       {
         "species": "cramorant",
@@ -322,7 +322,7 @@
         "hp": 0,
         "hp_max": 126,
         "hp_share": 0.0,
-        "energy": 100,
+        "energy": 24,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -332,7 +332,11 @@
           "type": "flying",
           "turns": 2,
           "energy_gain": 8,
-          "known_from": "guessed"
+          "known_from": "inferred",
+          "misfit": {
+            "PECK": 0.44,
+            "WATER_GUN": 0.59
+          }
         },
         "charged_moves": [
           {
@@ -353,9 +357,10 @@
           }
         ],
         "energy_range": [
-          100,
-          100
-        ]
+          24,
+          24
+        ],
+        "energy_by_clock": 48
       },
       {
         "species": "oinkologne",
@@ -376,17 +381,22 @@
         "hp": 0,
         "hp_max": 159,
         "hp_share": 0.0,
-        "energy": 5,
+        "energy": 20,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "TAKE_DOWN",
-          "name": "Take Down",
-          "type": "normal",
+          "id": "MUD_SLAP",
+          "name": "Mud Slap",
+          "type": "ground",
           "turns": 3,
-          "energy_gain": 9,
-          "known_from": "guessed"
+          "energy_gain": 10,
+          "known_from": "inferred",
+          "misfit": {
+            "TACKLE": 1.43,
+            "TAKE_DOWN": 1.79,
+            "MUD_SLAP": 0.49
+          }
         },
         "charged_moves": [
           {
@@ -407,9 +417,10 @@
           }
         ],
         "energy_range": [
-          5,
-          5
-        ]
+          20,
+          20
+        ],
+        "energy_by_clock": 30
       },
       {
         "species": "talonflame",
@@ -428,11 +439,11 @@
           12,
           15
         ],
-        "hp": 62,
+        "hp": 0,
         "hp_max": 135,
-        "hp_share": 0.459,
+        "hp_share": 0.0,
         "energy": 60,
-        "fainted": false,
+        "fainted": true,
         "attack_stage": 2,
         "defense_stage": 0,
         "fast_move": {
@@ -441,7 +452,13 @@
           "type": "fire",
           "turns": 5,
           "energy_gain": 20,
-          "known_from": "guessed"
+          "known_from": "inferred",
+          "misfit": {
+            "PECK": 0.95,
+            "FIRE_SPIN": 0.53,
+            "STEEL_WING": 0.91,
+            "INCINERATE": 0.26
+          }
         },
         "charged_moves": [
           {
@@ -464,7 +481,8 @@
         "energy_range": [
           60,
           60
-        ]
+        ],
+        "energy_by_clock": 80
       }
     ]
   }

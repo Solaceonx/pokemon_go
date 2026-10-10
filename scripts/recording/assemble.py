@@ -49,7 +49,8 @@ for s in texts:
         seq["move"] = seq["move"] or nearest(m.group(2), moves, 0.8)
     if "blocked" in joined and seq and t - seq["start"] < 15: seq["blocked"] = True
 for q in seqs:
-    q["resume"] = next((t for t in bar_times if t >= q["start"] + 7.5), rows[-1]["t"])
+    # A charged move is decided about 8.5 s after its cue and lands at about 9.5 s; fighting resumes at 10 s.
+    q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"])
     if q["user"]: q["side"] = "mine" if q["user"] in OURS else "theirs"
 end = next((r["t"] for r in rows if r["phase"] == "result" or r["result"]), rows[-1]["t"])
 
@@ -68,6 +69,17 @@ for t, name in gos:
             or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
     field[side].append({"t": t + 0.8, "name": name, "faint": faint})
 
+def header_shields(key):
+    """The header's shield counter, once it has shown the same number for half a second."""
+    out, value, run = [], None, 0
+    for r in rows:
+        v = r[key]["sh"]
+        if v is None: continue
+        value, run = (value, run + 1) if v == value else (v, 1)
+        if run == 30: out.append((r["t"], v))
+    return out
+header = {"mine": header_shields("m"), "theirs": header_shields("o")}
+blocked = {"mine": 0, "theirs": 0}
 looks, left, shields, emitted = [], {"mine": 3, "theirs": 3}, {"mine": 2, "theirs": 2}, set()
 seen_hp, risen, dropped = {}, {"mine": 0, "theirs": 0}, {"mine": 0, "theirs": 0}
 current = {"mine": None, "theirs": None}
@@ -98,11 +110,14 @@ for b in range(n_bins + 1):
             emitted.add(k)
             if q["side"] == "mine":
                 look["my_charged"] = q["move"] or "left"
-                if q["blocked"]: shields["theirs"] -= 1
+                if q["blocked"]: blocked["theirs"] += 1
             else:
                 look["foe_charged"] = True
                 if q["move"]: look["foe_move"] = q["move"]
-                if q["blocked"]: shields["mine"] -= 1
+                if q["blocked"]: blocked["mine"] += 1
+    for side in shields:  # the counter in the header, or failing that the "BLOCKED!" announcements
+        shown = [v for when, v in header[side] if when <= t]
+        shields[side] = min([shields[side], 2 - blocked[side]] + shown[-1:])
     look.update(my_shields=shields["mine"], foe_shields=shields["theirs"], my_left=left["mine"], foe_left=left["theirs"])
     if "my_hp" in look or "foe_hp" in look or "my_charged" in look or "foe_charged" in look or not looks:
         looks.append(look)

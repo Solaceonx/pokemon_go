@@ -256,6 +256,29 @@ class Tracking(unittest.TestCase):
         self.assertEqual(tally.wrong_active, 0)
 
 
+    def test_tracker_works_out_an_unusual_fast_move_from_the_health_bar(self):
+        import random
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        import check_tracker
+        pool = [GD.default(b.species_id) for b in GD.meta(30)]
+        rng = random.Random(2)
+        right = wrong = 0
+        for seed in range(12):
+            mine, theirs = rng.sample(pool, 3), []
+            for b in rng.sample(pool, 3):  # give each of theirs a fast move other than the usual one, where it has one
+                others = [f for f in GD.species[b.species_id]["fastMoves"] if f in GD.moves and f != b.fast.id]
+                theirs.append(GD.build(b.species_id, [others[0], *(m.id for m in b.charged)]) if others else b)
+            agents = (check_tracker.ViaTracker(Planner(seed=seed)), Planner(seed=seed))
+            check_tracker.play(GD, (mine, theirs), agents, seed, check_tracker.CAMERAS["perfect"], check_tracker.Tally(), rng)
+            for truth in theirs:
+                foe = agents[0].tracker.foes.get(truth.species_id)
+                if foe and foe.fast_from == "inferred":
+                    right += foe.mon.build.fast.id == truth.fast.id
+                    wrong += foe.mon.build.fast.id != truth.fast.id
+        self.assertGreater(right, 15)
+        self.assertLessEqual(wrong, 1)
+
+
 class Learning(unittest.TestCase):
     def test_learner_without_a_policy_plays_as_the_planner(self):
         from pogo.learner import Learner
