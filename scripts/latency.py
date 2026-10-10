@@ -64,6 +64,9 @@ def report(label: str, samples: list[float], target: float) -> None:
 
 
 def main() -> None:
+    if len(sys.argv) > 1:
+        print(__doc__)
+        return
     gd = GameData()
     pool = gd.meta(50)
     battles = 200

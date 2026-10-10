@@ -84,8 +84,9 @@ def load_team(gd: GameData, sheet: dict):
 
 
 def main() -> int:
-    if len(sys.argv) != 2:
-        sys.exit(__doc__)
+    if len(sys.argv) != 2 or sys.argv[1] in ("-h", "--help"):
+        print(__doc__)
+        return 0 if len(sys.argv) == 2 else 2
     folder = Path(sys.argv[1])
     gd = GameData()
     builds, known = load_team(gd, json.loads((folder / "team.json").read_text()))
