@@ -164,6 +164,7 @@ class Tracker:
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
         self.my_beat = 0  # the same for mine
+        self.ahead = 0  # their fast moves counted by rhythm, less those seen landing, since the rhythm restarted
         self.taken = 0.0  # health I have lost that is not yet matched to a whole fast move of theirs
         self.dealt = 0.0  # the same for the health they have lost to my fast moves
         self.hp_turn = 0  # fighting turn at which my health was last read
@@ -297,6 +298,7 @@ class Tracker:
                 self.beat = self.turn  # they start afresh after a charged move or a change of their Pokémon
             if thrown or i_changed:
                 self.my_beat = self.turn
+            self.ahead = 0
             self.taken = self.dealt = 0.0
             self.hp_turn = self.turn
         self.quiet = quiet
@@ -383,6 +385,7 @@ class Tracker:
         hits = -(-done // fast.turns) if in_air else done // fast.turns
         if hits > 0:
             self.beat += hits * fast.turns
+            self.ahead += hits
             foe.gain(hits * fast.energy_gain)
 
     def _fit_fast(self, t: float, foe: Foe) -> None:
@@ -493,6 +496,7 @@ class Tracker:
         fast = foe.mon.build.fast
         per_hit = damage(foe.mon, fast, mon)
         if not obs.foe_charged:
+            landed, clean = 0, drop is not None
             if drop:
                 # A hit can show up spread over two looks, so what is left over waits for the next one.
                 lost = self.taken + drop
@@ -500,6 +504,7 @@ class Tracker:
                 landed = min(landed, (self.turn - self.hp_turn) // fast.turns + 1)  # no more than the time allows
                 if (abs(lost - landed * per_hit) if landed else -lost) > max(1.0, 0.3 * per_hit):
                     # The drop is not a whole number of their assumed fast move: wrong move, wrong stats, or a misread.
+                    clean = False
                     self.warnings += 1
                     self._note(obs.t, "unexplained", what="my health drop", drop=drop, expected_per_hit=per_hit)
                 foe.lost.append((mon, drop))
@@ -508,6 +513,16 @@ class Tracker:
                     # Keep their rhythm if these hits fit it; otherwise restart it from now.
                     on_beat = self.beat + landed * fast.turns
                     self.beat = on_beat if 0 <= self.turn - on_beat < fast.turns else self.turn
+            if self.by_rhythm and not clean:
+                self.ahead = 0  # this look cannot say how many landed
+            elif self.by_rhythm:
+                # The rhythm does the counting; the hits that are seen keep it in step after a missed look.
+                self.ahead -= landed
+                if self.ahead < 0:  # more seen than counted: the rhythm was running behind
+                    foe.gain(-self.ahead * fast.energy_gain)
+                    self.ahead, self.beat = 0, self.turn
+                elif landed and self.turn - self.hp_turn == 1 and (self.turn - self.beat) % fast.turns:
+                    self.beat = self.turn  # one was seen landing this very turn: their next begins now
             self._fit_fast(obs.t, foe)
             return
 

@@ -426,11 +426,16 @@ other 15 had more to spare, up to a full bar. Some of that is real (Altaria was 
 100 before three Sky Attacks), but the true number is not on screen, so over-counting cannot
 be ruled out; Stunfisk's spare energy grew over its five Discharges (14, 10, 24, 29, 25).
 
-In simulation (`check_tracker.py`, 400 battles a camera): perfect camera, their energy exact
-99% of turns by rhythm against 98% by hits; rough camera 56% either way, but their place in
-the fast move is right 88% of turns by rhythm against 94% by hits, because rhythm does not
-yet use the hits it does see to re-set its beat after a missed look. That is the next
-improvement, along with noticing when a player really does stop attacking.
+The rhythm does the counting, and the hits that are seen keep it in step: if more hits are
+seen landing than it had counted, it was running behind and is caught up; if one is seen
+landing off its beat, the beat is moved. Pausing is rare (the owner) and is not handled.
+
+In simulation (`check_tracker.py`, 400 battles a camera):
+
+| Camera | Their energy exact, by hits | by rhythm | Their place in the fast move right, by hits | by rhythm |
+|---|---|---|---|---|
+| Perfect | 98% | 98% | 99% | 100% |
+| Rough (one look in five missed, coarse bars) | 56% | 64% | 94% | 96% |
 
 `scripts/recording/rhythm.py` is an independent version of the same count working from exact
 times instead of half-second looks; it agrees (25 of 25 payable).
