@@ -26,7 +26,7 @@ taps come later. Automating the real game breaks Niantic's terms and risks a ban
 | Per-decision learner | `pogo/learner.py`, `scripts/decide.py` | **The method that works**; see results |
 | State tracker | `pogo/tracker.py`, `scripts/track.py` | Builds the full game state from "looks" at the screen; tested on simulated cameras only |
 | Advice from a state | `scripts/advise.py` | Next action, shield advice, win chance, one typical continuation |
-| Team search | `scripts/teams.py` | First pass was too narrow; a wider rerun was in progress at the time of writing |
+| Team search | `scripts/teams.py` | Done: `data/teams.json` holds 81 teams from the wide search (random starts plus breeding), 25 of them with every lead tested |
 | Phone link | `helper/phonectl.swift`, `pogo/phone.py` | Compiles; never run against a phone |
 
 ## Results so far
@@ -96,6 +96,16 @@ nothing yet says how it does against an outside opponent.
 7. Farm energy with a Pokémon that takes little damage. Watch the switch timer.
 8. Save a nearly fainted Pokémon as a third shield; bring it in on a read.
 9. Opponents are good players with similar strategy, so optimise against that.
+
+## Team list
+
+`data/teams.json` is the wide list. Best teams, as win share piloted by the Planner
+against a field of half finalists and half random teams, 600 battles each:
+Altaria / Charjabug / Corviknight 73.2% ± 3.5; Altaria / Shadow Charjabug / Corviknight
+70.9% ± 3.6; Corviknight / Tinkaton / Mandibuzz 66.1% ± 3.8; the owner's Melmetal /
+Altaria / Jellicent 64.7% ± 3.8 (4th of the 25 fully tested). Tinkaton is on 39 of the 81
+saved teams, Shadow Annihilape on 31, Corviknight on 25. "Best" means best with this
+pilot against this field; the `seen` counts for teams met in real games are all still zero.
 
 ## Latency
 
