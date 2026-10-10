@@ -39,6 +39,7 @@ means the same teams and battles for both pilots.
 | Planner against a button-masher | 82-84% |
 | **Per-decision learning, one model for any team (shield, throw, swap, replace)** | **+13.6 ± 1.9 points over the Planner on random teams (71.3% against 57.7%), 3,000 fresh battles** |
 | The same model piloting Melmetal / Jellicent / Altaria | +13.2 ± 1.9 points over the Planner (79.0% against 65.8%), 3,000 fresh battles |
+| The same model against a tougher crowd (half the opponents use its own learned decisions, half the teams from the team list) | 61.7% ± 1.9, against 46.9% ± 2.0 for the Planner, 2,500 battles |
 | Per-decision learning, one team, shield and throw decisions only | +8.1 ± 1.8 points over the Planner, 3,000 battles |
 | Tracker with a perfect simulated camera | Opponent's energy exact on 99% of turns; Planner plays as well from it as from the truth (50.6% ± 4.0) |
 | Tracker with a rough camera (1 look in 5 missed, coarse bars, move not named) | Costs about 7 points (42.7% ± 4.0) |
@@ -63,6 +64,12 @@ Do not re-propose these without a new angle.
   lookahead**: no measurable difference.
 - **Length of a charged move** set to 6, 10 or 14 seconds: no measurable difference to
   which player wins.
+- **More per-decision training against tougher opponents.** A further hour, with half
+  the opponents using our own learned decisions and half the teams drawn from the team
+  list, gave a model (`runs/general-decide/q_v2.npz`) no better than the first: -1.5 ± 1.9
+  points on the original yardstick, +0.8 ± 1.9 against the tougher crowd, 51.6% ± 1.5
+  head to head. `q.npz` is still the first model. The method looks to have levelled off
+  with its current inputs.
 - **A fixed roster of crude opponent styles**: rejected as unrepresentative of real play.
 - **Shortlisting teams by one-on-one coverage score**: a team that ranked 3,818th of
   19,024 on that score came 4th in real battles, so the score is a poor filter.

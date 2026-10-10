@@ -218,11 +218,11 @@ against an outside opponent or a person.
 
 In order. `docs/status.md` has the reasoning.
 
-1. **Upgrade the opponents.** Run the `--resume --opponents ... --teams ...` command from
-   the training table. It reports against the new crowd and against the old crowd as a
-   fixed yardstick. Accept the new model only if the yardstick score does not fall below
-   the current +13.6 points. First check in `docs/status.md` whether `data/teams.json` is
-   the wide team list; if not, run `scripts/teams.py` first.
+1. **Find the next source of gain.** One more hour of the same training against tougher
+   opponents changed nothing (see "Tried and did not help"), so more of the same is not
+   the answer. The candidates are tasks 8, 14 and 15 in `docs/tasks.md`: predicting the
+   hidden team, training against an opponent built to beat the bot, and training through
+   the tracker's uncertain picture.
 2. **Test against PvPoke's AI.** The port is specified in
    `handoff/pvpoke_port_instructions.md`. When `pogo/pvpoke_ai.py` exists, run
    `scripts/check_pvpoke_ai.py`; it must print 108 of 108. Then measure the best bot
