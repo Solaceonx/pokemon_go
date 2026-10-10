@@ -104,6 +104,24 @@ nothing yet says how it does against an outside opponent.
 8. Save a nearly fainted Pokémon as a third shield; bring it in on a read.
 9. Opponents are good players with similar strategy, so optimise against that.
 
+## Adversarial training (task 14)
+
+An exploiter is a model trained the same way as the bot, but with the bot itself as its
+only opponent. All on 3,000 fresh battles, random teams.
+
+| Pilot | Against the best bot | Against the old crowd, points over the Planner |
+|---|---|---|
+| Planner | 36.1% ± 1.7 | 0 |
+| Best bot (`runs/general-decide/q.npz`) | 50% by definition | +13.6 ± 1.9 |
+| Exploiter 1 (`runs/exploiter-1/q.npz`) | **54.9% ± 1.8** | +9.1 ± 2.0 |
+
+So the best bot can be beaten by about 5 points by something aimed at it, and that
+exploiter is weaker than the bot against everyone else. Playing the bot, the exploiter
+holds a ready charged move twice as often (1.58 against 0.75 times a battle), throws the
+second move where the Planner would throw the first far more (0.67 against 0.12), swaps
+more (0.59 against 0.38) and shields more. Next step: retrain the bot against a crowd
+that includes the exploiter (`runs/general-v3/`).
+
 ## Team list
 
 `data/teams.json` is the wide list. Best teams, as win share piloted by the Planner
