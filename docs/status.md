@@ -97,6 +97,30 @@ nothing yet says how it does against an outside opponent.
 8. Save a nearly fainted Pokémon as a third shield; bring it in on a read.
 9. Opponents are good players with similar strategy, so optimise against that.
 
+## Latency
+
+One game turn is 500 ms. The whole path from something appearing on screen to the tap
+landing must fit in that 99% of the time, with a target of about 215 ms. Targets are the
+owner's; measurements are from `scripts/latency.py` on an Apple-silicon Mac, in pure Python.
+
+| Step | Target | Measured |
+|---|---|---|
+| Screen capture and transfer | 50 ms | not measured (needs the phone) |
+| Visual recognition | 50 ms | not measured. Reading text took 66 ms on a test image, so text cannot be read on every frame |
+| Battle tracker update | 5 ms | 0.02 ms at worst |
+| AI decision | 10 ms | 0.6 ms at the 99th percentile, 1.0 ms at worst (learned decisions); 5.2 ms at worst for the plain Planner |
+| Input transmission and execution | 100 ms | not measured (needs the phone) |
+
+So the software brain uses about 1 ms of the budget. Speed is not a reason to change it.
+
+## Endgames, measured
+
+In 600 simulated battles, 46% reached last Pokémon against last Pokémon: 32% of all
+battles with no shields on either side, 13% with shields on one side, 2% on both. That
+final one-on-one lasted a median of 6 fighting turns, so it holds few decisions. A full
+library of solved one-on-ones for every pair, health and energy would be enormous;
+solving one from the actual position is small (about 32,000 positions with no shields).
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).

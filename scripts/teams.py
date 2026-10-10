@@ -126,7 +126,9 @@ def main() -> None:
     def keep(scored, count: int) -> list[list[int]]:
         kept = [order for _, _, order in scored[:count]]
         if mine and not any(tuple(sorted(o)) == mine for o in kept):
-            kept.append(next(o for _, _, o in scored if tuple(sorted(o)) == mine))
+            found = next((o for _, _, o in scored if tuple(sorted(o)) == mine), None)
+            if found:
+                kept.append(found)
         return kept
 
     first = stage("stage 1, against random teams", [general_first(t) for t in teams], n1, [])
@@ -147,7 +149,10 @@ def main() -> None:
                     children.add(key)
                     tried.add(key)
         bred = stage(f"generation {generation}, one Pokémon changed", [general_first(c) for c in children], n2 // 2, parents)
-        second = sorted(second + bred, key=lambda r: -r[0])[:keep1]
+        merged = sorted(second + bred, key=lambda r: -r[0])
+        second = merged[:keep1]
+        if mine and not any(tuple(sorted(o)) == mine for _, _, o in second):
+            second.append(next(r for r in merged if tuple(sorted(r[2])) == mine))  # never drop the team being ranked
     finalists = keep(second, keep2)
     leads = [[k] + [j for j in team if j != k] for team in finalists for k in team]
     third = stage("stage 3, every lead, half against the leaders", leads, n3, finalists)
