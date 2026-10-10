@@ -306,7 +306,7 @@ opponent and, at 2 of their 5 charged moves, believed they could not afford the 
 Oinkologne was assumed to have Take Down; the steps in our health bars (about 13 on Melmetal
 and 3 on Altaria, every 1.5 s) fit only Mud Slap. The tracker now works the fast move out
 from the size and rhythm of those steps (`Tracker._fit_fast`): it kept Peck and Incinerate,
-and replaced Take Down with Mud Slap 19 s into the battle, recounting the energy. With that,
+and replaced Take Down with Mud Slap 20 s into the battle, recounting the energy. With that,
 its count says they could afford all 5 charged moves:
 
 | Their charged move | Energy by counting hits | Energy by the clock | Cost |
