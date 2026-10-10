@@ -24,6 +24,7 @@ taps come later. Automating the real game breaks Niantic's terms and risks a ban
 | Hand-written player ("Planner") | `pogo/agents.py` | Strongest hand-written pilot; every part can be switched off |
 | Opponent crowd | `varied()` in `pogo/agents.py` | The Planner with every habit jittered, drawn fresh each battle |
 | Per-decision learner | `pogo/learner.py`, `scripts/decide.py` | **The method that works**; see results |
+| Bounded exact endgame player | `pogo/endgame.py` | Revealed positions with at most two survivors each; Learner fallback; [checks and results](endgame.md) |
 | State tracker | `pogo/tracker.py`, `scripts/track.py` | Builds the full game state from "looks" at the screen; tested on simulated cameras only |
 | Advice from a state | `scripts/advise.py` | Next action, shield advice, win chance, one typical continuation |
 | Team search | `scripts/teams.py` | Done: `data/teams.json` holds 81 teams from the wide search (random starts plus breeding), 25 of them with every lead tested |
@@ -175,6 +176,29 @@ final one-on-one lasted a median of 6 fighting turns, so it holds few decisions.
 library of solved one-on-ones for every pair, health and energy would be enormous;
 solving one from the actual position is small (about 32,000 positions with no shields).
 
+Task 9 result (2026-10-09): `scripts/check_endgame.py` printed independent brute-force
+agreement **12/12**, independent multi-turn agreement **3/3**, and uncached-tree
+agreement **9/9**. The bounded exact player scored **53.33 ± 2.06%** against the best
+Learner on 300 fresh battles; the Learner baseline on the same battles scored
+51.67 ± 1.78%, for a paired improvement of **+1.67 ± 1.44 points** (95% margins,
+150 team-pair clusters, seed 90261019, 210.6 seconds on one core). It solved 1,279
+turn decisions and fell back after 3,738 capped searches. Low-health synthetic
+1-vs-1 fixtures took 1.2 / 16.6 / 17.2 ms with 0 / 1 / 2 shields per side;
+2-vs-1 took 18.9 / 340.9 / 773.2 ms. A 2-vs-2 fixture with one shield each needed
+145,413 states and 22.0 seconds; two shields exceeded 200,000 states. Exact search
+is still too expensive for many positions. All 32 tests pass. See
+[`endgame.md`](endgame.md) for assumptions, commands, limits and full timings.
+
+Replication on fresh battles (same command, `--seed 424242`): endgame player
+50.50 ± 1.99%, Learner baseline 49.83 ± 1.77%, paired improvement **+0.67 ± 0.92
+points**, which is not distinguishable from zero. Re-running seed 90261019 reproduced
+the figures above exactly, so the first result is real but sat at the lucky end. In both
+runs about three quarters of endgame decisions hit the search cap and fell back to the
+Learner (seed 424242: 1,379 solved, 3,361 capped), and the 0.05-second budget is five
+times the 10 ms decision target in the latency table. Verdict: the solver is exact, but
+under this budget it does not measurably win more games; a faster engine (task 11) is
+the way to let it solve more positions.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).
@@ -192,8 +216,8 @@ Each of these has a full brief in [`tasks.md`](tasks.md).
 - **Opponents that use our own learned decisions**, mixed with the old crowd, keeping the
   old crowd as a fixed yardstick (`scripts/decide.py --opponents ... --resume`). Built,
   not yet run.
-- **Exact endgames.** A single matchup has few distinct positions (about 567,000 with one
-  shield each in one sample), so last-Pokémon positions can be solved exactly.
+- **Larger exact endgames.** Task 9 implemented bounded search and measured a small gain;
+  many two-against-two positions still exceed the budget. See [`endgame.md`](endgame.md).
 - **Predicting the opponent's hidden Pokémon** from real team combinations (task 8).
 - **Adversarial training**: an opponent trained to beat our bot, then training against it
   (task 14).
