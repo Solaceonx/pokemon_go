@@ -275,3 +275,7 @@ In order. `docs/status.md` has the reasoning.
 
 The game data in `data/` and the reference battles in `tests/data/` come from
 [PvPoke](https://github.com/pvpoke/pvpoke), MIT licence (`data/PVPOKE_LICENSE`).
+
+## Offline screen reader and video viewer
+
+The screen-reading half is in [`screen_reader/`](screen_reader/README.md): video import, battle discovery, frame observations, visible-health fractions and a synchronized local viewer. See [`docs/screen_reader.md`](docs/screen_reader.md) for its tested scope and remaining gaps. Videos and generated readings stay local.
