@@ -141,13 +141,14 @@ class TrackedView:
 
 class Tracker:
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
-                 moves_known: list[bool] | None = None, energy: str = "rhythm"):
+                 moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True):
         """my_team may be incomplete (footage of someone else's game): Pokémon are added as they appear.
         moves_known says, per Pokémon, whether its moves come from a team sheet or are the usual ones assumed."""
         self.gd = gd
         # How energy is counted. "rhythm": a fast move every so many turns for as long as its user is on the
         # field, which needs no health bar but assumes nobody pauses. "hits": from the steps in the health bars.
         self.by_rhythm = energy == "rhythm"
+        self.trust_my_energy = trust_my_energy  # False: compare my count with the buttons but do not correct it
         self.me = Side([Mon(b) for b in my_team])
         self.my_moves_known = list(moves_known) if moves_known else [True] * len(my_team)
         self.my_seen_first = [False] * len(my_team)  # True for Pokémon we only learnt of from the screen
@@ -155,6 +156,9 @@ class Tracker:
         self.my_cp: dict[int, int] = {}
         self.my_left = 3
         self.warnings = 0
+        self.energy_checks = self.energy_fixed = 0  # looks where my energy was read, and where it overruled the count
+        self.energy_off = 0.0
+        self.energy_streak, self.energy_last = 0, 0.0  # looks in a row on which the buttons disagreed the same way
         self.foes: dict[str, Foe] = {}
         self.order: list[str] = []  # opposing species in the order they appeared
         self.foe: Foe | None = None  # their active Pokémon
@@ -235,7 +239,8 @@ class Tracker:
             # Mine, the same way. In play the bot knows its own taps; this is for footage of a person.
             fast = was_mine.build.fast
             done = self.turn - self.my_beat - int(obs.my_charged is not None or i_changed == "switch")
-            hits = -(-done // fast.turns) if obs.foe_charged and obs.my_charged is None else done // fast.turns
+            in_air = obs.foe_charged and obs.my_charged is None
+            hits = -(-done // fast.turns) if in_air else done // fast.turns
             if hits > 0:
                 self.my_beat += hits * fast.turns
                 was_mine.energy = min(ENERGY_CAP, was_mine.energy + hits * fast.energy_gain)
@@ -290,8 +295,18 @@ class Tracker:
                 if not self.by_rhythm:
                     mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
             foe.mon.hp = hp
-        if obs.my_energy is not None and abs(obs.my_energy - mon.energy) > 4:
-            mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
+        if obs.my_energy is not None:
+            self.energy_checks += 1  # how well the count holds up where the buttons can be read
+            self.energy_off += abs(obs.my_energy - mon.energy)
+            # The buttons lag a hit by a look or two, so only a difference that lasts overrules the count.
+            off = obs.my_energy - mon.energy
+            self.energy_streak = self.energy_streak + 1 if abs(off) > 4 and (off > 0) == (self.energy_last > 0) else int(abs(off) > 4)
+            self.energy_last = off
+            if self.energy_streak >= 3 and self.trust_my_energy:
+                self.energy_streak = 0
+                self.energy_fixed += 1
+                self._note(obs.t, "my_energy_read", counted=mon.energy, read=round(obs.my_energy, 1))
+                mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
 
         if thrown or i_changed or they_changed:
             if thrown or they_changed or not self.by_rhythm:

@@ -85,14 +85,15 @@ def load_team(gd: GameData, sheet: dict):
 
 def main() -> int:
     energy = "hits" if "--hits" in sys.argv else "rhythm"  # --hits: count energy from health-bar steps instead
-    sys.argv = [a for a in sys.argv if a != "--hits"]
+    blind = "--blind" in sys.argv  # compare our counted energy with the buttons without correcting it
+    sys.argv = [a for a in sys.argv if a not in ("--hits", "--blind")]
     if len(sys.argv) != 2 or sys.argv[1] in ("-h", "--help"):
         print(__doc__)
         return 0 if len(sys.argv) == 2 else 2
     folder = Path(sys.argv[1])
     gd = GameData()
     builds, known = load_team(gd, json.loads((folder / "team.json").read_text()))
-    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy)
+    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy, trust_my_energy=not blind)
     looks = problems = 0
     with (folder / "states.jsonl").open("w") as states:
         for number, line in enumerate((folder / "observations.jsonl").read_text().splitlines(), start=1):
@@ -132,7 +133,9 @@ def main() -> int:
     print(f"{looks} looks read, {problems} rejected; events: " + ", ".join(f"{n} {e}" for e, n in sorted(events.items())))
     print(f"unexplained changes: {tracker.warnings} (each is listed in events.jsonl)")
     (folder / "track.json").write_text(json.dumps({"looks": looks, "rejected": problems, "unexplained": tracker.warnings,
-                                                    "energy": energy, "events": dict(sorted(events.items()))}) + "\n")
+                                                    "energy": energy, "events": dict(sorted(events.items())),
+                                                    "my_energy_looks": tracker.energy_checks, "my_energy_overruled": tracker.energy_fixed,
+                                                    "my_energy_off_on_average": round(tracker.energy_off / max(tracker.energy_checks, 1), 2)}) + "\n")
     return 1 if problems else 0
 
 

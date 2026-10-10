@@ -471,10 +471,48 @@ What the verdict checks is listed in `scripts/recording/verdict.py`. It needs no
 so it can pass a game that is wrong in a way the checks do not cover; the shield check was
 added after exactly that happened.
 
-Seen while doing this, not yet used: the charged-move buttons at the bottom of the screen show
-our two move names and how full each is, and they vanish the moment either side starts a
-charged move, about 0.6 s before the "Get Ready!" text. Reading them would give our energy
-directly, our moves without a team sheet, and exact stop and start times for the fight.
+### Our energy, read off the charged-move buttons (2026-10-10)
+
+The two buttons at the bottom of the screen each fill from the bottom as energy builds: the
+filled share of the height is energy / cost, and once full the button starts again from empty
+for a second helping. `scripts/recording/buttons.py` reads the fill and whether the buttons
+are on screen; `assemble.py` turns the two fills into one energy (two buttons with different
+costs pin down which helping each is on) and puts it in the look as `my_energy`. Which button
+is which move is worked out from which pairing agrees. Example, Jellicent with Hex (13 a hit),
+Surf at 45: the Surf button read 0.28, 0.58, 0.87 of full, which is 13, 26, 39.
+
+This is the first real measurement of energy we have, so it was used to test the count:
+
+| Compared at the end of each stretch of fighting, while under both costs | Stretches | Count exact | Within one fast move |
+|---|---|---|---|
+| First recording | 5 | 2 | 5 |
+| Second recording | 9 | 4 | 9 |
+
+So the fast-move count is good to one fast move either way, and the verdict now allows a
+thrower to be one fast move short. The tracker takes the buttons over its own count when they
+disagree by more than 4 for three looks running (the fill lags a hit by a look or two, and
+more than that on the second helping, so a single look is not believed): 4 and 8 times in
+the two battles.
+
+What the buttons taught about timing, each found as a disagreement with the count:
+
+- A switch takes effect about a second before "Go, X!" is read. Jellicent had landed its
+  first fast move 0.7 s before its text; Altaria stopped gaining 1.5 s before "Go, Melmetal!".
+  The assembly now puts a switch 1 s before its text (`SWAPPED`).
+- The wait after a faint is longer than the header suggested: up to 3 s in which the count
+  kept crediting fast moves. Waits are now timed from the buttons going to half a second
+  before they return.
+- A charged move does not always take 10 s. Cramorant spitting out its prey stretched one to
+  13.5 s, and the count over-credited 6 fast moves there until the buttons corrected it.
+
+Tried and worse: using "buttons on screen" as the fight's clock. They go a second early when
+we tap a charged move and come back half a second after fighting resumes, and counting only
+that time left the opponent short of energy for 9 of 13 moves they threw. Also tried, with no
+difference on the measure above: holding a fast move over a charged move instead of landing
+it with the move.
+
+Not done yet: reading the move names under the buttons (our moves without a team sheet), and
+a one-move Pokémon, whose single button sits elsewhere.
 
 ## Known gaps in the simulator
 

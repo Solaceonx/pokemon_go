@@ -13,6 +13,9 @@ if "--middle-only" in sys.argv:  # to try doing without the lower text band
 FPS = 1.0 / statistics.median(b["t"] - a["t"] for a, b in zip(rows, rows[1:1000]))
 SIXTH, HALF = max(3, round(FPS / 6)), max(4, round(FPS / 2))  # frames in a sixth of a second and in half a second
 gm = json.load(open("data/gamemaster.json"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from pogo.gamedata import GameData
+gd = GameData()
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
 KNOWN = {  # movesets we have been told; any other Pokémon of ours gets the usual moves until it shows otherwise
@@ -124,7 +127,10 @@ left_shown = {"m": steady("m", "left"), "o": steady("o", "left")}
 def left_at(key, t):
     seen = [v for when, v in left_shown[key] if when <= t]
     return seen[-1] if seen else None
-ENTER = 0.2  # a Pokémon is on the field and attacking this long after its "Go, X!" is first read
+ENTER = 0.2  # a replacement for a fainted Pokémon is attacking this long after its "Go, X!" is first read
+# A switch takes effect before the text says so. Measured from our own energy on the buttons: Jellicent had its
+# first fast move in 0.7 s before "Go, Jellicent!" was read, and Altaria stopped gaining 1.5 s before "Go, Melmetal!".
+SWAPPED = -1.0
 field = {"mine": [], "theirs": []}
 for t, name in gos:
     side = "mine" if name in OURS else "theirs"
@@ -147,7 +153,7 @@ for t, name in gos:
         faint = (earlier is not None and now is not None and now < earlier) \
             or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
             or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
-    field[side].append({"t": t + ENTER, "name": name, "faint": faint})
+    field[side].append({"t": t + (ENTER if faint or not field[side] else SWAPPED), "name": name, "faint": faint, "read": t})
 
 def header_shields(key):
     """The header's shield counter, once it has shown the same number for half a second."""
@@ -167,7 +173,7 @@ def follow(side):
     step counts once that median has fallen by two pixels or more. Health cannot rise, so a higher level is
     believed only just after a change of Pokémon on that side."""
     key = "mh" if side == "mine" else "oh"
-    changes = [f["t"] - ENTER for f in field[side]]
+    changes = [min(f["t"], f["read"]) for f in field[side]]
     times, values, steps, recent, level = [], [], [], collections.deque(maxlen=SIXTH), None
     longer = collections.deque(maxlen=HALF)
     for r in rows:
@@ -204,8 +210,92 @@ waits = []
 for side, key in (("mine", "m"), ("theirs", "o")):
     for f in field[side]:
         if f["faint"]:
-            fell = [when - 0.5 for when, _ in left_shown[key][1:] if when - 0.5 <= f["t"] - ENTER]
+            fell = [when - 0.5 for when, _ in left_shown[key][1:] if when - 0.5 <= f["read"]]
             waits.append((fell[-1] if fell else f["t"] - 2.8, f["t"] - 0.5))
+# Our charged-move buttons, when the reading has them. They are on screen exactly while the fight is running:
+# they go the moment either side starts a charged move or a Pokémon faints, and come back when fighting resumes.
+both_on = lambda r: bool(r.get("b") and r["b"]["l"][1] and r["b"]["r"][1])
+live = []
+if sum(map(both_on, rows)) / FPS > 0.15 * (end - T0):
+    flags, reach, run = [(r["t"], both_on(r)) for r in rows], max(1, round(FPS / 7)), None
+    for i, (t, _) in enumerate(flags):
+        near = [f for _, f in flags[max(0, i - reach):i + reach + 1]]
+        if sum(near) * 2 > len(near):
+            run = [t, t] if run is None else [run[0], t]
+        elif run is not None:
+            live.append(run); run = None
+    if run: live.append(run)
+    joined_up = []
+    for a, b in (x for x in live if x[1] - x[0] > 0.3):
+        if joined_up and a - joined_up[-1][1] < 0.4: joined_up[-1][1] = b  # a flicker, or the frame of a switch
+        else: joined_up.append([a, b])
+    live = joined_up
+def away(a, b):
+    """Seconds between a and b with the buttons off screen, counted only once they have first been seen."""
+    if not live or b <= live[0][0]: return 0.0
+    a = max(a, live[0][0])
+    return max(0.0, (b - a) - sum(max(0.0, min(b, y) - max(a, x)) for x, y in live))
+# The buttons are away for each charged move, each wait for a replacement and, briefly, each switch of ours.
+# They are not used as the fight's clock: they come back about half a second after fighting resumes and go a
+# second early when we tap a charged move, and counting only the time they are on screen leaves the opponent
+# short of energy for moves they threw. They are used for the one thing the text times badly: how long nobody
+# attacks after a faint. A wait runs from the buttons going (or from the end of a charged move that caused the
+# faint) to half a second before they come back.
+if live:
+    waits = []
+    for (_, gone), (back, _) in zip(live, live[1:] + [[end + 0.5, end + 0.5]]):
+        cues = sorted((q for q in seqs if gone - 0.5 <= q["start"] <= back), key=lambda q: q["start"])
+        if not any(gone - 1.0 <= when - 0.5 <= back for key in ("m", "o") for when, _ in left_shown[key][1:]):
+            continue  # nobody fainted in this gap
+        start = cues[-1]["start"] + 10.0 if cues else gone
+        if back - 0.5 > start + 0.3: waits.append((start, back - 0.5))
+
+# Our energy, straight from the buttons. Each shows energy / cost as the filled share of its height, and starts
+# again from empty for the second helping once the first is full. Two buttons with different costs pin it down.
+def our_moves(name):
+    known = KNOWN.get(name, {}).get("charged")
+    if known:
+        return [next(m for m in gd.moves.values() if m.name == n) for n in known]
+    sid = next((k for k, v in gd.species.items() if v["speciesName"] == name), None)
+    return list(gd.default(sid, allow_forms=True).charged) if sid else []
+def readings_of(f, cost):
+    if 0.09 < f < 0.91: return [f * cost, cost + f * cost]
+    return None
+def energy_now(fl, fr, cl, cr, was):
+    a, b = readings_of(fl, cl), readings_of(fr, cr)
+    if a and b:
+        x, y = min(((x, y) for x in a for y in b), key=lambda xy: abs(xy[0] - xy[1]))
+        return (x + y) / 2 if abs(x - y) <= 5 else None
+    one, cost, other_f, other_cost = (a, cl, fr, cr) if a else (b, cr, fl, cl) if b else (None, 0, 0, 0)
+    if not one: return None
+    if other_f >= 0.91:  # the other is full: at least nine tenths of its cost
+        fits = [x for x in one if x >= 0.9 * other_cost - 2]
+    else:  # the other is empty: under a tenth of its cost, or just past a full helping
+        fits = [x for x in one if x < 0.12 * other_cost + 2 or other_cost - 2 <= x <= 1.12 * other_cost + 2]
+    fits = [x for x in fits if x <= 102]
+    return min(fits, key=lambda x: abs(x - was)) if fits else None
+button_energy = []  # (time, energy) for frames where it could be read
+if live:
+    flipped, votes = {}, collections.defaultdict(lambda: [0, 0])
+    stints = [(f["t"], nxt["t"] if nxt else end, f["name"]) for f, nxt in zip(field["mine"], field["mine"][1:] + [None])]
+    def active(t): return next((name for a, b, name in stints if a <= t < b), None)
+    for r in rows:  # which button is which move: the pairing whose two readings agree
+        name = active(r["t"])
+        moves_ = our_moves(name) if name else []
+        if len(moves_) == 2 and both_on(r) and 0.12 < r["b"]["l"][0] < 0.88 and 0.12 < r["b"]["r"][0] < 0.88 and moves_[0].energy != moves_[1].energy:
+            fl, fr = r["b"]["l"][0], r["b"]["r"][0]
+            straight = abs(fl * moves_[0].energy - fr * moves_[1].energy); crossed = abs(fl * moves_[1].energy - fr * moves_[0].energy)
+            if abs(straight - crossed) > 1.5: votes[name][straight > crossed] += 1
+    was = 0.0
+    for r in rows:
+        name = active(r["t"])
+        moves_ = our_moves(name) if name else []
+        if len(moves_) != 2 or not both_on(r): continue
+        cl, cr = (moves_[1].energy, moves_[0].energy) if votes[name][1] > votes[name][0] else (moves_[0].energy, moves_[1].energy)
+        e = energy_now(r["b"]["l"][0], r["b"]["r"][0], cl, cr, was)
+        if e is not None:
+            was = min(100.0, e); button_energy.append((r["t"], was))
+energy_times = [t for t, _ in button_energy]
 looks, left, shields, emitted = [], {"mine": 3, "theirs": 3}, {"mine": 2, "theirs": 2}, set()
 current = {"mine": None, "theirs": None}
 n_bins = int((end - T0) * 2)
@@ -248,6 +338,10 @@ for b in range(n_bins + 1):
         since = T0 + looks[-1]["t"] if looks else t
         stood = sum(max(0.0, min(t, b) - max(since, a)) for a, b in waits)
         if stood > 0: look["paused"] = round(stood, 2)
+        lo, hi = bisect.bisect_right(energy_times, t - 0.5), bisect.bisect_right(energy_times, t)
+        if hi > lo and "my_charged" not in look and not inside:
+            # The fill glides up after each hit and jumps about while it does; the last few frames are the settled ones.
+            look["my_energy"] = round(statistics.median(e for _, e in button_energy[max(lo, hi - 3):hi]), 1)
         looks.append(look)
 last = [q for k, q in enumerate(seqs) if k not in emitted]
 if last and last[-1]["side"] == "mine":  # the battle ended on our charged move: the result screen stands in for the last look
@@ -284,8 +378,9 @@ for side in ("mine", "theirs"):
 rel = lambda t: round(t - T0, 2)
 (out / "timeline.json").write_text(json.dumps({
     "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
-    "field": {side: [{"t": rel(f["t"] - ENTER), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
+    "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
     "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
     "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
+    "buttons_on": [[rel(a), rel(b)] for a, b in live], "waits": [[rel(a), rel(b)] for a, b in waits],
 }) + "\n")

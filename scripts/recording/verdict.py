@@ -10,7 +10,7 @@ Hard checks
   teams        one to three Pokémon seen on each side, all recognised
   moves        every charged move was read by name
   shields      each side's shields used equal the charged moves tracked as blocked against it
-  energy       whoever threw a charged move had at least its cost, by the tracker's count, on both sides
+  energy       whoever threw a charged move had its cost, to within one fast move, by the tracker's count
   ending       the result screen agrees with who had Pokémon left; with no result screen, exactly one side is out
 Soft checks
   unexplained  changes in our health the rules could not explain, as a share of looks (listed above 15%)
@@ -60,7 +60,11 @@ def verdict(game: Path, gd: GameData) -> dict:
                 continue
             had = mon["energy"] + cost
         spare.append(had - cost)
-        if had < cost:
+        # The count is good to about one fast move either way (checked against our own energy on the buttons),
+        # so being one fast move short of a move that was thrown is within its accuracy.
+        thrower = (final["opponent"]["pokemon"] if e["event"] == "foe_charged" else ours)
+        gain = max((p["fast_move"]["energy_gain"] for p in thrower if any(m["id"] == e["move"] for m in p["charged_moves"])), default=0)
+        if had < cost - gain:
             short.append(f"{e['move'].lower()} at {e['t']}s had {had} of {cost}")
     if short:
         failed.append("energy: " + "; ".join(short))

@@ -3,7 +3,7 @@
     cd <that branch>/screen_reader
     PYTHONPATH=. python <this file> recording.mp4 out_folder [--fps 15] [--text-rate 3] [--header-every 2]
 
-Writes out_folder/readings.jsonl (health bars and header, --fps times a second) and out_folder/text.jsonl
+Writes out_folder/readings.jsonl (health bars, header and our charged-move buttons, --fps times a second) and out_folder/text.jsonl
 (the announcement text in the middle of the screen, --text-rate times a second), which
 scripts/recording/assemble.py turns into looks for the tracker.
 
@@ -19,6 +19,8 @@ warnings.filterwarnings("ignore")
 import av, numpy as np
 import cv2
 from battle_reader import ROOT, BattleReader
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from buttons import measure as measure_buttons
 from rapidocr_onnxruntime import RapidOCR
 
 
@@ -80,6 +82,8 @@ with open(out_dir / "readings.jsonl", "w") as frames_out, open(out_dir / "text.j
                           "seg": [[g["color"], g["pixels"]] for g in hb["segments"]] if hb else None,
                           "w": hb.get("interior_width_pixels") if hb else None}
             row["result"] = val(r.get("result", {}))
+            b = measure_buttons(np.asarray(img))  # the two charged-move buttons: [fill, on screen, ready to throw]
+            row["b"] = {k[0]: [b[k]["fill"], int(b[k]["present"]), int(b[k]["ready"])] for k in ("left", "right")}
             if row["m"]["hp"] is not None or row["o"]["hp"] is not None: last_bar = t
             frames_out.write(json.dumps(row) + "\n"); n_frames += 1
         if want_text:
