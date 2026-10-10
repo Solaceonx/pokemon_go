@@ -66,8 +66,18 @@ Report each of these per battle, on recordings not used during development.
 The quickest first step: commit one exported battle under `games/`, however rough, so
 the tracker can be run on it.
 
-## Open question for the owner
+## Health bar colours (from the owner)
 
-Right after a hit, a health bar shows its usual colour up to some point and an orange
-segment beyond it. Is the usual-colour part already the new health, with orange showing
-what was just lost? If so the reader can report health the instant a hit lands.
+The colour of a health bar tells the health level: yellow means 25% to 50%, red means
+under 25%, and the normal colour means above 50%.
+
+Two uses for the reader:
+
+- **A free cross-check on every reading.** A bar measured at 10% must be red; one
+  measured at 40% must be yellow. A mismatch means the measurement or the bar's bounds
+  are wrong, and the look should be marked unreadable instead of exported.
+- **The two-colour bar.** Since colour follows level, a bar that is one colour up to a
+  point and orange beyond it is not showing two health levels. The reviewer's reading,
+  not yet confirmed by the owner, is that the first part is the new health and the
+  orange part is damage still draining away. If the owner confirms, export the first
+  part as the health value the moment a hit lands.

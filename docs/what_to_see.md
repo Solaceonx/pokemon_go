@@ -37,7 +37,7 @@ Read once per turn unless noted.
 |---|---|---|---|
 | 1 | Phase of the battle | Which of: countdown, normal fighting, my charged-move minigame, opponent's charged move (shield prompt), a Pokémon switching in, my choose-next screen after a faint, result screen | Exact, to the frame it changes |
 | 2 | My active Pokémon | Species (name text) and CP | Exact |
-| 3 | My health bar | Filled share of the bar | Within 1 HP if the bar is wide enough, else 1% |
+| 3 | My health bar | Filled share of the bar. Its colour is a cross-check: normal above 50%, yellow from 25% to 50%, red under 25%. The bars float above each Pokémon, not in the header | Within 1 HP if the bar is wide enough, else 1% |
 | 4 | Opponent's active Pokémon | Species (name text) and CP **(confirm CP is shown)** | Exact |
 | 5 | Opponent's health bar | Filled share of the bar | Within 1% |
 | 6 | Shields left | Mine and theirs, 0 to 2 each | Exact |
