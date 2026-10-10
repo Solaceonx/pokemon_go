@@ -345,11 +345,48 @@ def _pokemon(mon: Mon, known_from: str, moves_from: str, used: dict, stats_assum
     }
 
 
-def state(tracker: Tracker) -> dict:
+def _move_facts(user: Mon, move, target: Mon, charged: bool) -> dict:
+    """What a move does right now: damage on the Pokémon in front of it, stat changes included."""
+    facts = {"id": move.id, "name": move.name, "type": move.type, "damage": damage(user, move, target)}
+    if charged:
+        facts["energy"] = move.energy
+    else:
+        facts.update(energy_gain=move.energy_gain, turns=move.turns)
+    return facts
+
+
+def _matchup(t: Tracker, full: bool) -> dict:
+    """Every move in play between the two active Pokémon, with its damage and energy, from PvPoke's data."""
+    mine, foe = t.me.mon, t.foe
+    theirs = foe.mon
+    out = {
+        "ours": {
+            "fast": _move_facts(mine, mine.build.fast, theirs, False),
+            "charged": [dict(_move_facts(mine, m, theirs, True), ready=mine.energy >= m.energy) for m in mine.build.charged],
+        },
+        "theirs": {
+            "stats_assumed": True,  # their damage on us can be off by a point or two until their stats are known
+            "fast": _move_facts(theirs, theirs.build.fast, mine, False),
+            "charged": [dict(_move_facts(theirs, m, mine, True), could_be_ready=foe.hi >= m.energy, surely_ready=foe.lo >= m.energy)
+                        for m in theirs.build.charged],
+        },
+    }
+    if full:  # everything their species can have, for when they turn out not to run the usual moves
+        entry = t.gd.species[theirs.build.species_id]
+        out["theirs"]["every_fast_move_possible"] = [_move_facts(theirs, t.gd.moves[i], mine, False)
+                                                     for i in entry["fastMoves"] if i in t.gd.moves]
+        out["theirs"]["every_charged_move_possible"] = [_move_facts(theirs, t.gd.moves[i], mine, True)
+                                                        for i in entry["chargedMoves"] if i in t.gd.moves]
+    return out
+
+
+def state(tracker: Tracker, full: bool = False) -> dict:
     """The whole picture of the game right now, as plain data.
 
     known_from says how we know each thing: "team_sheet" (we were told), "seen" (the screen
     showed it) or "guessed" (the usual choice for that species, not yet confirmed).
+    "matchup" gives the damage and energy of every move between the two active Pokémon;
+    with full=True it also lists every move the opponent's species could have.
     """
     t, me = tracker, tracker.me
     mine = []
@@ -367,6 +404,7 @@ def state(tracker: Tracker) -> dict:
     view = t.view() if t.foe else None
     return {
         "t": round(t.t, 2), "fighting_turns": t.turn, "warnings": t.warnings,
+        "matchup": _matchup(t, full) if t.foe else None,
         "me": {
             "active": me.active, "shields": me.shields, "left": t.my_left,
             "switch_ready_in": round(max(0.0, t.my_switch_at - t.t), 1), "pokemon": mine,

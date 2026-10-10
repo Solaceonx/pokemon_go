@@ -17,7 +17,7 @@ One turn is 0.5 seconds. At 30 frames a second that is 15 frames a turn.
 - Do Not Disturb on, so no banners cover the screen.
 - Keep the whole battle in one file: from the opponent appearing to the result screen.
 - 30 frames a second is the minimum, 60 is better. Do not trim, crop, speed up or re-encode.
-- Sound on in the recording (microphone off). Hit sounds may help catch fast moves.
+- Sound is not needed. Recordings usually have none, so nothing may depend on it.
 - Great League only for now. That is what the simulator's data covers.
 - One battle per file, named `YYYY-MM-DD_NN.mov`.
 
@@ -101,7 +101,7 @@ What the footage has to make possible:
 - Seeing a drop of 1 or 2 HP on my health bar. This decides whether the plan works. Resisted fast moves do this little.
 - Telling whether the bar drops in one step or slides down, and how many frames the slide takes.
 - Telling a fast-move hit from the start of a charged move when both happen close together.
-- A fallback cue for tiny hits: the hit flash on my Pokémon, or the hit sound.
+- A fallback cue for tiny hits: the hit flash on my Pokémon. Not sound; recordings usually have none.
 
 Cases that stay ambiguous (two candidate moves with the same length and nearly the same damage) should be logged as ambiguous, not guessed.
 

@@ -123,7 +123,7 @@ def main() -> int:
                 continue
             looks += 1
             states.write(json.dumps(state(tracker)) + "\n")
-    final = state(tracker)
+    final = state(tracker, full=True)
     tracker.close()
     (folder / "state.json").write_text(json.dumps(final, indent=2) + "\n")
     events = Counter(json.loads(line)["event"] for line in (folder / "events.jsonl").read_text().splitlines())

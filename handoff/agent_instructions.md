@@ -165,6 +165,10 @@ battle's folder. Do not edit them; fix your looks and run again.
 
 ```
 t, fighting_turns, warnings
+matchup               every move between the two active Pokémon, from PvPoke's data:
+                      damage on the Pokémon in front of it, energy cost or gain, turns,
+                      and whether it is ready. state.json also lists every move the
+                      opponent's species could have
 me
   active              index into pokemon
   shields, left, switch_ready_in
