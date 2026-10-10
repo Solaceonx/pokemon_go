@@ -279,6 +279,17 @@ class Tracking(unittest.TestCase):
         self.assertLessEqual(wrong, 1)
 
 
+    def test_words_on_screen_rule_out_a_fast_move(self):
+        from pogo.tracker import Observation, Tracker
+        t = Tracker(GD, [GD.default("melmetal")])
+        for k in range(14):  # my Thunder Shock is not very effective on Stunfisk; nothing says super effective
+            t.update(Observation(t=0.5 * k, my_species="melmetal", foe_species="stunfisk", my_hp=1.0, foe_hp=1.0,
+                                 effects=["weak"]))
+        foe = t.foes["stunfisk"]
+        self.assertIn("MUD_SHOT", foe.ruled_out)  # ground on steel would have said so
+        self.assertEqual((foe.mon.build.fast.id, foe.fast_from), ("THUNDER_SHOCK", "inferred"))
+
+
 class Learning(unittest.TestCase):
     def test_learner_without_a_policy_plays_as_the_planner(self):
         from pogo.learner import Learner

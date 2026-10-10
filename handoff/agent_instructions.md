@@ -88,6 +88,7 @@ required.
 | `my_charged` | text | We threw a charged move since the last look: its name if shown, otherwise `"left"` or `"right"` for the button |
 | `foe_charged` | true | They threw a charged move since the last look |
 | `foe_move` | text | Its name, only if the screen named it |
+| `effects` | list | Which of `"super"` (SUPER EFFECTIVE!) and `"weak"` (NOT VERY EFFECTIVE...) are on screen in this look. `[]` if you read the text and it showed neither; leave it out if you did not read it. The tracker uses it to work out the opponent's fast move |
 | `note` | text | Anything worth flagging about this look |
 
 Example lines:

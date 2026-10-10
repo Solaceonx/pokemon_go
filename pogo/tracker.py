@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .battle import CHARGED, CHARGED_TURNS, ENERGY_CAP, FAST, SWITCH, Mon, Side, apply_buffs, damage
-from .gamedata import Build, GameData
+from .gamedata import Build, GameData, effectiveness
 
 TURN = 0.5  # seconds
 SWITCH_SECONDS = 45.0
@@ -45,6 +45,9 @@ class Observation:
     my_charged: int | None = None  # I threw this charged move (0 or 1) since the last look
     foe_charged: bool = False  # they threw a charged move since the last look
     foe_move: str | None = None  # its id or name, if the screen showed it
+    # Which of "super" (SUPER EFFECTIVE!) and "weak" (NOT VERY EFFECTIVE...) were on screen in this look.
+    # An empty list means the text was read and showed neither; None means it was not read.
+    effects: list | None = None
 
 
 class Foe:
@@ -62,7 +65,8 @@ class Foe:
         self.base = (0, 0)  # their energy range when the count last restarted (at their last charged move)
         self.lost: list[tuple[Mon | None, int]] = []  # since then: my Pokémon and the health it lost, or (None, hits)
         self.clock = 0  # fighting turns it has spent on the field since the count last restarted
-        self.ruled_out: set[str] = set()  # fast moves that could not have paid for a charged move it threw
+        self.ruled_out: set[str] = set()  # fast moves it cannot have: too little energy, or the wrong words on screen
+        self.words: dict[int, dict[str, int]] = {}  # per Pokémon of mine it faced: quiet looks, and looks with each word
         self.misfit: dict[str, float] = {}  # how badly each fast move it could have fits those steps; lower is better
 
     def gain(self, amount: int) -> None:
@@ -158,6 +162,7 @@ class Tracker:
         self.hp_turn = 0  # fighting turn at which my health was last read
         self.quiet = False  # the last look had no charged move and no change of Pokémon
         self.stretch = False  # an unbroken run of quiet looks is under way
+        self.quiet_looks = 0  # how many quiet looks in a row; the words from a charged move linger for a moment
         self.my_switch_at = 0.0  # time at which my switch is ready again
         self.foe_switch_at = 0.0
         self._file = open(path, "w") if path else None
@@ -269,8 +274,11 @@ class Tracker:
             self.taken = self.dealt = 0.0
             self.hp_turn = self.turn
         self.quiet = quiet
+        self.quiet_looks = self.quiet_looks + 1 if quiet else 0
         if not quiet:
             self.stretch = False
+        elif obs.effects is not None and self.quiet_looks >= 4:
+            self._effect_words(obs)
         if obs.my_switch is not None:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
@@ -320,6 +328,8 @@ class Tracker:
         if obs.foe_species not in self.foes:
             # Assume the usual moveset and typical stats for the species until shown otherwise.
             self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species, allow_forms=True))
+            if len(self._fast_options(self.foes[obs.foe_species])) == 1:
+                self.foes[obs.foe_species].fast_from = "inferred"  # the species has only the one
             self.order.append(obs.foe_species)
             self._note(obs.t, "foe_seen", species=obs.foe_species)
         self.foe = self.foes[obs.foe_species]
@@ -404,15 +414,43 @@ class Tracker:
     def _rule_out_fast(self, t: float, foe: Foe, cost: int) -> None:
         """They just paid this much for a charged move. A fast move that could not have earned it, even landing
         without a pause for every turn they have been on the field, is not the one they have."""
+        self._drop_fast(t, foe, {m.id for m in self._fast_options(foe)
+                                 if foe.base[1] + (foe.clock // m.turns + 1) * m.energy_gain < cost})
+
+    def _effect_words(self, obs: Observation) -> None:
+        """The game writes SUPER EFFECTIVE! or NOT VERY EFFECTIVE... when a fast move lands that is one or the
+        other. Leaving aside the word my own fast move puts up, a word on screen is their fast move's, and a word
+        that never appears while they keep hitting me rules out every fast move that would have shown it."""
+        mon, foe = self.me.mon, self.foe
+        seen = foe.words.setdefault(self.me.active, {"looks": 0, "super": 0, "weak": 0})
+        seen["looks"] += 1
+        for word in obs.effects:
+            seen[word] += 1
+        mine = _word(mon.build.fast.type, foe.mon)
+        options = [m for m in self._fast_options(foe) if m.id not in foe.ruled_out]
+        out: set[str] = set()
+        for word in ("super", "weak"):
+            if word == mine:
+                continue
+            shows = {m.id: _word(m.type, mon) == word for m in options}
+            if seen[word] >= 2 and any(shows.values()):
+                out |= {i for i, has in shows.items() if not has}
+            elif seen[word] == 0 and seen["looks"] >= 8:
+                out |= {i for i, has in shows.items() if has}
+        self._drop_fast(obs.t, foe, out)
+
+    def _drop_fast(self, t: float, foe: Foe, out: set[str]) -> None:
         options = self._fast_options(foe)
-        can_pay = [m for m in options if foe.base[1] + (foe.clock // m.turns + 1) * m.energy_gain >= cost]
-        if not can_pay or len(can_pay) == len(options):
-            return
-        foe.ruled_out |= {m.id for m in options} - {m.id for m in can_pay}
+        left = [m for m in options if m.id not in foe.ruled_out and m.id not in out]
+        if not left or not out - foe.ruled_out:
+            return  # nothing new, or it would rule out everything: then the evidence is at fault
+        foe.ruled_out |= out
         if foe.mon.build.fast.id in foe.ruled_out:
-            self._set_fast(t, foe, min(can_pay, key=lambda m: foe.misfit.get(m.id, 9.0)))
-        elif len(can_pay) == 1:
+            self._set_fast(t, foe, min(left, key=lambda m: foe.misfit.get(m.id, 9.0)))
+        elif len(left) == 1 and foe.fast_from != "inferred":
             foe.fast_from = "inferred"
+            self._note(t, "foe_fast_confirmed", species=foe.mon.build.species_id, move=left[0].id,
+                       ruled_out=sorted(foe.ruled_out))
 
     def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int) -> None:
         """Split a drop in my health into their fast moves and, if they threw one, their charged move."""
@@ -474,6 +512,12 @@ class Tracker:
             apply_buffs(foe.mon, mon, moves[0])
         self._note(obs.t, "foe_charged", move=moves[0].id if len(moves) == 1 else None, shielded=shielded,
                    energy=[foe.lo, foe.hi], energy_before=before, energy_before_by_clock=by_clock)
+
+
+def _word(move_type: str, target: Mon) -> str | None:
+    """The word the game shows when a move of this type lands on this Pokémon."""
+    x = effectiveness(move_type, target.build.types)
+    return "super" if x > 1.01 else "weak" if x < 0.99 else None
 
 
 def _whole_hits(lost: float, per_hit: int) -> tuple[int, float]:

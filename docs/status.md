@@ -365,8 +365,24 @@ team from the header names and starts when both bars are first on screen.
   fight is stopped during that wait, which the tracker's turn clock does not yet allow for.
 - The header shows a regional form under the plain name ("Stunfisk" for both kinds). Here
   Discharge settled it; in general the reader needs the types or the picture.
-- Fast moves: Quagsire's Mud Shot confirmed from the steps; Stunfisk's and their Melmetal's
-  left as the usual guess (Thunder Shock for both), because neither candidate fitted well.
+- Fast moves from the health steps alone: Quagsire's Mud Shot confirmed; Stunfisk's left as
+  the usual guess because neither candidate fitted well. The words on screen settled it (below).
+
+**Words on screen settle the fast move** (the owner's suggestion). The game writes SUPER
+EFFECTIVE! or NOT VERY EFFECTIVE... when a fast move lands that is one or the other. Setting
+aside the word our own fast move puts up, a word on screen belongs to their fast move, and a
+word that never appears over 4 s of quiet fighting rules out every fast move that would have
+shown it (`Tracker._effect_words`, the `effects` field of a look). On the two recordings:
+
+| Opponent | Outcome | When |
+|---|---|---|
+| Stunfisk | Thunder Shock confirmed; Mud Shot ruled out (it would be super effective on Melmetal). The owner confirms Thunder Shock | 7 s in |
+| Oinkologne | Mud Slap; Tackle and Take Down ruled out. This is before its first charged move; the health steps alone were too late with the automatic start | 19.5 s in |
+| Cramorant | Peck confirmed; Water Gun ruled out | 66 s in |
+| Talonflame, Quagsire | Incinerate and Mud Shot, from the health steps as before | |
+| Their Melmetal | Thunder Shock: the species has no other fast move | on sight |
+
+So every opponent fast move in both recordings is now worked out rather than guessed.
 
 **Their energy across both recordings, 13 charged moves.** The hit count was below the cost
 of the move they threw 5 times. The ceiling (`energy_by_clock`: never pausing, plus one hit,

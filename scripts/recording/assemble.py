@@ -39,9 +39,10 @@ THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 5][:3]
 T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) - 0.3, 1)
 
 # events from the announcement text
-gos, seqs, prompts, seq = [], [], [], None
+gos, seqs, prompts, seq, words = [], [], [], None, []
 for s in texts:
     items = [t for _, t in s["text"]]; joined = canon(" ".join(items)); t = s["t"]
+    words.append((t, [w for w, part in (("super", "supere"), ("weak", "notve")) if part in joined]))
     for item in items:
         m = re.match(r"^\W*[Gg][Oo0]\W*\s*([A-Za-z][A-Za-z ]{3,})", item)
         if m:
@@ -170,6 +171,8 @@ for b in range(n_bins + 1):
         at = bisect.bisect_right(level_times[side], t) - 1
         if at >= 0 and t - level_times[side][at] <= 0.5:  # the bar was on screen in this half-second
             look[f"{prefix}_hp"] = round(level_values[side][at] / W, 4)
+    shown = [w for when, w in words if t - 0.5 < when <= t]
+    if shown: look["effects"] = sorted({x for w in shown for x in w})
     for k, q in enumerate(seqs):
         if k not in emitted and q["resume"] <= t:
             emitted.add(k)
