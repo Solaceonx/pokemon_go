@@ -107,6 +107,11 @@ frames it tests on (a few hundred small crops, not whole videos).
 of frames; shields, Pokémon left and the charged-move flag right on 99%; median time per
 frame under 50 ms with text reading off. Report each number.
 
+**Started.** The `screen-reader-video-pipeline` branch is a first version, built for
+recorded video. [`screen_reader_review.md`](screen_reader_review.md) says what was
+measured on it and lists the seven things it must show before it can drive the tracker,
+chief among them a settled health value for both sides in 99% of half-seconds of fighting.
+
 ## 4. Make the tracker cope with real games
 
 **Why.** `pogo/tracker.py` was tested only on simulated cameras. Real games break its

@@ -216,6 +216,17 @@ final one-on-one lasted a median of 6 fighting turns, so it holds few decisions.
 library of solved one-on-ones for every pair, health and energy would be enormous;
 solving one from the actual position is small (about 32,000 positions with no shields).
 
+## Screen reader
+
+A first reader for recorded video exists on the `screen-reader-video-pipeline` branch.
+Reviewed 2026-10-10: its tests pass, the per-frame path takes 11 ms without text reading,
+and values it reads match the frames, but health readings are intermittent and are not
+exported to the tracker without a person approving them, and it has no accuracy figure.
+Details and the bar it must clear are in [`screen_reader_review.md`](screen_reader_review.md).
+
+On screen, health bars are not in the header: they float above each Pokémon. The header
+holds the name, CP, party markers and shield markers.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).
