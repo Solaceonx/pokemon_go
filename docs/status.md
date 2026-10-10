@@ -31,6 +31,8 @@ taps come later. Automating the real game breaks Niantic's terms and risks a ban
 
 ## Results so far
 
+- 2026-10-09: Task 6 PvPoke single-matchup AI port complete in `pogo/pvpoke_ai.py`, from commit `c15fb6f7e8613169740d904d6f96baa1824de480`: acceptance matches 108/108 battles with the same winner in 108; all 26 unit tests pass. No playing-strength improvement measured; team AI remains outside this stage. See [`PORT_NOTES.md`](PORT_NOTES.md) for the port mapping and coverage limits.
+
 Scores are win share (wins plus half of draws) with a 95% margin. "Against the Planner"
 means the same teams and battles for both pilots.
 
