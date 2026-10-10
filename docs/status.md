@@ -258,6 +258,50 @@ Details and the bar it must clear are in [`screen_reader_review.md`](screen_read
 On screen, health bars are not in the header: they float above each Pokémon. The header
 holds the name, CP, party markers and shield markers.
 
+### First real recording, tracked end to end (2026-10-10)
+
+One of the owner's own battles: iPhone screen recording, 1206×2622 at 60 frames a second,
+191 s, a Great League win with Melmetal / Altaria / Jellicent over Cramorant / Oinkologne /
+Talonflame. The reader's pixel readings on every frame, plus the announcement text read
+three times a second, were turned into 121 looks and fed to the tracker
+(`scripts/recording/`, result in `games/lyxia-2026-10-10/`).
+
+What came out right, checked against the announcements in the video:
+
+- every change of Pokémon in order: 2 switches and 4 faints;
+- all 10 charged moves, each with its name and who threw it, and the 3 that were shielded;
+- Talonflame threw Flame Charge, which was not in its assumed moves; the tracker swapped it in;
+- no look was rejected.
+
+Measured on this recording:
+
+| | |
+|---|---|
+| Health read while bars are on screen | ours 92.6% of half-seconds, theirs 88.3% |
+| Longest stretch with no reading | ours 2.5 s, theirs 4.5 s (bars are hidden for a while after a switch) |
+| Pixel reading, per frame at full size | 28.9 ms median, 34.2 ms at the 99th percentile |
+| Text reading, per look | 0.7 to 1 s, far too slow for live play |
+| Real time taken by a charged move | 9.5 to 10 s, shielded or not (the simulator assumes 10 s) |
+
+What is not right yet:
+
+- **Opponent energy.** At 2 of their 5 charged moves the tracker believed they could not
+  afford the move. Oinkologne was assumed to have Take Down; the steps in our health bar
+  (2 every half-second) fit Tackle. The opponent's fast move has to be worked out from the
+  size and rhythm of the steps, not assumed.
+- Hits taken while the bars are hidden arrive as one lump, and after a charged move the bar
+  sometimes shows the old health for one more look (18 and 22 health arrived a look late).
+- Hit flashes shift a reading by up to 3 pixels of 138 and now and then read the bar as empty
+  or full. Taking the commonest reading in each half-second and refusing any rise deals with
+  it (12 readings set aside), but the reader itself should not emit them.
+- A yellow bar (25 to 50%) and the orange part that is draining get the same colour label.
+- Not read at all: our energy and move buttons, the switch timer.
+- The phase templates do not fit this phone's layout, so the start of the fight and our team
+  were given by hand, and the text reader stood in for them.
+
+Changes made to the tracker for this: it follows Pokémon that change form (Cramorant), learns
+a named charged move it had not assumed, and carries a part-hit from one look to the next.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).

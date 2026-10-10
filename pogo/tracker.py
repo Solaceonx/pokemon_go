@@ -138,6 +138,8 @@ class Tracker:
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
+        self.taken = 0.0  # health I have lost that is not yet matched to a whole fast move of theirs
+        self.dealt = 0.0  # the same for the health they have lost to my fast moves
         self.my_switch_at = 0.0  # time at which my switch is ready again
         self.foe_switch_at = 0.0
         self._file = open(path, "w") if path else None
@@ -221,14 +223,15 @@ class Tracker:
         if obs.foe_hp is not None:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
-                landed = round((foe.mon.hp - hp) / damage(mon, mon.build.fast, foe.mon))
-                mon.energy = min(ENERGY_CAP, mon.energy + max(landed, 0) * mon.build.fast.energy_gain)
+                landed, self.dealt = _whole_hits(self.dealt + foe.mon.hp - hp, damage(mon, mon.build.fast, foe.mon))
+                mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
             foe.mon.hp = hp
         if obs.my_energy is not None and abs(obs.my_energy - mon.energy) > 4:
             mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
 
         if thrown or i_changed or they_changed:
             self.beat = self.turn  # everyone starts afresh after a charged move or a change of Pokémon
+            self.taken = self.dealt = 0.0
         if obs.my_switch is not None:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
@@ -243,7 +246,7 @@ class Tracker:
         if slot is None:
             if len(me.team) >= 3:
                 return None
-            me.team.append(Mon(self.gd.default(obs.my_species)))  # a team-mate we had not been told about
+            me.team.append(Mon(self.gd.default(obs.my_species, allow_forms=True)))  # a team-mate we had not been told about
             self.my_moves_known.append(False)
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
@@ -277,11 +280,26 @@ class Tracker:
                 self._note(obs.t, "foe_switch", to=obs.foe_species)
         if obs.foe_species not in self.foes:
             # Assume the usual moveset and typical stats for the species until shown otherwise.
-            self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species))
+            self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species, allow_forms=True))
             self.order.append(obs.foe_species)
             self._note(obs.t, "foe_seen", species=obs.foe_species)
         self.foe = self.foes[obs.foe_species]
         return how
+
+    def _learn_move(self, t: float, foe: Foe, name: str):
+        """They threw a charged move we had not assumed: give them that move in place of an unconfirmed one."""
+        build = foe.mon.build
+        entry = self.gd.species[build.species_id]
+        move = next((self.gd.moves[i] for i in entry["chargedMoves"]
+                     if i in self.gd.moves and name in (i, self.gd.moves[i].name)), None)
+        if move is None:
+            return None
+        kept = [m.id for m in build.charged if foe.used.get(m.id)]
+        spare = [m.id for m in build.charged if not foe.used.get(m.id)]
+        charged = ([move.id] + kept + spare)[:max(len(build.charged), 1)]
+        foe.mon.build = self.gd.build(build.species_id, [build.fast.id, *charged], level=build.level, ivs=build.ivs, allow_forms=True)
+        self._note(t, "foe_move_learned", species=build.species_id, move=move.id)
+        return move
 
     def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int) -> None:
         """Split a drop in my health into their fast moves and, if they threw one, their charged move."""
@@ -290,8 +308,10 @@ class Tracker:
         per_hit = damage(foe.mon, fast, mon)
         if not obs.foe_charged:
             if drop:
-                landed = max(0, round(drop / per_hit))
-                if abs(drop - landed * per_hit) > max(1.0, 0.3 * per_hit):
+                # A hit can show up spread over two looks, so what is left over waits for the next one.
+                lost = self.taken + drop
+                landed, self.taken = _whole_hits(lost, per_hit)
+                if (abs(lost - landed * per_hit) if landed else -lost) > max(1.0, 0.3 * per_hit):
                     # The drop is not a whole number of their assumed fast move: wrong move, wrong stats, or a misread.
                     self.warnings += 1
                     self._note(obs.t, "unexplained", what="my health drop", drop=drop, expected_per_hit=per_hit)
@@ -305,6 +325,10 @@ class Tracker:
         moves = [m for m in foe.mon.build.charged if m.energy <= foe.hi] or list(foe.mon.build.charged)
         shielded = self.me.shields < my_shields_before
         named = [m for m in foe.mon.build.charged if obs.foe_move in (m.id, m.name)]
+        if obs.foe_move and not named:
+            learned = self._learn_move(obs.t, foe, obs.foe_move)
+            if learned:
+                named = [learned]
         extra = 0  # their fast move in progress lands with the charged move
         if named:
             moves = named
@@ -326,6 +350,12 @@ class Tracker:
             apply_buffs(foe.mon, mon, moves[0])
         self._note(obs.t, "foe_charged", move=moves[0].id if len(moves) == 1 else None, shielded=shielded,
                    energy=[foe.lo, foe.hi])
+
+
+def _whole_hits(lost: float, per_hit: int) -> tuple[int, float]:
+    """How many whole fast moves a loss of health amounts to, and what is left over."""
+    landed = max(0, round(lost / per_hit))
+    return landed, (0.0 if landed else lost)  # only a part-hit waits; a mismatch must not pile up
 
 
 def _pokemon(mon: Mon, known_from: str, moves_from: str, used: dict, stats_assumed: bool, cp: int | None) -> dict:

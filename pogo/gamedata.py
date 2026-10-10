@@ -149,10 +149,14 @@ class GameData:
         return "formChange" not in self.species[species_id]
 
     def build(self, species_id: str, moveset: list[str], league: int = 1500,
-              level: float | None = None, ivs: tuple[int, int, int] | None = None) -> Build:
-        """A Pokémon with the given [fast, charged, charged] moves, at PvPoke's default level and IVs for the league."""
+              level: float | None = None, ivs: tuple[int, int, int] | None = None, allow_forms: bool = False) -> Build:
+        """A Pokémon with the given [fast, charged, charged] moves, at PvPoke's default level and IVs for the league.
+
+        allow_forms builds a form-changing Pokémon in its starting form, for following a real
+        game; the simulator still cannot play its form change.
+        """
         p = self.species[species_id]
-        if not self.supported(species_id):
+        if not allow_forms and not self.supported(species_id):
             raise ValueError(f"{species_id} changes form in battle, which is not modelled")
         if level is None or ivs is None:
             level, *ivs = p["defaultIVs"][f"cp{league}"]
@@ -175,14 +179,15 @@ class GameData:
             charged=tuple(self.moves[m] for m in moveset[1:]),
         )
 
-    def default(self, species_id: str, league: int = 1500) -> Build:
+    def default(self, species_id: str, league: int = 1500, allow_forms: bool = False) -> Build:
         """A Pokémon with PvPoke's recommended moveset and default level and IVs."""
-        key = (species_id, league)
+        key = (species_id, league, allow_forms)
         if key not in self._defaults:
             entry = next((e for e in self.rankings(league) if e["speciesId"] == species_id), None)
             if entry is None:
                 raise KeyError(f"{species_id} is not in the {league} rankings")
-            self._defaults[key] = self.build(species_id, entry["moveset"], league)
+            moves = [m for m in entry["moveset"] if m in self.moves]  # a form's special move may not be in the list
+            self._defaults[key] = self.build(species_id, moves, league, allow_forms=allow_forms)
         return self._defaults[key]
 
     def cp_at(self, species_id: str, level: float, ivs: tuple[int, int, int]) -> int:

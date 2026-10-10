@@ -75,10 +75,10 @@ def load_team(gd: GameData, sheet: dict):
         if entry.get("fast") and entry.get("charged"):
             ivs = tuple(entry["ivs"]) if entry.get("ivs") else None
             moves = [move_id(gd, entry["fast"]), *(move_id(gd, m) for m in entry["charged"])]
-            builds.append(gd.build(sid, moves, level=entry.get("level"), ivs=ivs))
+            builds.append(gd.build(sid, moves, level=entry.get("level"), ivs=ivs, allow_forms=True))
             known.append(True)
         else:
-            builds.append(gd.default(sid))  # moves not given: assume the usual ones
+            builds.append(gd.default(sid, allow_forms=True))  # moves not given: assume the usual ones
             known.append(False)
     return builds, known
 
