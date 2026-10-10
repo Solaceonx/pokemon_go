@@ -156,8 +156,9 @@ def main() -> None:
     if args.resume and (folder / "q.npz").exists():
         q = QNet.load(folder / "q.npz")
         margin = float((folder / "margin.txt").read_text()) if (folder / "margin.txt").exists() else margin
-        saved = np.load(folder / "examples.npz")
-        stored = {head: (saved[f"{head}_x"], saved[f"{head}_y"]) for head in Q_HEADS}
+        if (folder / "examples.npz").exists():  # not kept in git; without it, start collecting afresh from the saved model
+            saved = np.load(folder / "examples.npz")
+            stored = {head: (saved[f"{head}_x"], saved[f"{head}_y"]) for head in Q_HEADS}
         print(f"resuming with {sum(len(x) for x, _ in stored.values())} examples already collected", flush=True)
         args.seed += 1000 + sum(len(x) for x, _ in stored.values()) % 1000  # so new battles differ from the earlier ones
     for round_no in range(1, args.rounds + 1):
