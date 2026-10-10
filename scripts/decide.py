@@ -41,9 +41,19 @@ from pogo.arena import field_results, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import N_FEATURES, Q_HEADS, Learner, QNet  # noqa: E402
+from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 NAN = float("nan")
+
+
+class PvpokeOpponent(PvpokeAI):
+    """PvPoke's AI as a training opponent. Play-outs need clone(); PvpokeAI keys its matchup
+    cache on the battle's Pokémon objects, so a copy rebuilds it on first use anyway and a
+    fresh instance behaves the same as a deep copy."""
+
+    def clone(self):
+        return PvpokeOpponent()
 
 
 def play_out(snapshot, head: str, option: int) -> float:
@@ -61,15 +71,26 @@ def options_for(head: str, mask: tuple) -> list[int]:
     return [k for k in range(Q_HEADS[head]) if mask[k]]
 
 
-def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1):
-    """Play battles; at each decision (a sample of the throw decisions), play out every option."""
+def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
+            pvpoke_share: float = 0.0):
+    """Play battles; at each decision (a sample of the throw decisions), play out every option.
+
+    With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
+    faithful only inside a matchup and never switches, so these battles are 1v1 and only give
+    shield and throw decisions; there is no switching for the learner to exploit.
+    """
     rng = random.Random(seed)
     data = {head: ([], []) for head in Q_HEADS}
-    battles, stop = 0, time.time() + seconds
+    battles, pvpoke_battles, stop = 0, 0, time.time() + seconds
     while time.time() < stop:
         log: list = []
-        me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), crowd(rng)
-        battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
+        if pvpoke_share and rng.random() < pvpoke_share:
+            me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), PvpokeOpponent()
+            battle = Battle(rng.sample(pool, 1), rng.sample(pool, 1), me, them, seed=rng.getrandbits(32))
+            pvpoke_battles += 1
+        else:
+            me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), crowd(rng)
+            battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         while battle.winner is None:
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
             seen = len(log)
@@ -84,7 +105,7 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
                 data[head][1].append(y)
         battles += 1
     return {head: (np.array(x).reshape(-1, N_FEATURES), np.array(y).reshape(-1, Q_HEADS[head]))
-            for head, (x, y) in data.items()}, battles
+            for head, (x, y) in data.items()}, battles, pvpoke_battles
 
 
 def world(config: dict):
@@ -120,7 +141,8 @@ def collect_job(job):
     config, q_params, margin, seconds, seed = job
     os.nice(10)
     _, pool, team, draw, crowd = world(config)
-    return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw)
+    return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
+                   pvpoke_share=config.get("pvpoke_share", 0.0))
 
 
 def main() -> None:
@@ -141,10 +163,13 @@ def main() -> None:
     parser.add_argument("--val-battles", type=int, default=1000, help="battles used to choose how readily to overrule the Planner")
     parser.add_argument("--final-battles", type=int, default=3000)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--pvpoke-share", type=float, default=0.0,
+                        help="share of example battles played 1v1 against PvPoke's AI (shield and throw decisions only)")
     args = parser.parse_args()
 
     os.nice(10)
-    config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit}
+    config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
+              "pvpoke_share": args.pvpoke_share}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -203,12 +228,15 @@ def main() -> None:
             fresh = {head: (np.vstack([part[0][head][0] for part in parts]), np.vstack([part[0][head][1] for part in parts]))
                      for head in Q_HEADS}
             battles = sum(part[1] for part in parts)
+            pvpoke_battles = sum(part[2] for part in parts)
         else:
-            fresh, battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw)
+            fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
+                                                     pvpoke_share=args.pvpoke_share)
         for head in Q_HEADS:
             stored[head] = (np.vstack([stored[head][0], fresh[head][0]]), np.vstack([stored[head][1], fresh[head][1]]))
         np.savez_compressed(folder / "examples.npz", **{f"{h}_{k}": a for h, xy in stored.items() for k, a in zip("xy", xy)})
-        print(f"\nround {round_no}: {battles} battles in {(time.time() - t0) / 60:.1f} min; examples so far: "
+        print(f"\nround {round_no}: {battles} battles ({pvpoke_battles} of them 1v1 against PvPoke) in "
+              f"{(time.time() - t0) / 60:.1f} min; examples so far: "
               + ", ".join(f"{len(stored[h][0])} {h}" for h in Q_HEADS), flush=True)
         q = QNet(seed=args.seed)
         for head, (x, y) in stored.items():
