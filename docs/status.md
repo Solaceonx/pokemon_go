@@ -318,12 +318,11 @@ Their energy just before each charged move, two ways:
 | Talonflame, Flame Charge | 80 | 100 | 50 |
 | Talonflame, Flame Charge | 70 | 70 | 50 |
 
-"By the clock" assumes they never pause between fast moves (`energy_by_clock` in the state
-file). Counting hits misses any that land while the bars are hidden (the start of the battle,
-and a few seconds after every switch or faint), so the count is a floor and the clock a
-ceiling. The first Dive shows it: the count (32) could not pay for it. When that happens the
-tracker now takes the clock as the top of the range. Whether to use the clock as the top of
-the range all the time is open; it needs more recorded games.
+"By the clock" assumes they never pause between fast moves. Counting hits misses any that
+land while the bars are hidden (the start of the battle, and a few seconds after every switch
+or faint), so the count is a floor and the clock a ceiling; see the totals over both
+recordings below. (These numbers are from the first pass, with the start of the fight typed
+in; the committed game uses the automatic start, 0.3 s earlier, and differs a little.)
 
 **Steps, frame by frame.** `assemble.py` now follows each bar on every frame (median of the
 last ten frames; a step is a fall of two pixels or more; a step from a misread is taken back
@@ -348,6 +347,34 @@ Changes made to the tracker for this: it follows Pokémon that change form (Cram
 a named charged move it had not assumed, carries a part-hit from one look to the next, works
 out the opponent's fast move, never counts more fast moves than the time allows, and takes a
 charged move's damage off by the rules when the bar has not caught up yet.
+
+### Second real recording (2026-10-10, later the same day)
+
+254 s, a win with the same team over Stunfisk / Melmetal / Quagsire; result in
+`games/lyxia-2026-10-10b/`. Nothing was typed in by hand this time: `assemble.py` takes our
+team from the header names and starts when both bars are first on screen.
+
+- 157 looks, none rejected. All 15 charged moves named, with the 3 that were shielded; 4 faints
+  and 4 switches in order; the tracker ends with them on 0 Pokémon and us on 1, and the
+  result screen says win. Both sides threw a charged move on the same turn once (our Dynamic
+  Punch, their Mud Bomb) and both were followed.
+- Both teams had a Melmetal. "Go, Melmetal!" is now given to the side whose header changes to
+  that name.
+- The opponent took 10 s to send out a replacement after Stunfisk fainted. A faint is now
+  read from the header's count of Pokémon left, not from how soon the next one appears. The
+  fight is stopped during that wait, which the tracker's turn clock does not yet allow for.
+- The header shows a regional form under the plain name ("Stunfisk" for both kinds). Here
+  Discharge settled it; in general the reader needs the types or the picture.
+- Fast moves: Quagsire's Mud Shot confirmed from the steps; Stunfisk's and their Melmetal's
+  left as the usual guess (Thunder Shock for both), because neither candidate fitted well.
+
+**Their energy across both recordings, 13 charged moves.** The hit count was below the cost
+of the move they threw 5 times. The ceiling (`energy_by_clock`: never pausing, plus one hit,
+because the moment a Pokémon comes out is only known to within a turn or two) was never below
+it. So on real footage the count is a floor, and the range a player should plan against runs
+from the count up to the ceiling. The tracker uses the ceiling only when the count has just
+been shown to be short; using it as the top of the range all the time is the next change,
+and it needs the simulated check (`scripts/check_tracker.py`) kept honest while doing it.
 
 ## Known gaps in the simulator
 

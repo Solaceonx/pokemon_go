@@ -70,9 +70,10 @@ class Foe:
         self.mon.energy = (self.lo + self.hi) // 2
 
     def by_clock(self) -> int:
-        """A second opinion on their energy: what they would have if they never paused between fast moves."""
+        """The most energy they could have: never pausing between fast moves, plus one hit because the moment
+        a Pokémon comes out is only known to within a turn or two."""
         fast = self.mon.build.fast
-        return min(ENERGY_CAP, sum(self.base) // 2 + self.clock // fast.turns * fast.energy_gain)
+        return min(ENERGY_CAP, self.base[1] + (self.clock // fast.turns + 1) * fast.energy_gain)
 
     def spend(self, costs: list[int]) -> None:
         """They threw a charged move with one of these costs."""

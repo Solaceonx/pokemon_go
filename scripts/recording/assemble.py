@@ -34,6 +34,8 @@ bar_times = [r["t"] for r in rows if r["mh"] is not None or r["oh"] is not None]
 # Our Pokémon are the names the header shows on our side; the fight starts when both bars are first on screen.
 named = collections.Counter(nearest(r["m"]["sp"], species) for r in rows if r["m"]["sp"])
 OURS = [name for name, n in named.most_common() if name and n >= 5][:3]  # the header is read once a second
+theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows if r["o"]["sp"])
+THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 5][:3]
 T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) - 0.3, 1)
 
 # events from the announcement text
@@ -57,21 +59,48 @@ for s in texts:
 for q in seqs:
     # A charged move is decided about 8.5 s after its cue and lands at about 9.5 s; fighting resumes at 10 s.
     q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"])
-    if q["user"]: q["side"] = "mine" if q["user"] in OURS else "theirs"
+    if q["user"] and (q["user"] in OURS) != (q["user"] in THEIRS):  # the cue says whose move it is; the name confirms
+        q["side"] = "mine" if q["user"] in OURS else "theirs"
 end = next((r["t"] for r in rows if r["phase"] == "result" or r["result"]), rows[-1]["t"])
 
 # who is on the field, and whether each change was a faint
 def header_left(side, a, b):
     vals = [r[side]["left"] for r in rows if a <= r["t"] <= b and r[side]["left"] is not None]
     return statistics.mode(vals) if vals else None
+def steady(key, what):
+    """A header counter, once it has shown the same number for half a second: (time, value) at each change."""
+    out, value, run = [], None, 0
+    for r in rows:
+        v = r[key][what]
+        if v is None: continue
+        value, run = (value, run + 1) if v == value else (v, 1)
+        if run == 30: out.append((r["t"], v))
+    return out
+left_shown = {"m": steady("m", "left"), "o": steady("o", "left")}
+def left_at(key, t):
+    seen = [v for when, v in left_shown[key] if when <= t]
+    return seen[-1] if seen else None
 field = {"mine": [], "theirs": []}
 for t, name in gos:
-    side = "mine" if name in OURS else "theirs"; key = "m" if side == "mine" else "o"
+    side = "mine" if name in OURS else "theirs"
+    if name in OURS and name in THEIRS:
+        # Both teams have one: it came out on the side whose header changes to that name.
+        def shown(key):
+            after = [nearest(r[key]["sp"], species) for r in rows if t + 0.5 <= r["t"] <= t + 8 and r[key]["sp"]]
+            return bool(after) and collections.Counter(after).most_common(1)[0][0] == name
+        was = {k: (field[k][-1]["name"] if field[k] else None) for k in field}
+        if was["mine"] == name: side = "theirs"
+        elif was["theirs"] == name: side = "mine"
+        elif shown("o") and not shown("m"): side = "theirs"
+    key = "m" if side == "mine" else "o"
     faint = False
     if field[side]:
         before, after = header_left(key, t - 12, t - 1), header_left(key, t + 1, t + 6)
         last = [r[key + "h"] for r in rows if t - 8 <= r["t"] < t and r[key + "h"] is not None]
-        faint = (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
+        # The counter of Pokémon left falls when one faints; the next to come out on that side is its replacement.
+        earlier, now = left_at(key, field[side][-1]["t"] + 3), left_at(key, t + 6)
+        faint = (earlier is not None and now is not None and now < earlier) \
+            or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
             or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
     field[side].append({"t": t + 0.8, "name": name, "faint": faint})
 
