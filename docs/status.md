@@ -116,6 +116,7 @@ exploiter and version 1 (version 2 was an earlier retraining that changed nothin
 | Exploiter 1 against version 1 | 55.1% ± 1.5 |
 | Exploiter 1 against version 3 | 51.2% ± 1.6 |
 | Version 3 against version 1 | 52.2% ± 1.5 |
+| Exploiter 2 (trained against version 3) against version 3 | 53.2% ± 1.8 |
 | Planner against version 1 | 36.1% ± 1.7 |
 
 | Against the old crowd, points over the Planner | |
@@ -123,6 +124,7 @@ exploiter and version 1 (version 2 was an earlier retraining that changed nothin
 | Version 1 | +13.6 ± 1.9 |
 | Version 3 | +13.9 ± 1.9 (and +0.5 ± 1.7 against version 1 on the same battles) |
 | Exploiter 1 | +9.1 ± 2.0 |
+| Exploiter 2 | +10.7 ± 2.0 |
 
 Version 1 could be beaten by about 5 points by something aimed at it. Version 3 closes
 that to about 1 point, beats version 1 head to head, and gives up nothing against the old
@@ -133,8 +135,17 @@ What exploiter 1 did against version 1: held a ready charged move twice as often
 against 0.75 times a battle), threw the second move where the Planner would throw the
 first far more (0.67 against 0.12), swapped more and shielded more.
 
-Next: a second exploiter trained against version 3 (`runs/exploiter-2/`), to see whether
-a new gap opens.
+A second exploiter, trained against version 3, still finds an edge, but a smaller one:
+about 3 points where the first found about 5 against version 1. So the loop is
+converging, not finished. The next turn would retrain version 3 against a crowd that
+includes both exploiters:
+
+    cp -r runs/general-v3 runs/general-v4
+    python3 scripts/decide.py --run general-v4 --resume --minutes 60 --rounds 3 \
+        --opponents runs/general-decide/q_v1.npz runs/general-decide/q_v3.npz \
+                    runs/exploiter-1/q.npz runs/exploiter-2/q.npz
+
+then compare the result with version 3 as in the tables above before accepting it.
 
 ## Team list
 
