@@ -17,15 +17,17 @@ starting, so two people do not do the same one.
 | 5 | Learn from the tracked games | Python, numpy | 2 |
 | 6 | Port PvPoke's battle AI | Python | nothing |
 | 7 | Opponent stats from CP, move priority and damage | Python | nothing |
-| 8 | Guess the opponent's hidden Pokémon | Python | 5 helps |
+| 8 | Predict hidden teams from real team combinations | Python | 1 and 5 for real data |
 | 9 | Solve late-game positions exactly | Python | nothing |
 | 10 | Form-changing Pokémon in the engine | Python, a browser | nothing |
 | 11 | Make the simulator faster | Python | nothing |
 | 12 | Measure real timings from footage | Video access | 1 |
 | 13 | Live loop on the phone | The owner's iPhone and Mac | 3, 4 |
+| 14 | Adversarial training against stronger AI | Python, numpy, hours of computing | 6 helps |
+| 15 | Train the AI to handle uncertain battle information | Python, numpy | 4 helps |
 
-Tasks 1 to 5 are the footage pipeline, in order. Tasks 6 to 11 are independent of it and
-of each other.
+Tasks 1 to 5 are the footage pipeline, in order. Tasks 6 to 11, 14 and 15 are independent
+of it and of each other.
 
 ## What every task must do
 
@@ -175,18 +177,35 @@ list narrows and whether the true combination is always still in it.
 **Done when.** The true combination is never excluded in 1,000 simulated battles, and
 the report gives the median number of combinations left after one battle.
 
-## 8. Guess the opponent's hidden Pokémon
+## 8. Predict hidden teams from real team combinations
 
-**Why.** We see their lead and nothing else. Knowing what usually comes with it changes
-when to shield and switch.
+**Why.** We see their lead and nothing else. Good players do not bring random threes:
+certain Pokémon come together. Knowing what usually comes with what we have seen changes
+when to shield, when to switch and what to save. The owner wants the bot eventually to
+guess the last Pokémon, or both hidden ones.
 
-**Do.** From `data/teams.json` (and its `seen` counts once task 5 has filled them),
-build a function that takes the opponent's Pokémon seen so far and returns likely
-team-mates with probabilities. Then let the tracker's `state()` report it, and let
-`scripts/advise.py` draw unseen Pokémon from it instead of at random.
+**Do.**
 
-**Done when.** On teams held out from the list, the true team-mate is in the top five
-guesses more often than a guess by overall popularity, with both numbers reported.
+1. Build the table of real combinations. Sources, best first: teams seen in tracked
+   games (task 5 fills the `seen` counts in `data/teams.json`); team lists that players
+   and tournaments publish, recorded with a link and a date; and, only as a fallback
+   until real data exists, the simulated list already in `data/teams.json`. Keep the
+   source and the skill weight of each team so they can be weighted.
+2. Write `pogo/teamguess.py`: given the opponent's Pokémon seen so far (one or two),
+   return likely team-mates with probabilities. Use more than raw counts: a team seen
+   once should still inform guesses for similar teams (for example by what each Pokémon
+   covers). It must return something sensible for a lead never seen before.
+3. Report the guess in the tracker's `state()` (an `unseen_guess` list under `opponent`).
+4. Use it: let `scripts/advise.py` and the lookahead in `pogo/agents.py` draw unseen
+   Pokémon from the guess instead of at random, behind a flag that defaults to off.
+
+**Deliver.** The table with sources, `pogo/teamguess.py`, `scripts/check_teamguess.py`.
+
+**Done when.** On real teams held out from the table, the true team-mate is in the top
+five guesses more often than a guess by overall popularity, with both rates and the
+number of held-out teams reported; and the bot with the flag on is measured against the
+bot with it off on the same battles, where opponents' teams are drawn from the table.
+Say plainly if only simulated teams were available.
 
 ## 9. Solve late-game positions exactly
 
@@ -250,3 +269,72 @@ Needs the owner's iPhone and Mac, so it cannot be handed off. Listed for complet
 run `scripts/probe.py --drag` to find out whether iPhone Mirroring passes synthetic
 drags, then connect capture, `pogo/vision.py`, the tracker, the bot and taps, logging
 the time of each step against the targets in `status.md`.
+
+## 14. Adversarial training against stronger AI
+
+**Why.** Every opponent our bot has trained against is the hand-written Planner or a
+variation of it, and the bot now beats those by a wide margin. It has never faced
+something built to beat *it*. An opponent trained to exploit the bot shows where it is
+weak, and training against that opponent fixes it.
+
+**Do.** Run this loop with `scripts/decide.py`, which already learns one decision at a
+time and can give opponents a learned model (`--opponents`).
+
+1. **Exploiter.** Train a new model whose every opponent is the current best bot
+   (`runs/general-decide/q.npz`, margin 0.02), not the crowd. This needs a small change
+   so the share of opponents using the learned model can be set to 1. Save it under
+   `runs/exploiter-1/`.
+2. **Measure it.** Play the exploiter against the best bot on fresh battles. If it wins
+   clearly, the best bot has an exploitable weakness; read battle logs
+   (`scripts/arena.py --show` shows the idea) and write down what the exploiter does.
+3. **Retrain.** Train the bot against a mixed crowd: the old Planner variations, its own
+   earlier versions, and the exploiter. Save as a new version.
+4. **Repeat** with an exploiter for the new version, until an exploiter gains no more
+   than the margin.
+
+When task 6 delivers `pogo/pvpoke_ai.py`, add PvPoke's AI to the crowd and to the tests.
+
+**Deliver.** The change to `scripts/decide.py`, the models, and one table in
+`docs/status.md`: each version of the bot, each exploiter and the Planner, every pair
+played on the same battles, with margins.
+
+**Done when.** The table exists; a new version is accepted only if it does not lose to
+the previous version beyond the margin, does not drop against the old crowd (the fixed
+yardstick, currently +13.6 points over the Planner), and does better against the
+exploiter than the previous version did. Report it plainly if the loop goes in circles,
+with each version beating the last but losing to an older one.
+
+**Cost.** Each training run is about an hour on one core. Expect four or more.
+
+## 15. Train the AI to handle uncertain battle information
+
+**Why.** The bot is trained and tested with exact information: the opponent's precise
+energy, exact health, the right moves and stats. In a real game it sees the tracker's
+picture instead: their energy as a range, health read off a bar, some looks missed,
+their moves and stats assumed. Measured cost today: the Planner playing from a rough
+camera loses about 7 points (`scripts/check_tracker.py`). The learned bot has never been
+tested this way at all.
+
+**Do.**
+
+1. **Measure first.** Extend `scripts/check_tracker.py` to pilot with the best bot
+   (`Learner` with `runs/general-decide/q.npz`), and report its score from the perfect
+   camera and from the rough one. That is the baseline.
+2. **Make the uncertainty visible to it.** The network's inputs (`describe()` in
+   `pogo/learner.py`) carry one number for the opponent's energy. Add the low and high
+   ends of the tracker's range, and whether their moves are confirmed or assumed.
+3. **Train through the tracker.** Generate training positions with the bot deciding from
+   the tracker's picture under flawed cameras, while each option is still played out on
+   the true position. This needs the tracker and the simulated camera to be copyable
+   mid-game, as `Battle.clone()` is.
+4. **Make the assumptions wrong sometimes.** In training, give opponents random stats
+   within what their CP allows, and a non-standard fast or charged move some of the
+   time, so the bot meets cases where what it assumed is false.
+
+**Deliver.** The changes, a model under `runs/uncertain-decide/`, and a table in
+`docs/status.md`: current bot and new bot, each from the perfect camera and the rough
+camera, on the same battles.
+
+**Done when.** From the rough camera the new bot scores higher than the current bot by
+more than the margin, and from the perfect camera it is not worse beyond the margin.
+Both conditions, with numbers. If only one holds, say so.

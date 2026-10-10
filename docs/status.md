@@ -141,6 +141,8 @@ solving one from the actual position is small (about 32,000 positions with no sh
 
 ## Open directions
 
+Each of these has a full brief in [`tasks.md`](tasks.md).
+
 - **PvPoke's AI as an outside opponent.** Brief and bundle are in `handoff/`
   (`pvpoke_port_instructions.md`). Acceptance test: `scripts/check_pvpoke_ai.py`.
 - **Opponents that use our own learned decisions**, mixed with the old crowd, keeping the
@@ -148,8 +150,11 @@ solving one from the actual position is small (about 32,000 positions with no sh
   not yet run.
 - **Exact endgames.** A single matchup has few distinct positions (about 567,000 with one
   shield each in one sample), so last-Pokémon positions can be solved exactly.
-- **Guessing the opponent's hidden Pokémon.** Needs data on which Pokémon are run
-  together.
+- **Predicting the opponent's hidden Pokémon** from real team combinations (task 8).
+- **Adversarial training**: an opponent trained to beat our bot, then training against it
+  (task 14).
+- **Handling uncertain information**: training through the tracker with flawed cameras
+  and wrong assumptions (task 15).
 - **Opponent stats from CP, charge-move priority and damage per hit.** Secondary.
 - **Team list weighted by teams seen in real games** (`seen` counts in `data/teams.json`).
 - **Footage.** `docs/what_to_see.md` lists what recognition must read;
