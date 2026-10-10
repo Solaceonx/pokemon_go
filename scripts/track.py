@@ -63,6 +63,9 @@ def charged_index(gd: GameData, tracker: Tracker, look: dict, number: int) -> in
     mon = next((m for m in tracker.me.team if m.build.species_id == look.get("my_species")), tracker.me.mon)
     ids = [m.id for m in mon.build.charged]
     if mid not in ids:
+        learned = tracker.learn_my_move(look["t"], tracker.me.team.index(mon), mid)
+        if learned is not None:
+            return learned
         print(f"line {number}: our {mon.build.name} threw {value}, which is not among the moves listed for it ({', '.join(ids)})")
         return 0
     return ids.index(mid)

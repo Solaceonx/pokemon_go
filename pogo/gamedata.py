@@ -126,6 +126,21 @@ class Build:
         return value
 
 
+def spread(weights: dict, total: float) -> dict:
+    """Share `total` out in proportion to the weights, with no share above 1 (a move is in a moveset once)."""
+    out, free, left = {k: 0.0 for k in weights}, {k: v for k, v in weights.items() if v > 0}, total
+    while free and left > 1e-9:
+        whole = sum(free.values())
+        full = [k for k, v in free.items() if left * v / whole >= 1.0]
+        if not full:
+            out.update({k: left * v / whole for k, v in free.items()})
+            break
+        for k in full:
+            out[k], left = 1.0, left - 1.0
+            del free[k]
+    return out
+
+
 class GameData:
     def __init__(self, folder: Path = DATA):
         gm = json.loads((folder / "gamemaster.json").read_text())
@@ -135,6 +150,31 @@ class GameData:
         self._folder = folder
         self._rankings: dict[int, list] = {}
         self._defaults: dict = {}
+        self._odds: dict = {}
+
+    def move_odds(self, species_id: str, league: int = 1500) -> dict:
+        """What an opponent's Pokémon of this species is likely to have, before anything is seen.
+
+        {"fast": {move id: chance it is their fast move},
+         "charged": {move id: chance it is one of their two charged moves}}
+
+        The weights are how often PvPoke's simulations prefer each move, a stand-in until we have counts from
+        real battles. A species PvPoke gives no numbers for gets its recommended moves at three times the rest."""
+        key = (species_id, league)
+        if key not in self._odds:
+            entry = next((e for e in self.rankings(league) if e["speciesId"] == species_id), None)
+            uses = {x["moveId"]: float(x.get("uses") or 0) for g in ("fastMoves", "chargedMoves")
+                    for x in (entry["moves"][g] if entry else [])}
+            usual = set(entry["moveset"]) if entry else set()
+            out = {}
+            for kind, slots in (("fast", 1.0), ("charged", 2.0)):
+                ids = [m for m in self.species[species_id][kind + "Moves"] if m in self.moves]
+                weights = {m: uses.get(m, 0.0) for m in ids}
+                if sum(weights.values()) <= 0:
+                    weights = {m: 3.0 if m in usual else 1.0 for m in ids}
+                out[kind] = spread(weights, min(slots, len(ids)))
+            self._odds[key] = out
+        return self._odds[key]
 
     def cpm(self, level: float) -> float:
         return self._cpm[round((level - 1) * 2)]

@@ -148,7 +148,8 @@ class Planner:
                  expect_shield: float = 0.7, expect_bait: float = 0.5, belief: float = 2.0,
                  field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
-                 sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None):
+                 sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
+                 odds: bool = False):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -175,6 +176,9 @@ class Planner:
         self.sac_margin = sac_margin
         self.replace_by = replace_by
         self.value = value if field else None
+        # Weigh every charged move the opponent may have by its chance, where the view offers the chances
+        # (the Tracker's does), instead of taking their usual two moves as certain.
+        self.odds = odds
         self._sac_checked = None
         self.rng = random.Random(_seeds.getrandbits(32) if seed is None else seed)
         self._judged = None  # the matchup last considered for a switch
@@ -307,6 +311,18 @@ class Planner:
         if self.shields == "never":
             return False
         mon, foe = view.me.mon, view.foe
+        may_have = getattr(view, "foe_move_odds", None) if self.odds and self.shields == "lookahead" else None
+        if may_have and any(0.03 < p < 0.97 for _, p in may_have):
+            # Their moves are not settled: a move is coming, and each one they may have and could pay for is
+            # weighed by the chance of both.
+            energy = view.foe_energy_odds
+            weights = [(move, p * sum(q for e, q in energy.items() if e >= move.energy)) for move, p in may_have]
+            total = sum(w for _, w in weights)
+            if total > 0:
+                left = view.me.shields
+                gain = sum(w * (self._after_hit(view, move, True, left) - self._after_hit(view, move, False, left))
+                           for move, w in weights if w > 0.02 * total)
+                return gain > 0
         threats = [move for move in foe.build.charged if move.energy <= foe_energy]
         if not threats:
             return True

@@ -15,11 +15,17 @@ is also written to a file for that game, one line each.
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .battle import CHARGED, CHARGED_TURNS, ENERGY_CAP, FAST, SWITCH, Mon, Side, apply_buffs, damage
-from .gamedata import Build, GameData, effectiveness
+from .gamedata import Build, GameData, effectiveness, spread
+
+# How far the true energy is from the count, in fast moves, and how often. Measured against our own energy on
+# the charged-move buttons at the end of 24 stretches of fighting in four recorded battles (buttons minus count):
+# two fewer 2 times, one fewer 3, exact 8, one more 8, two more 2, four more once (counted here as two).
+COUNT_ERROR = {-2: 2 / 24, -1: 3 / 24, 0: 8 / 24, 1: 8 / 24, 2: 3 / 24}
 
 TURN = 0.5  # seconds
 SWITCH_SECONDS = 45.0
@@ -111,6 +117,16 @@ class TrackedView:
     @property
     def foe_switch_wait(self) -> int:
         return max(0, round((self._t.foe_switch_at - self._t.t) / TURN))
+
+    @property
+    def foe_move_odds(self) -> list:
+        """(charged move, chance they have it) for every charged move their active Pokémon may have."""
+        odds = self._t.move_odds(self._t.foe)["charged"]
+        return [(self._t.gd.moves[m], p) for m, p in odds.items() if p > 0]
+
+    @property
+    def foe_energy_odds(self) -> dict:
+        return self._t.energy_odds(self._t.foe)
 
     @property
     def foe_busy(self) -> int:
@@ -441,6 +457,45 @@ class Tracker:
             return  # dropping the usual move takes a little more
         self._set_fast(t, foe, best)
 
+    def learn_my_move(self, t: float, slot: int, move_id: str) -> int | None:
+        """One of ours threw a charged move its assumed moveset did not have (no team sheet, or footage of
+        someone else): put it in place of an assumed move not yet seen. Returns its place, or None."""
+        mon = self.me.team[slot]
+        build = mon.build
+        if self.my_moves_known[slot] or move_id not in self.gd.moves \
+                or move_id not in self.gd.species[build.species_id]["chargedMoves"]:
+            return None
+        unseen = [k for k in range(len(build.charged)) if not self.my_used.get((slot, k))]
+        if not unseen:
+            return None
+        ids = [m.id for m in build.charged]
+        ids[unseen[-1]] = move_id
+        mon.build = self.gd.build(build.species_id, [build.fast.id, *ids], level=build.level, ivs=build.ivs, allow_forms=True)
+        self._note(t, "my_move_learned", species=build.species_id, move=move_id)
+        return unseen[-1]
+
+    def move_odds(self, foe: Foe) -> dict:
+        """What this opposing Pokémon is likely to have, given what has been seen of it so far:
+        {"fast": {move id: chance}, "charged": {move id: chance it is one of its two}}."""
+        before = self.gd.move_odds(foe.mon.build.species_id)
+        if foe.fast_from == "inferred":
+            fast = {m: float(m == foe.mon.build.fast.id) for m in before["fast"]}
+        else:  # what the usage says, less what is ruled out, weighted by how well each fits the health steps
+            fast = spread({m: 0.0 if m in foe.ruled_out else p * math.exp(-3.0 * foe.misfit.get(m, 0.0))
+                           for m, p in before["fast"].items()}, 1.0)
+        seen = [m for m, n in foe.used.items() if n]
+        rest = spread({m: p for m, p in before["charged"].items() if m not in seen},
+                      max(0.0, min(2, len(before["charged"])) - len(seen)))
+        return {"fast": fast, "charged": {**{m: 1.0 for m in seen}, **rest}}
+
+    def energy_odds(self, foe: Foe) -> dict:
+        """{energy: chance}: the count, give or take one fast move, as often as the count has proved to be."""
+        gain, out = foe.mon.build.fast.energy_gain, {}
+        for off, p in COUNT_ERROR.items():
+            e = min(ENERGY_CAP, max(0, foe.mon.energy + off * gain))
+            out[e] = out.get(e, 0.0) + p
+        return out
+
     def _fast_options(self, foe: Foe) -> list:
         return [self.gd.moves[i] for i in self.gd.species[foe.mon.build.species_id]["fastMoves"] if i in self.gd.moves]
 
@@ -665,6 +720,13 @@ def state(tracker: Tracker, full: bool = False) -> dict:
         entry = _pokemon(foe.mon, "seen", "guessed", foe.used, stats_assumed=True, cp=foe.cp, fast_from=foe.fast_from)
         entry["energy_range"] = [foe.lo, foe.hi]
         entry["energy_by_clock"] = foe.by_clock()
+        odds, energy = tracker.move_odds(foe), tracker.energy_odds(foe)
+        entry["energy_odds"] = {str(e): round(p, 2) for e, p in sorted(energy.items())}
+        entry["fast_move_odds"] = {m: round(p, 2) for m, p in sorted(odds["fast"].items(), key=lambda x: -x[1]) if p >= 0.005}
+        entry["charged_move_odds"] = {m: round(p, 2) for m, p in sorted(odds["charged"].items(), key=lambda x: -x[1]) if p >= 0.005}
+        # Chance each charged move could be thrown right now: they have it, and they have the energy.
+        entry["ready_odds"] = {m: round(p * sum(q for e, q in energy.items() if e >= tracker.gd.moves[m].energy), 2)
+                               for m, p in sorted(odds["charged"].items(), key=lambda x: -x[1]) if p >= 0.005}
         entry["fast_move"]["misfit"] = foe.misfit
         theirs.append(entry)
     view = t.view() if t.foe else None

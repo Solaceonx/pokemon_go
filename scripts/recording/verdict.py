@@ -34,9 +34,11 @@ def verdict(game: Path, gd: GameData) -> dict:
     if not 1 <= len(ours) <= 3 or not 1 <= len(theirs) <= 3:
         failed.append(f"teams: {len(ours)} of ours and {len(theirs)} of theirs seen")
     thrown = [e for e in events if e["event"] in ("my_charged", "foe_charged")]
-    unnamed = sum(1 for e in thrown if not e.get("move")) + sum(1 for c in timeline["charged"] if not c["move"])
-    if unnamed:
-        failed.append(f"moves: {unnamed} charged move(s) without a name")
+    unnamed = [c for c in timeline["charged"] if not c["move"]]
+    if unnamed and unnamed == timeline["charged"][-1:] and timeline["end"] - unnamed[0]["t"] < 14:
+        notes.append("the last charged move ended the battle before its name came up")
+    elif unnamed:
+        failed.append(f"moves: {len(unnamed)} charged move(s) without a name")
     if len(thrown) != len(timeline["charged"]):
         failed.append(f"moves: {len(timeline['charged'])} charged moves announced, {len(thrown)} tracked")
     # Each shield that went must have a charged move it blocked, and the other way round.
@@ -63,17 +65,27 @@ def verdict(game: Path, gd: GameData) -> dict:
         # The count is good to about one fast move either way (checked against our own energy on the buttons),
         # so being one fast move short of a move that was thrown is within its accuracy.
         thrower = (final["opponent"]["pokemon"] if e["event"] == "foe_charged" else ours)
-        gain = max((p["fast_move"]["energy_gain"] for p in thrower if any(m["id"] == e["move"] for m in p["charged_moves"])), default=0)
+        # ... or, for a fast move of one turn, two of them: the count is good to about a second.
+        gain = max((p["fast_move"]["energy_gain"] * max(1, -(-2 // p["fast_move"]["turns"])) for p in thrower
+                    if any(m["id"] == e["move"] for m in p["charged_moves"])), default=0)
         if had < cost - gain:
             short.append(f"{e['move'].lower()} at {e['t']}s had {had} of {cost}")
     if short:
         failed.append("energy: " + "; ".join(short))
     result, mine_left, their_left = timeline.get("result"), final["me"]["left"], final["opponent"]["left"]
-    if result == "win" and not (their_left == 0 and mine_left >= 1):
-        failed.append(f"ending: result says win, tracker has us on {mine_left} and them on {their_left}")
-    elif result == "loss" and not (mine_left == 0 and their_left >= 1):
-        failed.append(f"ending: result says loss, tracker has us on {mine_left} and them on {their_left}")
-    elif result is None:
+    # A battle can end with the loser still holding Pokémon: they left. That is accepted only when the header's
+    # own count of their Pokémon agrees with the tracker's up to the last blow, so a missed faint still fails.
+    counted = {side: min((v for _, v in timeline["left"][side]), default=3) for side in ("mine", "theirs")}
+    for won, loser_left, winner_left, side, who in (("win", their_left, mine_left, "theirs", "they"), ("loss", mine_left, their_left, "mine", "we")):
+        if result != won:
+            continue
+        if loser_left == 0 and winner_left >= 1:
+            pass
+        elif winner_left >= 1 and 1 <= loser_left == counted[side] - 1:
+            notes.append(f"the result is a {won} with {'them' if won == 'win' else 'us'} still on {loser_left}: {who} left the battle")
+        else:
+            failed.append(f"ending: result says {won}, tracker has us on {mine_left} and them on {their_left}")
+    if result is None:
         # Without the result screen the ending still has to be decisive: exactly one side out of Pokémon.
         if (mine_left == 0) == (their_left == 0):
             failed.append(f"ending: no result screen, and the tracker has us on {mine_left} and them on {their_left}")

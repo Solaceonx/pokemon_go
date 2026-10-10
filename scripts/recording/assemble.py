@@ -83,7 +83,7 @@ for s in texts:
         m = re.match(r"^\W*[Gg][Oo0]\W*\s*([A-Za-z][A-Za-z ]{3,})", item)
         if m:
             name = nearest(m.group(1), species)
-            if name and not any(g[1] == name and t - g[0] < 8 for g in gos): gos.append((t, name))
+            if name and not any(g[1] == name and t - g[0] < 3 for g in gos): gos.append((t, name))
     if "switchinanewpok" in joined: prompts.append(t)
     start = "mine" if "getready" in joined else "theirs" if "ackincoming" in joined else None
     if start and (seq is None or t - seq["start"] > 9):
@@ -92,20 +92,25 @@ for s in texts:
     if m and not (seq and t - seq["start"] < 14):
         # "X used Y!" with no cue read before it (the cue can sit under other text): the cue comes about 7 s
         # earlier. Whose move it was is settled from the name below, or failing that from a shield going.
-        user = nearest(m.group(1), species)
+        user = nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
         if user:
             seq = {"side": None, "start": t - 7.2, "move": None, "user": None, "blocked": False, "late": True}; seqs.append(seq)
     if m and seq and t - seq["start"] < 14:
-        seq["user"] = seq["user"] or nearest(m.group(1), species)
+        seq["user"] = seq["user"] or nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
         seq["move"] = seq["move"] or nearest(m.group(2), moves, 0.8)
-    if "blocked" in joined and seq and t - seq["start"] < 15: seq["blocked"] = True
+    # "BLOCKED!" comes at the end of a move; one still on screen as the next cue appears belongs to the last move.
+    if "blocked" in joined and seq and 6 < t - seq["start"] < 15: seq["blocked"] = True
+    # NICE! GREAT! EXCELLENT! are the charging game, which only the thrower's own screen shows: our move.
+    if seq and t - seq["start"] < 9 and any(canon(x) in ("nice", "great", "excellent") for x in items): seq["ours"] = True
 for q in seqs:
     # A charged move is decided about 8.5 s after its cue and lands at about 9.5 s; fighting resumes at 10 s.
     q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"])
-    if q["user"] and (q["user"] in OURS) != (q["user"] in THEIRS):  # the cue says whose move it is; the name confirms
-        q["side"] = "mine" if q["user"] in OURS else "theirs"
-    if q["side"] is None:  # no cue and both teams have that Pokémon: we only block their moves, so guess from that
-        q["side"] = "theirs"
+    # Whose move: the cue says ("Get Ready!" is ours, "Attack incoming!" theirs). Without a cue, the charging
+    # game marks ours; failing that the name, if only one team has that Pokémon.
+    if q["side"] is None:
+        q["side"] = "mine" if q.get("ours") else "theirs"
+        if not q.get("ours") and q["user"] and (q["user"] in OURS) != (q["user"] in THEIRS):
+            q["side"] = "mine" if q["user"] in OURS else "theirs"
 for q, after in zip(seqs, seqs[1:]):
     q["resume"] = min(q["resume"], after["start"])  # two charged moves back to back: the bars do not come back between
 end = next((r["t"] for r in rows if r["phase"] == "result" or r["result"]), rows[-1]["t"])
@@ -131,21 +136,25 @@ ENTER = 0.2  # a replacement for a fainted Pokémon is attacking this long after
 # A switch takes effect before the text says so. Measured from our own energy on the buttons: Jellicent had its
 # first fast move in 0.7 s before "Go, Jellicent!" was read, and Altaria stopped gaining 1.5 s before "Go, Melmetal!".
 SWAPPED = -1.0
-field = {"mine": [], "theirs": []}
-for t, name in gos:
-    side = "mine" if name in OURS else "theirs"
-    if name in OURS and name in THEIRS:
-        # Both teams have one: it came out on the side whose header changes to that name.
-        def shown(key):
-            after = [nearest(r[key]["sp"], species) for r in rows if t + 0.5 <= r["t"] <= t + 8 and r[key]["sp"]]
-            return bool(after) and collections.Counter(after).most_common(1)[0][0] == name
-        was = {k: (field[k][-1]["name"] if field[k] else None) for k in field}
-        if was["mine"] == name: side = "theirs"
-        elif was["theirs"] == name: side = "mine"
-        elif shown("o") and not shown("m"): side = "theirs"
-    key = "m" if side == "mine" else "o"
+def header_stints(key):
+    """Stretches over which the header on one side showed the same name: [first seen, last seen, name]."""
+    runs = []
+    for r in rows:
+        name = nearest(r[key]["sp"], species) if r[key]["sp"] else None
+        if not name: continue
+        if runs and runs[-1][2] == name: runs[-1][1] = r["t"]; runs[-1][3] += 1
+        else: runs.append([r["t"], r["t"], name, 1])
+    # one odd reading inside a run of another name is a misread
+    runs = [x for i, x in enumerate(runs) if not (x[3] == 1 and 0 < i < len(runs) - 1 and runs[i - 1][2] == runs[i + 1][2])]
+    joined_up = []
+    for x in runs:
+        if joined_up and joined_up[-1][2] == x[2]: joined_up[-1][1] = x[1]
+        else: joined_up.append(x[:3])
+    return joined_up
+def entered(side, key, t, name, first):
+    """One Pokémon coming out on one side at time t (when its "Go, X!" was read)."""
     faint = False
-    if field[side]:
+    if not first:
         before, after = header_left(key, t - 12, t - 1), header_left(key, t + 1, t + 6)
         last = [r[key + "h"] for r in rows if t - 8 <= r["t"] < t and r[key + "h"] is not None]
         # The counter of Pokémon left falls when one faints; the next to come out on that side is its replacement.
@@ -153,7 +162,27 @@ for t, name in gos:
         faint = (earlier is not None and now is not None and now < earlier) \
             or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
             or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
-    field[side].append({"t": t + (ENTER if faint or not field[side] else SWAPPED), "name": name, "faint": faint, "read": t})
+    field[side].append({"t": t + (ENTER if faint or first else SWAPPED), "name": name, "faint": faint, "read": t})
+field = {"mine": [], "theirs": []}
+stints = {"mine": header_stints("m"), "theirs": header_stints("o")}
+if stints["mine"] and stints["theirs"]:
+    # Who is out comes from the name in each side's header, which also settles it when both teams have the same
+    # Pokémon. The header is read every second or two, so the moment comes from the matching "Go, X!".
+    changes = sorted((x[0], side, i) for side in stints for i, x in enumerate(stints[side]))
+    used = set()
+    for seen, side, i in changes:
+        name = stints[side][i][2]
+        earliest = stints[side][i - 1][1] - 1.5 if i else seen - 8.0
+        said = [k for k, (t, n) in enumerate(gos) if n == name and k not in used and earliest <= t <= seen + 0.5]
+        if said: used.add(said[0])
+        entered(side, "m" if side == "mine" else "o", gos[said[0]][0] if said else seen - 0.5, name, first=i == 0)
+else:
+    for t, name in gos:  # no header to go by: the names alone
+        side = "mine" if name in OURS else "theirs"
+        if name in OURS and name in THEIRS:
+            was = {k: (field[k][-1]["name"] if field[k] else None) for k in field}
+            if was["mine"] == name: side = "theirs"
+        entered(side, "m" if side == "mine" else "o", t, name, first=not field[side])
 
 def header_shields(key):
     """The header's shield counter, once it has shown the same number for half a second."""
@@ -216,7 +245,7 @@ for side, key in (("mine", "m"), ("theirs", "o")):
 # they go the moment either side starts a charged move or a Pokémon faints, and come back when fighting resumes.
 both_on = lambda r: bool(r.get("b") and r["b"]["l"][1] and r["b"]["r"][1])
 live = []
-if sum(map(both_on, rows)) / FPS > 0.15 * (end - T0):
+if sum(map(both_on, rows)) / FPS > max(5.0, 0.04 * (end - T0)):  # seen for long enough to be the real thing
     flags, reach, run = [(r["t"], both_on(r)) for r in rows], max(1, round(FPS / 7)), None
     for i, (t, _) in enumerate(flags):
         near = [f for _, f in flags[max(0, i - reach):i + reach + 1]]
@@ -332,7 +361,7 @@ for b in range(n_bins + 1):
                 if q["blocked"]: blocked["mine"] += 1
     for side in shields:  # the counter in the header, or failing that the "BLOCKED!" announcements
         shown = [v for when, v in header[side] if when <= t]
-        shields[side] = min([shields[side], 2 - blocked[side]] + shown[-1:])
+        shields[side] = max(0, min([shields[side], 2 - blocked[side]] + shown[-1:]))
     look.update(my_shields=shields["mine"], foe_shields=shields["theirs"], my_left=left["mine"], foe_left=left["theirs"])
     if "my_hp" in look or "foe_hp" in look or "my_charged" in look or "foe_charged" in look or not looks:
         since = T0 + looks[-1]["t"] if looks else t
@@ -344,9 +373,14 @@ for b in range(n_bins + 1):
             look["my_energy"] = round(statistics.median(e for _, e in button_energy[max(lo, hi - 3):hi]), 1)
         looks.append(look)
 last = [q for k, q in enumerate(seqs) if k not in emitted]
+result = next((r["result"] for r in rows if r.get("result")), None)
 if last and last[-1]["side"] == "mine":  # the battle ended on our charged move: the result screen stands in for the last look
     looks.append({"t": round(end - T0, 2), "my_charged": last[-1]["move"] or "left", "foe_hp": 0.0, "foe_left": left["theirs"] - 1,
                   "note": "from the result screen, not a fighting frame"})
+elif result == "win":  # the last knock-out was a fast move, with no replacement to announce it
+    looks.append({"t": round(end - T0, 2), "foe_hp": 0.0, "foe_left": left["theirs"] - 1, "note": "from the result screen"})
+elif result == "loss":
+    looks.append({"t": round(end - T0, 2), "my_hp": 0.0, "my_left": left["mine"] - 1, "note": "from the result screen"})
 
 out.mkdir(parents=True, exist_ok=True)
 order = list(dict.fromkeys([f["name"] for f in field["mine"]] + OURS))  # in the order they came out

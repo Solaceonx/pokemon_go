@@ -514,6 +514,71 @@ it with the move.
 Not done yet: reading the move names under the buttons (our moves without a team sheet), and
 a one-move Pokémon, whose single button sits elsewhere.
 
+### Third and fourth recordings (2026-10-10): what broke, and the count's real accuracy
+
+Two more of the owner's battles, both wins: against Altaria / Mimikyu / Melmetal, and against
+Snorlax / Dusclops / Cramorant. Both failed the verdict at first, each for reasons the first
+two recordings could not show. All four now pass.
+
+- **Both teams had Altaria and Melmetal.** Names no longer said whose Pokémon or whose move
+  it was. Who is out now comes from the name in each side's header, with the matching
+  "Go, X!" giving the moment; whose charged move it is comes from the cue ("Get Ready!" is
+  ours), and without a cue from NICE! / GREAT! / EXCELLENT!, which only our own moves show.
+- **The battle ended on a fast-move knock-out**, with no replacement to announce the faint.
+  The result screen now closes the battle: the Pokémon then out on the losing side is down.
+- **The opponent left with a Pokémon still standing.** The result said win, the tracker had
+  them on one. The verdict accepts that only when the header's own count of their Pokémon
+  agrees with the tracker's up to the last blow, so a missed faint still fails.
+- **The last charged move ended the battle before its name came up.** Noted, not failed.
+- **A lingering "BLOCKED!"** from our move was taken for the next move's, giving us three
+  shields used. A block is now counted only late in its own move.
+- **Buttons ignored.** The test for "the buttons are really there" wanted them on screen for
+  15% of the battle; with many charged moves they are on for less. Now 4%, at least 5 s.
+
+**The fast-move count against the buttons, all four battles.** At the end of each stretch of
+fighting, while under both costs, buttons minus count in fast moves:
+
+| | Stretches | Exact | Within one | Within two | Worse |
+|---|---|---|---|---|---|
+| First two battles | 14 | 6 | 14 | 14 | 0 |
+| Third and fourth | 10 | 2 | 5 | 9 | 1 (four out) |
+| All | 24 | 8 | 19 | 23 | 1 |
+
+So "good to one fast move" was too kind: it is within one four times in five, and within two
+almost always. The verdict's allowance is about a second of fast moves (two of a one-turn
+move). On our side the buttons then correct the count (4 to 8 times a battle). On their side
+nothing corrects it, so their energy should be read as the count give or take one or two fast
+moves; `energy_odds` in the state file carries exactly these frequencies.
+
+### Chances instead of certainties (2026-10-10)
+
+The owner's direction: much of this should be probabilistic, starting with which moves the
+opponent has. Now in the state file for each opposing Pokémon:
+
+- `fast_move_odds` and `charged_move_odds`: the chance of each move, starting from how often
+  PvPoke's simulations prefer it (`GameData.move_odds`) and updated by what is seen: a fast
+  move ruled out drops to nothing, one confirmed goes to certain, a charged move thrown is
+  certain and the rest share what is left of the two slots. Talonflame's Flame Charge, which
+  the old picture did not have at all, starts at 0.44.
+- `energy_odds`: the count give or take one or two fast moves, at the frequencies measured above.
+- `ready_odds`: for each charged move, the chance they have it and can pay for it now.
+
+PvPoke's numbers are a stand-in. The real ones are how often each move turns up in recorded
+battles, which is one more reason to track many of them.
+
+Tried, no gain yet: deciding shields by weighing every move they may have by its chance
+(`Planner(odds=True)`), against taking their usual two moves as certain. 600 battles against
+opponents whose movesets were drawn from the odds (86% carried something unusual), same
+battles for both: 70.5% against 69.8%, difference +0.7 ± 2.5 points
+(`scripts/moveset_odds.py`). It is off by default. The odds are still worth having for the
+tracked games themselves.
+
+### Handing the bulk work on
+
+`handoff/vod_pipeline_instructions.md` tells another agent how to set the pipeline up, what
+it has and has not been run on, what will break on other footage, and how to tell a correctly
+tracked battle from a wrong one.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).
