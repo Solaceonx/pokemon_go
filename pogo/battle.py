@@ -60,6 +60,8 @@ class Mon:
 
 
 def damage(user: Mon, move: Move, target: Mon) -> int:
+    if user.atk_stage == target.def_stage:
+        return int(user.build.base_damage(move, target.build)) + 1
     scale = STAGE[user.atk_stage + MAX_STAGE] / STAGE[target.def_stage + MAX_STAGE]
     return int(user.build.base_damage(move, target.build) * scale) + 1
 
@@ -181,7 +183,7 @@ class Battle:
         twin.sides = [side.copy() for side in self.sides]
         twin.agents = [agent_a, agent_b]
         twin.views = [View(twin, 0), View(twin, 1)]
-        twin.rng = random.Random()
+        twin.rng = random.Random(0)  # The copied state replaces this seed; no system entropy needed.
         twin.rng.setstate(self.rng.getstate())
         twin.turn, twin.winner, twin.log, twin.hits = self.turn, self.winner, None, None
         twin._saw_throw = [getattr(a, "saw_throw", None) for a in twin.agents]
@@ -217,7 +219,8 @@ class Battle:
         side.active = slot
         if slot not in side.shown:
             side.shown.append(slot)
-        self._note(i, f"sends in {side.mon}")
+        if self.log is not None:
+            self._note(i, f"sends in {side.mon}")
 
     def _throw(self, i: int, k: int) -> None:
         me, foe = self.sides[i], self.sides[1 - i]
@@ -242,7 +245,8 @@ class Battle:
         else:
             dealt = damage(user, move, target)
         target.hp -= dealt
-        self._note(i, f"{user.build.name} throws {move.name}: " + ("shielded" if shielded else f"{dealt} damage"))
+        if self.log is not None:
+            self._note(i, f"{user.build.name} throws {move.name}: " + ("shielded" if shielded else f"{dealt} damage"))
         if self.hits is not None:
             self.hits.append((i, move.id, dealt))
         if move.buff_chance and (move.buff_chance >= 1 or self.rng.random() < move.buff_chance):
@@ -250,6 +254,16 @@ class Battle:
 
     def step(self) -> None:
         sides, agents, views = self.sides, self.agents, self.views
+
+        # Neither player can act and neither fast move lands on this turn.
+        if sides[0].busy > 1 and sides[1].busy > 1:
+            for side in sides:
+                side.busy -= 1
+                side.switch_wait = max(0, side.switch_wait - 1)
+            self.turn += 1
+            if self.turn >= MAX_TURNS:
+                self.winner = self._on_time()
+            return
 
         # Both players choose at once; a player in the middle of a fast move has no choice.
         acts = [None, None]
@@ -305,8 +319,9 @@ class Battle:
 
         fainted = [i for i in (0, 1) if sides[i].mon.hp <= 0]
         if fainted:
-            for i in fainted:
-                self._note(i, f"{sides[i].mon.build.name} faints")
+            if self.log is not None:
+                for i in fainted:
+                    self._note(i, f"{sides[i].mon.build.name} faints")
             out = [i for i in fainted if sides[i].left() == 0]
             if out:
                 self.winner = DRAW if len(out) == 2 else 1 - out[0]

@@ -109,6 +109,48 @@ Altaria / Jellicent 64.7% ± 3.8 (4th of the 25 fully tested). Tinkaton is on 39
 saved teams, Shadow Annihilape on 31, Corviknight on 25. "Best" means best with this
 pilot against this field; the `seen` counts for teams met in real games are all still zero.
 
+## Simulator speed
+
+Task 11 (2026-10-09): small simulator speedup, with identical checked results.
+Skip work and training snapshots when both fast moves are still in progress; avoid
+unused log formatting, equal-stage damage scaling and system seeding of cloned battle
+RNGs. Baselines were recorded before code edits. Measured with
+`/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/arena.py --pairings 200 --seed 0`,
+one process/core, 400 battles per row. Rates are the script's `perf_counter` timings
+(excluding game-data loading), rounded to battles/s; these are single-run measurements.
+
+| Matchup (Planner unless stated) | Score before = after, 95% margin | Won/lost/drawn before = after | Battles/s before → after |
+|---|---|---|---|
+| Expert model | 57.5% ± 3.9 | 230/170/0 | 121 → 125 |
+| Expert model against itself | 47.9% ± 3.5 | 191/208/1 | 161 → 167 |
+| Masher | 82.6% ± 3.4 | 330/69/1 | 365 → 371 |
+| Spammer | 59.1% ± 4.3 | 234/161/5 | 212 → 216 |
+| Baiter | 51.9% ± 4.2 | 206/191/3 | 196 → 201 |
+| Straight | 50.9% ± 4.0 | 202/195/3 | 209 → 216 |
+| Shield saver | 67.9% ± 4.2 | 270/127/3 | 168 → 176 |
+| Stayer | 66.0% ± 4.2 | 264/136/0 | 313 → 320 |
+
+Training collection: 20 source battles took 3.038273 s before and 2.852242 s after
+(6.582688 → 7.012027 source battles/s, including all option play-outs). Used
+`scripts.decide.collect(None, pool, None, .03, crowd, 21, 0, draw)` with
+`pool = GameData().meta(50)`, `crowd = lambda rng: varied(rng, pool)` and
+`draw = lambda rng: rng.sample(pool, 3)`. To fix the work instead of the time budget,
+patched `decide.time.time` with `unittest.mock.patch.object` and
+`side_effect=itertools.count()`; timed the call with `time.perf_counter`. All four
+BLAS/OpenMP thread limits were 1. SHA-256 hashes of each head's feature and outcome
+arrays were identical: 86 shield, 34 throw, 78 swap and 20 replacement examples.
+
+Acceptance checks ran: `scripts/check_pvpoke.py` printed
+`108 of 108 PvPoke battles reproduced exactly` both before and after; all eight arena
+scores, counts and average lengths matched; `python -m unittest discover tests`
+passed all 27 tests, including new stage-rounding, idle-timeout and clone tests.
+Additional comparison against the original source matched 9,423 turn states, logs,
+hits and RNG states across 100 battles, plus every collected feature and option
+outcome in ten battles each with and without learned players (all throw decisions
+sampled). No long training run was attempted; the modest timing gains may vary with
+machine load. A fixed time budget will now collect more examples, so it is the same
+fixed battle sequence, rather than a timed training run, that remains identical.
+
 ## Latency
 
 One game turn is 500 ms. The whole path from something appearing on screen to the tap

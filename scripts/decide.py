@@ -70,6 +70,11 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
         me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), crowd(rng)
         battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         while battle.winner is None:
+            # No action, hit, shield or replacement can occur before either fast
+            # move finishes, so there is no decision to snapshot on this turn.
+            if battle.sides[0].busy > 1 and battle.sides[1].busy > 1:
+                battle.step()
+                continue
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
             seen = len(log)
             battle.step()

@@ -8,8 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import STYLES, Masher, Planner, fasts_to_wait, solve_2x2  # noqa: E402
-from pogo.battle import CHARGED, FAST, SWITCH, SWITCH_TURNS, Battle, Mon, damage  # noqa: E402
-from pogo.gamedata import GameData, effectiveness  # noqa: E402
+from pogo.battle import CHARGED, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, damage  # noqa: E402
+from pogo.gamedata import MAX_STAGE, STAGE, GameData, effectiveness  # noqa: E402
 
 GD = GameData()
 
@@ -75,8 +75,50 @@ class Stats(unittest.TestCase):
         az.atk_stage = 4  # attack doubled
         self.assertEqual(damage(az, play_rough, me), int(raw * 4) + 1)
 
+    def test_damage_rounding_at_every_stage_pair(self):
+        for attacker, defender in ((azumarill(), medicham()), (medicham(), azumarill())):
+            user, target = Mon(attacker), Mon(defender)
+            for move in (attacker.fast, *attacker.charged):
+                base = attacker.base_damage(move, defender)
+                for atk in range(-MAX_STAGE, MAX_STAGE + 1):
+                    for defense in range(-MAX_STAGE, MAX_STAGE + 1):
+                        user.atk_stage, target.def_stage = atk, defense
+                        scale = STAGE[atk + MAX_STAGE] / STAGE[defense + MAX_STAGE]
+                        self.assertEqual(damage(user, move, target), int(base * scale) + 1)
+
 
 class Turns(unittest.TestCase):
+    def test_idle_turn_keeps_timers_and_checks_timeout(self):
+        b = Battle([azumarill()], [medicham()], Script(), Script(), record=True)
+        b.sides[0].busy, b.sides[1].busy = 2, 3
+        b.sides[0].switch_wait, b.sides[1].switch_wait = 0, 7
+        b.turn = MAX_TURNS - 1
+        expected = b._on_time()
+        rng_state = b.rng.getstate()
+        b.step()
+        self.assertEqual((b.turn, b.winner), (MAX_TURNS, expected))
+        self.assertEqual([s.busy for s in b.sides], [1, 2])
+        self.assertEqual([s.switch_wait for s in b.sides], [0, 6])
+        self.assertEqual([s.mon.energy for s in b.sides], [0, 0])
+        self.assertTrue(all(s.mon.hp == s.mon.build.hp for s in b.sides))
+        self.assertEqual((b.log, b.hits), ([], []))
+        self.assertEqual(b.rng.getstate(), rng_state)
+
+    def test_clone_preserves_dice_and_has_independent_state(self):
+        b = Battle([azumarill()], [medicham()], Script(), Script(), seed=17, record=True)
+        b.step()
+        b.rng.gauss(0, 1)  # Include the cached Gaussian in the copied RNG state.
+        twin = b.clone(Script(), Script())
+        self.assertEqual(b.rng.getstate(), twin.rng.getstate())
+        self.assertEqual(b.rng.gauss(0, 1), twin.rng.gauss(0, 1))
+        self.assertEqual([b.rng.random() for _ in range(20)], [twin.rng.random() for _ in range(20)])
+        self.assertEqual((b.run(), b.turn), (twin.run(), twin.turn))
+        twin.sides[0].mon.energy = -1
+        twin.sides[0].shown.append(1)
+        self.assertNotEqual(b.sides[0].mon.energy, -1)
+        self.assertEqual(b.sides[0].shown, [0])
+        self.assertEqual((twin.log, twin.hits), (None, None))
+
     def test_fast_move_lands_on_its_last_turn(self):
         b = Battle([azumarill()], [medicham()], Script(), Script())
         az, me = b.sides[0].mon, b.sides[1].mon
