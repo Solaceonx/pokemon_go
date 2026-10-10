@@ -149,7 +149,7 @@ class Planner:
                  field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
                  sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
-                 odds: bool = False):
+                 odds: bool = False, hold: bool = False, hold_cost: float = 0.3):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -172,6 +172,9 @@ class Planner:
         self.punish = punish
         self.farm = farm
         self.farm_cost = farm_cost  # farm if it costs no more than this share of current health
+        # Hold a charged move that is ready and keep building energy for as long as the opponent cannot throw
+        # one of theirs, provided their fast moves in that time cost no more than this share of current health.
+        self.hold, self.hold_cost = hold, hold_cost
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -208,6 +211,8 @@ class Planner:
             return FAST  # the fast move finishes it; keep the energy
 
         if self.farm and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_farm(view):
+            return FAST
+        if self.hold and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_hold(view):
             return FAST
 
         def short_of(k: int) -> bool:
@@ -290,6 +295,21 @@ class Planner:
         throws = energy // min(m.energy for m in foe.build.charged)
         incoming = landing * damage(foe, foe_fast, mon) + throws * max(damage(foe, m, mon) for m in foe.build.charged)
         return incoming <= self.farm_cost * mon.hp
+
+    def _can_hold(self, view: View) -> bool:
+        """Is there room for one more fast move of mine before the opponent reaches a charged move, at a
+        price in health I can bear? (The owner's rule: farm until they are about to get a move, unless it hurts.)"""
+        mon, foe = view.me.mon, view.foe
+        fast, foe_fast = mon.build.fast, foe.build.fast
+        need = min(m.energy for m in foe.build.charged) - foe.energy
+        if need <= 0:
+            return False  # they have a move already
+        hits = -(-need // foe_fast.energy_gain)  # their fast moves still to land before they do
+        reach = (view.foe_busy or foe_fast.turns) + (hits - 1) * foe_fast.turns  # turns until then, counting this one
+        if fast.turns >= reach:
+            return False  # another fast move of mine would not be over in time: throw now
+        incoming = hits * damage(foe, foe_fast, mon)
+        return incoming <= self.hold_cost * mon.hp
 
     def _may_faint(self, view: View, turns: int) -> bool:
         """Could this Pokémon faint within that many turns, if the opponent keeps attacking?"""

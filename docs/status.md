@@ -104,6 +104,34 @@ nothing yet says how it does against an outside opponent.
 8. Save a nearly fainted Pokémon as a third shield; bring it in on a read.
 9. Opponents are good players with similar strategy, so optimise against that.
 
+### Farm until they are about to get a move (2026-10-10): helps
+
+The owner's rule: do not throw a charged move the moment it is ready; keep building energy
+with fast moves until the opponent is about to reach a charged move of their own, as long as
+it is not costing too much health. `Planner(hold=True, hold_cost=0.5)`: with a move ready, use
+another fast move if it will be over before their energy reaches their cheapest charged move,
+energy is not full, and their fast moves in that time take no more than `hold_cost` of current
+health. `scripts/hold_rule.py`:
+
+| Their fast moves may take | Head to head against the same player without the rule | Against the crowd, same battles |
+|---|---|---|
+| 10% of current health | 50.9% ± 0.9 | +0.7 ± 0.7 |
+| 20% | 52.0% ± 1.0 | +1.4 ± 1.1 |
+| 30% | 52.2% ± 1.1 | +1.6 ± 1.2 |
+| 50% | 53.4% ± 1.2 | +2.7 ± 1.4 |
+| 100% (always) | 53.3% ± 1.3 | +2.6 ± 1.5 |
+| 50%, again on 6,000 fresh battles | 53.6% ± 0.9 | +2.3 ± 0.9 |
+
+So the looser the limit the better, up to about half of current health, after which it makes
+no difference. On top of the trained bot (which was trained without the rule): 53.5% ± 1.1
+head to head, and against the crowd 71.6% against 70.3%, +1.2 ± 1.1 on the same 4,000 battles.
+
+The best bot is now `Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02, hold=True,
+hold_cost=0.5)`. The constructor default stays off so that every earlier number here can be
+reproduced, and the crowd of opponents does not use the rule yet. Open: retrain the learned
+decisions with the rule on (its throw decisions were learned around a player that throws
+early), and give the rule to part of the crowd, since good players do this.
+
 ## Adversarial training (task 14)
 
 An exploiter is a model trained the same way as the bot, but with the bot itself as its

@@ -239,6 +239,19 @@ class Tactics(unittest.TestCase):
         self.assertEqual(Planner().replace(b.views[0]), 2)  # nothing ready: keep Azumarill in reserve
 
 
+    def test_holds_a_ready_move_until_the_opponent_is_about_to_get_one(self):
+        az = Mon(azumarill(), energy=60)  # both charged moves ready
+        foe = Mon(GD.default("jellicent"))
+        b = Battle([az, medicham()], [foe, GD.default("altaria")], Script(), Script())
+        self.assertIn(Planner(switches=False, seed=1).act(b.views[0]), CHARGED)
+        patient = Planner(switches=False, seed=1, hold=True, hold_cost=0.5)
+        self.assertEqual(patient.act(b.views[0]), FAST)  # they are far from a move: keep building energy
+        foe.energy = min(m.energy for m in foe.build.charged)
+        self.assertIn(patient.act(b.views[0]), CHARGED)  # they have one now: no more waiting
+        foe.energy = 0
+        self.assertIn(Planner(switches=False, seed=1, hold=True, hold_cost=0.0).act(b.views[0]), CHARGED)  # any damage is too much
+
+
 class Tracking(unittest.TestCase):
     def test_tracker_follows_a_battle_from_the_screen_alone(self):
         import random

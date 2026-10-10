@@ -209,7 +209,7 @@ second test so results stay comparable over time.
 
 ```python
 from pogo.learner import Learner, QNet
-bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
+bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02, hold=True, hold_cost=0.5)
 ```
 
 It beats the `Planner` by 13.9 ± 1.9 points on random teams (3,000 fresh battles), and a
