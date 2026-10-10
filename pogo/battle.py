@@ -60,8 +60,14 @@ class Mon:
 
 
 def damage(user: Mon, move: Move, target: Mon) -> int:
-    scale = STAGE[user.atk_stage + MAX_STAGE] / STAGE[target.def_stage + MAX_STAGE]
-    return int(user.build.base_damage(move, target.build) * scale) + 1
+    build, other = user.build, target.build
+    base = build._cache.get((move.id, other.uid))
+    if base is None:
+        base = build.base_damage(move, other)
+    a, d = user.atk_stage, target.def_stage
+    if a or d:
+        base = base * (STAGE[a + MAX_STAGE] / STAGE[d + MAX_STAGE])
+    return int(base) + 1
 
 
 def apply_buffs(user: Mon, target: Mon, move: Move) -> None:
@@ -110,16 +116,13 @@ class View:
 
     def __init__(self, battle: Battle, index: int):
         self._battle = battle
-        self._me = battle.sides[index]
+        self.me: Side = battle.sides[index]
         self._foe = battle.sides[1 - index]
 
     @property
-    def me(self) -> Side:
-        return self._me
-
-    @property
     def foe(self) -> Mon:
-        return self._foe.mon
+        foe = self._foe
+        return foe.team[foe.active]
 
     @property
     def foe_shields(self) -> int:
@@ -146,7 +149,7 @@ class View:
         return self._battle.turn
 
     def legal(self) -> list[int]:
-        me, mon = self._me, self._me.mon
+        me, mon = self.me, self.me.mon
         out = [FAST]
         out += [CHARGED[k] for k, move in enumerate(mon.build.charged) if mon.energy >= move.energy]
         if me.switch_wait == 0:
@@ -249,62 +252,95 @@ class Battle:
             apply_buffs(user, target, move)
 
     def step(self) -> None:
-        sides, agents, views = self.sides, self.agents, self.views
+        # Written for speed: this runs millions of times inside play-outs. The rules are in the module header.
+        agents, views = self.agents, self.views
+        s0, s1 = self.sides
 
         # Both players choose at once; a player in the middle of a fast move has no choice.
-        acts = [None, None]
-        for i in (0, 1):
-            if sides[i].busy == 0:
-                acts[i] = agents[i].act(views[i])
-                self._check(i, acts[i])
+        a0 = a1 = None
+        if s0.busy == 0:
+            a0 = agents[0].act(views[0])
+            if a0 != FAST:
+                self._check(0, a0)
+        if s1.busy == 0:
+            a1 = agents[1].act(views[1])
+            if a1 != FAST:
+                self._check(1, a1)
 
-        for i in (0, 1):
-            if acts[i] in SWITCH:
-                side = sides[i]
-                side.mon.atk_stage = side.mon.def_stage = 0
-                side.switch_wait = SWITCH_TURNS
-                self._enter(i, acts[i] - SWITCH[0])
+        first_switch = SWITCH[0]
+        if a0 is not None and a0 >= first_switch:
+            m = s0.team[s0.active]
+            m.atk_stage = m.def_stage = 0
+            s0.switch_wait = SWITCH_TURNS
+            self._enter(0, a0 - first_switch)
+        if a1 is not None and a1 >= first_switch:
+            m = s1.team[s1.active]
+            m.atk_stage = m.def_stage = 0
+            s1.switch_wait = SWITCH_TURNS
+            self._enter(1, a1 - first_switch)
 
-        throwers = [i for i in (0, 1) if acts[i] in CHARGED]
-        if len(throwers) == 2:
-            a, b = sides[0].mon.build.cmp_atk, sides[1].mon.build.cmp_atk
-            if b > a or (a == b and self.rng.random() < 0.5):
-                throwers.reverse()
         thrown = 0
-        for i in throwers:
-            if sides[i].mon.hp > 0:
-                self._throw(i, acts[i] - CHARGED[0])
-                thrown += 1
+        throws0, throws1 = a0 in CHARGED, a1 in CHARGED
+        if throws0 or throws1:
+            order = (0, 1)
+            if throws0 and throws1:
+                a, b = s0.team[s0.active].build.cmp_atk, s1.team[s1.active].build.cmp_atk
+                if b > a or (a == b and self.rng.random() < 0.5):
+                    order = (1, 0)
+            for i in order:
+                action = a0 if i == 0 else a1
+                if action in CHARGED:
+                    side = s0 if i == 0 else s1
+                    if side.team[side.active].hp > 0:
+                        self._throw(i, action - CHARGED[0])
+                        thrown += 1
 
         # Fast moves: start new ones, then land those that finish this turn or were cut short by a charged move.
-        landing = []
-        for i in (0, 1):
-            side = sides[i]
-            if acts[i] == FAST:
-                side.busy = side.mon.build.fast.turns
-            if side.busy:
-                side.busy -= 1
-                if side.busy == 0 or thrown:
-                    side.busy = 0
-                    landing.append(i)
-        hits = []
-        for i in landing:
-            user, target = sides[i].mon, sides[1 - i].mon
-            if user.hp > 0 and target.hp > 0:
-                hits.append((user, target, damage(user, user.build.fast, target)))
+        m0, m1 = s0.team[s0.active], s1.team[s1.active]
+        land0 = land1 = False
+        if a0 == FAST:
+            s0.busy = m0.build.fast.turns
+        if s0.busy:
+            s0.busy -= 1
+            if s0.busy == 0 or thrown:
+                s0.busy = 0
+                land0 = True
+        if a1 == FAST:
+            s1.busy = m1.build.fast.turns
+        if s1.busy:
+            s1.busy -= 1
+            if s1.busy == 0 or thrown:
+                s1.busy = 0
+                land1 = True
+        if land0 or land1:
+            both_up = m0.hp > 0 and m1.hp > 0  # both hits are worked out before either is applied
+            d0 = damage(m0, m0.build.fast, m1) if land0 and both_up else None
+            d1 = damage(m1, m1.build.fast, m0) if land1 and both_up else None
+            if d0 is not None:
                 if self.hits is not None:
-                    self.hits.append((i, user.build.fast.id, hits[-1][2]))
-        for user, target, dealt in hits:
-            target.hp -= dealt
-            user.energy = min(ENERGY_CAP, user.energy + user.build.fast.energy_gain)
+                    self.hits.append((0, m0.build.fast.id, d0))
+                m1.hp -= d0
+                energy = m0.energy + m0.build.fast.energy_gain
+                m0.energy = energy if energy < ENERGY_CAP else ENERGY_CAP
+            if d1 is not None:
+                if self.hits is not None:
+                    self.hits.append((1, m1.build.fast.id, d1))
+                m0.hp -= d1
+                energy = m1.energy + m1.build.fast.energy_gain
+                m1.energy = energy if energy < ENERGY_CAP else ENERGY_CAP
 
         elapsed = 1 + CHARGED_TURNS * thrown
         self.turn += elapsed
-        for side in sides:
-            side.switch_wait = max(0, side.switch_wait - elapsed)
+        wait = s0.switch_wait
+        if wait:
+            s0.switch_wait = wait - elapsed if wait > elapsed else 0
+        wait = s1.switch_wait
+        if wait:
+            s1.switch_wait = wait - elapsed if wait > elapsed else 0
 
-        fainted = [i for i in (0, 1) if sides[i].mon.hp <= 0]
-        if fainted:
+        if m0.hp <= 0 or m1.hp <= 0:
+            sides = self.sides
+            fainted = [i for i in (0, 1) if sides[i].mon.hp <= 0]
             for i in fainted:
                 self._note(i, f"{sides[i].mon.build.name} faints")
             out = [i for i in fainted if sides[i].left() == 0]
@@ -316,8 +352,7 @@ class Battle:
                 if slot not in sides[i].bench():
                     raise ValueError(f"side {i} chose illegal replacement {slot}")
                 self._enter(i, slot)
-            for side in sides:
-                side.busy = 0
+            s0.busy = s1.busy = 0
 
         if self.turn >= MAX_TURNS:
             self.winner = self._on_time()

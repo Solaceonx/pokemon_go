@@ -175,11 +175,32 @@ So the software brain uses about 1 ms of the budget. Speed is not a reason to ch
 
 ## Speed of training
 
-A profile of the training loop (2026-10-10) shows no single bottleneck: about a quarter of
-the time is in the engine's `step`, the rest is spread over many small calls in the
-players. `scripts/decide.py --workers 4` runs four collectors at once and produced 3.8
-times the examples in the same time. Making the engine itself faster is task 11 and has
-not been started.
+Measured 2026-10-10 with `scripts/speedcheck.py`, which also fingerprints every result so
+a speed-up can be shown to change nothing.
+
+- **The engine is not where the time goes.** Engine alone (two button-mashers): about
+  9,900 battles per CPU second. Planner against the crowd: about 245. Learned bot against
+  learned bot: about 127. Nearly all the time is the players looking ahead, which means
+  playing out the rest of the visible battle several times per decision.
+- **Hot-path pass, done.** Rewriting `Battle.step`, `damage` and `View` for speed gave
+  1.40, 1.24 and 1.22 times on those three workloads with identical results.
+- **Several cores, done.** `scripts/decide.py --workers 4` produced 3.8 times the examples
+  in the same time.
+- **What is left** (task 11) is making the look-ahead itself cheaper. That changes what
+  the players decide, so it has to be re-measured for strength, not only for speed.
+
+## How the exploiter differs from the bot
+
+`scripts/habits.py` compares two players over 1,500 battles against each other. Exploiter 2
+against version 3: it throws the dearer move more often when it could throw either (44%
+against 38%, and 34% against 27% into shields) and shields less (65% against 72% of hits
+worth over half its health). Everything else is the same to within a point or two: both
+throw on the best-timed turn about 91% of the time, hold 53 energy on average when
+throwing, and switch about 1.7 times a battle. In that sample the two were level
+(50.2% against 48.9%), so the exploiter's true edge is small.
+
+Both leave about 47 energy on Pokémon that faint, per battle: nearly a charged move
+wasted every game. Nobody has yet looked at whether that can be reduced.
 
 ## Endgames, measured
 
