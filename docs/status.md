@@ -37,8 +37,9 @@ means the same teams and battles for both pilots.
 | What | Result |
 |---|---|
 | Planner against a button-masher | 82-84% |
-| **Per-decision learning, one team (shield and throw decisions)** | **+8.1 ± 1.8 points over the Planner, 3,000 battles** |
-| Per-decision learning, any team (shield, throw, swap, replace) | +13.7 ± 3.4 on a 1,000-battle check after two of three rounds; final test not yet read. See `runs/general-decide.out` |
+| **Per-decision learning, one model for any team (shield, throw, swap, replace)** | **+13.6 ± 1.9 points over the Planner on random teams (71.3% against 57.7%), 3,000 fresh battles** |
+| The same model piloting Melmetal / Jellicent / Altaria | +13.2 ± 1.9 points over the Planner (79.0% against 65.8%), 3,000 fresh battles |
+| Per-decision learning, one team, shield and throw decisions only | +8.1 ± 1.8 points over the Planner, 3,000 battles |
 | Tracker with a perfect simulated camera | Opponent's energy exact on 99% of turns; Planner plays as well from it as from the truth (50.6% ± 4.0) |
 | Tracker with a rough camera (1 look in 5 missed, coarse bars, move not named) | Costs about 7 points (42.7% ± 4.0) |
 
@@ -74,6 +75,12 @@ four or ten more fast moves; stay or swap; which replacement. A small network le
 chance of winning after each option from what the player can see. The bot follows the
 Planner except where the network rates another option clearly higher. The biggest change
 it learned was to hold where the Planner would throw.
+
+The best model so far is `runs/general-decide/q.npz` (one hour of examples: about 184,000
+shield, 64,000 throw, 163,000 swap and 37,000 replacement decisions). Per battle it
+overrules the Planner about 1.9 times on throws, 1.0 on shields, 0.5 on swaps and almost
+never on replacements. All of this is measured against the Planner and its variations;
+nothing yet says how it does against an outside opponent.
 
 ## Strategy guidance from the project owner (a former top player)
 
