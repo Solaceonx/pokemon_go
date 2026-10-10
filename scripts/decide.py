@@ -132,7 +132,8 @@ def main() -> None:
     print("teams: " + (f"half from {args.teams}, half random" if args.teams else "random threes"))
     if target is not None:
         print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
-    print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""), flush=True)
+    else:
+        print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""), flush=True)
 
     def versus_planner(q, margin, battles, seed, on_team, against=None):
         pilots = []
