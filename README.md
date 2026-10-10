@@ -25,7 +25,8 @@ Do these in order. Everything runs from the repository root.
    It must print `108 of 108 PvPoke battles reproduced exactly`.
 4. Run the measurement in [How to measure a change](#how-to-measure-a-change). It takes
    about five seconds and shows the current best bot beating the hand-written one.
-5. Pick a task from [What to do next](#what-to-do-next).
+5. Pick a task from [`docs/tasks.md`](docs/tasks.md), which has a self-contained brief
+   for each piece of outstanding work, or from [What to do next](#what-to-do-next).
 
 If you cannot run code, you can still help: read the status file and the code, and
 propose changes as a patch plus the exact command that would measure them. Do not state
@@ -85,7 +86,7 @@ battles was tried and did not work.
 | `tests/test_rules.py` | 24 tests of stats, damage, turn rules, tracker and learner |
 | `data/` | Game data from PvPoke, plus `teams.json` and `matchups.json` from the team search |
 | `runs/` | Trained models and the printed output of each training run |
-| `docs/` | `status.md` (read first), `what_to_see.md` (what recognition must read), `agent_instructions.md` (brief for an agent turning footage into looks) |
+| `docs/` | `status.md` (read first), `tasks.md` (outstanding work, one brief per task), `what_to_see.md` (what recognition must read), `agent_instructions.md` (brief for an agent turning footage into looks) |
 | `handoff/` | Self-contained briefs and bundles for agents that cannot see this repository |
 | `games/example/` | A worked example of the tracker's input and output files |
 
@@ -238,6 +239,15 @@ In order. `docs/status.md` has the reasoning.
 6. **The phone.** Run `scripts/probe.py --drag` with iPhone Mirroring open. Whether
    synthetic drags reach the phone is the open question; ball throws and charged-move
    swipes need them.
+
+## Working together
+
+- Before starting a task, put your name after its title in `docs/tasks.md` and push that.
+- Run `git pull` before you start and again before you push.
+- Work on a branch named for the task (`git switch -c task-7-stats-guess`), push the
+  branch, and open a pull request. Small fixes to documents can go straight to `main`.
+- Before pushing, run `python3 -m unittest discover tests` and
+  `python3 scripts/check_pvpoke.py`. Both must pass.
 
 ## Working rules
 
