@@ -327,13 +327,14 @@ the range all the time is open; it needs more recorded games.
 
 **Steps, frame by frame.** `assemble.py` now follows each bar on every frame (median of the
 last ten frames; a step is a fall of two pixels or more; a step from a misread is taken back
-when half a second of readings sit above it). Hits of 4 pixels or more come out clean:
+when half a second of readings sit above it; a bar that was lower and reads full is an attack
+animation covering it, and is skipped). Hits of 4 pixels or more come out clean:
 
 | Hitting | Steps seen | Size, pixels of 138 | Gap between steps |
 |---|---|---|---|
 | Cramorant on Altaria (Peck: 4, every 2 turns) | 11 | 4 in 8 of them; one of 23 is the spat-out prey | 2 turns in 5 of 7 |
 | Oinkologne on Melmetal (Mud Slap: 13, every 3 turns) | 2 | 12 and 13 | 3 turns |
-| Talonflame on Jellicent (Incinerate, attack raised) | 4 | 12, 12, 26 (two together), 4 | too few |
+| Talonflame on Jellicent (Incinerate: 11 to 13 with attack raised, every 5 turns) | 4 | 12, 12, 14, and one of 4 | 5 turns, once |
 | Oinkologne on Altaria (Mud Slap: 3) | 5 | 2 or 3 | 1, 2 and 3 turns: at the noise floor |
 
 Steps of 2 or 3 pixels (our Altaria's Dragon Breath, Mud Slap on a double resist) are at the

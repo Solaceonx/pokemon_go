@@ -93,6 +93,8 @@ def follow(side):
     for r in rows:
         if r[key] is None: continue
         t = r["t"]
+        if level is not None and level <= W - 6 and r[key] * W >= W - 1 and not any(0 <= t - c <= 6 for c in changes):
+            continue  # a bar that was lower cannot be full again: an attack animation is covering it
         if recent and t - recent[-1][0] > 1.0: recent.clear(); longer.clear()  # the bar was away: start afresh
         recent.append((t, round(r[key] * W))); longer.append(recent[-1][1])
         if len(recent) < 6: continue
