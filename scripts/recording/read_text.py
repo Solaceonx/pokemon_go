@@ -6,7 +6,7 @@ from local_ocr import LocalOCR
 video, out_path, rate = sys.argv[1], sys.argv[2], float(sys.argv[3])
 ocr = LocalOCR()
 c = av.open(video); v = c.streams.video[0]
-t0 = time.time(); next_t = 20.0; n = 0
+t0 = time.time(); next_t = float(sys.argv[4]) if len(sys.argv) > 4 else 0.0; n = 0  # optional: second to start from
 with open(out_path, "w") as out:
     for frame in c.decode(v):
         t = float(frame.pts * v.time_base)

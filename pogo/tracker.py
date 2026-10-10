@@ -62,6 +62,7 @@ class Foe:
         self.base = (0, 0)  # their energy range when the count last restarted (at their last charged move)
         self.lost: list[tuple[Mon | None, int]] = []  # since then: my Pokémon and the health it lost, or (None, hits)
         self.clock = 0  # fighting turns it has spent on the field since the count last restarted
+        self.ruled_out: set[str] = set()  # fast moves that could not have paid for a charged move it threw
         self.misfit: dict[str, float] = {}  # how badly each fast move it could have fits those steps; lower is better
 
     def gain(self, amount: int) -> None:
@@ -343,7 +344,7 @@ class Tracker:
         if sum(1 for step in foe.steps if step[2] > 0) < 3:
             return
         build = foe.mon.build
-        options = [self.gd.moves[i] for i in self.gd.species[build.species_id]["fastMoves"] if i in self.gd.moves]
+        options = [m for m in self._fast_options(foe) if m.id not in foe.ruled_out]
         stretches: list[tuple[Mon, list[tuple[int, int]]]] = []  # running totals of turns and health lost
         for target, turns, lost, starts in foe.steps:
             if starts or not stretches:
@@ -374,23 +375,43 @@ class Tracker:
             return
         if sum(1 for step in foe.steps if step[2] > 0) < 4:
             return  # dropping the usual move takes a little more
-        foe.mon.build = self.gd.build(build.species_id, [best.id, *(m.id for m in build.charged)], level=build.level,
+        self._set_fast(t, foe, best)
+
+    def _fast_options(self, foe: Foe) -> list:
+        return [self.gd.moves[i] for i in self.gd.species[foe.mon.build.species_id]["fastMoves"] if i in self.gd.moves]
+
+    def _set_fast(self, t: float, foe: Foe, move) -> None:
+        """Change the fast move we believe they have, and count their energy again from where the count restarted."""
+        build = foe.mon.build
+        foe.mon.build = self.gd.build(build.species_id, [move.id, *(m.id for m in build.charged)], level=build.level,
                                       ivs=build.ivs, allow_forms=True)
         foe.fast_from = "inferred"
-        # Count their energy again with the right move, from where the count last restarted.
         gained, left_over = 0, 0.0
         for target, lost in foe.lost:
             if target is None:
                 hits = lost
             else:
-                hits, left_over = _whole_hits(left_over + lost, damage(foe.mon, best, target))
-            gained += hits * best.energy_gain
+                hits, left_over = _whole_hits(left_over + lost, damage(foe.mon, move, target))
+            gained += hits * move.energy_gain
         foe.lo, foe.hi = foe.base
         foe.gain(gained)
         if foe is self.foe:
             self.taken, self.beat = left_over, self.turn
-        self._note(t, "foe_fast_learned", species=build.species_id, move=best.id,
-                   misfit={k: round(v, 2) for k, v in scores.items()})
+        self._note(t, "foe_fast_learned", species=build.species_id, move=move.id, misfit=foe.misfit,
+                   ruled_out=sorted(foe.ruled_out))
+
+    def _rule_out_fast(self, t: float, foe: Foe, cost: int) -> None:
+        """They just paid this much for a charged move. A fast move that could not have earned it, even landing
+        without a pause for every turn they have been on the field, is not the one they have."""
+        options = self._fast_options(foe)
+        can_pay = [m for m in options if foe.base[1] + (foe.clock // m.turns + 1) * m.energy_gain >= cost]
+        if not can_pay or len(can_pay) == len(options):
+            return
+        foe.ruled_out |= {m.id for m in options} - {m.id for m in can_pay}
+        if foe.mon.build.fast.id in foe.ruled_out:
+            self._set_fast(t, foe, min(can_pay, key=lambda m: foe.misfit.get(m.id, 9.0)))
+        elif len(can_pay) == 1:
+            foe.fast_from = "inferred"
 
     def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int) -> None:
         """Split a drop in my health into their fast moves and, if they threw one, their charged move."""
@@ -438,6 +459,7 @@ class Tracker:
             best = min(((abs(drop - damage(foe.mon, m, mon) - j * per_hit), k, j)
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
             moves, extra = [moves[best[1]]], best[2]
+        self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
         before, by_clock = [foe.lo, foe.hi], foe.by_clock()
         if foe.hi < min(m.energy for m in moves) <= by_clock:
             foe.hi = by_clock  # the count missed hits while the bars were hidden; the clock is the ceiling

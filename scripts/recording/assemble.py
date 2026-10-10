@@ -7,8 +7,10 @@ texts = [json.loads(l) for l in open(text_path)]
 gm = json.load(open("data/gamemaster.json"))
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
-OURS = ["Melmetal", "Altaria", "Jellicent"]
-T0 = 24.7
+KNOWN = {  # movesets we have been told; any other Pokémon of ours gets the usual moves until it shows otherwise
+    "Melmetal": {"fast": "Thunder Shock", "charged": ["Double Iron Bash", "Dynamic Punch"]},
+    "Altaria": {"fast": "Dragon Breath", "charged": ["Sky Attack", "Flamethrower"]},
+}
 canon = lambda s: re.sub(r"[^a-z]", "", s.lower())
 def nearest(word, options, cutoff=0.72):
     table = {}
@@ -29,6 +31,10 @@ def commonest(vals):
     return best / W if near >= 0.4 * len(vals) else None
 for r in rows: r["mh"], r["oh"] = health(r["m"]), health(r["o"])
 bar_times = [r["t"] for r in rows if r["mh"] is not None or r["oh"] is not None]
+# Our Pokémon are the names the header shows on our side; the fight starts when both bars are first on screen.
+named = collections.Counter(nearest(r["m"]["sp"], species) for r in rows if r["m"]["sp"])
+OURS = [name for name, n in named.most_common() if name and n >= 5][:3]  # the header is read once a second
+T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) - 0.3, 1)
 
 # events from the announcement text
 gos, seqs, prompts, seq = [], [], [], None
@@ -157,12 +163,11 @@ if last and last[-1]["side"] == "mine":  # the battle ended on our charged move:
                   "note": "from the result screen, not a fighting frame"})
 
 out.mkdir(parents=True, exist_ok=True)
-team = {"pokemon": [{"species": "Melmetal", "fast": "Thunder Shock", "charged": ["Double Iron Bash", "Dynamic Punch"]},
-                    {"species": "Altaria", "fast": "Dragon Breath", "charged": ["Sky Attack", "Flamethrower"]},
-                    {"species": "Jellicent"}]}
+order = list(dict.fromkeys([f["name"] for f in field["mine"]] + OURS))  # in the order they came out
+team = {"pokemon": [{"species": name, **KNOWN.get(name, {})} for name in order[:3]]}
 (out / "team.json").write_text(json.dumps(team, indent=2) + "\n")
 (out / "observations.jsonl").write_text("".join(json.dumps(l) + "\n" for l in looks))
-print(f"{len(looks)} looks over {end - T0:.0f}s of battle")
+print(f"fight starts {T0}s into the recording; ours: {', '.join(order[:3])}; {len(looks)} looks over {end - T0:.0f}s of battle")
 def on_field(side, t):
     on = [f for f in field[side] if f["t"] <= t]
     return on[-1]["name"] if on else "?"
