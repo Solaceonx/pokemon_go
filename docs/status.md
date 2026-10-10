@@ -163,6 +163,30 @@ Altaria / Jellicent 64.7% ± 3.8 (4th of the 25 fully tested). Tinkaton is on 39
 saved teams, Shadow Annihilape on 31, Corviknight on 25. "Best" means best with this
 pilot against this field; the `seen` counts for teams met in real games are all still zero.
 
+### Teams better than the owner's, in simulation (2026-10-10)
+
+`python3 scripts/better_teams.py` plays the owner's team (with their real moves), the ten best
+teams from the search above, and sixteen one-change versions of the owner's team on the same
+1,000 battles, then replays the leaders on 3,000 fresh battles with every choice of lead.
+Pilot: the trained bot. Opponents: the usual varied crowd, on teams drawn half from the
+good-team list and half at random from the top 50. Second round only:
+
+| Team (best lead first) | Wins | Against the owner's team, same battles |
+|---|---|---|
+| Corviknight / Tinkaton / Mandibuzz | 83.0% ± 1.3 | +6.5 ± 2.0 |
+| Mandibuzz / Tinkaton / Annihilape | 82.4% ± 1.4 | +5.9 ± 2.0 |
+| Jellicent / Melmetal / Tinkaton (Altaria changed for Tinkaton) | 81.8% ± 1.4 | +5.3 ± 1.9 |
+| Altaria / Shadow Charjabug / Corviknight | 79.5% ± 1.4 | +3.0 ± 2.0 |
+| Altaria / Charjabug / Corviknight | 78.5% ± 1.5 | +2.0 ± 2.0 |
+| Jellicent / Melmetal / Altaria (the owner's) | 76.5% ± 1.5 | |
+
+For the owner's team the lead hardly matters here (76.3, 75.9, 76.5). Limits: the field is
+PvPoke's top 50 for the open Great League with usual moves and IVs, while the owner is playing
+the Mega Edition of the league and has met Cramorant, Oinkologne, Talonflame, Stunfisk,
+Quagsire, Snorlax, Dusclops and Mimikyu, most of which are not in that field; Mega Pokémon and
+Pokémon that change form are not simulated. A field built from teams actually met is the fix,
+and needs many more tracked battles.
+
 ## Latency
 
 One game turn is 500 ms. The whole path from something appearing on screen to the tap
