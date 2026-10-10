@@ -2,8 +2,14 @@
 import bisect, collections, difflib, json, re, statistics, sys
 from pathlib import Path
 readings, text_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
-rows = [json.loads(l) for l in open(readings)]
-texts = [json.loads(l) for l in open(text_path)]
+def option(name, default):  # e.g. --every 4 keeps one frame in four, to try lower frame rates on a full reading
+    return type(default)(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
+import gzip
+lines = lambda path: (gzip.open(path, "rt") if str(path).endswith(".gz") else open(path))
+rows = [json.loads(l) for l in lines(readings)][::option("--every", 1)]
+texts = [json.loads(l) for l in lines(text_path)][::option("--text-every", 1)]
+FPS = 1.0 / statistics.median(b["t"] - a["t"] for a, b in zip(rows, rows[1:1000]))
+SIXTH, HALF = max(3, round(FPS / 6)), max(4, round(FPS / 2))  # frames in a sixth of a second and in half a second
 gm = json.load(open("data/gamemaster.json"))
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
@@ -30,12 +36,36 @@ def commonest(vals):
     near = px[best] + px.get(best - 1, 0) + px.get(best + 1, 0)
     return best / W if near >= 0.4 * len(vals) else None
 for r in rows: r["mh"], r["oh"] = health(r["m"]), health(r["o"])
+# A recording can hold several battles. One starts when both bars appear after 25 s without any, and ends at
+# its result screen or, failing that, at the last frame with a bar before the next such gap.
+battles, last_bar, current = [], None, None
+for r in rows:
+    bar, both = r["mh"] is not None or r["oh"] is not None, r["mh"] is not None and r["oh"] is not None
+    if current and bar and last_bar is not None and r["t"] - last_bar > 25:
+        current = None  # a long gap: that battle was over at the last bar
+    if current is None and both and (not battles or r["t"] - battles[-1]["end"] > 8):
+        current = {"start": r["t"], "end": r["t"]}; battles.append(current)
+    if current:
+        if r.get("result") or r["phase"] == "result":
+            current["end"] = r["t"]; current = None
+        elif bar:
+            current["end"] = r["t"]
+    if bar: last_bar = r["t"]
+battles = [b for b in battles if b["end"] - b["start"] > 20]
+if "--count" in sys.argv:
+    print(len(battles)); sys.exit(0)
+which = option("--battle", 1)
+if not 1 <= which <= len(battles):
+    sys.exit(f"no battle {which} in this recording ({len(battles)} found)")
+span = (battles[which - 1]["start"] - 6.0, battles[which - 1]["end"] + 0.5)
+rows = [r for r in rows if span[0] <= r["t"] <= span[1]]
+texts = [s for s in texts if span[0] <= s["t"] <= span[1]]
 bar_times = [r["t"] for r in rows if r["mh"] is not None or r["oh"] is not None]
 # Our Pokémon are the names the header shows on our side; the fight starts when both bars are first on screen.
 named = collections.Counter(nearest(r["m"]["sp"], species) for r in rows if r["m"]["sp"])
-OURS = [name for name, n in named.most_common() if name and n >= 5][:3]  # the header is read once a second
+OURS = [name for name, n in named.most_common() if name and n >= 3][:3]  # the header is read every second or two
 theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows if r["o"]["sp"])
-THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 5][:3]
+THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 3][:3]
 # The bars are on screen for about a second before the first fast moves begin.
 T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) + 0.7, 1)
 
@@ -78,7 +108,7 @@ def steady(key, what):
         v = r[key][what]
         if v is None: continue
         value, run = (value, run + 1) if v == value else (v, 1)
-        if run == 30: out.append((r["t"], v))
+        if run == HALF: out.append((r["t"], v))
     return out
 left_shown = {"m": steady("m", "left"), "o": steady("o", "left")}
 def left_at(key, t):
@@ -116,7 +146,7 @@ def header_shields(key):
         v = r[key]["sh"]
         if v is None: continue
         value, run = (value, run + 1) if v == value else (v, 1)
-        if run == 30: out.append((r["t"], v))
+        if run == HALF: out.append((r["t"], v))
     return out
 header = {"mine": header_shields("m"), "theirs": header_shields("o")}
 blocked = {"mine": 0, "theirs": 0}
@@ -128,8 +158,8 @@ def follow(side):
     believed only just after a change of Pokémon on that side."""
     key = "mh" if side == "mine" else "oh"
     changes = [f["t"] - ENTER for f in field[side]]
-    times, values, steps, recent, level = [], [], [], collections.deque(maxlen=10), None
-    longer = collections.deque(maxlen=30)
+    times, values, steps, recent, level = [], [], [], collections.deque(maxlen=SIXTH), None
+    longer = collections.deque(maxlen=HALF)
     for r in rows:
         if r[key] is None: continue
         t = r["t"]
@@ -137,18 +167,18 @@ def follow(side):
             continue  # a bar that was lower cannot be full again: an attack animation is covering it
         if recent and t - recent[-1][0] > 1.0: recent.clear(); longer.clear()  # the bar was away: start afresh
         recent.append((t, round(r[key] * W))); longer.append(recent[-1][1])
-        if len(recent) < 6: continue
+        if len(recent) < max(2, round(0.6 * SIXTH)): continue
         middle = statistics.median_low(v for _, v in recent)
         if level is None or (middle > level + 2 and any(0 <= t - c <= 6 for c in changes)):
             level = middle
-        elif len(longer) == 30 and sorted(longer)[3] > level + 2:
+        elif len(longer) == HALF and sorted(longer)[round(0.1 * HALF)] > level + 2:
             # Half a second of readings all above the level: the level came from a misread. Take the step back.
             wrong = statistics.median_low(longer) - level
             level += wrong
             while steps and wrong > 0:
                 taken = min(wrong, steps[-1][1]); steps[-1][1] -= taken; wrong -= taken
                 if steps[-1][1] <= 0: steps.pop()
-            values[-30:] = [max(v, level) for v in values[-30:]]
+            values[-HALF:] = [max(v, level) for v in values[-HALF:]]
         elif middle <= level - 2:
             when = next(tt for tt, v in recent if v <= level - 1)
             if steps and when - steps[-1][0] < 0.3: steps[-1][1] += level - middle  # one hit, still draining
@@ -219,7 +249,7 @@ order = list(dict.fromkeys([f["name"] for f in field["mine"]] + OURS))  # in the
 team = {"pokemon": [{"species": name, **KNOWN.get(name, {})} for name in order[:3]]}
 (out / "team.json").write_text(json.dumps(team, indent=2) + "\n")
 (out / "observations.jsonl").write_text("".join(json.dumps(l) + "\n" for l in looks))
-print(f"fight starts {T0}s into the recording; ours: {', '.join(order[:3])}; {len(looks)} looks over {end - T0:.0f}s of battle")
+print(f"battle {which} of {len(battles)}; fight starts {T0}s into the recording; ours: {', '.join(order[:3])}; {len(looks)} looks over {end - T0:.0f}s of battle")
 def on_field(side, t):
     on = [f for f in field[side] if f["t"] <= t]
     return on[-1]["name"] if on else "?"
@@ -243,7 +273,7 @@ for side in ("mine", "theirs"):
 # The bare timeline, in seconds since the fight started, for scripts that reason about timing (rhythm.py).
 rel = lambda t: round(t - T0, 2)
 (out / "timeline.json").write_text(json.dumps({
-    "end": rel(end),
+    "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
     "field": {side: [{"t": rel(f["t"] - ENTER), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
     "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},

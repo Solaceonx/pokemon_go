@@ -131,6 +131,8 @@ def main() -> int:
     events = Counter(json.loads(line)["event"] for line in (folder / "events.jsonl").read_text().splitlines())
     print(f"{looks} looks read, {problems} rejected; events: " + ", ".join(f"{n} {e}" for e, n in sorted(events.items())))
     print(f"unexplained changes: {tracker.warnings} (each is listed in events.jsonl)")
+    (folder / "track.json").write_text(json.dumps({"looks": looks, "rejected": problems, "unexplained": tracker.warnings,
+                                                    "energy": energy, "events": dict(sorted(events.items()))}) + "\n")
     return 1 if problems else 0
 
 
