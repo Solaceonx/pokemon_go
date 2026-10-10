@@ -219,3 +219,13 @@ for side, other in (("mine", "theirs"), ("theirs", "mine")):
 print("charged moves: " + "; ".join(f"{q['start'] - T0:.0f}s {q['user'] or q['side']} {q['move'] or '?'}{' (blocked)' if q['blocked'] else ''}, {q['resume'] - q['start']:.1f}s" for q in seqs))
 for side in ("mine", "theirs"):
     print(f"{side}: " + ", ".join(f"{f['t'] - T0:.0f}s {f['name']}{' (after a faint)' if f['faint'] else ''}" for f in field[side]))
+
+# The bare timeline, in seconds since the fight started, for scripts that reason about timing (rhythm.py).
+rel = lambda t: round(t - T0, 2)
+(out / "timeline.json").write_text(json.dumps({
+    "end": rel(end),
+    "field": {side: [{"t": rel(f["t"] - 0.8), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
+    "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
+    "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
+    "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
+}) + "\n")
