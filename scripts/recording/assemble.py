@@ -1,5 +1,5 @@
 """Turn the frame readings and the announcement text of one recording into looks for the tracker."""
-import collections, difflib, json, re, statistics, sys
+import bisect, collections, difflib, json, re, statistics, sys
 from pathlib import Path
 readings, text_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
 rows = [json.loads(l) for l in open(readings)]
@@ -80,8 +80,44 @@ def header_shields(key):
     return out
 header = {"mine": header_shields("m"), "theirs": header_shields("o")}
 blocked = {"mine": 0, "theirs": 0}
+def follow(side):
+    """Follow one health bar frame by frame: the level it sits at, and each step down with its time and size.
+
+    Hit flashes move single frames by a few pixels, so the level is the median of the last ten frames, and a
+    step counts once that median has fallen by two pixels or more. Health cannot rise, so a higher level is
+    believed only just after a change of Pokémon on that side."""
+    key = "mh" if side == "mine" else "oh"
+    changes = [f["t"] - 0.8 for f in field[side]]
+    times, values, steps, recent, level = [], [], [], collections.deque(maxlen=10), None
+    longer = collections.deque(maxlen=30)
+    for r in rows:
+        if r[key] is None: continue
+        t = r["t"]
+        if recent and t - recent[-1][0] > 1.0: recent.clear(); longer.clear()  # the bar was away: start afresh
+        recent.append((t, round(r[key] * W))); longer.append(recent[-1][1])
+        if len(recent) < 6: continue
+        middle = statistics.median_low(v for _, v in recent)
+        if level is None or (middle > level + 2 and any(0 <= t - c <= 6 for c in changes)):
+            level = middle
+        elif len(longer) == 30 and sorted(longer)[3] > level + 2:
+            # Half a second of readings all above the level: the level came from a misread. Take the step back.
+            wrong = statistics.median_low(longer) - level
+            level += wrong
+            while steps and wrong > 0:
+                taken = min(wrong, steps[-1][1]); steps[-1][1] -= taken; wrong -= taken
+                if steps[-1][1] <= 0: steps.pop()
+            values[-30:] = [max(v, level) for v in values[-30:]]
+        elif middle <= level - 2:
+            when = next(tt for tt, v in recent if v <= level - 1)
+            if steps and when - steps[-1][0] < 0.3: steps[-1][1] += level - middle  # one hit, still draining
+            else: steps.append([when, level - middle])
+            level = middle
+        times.append(t); values.append(level)
+    return times, values, steps
+level_times, level_values, level_steps = {}, {}, {}
+for side in ("mine", "theirs"):
+    level_times[side], level_values[side], level_steps[side] = follow(side)
 looks, left, shields, emitted = [], {"mine": 3, "theirs": 3}, {"mine": 2, "theirs": 2}, set()
-seen_hp, risen, dropped = {}, {"mine": 0, "theirs": 0}, {"mine": 0, "theirs": 0}
 current = {"mine": None, "theirs": None}
 n_bins = int((end - T0) * 2)
 for b in range(n_bins + 1):
@@ -94,17 +130,9 @@ for b in range(n_bins + 1):
             if on[-1]["faint"]: left[side] -= 1
             current[side] = on[-1]
         if current[side]: look[f"{prefix}_species"] = current[side]["name"]
-        key = "mh" if side == "mine" else "oh"
-        vals = [r[key] for r in rows if t - 0.5 < r["t"] <= t and r[key] is not None]
-        value = commonest(vals) if len(vals) >= 5 else None
-        name = current[side]["name"] if current[side] else None
-        if value is not None and name:
-            before = seen_hp.get((side, name))
-            if before is not None and value > before + 2.5 / W and risen[side] < 4:  # health cannot rise: a misread
-                risen[side] += 1; dropped[side] += 1; value = None
-            else:
-                risen[side] = 0; seen_hp[side, name] = value
-        if value is not None: look[f"{prefix}_hp"] = round(value, 4)
+        at = bisect.bisect_right(level_times[side], t) - 1
+        if at >= 0 and t - level_times[side][at] <= 0.5:  # the bar was on screen in this half-second
+            look[f"{prefix}_hp"] = round(level_values[side][at] / W, 4)
     for k, q in enumerate(seqs):
         if k not in emitted and q["resume"] <= t:
             emitted.add(k)
@@ -132,7 +160,23 @@ team = {"pokemon": [{"species": "Melmetal", "fast": "Thunder Shock", "charged": 
                     {"species": "Jellicent"}]}
 (out / "team.json").write_text(json.dumps(team, indent=2) + "\n")
 (out / "observations.jsonl").write_text("".join(json.dumps(l) + "\n" for l in looks))
-print(f"{len(looks)} looks over {end - T0:.0f}s of battle; readings set aside because health rose: ours {dropped['mine']}, theirs {dropped['theirs']}")
+print(f"{len(looks)} looks over {end - T0:.0f}s of battle")
+def on_field(side, t):
+    on = [f for f in field[side] if f["t"] <= t]
+    return on[-1]["name"] if on else "?"
+print("fast-move steps seen in the health bars (size in pixels of 138: how many; gap to the next step in turns: how many)")
+for side, other in (("mine", "theirs"), ("theirs", "mine")):
+    groups = collections.defaultdict(lambda: [collections.Counter(), collections.Counter()])
+    quiet = [s for s in level_steps[side] if not any(q["start"] <= s[0] < q["resume"] + 0.7 for q in seqs)]
+    for (t, size), nxt in zip(quiet, quiet[1:] + [None]):
+        pair = f"{on_field(other, t)} hitting {on_field(side, t)}"
+        groups[pair][0][size] += 1
+        if nxt and nxt[0] - t < 3.2 and on_field(other, nxt[0]) == on_field(other, t) and on_field(side, nxt[0]) == on_field(side, t) \
+                and not any(t < q["start"] < nxt[0] for q in seqs):
+            groups[pair][1][round((nxt[0] - t) / 0.5)] += 1
+    for pair, (sizes, gaps) in groups.items():
+        print(f"  {pair}: {sum(sizes.values())} steps; size " + " ".join(f"{k}:{v}" for k, v in sorted(sizes.items()))
+              + "; gap " + " ".join(f"{k}:{v}" for k, v in sorted(gaps.items())))
 print("charged moves: " + "; ".join(f"{q['start'] - T0:.0f}s {q['user'] or q['side']} {q['move'] or '?'}{' (blocked)' if q['blocked'] else ''}, {q['resume'] - q['start']:.1f}s" for q in seqs))
 for side in ("mine", "theirs"):
     print(f"{side}: " + ", ".join(f"{f['t'] - T0:.0f}s {f['name']}{' (after a faint)' if f['faint'] else ''}" for f in field[side]))

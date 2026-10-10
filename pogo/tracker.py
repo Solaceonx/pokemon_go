@@ -439,6 +439,8 @@ class Tracker:
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
             moves, extra = [moves[best[1]]], best[2]
         before, by_clock = [foe.lo, foe.hi], foe.by_clock()
+        if foe.hi < min(m.energy for m in moves) <= by_clock:
+            foe.hi = by_clock  # the count missed hits while the bars were hidden; the clock is the ceiling
         foe.spend([m.energy for m in moves])
         if extra:
             foe.gain(extra * fast.energy_gain)

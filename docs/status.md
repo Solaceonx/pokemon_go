@@ -306,21 +306,41 @@ opponent and, at 2 of their 5 charged moves, believed they could not afford the 
 Oinkologne was assumed to have Take Down; the steps in our health bars (about 13 on Melmetal
 and 3 on Altaria, every 1.5 s) fit only Mud Slap. The tracker now works the fast move out
 from the size and rhythm of those steps (`Tracker._fit_fast`): it kept Peck and Incinerate,
-and replaced Take Down with Mud Slap 20 s into the battle, recounting the energy. With that,
-its count says they could afford all 5 charged moves:
+and replaced Take Down with Mud Slap 20 s into the battle, recounting the energy.
 
-| Their charged move | Energy by counting hits | Energy by the clock | Cost |
+Their energy just before each charged move, two ways:
+
+| Their charged move | By counting hits | By the clock | Cost |
 |---|---|---|---|
 | Oinkologne, Body Slam | 50 | 40 | 40 |
-| Cramorant, Dive | 40 | 56 | 40 |
-| Cramorant, Dive | 48 | 72 | 40 |
+| Cramorant, Dive | 32 | 56 | 40 |
+| Cramorant, Dive | 48 to 64 | 80 | 40 |
 | Talonflame, Flame Charge | 80 | 100 | 50 |
 | Talonflame, Flame Charge | 70 | 70 | 50 |
 
-"By the clock" is a second estimate that assumes they never pause between fast moves
-(`energy_by_clock` in the state file). The two differ by up to 24 and the true number is
-not on screen, so which is closer is open; frame-by-frame step detection in the reader
-would settle it. In simulation, with a perfect camera, the fast move was worked out 148
+"By the clock" assumes they never pause between fast moves (`energy_by_clock` in the state
+file). Counting hits misses any that land while the bars are hidden (the start of the battle,
+and a few seconds after every switch or faint), so the count is a floor and the clock a
+ceiling. The first Dive shows it: the count (32) could not pay for it. When that happens the
+tracker now takes the clock as the top of the range. Whether to use the clock as the top of
+the range all the time is open; it needs more recorded games.
+
+**Steps, frame by frame.** `assemble.py` now follows each bar on every frame (median of the
+last ten frames; a step is a fall of two pixels or more; a step from a misread is taken back
+when half a second of readings sit above it). Hits of 4 pixels or more come out clean:
+
+| Hitting | Steps seen | Size, pixels of 138 | Gap between steps |
+|---|---|---|---|
+| Cramorant on Altaria (Peck: 4, every 2 turns) | 11 | 4 in 8 of them; one of 23 is the spat-out prey | 2 turns in 5 of 7 |
+| Oinkologne on Melmetal (Mud Slap: 13, every 3 turns) | 2 | 12 and 13 | 3 turns |
+| Talonflame on Jellicent (Incinerate, attack raised) | 4 | 12, 12, 26 (two together), 4 | too few |
+| Oinkologne on Altaria (Mud Slap: 3) | 5 | 2 or 3 | 1, 2 and 3 turns: at the noise floor |
+
+Steps of 2 or 3 pixels (our Altaria's Dragon Breath, Mud Slap on a double resist) are at the
+noise floor at this size: their sizes and gaps scatter. Reading the bar at full resolution
+(it is about 330 pixels wide in the recording, 138 after the reader's rescale) is the fix.
+
+In simulation, with a perfect camera, the fast move was worked out 148
 times in 60 battles and never wrongly; with the rough camera, 1 of 140 was wrong.
 
 Changes made to the tracker for this: it follows Pokémon that change form (Cramorant), learns
