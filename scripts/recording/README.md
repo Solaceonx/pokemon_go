@@ -34,13 +34,16 @@ tracker's own count.
 ## The screen reader
 
 Reading uses the reader on the `screen-reader-video-pipeline` branch, which is not merged
-here. Check that branch out somewhere, make a Python 3.12 environment with `av`, `opencv`,
-`onnxruntime` and `rapidocr-onnxruntime`, and point two variables at them:
+here. `run.py` looks for it in `.reader/` at the top of the project (not in git):
 
 ```bash
-export READER_PYTHON=/path/to/py312/bin/python
-export READER_DIR=/path/to/that/checkout/screen_reader
+git worktree add .reader/branch origin/screen-reader-video-pipeline
+conda create -y -p .reader/py312 python=3.12
+.reader/py312/bin/pip install av opencv-python onnxruntime rapidocr-onnxruntime==1.4.4
 ```
+
+To keep it somewhere else, set `READER_PYTHON` (that Python) and `READER_DIR` (the branch's
+`screen_reader` folder).
 
 `run.py` copies the layout file `lyxia-great.json` into the reader's `profiles/` the first
 time. That layout is the reader's own iPhone layout with a full list of species names; it has

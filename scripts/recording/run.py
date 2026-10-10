@@ -6,7 +6,8 @@ For each recording: read it once (slow; kept, compressed, in games/<name>/raw/),
 and for each battle assemble the looks, run the tracker and apply the checks in verdict.py.
 Battles go to games/<name>-1, games/<name>-2, ...; the report goes to games/report.json.
 
-Reading needs the screen reader, which is not part of this branch (see README.md here):
+Reading needs the screen reader, which is not part of this branch (see README.md here). It is looked for in
+.reader/ at the top of the project, or wherever these point:
   READER_PYTHON  a Python 3.12 with av, opencv, onnxruntime and rapidocr-onnxruntime
   READER_DIR     the screen_reader folder of the screen-reader-video-pipeline branch
 Everything after reading is plain python3 and can be re-run at any time without the reader.
@@ -31,9 +32,12 @@ def run(*cmd, cwd=ROOT, env=None):
 
 def read(video: Path, raw: Path, extra: list) -> dict:
     """Run the screen reader over one recording and keep its output compressed."""
-    python, reader = os.environ.get("READER_PYTHON"), os.environ.get("READER_DIR")
-    if not python or not reader:
-        raise RuntimeError("set READER_PYTHON and READER_DIR to read new recordings (see scripts/recording/README.md)")
+    # By default the reader lives in .reader/ at the top of the project (not in git): py312 is its Python
+    # environment and branch is a checkout of screen-reader-video-pipeline.
+    python = os.environ.get("READER_PYTHON") or str(ROOT / ".reader" / "py312" / "bin" / "python")
+    reader = os.environ.get("READER_DIR") or str(ROOT / ".reader" / "branch" / "screen_reader")
+    if not Path(python).exists() or not Path(reader).exists():
+        raise RuntimeError("the screen reader is not set up: see scripts/recording/README.md")
     profiles = Path(reader) / "profiles"
     if not (profiles / "lyxia-great.json").exists():  # the layout we use, built on the reader's own iPhone layout
         shutil.copy(HERE / "lyxia-great.json", profiles / "lyxia-great.json")
