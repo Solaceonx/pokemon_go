@@ -92,6 +92,8 @@ def main() -> None:
     parser.add_argument("--also-test", nargs=3, metavar="SPECIES", help="after training, also test on this team")
     parser.add_argument("--opponents", nargs="+", metavar="FILE", default=[],
                         help="learned models (q.npz) that half the opponents should play with")
+    parser.add_argument("--exploit", metavar="FILE",
+                        help="train an exploiter: every opponent is the bot with this learned model (q.npz), margin 0.02")
     parser.add_argument("--teams", metavar="FILE", help="draw half of all teams from this list (data/teams.json) instead of at random")
     parser.add_argument("--resume", action="store_true", help="carry on from the model and examples already in the run folder")
     parser.add_argument("--run", help="name of the run folder under runs/")
@@ -114,10 +116,13 @@ def main() -> None:
     else:
         draw = lambda rng: rng.sample(pool, 3)  # noqa: E731
     rivals = [QNet.load(path) for path in args.opponents]
+    target = QNet.load(args.exploit) if args.exploit else None
     old_crowd = lambda rng: varied(rng, pool)  # noqa: E731
 
     def crowd(rng):
         """An opponent: a variation of the Planner, and half the time one playing with our learned decisions."""
+        if target is not None:
+            return Learner(q=target, margin=0.02, seed=rng.getrandbits(32))  # always the bot being exploited
         settings = varied_settings(rng, pool)
         if rivals and rng.random() < 0.5:
             return Learner(q=rng.choice(rivals), margin=rng.choice((0.02, 0.05, 0.1)), **settings)
@@ -125,6 +130,8 @@ def main() -> None:
 
     print("team: " + (", ".join(b.name for b in team) if team else "any (random threes from the top 50)"))
     print("teams: " + (f"half from {args.teams}, half random" if args.teams else "random threes"))
+    if target is not None:
+        print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
     print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""), flush=True)
 
     def versus_planner(q, margin, battles, seed, on_team, against=None):
@@ -187,7 +194,7 @@ def main() -> None:
 
     print(f"\nfinal test on {args.final_battles} fresh battles, overruling when ahead by {margin}")
     show("final", *versus_planner(q, margin, args.final_battles, args.seed + 999, team))
-    if rivals:
+    if rivals or target is not None:
         print("\nthe same test against the old crowd (Planner variations only), as a fixed yardstick")
         show("yardstick", *versus_planner(q, margin, args.final_battles, args.seed + 999, team, against=old_crowd))
     if args.also_test:

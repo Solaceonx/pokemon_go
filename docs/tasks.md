@@ -24,7 +24,7 @@ starting, so two people do not do the same one.
 | 12 | Measure real timings from footage | Video access | 1 |
 | 13 | Live loop on the phone | The owner's iPhone and Mac | 3, 4 |
 | 14 | Adversarial training against stronger AI | Python, numpy, hours of computing | 6 helps |
-| 15 | Train the AI to handle uncertain battle information | Python, numpy | 4 helps |
+| 15 | Train the AI to handle uncertain battle information (on hold until real-game testing) | Python, numpy | 4 helps |
 
 Tasks 1 to 5 are the footage pipeline, in order. Tasks 6 to 11, 14 and 15 are independent
 of it and of each other.
@@ -270,7 +270,7 @@ run `scripts/probe.py --drag` to find out whether iPhone Mirroring passes synthe
 drags, then connect capture, `pogo/vision.py`, the tracker, the bot and taps, logging
 the time of each step against the targets in `status.md`.
 
-## 14. Adversarial training against stronger AI
+## 14. Adversarial training against stronger AI (Claude Code: first exploiter run started 2026-10-09)
 
 **Why.** Every opponent our bot has trained against is the hand-written Planner or a
 variation of it, and the bot now beats those by a wide margin. It has never faced
@@ -307,6 +307,9 @@ with each version beating the last but losing to an older one.
 **Cost.** Each training run is about an hour on one core. Expect four or more.
 
 ## 15. Train the AI to handle uncertain battle information
+
+**On hold.** The owner has decided this waits until testing in real games begins. Do not
+start it before then.
 
 **Why.** The bot is trained and tested with exact information: the opponent's precise
 energy, exact health, the right moves and stats. In a real game it sees the tracker's
