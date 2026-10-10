@@ -135,17 +135,23 @@ What exploiter 1 did against version 1: held a ready charged move twice as often
 against 0.75 times a battle), threw the second move where the Planner would throw the
 first far more (0.67 against 0.12), swapped more and shielded more.
 
-A second exploiter, trained against version 3, still finds an edge, but a smaller one:
-about 3 points where the first found about 5 against version 1. So the loop is
-converging, not finished. The next turn would retrain version 3 against a crowd that
-includes both exploiters:
+A second turn of the loop was then run and changed nothing, so the loop has settled.
+Each line is 3,000 battles, every pairing played both ways:
 
-    cp -r runs/general-v3 runs/general-v4
-    python3 scripts/decide.py --run general-v4 --resume --minutes 60 --rounds 3 \
-        --opponents runs/general-decide/q_v1.npz runs/general-decide/q_v3.npz \
-                    runs/exploiter-1/q.npz runs/exploiter-2/q.npz
+| Match | Score of the first named |
+|---|---|
+| Exploiter 2 against version 3 | 50.6% ± 1.5 (an earlier one-sided test gave 53.2% ± 1.8; pooled with a third sample, about 51.7%) |
+| Version 4 (version 3 retrained against both exploiters) against version 3 | 49.6% ± 1.4 |
+| Exploiter 2 against version 4 | 50.0% ± 1.5 |
+| Exploiter 1 against version 4 | 49.1% ± 1.5 |
+| Version 4 against the old crowd, compared with version 3 on the same battles | +1.1 ± 1.5 points |
 
-then compare the result with version 3 as in the tables above before accepting it.
+Version 4 is level with version 3 on every test, so **version 3 stays the best bot**
+(version 4 is kept as `q_v4.npz`). Neither exploiter beats version 3 by more than the
+margin when each pairing is played both ways. With this method, this crowd and these
+inputs, the bot is about as hard to exploit as we can measure. Further gains need
+something new: an outside opponent (task 6), a guess at the hidden team (task 8), or
+real games.
 
 ## Team list
 
