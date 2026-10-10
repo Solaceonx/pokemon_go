@@ -48,6 +48,9 @@ class Observation:
     # Which of "super" (SUPER EFFECTIVE!) and "weak" (NOT VERY EFFECTIVE...) were on screen in this look.
     # An empty list means the text was read and showed neither; None means it was not read.
     effects: list | None = None
+    # Seconds since the last look in which the fight stood still for a reason other than a charged move:
+    # a side choosing its next Pokémon after a faint.
+    paused: float | None = None
 
 
 class Foe:
@@ -138,10 +141,13 @@ class TrackedView:
 
 class Tracker:
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
-                 moves_known: list[bool] | None = None):
+                 moves_known: list[bool] | None = None, energy: str = "rhythm"):
         """my_team may be incomplete (footage of someone else's game): Pokémon are added as they appear.
         moves_known says, per Pokémon, whether its moves come from a team sheet or are the usual ones assumed."""
         self.gd = gd
+        # How energy is counted. "rhythm": a fast move every so many turns for as long as its user is on the
+        # field, which needs no health bar but assumes nobody pauses. "hits": from the steps in the health bars.
+        self.by_rhythm = energy == "rhythm"
         self.me = Side([Mon(b) for b in my_team])
         self.my_moves_known = list(moves_known) if moves_known else [True] * len(my_team)
         self.my_seen_first = [False] * len(my_team)  # True for Pokémon we only learnt of from the screen
@@ -157,6 +163,7 @@ class Tracker:
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
+        self.my_beat = 0  # the same for mine
         self.taken = 0.0  # health I have lost that is not yet matched to a whole fast move of theirs
         self.dealt = 0.0  # the same for the health they have lost to my fast moves
         self.hp_turn = 0  # fighting turn at which my health was last read
@@ -190,13 +197,15 @@ class Tracker:
             self.turn += turns
             if self.foe:
                 self.foe.clock += turns
+                if self.by_rhythm:
+                    self._their_rhythm(self.foe)
         self.t = t
         self.me.switch_wait = max(0, round((self.my_switch_at - t) / TURN))
 
     def update(self, obs: Observation) -> None:
         me = self.me
         thrown = int(obs.foe_charged) + int(obs.my_charged is not None)
-        turns = max(0, round((obs.t - self.t) / TURN) - CHARGED_TURNS * thrown)
+        turns = max(0, round((obs.t - self.t - (obs.paused or 0.0)) / TURN) - CHARGED_TURNS * thrown)
         self.turn += turns
         if self.foe:
             self.foe.clock += turns
@@ -221,7 +230,20 @@ class Tracker:
         if self.foe is None:
             self.t = obs.t
             return
-        if i_changed == "faint" and was_theirs and not obs.foe_charged and they_changed != "faint":
+        if self.by_rhythm:
+            # Mine, the same way. In play the bot knows its own taps; this is for footage of a person.
+            fast = was_mine.build.fast
+            done = self.turn - self.my_beat - int(obs.my_charged is not None or i_changed == "switch")
+            hits = -(-done // fast.turns) if obs.foe_charged and obs.my_charged is None else done // fast.turns
+            if hits > 0:
+                self.my_beat += hits * fast.turns
+                was_mine.energy = min(ENERGY_CAP, was_mine.energy + hits * fast.energy_gain)
+        if self.by_rhythm and was_theirs:
+            # A fast move of theirs still in the air when I throw a charged move lands after it.
+            # The turn they spent throwing a charged move or switching had no fast move in it.
+            self._their_rhythm(was_theirs, in_air=obs.my_charged is not None and not obs.foe_charged,
+                               idle=int(obs.foe_charged or they_changed == "switch"))
+        elif i_changed == "faint" and was_theirs and not obs.foe_charged and they_changed != "faint":
             was_theirs.gain(was_theirs.mon.build.fast.energy_gain)
             was_theirs.lost.append((None, 1))
         if they_changed == "faint" and obs.my_charged is None and i_changed != "faint":
@@ -264,13 +286,17 @@ class Tracker:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
                 landed, self.dealt = _whole_hits(self.dealt + foe.mon.hp - hp, damage(mon, mon.build.fast, foe.mon))
-                mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
+                if not self.by_rhythm:
+                    mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
             foe.mon.hp = hp
         if obs.my_energy is not None and abs(obs.my_energy - mon.energy) > 4:
             mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
 
         if thrown or i_changed or they_changed:
-            self.beat = self.turn  # everyone starts afresh after a charged move or a change of Pokémon
+            if thrown or they_changed or not self.by_rhythm:
+                self.beat = self.turn  # they start afresh after a charged move or a change of their Pokémon
+            if thrown or i_changed:
+                self.my_beat = self.turn
             self.taken = self.dealt = 0.0
             self.hp_turn = self.turn
         self.quiet = quiet
@@ -350,6 +376,15 @@ class Tracker:
         self._note(t, "foe_move_learned", species=build.species_id, move=move.id)
         return move
 
+    def _their_rhythm(self, foe: Foe, in_air: bool = False, idle: int = 0) -> None:
+        """Credit the fast moves their rhythm says have landed by now."""
+        fast = foe.mon.build.fast
+        done = self.turn - self.beat - idle
+        hits = -(-done // fast.turns) if in_air else done // fast.turns
+        if hits > 0:
+            self.beat += hits * fast.turns
+            foe.gain(hits * fast.energy_gain)
+
     def _fit_fast(self, t: float, foe: Foe) -> None:
         """Work out their fast move from the size and rhythm of the steps in my health bar."""
         if sum(1 for step in foe.steps if step[2] > 0) < 3:
@@ -405,7 +440,7 @@ class Tracker:
                 hits, left_over = _whole_hits(left_over + lost, damage(foe.mon, move, target))
             gained += hits * move.energy_gain
         foe.lo, foe.hi = foe.base
-        foe.gain(gained)
+        foe.gain(foe.clock // move.turns * move.energy_gain if self.by_rhythm else gained)
         if foe is self.foe:
             self.taken, self.beat = left_over, self.turn
         self._note(t, "foe_fast_learned", species=build.species_id, move=move.id, misfit=foe.misfit,
@@ -468,7 +503,7 @@ class Tracker:
                     self.warnings += 1
                     self._note(obs.t, "unexplained", what="my health drop", drop=drop, expected_per_hit=per_hit)
                 foe.lost.append((mon, drop))
-                if landed:
+                if landed and not self.by_rhythm:
                     foe.gain(landed * fast.energy_gain)
                     # Keep their rhythm if these hits fit it; otherwise restart it from now.
                     on_beat = self.beat + landed * fast.turns
@@ -503,7 +538,7 @@ class Tracker:
         if foe.hi < min(m.energy for m in moves) <= by_clock:
             foe.hi = by_clock  # the count missed hits while the bars were hidden; the clock is the ceiling
         foe.spend([m.energy for m in moves])
-        if extra:
+        if extra and not self.by_rhythm:
             foe.gain(extra * fast.energy_gain)
         foe.base, foe.lost, foe.clock = (foe.lo, foe.hi), [], 0
         if len(moves) == 1:

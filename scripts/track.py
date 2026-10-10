@@ -84,13 +84,15 @@ def load_team(gd: GameData, sheet: dict):
 
 
 def main() -> int:
+    energy = "hits" if "--hits" in sys.argv else "rhythm"  # --hits: count energy from health-bar steps instead
+    sys.argv = [a for a in sys.argv if a != "--hits"]
     if len(sys.argv) != 2 or sys.argv[1] in ("-h", "--help"):
         print(__doc__)
         return 0 if len(sys.argv) == 2 else 2
     folder = Path(sys.argv[1])
     gd = GameData()
     builds, known = load_team(gd, json.loads((folder / "team.json").read_text()))
-    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known)
+    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy)
     looks = problems = 0
     with (folder / "states.jsonl").open("w") as states:
         for number, line in enumerate((folder / "observations.jsonl").read_text().splitlines(), start=1):

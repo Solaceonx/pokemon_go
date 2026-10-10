@@ -392,6 +392,49 @@ from the count up to the ceiling. The tracker uses the ceiling only when the cou
 been shown to be short; using it as the top of the range all the time is the next change,
 and it needs the simulated check (`scripts/check_tracker.py`) kept honest while doing it.
 
+### Energy from the rhythm of fast moves (now the tracker's default)
+
+The owner's point: energy is just fast moves times energy per fast move, so count the fast
+moves. Counting them from steps in the health bars (the first approach) misses hits whenever
+the bars are hidden. Counting them from the clock does not need the bars at all: a fast move
+lands every so many turns for as long as its user is on the field and the fight is running.
+`Tracker(energy="rhythm")` does this for both sides and is the default; `energy="hits"` is
+the old way (`scripts/track.py --hits`, `scripts/check_tracker.py --hits`).
+
+What the count needs to know, all measured on the recordings:
+
+- the fight starts about 1 s after the bars first appear;
+- a charged move stops the fight for 10 s from its cue, and a fast move that was in the air
+  when the other side threw lands after it;
+- after a faint nobody attacks until the replacement is out (the `paused` field of a look);
+- a Pokémon attacks from about 0.2 s after its "Go, X!" is first read; a switch costs its turn;
+- our switching does not interrupt their rhythm.
+
+Checked against every charged move thrown in the two recordings, since whoever throws must
+have had the cost:
+
+| | Charged moves | Tracked energy below the cost |
+|---|---|---|
+| Ours, counting hits | 12 | 4 |
+| Theirs, counting hits | 13 | 4 |
+| Ours, by rhythm | 12 | 0 |
+| Theirs, by rhythm | 13 | 0 |
+
+By rhythm the tracked energy was within about one fast move of the cost for 10 of the 25
+(for example our Dynamic Punch at 45 of 45, Surf at 46 of 45, their Dive at 48 of 40). The
+other 15 had more to spare, up to a full bar. Some of that is real (Altaria was farmed to
+100 before three Sky Attacks), but the true number is not on screen, so over-counting cannot
+be ruled out; Stunfisk's spare energy grew over its five Discharges (14, 10, 24, 29, 25).
+
+In simulation (`check_tracker.py`, 400 battles a camera): perfect camera, their energy exact
+99% of turns by rhythm against 98% by hits; rough camera 56% either way, but their place in
+the fast move is right 88% of turns by rhythm against 94% by hits, because rhythm does not
+yet use the hits it does see to re-set its beat after a missed look. That is the next
+improvement, along with noticing when a player really does stop attacking.
+
+`scripts/recording/rhythm.py` is an independent version of the same count working from exact
+times instead of half-second looks; it agrees (25 of 25 payable).
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).

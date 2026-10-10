@@ -36,7 +36,8 @@ named = collections.Counter(nearest(r["m"]["sp"], species) for r in rows if r["m
 OURS = [name for name, n in named.most_common() if name and n >= 5][:3]  # the header is read once a second
 theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows if r["o"]["sp"])
 THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 5][:3]
-T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) - 0.3, 1)
+# The bars are on screen for about a second before the first fast moves begin.
+T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) + 0.7, 1)
 
 # events from the announcement text
 gos, seqs, prompts, seq, words = [], [], [], None, []
@@ -62,6 +63,8 @@ for q in seqs:
     q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"])
     if q["user"] and (q["user"] in OURS) != (q["user"] in THEIRS):  # the cue says whose move it is; the name confirms
         q["side"] = "mine" if q["user"] in OURS else "theirs"
+for q, after in zip(seqs, seqs[1:]):
+    q["resume"] = min(q["resume"], after["start"])  # two charged moves back to back: the bars do not come back between
 end = next((r["t"] for r in rows if r["phase"] == "result" or r["result"]), rows[-1]["t"])
 
 # who is on the field, and whether each change was a faint
@@ -81,6 +84,7 @@ left_shown = {"m": steady("m", "left"), "o": steady("o", "left")}
 def left_at(key, t):
     seen = [v for when, v in left_shown[key] if when <= t]
     return seen[-1] if seen else None
+ENTER = 0.2  # a Pokémon is on the field and attacking this long after its "Go, X!" is first read
 field = {"mine": [], "theirs": []}
 for t, name in gos:
     side = "mine" if name in OURS else "theirs"
@@ -103,7 +107,7 @@ for t, name in gos:
         faint = (earlier is not None and now is not None and now < earlier) \
             or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
             or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
-    field[side].append({"t": t + 0.8, "name": name, "faint": faint})
+    field[side].append({"t": t + ENTER, "name": name, "faint": faint})
 
 def header_shields(key):
     """The header's shield counter, once it has shown the same number for half a second."""
@@ -123,7 +127,7 @@ def follow(side):
     step counts once that median has fallen by two pixels or more. Health cannot rise, so a higher level is
     believed only just after a change of Pokémon on that side."""
     key = "mh" if side == "mine" else "oh"
-    changes = [f["t"] - 0.8 for f in field[side]]
+    changes = [f["t"] - ENTER for f in field[side]]
     times, values, steps, recent, level = [], [], [], collections.deque(maxlen=10), None
     longer = collections.deque(maxlen=30)
     for r in rows:
@@ -155,27 +159,40 @@ def follow(side):
 level_times, level_values, level_steps = {}, {}, {}
 for side in ("mine", "theirs"):
     level_times[side], level_values[side], level_steps[side] = follow(side)
+# After a faint nobody can attack until the replacement is out: from the counter falling to the "Go, X!".
+waits = []
+for side, key in (("mine", "m"), ("theirs", "o")):
+    for f in field[side]:
+        if f["faint"]:
+            fell = [when - 0.5 for when, _ in left_shown[key][1:] if when - 0.5 <= f["t"] - ENTER]
+            waits.append((fell[-1] if fell else f["t"] - 2.8, f["t"] - 0.5))
 looks, left, shields, emitted = [], {"mine": 3, "theirs": 3}, {"mine": 2, "theirs": 2}, set()
 current = {"mine": None, "theirs": None}
 n_bins = int((end - T0) * 2)
 for b in range(n_bins + 1):
     t = T0 + 0.5 * b
-    if any(q["start"] <= t < q["resume"] for q in seqs): continue
+    due = [k for k, q in enumerate(seqs) if k not in emitted and q["resume"] <= t][:1]
+    inside = any(q["start"] <= t < q["resume"] for q in seqs)
+    if inside and not due: continue
     look = {"t": round(t - T0, 2)}
+    # A look that reports a charged move shows the two Pokémon that were out when it was thrown; a change
+    # made straight after it is left for the next look.
+    as_of = seqs[due[0]]["start"] if due else t
     for side, prefix in (("mine", "my"), ("theirs", "foe")):
-        on = [f for f in field[side] if f["t"] <= t]
+        on = [f for f in field[side] if f["t"] <= as_of]
+        fresh = not any(as_of < f["t"] <= t for f in field[side])  # the bar still belongs to that Pokémon
         if on and on[-1] is not current[side]:
             if on[-1]["faint"]: left[side] -= 1
             current[side] = on[-1]
         if current[side]: look[f"{prefix}_species"] = current[side]["name"]
         at = bisect.bisect_right(level_times[side], t) - 1
-        if at >= 0 and t - level_times[side][at] <= 0.5:  # the bar was on screen in this half-second
+        if not inside and fresh and at >= 0 and t - level_times[side][at] <= 0.5:  # the bar was on screen in this half-second
             look[f"{prefix}_hp"] = round(level_values[side][at] / W, 4)
     shown = [w for when, w in words if t - 0.5 < when <= t]
-    if shown: look["effects"] = sorted({x for w in shown for x in w})
-    for k, q in enumerate(seqs):
-        if k not in emitted and q["resume"] <= t:
-            emitted.add(k)
+    if shown and not inside: look["effects"] = sorted({x for w in shown for x in w})
+    for k in due:
+        if True:
+            q = seqs[k]; emitted.add(k)
             if q["side"] == "mine":
                 look["my_charged"] = q["move"] or "left"
                 if q["blocked"]: blocked["theirs"] += 1
@@ -188,6 +205,9 @@ for b in range(n_bins + 1):
         shields[side] = min([shields[side], 2 - blocked[side]] + shown[-1:])
     look.update(my_shields=shields["mine"], foe_shields=shields["theirs"], my_left=left["mine"], foe_left=left["theirs"])
     if "my_hp" in look or "foe_hp" in look or "my_charged" in look or "foe_charged" in look or not looks:
+        since = T0 + looks[-1]["t"] if looks else t
+        stood = sum(max(0.0, min(t, b) - max(since, a)) for a, b in waits)
+        if stood > 0: look["paused"] = round(stood, 2)
         looks.append(look)
 last = [q for k, q in enumerate(seqs) if k not in emitted]
 if last and last[-1]["side"] == "mine":  # the battle ended on our charged move: the result screen stands in for the last look
@@ -224,7 +244,7 @@ for side in ("mine", "theirs"):
 rel = lambda t: round(t - T0, 2)
 (out / "timeline.json").write_text(json.dumps({
     "end": rel(end),
-    "field": {side: [{"t": rel(f["t"] - 0.8), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
+    "field": {side: [{"t": rel(f["t"] - ENTER), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
     "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
     "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
