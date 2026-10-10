@@ -440,6 +440,42 @@ In simulation (`check_tracker.py`, 400 battles a camera):
 `scripts/recording/rhythm.py` is an independent version of the same count working from exact
 times instead of half-second looks; it agrees (25 of 25 payable).
 
+### Recordings in bulk (2026-10-10)
+
+`python3 scripts/recording/run.py recording.mp4 ...` reads each recording once, splits it into
+battles, tracks each and gives a pass/fail verdict with nobody watching
+(`scripts/recording/README.md`). On the two recordings so far, both battles pass.
+
+Speed of reading, the slow step, for a 254 s recording on this Mac:
+
+| | Seconds | Times real time |
+|---|---|---|
+| First version: every frame, text read at full size in two bands | 710 + 362 (two passes) | about 2.8 running both at once |
+| Now: one pass, 15 frames a second, header text every 2 s, middle band only, text finder on a smaller copy | 224 | 0.88 |
+
+Where the 224 s go: bars and header pixels 90, header text 49, announcement text 40, decoding
+the video and the rest 45. Two recordings side by side took 247 s for 445 s of video. The
+recordings are about 110 MB a minute, so a gigabyte is about 9 minutes of video and about as
+long to read with one job.
+
+Each speed-up was checked against the full reading of the same recording: the tracked result
+(every charged move, faint and switch, the fast moves worked out, energy against costs) is the
+same at 10 frames a second and with the lower text band dropped. The smaller text finder
+catches 96 of 99 announcements per look, each of which stays up for several looks, but it
+did lose one cue outright ("Attack incoming!" under an effectiveness line). The assembly now
+also builds a charged move from its "X used Y!" line when the cue was not read, and the
+verdict fails a game whose shields used do not match the charged moves tracked as blocked,
+which is how that miss would have been caught.
+
+What the verdict checks is listed in `scripts/recording/verdict.py`. It needs no ground truth,
+so it can pass a game that is wrong in a way the checks do not cover; the shield check was
+added after exactly that happened.
+
+Seen while doing this, not yet used: the charged-move buttons at the bottom of the screen show
+our two move names and how full each is, and they vanish the moment either side starts a
+charged move, about 0.6 s before the "Get Ready!" text. Reading them would give our energy
+directly, our moves without a team sheet, and exact stop and start times for the fight.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).

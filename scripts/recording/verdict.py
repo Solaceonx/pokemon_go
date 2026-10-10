@@ -9,8 +9,9 @@ Hard checks
   looks        no look was rejected by the tracker
   teams        one to three Pokémon seen on each side, all recognised
   moves        every charged move was read by name
+  shields      each side's shields used equal the charged moves tracked as blocked against it
   energy       whoever threw a charged move had at least its cost, by the tracker's count, on both sides
-  ending       the result screen agrees with who had Pokémon left
+  ending       the result screen agrees with who had Pokémon left; with no result screen, exactly one side is out
 Soft checks
   unexplained  changes in our health the rules could not explain, as a share of looks (listed above 15%)
   fast moves   opponent fast moves still only guessed
@@ -38,6 +39,12 @@ def verdict(game: Path, gd: GameData) -> dict:
         failed.append(f"moves: {unnamed} charged move(s) without a name")
     if len(thrown) != len(timeline["charged"]):
         failed.append(f"moves: {len(timeline['charged'])} charged moves announced, {len(thrown)} tracked")
+    # Each shield that went must have a charged move it blocked, and the other way round.
+    for side, mine in (("me", True), ("opponent", False)):
+        gone = 2 - final[side]["shields"]
+        blocked = sum(1 for e in thrown if e.get("shielded") and (e["event"] == "foe_charged") == mine)
+        if gone != blocked:
+            failed.append(f"shields: {'we' if mine else 'they'} used {gone}, but {blocked} charged move(s) were tracked as blocked")
     short, spare = [], []
     for e in thrown:
         if not e.get("move"):
@@ -63,7 +70,12 @@ def verdict(game: Path, gd: GameData) -> dict:
     elif result == "loss" and not (mine_left == 0 and their_left >= 1):
         failed.append(f"ending: result says loss, tracker has us on {mine_left} and them on {their_left}")
     elif result is None:
-        notes.append("no result screen read")
+        # Without the result screen the ending still has to be decisive: exactly one side out of Pokémon.
+        if (mine_left == 0) == (their_left == 0):
+            failed.append(f"ending: no result screen, and the tracker has us on {mine_left} and them on {their_left}")
+        else:
+            result = "win" if their_left == 0 else "loss"
+            notes.append("no result screen read; result taken from who had Pokémon left")
     share = track["unexplained"] / max(track["looks"], 1)
     if share > 0.15:
         notes.append(f"unexplained changes in {100 * share:.0f}% of looks")

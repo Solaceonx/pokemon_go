@@ -8,6 +8,8 @@ import gzip
 lines = lambda path: (gzip.open(path, "rt") if str(path).endswith(".gz") else open(path))
 rows = [json.loads(l) for l in lines(readings)][::option("--every", 1)]
 texts = [json.loads(l) for l in lines(text_path)][::option("--text-every", 1)]
+if "--middle-only" in sys.argv:  # to try doing without the lower text band
+    for s in texts: s["text"] = [x for x in s["text"] if x[0] == "middle"]
 FPS = 1.0 / statistics.median(b["t"] - a["t"] for a, b in zip(rows, rows[1:1000]))
 SIXTH, HALF = max(3, round(FPS / 6)), max(4, round(FPS / 2))  # frames in a sixth of a second and in half a second
 gm = json.load(open("data/gamemaster.json"))
@@ -84,6 +86,12 @@ for s in texts:
     if start and (seq is None or t - seq["start"] > 9):
         seq = {"side": start, "start": t, "move": None, "user": None, "blocked": False}; seqs.append(seq)
     m = re.search(r"([a-z]{4,})used([a-z]+)", joined)
+    if m and not (seq and t - seq["start"] < 14):
+        # "X used Y!" with no cue read before it (the cue can sit under other text): the cue comes about 7 s
+        # earlier. Whose move it was is settled from the name below, or failing that from a shield going.
+        user = nearest(m.group(1), species)
+        if user:
+            seq = {"side": None, "start": t - 7.2, "move": None, "user": None, "blocked": False, "late": True}; seqs.append(seq)
     if m and seq and t - seq["start"] < 14:
         seq["user"] = seq["user"] or nearest(m.group(1), species)
         seq["move"] = seq["move"] or nearest(m.group(2), moves, 0.8)
@@ -93,6 +101,8 @@ for q in seqs:
     q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"])
     if q["user"] and (q["user"] in OURS) != (q["user"] in THEIRS):  # the cue says whose move it is; the name confirms
         q["side"] = "mine" if q["user"] in OURS else "theirs"
+    if q["side"] is None:  # no cue and both teams have that Pokémon: we only block their moves, so guess from that
+        q["side"] = "theirs"
 for q, after in zip(seqs, seqs[1:]):
     q["resume"] = min(q["resume"], after["start"])  # two charged moves back to back: the bars do not come back between
 end = next((r["t"] for r in rows if r["phase"] == "result" or r["result"]), rows[-1]["t"])

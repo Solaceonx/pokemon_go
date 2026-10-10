@@ -1,24 +1,61 @@
-# From a screen recording to a tracked game
+# From screen recordings to tracked games
 
-Used once so far, on a single iPhone recording (2026-10-10). It is a worked example, not a finished tool.
-
-These scripts need the reader on the `screen-reader-video-pipeline` branch and its packages
-(Python 3.12 with av, opencv, onnxruntime, rapidocr-onnxruntime). Check that branch out beside
-this one, copy `lyxia-great.json` into its `screen_reader/profiles/` (and copy the
-`profiles/reis-great/` template folder to `profiles/lyxia-great/`), then from `screen_reader/`:
+One command takes recordings and produces tracked games with a pass/fail report:
 
 ```bash
-PYTHONPATH=. python read_frames.py recording.mp4 readings.jsonl     # every frame: health bars, header
-PYTHONPATH=. python read_text.py recording.mp4 text.jsonl 3         # announcement text, 3 looks a second
+python3 scripts/recording/run.py ~/Downloads/ScreenRecording_*.MP4
 ```
 
-Then from this project's root, with plain Python 3:
+For each recording it reads the video once, splits it into battles, and for each battle
+builds the looks, runs the tracker and applies checks that need nobody watching. Battles go
+to `games/<recording>-1`, `-2`, ...; the report is `games/report.json`.
+
+## The steps
+
+| Step | Script | Needs | Writes |
+|---|---|---|---|
+| Read the video | `read_recording.py` | the screen reader (below) | `games/<recording>/raw/readings.jsonl.gz`, `text.jsonl.gz`, `read.json` |
+| Build the looks | `assemble.py` | plain python3 | `team.json`, `observations.jsonl`, `timeline.json` |
+| Track | `scripts/track.py` | plain python3 | `state.json`, `states.jsonl`, `events.jsonl`, `track.json` |
+| Judge | `verdict.py` | plain python3 | `verdict.json` |
+
+Reading is the slow step and is done once; its output is kept, so everything after it can be
+re-run whenever the assembly or the tracker changes:
 
 ```bash
-python3 scripts/recording/assemble.py readings.jsonl text.jsonl games/<name>
+python3 scripts/recording/assemble.py games/<recording>/raw/readings.jsonl.gz games/<recording>/raw/text.jsonl.gz games/<name> [--battle 2]
 python3 scripts/track.py games/<name>
+python3 scripts/recording/verdict.py games/<name>
 ```
 
-Set by hand at the top of `assemble.py` for now: when the fight starts (`T0`), our three
-Pokémon (`OURS`) and our team sheet. The readings of the first recording are kept, compressed,
-in `games/lyxia-2026-10-10/raw/`. What worked and what did not is in `docs/status.md`.
+`rhythm.py games/<name>` is an independent count of energy from exact times, for checking the
+tracker's own count.
+
+## The screen reader
+
+Reading uses the reader on the `screen-reader-video-pipeline` branch, which is not merged
+here. Check that branch out somewhere, make a Python 3.12 environment with `av`, `opencv`,
+`onnxruntime` and `rapidocr-onnxruntime`, and point two variables at them:
+
+```bash
+export READER_PYTHON=/path/to/py312/bin/python
+export READER_DIR=/path/to/that/checkout/screen_reader
+```
+
+`run.py` copies the layout file `lyxia-great.json` into the reader's `profiles/` the first
+time. That layout is the reader's own iPhone layout with a full list of species names; it has
+worked on two iPhone layouts and has not been tried on anything else.
+
+## What the verdict checks
+
+A battle fails if any of these fails: no look was rejected; one to three recognised Pokémon
+on each side; every charged move read by name, and as many tracked as announced; whoever
+threw a charged move had at least its cost by the tracker's count; the result screen agrees
+with who had Pokémon left. It also notes, without failing: many unexplained changes in our
+health, and opponent fast moves that are still only guessed.
+
+## What is set by hand
+
+Nothing per recording. `KNOWN` at the top of `assemble.py` holds the movesets we have been told
+for the owner's own Pokémon; any other Pokémon gets the usual moves until the battle shows
+otherwise. Results and open problems are in `docs/status.md`.
