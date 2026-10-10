@@ -37,7 +37,7 @@ means the same teams and battles for both pilots.
 | What | Result |
 |---|---|
 | Planner against a button-masher | 82-84% |
-| **Per-decision learning, one model for any team (shield, throw, swap, replace)** | **+13.6 ± 1.9 points over the Planner on random teams (71.3% against 57.7%), 3,000 fresh battles** |
+| **Per-decision learning, one model for any team (shield, throw, swap, replace)** | **+13.6 ± 1.9 points over the Planner on random teams (71.3% against 57.7%), 3,000 fresh battles.** After one turn of adversarial training (below): +13.9 ± 1.9 and harder to exploit |
 | The same model piloting Melmetal / Jellicent / Altaria | +13.2 ± 1.9 points over the Planner (79.0% against 65.8%), 3,000 fresh battles |
 | The same model against a tougher crowd (half the opponents use its own learned decisions, half the teams from the team list) | 61.7% ± 1.9, against 46.9% ± 2.0 for the Planner, 2,500 battles |
 | Per-decision learning, one team, shield and throw decisions only | +8.1 ± 1.8 points over the Planner, 3,000 battles |
@@ -107,20 +107,34 @@ nothing yet says how it does against an outside opponent.
 ## Adversarial training (task 14)
 
 An exploiter is a model trained the same way as the bot, but with the bot itself as its
-only opponent. All on 3,000 fresh battles, random teams.
+only opponent. One full turn of the loop has been run. Version 1 is the first general
+model; version 3 is version 1 retrained for an hour against a crowd that includes the
+exploiter and version 1 (version 2 was an earlier retraining that changed nothing).
 
-| Pilot | Against the best bot | Against the old crowd, points over the Planner |
-|---|---|---|
-| Planner | 36.1% ± 1.7 | 0 |
-| Best bot (`runs/general-decide/q.npz`) | 50% by definition | +13.6 ± 1.9 |
-| Exploiter 1 (`runs/exploiter-1/q.npz`) | **54.9% ± 1.8** | +9.1 ± 2.0 |
+| Match, 3,000 battles on random teams | Score of the first named |
+|---|---|
+| Exploiter 1 against version 1 | 55.1% ± 1.5 |
+| Exploiter 1 against version 3 | 51.2% ± 1.6 |
+| Version 3 against version 1 | 52.2% ± 1.5 |
+| Planner against version 1 | 36.1% ± 1.7 |
 
-So the best bot can be beaten by about 5 points by something aimed at it, and that
-exploiter is weaker than the bot against everyone else. Playing the bot, the exploiter
-holds a ready charged move twice as often (1.58 against 0.75 times a battle), throws the
-second move where the Planner would throw the first far more (0.67 against 0.12), swaps
-more (0.59 against 0.38) and shields more. Next step: retrain the bot against a crowd
-that includes the exploiter (`runs/general-v3/`).
+| Against the old crowd, points over the Planner | |
+|---|---|
+| Version 1 | +13.6 ± 1.9 |
+| Version 3 | +13.9 ± 1.9 (and +0.5 ± 1.7 against version 1 on the same battles) |
+| Exploiter 1 | +9.1 ± 2.0 |
+
+Version 1 could be beaten by about 5 points by something aimed at it. Version 3 closes
+that to about 1 point, beats version 1 head to head, and gives up nothing against the old
+crowd, so **version 3 is now the best bot** (`runs/general-decide/q.npz`; the versions are
+kept beside it as `q_v1.npz`, `q_v2.npz`, `q_v3.npz`).
+
+What exploiter 1 did against version 1: held a ready charged move twice as often (1.58
+against 0.75 times a battle), threw the second move where the Planner would throw the
+first far more (0.67 against 0.12), swapped more and shielded more.
+
+Next: a second exploiter trained against version 3 (`runs/exploiter-2/`), to see whether
+a new gap opens.
 
 ## Team list
 

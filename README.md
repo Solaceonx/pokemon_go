@@ -210,9 +210,10 @@ from pogo.learner import Learner, QNet
 bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
 ```
 
-It beats the `Planner` by 13.6 ± 1.9 points on random teams (3,000 fresh battles). All
-its results are against the `Planner` and its variations. Nothing yet says how it does
-against an outside opponent or a person.
+It beats the `Planner` by 13.9 ± 1.9 points on random teams (3,000 fresh battles), and a
+model trained specifically to beat it gets only 51.2% ± 1.6 against it. All its results
+are against the `Planner`, its variations and models trained the same way. Nothing yet
+says how it does against an outside opponent or a person.
 
 ## What to do next
 
