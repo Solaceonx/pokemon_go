@@ -799,7 +799,8 @@ are still assumed.
 
 ## Open directions
 
-Each of these has a full brief in [`tasks.md`](tasks.md).
+Each of these has a full brief in [`tasks.md`](tasks.md). Strategy rules, retraining and team choice
+are tasks 18 to 21 there, with the commands for each at the top of that file.
 
 - **PvPoke's AI as an outside opponent.** Brief and bundle are in `handoff/`
   (`pvpoke_port_instructions.md`). Acceptance test: `scripts/check_pvpoke_ai.py`.
@@ -1049,12 +1050,28 @@ times as many (336k / 115k / 298k / 66k). Compared with `scripts/compare_models.
 | Retrained, margin 0.02 | 60.9% ± 1.7 | +4.9 ± 2.0 | −5.8 ± 2.0 |
 | Fitted on both sets of examples, margin 0.02 | 67.3% ± 1.7 | +11.4 ± 1.9 | +0.6 ± 1.7 |
 
+Head to head on 2,000 battles the retrained model gets 44.6% ± 1.8 against the old one.
+
 The old model stays. An hour of examples played out under the right rules is worth less than eleven hours
 played out under slightly older ones, and adding the new examples to the old changes nothing measurable.
 Matching the old volume with new-rule examples would take about eleven core-hours; the expected gain is a
 few points at most, so it has not been run. Log: `runs/general-rules2.out`, `runs/compare_models_1.out`.
 
 ## Best teams from the owner's own Pokémon (2026-10-11)
+
+**Do not use the table in this section to pick a team.** The owner rejected it: at their level the game
+is close to 50-50, so 82% means the opposition was too weak. It was, in two ways, measured by re-scoring
+the same 15 line-ups on 2,000 battles each (`runs/roster_calibration.out`):
+
+| Opponents | Best line-up | Current three, Melmetal lead |
+|---|---|---|
+| The crowd on random teams from the top 100 (the table below) | 82% | 78% |
+| The same bot as ours on random teams from the top 100 | 70% | 64% |
+| The same bot as ours on teams from the good-team list | 60% | 60%, and it is the best of the 15 |
+
+With an opponent as good as we are on good teams, the Umbreon line-ups fall four points or more behind
+the current three. `roster_teams.py` now takes `--rival bot` and `--listed SHARE` for this; the rerun of
+the full search is the next section. What follows is the first run, kept as a record.
 
 `scripts/roster_teams.py` searches every line-up the owner can field. Their 20 Pokémon are in
 `data/owner_team.json` (the current three) and `data/owner_roster.json` (17 more, with IVs; moves are the usual

@@ -112,6 +112,9 @@ Every script prints its options with `--help`.
 | `python3 scripts/arena.py --parts` | What each `Planner` rule is worth against the `Masher` |
 | `python3 scripts/arena.py --show 7` | One battle, seed 7, printed move by move |
 | `python3 scripts/team.py melmetal jellicent altaria --grid` | A report on one team piloted by the `Planner`: record, best lead, hardest opponents, every one-on-one |
+| `python3 scripts/rule_trial.py "hold=False" "win_switch=0.2"` | A change to the `Planner`'s options against the standard `Planner`: head to head, and against the crowd on the same battles |
+| `python3 scripts/compare_models.py runs/A/q.npz:0.02 runs/B/q.npz:0.05` | Trained models on the same battles, then against each other |
+| `python3 scripts/roster_teams.py --rival bot --listed 0.8` | The best line-ups from the owner's own Pokémon (about 45 minutes on three cores) |
 
 **Train** (unattended, low priority, one core unless `--workers N` is given; each ends
 with a test on fresh battles). `--workers 4` generates examples on four cores at once,
@@ -209,15 +212,19 @@ second test so results stay comparable over time.
 
 ```python
 from pogo.learner import Learner, QNet
-bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02, hold=True, hold_cost=0.5)
+bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
 ```
 
-It beats the `Planner` by 13.9 ± 1.9 points on random teams (3,000 fresh battles), and a
+It beats today's `Planner` by 10.8 ± 2.0 points (3,000 battles, the same for both), and a
 model trained specifically to beat it gets only 51.2% ± 1.6 against it. All its results
 are against the `Planner`, its variations and models trained the same way. Nothing yet
 says how it does against an outside opponent or a person.
 
 ## What to do next
+
+**Strategy, training and team choice:** `docs/tasks.md` opens with how to test a strategy rule,
+how to train, and how to choose a team, each with its commands and its rule for accepting a result.
+Tasks 18 to 21 there are the open work. The list below is older and covers the rest.
 
 In order. `docs/status.md` has the reasoning.
 
