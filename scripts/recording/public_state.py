@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import copy
 import re
+from state_continuity import StateContinuity
 
 
 def unknown(reason):
@@ -54,8 +55,12 @@ class PublicState:
                       for s in ("mine", "opponent")}
         self.last_time = None
         self.charge_owner = None
-        self.move_names = {re.sub(r"[^A-Z]", "", name.upper()): name for name in move_costs}
+        self.move_names = {}
+        for name in sorted(move_costs, key=len, reverse=True):
+            self.move_names[re.sub(r"[^A-Z]", "", name.upper())] = name
         self.last_charge = {}
+        self.continuity = StateContinuity()
+        self.result = unknown("No result shown")
 
     def counter(self, state, name, field, t):
         value = field.get("value") if field.get("status") == "observed" else None
@@ -89,9 +94,14 @@ class PublicState:
         for side in ("mine", "opponent"):
             visible, state = frame[side], self.sides[side]
             drop = self.counter(state, "left", visible["pokemon_left"], t)
-            self.counter(state, "shields", visible["shields_left"], t)
+            shields = self.counter(state, "shields", visible["shields_left"], t)
+            for key, change in (("left", drop), ("shields", shields)):
+                if state[key].get("observed_at_seconds") == t:
+                    self.continuity.observed(side, None, key, changed=bool(change))
             if drop and drop[1] < drop[0] and drop[2] in state["pokemon"]:
                 state["pokemon"][drop[2]]["fainted"] = evidence(True, t, "inferred", method="party_counter_decreased")
+                for key in ("health", "energy", "attack_stage", "defense_stage"):
+                    self.continuity.observed(side, drop[2], key, changed=True)
             species, cp = visible["species"], visible["cp"]
             identity = None
             if species.get("value") and cp.get("value") is not None:
@@ -112,28 +122,45 @@ class PublicState:
                                 "maximum_hp": unknown("CP alone does not fix IVs or maximum HP"),
                             }
                     if identity in state["pokemon"]:
+                        outgoing = state["pokemon"].get(state["active"])
+                        if outgoing and identity != state["active"]:
+                            for key in ("health", "energy"):
+                                field = outgoing[key]
+                                if field.get("value") is not None and t - field.get("observed_at_seconds", t) > .75:
+                                    field["unconfirmed_at_exit"] = True
                         state["active"] = identity
+                        state["active_observed_at_seconds"] = seen
                         state["pokemon"][identity]["species"] = evidence(species["value"], seen)
                         state["pokemon"][identity]["cp"] = evidence(cp["value"], seen)
+        self.continuity.advance(frame, slim, self.sides)
+        for side in ("mine", "opponent"):
+            visible, state = frame[side], self.sides[side]
+            species, cp = visible["species"], visible["cp"]
+            identity = f"{species['value']}:{cp['value']}" if species.get("value") and cp.get("value") is not None else None
             mon = state["pokemon"].get(state["active"])
             if not mon or identity != state["active"]:
                 continue
             health = visible.get("health_estimate", {})
-            if health.get("status") == "estimated" and health.get("identity") == f"{side}:{identity}":
+            if (not self.continuity.holding and mon["fainted"].get("value") is not True and health.get("status") == "estimated"
+                    and health.get("identity") == f"{side}:{identity}"):
                 mon["health"] = evidence(health["fraction_range"], t, "estimated", units="fraction",
                                           integer_hp_range=health.get("integer_hp_range"), maximum_hp=health.get("maximum_hp"))
+                self.continuity.observed(side, identity, "health")
             if side == "mine":
                 for button in frame["buttons"]:
                     if button.get("identity_status") == "observed" and button.get("move") in self.move_costs:
                         mon["charged_moves"][button["id"]] = evidence(button["move"], t)
                 names = [mon["charged_moves"].get(f"charge_{i}", {}).get("value") for i in (0, 1)]
                 values = [slim["b"][key] for key in ("l", "r")]
-                if all(v[1] for v in values) and all(names):
+                seen = species.get("evidence", {}).get("observed_at_seconds", t)
+                if (not self.continuity.holding and mon["fainted"].get("value") is not True and seen is not None and 0 <= t - seen <= .75
+                        and all(v[1] for v in values) and all(names)):
                     amounts = energy_candidates([v[0] for v in values], [self.move_costs[n] for n in names], [v[2] for v in values])
                     if amounts:
                         mon["energy"] = evidence([min(amounts), max(amounts)], t, "estimated",
                             units="whole_energy_units", candidates=amounts, method="two_visible_discs_and_observed_move_costs",
                             tolerance_note="Unvalidated pixel tolerance; animation and fill wrap can leave several possibilities")
+                        self.continuity.observed(side, identity, "energy")
         if frame.get("text_observation", {}).get("fresh_this_frame"):
             for record in frame["text_observation"]["records"]:
                 key = re.sub(r"[^A-Z]", "", record["text"].upper())
@@ -152,24 +179,32 @@ class PublicState:
                     if t - self.last_charge.get(signature, -100) > 5:
                         state["pokemon"][state["active"]]["charged_moves"]["used_" + move] = evidence(name, t,
                             method="exact_announced_move_name", raw_text=record["text"])
+                        self.continuity.announcement(owner, name, self.move_costs[name], t, self.sides)
                     self.last_charge[signature] = t
-        out = {"schema": "public-game-state-v1", "t": t, "phase": frame.get("phase_estimate", frame["phase"]),
+        if frame["result"].get("value") is not None and frame["result"].get("status") == "observed":
+            self.result = evidence(frame["result"]["value"], t)
+        pending = self.continuity.snapshot()
+        out = {"schema": "public-game-state-v2", "t": t, "phase": frame.get("phase_estimate", frame["phase"]),
                "incomplete_start": self.incomplete_start, "accuracy_verified": False,
                "battle_clock": unknown("Action start and uninterrupted game clock are not verified"),
                "switch_cooldown": unknown("Switch cause and timer have not been independently confirmed"),
-               "controls": frame["buttons"], "result": frame["result"], "sides": {}}
+               "controls": frame["buttons"], "result": self.continuity.decorate(self.result, None, None, "result", t),
+               "pending_attack": pending, "sides": {}}
         for side, state in self.sides.items():
             values = {k: copy.deepcopy(v) for k, v in state.items() if k != "counter_runs"}
-            for mon in values["pokemon"].values():
-                for key in ("species", "cp", "health", "energy"):
-                    field = mon[key]
-                    age = t - field.get("observed_at_seconds", t)
-                    if field.get("value") is not None and age > .75:
-                        field["status"] = "stale"
-                    field["age_seconds"] = round(age, 6)
+            age = t - state.get("active_observed_at_seconds", t)
+            values["active_status"] = "observed" if age <= .75 else "retained" if self.continuity.holding else "stale"
+            for identity, mon in values["pokemon"].items():
+                for key in tuple(mon):
+                    if key == "charged_moves":
+                        mon[key] = {slot: self.continuity.decorate(field, side, identity, key, t)
+                                    for slot, field in mon[key].items()}
+                    else:
+                        mon[key] = self.continuity.decorate(mon[key], side, identity, key, t, bench=identity != state["active"])
+                        if mon["fainted"].get("value") is True and key in ("health", "energy") and mon[key].get("value") is not None:
+                            mon[key].update(status="historical", state_validity="before_faint",
+                                            reason="Last known reading before confirmed faint")
             for key in ("shields", "left"):
-                field = values[key]
-                if field.get("value") is not None and t - field["observed_at_seconds"] > .75:
-                    field["status"] = "stale"
+                values[key] = self.continuity.decorate(values[key], side, None, key, t)
             out["sides"][side] = values
         return out

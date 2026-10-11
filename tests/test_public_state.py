@@ -20,13 +20,13 @@ from vod_markers import party_patch
 
 
 def frame(t, name="Lanturn", cp=1493, left=3, health=None):
-    def side(species, cp):
+    def side(owner, species, cp):
         return {"species": {"value": species, "status": "observed", "evidence": {"observed_at_seconds": t}},
                 "cp": {"value": cp, "status": "observed", "evidence": {"observed_at_seconds": t}},
                 "pokemon_left": evidence(left, t), "shields_left": evidence(2, t),
                 "health_estimate": {"status": "estimated", "fraction_range": health or [.48, .52],
-                                    "identity": f"mine:{species}:{cp}"}}
-    return {"timestamp_seconds": t, "mine": side(name, cp), "opponent": side("Snorlax", 1488),
+                                    "identity": f"{owner}:{species}:{cp}"}}
+    return {"timestamp_seconds": t, "mine": side("mine", name, cp), "opponent": side("opponent", "Snorlax", 1488),
             "buttons": [], "phase": evidence("normal_fighting", t), "result": unknown("No result"),
             "text_observation": {"fresh_this_frame": False, "records": []}}
 
@@ -87,7 +87,7 @@ class LedgerTests(unittest.TestCase):
             hidden[side]["cp"] = unknown("Header hidden")
         state = reader.update(hidden, SLIM)
         mon = state["sides"]["mine"]["pokemon"]["Lanturn:1493"]
-        self.assertEqual(mon["species"]["status"], "stale")
+        self.assertEqual(mon["species"]["status"], "retained")
         self.assertEqual(mon["species"]["age_seconds"], 2)
 
     def test_bench_health_is_retained_under_its_identity(self):

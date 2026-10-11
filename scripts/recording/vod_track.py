@@ -215,6 +215,11 @@ def enforce_coverage(verdict, meta):
     return out
 
 
+def switch_time_left(remaining, reading_time, state_time):
+    """Switch cooldown continues through animations between model observations."""
+    return round(max(0, remaining - max(0, reading_time - state_time)), 1) if remaining is not None else None
+
+
 def publish(folder, game, verdict, reader):
     bootstrap(reader)
     from build_viewer import compact
@@ -245,6 +250,8 @@ def publish(folder, game, verdict, reader):
         model = states[at] if states and states[at]["t"] <= frame["t"] <= states[-1]["t"] else None
         for side, model_side in (("mine", "me"), ("opponent", "opponent")):
             visible = frame[side]
+            public_side = frame["game_state"]["sides"][side]
+            public_mon = public_side["pokemon"].get(public_side["active"])
             if model:
                 team = model["state"][model_side]
                 active = team["pokemon"][team["active"]] if team["active"] is not None and team["active"] < len(team["pokemon"]) else None
@@ -256,13 +263,14 @@ def publish(folder, game, verdict, reader):
                         "range": active.get("energy_range"),
                         "evidence": {"method": "tracker_rules_and_button_fill", "fast_move_source": known,
                                      "tracker_clip_seconds": model["t"], "accuracy_verified": False}}
-                if active and visible["species"].get("value") == active["name"]:
+                identity_matches = active and (visible["species"].get("value") == active["name"] or
+                    (public_mon and public_side["active_status"] == "retained" and public_mon["species"]["value"] == active["name"]))
+                if identity_matches:
                     visible["model"] = {"fast_move": active["fast_move"], "charged_moves": active["charged_moves"],
                         "attack_stage": active["attack_stage"], "defense_stage": active["defense_stage"],
-                        "switch_ready_in": team.get("switch_ready_in"), "status": "inferred",
+                        "switch_ready_in": switch_time_left(team.get("switch_ready_in"), frame["t"], model["t"]), "status": "inferred",
                         "stats_assumed": active["stats_assumed"], "accuracy_verified": False}
-            public_side = frame["game_state"]["sides"][side]
-            public_mon = public_side["pokemon"].get(public_side["active"])
+                    visible["model"]["switch_timer_rule"] = "elapsed_video_time_including_charged_animations"
             if public_mon and public_mon["energy"].get("status") == "estimated":
                 interval = public_mon["energy"]["value"]
                 visible["energy"] = {"value": interval[0] if interval[0] == interval[1] else None,
@@ -279,12 +287,17 @@ def publish(folder, game, verdict, reader):
                   "tracker_timeline": "offline_reconstruction_with_assumptions",
                   "processing_sha256": {name: sha256(ROOT / name) for name in
                     ("scripts/recording/assemble.py", "scripts/recording/public_transitions.py", "scripts/recording/vod_track.py", "scripts/recording/public_state.py",
-                     "scripts/recording/vod_markers.py", "scripts/recording/public_fast.py", "scripts/recording/vod_pairs.py",
+                     "scripts/recording/state_continuity.py", "scripts/recording/vod_markers.py", "scripts/recording/public_fast.py", "scripts/recording/vod_pairs.py",
                      "scripts/recording/buttons.py", "scripts/recording/verdict.py", "data/vod_tracking_layouts.json",
                      "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json")}}
     data = {**previous, "readings": display, "states": states, "observations": observations, "events": events,
             "screen_events": list(rows(raw / "screen_events.jsonl.gz")), "origin": origin,
             "bookmarks": bookmarks, "tracking_verdict": verdict, "prediction_provenance": provenance}
+    ledger_path = game / "continuity.jsonl.gz"
+    with gzip.GzipFile(filename=str(ledger_path), mode="wb", mtime=0) as stream:
+        for row in display:
+            stream.write((json.dumps({"t": row["t"], "game_state": row["game_state"]},
+                                    separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8"))
     temporary = target.with_name("viewer-data.incomplete.json.gz")
     temporary.write_bytes(gzip.compress(json.dumps(data, separators=(",", ":"), ensure_ascii=False).encode("utf-8"), compresslevel=6, mtime=0))
     if sha256(temporary) != sha256(target):
@@ -352,7 +365,7 @@ def track_clip(folder, reader):
     exported = ROOT / "games/twitch" / folder.name
     exported.mkdir(parents=True, exist_ok=True)
     for p in game.iterdir():
-        if not p.is_file() or p.suffix not in (".json", ".jsonl"):
+        if not p.is_file() or (p.suffix not in (".json", ".jsonl") and p.name != "continuity.jsonl.gz"):
             continue
         if p.suffix == ".jsonl":
             (exported / (p.name + ".gz")).write_bytes(gzip.compress(p.read_bytes(), mtime=0))

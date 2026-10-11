@@ -77,7 +77,7 @@ adding its ID; a channel name alone is insufficient calibration.
   `tracking-raw/` readings, compressed `tracker/` logs, `analysis-summary.json`
   and `viewer-data.json.gz`. Audio stays in the video when the source contains it.
 - `games/twitch/` contains portable compressed observations, states, events,
-  timelines, team hypotheses, verdicts and source/code fingerprints. It contains
+  per-frame evidence in `continuity.jsonl.gz`, timelines, team hypotheses, verdicts and source/code fingerprints. It contains
   no videos or runtime installations. Historical analyses stay locally in
   `analysis-archive/`; identical output does not add another archive.
 - `.vod/runs/<id>/` has compressed visual samples, boundary candidates and a run
@@ -150,7 +150,7 @@ is incomplete in both views. All boundaries retain review flags.
 All 228,285 saved frames decoded and matched their source-alignment logs within
 0.000687 seconds. Chrome playback and seeking were checked on a Henry clip,
 both official views and the partial opening clip, including the 17-column table
-and remembered teams. All 62 pipeline tests and 107 reader tests passed; all 108
+and remembered teams. All 88 pipeline tests and 107 reader tests passed; all 108
 PvPoke reference duels reproduced exactly. The default simulated tracker check
 produced byte-identical before/after output over 2,400 battles per run. Simulation
 regression does not measure real-video accuracy.
@@ -162,7 +162,7 @@ three have energy failures, one has a shield failure, and two start mid-match.
 Categories overlap. Terminal HP and party counts stay unreadable instead of
 creating a knockout to satisfy the verifier.
 
-Blind model energy differed from button estimates by 12.15 energy units on
+Blind model energy differed from button estimates by 12.77 energy units on
 average across 1,147 eligible looks. Two partial views supplied no energy looks.
 The button readings are unvalidated, so this is a disagreement measurement, not
 accuracy against labelled truth. Hidden teammates, forms/Shadow identity, maximum
@@ -176,13 +176,13 @@ and retained the same failed ending verdict.
 | Cropped player-view videos | 421.1 MB | 264.0 MB | 685.1 MB |
 | Alignment and metadata before tracking | 2.80 MB | 1.41 MB | 4.21 MB |
 
-Current analysis, alignment and metadata occupy 35.75 MB, plus 84.06 MB of
-historical analyses from calibration. The local total is 4.852 GB, excluding the
+Current analysis, alignment and metadata occupy 53.76 MB, plus 175.30 MB of
+historical analyses from calibration. The local total is 4.962 GB, excluding the
 shared runtime, existing library, viewer HTML, scan caches and review images.
 A typical complete player-view clip is 30.2 MB (median); current data averages
-1.55 MB per view, or 5.21 MB including these historical versions. The portable
-results committed for all 23 views occupy 2.23 MB total. The viewer HTML is a
-separate 23.94 MB artifact covering all 41 local clips. It embeds no videos and
+2.34 MB per view, or 9.96 MB including these historical versions. The portable
+results committed for all 23 views occupy 14.63 MB total. The viewer HTML is a
+separate 31.22 MB artifact covering all 41 local clips. It embeds no videos and
 decompresses only the selected battle in memory.
 Keeping the original averages about 232 MB per Henry match or 317 MB per official
 match when allocated across these recordings; the official total includes both views.
@@ -222,7 +222,7 @@ comparison and simulation receipts. These are two exposed clips used to develop
 the fix, reviewed by the agent. Exact timing and other fields are outside this
 measurement, and the user has not independently adjudicated the labels.
 
-All 23 views were rebuilt from cached readings. The current run passes all 73
+All 23 views were rebuilt from cached readings. This transition iteration passed all 73
 pipeline tests and 108 PvPoke reference duels. Default synthetic tracker output
 is unchanged over 2,400 battles per run. Four-clip playback and all 57,079 sample
 timestamps/fingerprints were checked again. A final unnamed public charge fails
@@ -234,6 +234,55 @@ There are still zero complete consistency passes. Blind energy disagreement is
 estimates are not independent energy truth. The improvement measured here is
 switch/faint kind and order only.
 
-Current clip data is 35.81 MB; retained histories are 116.17 MB. Videos and data
-total 4.885 GB. Portable results are 2.30 MB, and the 41-clip HTML is 23.93 MB.
-This iteration downloads no additional video and reuses immutable raw OCR.
+Before animation continuity, clip data was 35.81 MB; retained histories were
+116.17 MB. Videos and data totalled 4.885 GB, portable results 2.30 MB and the
+41-clip HTML 23.93 MB. That transition iteration reused immutable raw OCR.
+
+## Carry state through animations
+
+The public ledger uses `public-game-state-v2`. Known species, CP and move names
+remain retained when hidden. Bench readings and fresh, unaffected pre-animation
+values persist with their original observation times. An attack only makes
+potentially affected values pending: attacker energy, defender health/shields,
+possible stat changes, and at resolution possible faints or a fast move already
+in flight. A move announcement confirms its cost once; it cannot establish the
+remaining balance from an older reading.
+
+Fresh readback resolves each pending field separately after sustained normal
+fighting resumes. A counter decrease can confirm its change during animation.
+Old values for a confirmed faint are historical. An already uncertain reading
+stays uncertain, including when the Pokemon switches out. A missing time span
+can contain changes and is never treated as a harmless animation; fresh evidence
+can restore continuity afterward. Partial beginnings do not receive invented
+HP, shields, energy or roster members.
+
+The viewer cards, team ledger and live table use these statuses. Raw visible bars
+and buttons still show the current frame, so an obscured bar remains Unknown
+and a hidden button never stays clickable. Switch cooldown decreases through
+charged animations, as confirmed by the user. Its starting value remains a
+model hypothesis unless independently verified.
+
+Each `continuity.jsonl.gz` line contains the clip time and complete public
+`game_state`, including pending attack details and evidence ages. It exactly
+matches that frame's viewer state; compression is lossless and there is no plain
+duplicate. Existing compressed observation exports still replay through
+`scripts/track.py`. Rebuild the HTML after tracking:
+
+```bash
+python ../pokemon-go-screen-reader/build_lazy_viewer.py
+python -m unittest discover -s tests
+python scripts/recording/check_transition_labels.py
+node ../pokemon-go-screen-reader/test_state_values.mjs
+python scripts/recording/check_continuity.py --reader-dir ../pokemon-go-screen-reader --baseline 2fc5765
+```
+
+`data/vod_continuity_validation.json` contains checks for all 23 views and
+57,079 samples, actual browser checkpoints and test fingerprints. All 88
+pipeline tests and 13 viewer-value checks pass. Core observations, states and
+events are byte-identical to 2fc5765 for every view. The prior 15 reviewed
+transition labels still pass; strict consistency failures and energy disagreement
+are unchanged. Persistence checks do not establish pixel accuracy or validate an
+untouched test source.
+<!-- Current continuity storage -->
+
+Current data for the 23 Twitch views is 53.76 MB (2.34 MB per view on average), plus 175.30 MB of retained analysis history. The portable results total 14.63 MB, including 12.33 MB of continuity records. Videos plus saved data total 4.962 GB. The 41-clip HTML is 31.22 MB and embeds no videos. A typical complete view's video remains 30.2 MB (median). These are measured sizes for this pilot; repeated calibration archives are separate from current data.

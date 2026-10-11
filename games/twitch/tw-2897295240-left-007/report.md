@@ -14,7 +14,7 @@ Fast moves, modeled energy, stages and switch timing are hypotheses, not screen 
 
 | Side | Visible health samples | Missing health samples | Estimated energy samples |
 |---|---:|---:|---:|
-| mine | 1242 | 2163 | 406 |
+| mine | 1242 | 2163 | 299 |
 | opponent | 1212 | 2193 | 0 |
 
 Internal consistency: **fail**.
@@ -22,4 +22,6 @@ Internal consistency: **fail**.
 - ending: no result screen, and the tracker has us on 2 and them on 1
 
 Recognition accuracy has not been measured against independent human labels.
-The ledger retains unknown and stale values. A final announcement does not fabricate zero HP or a knockout.
+The ledger retains unaffected readings during animations. Affected values are pending until fresh evidence resolves them.
+Old readings for a fainted Pokemon are historical. Unknown initial values remain unknown.
+A final announcement does not fabricate zero HP or a knockout.

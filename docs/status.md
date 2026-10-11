@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-09.
+Last updated 2026-10-10.
 
 ## Goal
 
@@ -794,3 +794,41 @@ Current clip data occupies 35.81 MB, with 116.17 MB of retained analysis history
 Videos plus data total 4.885 GB; portable results occupy 2.30 MB. The rebuilt
 41-clip viewer is 23.93 MB and embeds no videos. Exact HP, forms, fast moves,
 energy, final outcomes and an untouched test source remain unresolved.
+
+## Animation continuity (2026-10-10)
+
+The public evidence ledger now carries known identities, moves, unaffected
+counters and fresh pre-animation readings through charged animations. An
+incoming attack marks the defender's health and shield decision pending; our
+charge marks our energy pending. Resolution also considers a fast move already
+in flight and possible faints. A readable move announcement records its exact
+energy cost once. It does not invent a resulting energy balance or damage.
+Normal fighting must resume before unchanged bars and counters resolve pending
+changes; an actual counter decrease can resolve its own change during animation.
+
+The viewer's cards, remembered teams and values table share those statuses.
+Retained means carried from evidence; pending means a last known value awaiting
+the attack's outcome; stale means current validity is unconfirmed. A fainted
+Pokemon's old bar and energy are historical. Unknown initial facts stay unknown,
+and an animation cannot make an already uncertain balance reliable. The raw
+visible bar and clickable controls continue to describe only the current frame.
+The user confirmed that switch cooldown continues during charged attacks. Both
+the per-frame model display and playback timer now follow elapsed video time,
+while the switch's cause and exact timer start remain inferred.
+
+All 88 pipeline tests, 107 reader tests, 13 viewer-value checks and 108 PvPoke
+reference duels pass. Browser checks cover an incoming charge, its resolution,
+our minigame, timer progress, four-clip playback and the previously reviewed
+Melmetal replacement sequence. All 57,079 readings in 23 views have matching
+compressed continuity exports and source timestamps. Core observations, states
+and events are byte-identical to commit 2fc5765 on all 23 views; the 15 reviewed
+transition labels still pass. This verifies persistence and provenance, not
+whole-game recognition accuracy. The existing consistency failures and 12.77
+unit blind energy disagreement remain unchanged.
+
+`data/vod_continuity_validation.json` records the new checks. Per-frame evidence
+is portable as gzip JSON Lines in `games/twitch/*/continuity.jsonl.gz`; no video
+was downloaded or duplicated and the immutable OCR cache was reused.
+<!-- Current continuity storage -->
+
+Current data for the 23 Twitch views is 53.76 MB (2.34 MB per view on average), plus 175.30 MB of retained analysis history. The portable results total 14.63 MB, including 12.33 MB of continuity records. Videos plus saved data total 4.962 GB. The 41-clip HTML is 31.22 MB and embeds no videos. A typical complete view's video remains 30.2 MB (median). These are measured sizes for this pilot; repeated calibration archives are separate from current data.

@@ -29,7 +29,9 @@ def battle_report(clip, summary):
     lines += ['', f"Internal consistency: **{summary['tracking_verdict']['verdict']}**.", '']
     lines += ['- ' + reason for reason in summary['tracking_verdict']['failed']]
     lines += ['', 'Recognition accuracy has not been measured against independent human labels.',
-              'The ledger retains unknown and stale values. A final announcement does not fabricate zero HP or a knockout.', '']
+              'The ledger retains unaffected readings during animations. Affected values are pending until fresh evidence resolves them.',
+              'Old readings for a fainted Pokemon are historical. Unknown initial values remain unknown.',
+              'A final announcement does not fabricate zero HP or a knockout.', '']
     folder = ROOT / 'games/twitch' / clip['id']
     folder.mkdir(parents=True, exist_ok=True)
     (folder / 'report.md').write_text('\n'.join(lines), encoding='utf-8')
@@ -87,7 +89,7 @@ def report(sources_root, library):
                             'median_complete_view_video_bytes': statistics.median(c['video_bytes'] for c in complete_views),
                             'mean_saved_data_bytes_per_view': data_bytes / len(clips),
                             'excludes': 'Shared runtime, pre-existing library, viewer HTML, scan caches and review images.',
-                            'tracking_data_note': 'Includes raw and refined gzip readings, compressed model states, viewer data, alignment, metadata and retained analysis archives.'},
+                            'tracking_data_note': 'Includes raw and refined gzip readings, compressed model and continuity logs, viewer data, alignment, metadata and retained analysis archives.'},
                 'validation': {'media_checks_passed': True,
                                'decoded_frames_verified': sum(s['decoded_frames_verified'] for s in sources),
                                'maximum_alignment_error_seconds': max(c['maximum_alignment_error_seconds'] for c in clips),
@@ -140,6 +142,9 @@ def report(sources_root, library):
     transition_check = ROOT / 'data/vod_transition_validation.json'
     if transition_check.is_file():
         artifact['validation']['reviewed_transition_regression'] = json.loads(transition_check.read_text(encoding='utf-8'))
+    continuity_check = ROOT / 'data/vod_continuity_validation.json'
+    if continuity_check.is_file():
+        artifact['validation']['animation_continuity'] = json.loads(continuity_check.read_text(encoding='utf-8'))
     write_json(ROOT / 'data/vod_pilot_report.json', artifact)
     return artifact
 
