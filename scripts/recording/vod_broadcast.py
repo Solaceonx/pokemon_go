@@ -11,13 +11,20 @@ import time
 from vod_media import sha256
 
 
-def marker_scan(video, regions, cache):
+def cue_matches(region, text):
+    key = re.sub(r"[^A-Z]", "", text.upper())
+    return any(cue in key for cue in region.get("cues", [region["cue"]]))
+
+
+def marker_scan(video, regions, cache, *, scan_end=None):
     import av
     import numpy as np
     from local_ocr import LocalOCR
     cache = Path(cache)
     fingerprint = {"source_sha256": sha256(video), "regions": regions,
                    "code_sha256": sha256(__file__)}
+    if scan_end is not None:
+        fingerprint["scan_end_seconds"] = scan_end
     if cache.exists():
         with gzip.open(cache, "rt", encoding="utf-8") as source:
             found = json.load(source)
@@ -34,14 +41,15 @@ def marker_scan(video, regions, cache):
                 continue
             rgb = frame.to_ndarray(format="rgb24")
             t = float(frame.pts * frame.time_base)
+            if scan_end is not None and t >= scan_end:
+                break
             for region in regions:
                 x, y, w, h = region["rect"]
                 if x < 0 or y < 0 or x + w > frame.width or y + h > frame.height:
                     raise ValueError("Broadcast label region is outside the video")
                 text = " ".join(item["text"] for item in ocr.read(rgb[y:y+h, x:x+w])
                                 if item["confidence"] >= .75)
-                key = re.sub(r"[^A-Z]", "", text.upper())
-                if region["cue"] in key:
+                if cue_matches(region, text):
                     markers.append({"t": round(t, 6), "kind": region["kind"], "text": text})
             if time.monotonic() >= progress:
                 print(json.dumps({"stage": "broadcast_labels", "vod_seconds": round(t, 1)}), flush=True)
@@ -73,7 +81,10 @@ def filter_broadcast(views, markers):
             first_hud = candidate["first_hud_seconds"]
             # The phone headers appear during the broadcaster's entrance
             # transition, before its REPLAY badge is fully readable.
-            if any(begin - 10 <= first_hud <= end + 5 for begin, end in runs):
+            # Two-second keyframe sampling leaves at most one sample interval
+            # after the last badge. A five-second tail swallowed live games
+            # that begin immediately after an instant replay.
+            if any(begin - 10 <= first_hud <= end + 2 for begin, end in runs):
                 excluded.append({**candidate, "excluded_reason": "broadcast_replay"})
                 continue
             tails = [begin for begin, end in runs if first_hud + 10 < begin < candidate["end"]]

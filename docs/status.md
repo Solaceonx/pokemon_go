@@ -990,3 +990,45 @@ was downloaded or duplicated and the immutable OCR cache was reused.
 <!-- Current continuity storage -->
 
 Current data for the 23 Twitch views is 53.76 MB (2.34 MB per view on average), plus 175.30 MB of retained analysis history. The portable results total 14.63 MB, including 12.33 MB of continuity records. Videos plus saved data total 4.962 GB. The 41-clip HTML is 31.22 MB and embeds no videos. A typical complete view's video remains 30.2 MB (median). These are measured sizes for this pilot; repeated calibration archives are separate from current data.
+
+## Official paired battle sample (2026-10-11)
+
+The owner requested about ten new games from the official pokemongo Twitch
+channel, with both players' views. Original VODs 2897166800 and 2897312743 now
+provide ten reviewed complete games and twenty player clips, five games per VOD.
+Their source broadcast intervals do not overlap. Rebroadcast VODs were not
+downloaded; eighteen instant-replay perspective candidates were excluded within
+the discovery windows. Both views share a match ID and synchronized coverage.
+The rebuilt library contains 61 video views, with a **New official sample** filter.
+
+Intake now bounds discovery, limits unique games while preserving paired views,
+recognizes broadcast result graphics, keeps a live game immediately after a
+replay, and joins header fragments under complete peer coverage. Brief result
+graphics between native keyframes receive quarter-second sampling near endings.
+If only one phone shows the result, the peer clip retains attributed
+`paired_result_visible` evidence. Missing source edges remain partial. Review
+frames, original fragment intervals and camera-specific evidence are saved.
+
+All twenty videos passed checksum, crop, audio, duration and source-alignment
+verification over 224,002 decoded frames; maximum alignment error was 0.001084
+seconds. Four browser playback checks cover both views of both VODs, pending
+analysis, unknown values, lazy data loading and separation from training and
+regression filters. All 102 pipeline tests and 108 PvPoke reference duels pass;
+the reader branch's 24 core tests and 108 reference duels also pass.
+
+The state tracker remains at 7fd4650. Fourteen state-processing files match that
+commit, and all nine pixel-reader hashes match an existing pre-collection raw
+cache. New clips are `not_analyzed`, with zero state readings. Layout/boundary
+review exposed the sources, and intake rules improved on these cases; this is a
+reserved state-evaluation sample, not an untouched end-to-end pipeline test.
+Full state accuracy and exact action timing remain unmeasured. The earlier
+23-view pilot/continuity reports are preserved as separate measurements.
+
+The new cropped videos occupy 774.40 MB, plus 4.27 MB of alignment and metadata.
+A sampled game averages 77.44 MB of video and 0.427 MB of saved data for both
+views; state-analysis data has not yet been generated. One retained original
+per VOD occupies 11.86 GB combined, including unused games and broadcast breaks.
+The additional media and clip data total 12.64 GB, excluding caches, review
+images and the shared runtime. The 61-view HTML remains 31.22 MB and embeds no
+videos. `data/vod_additional_sample.json` holds the receipts;
+`docs/official_sample.md` explains reproduction and the Windows launcher.

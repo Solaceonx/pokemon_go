@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import copy
 import gzip
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -135,6 +137,162 @@ def export_one(video, candidate, view, library, fingerprint, creator, url, sourc
             "video_bytes": facts["video_bytes"], "duration_seconds": facts["duration_seconds"]}
 
 
+def coalesce_paired_fragments(views):
+    """Join header gaps only inside a complete, simultaneous peer interval."""
+    views = copy.deepcopy(views)
+    complete = {"result_visible", "broadcast_result_visible"}
+    anchors = [(side, c) for side, candidates in views.items() for c in candidates
+               if c["completeness"] in complete and c["eligible_for_complete_battle_evaluation"]
+               and c["end"] - c["start"] >= 60]
+    for side, anchor in anchors:
+        for peer, candidates in list(views.items()):
+            if peer == side:
+                continue
+            fragments = sorted([c for c in candidates if c["source_id"] == anchor["source_id"]
+                and anchor["start"] - 2 <= c["start"] and c["end"] <= anchor["end"] + 2],
+                key=lambda c: c["start"])
+            if len(fragments) < 2 or abs(fragments[0]["start"] - anchor["start"]) > 2 or abs(fragments[-1]["end"] - anchor["end"]) > 2:
+                continue
+            if any(b["start"] - a["end"] > 2 for a, b in zip(fragments, fragments[1:])):
+                continue
+            if any(c["start_method"] not in ("entry_gap_or_edit", "sustained_party_reset")
+                   or any(cue["kind"] == "countdown" for cue in c["cues"]) for c in fragments[1:]):
+                continue
+            if any(c["incomplete_start"] or c["incomplete_end"] for c in fragments):
+                continue
+            merged = copy.deepcopy(fragments[0])
+            merged.update({"end": fragments[-1]["end"], "end_method": fragments[-1]["end_method"],
+                "end_uncertainty_seconds": max(anchor["end_uncertainty_seconds"], fragments[-1]["end_uncertainty_seconds"]),
+                "completeness": anchor["completeness"], "eligible_for_complete_battle_evaluation": True,
+                "paired_fragment_join": {"anchor_id": anchor["id"], "anchor_view": side,
+                    "anchor_start": anchor["start"], "anchor_end": anchor["end"],
+                    "fragments": [{key:c[key] for key in ("id", "start", "end", "start_method", "completeness")} for c in fragments]}})
+            merged["cues"] = [cue for c in fragments for cue in c["cues"]]
+            merged["notes"].append("Adjacent camera fragments joined inside one complete peer battle; exact boundaries still require review.")
+            removed = {c["id"] for c in fragments}
+            views[peer] = sorted([c for c in candidates if c["id"] not in removed] + [merged], key=lambda c: c["start"])
+    return views
+
+
+def result_refinement_windows(views, duration):
+    """Short result graphics can fall between the VOD's two-second keyframes."""
+    windows = []
+    for side, candidates in views.items():
+        for candidate in candidates:
+            if candidate["completeness"] != "result_unseen_or_edited" or not candidate["eligible_for_complete_battle_evaluation"] or candidate["end"] - candidate["start"] < 60:
+                continue
+            covered = any(peer["completeness"] in ("result_visible", "broadcast_result_visible")
+                and abs(peer["start"] - candidate["start"]) <= 2
+                and min(peer["end"],candidate["end"]) - max(peer["start"],candidate["start"]) >= .9 * (candidate["end"] - candidate["start"])
+                for other, peers in views.items() if other != side for peer in peers)
+            if not covered:
+                windows.append([max(0,candidate["end"] - 12), min(duration,candidate["end"] + 2)])
+    merged = []
+    for start,end in sorted(windows):
+        if merged and start <= merged[-1][1]:
+            merged[-1][1] = max(end,merged[-1][1])
+        else:
+            merged.append([start,end])
+    return merged
+
+
+def refine_result_markers(video, regions, windows, cache):
+    """Read only proposed endings at quarter-second cadence, preserving PTS."""
+    import av
+    from local_ocr import LocalOCR
+    from vod_broadcast import cue_matches
+    regions = [r for r in regions if r["kind"] == "match_win"]
+    if not regions or not windows:
+        return []
+    fingerprint = {"source_sha256":sha256(video), "regions":regions, "windows":windows,
+                   "interval_seconds":.25, "code_sha256":sha256(HERE / "vod.py")}
+    if cache.is_file():
+        with gzip.open(cache,"rt",encoding="utf-8") as f:
+            prior = json.load(f)
+        if prior["fingerprint"] == fingerprint:
+            return prior["markers"]
+    ocr, markers = LocalOCR(), []
+    with av.open(str(video)) as source:
+        stream = source.streams.video[0]
+        stream.codec_context.thread_count = 4
+        for number,(start,end) in enumerate(windows,1):
+            source.seek(int(start / stream.time_base),stream=stream,backward=True)
+            last = -100
+            for frame in source.decode(stream):
+                if frame.pts is None:
+                    continue
+                t = float(frame.pts * frame.time_base)
+                if t < start:
+                    continue
+                if t >= end:
+                    break
+                if t - last < .25 - 1e-6:
+                    continue
+                last = t
+                rgb = frame.to_ndarray(format="rgb24")
+                for region in regions:
+                    x,y,w,h = region["rect"]
+                    if min(x,y) < 0 or x+w > frame.width or y+h > frame.height:
+                        raise ValueError("Broadcast result region is outside this recording")
+                    text = " ".join(item["text"] for item in ocr.read(rgb[y:y+h,x:x+w]) if item["confidence"] >= .75)
+                    if cue_matches(region,text):
+                        markers.append({"t":round(t,6), "kind":region["kind"], "text":text,
+                                        "sampling":"quarter_second_result_window"})
+            print(json.dumps({"stage":"result_refine","windows_done":number,"windows_total":len(windows),"markers":len(markers)}),flush=True)
+    cache.parent.mkdir(parents=True,exist_ok=True)
+    temporary = cache.with_name(cache.name + ".incomplete")
+    with gzip.open(temporary,"wt",encoding="utf-8") as f:
+        json.dump({"fingerprint":fingerprint,"markers":markers},f,separators=(",",":"))
+    temporary.replace(cache)
+    return markers
+
+
+def align_paired_coverage(groups):
+    """Cover the shared beginning/end and explicitly attribute a peer result."""
+    complete = {"result_visible", "broadcast_result_visible"}
+    for group in groups:
+        anchors = [c for c in group if c["completeness"] in complete]
+        if len(group) < 2 or not anchors or any(c["incomplete_start"] or c["incomplete_end"] for c in group):
+            continue
+        start, end = min(c["start"] for c in group), max(c["end"] for c in group)
+        overlap = min(c["end"] for c in group) - max(c["start"] for c in group)
+        if overlap / (end - start) < .9 or max(c["start"] for c in group) - start > 2:
+            continue
+        evidence = [{key:c[key] for key in ("id", "view_id", "completeness", "end")} for c in anchors]
+        for candidate in group:
+            candidate["paired_boundary_evidence"] = {"result_views": evidence,
+                "own_start": candidate["start"], "own_end": candidate["end"],
+                "own_completeness": candidate["completeness"]}
+            if candidate["end"] != end:
+                candidate["end_method"] = "paired_result_coverage"
+            candidate["start"], candidate["end"] = start, end
+            if candidate["completeness"] not in complete:
+                candidate["completeness"] = "paired_result_visible"
+            candidate["notes"].append("Paired views share source coverage; result evidence is attributed to the camera that showed it.")
+
+
+def select_battles(views, limit=None, complete_only=False, required_views=None):
+    """Limit unique games, keeping both views together and selection chronological."""
+    if limit is not None and limit <= 0:
+        raise ValueError("Battle limit must be positive")
+    groups = {}
+    for candidates in views.values():
+        for candidate in candidates:
+            groups.setdefault(candidate["match_id"], []).append(candidate)
+    ordered = sorted(groups.values(), key=lambda group: min(c["first_hud_seconds"] for c in group))
+    selected = []
+    for group in ordered:
+        if complete_only and any(not c["eligible_for_complete_battle_evaluation"] or
+                                 c["completeness"] not in ("result_visible", "broadcast_result_visible", "paired_result_visible") for c in group):
+            continue
+        if required_views and {c["view_id"] for c in group} != required_views:
+            continue
+        selected.append(group)
+        if limit is not None and len(selected) >= limit:
+            break
+    return [c for group in selected for c in sorted(group, key=lambda c: c["view_id"])]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("url")
@@ -146,11 +304,19 @@ def main():
     parser.add_argument("--downloader", type=Path)
     parser.add_argument("--stage", choices=["detect", "extract"], default="extract")
     parser.add_argument("--jobs", type=int, default=2)
+    parser.add_argument("--scan-end", type=float, help="Stop boundary discovery at this source second; preserve the full original")
+    parser.add_argument("--limit-battles", type=int, help="Export at most this many unique games, including all paired views")
+    parser.add_argument("--complete-only", action="store_true", help="Require complete flags and a visible result on every view")
+    parser.add_argument("--paired-only", action="store_true", help="Require every configured view for each selected battle")
     parser.add_argument("--rescan", action="store_true")
     parser.add_argument("--resegment", action="store_true", help="Rebuild candidates while reusing unchanged visual samples")
     args = parser.parse_args()
     if not 1 <= args.jobs <= 4:
         parser.error("Use one to four export jobs")
+    if args.scan_end is not None and (not math.isfinite(args.scan_end) or args.scan_end <= 0):
+        parser.error("Use a positive finite scan ending time")
+    if args.limit_battles is not None and args.limit_battles <= 0:
+        parser.error("Use a positive battle limit")
     reader = reader_location(args.reader_dir)
     bootstrap(reader)
     from import_source import canonical_source
@@ -183,10 +349,12 @@ def main():
     run_folder = ROOT / ".vod/runs" / identity
     run_folder.mkdir(parents=True, exist_ok=True)
     profiles = profiles_for(layout, reader, ROOT / "data/gamemaster.json")
-    scan = coarse_scan(video, profiles, run_folder / "coarse-scan.json.gz", rescan=args.rescan)
+    scan = coarse_scan(video, profiles, run_folder / "coarse-scan.json.gz", rescan=args.rescan, scan_end=args.scan_end)
     fingerprint = {"detector": VERSION, "source_sha256": scan["fingerprint"]["source_sha256"],
                    "layout": layout, "code_sha256": {name: sha256(HERE / name) for name in ["vod.py", "vod_media.py", "vod_segments.py", "vod_broadcast.py"]},
                    "reader_sha256": {name: sha256(reader / name) for name in ["segment_battles.py", "extract_battles.py", "local_ocr.py"]}}
+    if args.scan_end is not None:
+        fingerprint["scan_end_seconds"] = scan["duration_seconds"]
     manifest_path = run_folder / "battle-candidates.json"
     previous = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
     if previous and not args.rescan and not args.resegment:
@@ -221,24 +389,38 @@ def main():
             views[name] = annotate_segments(refined, fine_rows, identity, name, scan["duration_seconds"])
             with gzip.open(fine_cache, "wt", encoding="utf-8") as stream:
                 json.dump(fine_rows, stream, separators=(",", ":"))
-        markers = marker_scan(video, layout["broadcast_regions"], run_folder / "broadcast-labels.json.gz") if layout.get("broadcast_regions") else []
-        views, excluded = filter_broadcast(views, markers)
+        markers = marker_scan(video, layout["broadcast_regions"], run_folder / "broadcast-labels.json.gz", scan_end=args.scan_end) if layout.get("broadcast_regions") else []
+        unfiltered = views
+        views, excluded = filter_broadcast(unfiltered, markers)
+        extra_markers = refine_result_markers(video, layout.get("broadcast_regions", []),
+            result_refinement_windows(views, scan["duration_seconds"]), run_folder / "result-refinement.json.gz")
+        if extra_markers:
+            markers = sorted(markers + extra_markers, key=lambda m:m["t"])
+            views, excluded = filter_broadcast(unfiltered, markers)
+        views = coalesce_paired_fragments(views)
         groups = pair_perspectives(views, identity)
+        align_paired_coverage(groups)
         for number, group in enumerate(groups, 1):
             for candidate in group:
                 suffix = " · partial" if candidate["incomplete_start"] or candidate["incomplete_end"] else ""
-                candidate["name"] = f"{layout['channel']} · Match {number:02d} · {candidate['view_id']}{suffix}"
+                candidate["name"] = f"{layout.get('label_prefix', layout['channel'])} · Match {number:02d} · {candidate['view_id']}{suffix}"
                 candidate["dataset_role"] = layout["dataset_role"]
         manifest = {"schema": "twitch-battle-candidates-v1", "source_id": identity, "url": canonical,
                     "fingerprint": fingerprint, "views": views, "unique_match_candidates": len(groups),
                     "excluded_candidates": excluded, "broadcast_markers": markers,
                     "all_boundaries_review_required": True, "full_game_state_verified": False}
         write_json(manifest_path, manifest)
+    selected = select_battles(views, args.limit_battles, args.complete_only,
+                              {view["id"] for view in layout["views"]} if args.paired_only else None)
+    manifest["export_selection"] = {"limit_unique_battles": args.limit_battles,
+        "complete_only": args.complete_only, "paired_only": args.paired_only,
+        "unique_battles": len({c["match_id"] for c in selected}), "clip_ids": [c["id"] for c in selected]}
+    write_json(manifest_path, manifest)
     exports = []
     if args.stage == "extract":
         args.library.mkdir(parents=True, exist_ok=True)
         view_lookup = {view["id"]: view for view in layout["views"]}
-        tasks = [(candidate, view_lookup[name]) for name, candidates in views.items() for candidate in candidates]
+        tasks = [(candidate, view_lookup[candidate["view_id"]]) for candidate in selected]
         with ThreadPoolExecutor(max_workers=args.jobs) as pool:
             futures = [pool.submit(export_one, video, candidate, view, args.library.resolve(), fingerprint,
                                    source_record.get("creator") or layout["channel"], canonical, source_record) for candidate, view in tasks]
@@ -256,6 +438,7 @@ def main():
                "exports": sorted(exports, key=lambda item: item["id"]),
                "clip_video_bytes": sum(e["video_bytes"] for e in exports), "wall_seconds": round(time.monotonic() - started, 3),
                "boundary_review_required": True, "tracking_run": False, "independent_accuracy_measured": False}
+    summary["export_selection"] = manifest["export_selection"]
     write_json(run_folder / "run.json", summary)
     print(json.dumps(summary), flush=True)
 

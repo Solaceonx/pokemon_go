@@ -12,14 +12,14 @@ from unittest.mock import patch
 HERE = Path(__file__).resolve().parents[1] / "scripts/recording"
 sys.path.insert(0, str(HERE))
 import vod_media
-from vod_segments import annotate_segments, discover_segments, pair_perspectives
-from vod_broadcast import filter_broadcast
-from vod import compatible_export
+from vod_segments import annotate_segments, coarse_scan, discover_segments, pair_perspectives
+from vod_broadcast import cue_matches, filter_broadcast, marker_scan
+from vod import align_paired_coverage, coalesce_paired_fragments, compatible_export, refine_result_markers, result_refinement_windows, select_battles
 
 
 @unittest.skipUnless(importlib.util.find_spec("av"), "video checks require the reader's PyAV environment")
 class TimestampTests(unittest.TestCase):
-    def source(self, folder):
+    def source(self, folder, *, all_keyframes=False):
         import av
         import numpy as np
         path = Path(folder) / "video.mp4"
@@ -27,6 +27,8 @@ class TimestampTests(unittest.TestCase):
             stream = container.add_stream("libx264", rate=15)
             stream.width, stream.height, stream.pix_fmt = 192, 320, "yuv420p"
             stream.options = {"preset": "ultrafast", "tune": "zerolatency"}
+            if all_keyframes:
+                stream.codec_context.gop_size = 1
             for i in range(45):
                 image = np.zeros((320, 192, 3), dtype="uint8")
                 image[:, :, i % 3] = 100 + i
@@ -78,6 +80,26 @@ class TimestampTests(unittest.TestCase):
             self.assertEqual(record['media']['sha256'], vod_media.sha256(path))
             self.assertLess(abs(self.decoded(path)[0][0]), .05)
 
+    def test_bounded_discovery_excludes_later_frames_and_rejects_different_window_cache(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = self.source(folder, all_keyframes=True)
+            vod_media.normalize_source(path)
+            fake_ocr = SimpleNamespace(read=lambda image: [{'text': 'REPLAY', 'confidence': 1}])
+            with patch.dict(sys.modules, {'local_ocr': SimpleNamespace(LocalOCR=lambda: fake_ocr)}), patch(
+                    'vod_segments.sample_frame', side_effect=lambda frame, profile, ocr, **kwargs:
+                        {'t': float(frame.pts * frame.time_base), 'hud': False, 'countdown': False}):
+                cache = Path(folder) / 'bounded.json.gz'
+                found = coarse_scan(path, {'left': {}}, cache, scan_end=.5)
+                self.assertEqual(found['duration_seconds'], .5)
+                self.assertEqual(len(found['views']['left']), 8)
+                self.assertTrue(all(r['t'] < .5 for r in found['views']['left']))
+                with self.assertRaisesRegex(ValueError, 'Scan inputs changed'):
+                    coarse_scan(path, {'left': {}}, cache, scan_end=.75)
+                markers = marker_scan(path, [{'rect': [0, 0, 20, 20], 'kind': 'replay', 'cue': 'REPLAY'}],
+                                      Path(folder) / 'markers.json.gz', scan_end=.5)
+                self.assertEqual(len(markers), 8)
+                self.assertTrue(all(m['t'] < .5 for m in markers))
+
     def test_partial_download_is_not_normalized(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'video.mp4.part'
@@ -85,6 +107,19 @@ class TimestampTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 vod_media.normalize_source(path)
             self.assertEqual(path.read_bytes(), b'not complete')
+
+    def test_brief_result_between_keyframes_is_found_in_refined_window(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = self.source(folder)
+            vod_media.normalize_source(path)
+            fake_ocr = SimpleNamespace(read=lambda image: [{'text':'GAME WIN!', 'confidence':1}]
+                if image[:,:,2].mean() > 50 else [])
+            region = {'rect':[0,0,20,20], 'kind':'match_win', 'cue':'GAMEWIN'}
+            with patch.dict(sys.modules, {'local_ocr':SimpleNamespace(LocalOCR=lambda:fake_ocr)}):
+                self.assertEqual(marker_scan(path,[region],Path(folder)/'keys.gz'), [])
+                markers = refine_result_markers(path,[region],[[.5,1.5]],Path(folder)/'fine.gz')
+                self.assertTrue(markers)
+                self.assertTrue(all(.5 <= m['t'] < 1.5 for m in markers))
 
     def test_incomplete_duration_is_rejected_before_original_is_changed(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -98,6 +133,110 @@ class TimestampTests(unittest.TestCase):
 
 
 class BoundaryTests(unittest.TestCase):
+    def test_result_refinement_skips_known_peer_ends_and_partial_source_edges(self):
+        base = {'start':100,'end':280,'completeness':'result_unseen_or_edited',
+                'eligible_for_complete_battle_evaluation':True}
+        self.assertEqual(result_refinement_windows({'left':[base],'right':[{**base,'completeness':'result_visible'}]},400), [])
+        self.assertEqual(result_refinement_windows({'left':[{**base,'eligible_for_complete_battle_evaluation':False}]},400), [])
+        self.assertEqual(result_refinement_windows({'left':[base],'right':[base]},400), [[268,282]])
+    def test_paired_end_covers_delayed_result_and_attributes_its_evidence(self):
+        shared = {'start':655.5, 'incomplete_start':False, 'incomplete_end':False,
+                  'end_method':'last_hud_tail', 'notes':[]}
+        left = {**shared,'id':'left-1','view_id':'left','end':833.75,'completeness':'result_visible','notes':[]}
+        right = {**shared,'id':'right-1','view_id':'right','end':829.25,'completeness':'result_unseen_or_edited','notes':[]}
+        align_paired_coverage([[left,right]])
+        self.assertEqual(right['end'],833.75)
+        self.assertEqual(right['completeness'],'paired_result_visible')
+        self.assertEqual(right['paired_boundary_evidence']['own_end'],829.25)
+        self.assertEqual(right['paired_boundary_evidence']['result_views'][0]['view_id'],'left')
+        self.assertEqual(left['completeness'],'result_visible')
+
+    def test_paired_end_never_restores_missing_source_edge(self):
+        views = self.fragmented_pair()
+        left, right = views['left'][0], views['right'][1]
+        left['view_id'], right['view_id'] = 'left','right'
+        right['incomplete_start'] = True
+        before = json.loads(json.dumps([left,right]))
+        align_paired_coverage([[left,right]])
+        self.assertEqual([left,right],before)
+
+    def fragmented_pair(self):
+        shared = {'source_id':'official', 'start':1709.132333, 'end':1875.952333,
+            'completeness':'result_visible', 'eligible_for_complete_battle_evaluation':True,
+            'incomplete_start':False, 'incomplete_end':False, 'start_method':'first_hud_context',
+            'end_method':'visible_result', 'end_uncertainty_seconds':2, 'cues':[], 'notes':[]}
+        anchor = {**shared, 'id':'left-1'}
+        first = {**shared, 'id':'right-1', 'end':1728.566333, 'completeness':'result_unseen_or_edited'}
+        second = {**shared, 'id':'right-2', 'start':1728.432333, 'start_method':'entry_gap_or_edit'}
+        return {'left':[anchor], 'right':[first, second]}
+
+    def test_peer_interval_recovers_complete_view_split_by_animation(self):
+        views = self.fragmented_pair()
+        result = coalesce_paired_fragments(views)
+        self.assertEqual(len(result['right']), 1)
+        self.assertEqual(result['right'][0]['start'], views['right'][0]['start'])
+        self.assertEqual(result['right'][0]['end'], views['right'][1]['end'])
+        self.assertEqual(result['right'][0]['completeness'], 'result_visible')
+        self.assertEqual(len(result['right'][0]['paired_fragment_join']['fragments']), 2)
+        self.assertEqual(len(views['right']), 2)
+
+    def test_peer_join_does_not_swallow_new_game_countdown(self):
+        views = self.fragmented_pair()
+        views['right'][1]['cues'] = [{'kind':'countdown','t':1728.5}]
+        self.assertEqual(coalesce_paired_fragments(views), views)
+
+    def test_peer_join_requires_contiguous_same_source_coverage(self):
+        views = self.fragmented_pair()
+        views['right'][1]['start'] += 5
+        self.assertEqual(coalesce_paired_fragments(views), views)
+        views = self.fragmented_pair()
+        views['right'][1]['source_id'] = 'another_recording'
+        self.assertEqual(coalesce_paired_fragments(views), views)
+
+    def test_live_game_immediately_after_replay_is_not_discarded(self):
+        replay = {'first_hud_seconds':2081.25, 'start':2079.75, 'end':2107.0, 'notes':[],
+                  'incomplete_start':False, 'incomplete_end':False}
+        live = {**replay, 'first_hud_seconds':2108.5, 'start':2107.0, 'end':2260.0}
+        markers = [{'t':float(t),'kind':'replay'} for t in range(2078,2107,2)]
+        kept, excluded = filter_broadcast({'left':[replay,live]}, markers)
+        self.assertEqual(len(kept['left']), 1)
+        self.assertEqual(kept['left'][0]['first_hud_seconds'], live['first_hud_seconds'])
+        self.assertEqual(kept['left'][0]['end'], live['end'])
+        self.assertEqual(len(excluded), 1)
+        self.assertEqual(excluded[0]['first_hud_seconds'], replay['first_hud_seconds'])
+
+    def test_official_result_graphics_accept_calibrated_font_readings(self):
+        region = {'cue': 'GAMEWIN', 'cues': ['GAMEWIN', 'GAMIWIN', 'MATCHWIN']}
+        self.assertTrue(cue_matches(region, 'GAMI WINI'))
+        self.assertTrue(cue_matches(region, 'MATCH WIN!'))
+        self.assertFalse(cue_matches(region, 'Swinub used Icy Wind!'))
+        self.assertFalse(cue_matches(region, 'No Protect Shields remaining'))
+
+    def test_existing_replay_cue_keeps_its_single_cue_behavior(self):
+        self.assertTrue(cue_matches({'cue':'REPLAY'}, 'REPLAY'))
+        self.assertFalse(cue_matches({'cue':'REPLAY'}, 'GAME WIN!'))
+
+    def selection_candidates(self):
+        return {view: [{'id': f'{view}-{i}', 'match_id': f'match-{i}', 'view_id': view,
+                       'first_hud_seconds': i * 100, 'eligible_for_complete_battle_evaluation': True,
+                       'completeness': 'result_visible'} for i in (3, 1, 2)] for view in ('left', 'right')}
+
+    def test_battle_limit_counts_games_not_player_views(self):
+        found = select_battles(self.selection_candidates(), 2, required_views={'left', 'right'})
+        self.assertEqual([c['id'] for c in found], ['left-1', 'right-1', 'left-2', 'right-2'])
+
+    def test_complete_pair_selection_skips_partial_unpaired_and_resultless_games(self):
+        views = self.selection_candidates()
+        views['right'][1]['eligible_for_complete_battle_evaluation'] = False
+        views['left'][2]['completeness'] = 'result_unseen_or_edited'
+        views['right'].append({**views['right'][0], 'id': 'right-4', 'match_id': 'match-4', 'first_hud_seconds': 400})
+        found = select_battles(views, 2, True, {'left', 'right'})
+        self.assertEqual([c['id'] for c in found], ['left-3', 'right-3'])
+
+    def test_nonpositive_battle_limit_is_rejected(self):
+        with self.assertRaises(ValueError):
+            select_battles(self.selection_candidates(), 0)
+
     def discover(self, rows, duration):
         # The legacy reader supplies its first-HUD cue. Exercise the extra
         # cues for a broadcast where shields cannot be measured.

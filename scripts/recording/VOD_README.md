@@ -11,6 +11,11 @@ folder is beside this checkout. Matching completed downloads and cuts are reused
 After cutting, double-click `Track Battle Videos.cmd`. It reads the calibrated
 clips, saves compressed results, and opens the viewer with its live values table.
 
+The two new official Louisville sample options export five complete games each,
+with both player views kept together. Select **New official sample** in the viewer
+to find them. Their state readings are pending. Keep these reserved games out of
+recognition calibration and broad tracking runs until the evaluation is ready.
+
 ## Track the saved clips
 
 ```bash
@@ -64,6 +69,15 @@ Defaults put sources, scan caches, candidates and cuts under `.vod/`, outside Gi
 `--resegment` rebuilds candidates using unchanged cached visual samples;
 `--rescan` rebuilds visual samples and boundary candidates. A changed input must
 never silently reuse a clip made from different footage or boundaries.
+
+`--scan-end SECONDS` bounds discovery while retaining the complete original.
+`--limit-battles N` counts unique match IDs and keeps their player views together.
+`--complete-only` requires visible result evidence and complete coverage on every
+view. A paired view may use the other camera's result with explicit attribution;
+`--paired-only` requires all configured views. The result can contain fewer
+than N games: inspect `export_selection.unique_battles` before calling the sample
+complete. Media verification checks the selected exports, not every discovered
+candidate. Increasing the scan window requires `--rescan`.
 
 The layout names apply to the specific recording IDs in `data/vod_layouts.json`.
 A creator can change their overlay or phone layout. Measure a new recording before

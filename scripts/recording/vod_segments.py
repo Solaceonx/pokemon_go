@@ -112,13 +112,15 @@ def sample_frame(frame, profile, ocr, *, context=True):
     return row
 
 
-def coarse_scan(video, profiles, cache, *, rescan=False):
+def coarse_scan(video, profiles, cache, *, rescan=False, scan_end=None):
     import av
     from local_ocr import LocalOCR
     video, cache = Path(video), Path(cache)
     source_hash = sha256(video)
     fingerprint = {"detector": VERSION, "source_sha256": source_hash, "profiles": profiles,
                    "frame_policy": "keyframes", "sample_interval_seconds": 0.5}
+    if scan_end is not None:
+        fingerprint["scan_end_seconds"] = scan_end
     if cache.exists() and not rescan:
         with gzip.open(cache, "rt", encoding="utf-8") as stream:
             saved = json.load(stream)
@@ -133,10 +135,14 @@ def coarse_scan(video, profiles, cache, *, rescan=False):
         stream.codec_context.thread_count = 4
         stream.codec_context.skip_frame = "NONKEY"
         duration = source.duration / av.time_base
+        if scan_end is not None:
+            duration = min(duration, scan_end)
         for frame in source.decode(stream):
             if frame.pts is None:
                 continue
             t = float(frame.pts * frame.time_base)
+            if t >= duration:
+                break
             for name, profile in profiles.items():
                 # Intro/lobby text is not needed on every keyframe. Near battle
                 # endings retain frequent context to catch short result screens.

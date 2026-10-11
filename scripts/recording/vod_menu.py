@@ -1,4 +1,4 @@
-"""Small Windows entry point for the two calibrated Twitch pilot recordings."""
+"""Windows entry point for calibrated Twitch recordings and paired samples."""
 import json
 from pathlib import Path
 import subprocess
@@ -14,8 +14,8 @@ def main():
     print('Cut Twitch recordings into battles\n')
     for index, (_, layout) in enumerate(choices, 1):
         print(f'{index}. {layout["channel"]} - recording {layout["source_ids"][0]}')
-    print('\nThese two screen layouts have been measured. Other recordings need a layout first.')
-    selected = input('Choose 1 or 2: ').strip()
+    print('\nThese recording layouts have been measured. Other recordings need a layout first.')
+    selected = input('Choose a recording number: ').strip()
     if selected not in {str(i) for i in range(1, len(choices) + 1)}:
         print('No recording selected.')
         return 2
@@ -23,6 +23,10 @@ def main():
     command = [sys.executable, str(HERE / 'vod.py'),
                f'https://www.twitch.tv/videos/{layout["source_ids"][0]}',
                '--layout', key, '--download']
+    sample = layout.get('sample_export')
+    if sample:
+        command += ['--scan-end', str(sample['scan_end_seconds']),
+                    '--limit-battles', str(sample['unique_battles']), '--complete-only', '--paired-only']
     library = ROOT.parent / 'pokemon-go-screen-reader'
     if (library / 'sources').is_dir() and (library / 'battles').is_dir():
         command += ['--sources-root', str(library / 'sources'), '--library', str(library / 'battles'),
@@ -33,6 +37,13 @@ def main():
     print('\nThis keeps one original recording and reuses matching battle clips.')
     result = subprocess.run(command, cwd=ROOT)
     if result.returncode == 0:
+        if sample:
+            manifest = json.loads((ROOT / '.vod/runs' / layout['source_ids'][0] / 'battle-candidates.json').read_text(encoding='utf-8'))
+            found = manifest['export_selection']['unique_battles']
+            if found < sample['unique_battles']:
+                print(f'\nOnly {found} complete paired battles were found. The requested sample is incomplete.')
+                print('A longer scan and boundary review are needed before counting this sample as ready.')
+                return 2
         check = [sys.executable, str(HERE / 'vod_verify.py'), layout['source_ids'][0], '--library', str(clips)]
         if (library / 'segment_battles.py').is_file():
             check += ['--reader-dir', str(library)]

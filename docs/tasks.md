@@ -366,3 +366,14 @@ field against those labels, identify forms, resolve energy-count disagreements,
 and reserve a new untouched source before tuning. Keep both tournament views
 of a match in the same evaluation group. Exact HP needs independent maximum-HP
 evidence; a visible bar alone cannot determine it.
+
+## 17. Official paired evaluation sample — Codex
+
+Collected ten reviewed complete battles from two original official pokemongo
+Twitch VODs, with both views kept together as twenty clips. The viewer's
+**New official sample** filter keeps these separate from earlier exposed clips.
+Selection, source/frame provenance, boundary evidence, measured storage and
+verification receipts are in `data/vod_additional_sample.json`; reproduction is
+in `docs/official_sample.md`. State recognition remains frozen and analysis of
+these new clips is pending. Next: independently adjudicate state labels and
+evaluate the frozen reader before using these sources to tune recognition.
