@@ -631,6 +631,40 @@ tracked games themselves.
 it has and has not been run on, what will break on other footage, and how to tell a correctly
 tracked battle from a wrong one.
 
+### How much of the game state is right: two screens of the same match (2026-10-11)
+
+The official broadcast in the Twitch pilot shows both players' screens. A player's own screen
+is the better witness for their own Pokémon, health, shields and (from the buttons) energy,
+so it stands in for the truth about what the other screen can only work out. Three complete
+matches, each seen from both sides (`scripts/recording/paired_state.py`,
+`paired_energy.py`):
+
+| One view's picture of the opponent, against the opponent's own screen | Right | Moments |
+|---|---|---|
+| Who is out | 98.7% | 818 |
+| Health within 3% of the bar | 88.2% | 807 |
+| Health within 10% | 96.2% | 807 |
+| Shields | 100% | 818 |
+| Pokémon left | 99.6% | 818 |
+| All of the above at once (health within 10%) | 94.6% | 818 |
+| Energy within one fast move | 54.4% | 274 |
+| Energy within two fast moves | 69.0% | 274 |
+| Everything at once, energy within two | 66.8% | 274 |
+
+The two views also give the same 11, 14 and 15 charged moves, mirrored, with the same names,
+and the same switches at the same moments.
+
+So the events and everything the screen shows directly are right about 95% of the time, and
+the opponent's energy is the weak part: the count is off by 12 on average (median 9), 2.8 too
+high on balance. This is the first measurement of it; until now it had only been checked
+against the cost of moves thrown. Part of the difference is the reference itself (the button
+fill lags a hit, and the players' own fast moves are guessed in public footage: the two
+views assumed the same fast move in 73% of moments).
+
+Under the ending rule used for the owner's recordings (the result screen closes the battle,
+checked against the header's count), 7 of the 23 public views would pass every check, 7 more
+fail only because their clip has no result screen, and 9 have something else wrong.
+
 ## Known gaps in the simulator
 
 - Form-changing Pokémon are left out (Aegislash, Mimikyu, Cramorant, Morpeko).
