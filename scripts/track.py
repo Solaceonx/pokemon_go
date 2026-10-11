@@ -114,7 +114,8 @@ def main() -> int:
     folder = Path(sys.argv[1])
     gd = GameData()
     builds, known = load_team(gd, json.loads((folder / "team.json").read_text()))
-    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy, trust_my_energy=not blind)
+    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy, trust_my_energy=not blind,
+                      foe_fast=json.loads((folder / "foes.json").read_text()) if (folder / "foes.json").exists() else None)
     looks = problems = 0
     with (folder / "states.jsonl").open("w") as states:
         for number, line in enumerate(observation_lines(folder), start=1):

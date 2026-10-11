@@ -157,13 +157,17 @@ class TrackedView:
 
 class Tracker:
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
-                 moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True):
+                 moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True,
+                 foe_fast: dict | None = None):
         """my_team may be incomplete (footage of someone else's game): Pokémon are added as they appear.
         moves_known says, per Pokémon, whether its moves come from a team sheet or are the usual ones assumed."""
         self.gd = gd
         # How energy is counted. "rhythm": a fast move every so many turns for as long as its user is on the
         # field, which needs no health bar but assumes nobody pauses. "hits": from the steps in the health bars.
         self.by_rhythm = energy == "rhythm"
+        # Fast moves we have been told for opposing species ({species id: move id}), e.g. from the other
+        # player's own screen in a broadcast that shows both. They are taken as known from first sight.
+        self.foe_fast = foe_fast or {}
         self.trust_my_energy = trust_my_energy  # False: compare my count with the buttons but do not correct it
         self.me = Side([Mon(b) for b in my_team])
         self.my_moves_known = list(moves_known) if moves_known else [True] * len(my_team)
@@ -401,6 +405,12 @@ class Tracker:
             self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species, allow_forms=True))
             if len(self._fast_options(self.foes[obs.foe_species])) == 1:
                 self.foes[obs.foe_species].fast_from = "inferred"  # the species has only the one
+            told = self.foe_fast.get(obs.foe_species)
+            if told in {m.id for m in self._fast_options(self.foes[obs.foe_species])}:
+                foe = self.foes[obs.foe_species]
+                foe.mon.build = self.gd.build(obs.foe_species, [told, *(m.id for m in foe.mon.build.charged)], allow_forms=True)
+                foe.fast_from = "inferred"
+                foe.ruled_out = {m.id for m in self._fast_options(foe)} - {told}
             self.order.append(obs.foe_species)
             self._note(obs.t, "foe_seen", species=obs.foe_species)
         self.foe = self.foes[obs.foe_species]

@@ -149,7 +149,7 @@ class Planner:
                  field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
                  sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
-                 odds: bool = False, hold: bool = False, hold_cost: float = 0.3):
+                 odds: bool = False, hold: bool = True, hold_cost: float = 0.5):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -587,6 +587,7 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         shield_share=min(0.9, near(0.4, 0.3)), shield_worth=near(0.35, 0.4),
         switch_margin=near(0.35, 0.4), bad_matchup=-near(0.2, 0.5),
         farm=rng.random() < 0.8, farm_cost=near(0.35, 0.4), sac=rng.random() < 0.8,
+        hold=rng.random() < 0.8, hold_cost=near(0.5, 0.4),
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),

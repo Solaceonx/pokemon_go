@@ -19,10 +19,12 @@ gd = GameData()
 from public_transitions import counter_changes, replacement_evidence
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
-KNOWN = {  # movesets we have been told; any other Pokémon of ours gets the usual moves until it shows otherwise
-    "Melmetal": {"fast": "Thunder Shock", "charged": ["Double Iron Bash", "Dynamic Punch"]},
-    "Altaria": {"fast": "Dragon Breath", "charged": ["Sky Attack", "Flamethrower"]},
-}
+# The owner's own Pokémon, known before the battle: moves, and IVs and CP where given (data/owner_team.json).
+# Any other Pokémon of ours gets the usual moves until the battle shows otherwise.
+SHEET = json.loads((Path(__file__).resolve().parents[2] / "data" / "owner_team.json").read_text())["pokemon"]
+KNOWN = {}
+for entry in SHEET:
+    KNOWN.setdefault(entry["species"], []).append(entry)
 PUBLIC = "--public-footage" in sys.argv
 if PUBLIC:
     KNOWN = {}  # The recorder owner's team sheet does not describe a public VOD.
@@ -81,7 +83,7 @@ theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows 
 THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 3][:3]
 # The bars are on screen for about a second before the first fast moves begin.
 first_both = next((r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None), bar_times[0])
-T0 = round(first_both + 0.7, 1)
+T0 = round(first_both + option("--start", 0.7), 1)
 
 # events from the announcement text
 gos, seqs, prompts, seq, words = [], [], [], None, []
@@ -152,6 +154,9 @@ ENTER = 0.2  # a replacement for a fainted Pokémon is attacking this long after
 # A switch takes effect before the text says so. Measured from our own energy on the buttons: Jellicent had its
 # first fast move in 0.7 s before "Go, Jellicent!" was read, and Altaria stopped gaining 1.5 s before "Go, Melmetal!".
 SWAPPED = -1.0
+# Their switch, seen from our screen, is another matter: checked against the other player's own buttons in
+# two-screen matches (see docs/status.md), and so has its own number.
+SWAPPED, SWAPPED_THEIRS, ENTER = option("--swapped-ours", SWAPPED), option("--swapped-theirs", SWAPPED), option("--enter", ENTER)
 def header_stints(key):
     """Stretches over which the header on one side showed the same name: [first seen, last seen, name]."""
     runs = []
@@ -183,7 +188,7 @@ def entered(side, key, t, name, first, seen=None):
             faint = (earlier is not None and now is not None and now < earlier) \
                 or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
                 or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
-    entry = {"t": t + (ENTER if faint or first else SWAPPED), "name": name, "faint": faint, "read": t}
+    entry = {"t": t + (ENTER if faint or first else SWAPPED if side == "mine" else SWAPPED_THEIRS), "name": name, "faint": faint, "read": t}
     if PUBLIC:
         entry.update(seen=seen if seen is not None else t, transition_evidence=proof)
     field[side].append(entry)
@@ -296,17 +301,38 @@ def away(a, b):
 # short of energy for moves they threw. They are used for the one thing the text times badly: how long nobody
 # attacks after a faint. A wait runs from the buttons going (or from the end of a charged move that caused the
 # faint) to half a second before they come back.
+WAITS, LONG_GAP = option("--waits", "faint"), option("--long-gap", 2.0)
+CHARGED_SECONDS, RESUME_LEAD = option("--charged-seconds", 10.0), option("--resume-lead", 0.5)
 if live:
+    seen_in_header = list(waits) if option("--header-waits", "yes") == "yes" else []  # from each faint to its replacement
     waits = []
     for (_, gone), (back, _) in zip(live, live[1:] + [[end + 0.5, end + 0.5]]):
         cues = sorted((q for q in seqs if gone - 0.5 <= q["start"] <= back), key=lambda q: q["start"])
-        if not any(gone - 1.0 <= when - 0.5 <= back for key in ("m", "o") for when, _ in left_shown[key][1:]):
-            continue  # nobody fainted in this gap
-        start = cues[-1]["start"] + 10.0 if cues else gone
-        if back - 0.5 > start + 0.3: waits.append((start, back - 0.5))
+        fainted = any(gone - 1.0 <= when - 0.5 <= back for key in ("m", "o") for when, _ in left_shown[key][1:])
+        # --waits faint: only gaps in which the header shows a faint. --waits any: every gap longer than a switch
+        # takes, faint seen or not (the fight cannot be running while the buttons are away this long).
+        if not fainted and (WAITS == "faint" or (not cues and back - gone < LONG_GAP)):
+            continue
+        start = cues[-1]["start"] + CHARGED_SECONDS if cues else gone
+        if back - RESUME_LEAD > start + 0.3: waits.append((start, back - RESUME_LEAD))
+    # A faint can also come before a charged move inside one gap, where the rule above sees only the move. The
+    # header's own account of each faint (counter falls, replacement comes out) covers that; the two are merged.
+    merged = []
+    for a, b in sorted(waits + seen_in_header):
+        if merged and a <= merged[-1][1]: merged[-1][1] = max(merged[-1][1], b)
+        else: merged.append([a, b])
+    waits = [tuple(w) for w in merged]
 
 # Our energy, straight from the buttons. Each shows energy / cost as the filled share of its height, and starts
 # again from empty for the second helping once the first is full. Two buttons with different costs pin it down.
+def sheet_entry(name):
+    """The owner's sheet for this Pokémon: with several of one species, the one whose CP the header shows."""
+    listed = KNOWN.get(name) or []
+    if len(listed) > 1:
+        shown = collections.Counter(r["m"]["cp"] for r in rows if r["m"]["sp"] and nearest(r["m"]["sp"], species) == name and r["m"]["cp"])
+        match = [e for e in listed if shown and e.get("cp") == shown.most_common(1)[0][0]]
+        return (match or listed)[0]
+    return listed[0] if listed else None
 def our_moves(name):
     if PUBLIC:
         # Read labels from this Pokémon's own stint. Never substitute PvPoke's
@@ -319,7 +345,7 @@ def our_moves(name):
         pair = labels.most_common(1)[0][0]
         found = [next((m for m in gd.moves.values() if m.name == n), None) for n in pair]
         return found if all(found) else []
-    known = KNOWN.get(name, {}).get("charged")
+    known = (sheet_entry(name) or {}).get("charged")
     if known:
         return [next(m for m in gd.moves.values() if m.name == n) for n in known]
     sid = next((k for k, v in gd.species.items() if v["speciesName"] == name), None)
@@ -362,6 +388,28 @@ if live:
         if e is not None:
             was = min(100.0, e); button_energy.append((r["t"], was))
 energy_times = [t for t, _ in button_energy]
+# Single rises of our own energy: each is a fast move of ours landing, so their size and spacing name the move.
+own_steps = collections.defaultdict(list)
+if button_energy:
+    readings_of_ours = collections.defaultdict(list)
+    for t, e in button_energy:
+        if active(t): readings_of_ours[active(t)].append((t, e))
+    for name, points in readings_of_ours.items():
+        under = min(m.energy for m in our_moves(name)) - 1  # past the first helping the two buttons stop agreeing
+        levels = []  # [first seen, last seen, value] for each value the fill settles on
+        for i, (t, e) in enumerate(points):
+            ahead = [v for when, v in points[i:i + 5] if when - t <= 0.3]
+            if len(ahead) >= 3 and max(ahead) - min(ahead) <= 2.0:
+                value = statistics.median(ahead)
+                if levels and abs(value - levels[-1][2]) <= 2.0 and t - levels[-1][1] <= 0.6: levels[-1][1] = t
+                else: levels.append([t, t, value])
+        previous = None
+        for a, b in zip(levels, levels[1:]):
+            if b[0] - a[1] > 1.2 or not 2.5 < b[2] - a[2] < 30 or b[2] > under:
+                previous = None  # the buttons were away, or this is not one clean rise
+                continue
+            own_steps[name].append([round(b[0] - T0, 2), round(b[2] - a[2], 1), round(b[0] - previous, 2) if previous else None])
+            previous = b[0]
 looks, left, shields, emitted = [], {"mine": 3, "theirs": 3}, {"mine": 2, "theirs": 2}, set()
 current = {"mine": None, "theirs": None}
 n_bins = int((end - T0) * 2)
@@ -411,7 +459,9 @@ for b in range(n_bins + 1):
     if "my_hp" in look or "foe_hp" in look or "my_charged" in look or "foe_charged" in look or not looks:
         since = T0 + looks[-1]["t"] if looks else t
         stood = sum(max(0.0, min(t, b) - max(since, a)) for a, b in waits)
-        if stood > 0: look["paused"] = round(stood, 2)
+        # The tracker allows 10 s for a charged move; --charged-seconds says how long one really stops the fight.
+        stood += (CHARGED_SECONDS - 10.0) * (("my_charged" in look) + ("foe_charged" in look))
+        if abs(stood) > 0.01: look["paused"] = round(stood, 2)
         lo, hi = bisect.bisect_right(energy_times, t - 0.5), bisect.bisect_right(energy_times, t)
         if hi > lo and "my_charged" not in look and not inside:
             # The fill glides up after each hit and jumps about while it does; the last few frames are the settled ones.
@@ -441,7 +491,20 @@ elif result == "loss":
     looks.append({"t": round(end - T0, 2), "my_hp": 0.0, "my_left": left["mine"] - 1, "note": "from the result screen"})
 out.mkdir(parents=True, exist_ok=True)
 order = list(dict.fromkeys([f["name"] for f in field["mine"]] + OURS))  # in the order they came out
-team = {"pokemon": [{"species": name, **KNOWN.get(name, {})} for name in order[:3]]}
+def team_entry(name):
+    """What goes on the team sheet for one of ours: its moves, and its IVs and exact level when both IVs and CP are known."""
+    entry = sheet_entry(name)
+    if not entry:
+        return {"species": name}
+    out = {"species": name, "fast": entry["fast"], "charged": entry["charged"]}
+    if entry.get("ivs"):
+        out["ivs"] = entry["ivs"]
+        sid = next(k for k, v in gd.species.items() if v["speciesName"] == name)
+        levels = [1 + i / 2 for i in range(100) if gd.cp_at(sid, 1 + i / 2, tuple(entry["ivs"])) == entry.get("cp")]
+        if levels: out["level"] = levels[-1]
+        else: print(f"{name}: no level gives CP {entry.get('cp')} with IVs {entry['ivs']}; check data/owner_team.json")
+    return out
+team = {"pokemon": [team_entry(name) for name in order[:3]]}
 (out / "team.json").write_text(json.dumps(team, indent=2) + "\n")
 (out / "observations.jsonl").write_text("".join(json.dumps(l) + "\n" for l in looks))
 print(f"battle {which} of {len(battles)}; fight starts {T0}s into the recording; ours: {', '.join(order[:3])}; {len(looks)} looks over {end - T0:.0f}s of battle")
@@ -476,5 +539,6 @@ rel = lambda t: round(t - T0, 2)
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
     "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
     "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
+    "own_energy_steps": dict(own_steps),
     "buttons_on": [[rel(a), rel(b)] for a, b in live], "waits": [[rel(a), rel(b)] for a, b in waits],
 }) + "\n")

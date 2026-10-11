@@ -7,6 +7,30 @@ import json
 import statistics
 
 
+def fit_steps(steps, candidates):
+    """A player's own fast move from single rises of their own energy.
+
+    steps: (rise, seconds since the previous rise or None), read off the charged-move buttons frame by frame.
+    Each candidate (move id, energy gain, turns) predicts a rise of its gain every turns/2 seconds; a rise may
+    hold more than one hit when the fill glides. Unlike a rate, this tells apart moves that charge at the same
+    speed in different-sized steps."""
+    scores = {}
+    for mid, gain, turns in candidates:
+        errors = []
+        for rise, gap in steps:
+            hits = max(1, round(rise / gain))
+            error = abs(rise - hits * gain) / gain
+            if gap is not None:
+                error += 0.5 * abs(gap - hits * turns * 0.5) / (turns * 0.5)
+            errors.append(min(error, 2.0))
+        scores[mid] = round(sum(errors) / len(errors), 3)
+    ranked = sorted(scores, key=scores.get)
+    apart = len(ranked) == 1 or scores[ranked[1]] - scores[ranked[0]] > 0.12
+    # Four rises that fit loosely, or two that fit almost exactly.
+    clear = apart and ((len(steps) >= 4 and scores[ranked[0]] < 0.35) or (len(steps) >= 2 and scores[ranked[0]] < 0.08))
+    return {"selected": ranked[0] if clear else None, "scores": scores, "steps": len(steps)}
+
+
 def score_candidates(windows, candidates):
     scores = {}
     for mid, gain, turns in candidates:
@@ -56,6 +80,13 @@ def prepare_team(game, gd):
                     windows.append((duration, delta))
         fit = score_candidates(windows, [(m.id, m.energy_gain, m.turns) for m in legal]) if windows else {
             "selected": None, "status": "insufficient_evidence", "windows": 0, "scores_energy_per_second": {}, "accuracy_verified": False}
+        # Single rises, where the assembly found enough of them, say more than the rate over a window.
+        steps = [(rise, gap) for _, rise, gap in timeline.get("own_energy_steps", {}).get(name, [])]
+        by_steps = fit_steps(steps, [(m.id, m.energy_gain, m.turns) for m in legal]) if steps else None
+        if by_steps:
+            fit["by_steps"] = by_steps
+            if by_steps["selected"]:
+                fit.update(selected=by_steps["selected"], status="inferred")
         reports[name] = fit
         if fit["selected"]:
             # Charged moves still begin as model defaults and are learned when

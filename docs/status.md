@@ -126,11 +126,20 @@ So the looser the limit the better, up to about half of current health, after wh
 no difference. On top of the trained bot (which was trained without the rule): 53.5% ± 1.1
 head to head, and against the crowd 71.6% against 70.3%, +1.2 ± 1.1 on the same 4,000 battles.
 
-The best bot is now `Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02, hold=True,
-hold_cost=0.5)`. The constructor default stays off so that every earlier number here can be
-reproduced, and the crowd of opponents does not use the rule yet. Open: retrain the learned
-decisions with the rule on (its throw decisions were learned around a player that throws
-early), and give the rule to part of the crowd, since good players do this.
+**Now part of the baseline (2026-10-11).** At the owner's direction the standard player is
+being raised with general rules, for any team and any game state. `Planner()` now holds by
+default (`hold=True, hold_cost=0.5`), and four in five of the simulated opponents hold too
+(`varied_settings`). To reproduce a number from before this date, pass `hold=False` and note
+that the crowd it was measured against did not hold. Against the new crowd, same 4,000 battles:
+
+| Player | Wins |
+|---|---|
+| Rules without the hold rule | 53.2% ± 1.5 |
+| Rules as they now stand | 56.8% ± 1.5 (+3.5 ± 1.2) |
+| Trained bot on top of the new rules (`Learner(q=..., margin=0.02)`) | 69.0% ± 1.4 (+12.2 ± 1.7 over the rules) |
+
+The learned decisions were trained around a player that throws early and have not been
+retrained yet.
 
 ## Adversarial training (task 14)
 

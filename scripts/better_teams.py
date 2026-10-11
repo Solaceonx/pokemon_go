@@ -28,11 +28,16 @@ from pogo.arena import field_results, mean_and_margin  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
-OWNER = {  # the owner's team as they run it
-    "melmetal": ["THUNDER_SHOCK", "DOUBLE_IRON_BASH", "DYNAMIC_PUNCH"],
-    "altaria": ["DRAGON_BREATH", "SKY_ATTACK", "FLAMETHROWER"],
-    "jellicent": ["HEX", "SURF", "SHADOW_BALL"],
-}
+def owner_team() -> dict:
+    """{species id: [fast, charged, charged]} from data/owner_team.json, the owner's Pokémon as they run them."""
+    gd = GameData()
+    ids = {v["speciesName"]: k for k, v in gd.species.items()}
+    moves = {m.name: m.id for m in gd.moves.values()}
+    sheet = json.loads((ROOT / "data" / "owner_team.json").read_text())["pokemon"]
+    return {ids[e["species"]]: [moves[e["fast"]], *(moves[c] for c in e["charged"])] for e in sheet}
+
+
+OWNER = owner_team()
 _state: dict = {}
 
 

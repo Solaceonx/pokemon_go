@@ -194,10 +194,10 @@ class Guessing(unittest.TestCase):
         b = Battle([gator, azumarill()], [Mon(GD.default("altaria")), medicham()], Script(), Script(shield=True))
 
         def baiter():
-            return Planner(bait="farm", shields="threshold", farm=False)
+            return Planner(bait="farm", shields="threshold", farm=False, hold=False)  # the bait rule on its own
 
         self.assertEqual(baiter().act(b.views[0]), FAST)
-        self.assertEqual(Planner(bait="cheap", farm=False).act(b.views[0]), CHARGED[0])
+        self.assertEqual(Planner(bait="cheap", farm=False, hold=False).act(b.views[0]), CHARGED[0])
         gator.energy = 60
         b.sides[1].busy = 1  # Dragon Breath lands this turn, so the timing is already right
         self.assertEqual(baiter().act(b.views[0]), CHARGED[0])  # Hydro Cannon, with Ice Beam in hand
@@ -221,7 +221,7 @@ class Tactics(unittest.TestCase):
         b = Battle([alt, GD.default("melmetal")], [GD.default("torterra"), GD.default("jellicent")], Script(), Script())
         b.sides[1].busy = 1  # so that timing is not the reason to wait
         self.assertEqual(Planner(switches=False).act(b.views[0]), FAST)
-        self.assertIn(Planner(farm=False, switches=False).act(b.views[0]), CHARGED)
+        self.assertIn(Planner(farm=False, hold=False, switches=False).act(b.views[0]), CHARGED)
         alt.energy = 100
         self.assertIn(Planner(switches=False).act(b.views[0]), CHARGED)  # full, so holding gains nothing
 
@@ -243,8 +243,8 @@ class Tactics(unittest.TestCase):
         az = Mon(azumarill(), energy=60)  # both charged moves ready
         foe = Mon(GD.default("jellicent"))
         b = Battle([az, medicham()], [foe, GD.default("altaria")], Script(), Script())
-        self.assertIn(Planner(switches=False, seed=1).act(b.views[0]), CHARGED)
-        patient = Planner(switches=False, seed=1, hold=True, hold_cost=0.5)
+        self.assertIn(Planner(switches=False, seed=1, hold=False).act(b.views[0]), CHARGED)
+        patient = Planner(switches=False, seed=1)  # the rule is part of the standard player
         self.assertEqual(patient.act(b.views[0]), FAST)  # they are far from a move: keep building energy
         foe.energy = min(m.energy for m in foe.build.charged)
         self.assertIn(patient.act(b.views[0]), CHARGED)  # they have one now: no more waiting
