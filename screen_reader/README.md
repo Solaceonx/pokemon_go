@@ -106,3 +106,19 @@ fast moves and other tracker assumptions remain inferred. These displays and
 their exports distinguish known evidence from unverified current values; they
 do not establish full game-state accuracy. `node test_state_values.mjs` checks
 state carryover, pending values, unknown bars and immutable source readings.
+
+## New official battle sample
+
+The viewer's **New official sample** filter shows clips whose saved dataset role
+is `reserved_state_evaluation`. The official `pokemongo` Twitch collection in
+`twitch-vod-pilot` selects ten unique complete games from two original Louisville
+broadcasts and keeps each game's left and right player views together: twenty
+video clips. These remain separate from the exposed training and regression
+footage. Playback and folder imports work before tracking; the viewer labels
+these clips **Analysis pending** and preserves unknown values.
+
+The library count is a count of video views. Two views of the same match do not
+increase the unique battle count. Source selection, measured storage and media
+verification are recorded in `docs/official_sample.md` and
+`data/vod_additional_sample.json` on the pipeline branch. Keep the sample out of
+recognition calibration until independently reviewed state labels are ready.
