@@ -16,6 +16,7 @@ gm = json.load(open("data/gamemaster.json"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from pogo.gamedata import GameData
 gd = GameData()
+from public_transitions import counter_changes, replacement_evidence
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
 KNOWN = {  # movesets we have been told; any other Pokémon of ours gets the usual moves until it shows otherwise
@@ -133,6 +134,8 @@ def header_left(side, a, b):
     return statistics.mode(vals) if vals else None
 def steady(key, what):
     """A header counter, once it has shown the same number for half a second: (time, value) at each change."""
+    if PUBLIC:
+        return [(r["t"], r["value"]) for r in counter_changes(rows, key, what, FPS)]
     out, value, run = [], None, 0
     for r in rows:
         v = r[key][what]
@@ -141,6 +144,7 @@ def steady(key, what):
         if run == HALF: out.append((r["t"], v))
     return out
 left_shown = {"m": steady("m", "left"), "o": steady("o", "left")}
+left_evidence = {key: counter_changes(rows, key, "left", FPS) for key in ("m", "o")} if PUBLIC else {}
 def left_at(key, t):
     seen = [v for when, v in left_shown[key] if when <= t]
     return seen[-1] if seen else None
@@ -163,18 +167,26 @@ def header_stints(key):
         if joined_up and joined_up[-1][2] == x[2]: joined_up[-1][1] = x[1]
         else: joined_up.append(x[:3])
     return joined_up
-def entered(side, key, t, name, first):
+def entered(side, key, t, name, first, seen=None):
     """One Pokémon coming out on one side at time t (when its "Go, X!" was read)."""
     faint = False
+    proof = {"kind": "first", "method": "first_visible_header"}
     if not first:
-        before, after = header_left(key, t - 12, t - 1), header_left(key, t + 1, t + 6)
-        last = [r[key + "h"] for r in rows if t - 8 <= r["t"] < t and r[key + "h"] is not None]
-        # The counter of Pokémon left falls when one faints; the next to come out on that side is its replacement.
-        earlier, now = left_at(key, field[side][-1]["t"] + 3), left_at(key, t + 6)
-        faint = (earlier is not None and now is not None and now < earlier) \
-            or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
-            or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
-    field[side].append({"t": t + (ENTER if faint or first else SWAPPED), "name": name, "faint": faint, "read": t})
+        if PUBLIC:
+            proof = replacement_evidence(left_evidence[key], field[side][-1]["seen"], seen if seen is not None else t,
+                                         prompt=side == "mine" and any(0 <= t - p < 4 for p in prompts))
+            faint = proof["kind"] == "faint"
+        else:
+            before, after = header_left(key, t - 12, t - 1), header_left(key, t + 1, t + 6)
+            last = [r[key + "h"] for r in rows if t - 8 <= r["t"] < t and r[key + "h"] is not None]
+            earlier, now = left_at(key, field[side][-1]["t"] + 3), left_at(key, t + 6)
+            faint = (earlier is not None and now is not None and now < earlier) \
+                or (before is not None and after is not None and after < before) or (bool(last) and statistics.median(last[-10:]) < 0.08) \
+                or (side == "mine" and any(0 <= t - p < 4 for p in prompts))
+    entry = {"t": t + (ENTER if faint or first else SWAPPED), "name": name, "faint": faint, "read": t}
+    if PUBLIC:
+        entry.update(seen=seen if seen is not None else t, transition_evidence=proof)
+    field[side].append(entry)
 field = {"mine": [], "theirs": []}
 stints = {"mine": header_stints("m"), "theirs": header_stints("o")}
 if stints["mine"] and stints["theirs"]:
@@ -187,7 +199,7 @@ if stints["mine"] and stints["theirs"]:
         earliest = stints[side][i - 1][1] - 1.5 if i else seen - 8.0
         said = [k for k, (t, n) in enumerate(gos) if n == name and k not in used and earliest <= t <= seen + 0.5]
         if said: used.add(said[0])
-        entered(side, "m" if side == "mine" else "o", gos[said[0]][0] if said else seen - 0.5, name, first=i == 0)
+        entered(side, "m" if side == "mine" else "o", gos[said[0]][0] if said else seen - 0.5, name, first=i == 0, seen=seen)
 else:
     for t, name in gos:  # no header to go by: the names alone
         side = "mine" if name in OURS else "theirs"
@@ -198,6 +210,8 @@ else:
 
 def header_shields(key):
     """The header's shield counter, once it has shown the same number for half a second."""
+    if PUBLIC:
+        return steady(key, "sh")
     out, value, run = [], None, 0
     for r in rows:
         v = r[key]["sh"]
@@ -456,7 +470,9 @@ rel = lambda t: round(t - T0, 2)
 (out / "timeline.json").write_text(json.dumps({
     "clip_origin_seconds": T0, "public_footage": PUBLIC,
     "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
-    "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
+    "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"],
+                       **({"header_seen_clip_seconds": f["seen"], "transition_evidence": f["transition_evidence"]} if PUBLIC else {})}
+                      for f in field[side]] for side in field},
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
     "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
     "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},

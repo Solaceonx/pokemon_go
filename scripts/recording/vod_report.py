@@ -108,7 +108,8 @@ def report(sources_root, library):
                             'verdict': summary['tracking_verdict']})
     if tracked:
         from collections import Counter
-        failed = Counter(reason.split(':', 1)[0] for s in tracked for reason in s['verdict']['failed'])
+        failed = Counter(category for s in tracked for category in
+                         {reason.split(':', 1)[0] for reason in s['verdict']['failed']})
         artifact['tracking'] = {'views_processed': len(tracked), 'sampled_frames': sum(s['sampled_frames'] for s in tracked),
                                 'model_states': sum(s['model_states'] for s in tracked),
                                 'view_consistency_passes': sum(s['verdict']['verdict'] == 'pass' for s in tracked),
@@ -136,6 +137,9 @@ def report(sources_root, library):
     measurements = ROOT / '.vod/tracking-measurements.json'
     if measurements.is_file() and tracked:
         artifact['tracking']['measurements'] = json.loads(measurements.read_text(encoding='utf-8'))
+    transition_check = ROOT / 'data/vod_transition_validation.json'
+    if transition_check.is_file():
+        artifact['validation']['reviewed_transition_regression'] = json.loads(transition_check.read_text(encoding='utf-8'))
     write_json(ROOT / 'data/vod_pilot_report.json', artifact)
     return artifact
 

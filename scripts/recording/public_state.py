@@ -64,7 +64,7 @@ class PublicState:
             return None
         run = state["counter_runs"].get(name)
         if run is None or run["value"] != value or t - run["last"] > .2:
-            run = {"value": value, "start": t, "last": t, "count": 0}
+            run = {"value": value, "start": t, "last": t, "count": 0, "active_at_start": state["active"]}
         run["last"], run["count"] = t, run["count"] + 1
         state["counter_runs"][name] = run
         if run["count"] < 3 or t - run["start"] < .12:
@@ -74,7 +74,7 @@ class PublicState:
             state[name] = unknown("Counter increased inside one match; possible misread or edit")
             return None
         state[name] = evidence(value, t, method="sustained_visible_counter")
-        return (old, value) if old is not None and old != value else None
+        return (old, value, run["active_at_start"]) if old is not None and old != value else None
 
     def update(self, frame, slim):
         t = frame["timestamp_seconds"]
@@ -88,11 +88,10 @@ class PublicState:
             self.charge_owner = "opponent"
         for side in ("mine", "opponent"):
             visible, state = frame[side], self.sides[side]
-            active_before = state["active"]
             drop = self.counter(state, "left", visible["pokemon_left"], t)
             self.counter(state, "shields", visible["shields_left"], t)
-            if drop and drop[1] < drop[0] and active_before:
-                state["pokemon"][active_before]["fainted"] = evidence(True, t, "inferred", method="party_counter_decreased")
+            if drop and drop[1] < drop[0] and drop[2] in state["pokemon"]:
+                state["pokemon"][drop[2]]["fainted"] = evidence(True, t, "inferred", method="party_counter_decreased")
             species, cp = visible["species"], visible["cp"]
             identity = None
             if species.get("value") and cp.get("value") is not None:

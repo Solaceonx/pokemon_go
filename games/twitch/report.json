@@ -42,7 +42,7 @@
         28,
         10,
         29,
-        6
+        10
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
@@ -53,18 +53,20 @@
         "events": {
           "end": 1,
           "foe_charged": 6,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_move_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 5,
+          "foe_switch": 3,
           "my_charged": 5,
-          "my_switch": 3,
+          "my_faint": 1,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 17
         },
         "my_energy_looks": 50,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 16.2
+        "my_energy_off_on_average": 16.12
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -142,17 +144,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -206,8 +209,9 @@
         "events": {
           "end": 1,
           "foe_charged": 3,
+          "foe_faint": 1,
           "foe_seen": 3,
-          "foe_switch": 2,
+          "foe_switch": 1,
           "my_charged": 4,
           "my_switch": 2,
           "start": 1,
@@ -293,17 +297,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -316,11 +321,12 @@
       "game": "tw-2894502346-pov-003",
       "verdict": "fail",
       "failed": [
+        "moves: 1 charged move(s) without an observed name",
         "moves: 10 charged moves announced, 9 tracked",
         "ending: no result screen, and the tracker has us on 2 and them on 3"
       ],
       "notes": [
-        "the last charged move ended the battle before its name came up",
+        "final charged-move cue has no observed name; resolution and ending are unverified",
         "fast move only guessed for annihilape, charjabug, snorlax"
       ],
       "result": null,
@@ -365,7 +371,8 @@
           "foe_seen": 3,
           "foe_switch": 3,
           "my_charged": 4,
-          "my_switch": 3,
+          "my_faint": 1,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 13
         },
@@ -449,17 +456,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -506,7 +514,7 @@
         10,
         18,
         16,
-        11,
+        9,
         -5,
         16
       ],
@@ -519,16 +527,18 @@
         "events": {
           "end": 1,
           "foe_charged": 7,
+          "foe_faint": 2,
           "foe_seen": 3,
-          "foe_switch": 5,
+          "foe_switch": 3,
           "my_charged": 5,
-          "my_switch": 4,
+          "my_faint": 2,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 5
         },
         "my_energy_looks": 71,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 7.98
+        "my_energy_off_on_average": 8.42
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -606,17 +616,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -658,7 +669,7 @@
         57,
         37,
         50,
-        12,
+        15,
         51,
         18,
         0
@@ -667,22 +678,24 @@
       "blind_energy_check": {
         "looks": 115,
         "rejected": 0,
-        "unexplained": 8,
+        "unexplained": 13,
         "energy": "rhythm",
         "events": {
           "end": 1,
           "foe_charged": 4,
+          "foe_faint": 1,
           "foe_seen": 3,
-          "foe_switch": 2,
+          "foe_switch": 1,
           "my_charged": 4,
+          "my_faint": 1,
           "my_move_learned": 1,
-          "my_switch": 3,
+          "my_switch": 2,
           "start": 1,
-          "unexplained": 8
+          "unexplained": 13
         },
         "my_energy_looks": 63,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 9.37
+        "my_energy_off_on_average": 10.76
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -760,17 +773,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -783,11 +797,12 @@
       "game": "tw-2894502346-pov-006",
       "verdict": "fail",
       "failed": [
+        "moves: 1 charged move(s) without an observed name",
         "moves: 10 charged moves announced, 9 tracked",
         "ending: no result screen, and the tracker has us on 2 and them on 2"
       ],
       "notes": [
-        "the last charged move ended the battle before its name came up"
+        "final charged-move cue has no observed name; resolution and ending are unverified"
       ],
       "result": null,
       "seconds": 151.13,
@@ -814,7 +829,7 @@
         56,
         32,
         -8,
-        43,
+        47,
         39
       ],
       "paired_move_names_recovered": 0,
@@ -826,17 +841,19 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 1,
           "foe_fast_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 3,
           "my_charged": 4,
-          "my_switch": 4,
+          "my_faint": 1,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 9
         },
         "my_energy_looks": 56,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 8.66
+        "my_energy_off_on_average": 8.45
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -914,17 +931,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -940,8 +958,8 @@
         "ending: result says win, tracker has us on 1 and them on 1"
       ],
       "notes": [
-        "unexplained changes in 21% of looks",
-        "fast move only guessed for ninetales"
+        "unexplained changes in 20% of looks",
+        "fast move only guessed for ninetales, hydreigon"
       ],
       "result": "win",
       "seconds": 194.73,
@@ -960,7 +978,7 @@
       "their_fast_moves": {
         "ninetales": "EMBER",
         "quagsire": "MUD_SHOT",
-        "hydreigon": "BITE"
+        "hydreigon": "DRAGON_BREATH"
       },
       "spare_energy_at_throws": [
         45,
@@ -970,33 +988,33 @@
         17,
         46,
         20,
-        41,
+        49,
         10,
-        58,
-        39,
+        65,
+        50,
         2
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
         "looks": 129,
         "rejected": 0,
-        "unexplained": 27,
+        "unexplained": 26,
         "energy": "rhythm",
         "events": {
           "end": 1,
           "foe_charged": 8,
-          "foe_faint": 1,
-          "foe_fast_learned": 1,
+          "foe_faint": 2,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 2,
           "my_charged": 5,
-          "my_switch": 4,
+          "my_faint": 2,
+          "my_switch": 2,
           "start": 1,
-          "unexplained": 27
+          "unexplained": 26
         },
         "my_energy_looks": 71,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 11.57
+        "my_energy_off_on_average": 12.63
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1015,7 +1033,7 @@
       "opponent.health_bar.unknown": 1662,
       "opponent.shields_left.unknown": 2160,
       "opponent.pokemon_left.unknown": 1303,
-      "opponent.energy.unknown": 1221,
+      "opponent.energy.unknown": 1236,
       "mine.health_bar.observed": 1257,
       "opponent.health_bar.observed": 1361,
       "mine.species.observed": 182,
@@ -1031,7 +1049,7 @@
       "opponent.species.stale": 1647,
       "opponent.cp.stale": 1665,
       "mine.energy.inferred": 1197,
-      "opponent.energy.inferred": 1802,
+      "opponent.energy.inferred": 1787,
       "mine.energy.estimated": 637
     },
     "full_game_state_verified": false,
@@ -1074,17 +1092,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1134,29 +1153,31 @@
         12,
         11,
         18,
-        3
+        7
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
         "looks": 126,
         "rejected": 0,
-        "unexplained": 18,
+        "unexplained": 17,
         "energy": "rhythm",
         "events": {
           "end": 1,
           "foe_charged": 7,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_move_learned": 2,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 2,
           "my_charged": 6,
-          "my_switch": 3,
+          "my_faint": 2,
+          "my_switch": 1,
           "start": 1,
-          "unexplained": 18
+          "unexplained": 17
         },
         "my_energy_looks": 55,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 14.3
+        "my_energy_off_on_average": 14.37
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1234,17 +1255,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1285,7 +1307,7 @@
       "spare_energy_at_throws": [
         28,
         45,
-        38,
+        36,
         11,
         50,
         9,
@@ -1293,7 +1315,7 @@
         45,
         26,
         6,
-        5
+        8
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
@@ -1304,10 +1326,11 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_fast_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 1,
           "my_charged": 6,
           "my_switch": 3,
           "start": 1,
@@ -1315,7 +1338,7 @@
         },
         "my_energy_looks": 57,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 7.94
+        "my_energy_off_on_average": 8.87
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1393,17 +1416,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1449,7 +1473,7 @@
         -7,
         22,
         36,
-        15,
+        19,
         -1,
         24,
         0,
@@ -1465,17 +1489,19 @@
         "events": {
           "end": 1,
           "foe_charged": 7,
+          "foe_faint": 2,
           "foe_fast_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 5,
+          "foe_switch": 3,
           "my_charged": 6,
-          "my_switch": 4,
+          "my_faint": 1,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 20
         },
         "my_energy_looks": 65,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 9.33
+        "my_energy_off_on_average": 11.57
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1553,17 +1579,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1576,11 +1603,12 @@
       "game": "tw-2894502346-pov-011",
       "verdict": "fail",
       "failed": [
+        "moves: 1 charged move(s) without an observed name",
         "moves: 10 charged moves announced, 9 tracked",
         "ending: result says win, tracker has us on 2 and them on 2"
       ],
       "notes": [
-        "the last charged move ended the battle before its name came up",
+        "final charged-move cue has no observed name; resolution and ending are unverified",
         "unexplained changes in 16% of looks",
         "fast move only guessed for houndoom, electrode"
       ],
@@ -1610,7 +1638,7 @@
         12,
         42,
         9,
-        11
+        14
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
@@ -1621,16 +1649,18 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 1,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 3,
           "my_charged": 4,
-          "my_switch": 4,
+          "my_faint": 1,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 23
         },
         "my_energy_looks": 79,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 18.85
+        "my_energy_off_on_average": 19.61
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1708,17 +1738,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1765,8 +1796,8 @@
         41,
         40,
         24,
-        40,
-        16
+        44,
+        9
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
@@ -1777,18 +1808,20 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_move_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 2,
           "my_charged": 5,
-          "my_switch": 4,
+          "my_faint": 1,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 21
         },
         "my_energy_looks": 64,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 20.44
+        "my_energy_off_on_average": 21.25
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -1866,17 +1899,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -1889,11 +1923,12 @@
       "game": "tw-2894502346-pov-013",
       "verdict": "fail",
       "failed": [
+        "moves: 1 charged move(s) without an observed name",
         "moves: 9 charged moves announced, 8 tracked",
         "ending: result says win, tracker has us on 3 and them on 2"
       ],
       "notes": [
-        "the last charged move ended the battle before its name came up",
+        "final charged-move cue has no observed name; resolution and ending are unverified",
         "fast move only guessed for hydreigon"
       ],
       "result": "win",
@@ -1933,9 +1968,10 @@
         "events": {
           "end": 1,
           "foe_charged": 4,
+          "foe_faint": 1,
           "foe_fast_confirmed": 1,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 2,
           "my_charged": 4,
           "my_switch": 2,
           "start": 1,
@@ -2021,17 +2057,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2073,7 +2110,7 @@
         51,
         7,
         54,
-        22,
+        26,
         3,
         25,
         40,
@@ -2090,18 +2127,20 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_fast_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 2,
           "my_charged": 6,
-          "my_switch": 3,
+          "my_faint": 1,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 12
         },
         "my_energy_looks": 69,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 8.04
+        "my_energy_off_on_average": 8.36
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -2179,17 +2218,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2245,7 +2285,8 @@
           "foe_seen": 2,
           "foe_switch": 2,
           "my_charged": 2,
-          "my_switch": 4,
+          "my_faint": 2,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 11
         },
@@ -2329,17 +2370,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2388,7 +2430,7 @@
           "foe_charged": 1,
           "foe_fast_confirmed": 1,
           "foe_seen": 1,
-          "my_switch": 1,
+          "my_faint": 1,
           "start": 1,
           "unexplained": 2
         },
@@ -2468,17 +2510,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2523,31 +2566,33 @@
         20,
         10,
         8,
-        56,
-        56
+        60,
+        60
       ],
       "paired_move_names_recovered": 0,
       "blind_energy_check": {
         "looks": 124,
         "rejected": 0,
-        "unexplained": 17,
+        "unexplained": 16,
         "energy": "rhythm",
         "events": {
           "end": 1,
           "foe_charged": 6,
+          "foe_faint": 2,
           "foe_fast_confirmed": 1,
           "foe_fast_learned": 2,
           "foe_seen": 3,
-          "foe_switch": 4,
+          "foe_switch": 2,
           "my_charged": 5,
+          "my_faint": 2,
           "my_move_learned": 1,
-          "my_switch": 3,
+          "my_switch": 1,
           "start": 1,
-          "unexplained": 17
+          "unexplained": 16
         },
         "my_energy_looks": 37,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 12.82
+        "my_energy_off_on_average": 15.49
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -2566,7 +2611,7 @@
       "opponent.health_bar.unknown": 1617,
       "opponent.shields_left.unknown": 1305,
       "opponent.pokemon_left.unknown": 971,
-      "opponent.energy.unknown": 921,
+      "opponent.energy.unknown": 948,
       "mine.health_bar.observed": 1303,
       "mine.species.observed": 181,
       "mine.cp.observed": 181,
@@ -2582,7 +2627,7 @@
       "mine.shields_left.observed": 1672,
       "opponent.shields_left.observed": 1380,
       "mine.energy.estimated": 410,
-      "opponent.energy.inferred": 1764,
+      "opponent.energy.inferred": 1737,
       "mine.energy.inferred": 1372
     },
     "full_game_state_verified": false,
@@ -2624,17 +2669,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2694,17 +2740,19 @@
         "events": {
           "end": 1,
           "foe_charged": 6,
+          "foe_faint": 2,
           "foe_fast_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 5,
+          "foe_switch": 3,
           "my_charged": 8,
-          "my_switch": 5,
+          "my_faint": 2,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 20
         },
         "my_energy_looks": 62,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 10.79
+        "my_energy_off_on_average": 10.86
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -2781,17 +2829,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2835,11 +2884,11 @@
         41,
         17,
         -2,
-        14,
+        10,
         22,
         60,
         0,
-        4,
+        8,
         21,
         33,
         10,
@@ -2854,18 +2903,20 @@
         "events": {
           "end": 1,
           "foe_charged": 7,
+          "foe_faint": 2,
           "foe_fast_confirmed": 2,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 1,
           "my_charged": 8,
+          "my_faint": 1,
           "my_move_learned": 1,
-          "my_switch": 3,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 19
         },
         "my_energy_looks": 37,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 18.82
+        "my_energy_off_on_average": 19.58
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -2942,17 +2993,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -2969,7 +3021,6 @@
         "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
       ],
       "notes": [
-        "unexplained changes in 21% of looks",
         "fast move only guessed for sableye"
       ],
       "result": "win",
@@ -2994,16 +3045,16 @@
       "blind_energy_check": {
         "looks": 14,
         "rejected": 0,
-        "unexplained": 3,
+        "unexplained": 2,
         "energy": "rhythm",
         "events": {
           "end": 1,
+          "foe_faint": 1,
           "foe_fast_confirmed": 1,
           "foe_seen": 2,
-          "foe_switch": 1,
           "my_charged": 1,
           "start": 1,
-          "unexplained": 3
+          "unexplained": 2
         },
         "my_energy_looks": 0,
         "my_energy_overruled": 0,
@@ -3080,17 +3131,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -3132,9 +3184,9 @@
         30,
         2,
         13,
-        2,
+        1,
         -8,
-        3,
+        2,
         55,
         57,
         56,
@@ -3149,18 +3201,20 @@
         "events": {
           "end": 1,
           "foe_charged": 5,
+          "foe_faint": 2,
           "foe_fast_confirmed": 2,
           "foe_move_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 1,
           "my_charged": 6,
-          "my_switch": 4,
+          "my_faint": 2,
+          "my_switch": 2,
           "start": 1,
           "unexplained": 26
         },
         "my_energy_looks": 56,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 10.87
+        "my_energy_off_on_average": 11.83
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -3173,7 +3227,7 @@
       "mine.health_bar.unknown": 1505,
       "mine.shields_left.unknown": 2667,
       "mine.pokemon_left.unknown": 872,
-      "mine.energy.unknown": 830,
+      "mine.energy.unknown": 844,
       "opponent.species.unknown": 798,
       "opponent.cp.unknown": 778,
       "opponent.health_bar.unknown": 1454,
@@ -3193,7 +3247,7 @@
       "opponent.shields_left.observed": 1781,
       "opponent.species.observed": 188,
       "opponent.species.stale": 1692,
-      "mine.energy.inferred": 1336,
+      "mine.energy.inferred": 1322,
       "opponent.energy.inferred": 1828,
       "mine.energy.estimated": 512,
       "mine.shields_left.observed": 11
@@ -3237,17 +3291,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -3309,17 +3364,19 @@
         "events": {
           "end": 1,
           "foe_charged": 8,
+          "foe_faint": 2,
           "foe_fast_confirmed": 2,
           "foe_seen": 3,
-          "foe_switch": 5,
+          "foe_switch": 3,
           "my_charged": 6,
-          "my_switch": 5,
+          "my_faint": 2,
+          "my_switch": 3,
           "start": 1,
           "unexplained": 11
         },
         "my_energy_looks": 52,
         "my_energy_overruled": 0,
-        "my_energy_off_on_average": 7.39
+        "my_energy_off_on_average": 7.6
       },
       "full_game_state_verified": false,
       "evaluation_kind": "internal_consistency_not_accuracy",
@@ -3396,17 +3453,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }
@@ -3468,13 +3526,15 @@
         "events": {
           "end": 1,
           "foe_charged": 8,
+          "foe_faint": 1,
           "foe_fast_confirmed": 2,
           "foe_fast_learned": 1,
           "foe_move_learned": 1,
           "foe_seen": 3,
-          "foe_switch": 3,
+          "foe_switch": 2,
           "my_charged": 7,
-          "my_switch": 3,
+          "my_faint": 2,
+          "my_switch": 1,
           "start": 1,
           "unexplained": 11
         },
@@ -3557,17 +3617,18 @@
       "causal_screen_readings": true,
       "tracker_timeline": "offline_reconstruction_with_assumptions",
       "processing_sha256": {
-        "scripts/recording/assemble.py": "2015c7daf3fffa2818d6d1781d0dff52717cd343bd87e8c335c08c8eb35a8d20",
-        "scripts/recording/vod_track.py": "eef0b5a8aa6354b2af05991afa35417a275bdec9e12434fb0cf74a490621d5d5",
-        "scripts/recording/public_state.py": "cacb17c828ebff304340a04dd7307a6b0229705278b2403ba27c079cf13c0be0",
+        "scripts/recording/assemble.py": "7df66ae1ea1837ce7f77526211f8ca160a03eec49277d092dbee4ce67ea3a8d4",
+        "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+        "scripts/recording/vod_track.py": "8b5aae7c0b9ad9cb63b568c10527f4f3334a7607e8254b563a196f1ba99b5df1",
+        "scripts/recording/public_state.py": "70a72602f06ba6576baa3ee81a80bd833ab37f4adceb76a4d0ea71df9e59f39c",
         "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
         "scripts/recording/public_fast.py": "9a4fde8c56b1ddd3e9fdf37c8be9eb323f244f62656406e7cffba4f14b856042",
         "scripts/recording/vod_pairs.py": "a7f4e7a31ec434d58630c00f122d6947aba6a8166154327bd3e543c1e46fd19d",
         "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
-        "scripts/recording/verdict.py": "e39f92f2faa8a83f06de05ac6ea3db7d752020066f63cfb6970f4286b3355d7e",
+        "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
         "data/vod_tracking_layouts.json": "1c013d293b723f83ef20952abd4821c270d1792d74a15e592eae6ad9aeb55240",
         "scripts/track.py": "128d070824ff383e7238e651fb5393f62005bf20628ba699d0825dcbb10dd619",
-        "pogo/tracker.py": "ce339eaab1ff13a587248dedec6188d6d26425f85fc21e9058ea3e691f3ae842",
+        "pogo/tracker.py": "fbefc97a746db6288eddeb9fab84d98b03cb7bb5b9cca048078cef9ed7b2cf73",
         "data/gamemaster.json": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
       }
     }

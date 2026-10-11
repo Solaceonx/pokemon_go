@@ -1,0 +1,411 @@
+{
+  "schema": "public-transition-validation-v1",
+  "date": "2026-10-10",
+  "baseline_commit": "1750c52f9acdf9ce3693f83832d78e854f8eda32",
+  "label_sha256": "43598456e7e39ecab835ea8378554de9d36e661f7a02b442b2db6b401688eb03",
+  "checker_sha256": "7bbfa4f030d38c4b7524e8528ad771ac6aa4d36fbdbfac7575c994e105fe28b8",
+  "evaluation_role": "exposed_regression; these cases guided this fix and are not an untouched test set",
+  "label_origin": "Agent visual review of local video frames; user has not independently adjudicated these labels",
+  "scope": "15 incoming replacements in two previously exposed clips. Kind and order only; exact switch timing, terminal faints, energy and whole-game accuracy are not validated.",
+  "before": {
+    "assembly": {
+      "correct": 13,
+      "expected": 15,
+      "extra": 0
+    },
+    "model": {
+      "correct": 8,
+      "expected": 15,
+      "extra": 0
+    }
+  },
+  "after": {
+    "assembly": {
+      "correct": 15,
+      "expected": 15,
+      "extra": 0
+    },
+    "model": {
+      "correct": 15,
+      "expected": 15,
+      "extra": 0
+    }
+  },
+  "latest_passed": true,
+  "details": [
+    {
+      "clip": "tw-2897295240-left-003",
+      "side": "mine",
+      "method": "assembly",
+      "correct": 3,
+      "expected": [
+        [
+          "sableye",
+          "faint"
+        ],
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "sableye",
+          "faint"
+        ],
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2897295240-left-003",
+      "side": "mine",
+      "method": "model",
+      "correct": 3,
+      "expected": [
+        [
+          "sableye",
+          "faint"
+        ],
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "sableye",
+          "faint"
+        ],
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2897295240-left-003",
+      "side": "theirs",
+      "method": "assembly",
+      "correct": 4,
+      "expected": [
+        [
+          "quagsire",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "quagsire",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2897295240-left-003",
+      "side": "theirs",
+      "method": "model",
+      "correct": 4,
+      "expected": [
+        [
+          "quagsire",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "quagsire",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "clodsire",
+          "faint"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2894502346-pov-001",
+      "side": "mine",
+      "method": "assembly",
+      "correct": 3,
+      "expected": [
+        [
+          "lanturn",
+          "switch"
+        ],
+        [
+          "araquanid",
+          "faint"
+        ],
+        [
+          "hydreigon",
+          "switch"
+        ]
+      ],
+      "observed": [
+        [
+          "lanturn",
+          "switch"
+        ],
+        [
+          "araquanid",
+          "faint"
+        ],
+        [
+          "hydreigon",
+          "switch"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2894502346-pov-001",
+      "side": "mine",
+      "method": "model",
+      "correct": 3,
+      "expected": [
+        [
+          "lanturn",
+          "switch"
+        ],
+        [
+          "araquanid",
+          "faint"
+        ],
+        [
+          "hydreigon",
+          "switch"
+        ]
+      ],
+      "observed": [
+        [
+          "lanturn",
+          "switch"
+        ],
+        [
+          "araquanid",
+          "faint"
+        ],
+        [
+          "hydreigon",
+          "switch"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2894502346-pov-001",
+      "side": "theirs",
+      "method": "assembly",
+      "correct": 5,
+      "expected": [
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "switch"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "florges",
+          "faint"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "switch"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "florges",
+          "faint"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ]
+    },
+    {
+      "clip": "tw-2894502346-pov-001",
+      "side": "theirs",
+      "method": "model",
+      "correct": 5,
+      "expected": [
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "switch"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "florges",
+          "faint"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ],
+      "observed": [
+        [
+          "florges",
+          "switch"
+        ],
+        [
+          "sableye",
+          "switch"
+        ],
+        [
+          "melmetal",
+          "switch"
+        ],
+        [
+          "florges",
+          "faint"
+        ],
+        [
+          "sableye",
+          "faint"
+        ]
+      ]
+    }
+  ],
+  "whole_game_accuracy_verified": false,
+  "simulation": {
+    "passed": true,
+    "battles_per_run": 2400,
+    "before_and_after_identical": true,
+    "before_sha256": "8cb76cdc8c1ca5db32398282412dffc12505a5e5c43cd17a0093a299b9638c26",
+    "after_sha256": "8cb76cdc8c1ca5db32398282412dffc12505a5e5c43cd17a0093a299b9638c26",
+    "before_output": "camera: perfect\n  their energy exact 98%, inside the range 98%, off by 0.2 on average | their fast-move position right 100% | their switch timer off by 0.28s | my energy off by 0.1, my health by 0.0 | wrong Pok\ufffdmon in view 0.0% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 49.8% \ufffd 3.5 over 800 battles\n\ncamera: move not named\n  their energy exact 76%, inside the range 98%, off by 1.4 on average | their fast-move position right 100% | their switch timer off by 0.28s | my energy off by 0.2, my health by 0.0 | wrong Pok\ufffdmon in view 0.0% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 48.6% \ufffd 3.5 over 800 battles\n\ncamera: rough\n  their energy exact 65%, inside the range 84%, off by 2.9 on average | their fast-move position right 96% | their switch timer off by 0.32s | my energy off by 2.7, my health by 0.9 | wrong Pok\ufffdmon in view 0.7% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 42.1% \ufffd 3.4 over 800 battles\n\n",
+    "after_output": "camera: perfect\n  their energy exact 98%, inside the range 98%, off by 0.2 on average | their fast-move position right 100% | their switch timer off by 0.28s | my energy off by 0.1, my health by 0.0 | wrong Pok\ufffdmon in view 0.0% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 49.8% \ufffd 3.5 over 800 battles\n\ncamera: move not named\n  their energy exact 76%, inside the range 98%, off by 1.4 on average | their fast-move position right 100% | their switch timer off by 0.28s | my energy off by 0.2, my health by 0.0 | wrong Pok\ufffdmon in view 0.0% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 48.6% \ufffd 3.5 over 800 battles\n\ncamera: rough\n  their energy exact 65%, inside the range 84%, off by 2.9 on average | their fast-move position right 96% | their switch timer off by 0.32s | my energy off by 2.7, my health by 0.9 | wrong Pok\ufffdmon in view 0.7% of turns\n  Planner playing from the Tracker's picture, against the Planner playing from the truth: 42.1% \ufffd 3.4 over 800 battles\n\n",
+    "core_tracker_changed": true,
+    "pvpoke_reference_duels_reproduced": 108,
+    "pvpoke_reference_duels_total": 108,
+    "interpretation": "Standard synthetic camera regression is unchanged; delayed-replacement behavior is separately covered by targeted tests. This is not video accuracy."
+  },
+  "unit_tests_run": 73,
+  "viewer_transition_check": {
+    "passed": true,
+    "checks": [
+      {
+        "t": 61.7,
+        "at": 61.683317,
+        "active": "Quagsire:1499",
+        "left": 3,
+        "melmetal_fainted": null
+      },
+      {
+        "t": 107.1,
+        "at": 107.083305,
+        "active": "Clodsire:1497",
+        "left": 2,
+        "melmetal_fainted": null
+      },
+      {
+        "t": 141.7,
+        "at": 141.683296,
+        "active": "Melmetal:1485",
+        "left": 2,
+        "melmetal_fainted": null
+      },
+      {
+        "t": 144.4,
+        "at": 144.349962,
+        "active": "Clodsire:1497",
+        "left": 1,
+        "melmetal_fainted": true
+      }
+    ]
+  },
+  "limitations": [
+    "Only two exposed clips and 15 transitions; these labels guided the change.",
+    "The labels were visually reviewed by the agent and have not been independently adjudicated by the user.",
+    "Kinds and order are checked; exact timing, forms, energy, HP and terminal outcomes are outside this measurement.",
+    "All 23 views still fail the ending check; there is no untouched accuracy test source."
+  ]
+}

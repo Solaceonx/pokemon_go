@@ -120,6 +120,14 @@ class LedgerTests(unittest.TestCase):
         moves = state["sides"]["opponent"]["pokemon"]["Snorlax:1488"]["charged_moves"]
         self.assertEqual(next(iter(moves.values()))["value"], "Body Slam")
 
+    def test_counter_confirmation_after_new_header_marks_outgoing_mon(self):
+        reader = PublicState({})
+        for t in [0, .067, .134]: reader.update(frame(t), SLIM)
+        for t in [.2, .267, .334]: state = reader.update(frame(t, "Araquanid", 1492, left=2), SLIM)
+        mons = state["sides"]["mine"]["pokemon"]
+        self.assertTrue(mons["Lanturn:1493"]["fainted"]["value"])
+        self.assertIsNone(mons["Araquanid:1492"]["fainted"]["value"])
+
     def test_partial_beginning_never_passes_complete_verdict(self):
         v = enforce_coverage({"verdict": "pass", "failed": [], "notes": []}, {"incomplete_start": True})
         self.assertEqual(v["verdict"], "fail")

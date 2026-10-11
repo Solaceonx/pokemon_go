@@ -180,6 +180,11 @@ class Tracker:
         self.foe: Foe | None = None  # their active Pokémon
         self.foe_shields = 2
         self.foe_left = 3
+        # A faint counter often arrives before the replacement header. Keep
+        # its outgoing identity until that header changes; consuming the count
+        # immediately used to turn the later replacement into a timed switch.
+        self._my_counter_seen = self._foe_counter_seen = False
+        self._my_pending_faint = self._foe_pending_faint = None
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -241,9 +246,15 @@ class Tracker:
         i_changed = self._my_active(obs)
         they_changed = self._their_active(obs)
         if obs.my_left is not None:
+            if self._my_counter_seen and obs.my_left < self.my_left and not i_changed:
+                self._my_pending_faint = was_mine
             self.my_left = obs.my_left
+            self._my_counter_seen = True
         if obs.foe_left is not None:
+            if self._foe_counter_seen and obs.foe_left < self.foe_left and not they_changed and was_theirs:
+                self._foe_pending_faint = was_theirs
             self.foe_left = obs.foe_left
+            self._foe_counter_seen = True
         if obs.my_cp is not None:
             self.my_cp[me.active] = obs.my_cp
         if obs.foe_cp is not None and self.foe is not None:
@@ -357,7 +368,7 @@ class Tracker:
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
             self._note(obs.t, "my_seen", species=obs.my_species)
-        if obs.my_left is not None and obs.my_left < self.my_left:
+        if self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left):
             how = "faint"
             me.mon.hp = 0
             self._note(obs.t, "my_faint", next=obs.my_species)
@@ -367,6 +378,7 @@ class Tracker:
             self.my_switch_at = obs.t + SWITCH_SECONDS
             self._note(obs.t, "my_switch", to=obs.my_species)
         me.active = slot
+        self._my_pending_faint = None
         return how
 
     def _their_active(self, obs: Observation) -> str | None:
@@ -375,7 +387,7 @@ class Tracker:
             return None
         how = "first"
         if self.foe is not None:
-            if obs.foe_left is not None and obs.foe_left < self.foe_left:
+            if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
                 how = "faint"
                 self.foe.mon.hp = 0
                 self._note(obs.t, "foe_faint", next=obs.foe_species)
@@ -392,6 +404,7 @@ class Tracker:
             self.order.append(obs.foe_species)
             self._note(obs.t, "foe_seen", species=obs.foe_species)
         self.foe = self.foes[obs.foe_species]
+        self._foe_pending_faint = None
         return how
 
     def _learn_move(self, t: float, foe: Foe, name: str):

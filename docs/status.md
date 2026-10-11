@@ -745,3 +745,52 @@ rerun commands, runtime-cache limits and storage are in
 `scripts/recording/VOD_README.md`; `data/vod_pilot_report.json` holds the receipts.
 Henry remains development footage and the official broadcast exposed regression
 footage. Paired views stay together; there is still no untouched accuracy test.
+
+## Public transition accuracy iteration (2026-10-10)
+
+A party counter can fall before the replacement header appears. The core tracker
+previously consumed that count immediately and called the later replacement a
+voluntary switch, incorrectly restarting its 45-second timer. It now remembers
+the outgoing identity until the replacement arrives. The evidence ledger also
+assigns a delayed counter confirmation to the identity at the start of the run,
+rather than marking the incoming Pokemon fainted.
+
+The public assembler now uses local counter drops and replacement prompts.
+Low HP alone no longer proves a faint; a six-second lookahead no longer mistakes
+a later faint for the cause of an earlier switch. In official left match 02,
+Melmetal switches out alive for Quagsire, then later briefly returns before
+fainting. Both real switches were previously labelled as faints. Uninterrupted
+counter runs are required, and counters cannot restore fainted party members.
+Timeline entries retain their header timestamps and transition evidence.
+
+Visual review produced 15 incoming-transition labels in Henry match 01 and
+official left match 02, saved with video checksums and source frame timestamps in
+`data/vod_transition_labels.json`. Against baseline `1750c52`, assembly kind/order
+improved from 13/15 to 15/15; the saved model's switch/faint events improved from
+8/15 to 15/15. `scripts/recording/check_transition_labels.py` reproduces that
+comparison; `data/vod_transition_validation.json` holds its receipts. These two
+exposed clips guided the fix. The labels are agent-reviewed, not independently
+adjudicated by the user, and do not validate exact timing or whole-game accuracy.
+
+All 23 views were rebuilt using the existing raw OCR, with no new downloads.
+All 73 pipeline tests and 108 PvPoke reference duels pass. The default synthetic
+tracker run remains byte-identical before/after across 2,400 battles per run;
+targeted tests additionally cover delayed replacement counters on both sides,
+partial initial counters, timer preservation and ledger ownership. Source PTS,
+code fingerprints and uncertainty checks pass for all 57,079 samples. The
+compressed Henry export replays identically. Four-clip Chrome playback and the
+17-column table remain verified.
+
+An unnamed public final charge now fails the move check and is described as an
+unverified resolution. A cut during an attack does not prove that attack ended
+the battle. All 23 views still fail the strict ending check; four also fail
+moves, three energy, one shields and two coverage. Categories count affected
+views once even when a view has several failures in that category. Blind energy
+disagreement worsened from 12.15 to 12.77 units over the same 1,147 looks. That is
+reported honestly: corrected faint/switch behavior does not establish energy
+accuracy, and button readings themselves remain unvalidated.
+
+Current clip data occupies 35.81 MB, with 116.17 MB of retained analysis history.
+Videos plus data total 4.885 GB; portable results occupy 2.30 MB. The rebuilt
+41-clip viewer is 23.93 MB and embeds no videos. Exact HP, forms, fast moves,
+energy, final outcomes and an untouched test source remain unresolved.

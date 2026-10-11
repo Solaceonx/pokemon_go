@@ -2,11 +2,12 @@
   "game": "tw-2894502346-pov-011",
   "verdict": "fail",
   "failed": [
+    "moves: 1 charged move(s) without an observed name",
     "moves: 10 charged moves announced, 9 tracked",
     "ending: result says win, tracker has us on 2 and them on 2"
   ],
   "notes": [
-    "the last charged move ended the battle before its name came up",
+    "final charged-move cue has no observed name; resolution and ending are unverified",
     "unexplained changes in 16% of looks",
     "fast move only guessed for houndoom, electrode"
   ],
@@ -36,7 +37,7 @@
     12,
     42,
     9,
-    11
+    14
   ],
   "paired_move_names_recovered": 0,
   "blind_energy_check": {
@@ -47,16 +48,18 @@
     "events": {
       "end": 1,
       "foe_charged": 5,
+      "foe_faint": 1,
       "foe_seen": 3,
-      "foe_switch": 4,
+      "foe_switch": 3,
       "my_charged": 4,
-      "my_switch": 4,
+      "my_faint": 1,
+      "my_switch": 3,
       "start": 1,
       "unexplained": 23
     },
     "my_energy_looks": 79,
     "my_energy_overruled": 0,
-    "my_energy_off_on_average": 18.85
+    "my_energy_off_on_average": 19.61
   },
   "full_game_state_verified": false,
   "evaluation_kind": "internal_consistency_not_accuracy",

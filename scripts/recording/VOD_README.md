@@ -198,3 +198,42 @@ concurrent load. This is a sum of worker timings, not elapsed single-core time.
 hashes collected after the run. Raw-cache invalidation does not yet enforce these
 asset hashes; changing the runtime requires a fresh reading version. Recognition
 accuracy still needs human labels and a new untouched test source.
+
+## Transition improvement and reproducible labels
+
+The next iteration fixes counters that fall before a replacement arrives and
+counter confirmations that otherwise get assigned to the incoming Pokemon.
+For public footage, low health is no longer a faint test. A later faint cannot
+be borrowed to classify an earlier switch. Header timestamps and counter
+evidence are retained on each reconstructed transition.
+
+Run the visually reviewed regression comparison with:
+
+```bash
+python scripts/recording/check_transition_labels.py
+python scripts/recording/check_transition_labels.py --revision 1750c52
+```
+
+The baseline command intentionally returns a failing status: assembly matched
+13/15 labelled transitions and the model matched 8/15. The current version
+matches 15/15 at both stages. `data/vod_transition_labels.json` identifies the
+reviewed source frames; `data/vod_transition_validation.json` contains the
+comparison and simulation receipts. These are two exposed clips used to develop
+the fix, reviewed by the agent. Exact timing and other fields are outside this
+measurement, and the user has not independently adjudicated the labels.
+
+All 23 views were rebuilt from cached readings. The current run passes all 73
+pipeline tests and 108 PvPoke reference duels. Default synthetic tracker output
+is unchanged over 2,400 battles per run. Four-clip playback and all 57,079 sample
+timestamps/fingerprints were checked again. A final unnamed public charge fails
+the move check and keeps its resolution unknown; a cut is not proof of a win or
+terminal knockout.
+
+There are still zero complete consistency passes. Blind energy disagreement is
+12.77 units over 1,147 looks, compared with 12.15 before this change. These button
+estimates are not independent energy truth. The improvement measured here is
+switch/faint kind and order only.
+
+Current clip data is 35.81 MB; retained histories are 116.17 MB. Videos and data
+total 4.885 GB. Portable results are 2.30 MB, and the 41-clip HTML is 23.93 MB.
+This iteration downloads no additional video and reuses immutable raw OCR.

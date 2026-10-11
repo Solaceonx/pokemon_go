@@ -19,6 +19,7 @@ Fast moves, modeled energy, stages and switch timing are hypotheses, not screen 
 
 Internal consistency: **fail**.
 
+- moves: 1 charged move(s) without an observed name
 - moves: 10 charged moves announced, 9 tracked
 - ending: no result screen, and the tracker has us on 2 and them on 2
 

@@ -278,7 +278,7 @@ def publish(folder, game, verdict, reader):
                   "maximum_hp_supplied": False, "causal_screen_readings": True,
                   "tracker_timeline": "offline_reconstruction_with_assumptions",
                   "processing_sha256": {name: sha256(ROOT / name) for name in
-                    ("scripts/recording/assemble.py", "scripts/recording/vod_track.py", "scripts/recording/public_state.py",
+                    ("scripts/recording/assemble.py", "scripts/recording/public_transitions.py", "scripts/recording/vod_track.py", "scripts/recording/public_state.py",
                      "scripts/recording/vod_markers.py", "scripts/recording/public_fast.py", "scripts/recording/vod_pairs.py",
                      "scripts/recording/buttons.py", "scripts/recording/verdict.py", "data/vod_tracking_layouts.json",
                      "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json")}}

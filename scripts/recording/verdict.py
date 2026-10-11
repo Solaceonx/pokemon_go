@@ -41,7 +41,11 @@ def verdict(game: Path, gd: GameData) -> dict:
         failed.append(f"teams: {len(ours)} of ours and {len(theirs)} of theirs seen")
     thrown = [e for e in events if e["event"] in ("my_charged", "foe_charged")]
     unnamed = [c for c in timeline["charged"] if not c["move"]]
-    if unnamed and unnamed == timeline["charged"][-1:] and timeline["end"] - unnamed[0]["t"] < 14:
+    if unnamed and timeline.get("public_footage"):
+        failed.append(f"moves: {len(unnamed)} charged move(s) without an observed name")
+        if unnamed == timeline["charged"][-1:] and timeline["end"] - unnamed[0]["t"] < 14:
+            notes.append("final charged-move cue has no observed name; resolution and ending are unverified")
+    elif unnamed and unnamed == timeline["charged"][-1:] and timeline["end"] - unnamed[0]["t"] < 14:
         notes.append("the last charged move ended the battle before its name came up")
     elif unnamed:
         failed.append(f"moves: {len(unnamed)} charged move(s) without a name")
