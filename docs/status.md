@@ -1103,3 +1103,38 @@ What this does not show: random threes from the top 100 are easier than the team
 the scores are high and the gaps may shrink or reorder against coherent teams; form-changers (Cramorant,
 Mimikyu, Aegislash, Morpeko) are not in the pool; and Umbreon is assumed to have Snarl with Dark Pulse and
 Last Resort.
+
+## The team search again, with an opponent as good as we are (2026-10-11)
+
+`python3 scripts/roster_teams.py --rival bot --listed 0.8`: the same trained bot pilots both sides, and 80%
+of opposing teams come from the good-team list (`data/teams.json`), the rest random threes from the top 100.
+All 3,366 line-ups, stages 120:450, 500:40, 2500:12, then 5,000 fresh battles each (50 minutes, three cores).
+The second column re-scores the same line-ups against the same bot on random top-100 teams only (2,000
+battles each, `runs/roster_recheck_2.out`).
+
+| Line-up (lead first) | Against the good-team list (80%) | Against random top-100 teams |
+|---|---|---|
+| Stunfisk / Melmetal / Altaria | 74.4% ± 1.2 | 58.1% ± 2.2 |
+| Ninetales / Melmetal / Jellicent | 70.0% ± 1.3 | 58.7% ± 2.2 |
+| Feraligatr / Melmetal / Mantine | 69.9% ± 1.3 | 56.9% ± 2.2 |
+| Feraligatr / Melmetal / Altaria | 69.6% ± 1.3 | 60.8% ± 2.1 |
+| Feraligatr / Altaria / Stunfisk | 69.2% ± 1.3 | 51.1% ± 2.2 |
+| Ninetales / Stunfisk / Empoleon | 68.6% ± 1.3 | 49.0% ± 2.2 |
+| Melmetal / Altaria / Jellicent (current) | 60.6% ± 1.4 | 64.1% ± 2.1 |
+
+**This is still not an answer.** By the owner's test (the game is near 50-50 between equals), 74% says the
+opposing teams are beatable, and the second column shows how: the line-ups that top the first column fall
+to 49 to 61% once the opposing teams change, and the current three, last in the first column, are first in
+the second. The good-team list is narrow and heavy with Steel types (Tinkaton in 39 of 81 teams,
+Corviknight in 25), so the search found its counters: Stunfisk, Ninetales and Feraligatr. Real opponents
+would not keep bringing teams that lose three games in four.
+
+What the two columns do agree on: Melmetal is in every line-up that holds up in both, and the current
+three are not beaten in both columns by anything. Feraligatr / Melmetal / Altaria matches them in the
+worse of its two columns (60.8 against 60.6) and is nine points better against the list.
+
+The order of teams is decided by what the opponents bring, and that is the missing piece: a set of
+opposing teams whose own best teams score about 50% against it (task 21 in `tasks.md`), or the teams the
+owner actually meets. The script now prints a caution, and writes it into `data/roster_teams.json`, when
+its best line-up wins more than 65%.
+

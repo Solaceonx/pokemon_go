@@ -127,11 +127,16 @@ def main() -> None:
         for sp in t:
             count[sp] = count.get(sp, 0) + 1
     print(f"how often each Pokémon is in the {len(alive)} survivors: " + ", ".join(f"{sp} {n}" for sp, n in sorted(count.items(), key=lambda kv: -kv[1])))
+    caution = ""
+    if rows[0]["score"] > 0.65:  # the owner's test: between equals on real teams the game is close to 50-50
+        caution = (f"The best line-up wins {100 * rows[0]['score']:.0f}%. Opponents this beatable are not what a good player meets, "
+                   "so the order may only show which line-ups counter this particular set of opposing teams.")
+        print("caution: " + caution)
     if args.recheck:
         return
     out.write_text(json.dumps({"about": "Best line-ups from the owner's own Pokémon (scripts/roster_teams.py). score: share of battles won on fresh battles "
                                f"against {field}, piloted by {rival}; margin: 95% range; behind_best: gap to the top line on the same battles.",
-                               "pool": args.pool, "listed": args.listed, "rival": args.rival, "battles": args.finals, "teams": rows}, indent=1) + "\n")
+                               "caution": caution, "pool": args.pool, "listed": args.listed, "rival": args.rival, "battles": args.finals, "teams": rows}, indent=1) + "\n")
     print(f"written: {out.relative_to(ROOT)}")
 
 

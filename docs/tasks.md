@@ -556,10 +556,14 @@ both on the same amount of examples, by `compare_models.py`. Report it either wa
 one of the best line-ups. The first search (`status.md`, "Best teams from the owner's own Pokémon")
 used a weaker opposing pilot on random teams from the top 100. Its best line-up won 82%, which the
 owner rejected at once, and re-scoring the same line-ups against the same bot on good teams brought
-them to 50 to 60% and put a different one on top. The search is being rerun that way
-(`--rival bot --listed 0.8`). What is still wrong is the good-team list itself: `data/teams.json` was
-found with the `Planner` as pilot, among the top 50 only, against a field that was half random, and
-about half its teams contain Tinkaton.
+them to 50 to 60% and put a different one on top. The full search rerun that way
+(`--rival bot --listed 0.8`) still has a best line-up at 74%, and its winners are counters to the list:
+Stunfisk, Ninetales and Feraligatr line-ups that fall to 49 to 61% against other opposing teams, where
+the owner's current three come first (`status.md`, "The team search again"). So the order of teams is
+decided by the opposing list, and the list is what is wrong: `data/teams.json` was found with the
+`Planner` as pilot, among the top 50 only, against a field that was half random, and it is heavy with
+Steel types (Tinkaton in 39 of 81 teams, Corviknight in 25). A real field would not keep bringing teams
+that lose three games in four to a counter.
 
 **Do.**
 
