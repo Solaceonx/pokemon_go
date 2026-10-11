@@ -1,0 +1,2329 @@
+{
+  "schema": "reserved-vod-state-evaluation-v1",
+  "frozen_commit": "0fd98ff",
+  "protected_code_sha256": {
+    "scripts/recording/assemble.py": "ecee5aaed801ae07c08529728ec99fcc2fceb0057c98a5e4f94ae2cadadc1196",
+    "pogo/tracker.py": "bac772126c8feea6189b2a012fac2ffb29d4cb7e90afb3c4671e7dc72ba37e4c",
+    "scripts/track.py": "497021bbed7d7127fb02cff3293e367aca7e59dcf7a90c7675f05f2b53c67c01"
+  },
+  "unique_battles": 10,
+  "pov_clips": 20,
+  "readings": 56034,
+  "published_model_states": 2534,
+  "settings_fitted_on_this_sample": false,
+  "calibration_inheritance": [
+    {
+      "new_layout": "2897166800:left",
+      "inherited_from": "2897295240:left",
+      "identical_source_crop": [
+        508,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          156,
+          351
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897166800:right",
+      "inherited_from": "2897295240:right",
+      "identical_source_crop": [
+        970,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          146,
+          341
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897312743:left",
+      "inherited_from": "2897295240:left",
+      "identical_source_crop": [
+        508,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          156,
+          351
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897312743:right",
+      "inherited_from": "2897295240:right",
+      "identical_source_crop": [
+        970,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          146,
+          341
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    }
+  ],
+  "measurements": {
+    "before": {
+      "matches": 10,
+      "state": {
+        "who is out": {
+          "moments": 2411,
+          "agreements": 2369,
+          "agreement_share": 0.9825798423890502
+        },
+        "health within 3%": {
+          "moments": 2369,
+          "agreements": 1808,
+          "agreement_share": 0.7631912199240186
+        },
+        "health within 10%": {
+          "moments": 2369,
+          "agreements": 2095,
+          "agreement_share": 0.8843393837062051
+        },
+        "shields": {
+          "moments": 2411,
+          "agreements": 2293,
+          "agreement_share": 0.9510576524263791
+        },
+        "Pokémon left": {
+          "moments": 2411,
+          "agreements": 2400,
+          "agreement_share": 0.9954375777685608
+        },
+        "energy within one fast move": {
+          "moments": 777,
+          "agreements": 378,
+          "agreement_share": 0.4864864864864865
+        },
+        "energy within two": {
+          "moments": 777,
+          "agreements": 568,
+          "agreement_share": 0.731016731016731
+        },
+        "all of these but energy": {
+          "moments": 2411,
+          "agreements": 2009,
+          "agreement_share": 0.833264205723766
+        },
+        "everything, energy within two": {
+          "moments": 777,
+          "agreements": 514,
+          "agreement_share": 0.6615186615186616
+        }
+      },
+      "energy_all": {
+        "moments": 767,
+        "mean_signed_error": 2.996219035202086,
+        "mean_absolute_error": 16.31877444589309,
+        "median_absolute_error": 11.0,
+        "within_one_fast_move_share": 0.49282920469361147,
+        "within_two_fast_moves_share": 0.7340286831812256,
+        "same_assumed_fast_move_share": 0.8683181225554107
+      },
+      "energy_below_both_costs": {
+        "moments": 465,
+        "mean_signed_error": 7.2595698924731185,
+        "mean_absolute_error": 13.040645161290323,
+        "median_absolute_error": 9.2,
+        "within_one_fast_move_share": 0.589247311827957,
+        "within_two_fast_moves_share": 0.8451612903225807,
+        "same_assumed_fast_move_share": 0.8709677419354839
+      },
+      "energy_below_costs_and_same_assumed_fast": {
+        "moments": 405,
+        "mean_signed_error": 8.018271604938272,
+        "mean_absolute_error": 13.036543209876543,
+        "median_absolute_error": 8.8,
+        "within_one_fast_move_share": 0.6074074074074074,
+        "within_two_fast_moves_share": 0.8419753086419753,
+        "same_assumed_fast_move_share": 1.0
+      },
+      "per_match": [
+        {
+          "match_id": "tw-2897166800-match-001",
+          "views": [
+            "tw-2897166800-left-001",
+            "tw-2897166800-right-001"
+          ],
+          "state_moments": 234,
+          "energy": {
+            "moments": 84,
+            "mean_signed_error": 15.811904761904762,
+            "mean_absolute_error": 20.87857142857143,
+            "median_absolute_error": 13.600000000000001,
+            "within_one_fast_move_share": 0.42857142857142855,
+            "within_two_fast_moves_share": 0.5952380952380952,
+            "same_assumed_fast_move_share": 0.9523809523809523
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-002",
+          "views": [
+            "tw-2897166800-left-003",
+            "tw-2897166800-right-003"
+          ],
+          "state_moments": 288,
+          "energy": {
+            "moments": 99,
+            "mean_signed_error": 5.842424242424243,
+            "mean_absolute_error": 18.856565656565657,
+            "median_absolute_error": 19.299999999999997,
+            "within_one_fast_move_share": 0.29292929292929293,
+            "within_two_fast_moves_share": 0.6666666666666666,
+            "same_assumed_fast_move_share": 0.7272727272727273
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-003",
+          "views": [
+            "tw-2897166800-left-005",
+            "tw-2897166800-right-005"
+          ],
+          "state_moments": 280,
+          "energy": {
+            "moments": 116,
+            "mean_signed_error": 8.625862068965517,
+            "mean_absolute_error": 15.263793103448275,
+            "median_absolute_error": 11.399999999999999,
+            "within_one_fast_move_share": 0.3448275862068966,
+            "within_two_fast_moves_share": 0.7155172413793104,
+            "same_assumed_fast_move_share": 0.5775862068965517
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-004",
+          "views": [
+            "tw-2897166800-left-007",
+            "tw-2897166800-right-007"
+          ],
+          "state_moments": 156,
+          "energy": {
+            "moments": 53,
+            "mean_signed_error": -6.524528301886793,
+            "mean_absolute_error": 9.128301886792453,
+            "median_absolute_error": 7.7,
+            "within_one_fast_move_share": 0.660377358490566,
+            "within_two_fast_moves_share": 0.6792452830188679,
+            "same_assumed_fast_move_share": 1.0
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-005",
+          "views": [
+            "tw-2897166800-left-009",
+            "tw-2897166800-right-010"
+          ],
+          "state_moments": 322,
+          "energy": {
+            "moments": 46,
+            "mean_signed_error": 3.071739130434783,
+            "mean_absolute_error": 14.667391304347825,
+            "median_absolute_error": 10.100000000000001,
+            "within_one_fast_move_share": 0.43478260869565216,
+            "within_two_fast_moves_share": 0.6521739130434783,
+            "same_assumed_fast_move_share": 1.0
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-001",
+          "views": [
+            "tw-2897312743-left-002",
+            "tw-2897312743-right-002"
+          ],
+          "state_moments": 185,
+          "energy": {
+            "moments": 36,
+            "mean_signed_error": -8.652777777777779,
+            "mean_absolute_error": 17.558333333333334,
+            "median_absolute_error": 8.7,
+            "within_one_fast_move_share": 0.6388888888888888,
+            "within_two_fast_moves_share": 0.8333333333333334,
+            "same_assumed_fast_move_share": 0.9444444444444444
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-002",
+          "views": [
+            "tw-2897312743-left-003",
+            "tw-2897312743-right-003"
+          ],
+          "state_moments": 254,
+          "energy": {
+            "moments": 54,
+            "mean_signed_error": -7.520370370370371,
+            "mean_absolute_error": 21.853703703703705,
+            "median_absolute_error": 17.7,
+            "within_one_fast_move_share": 0.42592592592592593,
+            "within_two_fast_moves_share": 0.7037037037037037,
+            "same_assumed_fast_move_share": 0.9444444444444444
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-003",
+          "views": [
+            "tw-2897312743-left-005",
+            "tw-2897312743-right-005"
+          ],
+          "state_moments": 217,
+          "energy": {
+            "moments": 80,
+            "mean_signed_error": 4.003750000000001,
+            "mean_absolute_error": 10.071250000000001,
+            "median_absolute_error": 8.3,
+            "within_one_fast_move_share": 0.7375,
+            "within_two_fast_moves_share": 0.9375,
+            "same_assumed_fast_move_share": 1.0
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-004",
+          "views": [
+            "tw-2897312743-left-007",
+            "tw-2897312743-right-007"
+          ],
+          "state_moments": 256,
+          "energy": {
+            "moments": 110,
+            "mean_signed_error": -10.52909090909091,
+            "mean_absolute_error": 18.456363636363637,
+            "median_absolute_error": 11.299999999999997,
+            "within_one_fast_move_share": 0.5727272727272728,
+            "within_two_fast_moves_share": 0.7363636363636363,
+            "same_assumed_fast_move_share": 0.8545454545454545
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-005",
+          "views": [
+            "tw-2897312743-left-009",
+            "tw-2897312743-right-009"
+          ],
+          "state_moments": 219,
+          "energy": {
+            "moments": 89,
+            "mean_signed_error": 12.931460674157304,
+            "mean_absolute_error": 14.81685393258427,
+            "median_absolute_error": 10.5,
+            "within_one_fast_move_share": 0.5617977528089888,
+            "within_two_fast_moves_share": 0.8314606741573034,
+            "same_assumed_fast_move_share": 1.0
+          }
+        }
+      ]
+    },
+    "fitted": {
+      "matches": 10,
+      "state": {
+        "who is out": {
+          "moments": 2421,
+          "agreements": 2318,
+          "agreement_share": 0.9574555968608013
+        },
+        "health within 3%": {
+          "moments": 2318,
+          "agreements": 1790,
+          "agreement_share": 0.7722174288179465
+        },
+        "health within 10%": {
+          "moments": 2318,
+          "agreements": 2085,
+          "agreement_share": 0.8994823123382226
+        },
+        "shields": {
+          "moments": 2421,
+          "agreements": 2303,
+          "agreement_share": 0.9512598099958695
+        },
+        "Pokémon left": {
+          "moments": 2421,
+          "agreements": 2410,
+          "agreement_share": 0.9954564229657167
+        },
+        "energy within one fast move": {
+          "moments": 756,
+          "agreements": 466,
+          "agreement_share": 0.6164021164021164
+        },
+        "energy within two": {
+          "moments": 756,
+          "agreements": 567,
+          "agreement_share": 0.75
+        },
+        "all of these but energy": {
+          "moments": 2421,
+          "agreements": 1999,
+          "agreement_share": 0.825691862866584
+        },
+        "everything, energy within two": {
+          "moments": 756,
+          "agreements": 523,
+          "agreement_share": 0.6917989417989417
+        }
+      },
+      "energy_all": {
+        "moments": 744,
+        "mean_signed_error": -3.0774193548387094,
+        "mean_absolute_error": 14.150537634408602,
+        "median_absolute_error": 9.3,
+        "within_one_fast_move_share": 0.6196236559139785,
+        "within_two_fast_moves_share": 0.7567204301075269,
+        "same_assumed_fast_move_share": 0.9139784946236559
+      },
+      "energy_below_both_costs": {
+        "moments": 453,
+        "mean_signed_error": 0.7860927152317881,
+        "mean_absolute_error": 10.675275938189845,
+        "median_absolute_error": 8.4,
+        "within_one_fast_move_share": 0.7218543046357616,
+        "within_two_fast_moves_share": 0.8543046357615894,
+        "same_assumed_fast_move_share": 0.9116997792494481
+      },
+      "energy_below_costs_and_same_assumed_fast": {
+        "moments": 413,
+        "mean_signed_error": 1.419128329297821,
+        "mean_absolute_error": 10.530992736077481,
+        "median_absolute_error": 8.4,
+        "within_one_fast_move_share": 0.7409200968523002,
+        "within_two_fast_moves_share": 0.8571428571428571,
+        "same_assumed_fast_move_share": 1.0
+      },
+      "per_match": [
+        {
+          "match_id": "tw-2897166800-match-001",
+          "views": [
+            "tw-2897166800-left-001",
+            "tw-2897166800-right-001"
+          ],
+          "state_moments": 234,
+          "energy": {
+            "moments": 78,
+            "mean_signed_error": 5.1269230769230765,
+            "mean_absolute_error": 14.403846153846153,
+            "median_absolute_error": 8.700000000000003,
+            "within_one_fast_move_share": 0.6923076923076923,
+            "within_two_fast_moves_share": 0.717948717948718,
+            "same_assumed_fast_move_share": 0.9487179487179487
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-002",
+          "views": [
+            "tw-2897166800-left-003",
+            "tw-2897166800-right-003"
+          ],
+          "state_moments": 289,
+          "energy": {
+            "moments": 98,
+            "mean_signed_error": -2.892857142857143,
+            "mean_absolute_error": 11.466326530612246,
+            "median_absolute_error": 9.100000000000001,
+            "within_one_fast_move_share": 0.5714285714285714,
+            "within_two_fast_moves_share": 0.7857142857142857,
+            "same_assumed_fast_move_share": 0.7244897959183674
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-003",
+          "views": [
+            "tw-2897166800-left-005",
+            "tw-2897166800-right-005"
+          ],
+          "state_moments": 282,
+          "energy": {
+            "moments": 114,
+            "mean_signed_error": 4.121052631578947,
+            "mean_absolute_error": 12.556140350877193,
+            "median_absolute_error": 9.100000000000001,
+            "within_one_fast_move_share": 0.4649122807017544,
+            "within_two_fast_moves_share": 0.6929824561403509,
+            "same_assumed_fast_move_share": 0.8947368421052632
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-004",
+          "views": [
+            "tw-2897166800-left-007",
+            "tw-2897166800-right-007"
+          ],
+          "state_moments": 156,
+          "energy": {
+            "moments": 53,
+            "mean_signed_error": -7.713207547169811,
+            "mean_absolute_error": 9.373584905660378,
+            "median_absolute_error": 8.7,
+            "within_one_fast_move_share": 0.6415094339622641,
+            "within_two_fast_moves_share": 0.6792452830188679,
+            "same_assumed_fast_move_share": 1.0
+          }
+        },
+        {
+          "match_id": "tw-2897166800-match-005",
+          "views": [
+            "tw-2897166800-left-009",
+            "tw-2897166800-right-010"
+          ],
+          "state_moments": 323,
+          "energy": {
+            "moments": 43,
+            "mean_signed_error": -10.011627906976743,
+            "mean_absolute_error": 13.886046511627907,
+            "median_absolute_error": 10.0,
+            "within_one_fast_move_share": 0.627906976744186,
+            "within_two_fast_moves_share": 0.8372093023255814,
+            "same_assumed_fast_move_share": 1.0
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-001",
+          "views": [
+            "tw-2897312743-left-002",
+            "tw-2897312743-right-002"
+          ],
+          "state_moments": 185,
+          "energy": {
+            "moments": 36,
+            "mean_signed_error": -16.069444444444443,
+            "mean_absolute_error": 20.86388888888889,
+            "median_absolute_error": 18.3,
+            "within_one_fast_move_share": 0.4444444444444444,
+            "within_two_fast_moves_share": 0.7777777777777778,
+            "same_assumed_fast_move_share": 0.9444444444444444
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-002",
+          "views": [
+            "tw-2897312743-left-003",
+            "tw-2897312743-right-003"
+          ],
+          "state_moments": 256,
+          "energy": {
+            "moments": 50,
+            "mean_signed_error": -14.491999999999999,
+            "mean_absolute_error": 20.264,
+            "median_absolute_error": 9.5,
+            "within_one_fast_move_share": 0.6,
+            "within_two_fast_moves_share": 0.76,
+            "same_assumed_fast_move_share": 0.94
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-003",
+          "views": [
+            "tw-2897312743-left-005",
+            "tw-2897312743-right-005"
+          ],
+          "state_moments": 218,
+          "energy": {
+            "moments": 76,
+            "mean_signed_error": -4.910526315789473,
+            "mean_absolute_error": 9.057894736842105,
+            "median_absolute_error": 8.100000000000001,
+            "within_one_fast_move_share": 0.8947368421052632,
+            "within_two_fast_moves_share": 0.9473684210526315,
+            "same_assumed_fast_move_share": 0.9736842105263158
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-004",
+          "views": [
+            "tw-2897312743-left-007",
+            "tw-2897312743-right-007"
+          ],
+          "state_moments": 258,
+          "energy": {
+            "moments": 108,
+            "mean_signed_error": -13.656481481481482,
+            "mean_absolute_error": 17.949074074074073,
+            "median_absolute_error": 8.399999999999999,
+            "within_one_fast_move_share": 0.6388888888888888,
+            "within_two_fast_moves_share": 0.7222222222222222,
+            "same_assumed_fast_move_share": 0.8703703703703703
+          }
+        },
+        {
+          "match_id": "tw-2897312743-match-005",
+          "views": [
+            "tw-2897312743-left-009",
+            "tw-2897312743-right-009"
+          ],
+          "state_moments": 220,
+          "energy": {
+            "moments": 88,
+            "mean_signed_error": 12.667045454545455,
+            "mean_absolute_error": 15.503409090909091,
+            "median_absolute_error": 10.6,
+            "within_one_fast_move_share": 0.6136363636363636,
+            "within_two_fast_moves_share": 0.7159090909090909,
+            "same_assumed_fast_move_share": 1.0
+          }
+        }
+      ]
+    }
+  },
+  "strict_consistency_failure_categories": {
+    "ending": 20,
+    "energy": 10,
+    "shields": 2
+  },
+  "reference_kind": "other_player_screen_readings_and_model_states_not_independent_ground_truth",
+  "limitations": [
+    "The reference button fill and fast moves are themselves unvalidated.",
+    "Same-crop button calibration was inherited unchanged from the earlier official pilot.",
+    "Layout/boundary review exposed the videos; no state/timing parameters were fitted on them.",
+    "Both comparisons use --told, which supplies peer-inferred fast moves when available.",
+    "Metrics apply to eligible looks; animations and unreadable values reduce coverage.",
+    "View agreement does not verify exact HP, forms, stat stages or all game events.",
+    "Agent frame review identified combat by 4.517 seconds but a 20.7-second model origin in one view.",
+    "Forms are not verified: a displayed Ninetales still uses generic species defaults and guessed moves.",
+    "Many adjacent looks belong to the same match; denominators are looks, not independent battles.",
+    "Strict consistency checks use the published reconstruction; the separate --told comparison is diagnostic."
+  ],
+  "commands": [
+    [
+      "python",
+      "scripts/recording/retrack_public.py",
+      "out-before",
+      "--told",
+      "--swapped-theirs",
+      "-1.0",
+      "--enter",
+      "0.2",
+      "--start",
+      "0.7",
+      "--resume-lead",
+      "0.5",
+      "--waits",
+      "faint",
+      "--header-waits",
+      "no"
+    ],
+    [
+      "python",
+      "scripts/recording/paired_energy.py",
+      "--all",
+      "out-before",
+      "--source",
+      "2897166800",
+      "--source",
+      "2897312743"
+    ],
+    [
+      "python",
+      "scripts/recording/paired_state.py",
+      "--all",
+      "out-before",
+      "--source",
+      "2897166800",
+      "--source",
+      "2897312743"
+    ],
+    [
+      "python",
+      "scripts/recording/retrack_public.py",
+      "out-fitted",
+      "--told"
+    ],
+    [
+      "python",
+      "scripts/recording/paired_energy.py",
+      "--all",
+      "out-fitted",
+      "--source",
+      "2897166800",
+      "--source",
+      "2897312743"
+    ],
+    [
+      "python",
+      "scripts/recording/paired_state.py",
+      "--all",
+      "out-fitted",
+      "--source",
+      "2897166800",
+      "--source",
+      "2897312743"
+    ]
+  ],
+  "inputs": [
+    {
+      "id": "tw-2897166800-left-001",
+      "sampled_frames": 2622,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "ccfffc03dec51c5b5a21e7a986afeadda77a0e79108c4e87cd0eb722ad53abe5",
+          "bytes": 29006
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "5989fe824cc6a7cdf4d1bf2a6f07578d52697d06451a773b36431e82917399bb",
+          "bytes": 5369
+        },
+        "raw/read.json": {
+          "sha256": "6637225f9fc67dffc9878c8b3ea3782836f9a139040e3469abc0b7c29e896846",
+          "bytes": 2437
+        },
+        "raw/markers.json": {
+          "sha256": "02cc5fe0a429025ceeb78ea2717e59a4b87c9889f172589521f2da7a88e7d4ac",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "732a1e6d5582f2e53c489487b4552eb78174cbc889f6e13d3eb749cb088f9ef2",
+          "bytes": 549
+        },
+        "observations.jsonl.gz": {
+          "sha256": "03915393c301e51f175d845c6f5b7720e9233e342b12c76811cf948a441469ef",
+          "bytes": 1679
+        },
+        "states.jsonl.gz": {
+          "sha256": "0100ab7433240e8bdd7f1907263db72f90ebb624f9f259072f961c494b924fed",
+          "bytes": 11643
+        },
+        "events.jsonl.gz": {
+          "sha256": "09edfb88ce7fd97d42f34c060f7e3b858eda067568c9ad9f2281ef9408a2d584",
+          "bytes": 912
+        },
+        "timeline.json": {
+          "sha256": "460a3f8a27911452d308947311978a530846cf678682187dc737c9c95d8fe3c8",
+          "bytes": 4629
+        },
+        "verdict.json": {
+          "sha256": "1ce01e5cca7e8c9b10465db1de498197b52a176f48df96b6fb6171701cc27f38",
+          "bytes": 1453
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "9eb4f456be70d2019c11a50eac0426a31f5ce5dafaff8948c06e80b7ee372d4c",
+          "bytes": 653579
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-left-003",
+      "sampled_frames": 3117,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "a2a48222f379c561488b13e8f23851cb335d13092a55391dba24119d9fe5a10a",
+          "bytes": 32270
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "dd20c66b1ca2e325d677595fb10e1bb60109f4ed92188207d17b3671924d6d8c",
+          "bytes": 6613
+        },
+        "raw/read.json": {
+          "sha256": "692003622a72461f6ecebf7e2e42a69117311b4eb12852b3c1f6cfd6334c8ed9",
+          "bytes": 2440
+        },
+        "raw/markers.json": {
+          "sha256": "f96ad8c995b0484958dce8d72189323cd04e50d7915be73960109810efadb4e7",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "816801e7169b16134c8df545fac0df4048f28cf940de0f85afe51b2532251b13",
+          "bytes": 548
+        },
+        "observations.jsonl.gz": {
+          "sha256": "cf1de5e2ad49cc9c766b04643132141712da8f86a804abd601e6155d50baf905",
+          "bytes": 1797
+        },
+        "states.jsonl.gz": {
+          "sha256": "48f30dbb33acedaecc5790ba4f1705cba95e3ac8bfb20ae19c8187b62c9b0921",
+          "bytes": 13833
+        },
+        "events.jsonl.gz": {
+          "sha256": "10c49c2d8467c6f7b6a21ab9db5a31c2c30d80438be740ccfae27011d2dea64b",
+          "bytes": 926
+        },
+        "timeline.json": {
+          "sha256": "7b4322301554b3d6b20edf51259c20aef7e77fd95ba96b31403cb457523dd139",
+          "bytes": 10932
+        },
+        "verdict.json": {
+          "sha256": "276f25052649129af8675f017f44f940436cf432fc33fa0281a73e2463e586a1",
+          "bytes": 1568
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "73a73b1d69fb4aceff18c7d80f3c65f2faa988b9620c01626741369ff7791574",
+          "bytes": 801584
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-left-005",
+      "sampled_frames": 3135,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "6a1e54b597642b02592ef3499f62a3de8eca829a1f11835582548d396bee4c89",
+          "bytes": 35156
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "ee3b84f1780c82fe1c1f81658912c5806d54714a63be12b47f515d54dfadaf1d",
+          "bytes": 6122
+        },
+        "raw/read.json": {
+          "sha256": "0b87e511868c02f600066be6aafd653c1cf40109d446a9fe275d2dcc71604aa1",
+          "bytes": 2456
+        },
+        "raw/markers.json": {
+          "sha256": "397296bb34e12700beb5c3562b6871c9170f34e12ace7f91652cedbc29d5a6a6",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "be9951f2cfedf85114d8da4787b519f5f40e325dc96404f5eb35ffca4aff9030",
+          "bytes": 550
+        },
+        "observations.jsonl.gz": {
+          "sha256": "6578cf5cd12cf22ddeaf5b0050c40be7b219eae15182d3b970344c6ef95e3bf1",
+          "bytes": 2030
+        },
+        "states.jsonl.gz": {
+          "sha256": "c30a769a99e784b4c2958020b7d6d90d99377e3b790b178ebbd939e610d340fc",
+          "bytes": 13790
+        },
+        "events.jsonl.gz": {
+          "sha256": "7824d8cf5e035deea892ed2b3ba73289761e06a6a01d1dc513ff962f35e22e6f",
+          "bytes": 960
+        },
+        "timeline.json": {
+          "sha256": "bcc10f3bdaac090000ae9a1015f8605a8d5a072544298e0d702e75a36192f05d",
+          "bytes": 5901
+        },
+        "verdict.json": {
+          "sha256": "0e3724ed14e4e9cd025f974e24c42d1b9ea6ac96bb0c066f950f88dc705f06f6",
+          "bytes": 1518
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "75c78a45be0cdb3a3e73557562a169f1dc3922d8b59e06894f3dcc48a48483d9",
+          "bytes": 797886
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-left-007",
+      "sampled_frames": 2405,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "5d948b547c8c4bc1396c8a0409534a51053e7774ae4626b5eaa1a7d4f1df7d45",
+          "bytes": 24955
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "a3c72f8dbbe572b969244a3c0d7194badb4daf3f63e77675a852f7540212c01d",
+          "bytes": 4781
+        },
+        "raw/read.json": {
+          "sha256": "6acd2f359afe3d1d39d0c0fd0ec8c7f92bfbc366d1b223cd7b59fb4064d30a44",
+          "bytes": 2436
+        },
+        "raw/markers.json": {
+          "sha256": "a8e2a0d2d16e5bb7fc7ef70315dcc9fabb4eaee6d6bc00de0b0051f92d71e88e",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "a6ae1cbaff872123202e0e44a8c2a883ae140a86b380e6a30190ba3ebf0ccdc3",
+          "bytes": 550
+        },
+        "observations.jsonl.gz": {
+          "sha256": "516aeed70fad66335c404182ec240844f788a0542e634a9c6e36adc459a71c86",
+          "bytes": 1114
+        },
+        "states.jsonl.gz": {
+          "sha256": "ada151f9b89af2b2893aa398d82711bba4f84d7c6a146d55b1fce6aec3c800a0",
+          "bytes": 6879
+        },
+        "events.jsonl.gz": {
+          "sha256": "0f955470063d57a9786c0fdd18c98836e8af0bd9977641628256e820e2c24264",
+          "bytes": 687
+        },
+        "timeline.json": {
+          "sha256": "6a2ef46f925d4723ad3631e8fb8278c55dc3a2998b9c4ae67a9b4e4f0197e6d9",
+          "bytes": 3461
+        },
+        "verdict.json": {
+          "sha256": "8cd29cba67eba90ea0fb8870c13b96b24fe3f2c9f988da467ab0ea09c566e07b",
+          "bytes": 1467
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "a82e360f74987a4ca18a056f39ba3ee4a3a7386add94f417f2bf516c5ec2b0d8",
+          "bytes": 471160
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-left-009",
+      "sampled_frames": 3102,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "5aef97e33a8c0f95383bc07efd08f89b9598a768af1eeb78446df5b8282fe17c",
+          "bytes": 31859
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "d7e34cea67d0c69f00400d343010784d68630f6abe657feee7a34e7085da823d",
+          "bytes": 6063
+        },
+        "raw/read.json": {
+          "sha256": "2177d02d01db127e8fb0e3cde5e828ec8ad6746a4ba2ab602dffbe9e70f93712",
+          "bytes": 2456
+        },
+        "raw/markers.json": {
+          "sha256": "dad1350e50b392ffd2ab7d5ba62ab374a2370b37ad2c2dca421bf0ea54adefc8",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "443f8e555bb42803ab3f3b77bf04deafb67acb72dcdd9c6371d81f5f9670658c",
+          "bytes": 549
+        },
+        "observations.jsonl.gz": {
+          "sha256": "6c512a1e29be2511eefcd55d1c003aec9a2864e8008521a6b278b87751ac4e3c",
+          "bytes": 1813
+        },
+        "states.jsonl.gz": {
+          "sha256": "f6af7fa21d13b59e0dce8f113c9389e1085a07a1647222c0c9557cdf9a0018ef",
+          "bytes": 14409
+        },
+        "events.jsonl.gz": {
+          "sha256": "a0e605b3422e48234eb0fc58e2e52a7cd0294c31c62a402e6c344567e079c090",
+          "bytes": 876
+        },
+        "timeline.json": {
+          "sha256": "cf8072ab50e053c779e4a7f21de112e0fb1b901532e1de1f08104eb908eae74c",
+          "bytes": 5368
+        },
+        "verdict.json": {
+          "sha256": "a2dfaae725bd5079e946bc0bbcb87e11543d5a3562a1352204c8859bda275bba",
+          "bytes": 1536
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "21c88dbcce9db148f9c96c7586d9d55cb313c6c916f6df0fb8455b4a16e045f7",
+          "bytes": 834572
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-right-001",
+      "sampled_frames": 2622,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "e68d7fc8ea3b922b152606f3cbe95fde729e869e7864c8ff26f4ed632e74831e",
+          "bytes": 29448
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "58dbb14b47ad658df2a019cab8c56088556a9c3687934416eb0b2394c7f1e3ab",
+          "bytes": 5230
+        },
+        "raw/read.json": {
+          "sha256": "938c24130aa9e878221c18c4e077802c954d495b6f363017938ef020e3f9903e",
+          "bytes": 2437
+        },
+        "raw/markers.json": {
+          "sha256": "813072fc8970de0f843523ff0d9726561f43e4a28676f26a6cf9cd06856de538",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "7e9a4564e947ad3150644d1280c852e9b2e7ae3b3a4d4be2bedb425ef9a8cb01",
+          "bytes": 551
+        },
+        "observations.jsonl.gz": {
+          "sha256": "18865be24999a42494663faa258b2893f0c494ce0947ecb35675da3d62bf159d",
+          "bytes": 1627
+        },
+        "states.jsonl.gz": {
+          "sha256": "7546a1f54dc1d6f1523a36e0c6e1f241b495f1232ae509e40db13220c1700567",
+          "bytes": 12238
+        },
+        "events.jsonl.gz": {
+          "sha256": "2ed7fa4fde360e610278c3ca1c8b0f175509c8185a7a4cd7b8c749d6e5ec8650",
+          "bytes": 897
+        },
+        "timeline.json": {
+          "sha256": "3d34a2b71bf1ac6a3a9709ec538332296fd4903b0cd00eba70189e679cf9d03d",
+          "bytes": 4949
+        },
+        "verdict.json": {
+          "sha256": "4539bc84a65fd82695a6068bde8c42cc4b376b8e5abf7c6d0eef74b719ad2cc1",
+          "bytes": 1490
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "a9bae6a8a372de1c31d8ec4921fda50108680943f67488f2f98af891969ce8dc",
+          "bytes": 642691
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-right-003",
+      "sampled_frames": 3117,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "1111aec4c1b5d20446357f562173bfeef4a4afc9213d55d264681c6eaaead184",
+          "bytes": 34458
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "63f1a5bfb5f025e538bf922204c22eaa687c9e482b95f57c7140e767f361a153",
+          "bytes": 6360
+        },
+        "raw/read.json": {
+          "sha256": "39698214a334a3e3711c89302d62efc08c287a8e116249b37a33ea3e69b3a069",
+          "bytes": 2439
+        },
+        "raw/markers.json": {
+          "sha256": "165b5df8520dc5cc73d4efab98c4e9dc8052ab237ca12662833d47c097e7fb7a",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "c72e25e26a8288291d036d30f265cb71d08477ddede894f6ee7329333a8bc389",
+          "bytes": 550
+        },
+        "observations.jsonl.gz": {
+          "sha256": "61d920713082b6583c0a9cf4cfce2e5f32ce7da8a4b6eb67bc8cebc8c9ff8837",
+          "bytes": 1926
+        },
+        "states.jsonl.gz": {
+          "sha256": "ffd5cda07359c7ca826a53b898a2de05c76ce29397847d822e944e196b145759",
+          "bytes": 13645
+        },
+        "events.jsonl.gz": {
+          "sha256": "62eac39b2e5534f0bb975ad732f60ba5f711de35f36c13a596ea39ae54db0e88",
+          "bytes": 1006
+        },
+        "timeline.json": {
+          "sha256": "f03c93c9a561c60e89cf7c656972deded5ce5e5f8aa0cd71033e2bda3ba53f09",
+          "bytes": 5245
+        },
+        "verdict.json": {
+          "sha256": "a26a0022f5652499aca5644cf78a426dd4a6a17348d0c55ed3ed534b87c892f2",
+          "bytes": 1609
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "42bc8325e4a8eaf6b0e0753d5b2bc960b272f92f671aa56998cd5fbe60939b01",
+          "bytes": 826100
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-right-005",
+      "sampled_frames": 3135,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "d72775140f9bf1bd147153ab4ae271576237e967544f77e8497e67d28c05175c",
+          "bytes": 33447
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "a4c3a0acca0b4f71411fac951f7385438813f7ad2e8fc88b29c05a24441e4d58",
+          "bytes": 6083
+        },
+        "raw/read.json": {
+          "sha256": "566982e7203a02cef7f2761fa79497f8e2ce56a1026c1cb1ee09d12fa6169aef",
+          "bytes": 2436
+        },
+        "raw/markers.json": {
+          "sha256": "bd55f36165e2bc83df8d7d7e9577ddefa8e5c010cd73b625bc9fbd5710c9031b",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "1b06f39f9a5a35bc4efae99fd4a90411be048390273abd6a37447b76c8ecac32",
+          "bytes": 552
+        },
+        "observations.jsonl.gz": {
+          "sha256": "cf1af688864deaa84248a3bcc03a924d2d08d9c52621ebf4f4ace0ede34be8e1",
+          "bytes": 1911
+        },
+        "states.jsonl.gz": {
+          "sha256": "6eaf3721cde44586140dc138da27d90c72cdc9eda1eb28ca3145bc3cadfe4554",
+          "bytes": 15414
+        },
+        "events.jsonl.gz": {
+          "sha256": "f1fde1e314a0ee0df05f9dae7bb8248b386d925be069679ade19f3cf8c122816",
+          "bytes": 909
+        },
+        "timeline.json": {
+          "sha256": "9d4a8bb4c5422e9cd35b6f0eeed00c8306cb1f1f8fd0238b6703729335abe066",
+          "bytes": 5648
+        },
+        "verdict.json": {
+          "sha256": "91fdd15a755cbd96e8fdc5ca2838471adef8a98c2d4b6432fda7d05ff2d95eaf",
+          "bytes": 1518
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "72d2742123b231ccdbc998636844b1cf0ed5ff39be2179f3b708bc4a7ebf75df",
+          "bytes": 743547
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-right-007",
+      "sampled_frames": 2405,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "d0b7bfb98d6e366e1d0b09ff8a6225200f95071a1532b72b3d1a5f7d8871f9e7",
+          "bytes": 26757
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "11606582703fd9f721c64b3400b1cbc5215a55260c02c925380f2066aa6a8c4a",
+          "bytes": 4705
+        },
+        "raw/read.json": {
+          "sha256": "bf7c0411d6f96a46d47a4e5495cd12aa116db76d51aa015473d32dadab19443f",
+          "bytes": 2437
+        },
+        "raw/markers.json": {
+          "sha256": "da088b5c176d892c30fffac36cae2144483050881162a3f05e046a5c045b4ed5",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "cddca6e873a9ff49a68d37e179e5304d02c9fbd3b7d88ecd208c53412c66738d",
+          "bytes": 552
+        },
+        "observations.jsonl.gz": {
+          "sha256": "df17a2e8d249cf01267fa746397ca3b52da1f55e8adc850a55be8e05781e0a91",
+          "bytes": 1372
+        },
+        "states.jsonl.gz": {
+          "sha256": "07b7eedd25d03495d1caad23417f985ff56f25028a43a8007dd3525d4988e3eb",
+          "bytes": 7736
+        },
+        "events.jsonl.gz": {
+          "sha256": "e140c3d2faea04fc3cf05bc96b5d9bde58388b2b6964673ecb09d8d16643b39b",
+          "bytes": 695
+        },
+        "timeline.json": {
+          "sha256": "308d62377ab66f251868101700620786635ae9a36791ca1834004b2ed629c2a4",
+          "bytes": 3548
+        },
+        "verdict.json": {
+          "sha256": "62ec5458d66d8b8426d678346f204565f5158024515c1fb7dda80a61b51df679",
+          "bytes": 1417
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "aa6063ba087b830a3c34830a85ad2cb73cf8ad2877a24963435049af646875ee",
+          "bytes": 500150
+        }
+      }
+    },
+    {
+      "id": "tw-2897166800-right-010",
+      "sampled_frames": 3102,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "e60cbf90ab88228509c2cec7f0b2dd4cd569f14acdf754afdecbd34b6d0622b6",
+          "bytes": 32440
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "6c7cf30100e27f94c266b2c987295993930dd3f4ae3ad8d7e6f4201967c268d7",
+          "bytes": 5961
+        },
+        "raw/read.json": {
+          "sha256": "820056ab5fe6850b0fe88a2ad117677454be314857ed390245e44898ba9f1e81",
+          "bytes": 2438
+        },
+        "raw/markers.json": {
+          "sha256": "35407629e0781fae1d692da1711f7faa705aee6f9decd0dcf806a3de3eacdec8",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "7875669684b8aeafbd8609af9c5c31bf7a820b0674da5a9936667c6c2060c66d",
+          "bytes": 551
+        },
+        "observations.jsonl.gz": {
+          "sha256": "0610f5a2f55f80f3d69892c7e1a5356bc305b09f2a2ab5b3058c2552175d672c",
+          "bytes": 1869
+        },
+        "states.jsonl.gz": {
+          "sha256": "ab3955fbc0c362fa5cff5ddd0cf6c3eb6710653dfc057d983c43921ec90197db",
+          "bytes": 13503
+        },
+        "events.jsonl.gz": {
+          "sha256": "5b6d315dbb73fdaf98f32a823a855f9d7e121a4b2225abc60da650d04fac296d",
+          "bytes": 825
+        },
+        "timeline.json": {
+          "sha256": "a70dc5162d1ff3eaab07e389f9379616cfedf55bc6380846f777ccdf9f835606",
+          "bytes": 5476
+        },
+        "verdict.json": {
+          "sha256": "3d882521395810f804e4583c486b15fc2e705c191034b27715aaf466a5b9c769",
+          "bytes": 1382
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "846f86db157c800ccad0739a0f28ec2d4e77f3eceeef720ebcfb1a41c35160ed",
+          "bytes": 836424
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-left-002",
+      "sampled_frames": 2745,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "5cc199b6d883868736d15c91971023a9795ed6ff07bd51e46c27dd6cc3c84ec0",
+          "bytes": 24413
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "58dd4a5d4cebaae06fe5a2c85ebf80d54b59a6ff79100dcad59b4d6f98ea2146",
+          "bytes": 4262
+        },
+        "raw/read.json": {
+          "sha256": "6b75a9fcd9a29227fc05b185beb9c01952acc21f9447215b06ceb8ffe16284ca",
+          "bytes": 2438
+        },
+        "raw/markers.json": {
+          "sha256": "40aad075e52d4b9f7937f54c3551a80d48f9afdba994d1cee9b60fe64ab5dbd9",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "bd723d9fb4d79184ee1bed8fe99f2bd354925e1b406591e4d6e4fd954c6bd310",
+          "bytes": 531
+        },
+        "observations.jsonl.gz": {
+          "sha256": "813b92037e892984edc6e75f8dd719f073ba71508c02fa12802735acb8d0d215",
+          "bytes": 1370
+        },
+        "states.jsonl.gz": {
+          "sha256": "4e981f724567cde4d4e88ead9fe0e1b2d39e2476a3bc0075532222849eeaf062",
+          "bytes": 9388
+        },
+        "events.jsonl.gz": {
+          "sha256": "10160f9619c6b0295afaff79cb6ffa6bc88468b4af6438df8bec1fa2d4ff3c9c",
+          "bytes": 849
+        },
+        "timeline.json": {
+          "sha256": "28896b1a3cb672a6f45afe7cbbec34c6d01a594d872efff2ceb2a527f6af3ae1",
+          "bytes": 10301
+        },
+        "verdict.json": {
+          "sha256": "3a5361d2305be6e50ad001cdd652c5e30e38b8f325ef3a1a069c81a30ec985f6",
+          "bytes": 1560
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "bb3016699f2197129d8ecb2f19a21863d40bab8fea0bc8b3e9cdbc6d356d990a",
+          "bytes": 619687
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-left-003",
+      "sampled_frames": 2674,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "e58070b6ca3f8a263089dcf90175f2b7440995833edb6f1dfafb14b0d32c95fa",
+          "bytes": 23259
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "2394674d918745ff3ffc24c4d75a58f274f8fa6da6b78872646d2004ed368b3a",
+          "bytes": 4387
+        },
+        "raw/read.json": {
+          "sha256": "14bd49448752e090c1872ca2835f5de4034db04d88c34f413a224b3a356bc58d",
+          "bytes": 2457
+        },
+        "raw/markers.json": {
+          "sha256": "f4da20efc897d05e16bf128c6c2fba0734a61a1150f2c6d354ea46b6063f0d42",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "b31d38329b0d621cc1353addf7232b28db8d7a82c8f876bf1e3d2e0525cc5e6c",
+          "bytes": 532
+        },
+        "observations.jsonl.gz": {
+          "sha256": "566ef80e601e45c7736c96072284e80d4a36bc39ebe79ca8177b1d9eaa154851",
+          "bytes": 1642
+        },
+        "states.jsonl.gz": {
+          "sha256": "b5ef3f2d8a0df3d122d313cea2b15c0cd3f52956e72513e8aaee782d5fa89f55",
+          "bytes": 12614
+        },
+        "events.jsonl.gz": {
+          "sha256": "f4f47e509d525a42b04821d8970fff7d1b35d843fa459591109f9835ae632c62",
+          "bytes": 936
+        },
+        "timeline.json": {
+          "sha256": "3a9d9a656b804d62dde9449c51cbf5fb1aac069d26a771a75637960f9530d762",
+          "bytes": 4703
+        },
+        "verdict.json": {
+          "sha256": "6250ee018eb1c49d428f6ee38550ea1ec18a6c9cf670341d1967cfaea2815241",
+          "bytes": 1527
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "26f83ae9823d476dbee19c13683d6c49e1f3d0c6ed254b72bcd10bfd45887b41",
+          "bytes": 590385
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-left-005",
+      "sampled_frames": 2828,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "44ef32bc215098b9342339db2c2f0c4fc456cbf19a29540b218721fd9db554ab",
+          "bytes": 24956
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "ad11b5f234d725c4bb8c362587094828bfcc0d71891c84cb8c2f951b51ae0071",
+          "bytes": 4234
+        },
+        "raw/read.json": {
+          "sha256": "9149ac890fea017cee3182788b6c6fecb9fc768b2f22f4157a8cba41e0023caf",
+          "bytes": 2437
+        },
+        "raw/markers.json": {
+          "sha256": "02cd2c3be29c781c2733b400e0886d38adb20e7e27ec0a6cb05f10292a72d0eb",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "296e7c3f76775869006317f36679da90355e5803953c8654fd843587985c26c8",
+          "bytes": 532
+        },
+        "observations.jsonl.gz": {
+          "sha256": "135f379caaaf2654291dfaadbbb415526380089ea57d2dab038680311c4b1f8e",
+          "bytes": 1485
+        },
+        "states.jsonl.gz": {
+          "sha256": "448c0de3f1b94ad4884792d2aab8ff28315b358761f5fd516308c0345e2b915c",
+          "bytes": 10501
+        },
+        "events.jsonl.gz": {
+          "sha256": "46d3abb675bd951278b88794200b8605c846df75de9cbced1f8e870b4e24b298",
+          "bytes": 766
+        },
+        "timeline.json": {
+          "sha256": "681d981ab83ccf710e8176fbe7206a7b6611f61af487df8b0e776532d685b6ed",
+          "bytes": 4857
+        },
+        "verdict.json": {
+          "sha256": "49b1c864463f6e10827ce61a91f8b2cd674d62db73c9dcfc2124b87c91ff2774",
+          "bytes": 1443
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "fce5672286176df12d1a15e5fb556952f7839f716d4923e7fae07d07e0b704cc",
+          "bytes": 640311
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-left-007",
+      "sampled_frames": 3086,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "ccca462b16888de0a759bf22b3fd6b6a5b38ca5587968b74113156fd5eb99174",
+          "bytes": 28193
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "79f3decb27197d25657fd9d8f9b7fdef0c5262cac21ebb7f884c74b166bd7b8a",
+          "bytes": 4791
+        },
+        "raw/read.json": {
+          "sha256": "d43c48750a3c4f632993d77f9e628188d348af3192a85340dae1cf01afcc684f",
+          "bytes": 2455
+        },
+        "raw/markers.json": {
+          "sha256": "ae6e4c77de449df539949b039f9d9ce963db2fbbc54cd54d9c9f5aa84af3e7d5",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "b92fb1e36dc3e3bf6e610f77c9eeadf4bb9389c10231ccf7441104937dccacee",
+          "bytes": 534
+        },
+        "observations.jsonl.gz": {
+          "sha256": "0e0567f975d9f41b916fc1638c59b26a66a10463ecfd953174d4afcbb7df7901",
+          "bytes": 1720
+        },
+        "states.jsonl.gz": {
+          "sha256": "3f42a5ac6032ae25a3dc83bc0e7db9c2bd4b49f6b5955243d05be5e099d3a0bd",
+          "bytes": 11967
+        },
+        "events.jsonl.gz": {
+          "sha256": "693a3be8b5beec5bda833f5601e1b9414cb23e3bedacf0ae713fb27ee01bc13f",
+          "bytes": 928
+        },
+        "timeline.json": {
+          "sha256": "dadd555e1a4f0170bf9ae91307ad939e74cadd5bd7e775912b81f0054ef16c62",
+          "bytes": 5095
+        },
+        "verdict.json": {
+          "sha256": "30eb3817cf06df3561672cc830941429aaa7069baa9863ead8a3dd0ab972d3dd",
+          "bytes": 1455
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "4fe8e6a836b7be6cb7c5bea3ed560b6c6404e4c2223c84a9a59f78a4c1a57b7c",
+          "bytes": 706762
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-left-009",
+      "sampled_frames": 2303,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "67464f7f6bc1cbcb4fb13c881427e310a210588e91fcdd6b636d36d8b0d26294",
+          "bytes": 21296
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "3982eb08e3161b7cd0caa953305233639410e7c0fbd088c8075425a8b2f5e7d6",
+          "bytes": 3749
+        },
+        "raw/read.json": {
+          "sha256": "48a78b58390d13685294eccd5bd14eba404e70f4aed91e544e157814b1374dfa",
+          "bytes": 2436
+        },
+        "raw/markers.json": {
+          "sha256": "09507d5e015c019cb8a37ca8f15acbe47c1a2ec6eded8348dabc761730bf1c2d",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "487e4cb61cfdff73fdea98536fe6f64379a1e46349b6bd3b3a8eefa9c47628ae",
+          "bytes": 533
+        },
+        "observations.jsonl.gz": {
+          "sha256": "300a01d6361dae010f8ce7c4fd6ed681f19bd2600f545b7a380c13707fa72fba",
+          "bytes": 1441
+        },
+        "states.jsonl.gz": {
+          "sha256": "68bbdb392ff02d6f59fa268f6092efe1cb267ac6a59067f3ed799e7cbcde906c",
+          "bytes": 10064
+        },
+        "events.jsonl.gz": {
+          "sha256": "41363be2574934ba1f36554a14e1f5a4106b33da2eedf9c76eceb10702ccdde6",
+          "bytes": 822
+        },
+        "timeline.json": {
+          "sha256": "75d81ef075f448c30b0acf87bf46aa090bf873a288ed4bbaec03c5fd72e6088c",
+          "bytes": 3940
+        },
+        "verdict.json": {
+          "sha256": "77ceb88d7cbc81774311335d8aa295525880c8cdac10b84dc5211aa151108b02",
+          "bytes": 1501
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "10f7c06fb738eeadd723f75a3e0ed88e19d1ecc5194a4c635a8c35b5b5357d52",
+          "bytes": 527214
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-right-002",
+      "sampled_frames": 2745,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "2235147b2cf3793d895af6f577339e0123829b54bc8c29d081634e310f482d36",
+          "bytes": 23187
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "265085149a47f1903d834e904b724c071317bf7204f867c0fab4e7a4196c52d2",
+          "bytes": 4349
+        },
+        "raw/read.json": {
+          "sha256": "63fe06bfd7523b512ef4495f1a6f5a549f73c954aa7e4780e0f34dac8dbbba2d",
+          "bytes": 2457
+        },
+        "raw/markers.json": {
+          "sha256": "006a690a10744d3c6f4d1c27b9690278e2ce5bee7d4e30c85cd94f4be81441e3",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "30fcc6eedf27641257fd8ff6fbb9eb7a8caa142cb6b59030b41108a133bb7c01",
+          "bytes": 533
+        },
+        "observations.jsonl.gz": {
+          "sha256": "8cbdee1f26ccceab60e2c416efefbc66eba9b6f1ef0fd87d5fa216db9dbf91a7",
+          "bytes": 1320
+        },
+        "states.jsonl.gz": {
+          "sha256": "dd9061d5a4f05acaa32694d2a9436b623e16dfbe64f42862d8e182f983da3ef9",
+          "bytes": 10061
+        },
+        "events.jsonl.gz": {
+          "sha256": "d890023016f0c4c043c51ea6eb20975b4d5f3fdb400f2f4eb4c7657599cff85d",
+          "bytes": 753
+        },
+        "timeline.json": {
+          "sha256": "173d92ad905cc3d03b68c375e3c842bcfeafe20d7c3c80bc51e0d93221f8aeb1",
+          "bytes": 4347
+        },
+        "verdict.json": {
+          "sha256": "6933d864c9ed1f08624380fbf2958d115c113d56360d8c1a8a23c0460eeec057",
+          "bytes": 1478
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "bbe5c4b406c67750075fb9a66319e2d0bc559e635c5473660d5d504988d9adb8",
+          "bytes": 586317
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-right-003",
+      "sampled_frames": 2674,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "38d39f025b5326f5531898b4f9a8500323783373c1fb12dfa3d926ec240d1437",
+          "bytes": 21335
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "9aa91e182527fdf35cfa3a99961b266b7c6db4c4926629ab8c90160ef43e253e",
+          "bytes": 4412
+        },
+        "raw/read.json": {
+          "sha256": "3eccf93cf889179b5a43c22277992f03b78388c9ec93a1a08e521b5bd6216729",
+          "bytes": 2401
+        },
+        "raw/markers.json": {
+          "sha256": "bb7dedb5a33f07de7ac4b768813af5267b6d9a227db5506e3abca1a234e19d54",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "9e40a44d656916c2511964f5437eac5654b2817ef9a87fabd65bae604f6862cf",
+          "bytes": 534
+        },
+        "observations.jsonl.gz": {
+          "sha256": "b5adfbbebc9e35a6ee249ccca567a8a139185eb36e3f49b22b778731d2f45738",
+          "bytes": 1483
+        },
+        "states.jsonl.gz": {
+          "sha256": "f34db7a1c94224e86ee28f060a7cfbdfaae7ce5681c92403a6fb73c87146bbf1",
+          "bytes": 11492
+        },
+        "events.jsonl.gz": {
+          "sha256": "27dc56bdaaf325c18057f17cda7a7e645232a7e50a9be7d288cb557c5ffffb6c",
+          "bytes": 731
+        },
+        "timeline.json": {
+          "sha256": "3551f62dfbfc4f1c7238c5b35ca45fbdfc28ce7afae9dabe97e8438f268661c4",
+          "bytes": 4364
+        },
+        "verdict.json": {
+          "sha256": "02afe9c5e3581dc2fe87914b64e079b2b2e4d33c19a77d1de35eacf5507934d8",
+          "bytes": 1490
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "c46fdfdaa752cc3d8774de0f8843c5cb87ba7b8a310e94da9208610522b08ca2",
+          "bytes": 594755
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-right-005",
+      "sampled_frames": 2828,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "1341d0ea5d0df9da6123367378e18ce1c7e49cce982f752feb7575bf992075a3",
+          "bytes": 25830
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "20598162c0be5253b7d87e21a224ab9adc73ed3ffe06506e016b70ebe610f456",
+          "bytes": 4144
+        },
+        "raw/read.json": {
+          "sha256": "b6074659a471e396caf99b4c4c68ecb69bf85d96b86b31b300da17059344d378",
+          "bytes": 2436
+        },
+        "raw/markers.json": {
+          "sha256": "166ba07f9da13f174d4728794a36489cf11a47a0d199723d634cf27ad57246bf",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "035d17d65180fbdef4f9d80e4376b5c073c9b49fd045e3b877747fbd63fe8b38",
+          "bytes": 534
+        },
+        "observations.jsonl.gz": {
+          "sha256": "72522d56af800934106662d8094cdb5c78f500e188410747552e6a1f2fff851c",
+          "bytes": 1468
+        },
+        "states.jsonl.gz": {
+          "sha256": "baefbeecb8920fd18486b9d299380323704d262440c54159bb5c0ef86e6eda13",
+          "bytes": 10789
+        },
+        "events.jsonl.gz": {
+          "sha256": "82bbc46facbf208657365a91120fefd20adc0fc5ea6e36c443d6ef0f1a094d74",
+          "bytes": 817
+        },
+        "timeline.json": {
+          "sha256": "d9f2e1b5d9f995bdb9c858921c4d7c96f0e0a558ab4c0de78151983836c61836",
+          "bytes": 4807
+        },
+        "verdict.json": {
+          "sha256": "112b1ab016807442b1073ce0b37cf8a74d048351d2e62a40d7c022f5fc19d4cf",
+          "bytes": 1472
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "fa4c54b6b179e3f292bc71fc68c453c786354f6a1541e2baed8b7759ca28ce93",
+          "bytes": 596724
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-right-007",
+      "sampled_frames": 3086,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "5851143b9276712a5858f7fa844b493ca5cbb98cef7de5ce19e3a15ddeea5635",
+          "bytes": 28059
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "6398054786faa72bf54979ccd1a39be5ad9e93538c4759071ddbf4474b7f80a5",
+          "bytes": 4866
+        },
+        "raw/read.json": {
+          "sha256": "6508be208ae19726ab3931d566ebeed9071057cd97ebf5c272643aa8a2ffb0aa",
+          "bytes": 2437
+        },
+        "raw/markers.json": {
+          "sha256": "acb86d7ea80291bee0d6661669cd3c2394902dd25c1df1a8d46b3c8ae22bcc9e",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "ab13ec589bb687d215daf838af914921aa5df4f1f8b4127a612870814efa9c0c",
+          "bytes": 536
+        },
+        "observations.jsonl.gz": {
+          "sha256": "dbb8f868074fbdd2bb5d7c504b20109f27f9a740cdb7aa6f8e4ec6e00e802f37",
+          "bytes": 1787
+        },
+        "states.jsonl.gz": {
+          "sha256": "e89c9a5d4ac55051f5fc23128b8bc2d7f811b650198b3ae622df38f26bc71bdd",
+          "bytes": 12060
+        },
+        "events.jsonl.gz": {
+          "sha256": "68f6271397857f7224cbe18295c51240a79b07cc0d0e0559ee9d735dfaf8013c",
+          "bytes": 968
+        },
+        "timeline.json": {
+          "sha256": "13fff0094512ac43d3bd6b4b1cd094083ecdb1cf1649748246ad162ba9210016",
+          "bytes": 5231
+        },
+        "verdict.json": {
+          "sha256": "065a18f11f477a7eba1bdc9a633e472eb569f180bfeac4a0605b34318ad3a42a",
+          "bytes": 1533
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "779adb7837ca35a19917d14d110d702e7b3b509a9e68cc28799e385ca08908ea",
+          "bytes": 712569
+        }
+      }
+    },
+    {
+      "id": "tw-2897312743-right-009",
+      "sampled_frames": 2303,
+      "fps": 15,
+      "text_rate": 3,
+      "coverage": "full_clip",
+      "reader_sha256": {
+        "battle_reader.py": "0081e4a3ea7aa900260ccd7a23b0f9e2d5dceda01c421612e72a28f7ed188095",
+        "button_reader.py": "a91a138c6ca3ee07826664f2b7ced7d63ca74caa98111d1f86d5c1080bda67eb",
+        "health_reader.py": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
+        "health_tracker.py": "49eb31ab4e1fefaa8f1c9226455f43104f17f354cad0d6b6e34ef2a76948be2f",
+        "scene_tracker.py": "b9dfc41a7294b11363b173b1e5495e881f0a873805103355ee11acc9a5e158f2",
+        "adaptive_reader.py": "b057466eaaa69ba5b003d12bec0b20fb3b342077a7d8d7da16ee3ab6bb8a347e",
+        "roi_ocr.py": "2cb5b19740def1f01e84906a2790a69782059ef6b08b3fa9d9fc7bb73d4f919f",
+        "local_ocr.py": "88798735ed15b8d8486ca61f1c3a6debb8f2513bc61df807e50b851d8d6df515",
+        "build_viewer.py": "34aa967f1cd88cd4bbbedb4142c896503be0db9371cc00c1fb4de621fa89eaa7"
+      },
+      "files": {
+        "raw/readings-refined.jsonl.gz": {
+          "sha256": "6a7f821e85f12b86084378a174f1b0edad1296f2a56b1f66cebced92fb5aa089",
+          "bytes": 21995
+        },
+        "raw/text.jsonl.gz": {
+          "sha256": "1d60491878a6090fe0f6a61d2da3cb674cb498338785196a087785dcb6d9db92",
+          "bytes": 3869
+        },
+        "raw/read.json": {
+          "sha256": "3693a74a1314526c4f92dd2fc7a100016a1e532b6960538af6131b09c9b05a80",
+          "bytes": 2455
+        },
+        "raw/markers.json": {
+          "sha256": "90e153d06f2bc9128bd9e4a66cdcdd7f4ada1891d30f047912197d70b64e69b0",
+          "bytes": 769
+        },
+        "source.json": {
+          "sha256": "f12085c2d9978e1ead7195c5a275cc145181966bda095a0ba37da8d1d4ce4c5e",
+          "bytes": 535
+        },
+        "observations.jsonl.gz": {
+          "sha256": "bd1b076e18da87bc028c5ced2536f76d04cc40f69e8f778e226501a9aad4c30b",
+          "bytes": 1479
+        },
+        "states.jsonl.gz": {
+          "sha256": "beaaf206868513caf7b25627a2e7feffffc7da6ceb5e319384f3a760beccbe67",
+          "bytes": 10363
+        },
+        "events.jsonl.gz": {
+          "sha256": "78cedb34b130a24fc5a3221ad581856445e60037393fdec62da7a8a65abea3b8",
+          "bytes": 809
+        },
+        "timeline.json": {
+          "sha256": "91a58e23ce96d0a4f41388e5862257d3bc81f7c0b513d53e67c2f20dfd984b46",
+          "bytes": 4118
+        },
+        "verdict.json": {
+          "sha256": "21957fbdb9b6d77b25cdf0f68c158b22a973bc24adf31d643679e18398a5ed33",
+          "bytes": 1368
+        },
+        "continuity.jsonl.gz": {
+          "sha256": "1825755be641660beb7308441ad4a77eefae519ade81c3ab7fa21dbd1dac01b0",
+          "bytes": 512456
+        }
+      }
+    }
+  ],
+  "validation": {
+    "export_audit": {
+      "passed": true,
+      "unique_matches": 10,
+      "pov_clips": 20,
+      "checks": [
+        "protected code equals frozen commit",
+        "nine pixel reader hashes unchanged",
+        "full 15 FPS / 3 text looks coverage",
+        "current inherited refinement fingerprint",
+        "monotonic row timestamps",
+        "all readings carry unverified accuracy",
+        "source partial flags and paired match IDs",
+        "no media or local user paths in exports"
+      ],
+      "rows_checked": {
+        "raw/readings-refined.jsonl.gz": 56034,
+        "raw/text.jsonl.gz": 11192,
+        "states.jsonl.gz": 2534,
+        "continuity.jsonl.gz": 56034
+      }
+    },
+    "viewer": {
+      "passed": true,
+      "clip_count": 20,
+      "playback_checks": 4,
+      "timestamp_checks": [
+        {
+          "id": "tw-2897166800-left-001",
+          "time": 5,
+          "reading_time": 4.938267,
+          "readings": 2622,
+          "states": 119,
+          "phase": "Normal fighting",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Persian",
+            "Melmetal"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897166800-left-001",
+          "time": 60,
+          "reading_time": 59.943217,
+          "readings": 2622,
+          "states": 119,
+          "phase": "Our charge minigame · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Araquanid",
+            "Sableye"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897166800-left-001",
+          "time": 150,
+          "reading_time": 149.9498,
+          "readings": 2622,
+          "states": 119,
+          "phase": "Our charge minigame · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Persian",
+            "Melmetal"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897166800-right-001",
+          "time": 5,
+          "reading_time": 4.938267,
+          "readings": 2622,
+          "states": 123,
+          "phase": "Normal fighting",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Melmetal",
+            "Persian"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897166800-right-001",
+          "time": 60,
+          "reading_time": 59.943217,
+          "readings": 2622,
+          "states": 123,
+          "phase": "Incoming charged attack · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Sableye · retained",
+            "Araquanid · retained"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897166800-right-001",
+          "time": 150,
+          "reading_time": 149.9498,
+          "readings": 2622,
+          "states": 123,
+          "phase": "Incoming charged attack · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Melmetal · retained",
+            "Persian · retained"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-left-002",
+          "time": 5,
+          "reading_time": 5,
+          "readings": 2745,
+          "states": 95,
+          "phase": "Normal fighting",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Melmetal",
+            "Corviknight"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-left-002",
+          "time": 60,
+          "reading_time": 59.949997,
+          "readings": 2745,
+          "states": 95,
+          "phase": "Charged attack animation · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Quagsire · retained",
+            "Sableye · retained"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-left-002",
+          "time": 150,
+          "reading_time": 149.949992,
+          "readings": 2745,
+          "states": 95,
+          "phase": "Charged attack animation · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Melmetal · retained",
+            "Ninetales · retained"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-right-002",
+          "time": 5,
+          "reading_time": 5,
+          "readings": 2745,
+          "states": 105,
+          "phase": "Normal fighting",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Corviknight",
+            "Melmetal"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-right-002",
+          "time": 60,
+          "reading_time": 59.949997,
+          "readings": 2745,
+          "states": 105,
+          "phase": "Charged attack animation · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Sableye · retained",
+            "Quagsire · retained"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        },
+        {
+          "id": "tw-2897312743-right-002",
+          "time": 150,
+          "reading_time": 149.949992,
+          "readings": 2745,
+          "states": 105,
+          "phase": "Charged attack animation · inferred",
+          "status": "61 video views in this library · Full video analyzed · unreadable values remain unknown · Original edits/timing unverified.",
+          "names": [
+            "Ninetales",
+            "Melmetal"
+          ],
+          "sheet_rows": 2,
+          "sheet_columns": [
+            17,
+            17
+          ],
+          "decoded_sources": 1,
+          "ledger_schema": "public-game-state-v2",
+          "accuracy_verified": false,
+          "width": 448,
+          "height": 976
+        }
+      ],
+      "source_split_filters_passed": true,
+      "errors": []
+    },
+    "pipeline_tests_passed": 102,
+    "pvpoke_duels_passed": 108,
+    "log_sha256": {
+      "final-tests.log": "2ac8f4274b182c3306699e3d0afe90746a1af04bd51a8a0c994033fa9734bb96",
+      "final-pvpoke.log": "fb2c308ba9cb46c830a866700646c303514ee4439626949eb402f4fc2b34a02d",
+      "before-paired_energy.log": "acbbd242c46ca8a244ca689dc7ff7f4ac3bb01a8fa7b80918b0b23b1d8f38daa",
+      "before-paired_state.log": "989c1bbf324085fc7e043c78f2ff91b43db3938b0f3d7222fa2a17a1bdd5e1e6",
+      "fitted-paired_energy.log": "666b4faf3504cb9de1110669b96a811812a3c382b7708aeda52993218328f0a2",
+      "fitted-paired_state.log": "83bcc1c03e3da777319001b3faa4cf1d0d6936f888442e12d12209950328c524"
+    }
+  },
+  "storage": {
+    "portable_exports_bytes": 15311952,
+    "current_local_data_bytes": 55358628,
+    "cropped_video_bytes": 774401133,
+    "retained_analysis_history_bytes": 10161121,
+    "original_vod_bytes": 11863728497,
+    "units": "decimal bytes; MB=1e6; GB=1e9",
+    "mean_cropped_video_bytes_per_unique_battle_both_povs": 77440113.3,
+    "mean_current_data_bytes_per_unique_battle_both_povs": 5535862.8,
+    "mean_portable_exports_bytes_per_unique_battle_both_povs": 1531195.2,
+    "shared_viewer_html_bytes": 58924925,
+    "excluded_from_current_local_data": [
+      "video files",
+      "retained analysis archives",
+      "portable Git export copy",
+      "shared viewer HTML",
+      "shared runtime",
+      "boundary caches",
+      "review frames",
+      "comparison output folders"
+    ],
+    "original_plus_cropped_video_and_current_data_bytes": 12693488258
+  },
+  "visual_diagnostic_file": "data/vod_reserved_visual_diagnostic.json",
+  "comparison_interpretation": [
+    "Mean energy disagreement falls from 16.32 to 14.15, with within-two-fast-move share rising from 73.4% to 75.7%.",
+    "Active-species agreement falls from 98.3% to 95.7%; combined non-energy fields fall from 83.3% to 82.6%.",
+    "Different eligible-look denominators and correlated within-match readings limit the comparison; this is not an independently verified accuracy estimate."
+  ]
+}

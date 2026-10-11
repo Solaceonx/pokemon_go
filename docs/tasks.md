@@ -374,6 +374,10 @@ Twitch VODs, with both views kept together as twenty clips. The viewer's
 **New official sample** filter keeps these separate from earlier exposed clips.
 Selection, source/frame provenance, boundary evidence, measured storage and
 verification receipts are in `data/vod_additional_sample.json`; reproduction is
-in `docs/official_sample.md`. State recognition remains frozen and analysis of
-these new clips is pending. Next: independently adjudicate state labels and
-evaluate the frozen reader before using these sources to tune recognition.
+in `docs/official_sample.md`. The latest handoff's frozen evaluation at
+0fd98ff is now complete: all twenty views' readings and compressed tracked data
+are published, with before/fitted timing comparisons in
+`docs/reserved_state_evaluation.md` and `data/vod_reserved_state_evaluation.json`.
+No recognition/timing parameters were fitted on these games. Independent labels,
+terminal faints, early battle-clock origins, forms and energy discrepancies remain
+next acceptance work. Keep these sources reserved and do not use them to tune.

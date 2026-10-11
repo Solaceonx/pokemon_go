@@ -101,3 +101,13 @@ the same originals. These decimal sizes exclude the shared runtime, prior
 library, scan caches, review images and the separate 31.22 MB viewer HTML. The
 viewer covers 61 video views, embeds no video and keeps pending state values
 unknown. State-analysis storage will be measured when those readings are made.
+
+## Subsequent frozen state evaluation
+
+The collection results above record the pre-analysis intake. All twenty reserved
+views have since been read and published at the unchanged 15 FPS / three text
+looks cadence, following the GitHub handoff at 0fd98ff. The new measurement,
+current storage and before/fitted comparison are in
+`reserved_state_evaluation.md` and `data/vod_reserved_state_evaluation.json`.
+The original intake receipt is preserved; full game-state accuracy remains
+unverified, and these games remain excluded from recognition tuning.
