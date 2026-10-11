@@ -5,7 +5,7 @@ readings, text_path, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
 def option(name, default):  # e.g. --every 4 keeps one frame in four, to try lower frame rates on a full reading
     return type(default)(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
 import gzip
-lines = lambda path: (gzip.open(path, "rt") if str(path).endswith(".gz") else open(path))
+lines = lambda path: (gzip.open(path, "rt", encoding="utf-8") if str(path).endswith(".gz") else open(path, encoding="utf-8"))
 rows = [json.loads(l) for l in lines(readings)][::option("--every", 1)]
 texts = [json.loads(l) for l in lines(text_path)][::option("--text-every", 1)]
 if "--middle-only" in sys.argv:  # to try doing without the lower text band
@@ -22,6 +22,9 @@ KNOWN = {  # movesets we have been told; any other Pokémon of ours gets the usu
     "Melmetal": {"fast": "Thunder Shock", "charged": ["Double Iron Bash", "Dynamic Punch"]},
     "Altaria": {"fast": "Dragon Breath", "charged": ["Sky Attack", "Flamethrower"]},
 }
+PUBLIC = "--public-footage" in sys.argv
+if PUBLIC:
+    KNOWN = {}  # The recorder owner's team sheet does not describe a public VOD.
 canon = lambda s: re.sub(r"[^a-z]", "", s.lower())
 def nearest(word, options, cutoff=0.72):
     table = {}
@@ -57,6 +60,10 @@ for r in rows:
             current["end"] = r["t"]
     if bar: last_bar = r["t"]
 battles = [b for b in battles if b["end"] - b["start"] > 20]
+if "--single-clip" in sys.argv and any(r["mh"] is not None or r["oh"] is not None for r in rows):
+    # VOD intake already supplies one match candidate. Read its complete tail:
+    # an announced move or result can arrive after the last health bar vanished.
+    battles = [{"start": rows[0]["t"], "end": rows[-1]["t"]}]
 if "--count" in sys.argv:
     print(len(battles)); sys.exit(0)
 which = option("--battle", 1)
@@ -72,7 +79,8 @@ OURS = [name for name, n in named.most_common() if name and n >= 3][:3]  # the h
 theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows if r["o"]["sp"])
 THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 3][:3]
 # The bars are on screen for about a second before the first fast moves begin.
-T0 = round(next(r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None) + 0.7, 1)
+first_both = next((r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None), bar_times[0])
+T0 = round(first_both + 0.7, 1)
 
 # events from the announcement text
 gos, seqs, prompts, seq, words = [], [], [], None, []
@@ -88,7 +96,10 @@ for s in texts:
     start = "mine" if "getready" in joined else "theirs" if "ackincoming" in joined else None
     if start and (seq is None or t - seq["start"] > 9):
         seq = {"side": start, "start": t, "move": None, "user": None, "blocked": False}; seqs.append(seq)
-    m = re.search(r"([a-z]{4,})used([a-z]+)", joined)
+    # Broadcast logos can cover the actor prefix while leaving "used MOVE"
+    # readable. An earlier charge cue still establishes the thrower's side.
+    announcement = next((canon(item) for item in items if "used" in canon(item)), joined) if PUBLIC else joined
+    m = re.search(r"([a-z]*)used([a-z]+)" if PUBLIC else r"([a-z]{4,})used([a-z]+)", announcement)
     if m and not (seq and t - seq["start"] < 14):
         # "X used Y!" with no cue read before it (the cue can sit under other text): the cue comes about 7 s
         # earlier. Whose move it was is settled from the name below, or failing that from a shield going.
@@ -97,7 +108,8 @@ for s in texts:
             seq = {"side": None, "start": t - 7.2, "move": None, "user": None, "blocked": False, "late": True}; seqs.append(seq)
     if m and seq and t - seq["start"] < 14:
         seq["user"] = seq["user"] or nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
-        seq["move"] = seq["move"] or nearest(m.group(2), moves, 0.8)
+        move_text = m.group(2).replace("lron", "iron") if PUBLIC else m.group(2)
+        seq["move"] = seq["move"] or nearest(move_text, moves, 0.8)
     # "BLOCKED!" comes at the end of a move; one still on screen as the next cue appears belongs to the last move.
     if "blocked" in joined and seq and 6 < t - seq["start"] < 15: seq["blocked"] = True
     # NICE! GREAT! EXCELLENT! are the charging game, which only the thrower's own screen shows: our move.
@@ -282,6 +294,17 @@ if live:
 # Our energy, straight from the buttons. Each shows energy / cost as the filled share of its height, and starts
 # again from empty for the second helping once the first is full. Two buttons with different costs pin it down.
 def our_moves(name):
+    if PUBLIC:
+        # Read labels from this Pokémon's own stint. Never substitute PvPoke's
+        # default charged costs when the footage did not show the move names.
+        labels = collections.Counter(tuple(r.get("cm", [])) for r in rows
+                                     if r["m"].get("sp") == name and len(r.get("cm", [])) == 2
+                                     and all(r["cm"]))
+        if not labels:
+            return []
+        pair = labels.most_common(1)[0][0]
+        found = [next((m for m in gd.moves.values() if m.name == n), None) for n in pair]
+        return found if all(found) else []
     known = KNOWN.get(name, {}).get("charged")
     if known:
         return [next(m for m in gd.moves.values() if m.name == n) for n in known]
@@ -363,6 +386,14 @@ for b in range(n_bins + 1):
         shown = [v for when, v in header[side] if when <= t]
         shields[side] = max(0, min([shields[side], 2 - blocked[side]] + shown[-1:]))
     look.update(my_shields=shields["mine"], foe_shields=shields["theirs"], my_left=left["mine"], foe_left=left["theirs"])
+    if PUBLIC:
+        # A counter decrease can happen without a subsequent replacement
+        # announcement. Public footage supplies the actual remaining count.
+        for side, key, prefix in (("mine", "m", "my"), ("theirs", "o", "foe")):
+            seen = left_at(key, t)
+            if seen is not None:
+                left[side] = seen
+                look[prefix + "_left"] = seen
     if "my_hp" in look or "foe_hp" in look or "my_charged" in look or "foe_charged" in look or not looks:
         since = T0 + looks[-1]["t"] if looks else t
         stood = sum(max(0.0, min(t, b) - max(since, a)) for a, b in waits)
@@ -374,14 +405,26 @@ for b in range(n_bins + 1):
         looks.append(look)
 last = [q for k, q in enumerate(seqs) if k not in emitted]
 result = next((r["result"] for r in rows if r.get("result")), None)
-if last and last[-1]["side"] == "mine":  # the battle ended on our charged move: the result screen stands in for the last look
+if PUBLIC:
+    # A final named announcement proves an attack, not a knockout. Public
+    # footage can end during the animation or show a concession. Keep the
+    # visible attack without inventing zero HP or a lost party marker.
+    for q in last:
+        if not q["move"]:
+            continue
+        look = {"t": round(end - T0, 2), "note": "final attack announcement; damage and remaining count unreadable"}
+        if q["side"] == "mine":
+            look["my_charged"] = q["move"]
+        else:
+            look.update(foe_charged=True, foe_move=q["move"])
+        looks.append(look)
+elif last and last[-1]["side"] == "mine":  # the battle ended on our charged move: the result screen stands in for the last look
     looks.append({"t": round(end - T0, 2), "my_charged": last[-1]["move"] or "left", "foe_hp": 0.0, "foe_left": left["theirs"] - 1,
                   "note": "from the result screen, not a fighting frame"})
 elif result == "win":  # the last knock-out was a fast move, with no replacement to announce it
     looks.append({"t": round(end - T0, 2), "foe_hp": 0.0, "foe_left": left["theirs"] - 1, "note": "from the result screen"})
 elif result == "loss":
     looks.append({"t": round(end - T0, 2), "my_hp": 0.0, "my_left": left["mine"] - 1, "note": "from the result screen"})
-
 out.mkdir(parents=True, exist_ok=True)
 order = list(dict.fromkeys([f["name"] for f in field["mine"]] + OURS))  # in the order they came out
 team = {"pokemon": [{"species": name, **KNOWN.get(name, {})} for name in order[:3]]}
@@ -411,6 +454,7 @@ for side in ("mine", "theirs"):
 # The bare timeline, in seconds since the fight started, for scripts that reason about timing (rhythm.py).
 rel = lambda t: round(t - T0, 2)
 (out / "timeline.json").write_text(json.dumps({
+    "clip_origin_seconds": T0, "public_footage": PUBLIC,
     "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
     "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"]} for f in field[side]] for side in field},
     "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],

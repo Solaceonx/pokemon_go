@@ -5,7 +5,7 @@
 
 The folder must hold:
     team.json           the Pokémon on our side that we know about (may be fewer than three)
-    observations.jsonl  one look per line, in time order
+    observations.jsonl  one look per line, in time order (or observations.jsonl.gz)
 
 It writes, in the same folder:
     state.json          the game state after the last look
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import dataclasses
 import difflib
+import gzip
 import json
 import sys
 from collections import Counter
@@ -28,6 +29,15 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.tracker import Observation, Tracker, state  # noqa: E402
 
 FIELDS = {f.name for f in dataclasses.fields(Observation)}
+
+
+def observation_lines(folder: Path):
+    path = folder / "observations.jsonl"
+    if not path.exists():
+        path = path.with_name(path.name + ".gz")
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8") as stream:
+        yield from stream
 
 
 def species_id(gd: GameData, text: str) -> str:
@@ -81,7 +91,15 @@ def load_team(gd: GameData, sheet: dict):
             builds.append(gd.build(sid, moves, level=entry.get("level"), ivs=ivs, allow_forms=True))
             known.append(True)
         else:
-            builds.append(gd.default(sid, allow_forms=True))  # moves not given: assume the usual ones
+            default = gd.default(sid, allow_forms=True)
+            if entry.get("model_fast"):
+                # Public-footage inference is a model hypothesis, with default
+                # IVs and unobserved charged moves. It is never a team sheet.
+                fast = move_id(gd, entry["model_fast"])
+                if fast not in gd.species[sid]["fastMoves"]:
+                    raise ValueError(f"{fast} is not a legal fast move for {sid}")
+                default = gd.build(sid, [fast, *(m.id for m in default.charged)], allow_forms=True)
+            builds.append(default)  # moves not given: assume the usual ones
             known.append(False)
     return builds, known
 
@@ -99,7 +117,7 @@ def main() -> int:
     tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy, trust_my_energy=not blind)
     looks = problems = 0
     with (folder / "states.jsonl").open("w") as states:
-        for number, line in enumerate((folder / "observations.jsonl").read_text().splitlines(), start=1):
+        for number, line in enumerate(observation_lines(folder), start=1):
             if not line.strip():
                 continue
             try:

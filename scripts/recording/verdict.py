@@ -16,7 +16,7 @@ Soft checks
   unexplained  changes in our health the rules could not explain, as a share of looks (listed above 15%)
   fast moves   opponent fast moves still only guessed
 """
-import json, sys
+import gzip, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from pogo.gamedata import GameData
@@ -24,7 +24,13 @@ from pogo.gamedata import GameData
 
 def verdict(game: Path, gd: GameData) -> dict:
     load = lambda name: json.loads((game / name).read_text())
-    rows = lambda name: [json.loads(l) for l in (game / name).read_text().splitlines() if l.strip()]
+    def rows(name):
+        path = game / name
+        if not path.exists():
+            path = path.with_name(path.name + ".gz")
+        opener = gzip.open if path.suffix == ".gz" else open
+        with opener(path, "rt", encoding="utf-8") as stream:
+            return [json.loads(line) for line in stream if line.strip()]
     track, final, timeline = load("track.json"), load("state.json"), load("timeline.json")
     obs, states, events = rows("observations.jsonl"), rows("states.jsonl"), rows("events.jsonl")
     failed, notes = [], []

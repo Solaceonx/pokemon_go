@@ -352,3 +352,17 @@ camera, on the same battles.
 **Done when.** From the rough camera the new bot scores higher than the current bot by
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
+
+## 16. Public VOD screen tracking — Codex
+
+The first implementation reads the 23 calibrated Twitch player-view clips and
+publishes screen readings, a persistent evidence ledger, model states, events,
+and consistency results to the video viewer. Reproduction and measured limits
+are in `scripts/recording/VOD_README.md`; portable compressed results are in
+`games/twitch/`. This does not establish full game-state accuracy.
+
+Next acceptance work: label fainting and charged-attack transitions, measure each
+field against those labels, identify forms, resolve energy-count disagreements,
+and reserve a new untouched source before tuning. Keep both tournament views
+of a match in the same evaluation group. Exact HP needs independent maximum-HP
+evidence; a visible bar alone cannot determine it.

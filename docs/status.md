@@ -701,3 +701,47 @@ This is intake and media validation: full game-state tracking and its verdict ha
 not run on these clips. Sampled boundaries still need review. Henry is development
 data; the official footage is exposed regression data after layout calibration.
 Neither is an untouched accuracy test, and possible YouTube overlap is unchecked.
+
+## Public VOD tracking (2026-10-10)
+
+`Track Battle Videos.cmd` now reads the 23 saved clips and opens their synchronized
+viewer. `vod_track.py` samples screen pixels at 15 Hz and text at 3 Hz, keeps
+immutable raw readings, and publishes a causal evidence ledger alongside the
+existing tracker's inferred states. Public footage uses observed move labels
+instead of the owner's fixed movesets. Expanded health regions handle shorter
+Pokemon; faint markers and both tournament cameras have separate calibration.
+The core tracker and its decision logic are unchanged.
+
+The run produced 57,079 screen samples and 2,568 model states over all saved clip
+time. The viewer shows HP fraction ranges, shields, party counters, observed and
+guessed moves, energy ranges, inferred stages and switch estimates, and remembered
+bench readings with their ages. Exact HP stays unknown without verified maximum
+HP. Forms, unseen teammates, some fast moves and exact clocks remain unresolved.
+
+No view passes every strict consistency check: all 23 retain an ending/terminal
+roster failure. Four also have charged-event disagreements, three have energy
+failures, one has a shield failure, and two start mid-match. The original
+assembler filled in a zero-HP terminal knockout; the public-footage adapter now
+keeps only the named attack and leaves unobserved damage/counts out. Result-screen
+outcomes remain recorded separately. An unresolved final faint is not a pass.
+These are consistency checks, not ground-truth field accuracy.
+
+Without correcting the model from buttons, its energy differed from button
+estimates by 12.15 units on average over 1,147 looks; two partial views had no
+coverage. Equal energy rates still cannot distinguish fast moves such as Bite
+and Dragon Breath. Button estimates themselves need labelled validation.
+
+All 62 pipeline tests and 107 reader tests passed. All 108 PvPoke reference duels
+still reproduced exactly. The default tracker simulation produced byte-identical
+before/after output across 2,400 battles per run. Source timestamps matched for
+all 57,079 readings; compressed logs reproduced a Henry clip's model states and
+events byte for byte. Chrome playback, seeking, the 17-column values table,
+partial-clip flags and split filters passed on four clips.
+
+Portable results occupy 2.23 MB for all 23 views in `games/twitch/`. Local current
+clip data occupies 35.75 MB plus 84.06 MB of historical calibration analyses;
+media and saved clip data total 4.852 GB. Videos remain outside Git. Details,
+rerun commands, runtime-cache limits and storage are in
+`scripts/recording/VOD_README.md`; `data/vod_pilot_report.json` holds the receipts.
+Henry remains development footage and the official broadcast exposed regression
+footage. Paired views stay together; there is still no untouched accuracy test.

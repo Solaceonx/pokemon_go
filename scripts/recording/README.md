@@ -1,7 +1,10 @@
 # From screen recordings to tracked games
 
 For Twitch originals and cropped battle clips, see [VOD_README.md](VOD_README.md).
-That intake stage preserves source timing and review flags; game-state tracking is a separate stage.
+That intake stage preserves source timing and review flags. `Track Battle Videos.cmd`
+then reads the calibrated public clips, runs state reconstruction, and opens their
+synchronized viewer. The public-footage path removes the owner's fixed movesets;
+observed readings, model assumptions and consistency failures remain separate.
 
 One command takes recordings and produces tracked games with a pass/fail report:
 
