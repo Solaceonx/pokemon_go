@@ -19,7 +19,13 @@ function createValueSheet({$,esc,time,getSource,video}) {
       integer_hp_high:e.integer_hp_range?.[1]??null,maximum_hp:e.maximum_hp??null,
       shields_left:value(v.shields_left),pokemon_left:value(v.pokemon_left),
       shields_status:v.shields_left?.status||'unknown',pokemon_left_status:v.pokemon_left?.status||'unknown',
-      energy:value(v.energy),energy_status:v.energy?.status||'unknown',reason:e.reason||e.meaning||'No health estimate'};
+      energy:value(v.energy),energy_low:v.energy?.range?.[0]??null,energy_high:v.energy?.range?.[1]??null,
+      energy_status:v.energy?.status||'unknown',fast_move:v.model?.fast_move?.name??null,
+      fast_move_status:v.model?.fast_move?.known_from??'unknown',
+      charged_moves:(v.model?.charged_moves||[]).map(m=>`${m.name} · ${m.known_from}`).join(', '),
+      attack_stage:v.model?.attack_stage??null,defense_stage:v.model?.defense_stage??null,
+      switch_ready_in:v.model?.switch_ready_in??null,tracking_consistency:source.tracking_verdict?.verdict??'not checked',
+      reason:e.reason||e.meaning||'No health estimate'};
   }
   function row(r){
     const hp=r.integer_hp_low===null?'Unknown':`${r.integer_hp_low}–${r.integer_hp_high}/${r.maximum_hp}`;
@@ -27,16 +33,21 @@ function createValueSheet({$,esc,time,getSource,video}) {
     const fields=[time(r.clip_seconds),r.side==='mine'?'Us':'Opponent',
       (r.species??'Unknown')+(r.species_status==='stale'?' · stale':''),(r.cp??'Unknown')+(r.cp_status==='stale'?' · stale':''),
       percent(r.visible_health_fraction),r.health_fraction_low===null?'Unknown':`${percent(r.health_fraction_low)}–${percent(r.health_fraction_high)}`,
-      r.health_status,hp,r.shields_left??'Unknown',r.pokemon_left??'Unknown',scene+(r.phase===null&&r.phase_estimate?` · ${r.phase_estimate_status}`:''),r.reason];
+      r.health_status,hp,r.shields_left??'Unknown',r.pokemon_left??'Unknown',
+      (r.energy_low!==null?`${r.energy_low}–${r.energy_high}`:r.energy??'Unknown')+` · ${r.energy_status}`,
+      r.fast_move?`${r.fast_move} · ${r.fast_move_status}`:'Unknown',r.charged_moves||'Unknown',
+      r.attack_stage===null?'Unknown':`${r.attack_stage}/${r.defense_stage} · inferred`,
+      r.switch_ready_in===null?'Unknown':`${r.switch_ready_in}s · inferred`,
+      scene+(r.phase===null&&r.phase_estimate?` · ${r.phase_estimate_status}`:''),r.reason];
     return '<tr>'+fields.map(v=>`<td>${esc(v)}</td>`).join('')+'</tr>';
   }
   function render(t,frame){
     const source=getSource();
-    $('values-current').innerHTML=frame?['mine','opponent'].map(s=>row(flatten(frame,s,source))).join(''):'<tr><td colspan="12">No recorded values at this time.</td></tr>';
+    $('values-current').innerHTML=frame?['mine','opponent'].map(s=>row(flatten(frame,s,source))).join(''):'<tr><td colspan="17">No recorded values at this time.</td></tr>';
     $('values-time').textContent=frame?`Recorded ${time(frame.t)} · follows playback`:'No coverage';
     const history=[];let last=-Infinity;
     for(const r of source.readings){if(r.t>t+0.000001)break;if(r.t-last>=.5-1e-6){history.push(r);last=r.t}}
-    $('values-history').innerHTML=history.slice(-15).flatMap(r=>['mine','opponent'].map(s=>row(flatten(r,s,source)))).join('')||'<tr><td colspan="12">No earlier readings.</td></tr>';
+    $('values-history').innerHTML=history.slice(-15).flatMap(r=>['mine','opponent'].map(s=>row(flatten(r,s,source)))).join('')||'<tr><td colspan="17">No earlier readings.</td></tr>';
     $('review-time').textContent=`Label video at ${time(t)} · ${reviews.filter(r=>r.battle_id===(source.battle_id||source.id)).length} saved labels for this battle`;
   }
   function download(rows,name){

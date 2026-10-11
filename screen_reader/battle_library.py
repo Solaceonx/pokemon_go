@@ -27,7 +27,7 @@ def scan_library(root):
             meta["video_bytes"] = video.stat().st_size
             view_stat = view.stat()
             meta["analysis_revision"] = f"{view_stat.st_mtime_ns}:{view_stat.st_size}"
-            meta["saved_data_bytes"] = sum(p.stat().st_size for p in folder.iterdir()
+            meta["saved_data_bytes"] = sum(p.stat().st_size for p in folder.rglob("*")
                 if p.is_file() and p != video and ".incomplete." not in p.name)
             battles.append(meta)
         except (OSError, ValueError, TypeError):
@@ -58,6 +58,8 @@ def viewer_entry(meta, prefix="battles/"):
             "source_start": meta.get("source_start_seconds", 0),
             "video_bytes": meta["video_bytes"], "saved_data_bytes": meta["saved_data_bytes"],
             "completeness": meta.get("completeness", "unknown"), "analysis_status": meta.get("analysis_status", "not_analyzed"),
+            "dataset_role": meta.get("boundary_candidate", {}).get("dataset_role"),
+            "incomplete_start": meta.get("incomplete_start", False), "incomplete_end": meta.get("incomplete_end", False),
             "analysis_revision": meta.get("analysis_revision"),
             "audio_in_video": meta.get("audio_in_video", True), "isClip": True,
             "readings": [], "states": [], "observations": [], "events": [], "bookmarks": []}
