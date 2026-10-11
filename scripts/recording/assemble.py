@@ -502,9 +502,13 @@ def team_entry(name):
     if entry.get("ivs"):
         out["ivs"] = entry["ivs"]
         sid = next(k for k, v in gd.species.items() if v["speciesName"] == name)
-        levels = [1 + i / 2 for i in range(100) if gd.cp_at(sid, 1 + i / 2, tuple(entry["ivs"])) == entry.get("cp")]
-        if levels: out["level"] = levels[-1]
-        else: print(f"{name}: no level gives CP {entry.get('cp')} with IVs {entry['ivs']}; check data/owner_team.json")
+        cp_at = {1 + i / 2: gd.cp_at(sid, 1 + i / 2, tuple(entry["ivs"])) for i in range(100)}
+        if entry.get("cp"):
+            # The level whose CP is the one shown; if none is exact the IVs or the CP are a little off, and the
+            # nearest level is still far closer to the real Pokémon than the usual spread would be.
+            out["level"] = min(cp_at, key=lambda lv: (abs(cp_at[lv] - entry["cp"]), -lv))
+            if cp_at[out["level"]] != entry["cp"]:
+                print(f"{name}: IVs {entry['ivs']} give CP {cp_at[out['level']]} at level {out['level']}, not the {entry['cp']} shown; check data/owner_team.json")
     return out
 team = {"pokemon": [team_entry(name) for name in order[:3]]}
 (out / "team.json").write_text(json.dumps(team, indent=2) + "\n")

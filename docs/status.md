@@ -738,8 +738,13 @@ moves (read from single rises of their button energy, which names Thunder Shock,
 and Hex correctly on the owner's recordings). It did not reduce the energy error, so the
 error is in the timing and not in which fast move is assumed.
 
-The owner's Pokémon are now described in `data/owner_team.json` (moves, CP, and IVs once
-given), read before the battle starts.
+The owner's Pokémon are described in `data/owner_team.json` (moves, CP, IVs), read before the
+battle starts. Altaria 0/14/15 is level 29 at exactly the CP shown (1497; the best spread of
+4,096) and Jellicent 6/12/11 is level 24 at exactly 1496. Melmetal 3/14/12 does not give the
+1496 the recordings show at any level (1454 at 15, 1503 at 15.5); 2/14/12 would. Until that is
+settled the nearest level is used (15.5). With real stats the count of unexplained health
+changes in the four recordings is about the same (32 before, 34 after): the opponent's stats
+are still assumed.
 
 ## Known gaps in the simulator
 
