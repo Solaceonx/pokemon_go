@@ -53,8 +53,26 @@ def report(label: str, rows: list[dict]) -> None:
           f" | fast move assumed correctly {100 * sum(r['same_fast'] for r in rows) / len(rows):.0f}%")
 
 
+def paired_folders(args: list[str]) -> list[Path]:
+    """The folders to compare, two by two. Either named outright, or `--all TRACKED [--source ID ...]`: every
+    two-screen match among the published clips (games/twitch/<clip>/source.json says which clips belong to one
+    match), with the tracked games taken from TRACKED/<clip>."""
+    if "--all" not in args:
+        return [Path(a) for a in args]
+    tracked = Path(args[args.index("--all") + 1])
+    sources = {args[i + 1] for i, a in enumerate(args) if a == "--source"}
+    matches = {}
+    for clip in sorted((Path(__file__).resolve().parents[2] / "games" / "twitch").glob("tw-*")):
+        info = json.loads((clip / "source.json").read_text()) if (clip / "source.json").exists() else {}
+        whole = info.get("incomplete_start") in (False, "False") and info.get("incomplete_end") in (False, "False")
+        if whole and (not sources or clip.name.split("-")[1] in sources) and (tracked / clip.name / "timeline.json").exists():
+            matches.setdefault(info.get("match_id"), []).append(tracked / clip.name)
+    return [folder for views in matches.values() if len(views) == 2 for folder in views]
+
+
 if __name__ == "__main__":
-    folders = [load(Path(a)) for a in sys.argv[1:]]
+    folders = [load(a) for a in paired_folders(sys.argv[1:])]
+    print(f"{len(folders) // 2} matches seen from both sides")
     everything, settled = [], []
     for a, b in zip(folders[::2], folders[1::2]):
         for watcher, owner in ((a, b), (b, a)):

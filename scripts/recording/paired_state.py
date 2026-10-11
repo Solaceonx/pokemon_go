@@ -9,7 +9,7 @@ A player's own screen is the better witness for all of these, so it stands in fo
 import bisect, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from paired_energy import load
+from paired_energy import load, paired_folders
 
 FIELDS = ("who is out", "health within 3%", "health within 10%", "shields", "Pokémon left", "energy within one fast move",
           "energy within two", "all of these but energy", "everything, energy within two")
@@ -40,7 +40,7 @@ def moments(watcher: dict, owner: dict):
 
 
 if __name__ == "__main__":
-    folders = [load(Path(a)) for a in sys.argv[1:]]
+    folders = [load(a) for a in paired_folders(sys.argv[1:])]
     rows = [r for a, b in zip(folders[::2], folders[1::2]) for watcher, owner in ((a, b), (b, a)) for r in moments(watcher, owner)]
     print(f"{len(rows)} moments from {len(folders) // 2} matches, each seen from both sides")
     for f in FIELDS:
