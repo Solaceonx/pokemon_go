@@ -1,5 +1,22 @@
 // Playback-driven values and independent review labels. No detector output is
 // copied into review inputs; exports preserve nulls and observation statuses.
+function battleStateValues(frame,side){
+  const raw=frame?.[side]||{},team=frame?.game_state?.sides?.[side],mon=team?.pokemon?.[team?.active];
+  if(!mon)return raw;
+  const result={...raw,species:mon.species,cp:mon.cp,shields_left:team.shields,pokemon_left:team.left};
+  if(team.active_status==='stale')result.species={...mon.species,status:'stale'};
+  if(mon.health.value!==null){
+    result.health_estimate={status:mon.health.status,fraction_range:mon.health.value,
+      integer_hp_range:mon.health.integer_hp_range??null,maximum_hp:mon.health.maximum_hp??null,
+      source_status:mon.health.source_status??mon.health.status,
+      reason:mon.health.reason||mon.health.pending_event?.reason||(mon.health.status==='retained'?'Held from the last reading; no relevant change observed':mon.health.status==='stale'?'Last known health; current health is unconfirmed':'Settled visible health reading')};
+  }
+  if(mon.energy.value!==null)result.energy={value:null,range:mon.energy.value,status:mon.energy.status,evidence:mon.energy};
+  else if(frame?.game_state?.pending_attack?.side===side&&result.energy&&(result.energy.value!=null||result.energy.range!=null))
+    result.energy={...result.energy,status:'pending',evidence:{...result.energy?.evidence,reason:'Model balance before the pending attack'}};
+  return result;
+}
+
 function createValueSheet({$,esc,time,getSource,video}) {
   const key='battle-lens-human-labels-v1';
   let reviews=[];
@@ -7,7 +24,7 @@ function createValueSheet({$,esc,time,getSource,video}) {
   const value=f=>f?.value??null;
   const percent=v=>Number.isFinite(v)?(100*v).toFixed(1)+'%':'Unknown';
   function flatten(frame,side,source){
-    const v=frame[side]||{},e=v.health_estimate||{};
+    const v=battleStateValues(frame,side),e=v.health_estimate||{};
     return {battle_id:source.battle_id||source.id,clip_seconds:frame.t,
       source_seconds:frame.t+(source.source_start||0),side,phase:value(frame.phase),
       phase_estimate:value(frame.phase_estimate),phase_estimate_status:frame.phase_estimate?.status||'unknown',
@@ -25,15 +42,17 @@ function createValueSheet({$,esc,time,getSource,video}) {
       charged_moves:(v.model?.charged_moves||[]).map(m=>`${m.name} · ${m.known_from}`).join(', '),
       attack_stage:v.model?.attack_stage??null,defense_stage:v.model?.defense_stage??null,
       switch_ready_in:v.model?.switch_ready_in??null,tracking_consistency:source.tracking_verdict?.verdict??'not checked',
+      pending_attack:frame.game_state?.pending_attack??null,
       reason:e.reason||e.meaning||'No health estimate'};
   }
   function row(r){
     const hp=r.integer_hp_low===null?'Unknown':`${r.integer_hp_low}–${r.integer_hp_high}/${r.maximum_hp}`;
     const scene=(r.phase??r.phase_estimate)?.replaceAll('_',' ')||'Unknown';
     const fields=[time(r.clip_seconds),r.side==='mine'?'Us':'Opponent',
-      (r.species??'Unknown')+(r.species_status==='stale'?' · stale':''),(r.cp??'Unknown')+(r.cp_status==='stale'?' · stale':''),
+      (r.species??'Unknown')+(['stale','retained'].includes(r.species_status)?' · '+r.species_status:''),(r.cp??'Unknown')+(['stale','retained'].includes(r.cp_status)?' · '+r.cp_status:''),
       percent(r.visible_health_fraction),r.health_fraction_low===null?'Unknown':`${percent(r.health_fraction_low)}–${percent(r.health_fraction_high)}`,
-      r.health_status,hp,r.shields_left??'Unknown',r.pokemon_left??'Unknown',
+      r.health_status,hp,(r.shields_left??'Unknown')+(['retained','pending','stale'].includes(r.shields_status)?' · '+r.shields_status:''),
+      (r.pokemon_left??'Unknown')+(['retained','pending','stale'].includes(r.pokemon_left_status)?' · '+r.pokemon_left_status:''),
       (r.energy_low!==null?`${r.energy_low}–${r.energy_high}`:r.energy??'Unknown')+` · ${r.energy_status}`,
       r.fast_move?`${r.fast_move} · ${r.fast_move_status}`:'Unknown',r.charged_moves||'Unknown',
       r.attack_stage===null?'Unknown':`${r.attack_stage}/${r.defense_stage} · inferred`,

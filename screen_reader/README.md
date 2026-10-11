@@ -34,7 +34,7 @@ On another OS, create a Python environment, install `requirements.txt` and run
 - Separate causal scene estimates, with inference and stale OCR clearly marked.
 
 Every-frame decoding is not complete game-state recognition. Animated/hidden
-values remain unknown. Continuous health reconstruction, numerical energy,
+pixels remain unknown; persistent known values can carry through animations as described below. Continuous health reconstruction, numerical energy,
 switch-clock measurement, all minigame types and live iPhone control are unfinished.
 Reviewed observations can be exported with `export_tracker.py` using the contract
 in [`../docs/agent_instructions.md`](../docs/agent_instructions.md).
@@ -88,3 +88,21 @@ source needs an explicit profile and dataset partition policy. Full processing i
 an offline job and can take hours; the alternate ROI reader has no established
 real-time guarantee. See [`PIPELINE.md`](PIPELINE.md) and
 [`dataset/README.md`](dataset/README.md) for the development history and limits.
+
+## Animation state in public VOD clips
+
+The `twitch-vod-pilot` branch produces a persistent public ledger for the 23
+calibrated Twitch views. This viewer uses that ledger in the cards, remembered
+teams and live values table. Known values carry through animations as retained;
+an attack's affected fields show their last known values as pending until fresh
+evidence resolves them. A stale reading remains unconfirmed, and a fainted
+Pokemon's old readings are historical. Unknown initial values remain unknown.
+The pending-attack banner identifies the side, announced move and confirmed cost
+when available. Raw visible bars and buttons still describe only the current
+frame. Legacy clips without a public ledger continue to use their saved readings.
+
+Switch estimates continue counting down during charged attacks. Timer starts,
+fast moves and other tracker assumptions remain inferred. These displays and
+their exports distinguish known evidence from unverified current values; they
+do not establish full game-state accuracy. `node test_state_values.mjs` checks
+state carryover, pending values, unknown bars and immutable source readings.
