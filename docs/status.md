@@ -141,6 +141,42 @@ that the crowd it was measured against did not hold. Against the new crowd, same
 The learned decisions were trained around a player that throws early and have not been
 retrained yet.
 
+### Throw before you faint, and farming that keeps its timing (2026-10-11)
+
+Both at the owner's direction, both now part of the standard player and of four in five
+simulated opponents.
+
+**Throw before you faint** (`Planner(last_gasp=True)`). With a move ready and a knock-out
+coming before the next chance to act (their fast moves, or a charged move that would not be
+blocked), throw now. It comes before every other rule, including finishing them with a fast
+move we may not live to land. Before it, 13% of our faints took a ready move down with them
+(49 energy each, about 13 a battle). Where that came from: 47% let a charged move through
+with a shield in hand, 26% the energy arrived on the last fast move, 19% had thrown once and
+still held another move's worth, 8% were waiting. With the rule the energy thrown away falls
+from 14.4 to 8.0 a battle.
+
+**Farming that keeps its timing** (`timed_farm=True`). While farming or holding, the throw is
+planned for the latest turn that gives the opponent's fast move the fewest turns to run,
+before they reach a move or our energy is full, instead of farming until forced. Measured
+directly it changes little, because timing was already mostly right: 64% of charged moves
+were thrown at the ideal moment before and 66% after (0.42 and 0.40 turns given away a throw).
+
+| On fresh battles (`scripts/rule_trial.py`) | Head to head against the player without it | Against the crowd, same battles |
+|---|---|---|
+| Throw before you faint | 51.1% ± 1.0 (51.6% ± 1.0 on another set) | +0.9 ± 1.0 |
+| Both | 51.1% ± 1.1 | +1.4 ± 1.1 |
+
+Where the standard player stands, against today's crowd on the same 4,000 battles:
+
+| Player | Wins |
+|---|---|
+| Rules as of 10 October | 51.1% ± 1.5 |
+| + hold until they are about to get a move | 53.8% ± 1.5 (+2.7 ± 1.2) |
+| + throw before fainting, timed farming | 56.0% ± 1.5 (+2.2 ± 1.1) |
+| Trained bot on top (not yet retrained on these rules) | 66.9% ± 1.5 (+10.8 ± 1.7) |
+
+Today's rules beat the rules of 10 October 55.2% ± 1.2 head to head.
+
 ## Adversarial training (task 14)
 
 An exploiter is a model trained the same way as the bot, but with the bot itself as its
@@ -673,6 +709,37 @@ views assumed the same fast move in 73% of moments).
 Under the ending rule used for the owner's recordings (the result screen closes the battle,
 checked against the header's count), 7 of the 23 public views would pass every check, 7 more
 fail only because their clip has no result screen, and 9 have something else wrong.
+
+### Timing fitted to the truth (2026-10-11)
+
+With the other player's own energy as truth in the two-screen matches, and the owner's own in
+their recordings, the timing settings in `assemble.py` were fitted one at a time
+(`runs/timing_fit.out`). What changed:
+
+| Setting | Was | Now | Why |
+|---|---|---|---|
+| The opponent's switch takes effect | 1 s before its "Go, X!" | 0.5 s after | The 1 s head start was measured on our own switches; for theirs it handed the new Pokémon two fast moves it had not made |
+| A replacement after a faint starts attacking | 0.2 s after its text | 0.7 s after | |
+| The fight starts | 0.7 s after the bars appear | 0.2 s after | |
+| Fighting resumes before the buttons return by | 0.5 s | 0.8 s | |
+| A long gap in the buttons counts as a pause | only with a faint seen | always | |
+| A wait after a faint that comes before a charged move in the same gap | missed | counted | |
+
+| One view's count of the opponent's energy, against their own buttons | Before | After |
+|---|---|---|
+| Average error | 12.8 | 9.4 |
+| Within one fast move | 57% | 69% |
+| Within two | 76% | 88% |
+
+Three of the six view-directions improve a lot, two are unchanged and one is slightly worse.
+The settings were fitted on these same three matches, so the "after" column is not a test;
+it needs new two-screen matches. Also tried: telling each view the other player's real fast
+moves (read from single rises of their button energy, which names Thunder Shock, Dragon Breath
+and Hex correctly on the owner's recordings). It did not reduce the energy error, so the
+error is in the timing and not in which fast move is assumed.
+
+The owner's Pokémon are now described in `data/owner_team.json` (moves, CP, and IVs once
+given), read before the battle starts.
 
 ## Known gaps in the simulator
 

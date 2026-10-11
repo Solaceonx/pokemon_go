@@ -149,7 +149,8 @@ class Planner:
                  field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
                  sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
-                 odds: bool = False, hold: bool = True, hold_cost: float = 0.5):
+                 odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
+                 last_gasp: bool = True, timed_farm: bool = True):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -175,6 +176,13 @@ class Planner:
         # Hold a charged move that is ready and keep building energy for as long as the opponent cannot throw
         # one of theirs, provided their fast moves in that time cost no more than this share of current health.
         self.hold, self.hold_cost = hold, hold_cost
+        # Throw before you faint: with a move ready and a knock-out coming before the next chance to act
+        # (their fast moves, or a charged move that would not be blocked), throw now instead of taking the
+        # energy down with the Pokémon.
+        self.last_gasp = last_gasp
+        # While farming or holding, plan the throw for a turn that suits the opponent's fast move instead of
+        # farming until forced to throw at a bad moment.
+        self.timed_farm = timed_farm
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -207,13 +215,29 @@ class Planner:
             return FAST
         fast = mon.build.fast
         hit = [damage(mon, move, foe) for move in moves]
+        if self.last_gasp:
+            # Before anything else, including finishing them with a fast move that I may not live to land.
+            both = mon.energy >= 2 * min(move.energy for move in moves)  # two throws need a turn more
+            if self._doomed(view, fast.turns + int(both)):
+                lethal = [k for k in ready if hit[k] >= foe.hp]
+                return CHARGED[min(lethal, key=lambda k: moves[k].energy) if lethal else max(ready, key=lambda k: hit[k])]
         if foe.hp <= damage(mon, fast, foe):
             return FAST  # the fast move finishes it; keep the energy
 
+        planned = False  # the farm or hold rule has already chosen this turn as the one to throw on
         if self.farm and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_farm(view):
-            return FAST
-        if self.hold and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_hold(view):
-            return FAST
+            if not self.timed_farm:
+                return FAST
+            room = (ENERGY_CAP - mon.energy) // fast.energy_gain
+            to_finish = -(-foe.hp // damage(mon, fast, foe))
+            if to_finish <= room or self._latest_good_turn(view, room) > 0:
+                return FAST  # fast moves finish it, or a better moment to throw is still ahead
+            planned = True
+        if not planned and self.hold and mon.energy + fast.energy_gain <= ENERGY_CAP:
+            wait = self._hold_plan(view)
+            if wait:
+                return FAST
+            planned = self.timed_farm and wait == 0
 
         def short_of(k: int) -> bool:
             """True if move k is not ready yet and it is safe to keep building towards it."""
@@ -250,7 +274,7 @@ class Planner:
             if choice not in ready:
                 choice = max(ready, key=lambda k: hit[k])
 
-        if self.timing:
+        if self.timing and not planned:
             wait = fasts_to_wait(fast.turns, foe.build.fast.turns, view.foe_busy)
             if (wait and mon.energy + wait * fast.energy_gain <= ENERGY_CAP
                     and not self._may_faint(view, wait * fast.turns)):
@@ -296,20 +320,50 @@ class Planner:
         incoming = landing * damage(foe, foe_fast, mon) + throws * max(damage(foe, m, mon) for m in foe.build.charged)
         return incoming <= self.farm_cost * mon.hp
 
-    def _can_hold(self, view: View) -> bool:
-        """Is there room for one more fast move of mine before the opponent reaches a charged move, at a
-        price in health I can bear? (The owner's rule: farm until they are about to get a move, unless it hurts.)"""
+    def _hold_plan(self, view: View) -> int | None:
+        """How many more fast moves to use before throwing, under the owner's rule: farm until they are about
+        to get a move, unless it hurts. None when the rule does not apply (they have a move already, or the
+        wait costs too much health); 0 to throw now."""
         mon, foe = view.me.mon, view.foe
         fast, foe_fast = mon.build.fast, foe.build.fast
         need = min(m.energy for m in foe.build.charged) - foe.energy
         if need <= 0:
-            return False  # they have a move already
+            return None  # they have a move already
         hits = -(-need // foe_fast.energy_gain)  # their fast moves still to land before they do
         reach = (view.foe_busy or foe_fast.turns) + (hits - 1) * foe_fast.turns  # turns until then, counting this one
-        if fast.turns >= reach:
-            return False  # another fast move of mine would not be over in time: throw now
-        incoming = hits * damage(foe, foe_fast, mon)
-        return incoming <= self.hold_cost * mon.hp
+        if hits * damage(foe, foe_fast, mon) > self.hold_cost * mon.hp:
+            return None
+        room = min((reach - 1) // fast.turns, (ENERGY_CAP - mon.energy) // fast.energy_gain)
+        if not self.timed_farm:
+            return 1 if room >= 1 else 0
+        return self._latest_good_turn(view, room)
+
+    def _can_hold(self, view: View) -> bool:
+        return bool(self._hold_plan(view))
+
+    def _latest_good_turn(self, view: View, room: int) -> int:
+        """Of the next `room` fast moves of mine, after how many is the best moment to throw: the one that
+        leaves the opponent's fast move in progress the fewest turns to run (a charged move lets it land in
+        full), and of equally good moments the latest, so as to farm the longest."""
+        mine, theirs = view.me.mon.build.fast.turns, view.foe.build.fast.turns
+        phase = (theirs - view.foe_busy) % theirs
+        free = lambda j: theirs - 1 - (phase + j * mine) % theirs  # turns given away by throwing after j more
+        return min(range(room + 1), key=lambda j: (free(j), -j))
+
+    def _doomed(self, view: View, turns: int) -> bool:
+        """Will I be knocked out within that many turns, counting a charged move of theirs I would not block?"""
+        mon, foe = view.me.mon, view.foe
+        foe_fast = foe.build.fast
+        phase = (foe_fast.turns - view.foe_busy) % foe_fast.turns
+        landing = (phase + turns) // foe_fast.turns
+        incoming = landing * damage(foe, foe_fast, mon)
+        if incoming >= mon.hp:
+            return True
+        energy = min(ENERGY_CAP, foe.energy + landing * foe_fast.energy_gain)
+        worst = max((damage(foe, move, mon) for move in foe.build.charged if move.energy <= energy), default=0)
+        if incoming + worst < mon.hp:
+            return False
+        return view.me.shields == 0 or not self.shield(view, energy)
 
     def _may_faint(self, view: View, turns: int) -> bool:
         """Could this Pokémon faint within that many turns, if the opponent keeps attacking?"""
@@ -588,6 +642,7 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         switch_margin=near(0.35, 0.4), bad_matchup=-near(0.2, 0.5),
         farm=rng.random() < 0.8, farm_cost=near(0.35, 0.4), sac=rng.random() < 0.8,
         hold=rng.random() < 0.8, hold_cost=near(0.5, 0.4),
+        last_gasp=rng.random() < 0.8, timed_farm=rng.random() < 0.8,
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),

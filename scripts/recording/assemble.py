@@ -83,7 +83,7 @@ theirs_named = collections.Counter(nearest(r["o"]["sp"], species) for r in rows 
 THEIRS = [name for name, n in theirs_named.most_common() if name and n >= 3][:3]
 # The bars are on screen for about a second before the first fast moves begin.
 first_both = next((r["t"] for r in rows if r["mh"] is not None and r["oh"] is not None), bar_times[0])
-T0 = round(first_both + option("--start", 0.7), 1)
+T0 = round(first_both + option("--start", 0.2), 1)
 
 # events from the announcement text
 gos, seqs, prompts, seq, words = [], [], [], None, []
@@ -156,7 +156,7 @@ ENTER = 0.2  # a replacement for a fainted Pokémon is attacking this long after
 SWAPPED = -1.0
 # Their switch, seen from our screen, is another matter: checked against the other player's own buttons in
 # two-screen matches (see docs/status.md), and so has its own number.
-SWAPPED, SWAPPED_THEIRS, ENTER = option("--swapped-ours", SWAPPED), option("--swapped-theirs", SWAPPED), option("--enter", ENTER)
+SWAPPED, SWAPPED_THEIRS, ENTER = option("--swapped-ours", SWAPPED), option("--swapped-theirs", 0.5), option("--enter", 0.7)
 def header_stints(key):
     """Stretches over which the header on one side showed the same name: [first seen, last seen, name]."""
     runs = []
@@ -301,8 +301,10 @@ def away(a, b):
 # short of energy for moves they threw. They are used for the one thing the text times badly: how long nobody
 # attacks after a faint. A wait runs from the buttons going (or from the end of a charged move that caused the
 # faint) to half a second before they come back.
-WAITS, LONG_GAP = option("--waits", "faint"), option("--long-gap", 2.0)
-CHARGED_SECONDS, RESUME_LEAD = option("--charged-seconds", 10.0), option("--resume-lead", 0.5)
+# These timings were fitted (2026-10-11) to the other player's own energy in three two-screen matches and to
+# the owner's energy in four recordings; the values tried and their scores are in runs/timing_fit.out.
+WAITS, LONG_GAP = option("--waits", "any"), option("--long-gap", 2.0)
+CHARGED_SECONDS, RESUME_LEAD = option("--charged-seconds", 10.0), option("--resume-lead", 0.8)
 if live:
     seen_in_header = list(waits) if option("--header-waits", "yes") == "yes" else []  # from each faint to its replacement
     waits = []
