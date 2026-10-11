@@ -1,5 +1,8 @@
 # From screen recordings to tracked games
 
+For Twitch originals and cropped battle clips, see [VOD_README.md](VOD_README.md).
+That intake stage preserves source timing and review flags; game-state tracking is a separate stage.
+
 One command takes recordings and produces tracked games with a pass/fail report:
 
 ```bash

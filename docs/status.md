@@ -670,3 +670,34 @@ Each of these has a full brief in [`tasks.md`](tasks.md).
   loop.
 - The owner is short on assistant usage: prefer changes that are small, local and cheap
   to verify.
+
+## Twitch intake pilot (2026-10-10)
+
+`scripts/recording/vod.py` now downloads calibrated completed Twitch recordings,
+keeps one playable source, discovers battle candidates and exports cropped clips
+with compressed source-frame alignment. Details and rerun commands are in
+`scripts/recording/VOD_README.md`; `data/vod_pilot_report.json` holds the measured
+source intervals, checksums, storage and evaluation roles. Media remains outside Git.
+
+Two sources produced 19 match candidates and 23 player-view clips: 15 from
+HomeSliceHenry and four from the official Pokémon GO broadcast with two views
+each. Three replay sections were excluded, and the official opening match stays
+incomplete. The broadcaster's replay badge is read separately from the phone UI,
+including entrances whose phone header appears before the badge. Paired views
+share a match ID and evaluation group.
+
+The download aborts on missing fragments, checks the expected duration, and
+normalizes Twitch's nonzero MPEG-TS timestamp origin by packet-copying into MP4.
+An interrupted metadata update is recoverable without losing the original.
+Unchanged clips can be reused after correcting replay metadata; different source
+bytes, crop rectangles or boundaries are rejected.
+
+All 41 unit tests passed. All 228,285 saved video frames decoded and matched their
+source-alignment logs within 0.000687 seconds; playback and seeking worked in
+Chrome on a Henry clip and both official views. Originals plus clips and their
+alignment/metadata occupy 4.737 GB. No tracker changes were made.
+
+This is intake and media validation: full game-state tracking and its verdict have
+not run on these clips. Sampled boundaries still need review. Henry is development
+data; the official footage is exposed regression data after layout calibration.
+Neither is an untouched accuracy test, and possible YouTube overlap is unchecked.
