@@ -15,9 +15,12 @@ def verify(source_id, library):
     run = ROOT / '.vod/runs' / str(source_id)
     manifest = json.loads((run / 'battle-candidates.json').read_text(encoding='utf-8'))
     clips, failures = [], []
+    selected = manifest.get('export_selection', {}).get('clip_ids')
     started = time.monotonic()
     for candidates in manifest['views'].values():
         for candidate in candidates:
+            if selected is not None and candidate['id'] not in selected:
+                continue
             folder = library / candidate['id']
             try:
                 if not folder.resolve().is_relative_to(library):
@@ -71,6 +74,11 @@ def verify(source_id, library):
               'saved_data_bytes': sum(c['saved_data_bytes'] for c in clips),
               'elapsed_seconds': round(time.monotonic() - started, 3),
               'game_states_verified': False, 'battle_boundaries_exactly_verified': False}
+    if selected is not None and set(selected) != {c['id'] for c in clips}:
+        report['media_checks_passed'] = False
+    if not clips:
+        report['media_checks_passed'] = False
+    report['export_selection'] = manifest.get('export_selection')
     write_json(run / 'media-validation.json', report)
     return report
 
