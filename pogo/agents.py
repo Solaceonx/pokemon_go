@@ -150,7 +150,8 @@ class Planner:
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
                  sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
                  odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
-                 last_gasp: bool = True, timed_farm: bool = True):
+                 last_gasp: bool = True, timed_farm: bool = True,
+                 win_switch: float | None = 0.1, switch_worth: float = 0.0):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -183,6 +184,13 @@ class Planner:
         # While farming or holding, plan the throw for a turn that suits the opponent's fast move instead of
         # farming until forced to throw at a bad moment.
         self.timed_farm = timed_farm
+        # Winning the switch (the owner's rule). When the opponent has just swapped they cannot swap again for
+        # 45 seconds, so the matchup is ours to choose: if we are not already winning it, bring the Pokémon
+        # that wins it by at least `win_switch` more than staying would (None: the ordinary swap rule only).
+        self.win_switch = win_switch
+        # And then win it: while a switch clock is running on either side, coming out of the present matchup
+        # on top is worth this much extra when weighing a shield, on top of what is left on each side.
+        self.switch_worth = switch_worth
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -408,9 +416,19 @@ class Planner:
             worst = damage(foe, hard, mon)
             return worst >= mon.hp or worst >= self.shield_share * mon.build.hp
         left = view.me.shields
+        at_stake = self.switch_worth and view.me.left() > 1 and view.foe_left > 1 \
+            and (view.foe_switch_wait > 0 or view.me.switch_wait > 0)
+
+        def after(move, shielded: bool) -> float:
+            worth = self._after_hit(view, move, shielded, left)
+            if at_stake:  # does this choice leave me the winner of the matchup we are in?
+                hurt, thrower = self._hit_state(view, move, shielded)
+                worth += self.switch_worth * (hurt.hp > 0 and duel(hurt, thrower, left - shielded, view.foe_shields) > 0)
+            return worth
+
         if soft is hard or self.guess == "worst":
-            return self._after_hit(view, hard, True, left) > self._after_hit(view, hard, False, left)
-        value = {(m.id, s): self._after_hit(view, m, s, left) for m in (soft, hard) for s in (True, False)}
+            return after(hard, True) > after(hard, False)
+        value = {(m.id, s): after(m, s) for m in (soft, hard) for s in (True, False)}
         if self.guess == "read":
             q = self._bait_seen[0] / self._bait_seen[1]  # how likely the softer move is
             return (q * value[soft.id, True] + (1 - q) * value[hard.id, True]
@@ -420,14 +438,18 @@ class Planner:
 
     # looking ahead
 
-    def _after_hit(self, view: View, move, shielded: bool, shields: int) -> float:
-        """Where I stand after the opponent's charged move lands or is shielded."""
-        me = view.me
-        hurt, thrower = me.mon.copy(), view.foe.copy()
-        hurt.hp -= 1 if shielded else damage(view.foe, move, me.mon)
+    def _hit_state(self, view: View, move, shielded: bool) -> tuple[Mon, Mon]:
+        """My active Pokémon and theirs just after their charged move lands or is shielded."""
+        hurt, thrower = view.me.mon.copy(), view.foe.copy()
+        hurt.hp -= 1 if shielded else damage(view.foe, move, view.me.mon)
         thrower.energy -= move.energy
         if move.buff_chance >= 1:
             apply_buffs(thrower, hurt, move)
+        return hurt, thrower
+
+    def _after_hit(self, view: View, move, shielded: bool, shields: int) -> float:
+        """Where I stand after the opponent's charged move lands or is shielded."""
+        hurt, thrower = self._hit_state(view, move, shielded)
         return self._play_out(view, hurt, thrower, shields - shielded, view.foe_shields)
 
     def _after_throw(self, view: View, k: int, shielded: bool) -> float:
@@ -521,6 +543,13 @@ class Planner:
         if self._spent(mon):
             return None  # too hurt to fight elsewhere; any rescue was decided above
         staying = self._outlook(view, me.active)
+        if self.win_switch is not None and view.foe_switch_wait > 0:
+            if staying >= 0.15:
+                return None  # winning as it stands: stay in and keep the switch for later
+            best = max(me.bench(), key=lambda j: self._outlook(view, j))
+            gain = self._outlook(view, best) - max(staying, 0.0)
+            if gain >= self.win_switch and not self._spent(me.team[best]):
+                return best
         if staying > self.bad_matchup:
             return None
         w = 0.0 if self.punish and view.foe_switch_wait else self.safe_weight
@@ -643,6 +672,7 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         farm=rng.random() < 0.8, farm_cost=near(0.35, 0.4), sac=rng.random() < 0.8,
         hold=rng.random() < 0.8, hold_cost=near(0.5, 0.4),
         last_gasp=rng.random() < 0.8, timed_farm=rng.random() < 0.8,
+        win_switch=near(0.1, 0.4) if rng.random() < 0.8 else None,
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),

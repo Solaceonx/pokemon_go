@@ -177,6 +177,49 @@ Where the standard player stands, against today's crowd on the same 4,000 battle
 
 Today's rules beat the rules of 10 October 55.2% ± 1.2 head to head.
 
+### Winning the switch (2026-10-11): the counter-swap helps, the shield bonus does not
+
+The owner's rule: if you win the lead and they swap, try to win the switch; if you lose the
+lead, swap, they swap too and it is winnable, either set up a sweeper (rarer) or try to win
+the switch.
+
+**Counter-swap when they are locked in** (`Planner(win_switch=0.1)`, now standard). When the
+opponent has just swapped they cannot swap again for 45 seconds, so the matchup is ours to
+choose. If we are not already winning it (one-on-one margin under 0.15), bring the Pokémon
+whose one-on-one against theirs beats staying by at least `win_switch`, with no weight on
+being a safe choice, since they cannot answer. The one-on-ones are played out from the real
+health, energy and shields with our own simulator, which reproduces PvPoke's battles hit for
+hit, so this is the PvPoke matchup estimate the owner asked for, for any pair in any state.
+
+| Must beat staying by | Head to head against the standard player | Against the crowd, same battles |
+|---|---|---|
+| 0.0 | 51.9% ± 0.9 | +2.6 ± 0.8 |
+| 0.15 | 51.2% ± 0.8 (51.8% ± 0.8 on another set) | +2.2 ± 0.8 (+2.0 ± 0.8) |
+| 0.3 | 51.5% ± 0.8 | +1.6 ± 0.7 |
+| 0.5 | 50.7% ± 0.7 | +0.9 ± 0.6 |
+| 0.1, on 6,000 fresh battles | 52.3% ± 0.7 | +2.0 ± 0.6 |
+
+An earlier attempt at this ("bring the hard counter when the opponent's switch is locked")
+showed nothing, because it still waited for the present matchup to be bad (worse than -0.2)
+and for the counter to be better by 0.35. The gain is in taking small edges too.
+
+**Valuing the win when shielding** (`switch_worth`): while a switch clock is running, add a
+bonus to the shield choice that leaves us the winner of the present matchup. No difference at
+0.2 or 0.5 (50.4% ± 0.7 and 50.2% ± 0.8 head to head). Left at zero. Setting up a sweeper is
+not attempted.
+
+Where the standard player stands, against today's crowd (four in five opponents use each
+rule) on the same 4,000 battles:
+
+| Player | Wins |
+|---|---|
+| Rules as of 10 October | 50.5% ± 1.5 |
+| + hold, throw before fainting, timed farming | 53.1% ± 1.5 (+2.6 ± 1.3) |
+| + win the switch | 54.7% ± 1.5 (+1.6 ± 0.8) |
+| Trained bot on top (not yet retrained on these rules) | 65.2% ± 1.5 (+10.5 ± 1.6) |
+
+Today's rules beat the rules of 10 October 57.2% ± 1.2 head to head.
+
 ## Adversarial training (task 14)
 
 An exploiter is a model trained the same way as the bot, but with the bot itself as its
@@ -740,9 +783,9 @@ error is in the timing and not in which fast move is assumed.
 
 The owner's Pokémon are described in `data/owner_team.json` (moves, CP, IVs), read before the
 battle starts. Altaria 0/14/15 is level 29 at exactly the CP shown (1497; the best spread of
-4,096) and Jellicent 6/12/11 is level 24 at exactly 1496. Melmetal 3/14/12 does not give the
-1496 the recordings show at any level (1454 at 15, 1503 at 15.5); 2/14/12 would. Until that is
-settled the nearest level is used (15.5). With real stats the count of unexplained health
+4,096) and Jellicent 6/12/11 is level 24 at exactly 1496. Melmetal, given as 2/15/12 (the
+second-best spread), is CP 1500 at level 15.5, while every recording shows 1496; 2/14/12 would
+be 1496 exactly. The nearest level is used (15.5), which is within one IV point either way. With real stats the count of unexplained health
 changes in the four recordings is about the same (32 before, 34 after): the opponent's stats
 are still assumed.
 
