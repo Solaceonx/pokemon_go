@@ -1032,3 +1032,57 @@ The additional media and clip data total 12.64 GB, excluding caches, review
 images and the shared runtime. The 61-view HTML remains 31.22 MB and embeds no
 videos. `data/vod_additional_sample.json` holds the receipts;
 `docs/official_sample.md` explains reproduction and the Windows launcher.
+
+## Retraining on the new rules (2026-10-11)
+
+The model in `runs/general-decide` was trained before the hold, throw-before-fainting, timed-farming and
+win-the-switch rules existed. `runs/general-rules2` is a fresh model trained with them: 65 minutes on one
+core, 5,020 battles, 30k shield / 11k throw / 20k swap / 5k replacement examples. The old model has eleven
+times as many (336k / 115k / 298k / 66k). Compared with `scripts/compare_models.py` on the same 3,000 battles
+(teams half from the good-team list and half random, today's crowd):
+
+| Pilot | Score | Over the Planner | Against the old model |
+|---|---|---|---|
+| Planner alone | 55.9% ± 1.8 | | |
+| Old model, margin 0.02 | 66.7% ± 1.7 | +10.8 ± 2.0 | |
+| Retrained, margin 0.05 (its own choice) | 62.4% ± 1.7 | +6.5 ± 1.7 | −4.2 ± 1.8 |
+| Retrained, margin 0.02 | 60.9% ± 1.7 | +4.9 ± 2.0 | −5.8 ± 2.0 |
+| Fitted on both sets of examples, margin 0.02 | 67.3% ± 1.7 | +11.4 ± 1.9 | +0.6 ± 1.7 |
+
+The old model stays. An hour of examples played out under the right rules is worth less than eleven hours
+played out under slightly older ones, and adding the new examples to the old changes nothing measurable.
+Matching the old volume with new-rule examples would take about eleven core-hours; the expected gain is a
+few points at most, so it has not been run. Log: `runs/general-rules2.out`, `runs/compare_models_1.out`.
+
+## Best teams from the owner's own Pokémon (2026-10-11)
+
+`scripts/roster_teams.py` searches every line-up the owner can field. Their 20 Pokémon are in
+`data/owner_team.json` (the current three) and `data/owner_roster.json` (17 more, with IVs; moves are the usual
+ones except where the owner gave them; each is taken to be at the highest level within 1500). That is 3,366
+line-ups counting who leads (Quagsire and Shadow Quagsire cannot share a team).
+
+Opponents, as the owner asked: a random legal three from the top 100 supported Pokémon, every such team
+equally likely (about 485,000 with the lead counted), played by the usual crowd. Each candidate meets a random
+sample of them, the same sample for every candidate, piloted by the trained bot. Stages: 150 battles each,
+keep 500; 600 more, keep 50; 3,000 more, keep 12; then 6,000 fresh battles each, which are the only numbers
+reported. 47 minutes on three cores, about a million battles.
+
+| Line-up (lead first) | Score | Against the top line |
+|---|---|---|
+| Umbreon / Melmetal / Altaria | 82.1% ± 1.0 | |
+| Altaria / Melmetal / Araquanid | 80.9% ± 1.0 | −1.2 ± 1.3 |
+| Altaria / Melmetal / Umbreon | 80.7% ± 1.0 | −1.4 ± 1.2 |
+| Melmetal / Altaria / Umbreon | 80.3% ± 1.0 | −1.7 ± 1.3 |
+| Melmetal / Altaria / Araquanid | 80.1% ± 1.0 | −2.0 ± 1.4 |
+| Umbreon / Melmetal / Feraligatr | 79.8% ± 1.0 | −2.2 ± 1.2 |
+| Umbreon / Altaria / Empoleon | 79.1% ± 1.0 | −3.0 ± 1.2 |
+| Melmetal / Altaria / Jellicent (current, best lead) | 77.6% ± 1.1 | −4.5 ± 1.4 |
+
+Melmetal is in 11 of the 12 survivors, Umbreon in 9, Altaria in 7, Araquanid in 5. Jellicent is the slot to
+change: Umbreon in its place is worth about four points, Araquanid about three. The full list is in
+`data/roster_teams.json`; log in `runs/roster_teams.out`.
+
+What this does not show: random threes from the top 100 are easier than the teams real opponents build, so
+the scores are high and the gaps may shrink or reorder against coherent teams; form-changers (Cramorant,
+Mimikyu, Aegislash, Morpeko) are not in the pool; and Umbreon is assumed to have Snarl with Dark Pulse and
+Last Resort.

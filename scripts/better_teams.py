@@ -26,23 +26,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pogo.agents import Planner, varied  # noqa: E402
 from pogo.arena import field_results, mean_and_margin  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
+from pogo.roster import TEAM, builds  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
-def owner_team() -> dict:
-    """{species id: build} from data/owner_team.json: the owner's Pokémon with their own moves, IVs and level."""
-    gd = GameData()
-    ids = {v["speciesName"]: k for k, v in gd.species.items()}
-    moves = {m.name: m.id for m in gd.moves.values()}
-    out = {}
-    for e in json.loads((ROOT / "data" / "owner_team.json").read_text())["pokemon"]:
-        sid, ivs, level = ids[e["species"]], tuple(e["ivs"]) if e.get("ivs") else None, None
-        if ivs and e.get("cp"):  # the level whose CP is nearest the one shown
-            level = min((1 + i / 2 for i in range(100)), key=lambda lv: (abs(gd.cp_at(sid, lv, ivs) - e["cp"]), -lv))
-        out[sid] = gd.build(sid, [moves[e["fast"]], *(moves[c] for c in e["charged"])], level=level, ivs=ivs)
-    return out
-
-
-OWNER = owner_team()
+OWNER = builds(GameData(), files=(TEAM,))  # the owner's three, with their own moves, IVs and level
 _state: dict = {}
 
 

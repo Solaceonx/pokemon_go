@@ -1,0 +1,37 @@
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner
+workers: 1
+
+round 1: 3148 battles in 22.9 min; examples so far: 18230 shield, 6762 throw, 12657 swap, 2954 replace
+  shield: average result by option 57.1% 55.9%
+  throw: average result by option 56.6% 54.6% 55.4% 51.9% 37.4%
+  swap: average result by option 57.3% 54.3% 55.5%
+  replace: average result by option 49.6% 50.7%
+  overrule when ahead by 0.02: +2.6 ± 3.3 points against the Planner
+  overrule when ahead by 0.05: +3.1 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +2.9 ± 1.9 points against the Planner
+
+round 2: 745 battles in 24.2 min; examples so far: 22925 shield, 8303 throw, 15754 swap, 3646 replace
+  shield: average result by option 58.2% 56.4%
+  throw: average result by option 57.4% 55.4% 55.8% 52.6% 38.2%
+  swap: average result by option 58.2% 55.0% 56.3%
+  replace: average result by option 50.9% 51.7%
+  overrule when ahead by 0.02: +4.7 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +3.4 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +1.9 ± 2.0 points against the Planner
+
+round 3: 1127 battles in 20.0 min; examples so far: 30307 shield, 10754 throw, 20426 swap, 4670 replace
+  shield: average result by option 58.8% 57.1%
+  throw: average result by option 58.8% 56.7% 57.3% 53.5% 38.9%
+  swap: average result by option 59.3% 56.1% 57.0%
+  replace: average result by option 51.5% 52.5%
+  overrule when ahead by 0.02: +0.8 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +4.8 ± 3.0 points against the Planner
+  overrule when ahead by 0.1: +2.5 ± 2.1 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.05
+  with learned decisions   61.4% ± 1.7
+  Planner, same teams      54.6% ± 1.8
+  difference               +6.8 ± 1.7 points (same battles for both); overruled the Planner per battle: replace 0.01, shield 0.85, swap 0.26, throw 0.37
+files: runs/general-rules2/q.npz, margin.txt, examples.npz
