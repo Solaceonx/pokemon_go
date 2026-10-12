@@ -2,11 +2,23 @@
 from __future__ import annotations
 
 import math
+import os
 import random
 from dataclasses import dataclass
 
 from .battle import DRAW, Battle
 from .gamedata import Build
+
+
+def low_priority() -> None:
+    """Lower batch-job priority, or retain an already-low inherited sandbox priority."""
+    try:
+        os.nice(10)
+    except PermissionError:
+        priority = os.getpriority(os.PRIO_PROCESS, 0)
+        if priority <= 0:
+            raise
+        print(f"priority: retaining inherited nice={priority} (sandbox denied lowering it further)", flush=True)
 
 
 @dataclass

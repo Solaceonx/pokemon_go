@@ -93,7 +93,7 @@ def main() -> None:
     if args.q:
         from pogo.learner import Learner, QNet
         learned = QNet.load(args.q)
-        make_pilot = lambda seed: Learner(q=learned, margin=0.02, seed=seed)  # noqa: E731
+        make_pilot = lambda seed: Learner(q=learned, margin=0.02, seed=seed, hold=True, hold_cost=0.5)  # noqa: E731
     else:
         make_pilot = lambda seed: Planner(seed=seed)  # noqa: E731
 

@@ -1,0 +1,44 @@
+Task 18 rule 1: commands and results
+Working directory: /Users/marco/Developer/pokemon_go-wt/t18-sweeper
+
+Each job below ran sequentially. All exited with status 0. Each output starts
+with "nice: setpriority: Operation not permitted": the sandbox denied lowering
+priority, but nice continued to run the command. Numerical-library threads were
+limited to one. No network, phone/recording edits, or git history changes.
+
+Initial full suite, after implementation and before adding setup tests:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18-sweeper-tests-initial.out 2>&1
+Printed: Ran 102 tests in 1.012s; OK (skipped=6).
+
+Full suite with the nine new tests:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18-sweeper-tests.out 2>&1
+Printed: Ran 111 tests in 1.042s; OK (skipped=6).
+
+Tuning only; these battles are not acceptance evidence:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py "sweeper=0.5,sweep_chance=0.5" "sweeper=0.5,sweep_chance=0.75" "sweeper=1.0,sweep_chance=0.5" --battles 4000 --seed 41 > runs/t18-sweeper-tuning-seed41.out 2>&1
+The complete printed output is in t18-sweeper-tuning-seed41.out, with margins
+for every score. The displayed head-to-head results tied. The selection was
+frozen in t18-sweeper-selection.txt before the confirmation run.
+
+Held-out confirmation, no subsequent tuning:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py "sweeper=0.5,sweep_chance=0.5" --battles 4000 --seed 90317 > runs/t18-sweeper-confirm-seed90317.out 2>&1
+Printed:
+standard player against the crowd: 54.8% ± 1.5; energy thrown away with a move ready: 6.5 a battle
+sweeper=0.5,sweep_chance=0.5: head to head 50.1% ± 0.6 | against the crowd 54.9% ± 1.5, +0.1 ± 0.2 | energy thrown away 6.5 a battle
+
+Final full suite:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18-sweeper-tests-final.out 2>&1
+Printed: Ran 111 tests in 1.062s; OK (skipped=6).
+The existing reference test checks all 108 PvPoke duels.
+
+Whitespace check:
+git diff --check
+Printed nothing; exit status 0.
+
+Done-when disposition: rule 1's fresh-seed gain check ran and failed;
+50.1 - 0.6 does not exceed 50.0. The negative result is recorded under
+"Tried and did not help" and under the owner's strategy guidance in
+docs/status.md. sweeper=0.0 remains the default. No promotion/crowd change,
+standalone check_pvpoke run, speedcheck save, or compare_models run was
+triggered. Rules 2-5 and the full five-rule task completion check were
+out of scope. All changes remain uncommitted.

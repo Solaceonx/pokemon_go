@@ -15,11 +15,17 @@ is also written to a file for that game, one line each.
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .battle import CHARGED, CHARGED_TURNS, ENERGY_CAP, FAST, SWITCH, Mon, Side, apply_buffs, damage
-from .gamedata import Build, GameData
+from .gamedata import Build, GameData, effectiveness, spread
+
+# How far the true energy is from the count, in fast moves, and how often. Measured against our own energy on
+# the charged-move buttons at the end of 24 stretches of fighting in four recorded battles (buttons minus count):
+# two fewer 2 times, one fewer 3, exact 8, one more 8, two more 2, four more once (counted here as two).
+COUNT_ERROR = {-2: 2 / 24, -1: 3 / 24, 0: 8 / 24, 1: 8 / 24, 2: 3 / 24}
 
 TURN = 0.5  # seconds
 SWITCH_SECONDS = 45.0
@@ -45,6 +51,12 @@ class Observation:
     my_charged: int | None = None  # I threw this charged move (0 or 1) since the last look
     foe_charged: bool = False  # they threw a charged move since the last look
     foe_move: str | None = None  # its id or name, if the screen showed it
+    # Which of "super" (SUPER EFFECTIVE!) and "weak" (NOT VERY EFFECTIVE...) were on screen in this look.
+    # An empty list means the text was read and showed neither; None means it was not read.
+    effects: list | None = None
+    # Seconds since the last look in which the fight stood still for a reason other than a charged move:
+    # a side choosing its next Pokémon after a faint.
+    paused: float | None = None
 
 
 class Foe:
@@ -55,10 +67,26 @@ class Foe:
         self.lo = self.hi = 0  # range their energy must lie in
         self.used: dict[str, int] = {}  # charged moves we have seen them throw, and how often
         self.cp: int | None = None
+        self.fast_from = "guessed"  # "inferred" once the steps in our health bar have shown which fast move it is
+        # Quiet looks, for working out the fast move: my Pokémon hit, fighting turns covered, health lost,
+        # and whether this look starts a new unbroken stretch.
+        self.steps: list[tuple[Mon, int, int, bool]] = []
+        self.base = (0, 0)  # their energy range when the count last restarted (at their last charged move)
+        self.lost: list[tuple[Mon | None, int]] = []  # since then: my Pokémon and the health it lost, or (None, hits)
+        self.clock = 0  # fighting turns it has spent on the field since the count last restarted
+        self.ruled_out: set[str] = set()  # fast moves it cannot have: too little energy, or the wrong words on screen
+        self.words: dict[int, dict[str, int]] = {}  # per Pokémon of mine it faced: quiet looks, and looks with each word
+        self.misfit: dict[str, float] = {}  # how badly each fast move it could have fits those steps; lower is better
 
     def gain(self, amount: int) -> None:
         self.lo, self.hi = min(ENERGY_CAP, self.lo + amount), min(ENERGY_CAP, self.hi + amount)
         self.mon.energy = (self.lo + self.hi) // 2
+
+    def by_clock(self) -> int:
+        """The most energy they could have: never pausing between fast moves, plus one hit because the moment
+        a Pokémon comes out is only known to within a turn or two."""
+        fast = self.mon.build.fast
+        return min(ENERGY_CAP, self.base[1] + (self.clock // fast.turns + 1) * fast.energy_gain)
 
     def spend(self, costs: list[int]) -> None:
         """They threw a charged move with one of these costs."""
@@ -91,6 +119,16 @@ class TrackedView:
         return max(0, round((self._t.foe_switch_at - self._t.t) / TURN))
 
     @property
+    def foe_move_odds(self) -> list:
+        """(charged move, chance they have it) for every charged move their active Pokémon may have."""
+        odds = self._t.move_odds(self._t.foe)["charged"]
+        return [(self._t.gd.moves[m], p) for m, p in odds.items() if p > 0]
+
+    @property
+    def foe_energy_odds(self) -> dict:
+        return self._t.energy_odds(self._t.foe)
+
+    @property
     def foe_busy(self) -> int:
         """Turns left on the fast move they have in progress, assuming they attack without pause."""
         length = self._t.foe.mon.build.fast.turns
@@ -119,10 +157,18 @@ class TrackedView:
 
 class Tracker:
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
-                 moves_known: list[bool] | None = None):
+                 moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True,
+                 foe_fast: dict | None = None):
         """my_team may be incomplete (footage of someone else's game): Pokémon are added as they appear.
         moves_known says, per Pokémon, whether its moves come from a team sheet or are the usual ones assumed."""
         self.gd = gd
+        # How energy is counted. "rhythm": a fast move every so many turns for as long as its user is on the
+        # field, which needs no health bar but assumes nobody pauses. "hits": from the steps in the health bars.
+        self.by_rhythm = energy == "rhythm"
+        # Fast moves we have been told for opposing species ({species id: move id}), e.g. from the other
+        # player's own screen in a broadcast that shows both. They are taken as known from first sight.
+        self.foe_fast = foe_fast or {}
+        self.trust_my_energy = trust_my_energy  # False: compare my count with the buttons but do not correct it
         self.me = Side([Mon(b) for b in my_team])
         self.my_moves_known = list(moves_known) if moves_known else [True] * len(my_team)
         self.my_seen_first = [False] * len(my_team)  # True for Pokémon we only learnt of from the screen
@@ -130,14 +176,30 @@ class Tracker:
         self.my_cp: dict[int, int] = {}
         self.my_left = 3
         self.warnings = 0
+        self.energy_checks = self.energy_fixed = 0  # looks where my energy was read, and where it overruled the count
+        self.energy_off = 0.0
+        self.energy_streak, self.energy_last = 0, 0.0  # looks in a row on which the buttons disagreed the same way
         self.foes: dict[str, Foe] = {}
         self.order: list[str] = []  # opposing species in the order they appeared
         self.foe: Foe | None = None  # their active Pokémon
         self.foe_shields = 2
         self.foe_left = 3
+        # A faint counter often arrives before the replacement header. Keep
+        # its outgoing identity until that header changes; consuming the count
+        # immediately used to turn the later replacement into a timed switch.
+        self._my_counter_seen = self._foe_counter_seen = False
+        self._my_pending_faint = self._foe_pending_faint = None
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
+        self.my_beat = 0  # the same for mine
+        self.ahead = 0  # their fast moves counted by rhythm, less those seen landing, since the rhythm restarted
+        self.taken = 0.0  # health I have lost that is not yet matched to a whole fast move of theirs
+        self.dealt = 0.0  # the same for the health they have lost to my fast moves
+        self.hp_turn = 0  # fighting turn at which my health was last read
+        self.quiet = False  # the last look had no charged move and no change of Pokémon
+        self.stretch = False  # an unbroken run of quiet looks is under way
+        self.quiet_looks = 0  # how many quiet looks in a row; the words from a charged move linger for a moment
         self.my_switch_at = 0.0  # time at which my switch is ready again
         self.foe_switch_at = 0.0
         self._file = open(path, "w") if path else None
@@ -163,14 +225,20 @@ class Tracker:
         turns = round((t - self.t) / TURN)
         if 0 < turns <= 3:  # a longer gap means a charged move is playing, which stops the turn clock
             self.turn += turns
+            if self.foe:
+                self.foe.clock += turns
+                if self.by_rhythm:
+                    self._their_rhythm(self.foe)
         self.t = t
         self.me.switch_wait = max(0, round((self.my_switch_at - t) / TURN))
 
     def update(self, obs: Observation) -> None:
         me = self.me
         thrown = int(obs.foe_charged) + int(obs.my_charged is not None)
-        turns = max(0, round((obs.t - self.t) / TURN) - CHARGED_TURNS * thrown)
+        turns = max(0, round((obs.t - self.t - (obs.paused or 0.0)) / TURN) - CHARGED_TURNS * thrown)
         self.turn += turns
+        if self.foe:
+            self.foe.clock += turns
         my_shields_before, foe_shields_before = me.shields, self.foe_shields
         if obs.my_shields is not None:
             me.shields = obs.my_shields
@@ -182,9 +250,15 @@ class Tracker:
         i_changed = self._my_active(obs)
         they_changed = self._their_active(obs)
         if obs.my_left is not None:
+            if self._my_counter_seen and obs.my_left < self.my_left and not i_changed:
+                self._my_pending_faint = was_mine
             self.my_left = obs.my_left
+            self._my_counter_seen = True
         if obs.foe_left is not None:
+            if self._foe_counter_seen and obs.foe_left < self.foe_left and not they_changed and was_theirs:
+                self._foe_pending_faint = was_theirs
             self.foe_left = obs.foe_left
+            self._foe_counter_seen = True
         if obs.my_cp is not None:
             self.my_cp[me.active] = obs.my_cp
         if obs.foe_cp is not None and self.foe is not None:
@@ -192,21 +266,41 @@ class Tracker:
         if self.foe is None:
             self.t = obs.t
             return
-        if i_changed == "faint" and was_theirs and not obs.foe_charged and they_changed != "faint":
+        if self.by_rhythm:
+            # Mine, the same way. In play the bot knows its own taps; this is for footage of a person.
+            fast = was_mine.build.fast
+            done = self.turn - self.my_beat - int(obs.my_charged is not None or i_changed == "switch")
+            in_air = obs.foe_charged and obs.my_charged is None
+            hits = -(-done // fast.turns) if in_air else done // fast.turns
+            if hits > 0:
+                self.my_beat += hits * fast.turns
+                was_mine.energy = min(ENERGY_CAP, was_mine.energy + hits * fast.energy_gain)
+        if self.by_rhythm and was_theirs:
+            # A fast move of theirs still in the air when I throw a charged move lands after it.
+            # The turn they spent throwing a charged move or switching had no fast move in it.
+            self._their_rhythm(was_theirs, in_air=obs.my_charged is not None and not obs.foe_charged,
+                               idle=int(obs.foe_charged or they_changed == "switch"))
+        elif i_changed == "faint" and was_theirs and not obs.foe_charged and they_changed != "faint":
             was_theirs.gain(was_theirs.mon.build.fast.energy_gain)
+            was_theirs.lost.append((None, 1))
         if they_changed == "faint" and obs.my_charged is None and i_changed != "faint":
             was_mine.energy = min(ENERGY_CAP, was_mine.energy + was_mine.build.fast.energy_gain)
         mon, foe = me.mon, self.foe
 
         # What they did to me, from my health bar. After a switch the drop is measured on the Pokémon now in.
+        quiet = not thrown and not i_changed and not they_changed
         if obs.my_hp is not None:
             hp = round(obs.my_hp * mon.build.hp)
             drop = mon.hp - hp
             mon.hp = hp
             if they_changed != "faint" and i_changed != "faint":
+                if quiet and self.quiet and self.turn > self.hp_turn:
+                    foe.steps.append((mon, self.turn - self.hp_turn, drop, not self.stretch))
+                    self.stretch = True
                 self._their_attacks(obs, drop, my_shields_before)
             elif obs.foe_charged and they_changed != "faint":
                 self._their_attacks(obs, None, my_shields_before)
+            self.hp_turn = self.turn
         elif obs.foe_charged and they_changed != "faint":
             self._their_attacks(obs, None, my_shields_before)
 
@@ -217,18 +311,48 @@ class Tracker:
             if move.buff_chance >= 1:
                 apply_buffs(mon, foe.mon, move)
             self.my_used[me.active, obs.my_charged] = self.my_used.get((me.active, obs.my_charged), 0) + 1
-            self._note(obs.t, "my_charged", move=move.id, shielded=self.foe_shields < foe_shields_before)
+            blocked = self.foe_shields < foe_shields_before
+            self._note(obs.t, "my_charged", move=move.id, shielded=blocked)
+            expected = 1 if blocked else damage(mon, move, foe.mon)
+            if obs.foe_hp is not None and they_changed != "faint":
+                seen = round(obs.foe_hp * foe.mon.build.hp)
+                if foe.mon.hp - seen < 0.6 * expected:  # their bar has not caught up with the hit yet
+                    foe.mon.hp = max(0, foe.mon.hp - expected)
+                    obs = Observation(**{**asdict(obs), "foe_hp": None})
         if obs.foe_hp is not None:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
-                landed = round((foe.mon.hp - hp) / damage(mon, mon.build.fast, foe.mon))
-                mon.energy = min(ENERGY_CAP, mon.energy + max(landed, 0) * mon.build.fast.energy_gain)
+                landed, self.dealt = _whole_hits(self.dealt + foe.mon.hp - hp, damage(mon, mon.build.fast, foe.mon))
+                if not self.by_rhythm:
+                    mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
             foe.mon.hp = hp
-        if obs.my_energy is not None and abs(obs.my_energy - mon.energy) > 4:
-            mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
+        if obs.my_energy is not None:
+            self.energy_checks += 1  # how well the count holds up where the buttons can be read
+            self.energy_off += abs(obs.my_energy - mon.energy)
+            # The buttons lag a hit by a look or two, so only a difference that lasts overrules the count.
+            off = obs.my_energy - mon.energy
+            self.energy_streak = self.energy_streak + 1 if abs(off) > 4 and (off > 0) == (self.energy_last > 0) else int(abs(off) > 4)
+            self.energy_last = off
+            if self.energy_streak >= 3 and self.trust_my_energy:
+                self.energy_streak = 0
+                self.energy_fixed += 1
+                self._note(obs.t, "my_energy_read", counted=mon.energy, read=round(obs.my_energy, 1))
+                mon.energy = int(round(obs.my_energy))  # the buttons are the better witness
 
         if thrown or i_changed or they_changed:
-            self.beat = self.turn  # everyone starts afresh after a charged move or a change of Pokémon
+            if thrown or they_changed or not self.by_rhythm:
+                self.beat = self.turn  # they start afresh after a charged move or a change of their Pokémon
+            if thrown or i_changed:
+                self.my_beat = self.turn
+            self.ahead = 0
+            self.taken = self.dealt = 0.0
+            self.hp_turn = self.turn
+        self.quiet = quiet
+        self.quiet_looks = self.quiet_looks + 1 if quiet else 0
+        if not quiet:
+            self.stretch = False
+        elif obs.effects is not None and self.quiet_looks >= 4:
+            self._effect_words(obs)
         if obs.my_switch is not None:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
@@ -243,12 +367,12 @@ class Tracker:
         if slot is None:
             if len(me.team) >= 3:
                 return None
-            me.team.append(Mon(self.gd.default(obs.my_species)))  # a team-mate we had not been told about
+            me.team.append(Mon(self.gd.default(obs.my_species, allow_forms=True)))  # a team-mate we had not been told about
             self.my_moves_known.append(False)
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
             self._note(obs.t, "my_seen", species=obs.my_species)
-        if obs.my_left is not None and obs.my_left < self.my_left:
+        if self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left):
             how = "faint"
             me.mon.hp = 0
             self._note(obs.t, "my_faint", next=obs.my_species)
@@ -258,6 +382,7 @@ class Tracker:
             self.my_switch_at = obs.t + SWITCH_SECONDS
             self._note(obs.t, "my_switch", to=obs.my_species)
         me.active = slot
+        self._my_pending_faint = None
         return how
 
     def _their_active(self, obs: Observation) -> str | None:
@@ -266,7 +391,7 @@ class Tracker:
             return None
         how = "first"
         if self.foe is not None:
-            if obs.foe_left is not None and obs.foe_left < self.foe_left:
+            if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
                 how = "faint"
                 self.foe.mon.hp = 0
                 self._note(obs.t, "foe_faint", next=obs.foe_species)
@@ -277,11 +402,186 @@ class Tracker:
                 self._note(obs.t, "foe_switch", to=obs.foe_species)
         if obs.foe_species not in self.foes:
             # Assume the usual moveset and typical stats for the species until shown otherwise.
-            self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species))
+            self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species, allow_forms=True))
+            if len(self._fast_options(self.foes[obs.foe_species])) == 1:
+                self.foes[obs.foe_species].fast_from = "inferred"  # the species has only the one
+            told = self.foe_fast.get(obs.foe_species)
+            if told in {m.id for m in self._fast_options(self.foes[obs.foe_species])}:
+                foe = self.foes[obs.foe_species]
+                foe.mon.build = self.gd.build(obs.foe_species, [told, *(m.id for m in foe.mon.build.charged)], allow_forms=True)
+                foe.fast_from = "inferred"
+                foe.ruled_out = {m.id for m in self._fast_options(foe)} - {told}
             self.order.append(obs.foe_species)
             self._note(obs.t, "foe_seen", species=obs.foe_species)
         self.foe = self.foes[obs.foe_species]
+        self._foe_pending_faint = None
         return how
+
+    def _learn_move(self, t: float, foe: Foe, name: str):
+        """They threw a charged move we had not assumed: give them that move in place of an unconfirmed one."""
+        build = foe.mon.build
+        entry = self.gd.species[build.species_id]
+        move = next((self.gd.moves[i] for i in entry["chargedMoves"]
+                     if i in self.gd.moves and name in (i, self.gd.moves[i].name)), None)
+        if move is None:
+            return None
+        kept = [m.id for m in build.charged if foe.used.get(m.id)]
+        spare = [m.id for m in build.charged if not foe.used.get(m.id)]
+        charged = ([move.id] + kept + spare)[:max(len(build.charged), 1)]
+        foe.mon.build = self.gd.build(build.species_id, [build.fast.id, *charged], level=build.level, ivs=build.ivs, allow_forms=True)
+        self._note(t, "foe_move_learned", species=build.species_id, move=move.id)
+        return move
+
+    def _their_rhythm(self, foe: Foe, in_air: bool = False, idle: int = 0) -> None:
+        """Credit the fast moves their rhythm says have landed by now."""
+        fast = foe.mon.build.fast
+        done = self.turn - self.beat - idle
+        hits = -(-done // fast.turns) if in_air else done // fast.turns
+        if hits > 0:
+            self.beat += hits * fast.turns
+            self.ahead += hits
+            foe.gain(hits * fast.energy_gain)
+
+    def _fit_fast(self, t: float, foe: Foe) -> None:
+        """Work out their fast move from the size and rhythm of the steps in my health bar."""
+        if sum(1 for step in foe.steps if step[2] > 0) < 3:
+            return
+        build = foe.mon.build
+        options = [m for m in self._fast_options(foe) if m.id not in foe.ruled_out]
+        stretches: list[tuple[Mon, list[tuple[int, int]]]] = []  # running totals of turns and health lost
+        for target, turns, lost, starts in foe.steps:
+            if starts or not stretches:
+                stretches.append((target, [(turns, lost)]))
+            else:
+                run = stretches[-1][1]
+                run.append((run[-1][0] + turns, run[-1][1] + lost))
+
+        def misfit(move) -> float:
+            """How far the health lost strays from this move landing on its beat without a pause."""
+            off = total = 0.0
+            for target, run in stretches:
+                per_hit = damage(foe.mon, move, target)
+                off += min(sum(abs(lost - (turns + phase) // move.turns * per_hit) for turns, lost in run)
+                           for phase in range(move.turns))
+                total += sum(lost for _, lost in run)
+            return off / max(total, 1.0)
+
+        scores = {m.id: misfit(m) for m in options}
+        ranked = sorted(options, key=lambda m: scores[m.id])
+        best = ranked[0]
+        clear = len(ranked) < 2 or scores[best.id] < 0.6 * scores[ranked[1].id] - 0.05
+        foe.misfit = {k: round(v, 2) for k, v in scores.items()}
+        if not clear or scores[best.id] > 0.3:
+            return  # not enough to tell them apart yet
+        if best.id == build.fast.id:
+            foe.fast_from = "inferred"
+            return
+        if sum(1 for step in foe.steps if step[2] > 0) < 4:
+            return  # dropping the usual move takes a little more
+        self._set_fast(t, foe, best)
+
+    def learn_my_move(self, t: float, slot: int, move_id: str) -> int | None:
+        """One of ours threw a charged move its assumed moveset did not have (no team sheet, or footage of
+        someone else): put it in place of an assumed move not yet seen. Returns its place, or None."""
+        mon = self.me.team[slot]
+        build = mon.build
+        if self.my_moves_known[slot] or move_id not in self.gd.moves \
+                or move_id not in self.gd.species[build.species_id]["chargedMoves"]:
+            return None
+        unseen = [k for k in range(len(build.charged)) if not self.my_used.get((slot, k))]
+        if not unseen:
+            return None
+        ids = [m.id for m in build.charged]
+        ids[unseen[-1]] = move_id
+        mon.build = self.gd.build(build.species_id, [build.fast.id, *ids], level=build.level, ivs=build.ivs, allow_forms=True)
+        self._note(t, "my_move_learned", species=build.species_id, move=move_id)
+        return unseen[-1]
+
+    def move_odds(self, foe: Foe) -> dict:
+        """What this opposing Pokémon is likely to have, given what has been seen of it so far:
+        {"fast": {move id: chance}, "charged": {move id: chance it is one of its two}}."""
+        before = self.gd.move_odds(foe.mon.build.species_id)
+        if foe.fast_from == "inferred":
+            fast = {m: float(m == foe.mon.build.fast.id) for m in before["fast"]}
+        else:  # what the usage says, less what is ruled out, weighted by how well each fits the health steps
+            fast = spread({m: 0.0 if m in foe.ruled_out else p * math.exp(-3.0 * foe.misfit.get(m, 0.0))
+                           for m, p in before["fast"].items()}, 1.0)
+        seen = [m for m, n in foe.used.items() if n]
+        rest = spread({m: p for m, p in before["charged"].items() if m not in seen},
+                      max(0.0, min(2, len(before["charged"])) - len(seen)))
+        return {"fast": fast, "charged": {**{m: 1.0 for m in seen}, **rest}}
+
+    def energy_odds(self, foe: Foe) -> dict:
+        """{energy: chance}: the count, give or take one fast move, as often as the count has proved to be."""
+        gain, out = foe.mon.build.fast.energy_gain, {}
+        for off, p in COUNT_ERROR.items():
+            e = min(ENERGY_CAP, max(0, foe.mon.energy + off * gain))
+            out[e] = out.get(e, 0.0) + p
+        return out
+
+    def _fast_options(self, foe: Foe) -> list:
+        return [self.gd.moves[i] for i in self.gd.species[foe.mon.build.species_id]["fastMoves"] if i in self.gd.moves]
+
+    def _set_fast(self, t: float, foe: Foe, move) -> None:
+        """Change the fast move we believe they have, and count their energy again from where the count restarted."""
+        build = foe.mon.build
+        foe.mon.build = self.gd.build(build.species_id, [move.id, *(m.id for m in build.charged)], level=build.level,
+                                      ivs=build.ivs, allow_forms=True)
+        foe.fast_from = "inferred"
+        gained, left_over = 0, 0.0
+        for target, lost in foe.lost:
+            if target is None:
+                hits = lost
+            else:
+                hits, left_over = _whole_hits(left_over + lost, damage(foe.mon, move, target))
+            gained += hits * move.energy_gain
+        foe.lo, foe.hi = foe.base
+        foe.gain(foe.clock // move.turns * move.energy_gain if self.by_rhythm else gained)
+        if foe is self.foe:
+            self.taken, self.beat = left_over, self.turn
+        self._note(t, "foe_fast_learned", species=build.species_id, move=move.id, misfit=foe.misfit,
+                   ruled_out=sorted(foe.ruled_out))
+
+    def _rule_out_fast(self, t: float, foe: Foe, cost: int) -> None:
+        """They just paid this much for a charged move. A fast move that could not have earned it, even landing
+        without a pause for every turn they have been on the field, is not the one they have."""
+        self._drop_fast(t, foe, {m.id for m in self._fast_options(foe)
+                                 if foe.base[1] + (foe.clock // m.turns + 1) * m.energy_gain < cost})
+
+    def _effect_words(self, obs: Observation) -> None:
+        """The game writes SUPER EFFECTIVE! or NOT VERY EFFECTIVE... when a fast move lands that is one or the
+        other. Leaving aside the word my own fast move puts up, a word on screen is their fast move's, and a word
+        that never appears while they keep hitting me rules out every fast move that would have shown it."""
+        mon, foe = self.me.mon, self.foe
+        seen = foe.words.setdefault(self.me.active, {"looks": 0, "super": 0, "weak": 0})
+        seen["looks"] += 1
+        for word in obs.effects:
+            seen[word] += 1
+        mine = _word(mon.build.fast.type, foe.mon)
+        options = [m for m in self._fast_options(foe) if m.id not in foe.ruled_out]
+        out: set[str] = set()
+        for word in ("super", "weak"):
+            if word == mine:
+                continue
+            shows = {m.id: _word(m.type, mon) == word for m in options}
+            if seen[word] >= 2 and any(shows.values()):
+                out |= {i for i, has in shows.items() if not has}
+            elif seen[word] == 0 and seen["looks"] >= 8:
+                out |= {i for i, has in shows.items() if has}
+        self._drop_fast(obs.t, foe, out)
+
+    def _drop_fast(self, t: float, foe: Foe, out: set[str]) -> None:
+        options = self._fast_options(foe)
+        left = [m for m in options if m.id not in foe.ruled_out and m.id not in out]
+        if not left or not out - foe.ruled_out:
+            return  # nothing new, or it would rule out everything: then the evidence is at fault
+        foe.ruled_out |= out
+        if foe.mon.build.fast.id in foe.ruled_out:
+            self._set_fast(t, foe, min(left, key=lambda m: foe.misfit.get(m.id, 9.0)))
+        elif len(left) == 1 and foe.fast_from != "inferred":
+            foe.fast_from = "inferred"
+            self._note(t, "foe_fast_confirmed", species=foe.mon.build.species_id, move=left[0].id,
+                       ruled_out=sorted(foe.ruled_out))
 
     def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int) -> None:
         """Split a drop in my health into their fast moves and, if they threw one, their charged move."""
@@ -289,27 +589,51 @@ class Tracker:
         fast = foe.mon.build.fast
         per_hit = damage(foe.mon, fast, mon)
         if not obs.foe_charged:
+            landed, clean = 0, drop is not None
             if drop:
-                landed = max(0, round(drop / per_hit))
-                if abs(drop - landed * per_hit) > max(1.0, 0.3 * per_hit):
+                # A hit can show up spread over two looks, so what is left over waits for the next one.
+                lost = self.taken + drop
+                landed, self.taken = _whole_hits(lost, per_hit)
+                landed = min(landed, (self.turn - self.hp_turn) // fast.turns + 1)  # no more than the time allows
+                if (abs(lost - landed * per_hit) if landed else -lost) > max(1.0, 0.3 * per_hit):
                     # The drop is not a whole number of their assumed fast move: wrong move, wrong stats, or a misread.
+                    clean = False
                     self.warnings += 1
                     self._note(obs.t, "unexplained", what="my health drop", drop=drop, expected_per_hit=per_hit)
-                if landed:
+                foe.lost.append((mon, drop))
+                if landed and not self.by_rhythm:
                     foe.gain(landed * fast.energy_gain)
                     # Keep their rhythm if these hits fit it; otherwise restart it from now.
                     on_beat = self.beat + landed * fast.turns
                     self.beat = on_beat if 0 <= self.turn - on_beat < fast.turns else self.turn
+            if self.by_rhythm and not clean:
+                self.ahead = 0  # this look cannot say how many landed
+            elif self.by_rhythm:
+                # The rhythm does the counting; the hits that are seen keep it in step after a missed look.
+                self.ahead -= landed
+                if self.ahead < 0:  # more seen than counted: the rhythm was running behind
+                    foe.gain(-self.ahead * fast.energy_gain)
+                    self.ahead, self.beat = 0, self.turn
+                elif landed and self.turn - self.hp_turn == 1 and (self.turn - self.beat) % fast.turns:
+                    self.beat = self.turn  # one was seen landing this very turn: their next begins now
+            self._fit_fast(obs.t, foe)
             return
 
         moves = [m for m in foe.mon.build.charged if m.energy <= foe.hi] or list(foe.mon.build.charged)
         shielded = self.me.shields < my_shields_before
         named = [m for m in foe.mon.build.charged if obs.foe_move in (m.id, m.name)]
+        if obs.foe_move and not named:
+            learned = self._learn_move(obs.t, foe, obs.foe_move)
+            if learned:
+                named = [learned]
         extra = 0  # their fast move in progress lands with the charged move
         if named:
             moves = named
             if drop is not None:
-                extra = min(1, max(0, round((drop - (1 if shielded else damage(foe.mon, named[0], mon))) / per_hit)))
+                expected = 1 if shielded else damage(foe.mon, named[0], mon)
+                extra = min(1, max(0, round((drop - expected) / per_hit)))
+                if drop < 0.6 * expected:  # the bar is still showing the health from before the hit
+                    mon.hp = max(0, mon.hp + drop - expected)
         elif shielded:
             if drop is not None:
                 extra = min(1, max(0, round((drop - 1) / per_hit)))
@@ -317,18 +641,36 @@ class Tracker:
             best = min(((abs(drop - damage(foe.mon, m, mon) - j * per_hit), k, j)
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
             moves, extra = [moves[best[1]]], best[2]
+        self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
+        before, by_clock = [foe.lo, foe.hi], foe.by_clock()
+        if foe.hi < min(m.energy for m in moves) <= by_clock:
+            foe.hi = by_clock  # the count missed hits while the bars were hidden; the clock is the ceiling
         foe.spend([m.energy for m in moves])
-        if extra:
+        if extra and not self.by_rhythm:
             foe.gain(extra * fast.energy_gain)
+        foe.base, foe.lost, foe.clock = (foe.lo, foe.hi), [], 0
         if len(moves) == 1:
             foe.used[moves[0].id] = foe.used.get(moves[0].id, 0) + 1
         if len(moves) == 1 and moves[0].buff_chance >= 1:
             apply_buffs(foe.mon, mon, moves[0])
         self._note(obs.t, "foe_charged", move=moves[0].id if len(moves) == 1 else None, shielded=shielded,
-                   energy=[foe.lo, foe.hi])
+                   energy=[foe.lo, foe.hi], energy_before=before, energy_before_by_clock=by_clock)
 
 
-def _pokemon(mon: Mon, known_from: str, moves_from: str, used: dict, stats_assumed: bool, cp: int | None) -> dict:
+def _word(move_type: str, target: Mon) -> str | None:
+    """The word the game shows when a move of this type lands on this Pokémon."""
+    x = effectiveness(move_type, target.build.types)
+    return "super" if x > 1.01 else "weak" if x < 0.99 else None
+
+
+def _whole_hits(lost: float, per_hit: int) -> tuple[int, float]:
+    """How many whole fast moves a loss of health amounts to, and what is left over."""
+    landed = max(0, round(lost / per_hit))
+    return landed, (0.0 if landed else lost)  # only a part-hit waits; a mismatch must not pile up
+
+
+def _pokemon(mon: Mon, known_from: str, moves_from: str, used: dict, stats_assumed: bool, cp: int | None,
+             fast_from: str | None = None) -> dict:
     b = mon.build
     return {
         "species": b.species_id, "name": b.name, "types": list(b.types), "known_from": known_from,
@@ -338,7 +680,7 @@ def _pokemon(mon: Mon, known_from: str, moves_from: str, used: dict, stats_assum
         "energy": mon.energy, "fainted": mon.hp <= 0,
         "attack_stage": mon.atk_stage, "defense_stage": mon.def_stage,
         "fast_move": {"id": b.fast.id, "name": b.fast.name, "type": b.fast.type, "turns": b.fast.turns,
-                      "energy_gain": b.fast.energy_gain, "known_from": moves_from},
+                      "energy_gain": b.fast.energy_gain, "known_from": fast_from or moves_from},
         "charged_moves": [{"id": m.id, "name": m.name, "type": m.type, "energy": m.energy,
                            "known_from": "seen" if used.get(m.id) else moves_from, "times_used": used.get(m.id, 0)}
                           for m in b.charged],
@@ -398,8 +740,17 @@ def state(tracker: Tracker, full: bool = False) -> dict:
     theirs = []
     for species in t.order:
         foe = t.foes[species]
-        entry = _pokemon(foe.mon, "seen", "guessed", foe.used, stats_assumed=True, cp=foe.cp)
+        entry = _pokemon(foe.mon, "seen", "guessed", foe.used, stats_assumed=True, cp=foe.cp, fast_from=foe.fast_from)
         entry["energy_range"] = [foe.lo, foe.hi]
+        entry["energy_by_clock"] = foe.by_clock()
+        odds, energy = tracker.move_odds(foe), tracker.energy_odds(foe)
+        entry["energy_odds"] = {str(e): round(p, 2) for e, p in sorted(energy.items())}
+        entry["fast_move_odds"] = {m: round(p, 2) for m, p in sorted(odds["fast"].items(), key=lambda x: -x[1]) if p >= 0.005}
+        entry["charged_move_odds"] = {m: round(p, 2) for m, p in sorted(odds["charged"].items(), key=lambda x: -x[1]) if p >= 0.005}
+        # Chance each charged move could be thrown right now: they have it, and they have the energy.
+        entry["ready_odds"] = {m: round(p * sum(q for e, q in energy.items() if e >= tracker.gd.moves[m].energy), 2)
+                               for m, p in sorted(odds["charged"].items(), key=lambda x: -x[1]) if p >= 0.005}
+        entry["fast_move"]["misfit"] = foe.misfit
         theirs.append(entry)
     view = t.view() if t.foe else None
     return {

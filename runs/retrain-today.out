@@ -1,0 +1,37 @@
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner
+workers: 4
+
+round 1: 83797 battles in 60.1 min; examples so far: 491701 shield, 181621 throw, 337737 swap, 78607 replace
+  shield: average result by option 57.6% 55.9%
+  throw: average result by option 57.6% 55.5% 55.0% 51.9% 37.7%
+  swap: average result by option 58.1% 54.7% 55.7%
+  replace: average result by option 50.7% 50.9%
+  overrule when ahead by 0.02: +11.2 ± 3.1 points against the Planner
+  overrule when ahead by 0.05: +8.0 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +5.0 ± 2.0 points against the Planner
+
+round 2: 69088 battles in 60.2 min; examples so far: 942260 shield, 326789 throw, 627622 swap, 141886 replace
+  shield: average result by option 62.1% 60.2%
+  throw: average result by option 61.8% 59.8% 59.4% 55.9% 41.3%
+  swap: average result by option 62.5% 58.9% 60.1%
+  replace: average result by option 54.9% 55.4%
+  overrule when ahead by 0.02: +10.2 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +10.0 ± 2.9 points against the Planner
+  overrule when ahead by 0.1: +5.3 ± 2.1 points against the Planner
+
+round 3: 64411 battles in 60.3 min; examples so far: 1385980 shield, 465543 throw, 902365 swap, 200948 replace
+  shield: average result by option 63.8% 62.0%
+  throw: average result by option 63.8% 61.9% 61.5% 57.8% 42.9%
+  swap: average result by option 64.4% 60.8% 62.1%
+  replace: average result by option 56.7% 57.4%
+  overrule when ahead by 0.02: +8.6 ± 3.2 points against the Planner
+  overrule when ahead by 0.05: +6.0 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +3.0 ± 2.0 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.02
+  with learned decisions   66.2% ± 1.7
+  Planner, same teams      54.6% ± 1.8
+  difference               +11.6 ± 1.9 points (same battles for both); overruled the Planner per battle: replace 0.03, shield 0.96, swap 0.59, throw 1.05
+files: runs/retrain-today/q.npz, margin.txt, examples.npz

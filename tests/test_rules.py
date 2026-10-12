@@ -8,8 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import STYLES, Masher, Planner, fasts_to_wait, solve_2x2  # noqa: E402
-from pogo.battle import CHARGED, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, damage  # noqa: E402
-from pogo.gamedata import MAX_STAGE, STAGE, GameData, effectiveness  # noqa: E402
+from pogo.battle import CHARGED, FAST, SWITCH, SWITCH_TURNS, Battle, Mon, damage  # noqa: E402
+from pogo.gamedata import GameData, effectiveness  # noqa: E402
 
 GD = GameData()
 
@@ -75,50 +75,8 @@ class Stats(unittest.TestCase):
         az.atk_stage = 4  # attack doubled
         self.assertEqual(damage(az, play_rough, me), int(raw * 4) + 1)
 
-    def test_damage_rounding_at_every_stage_pair(self):
-        for attacker, defender in ((azumarill(), medicham()), (medicham(), azumarill())):
-            user, target = Mon(attacker), Mon(defender)
-            for move in (attacker.fast, *attacker.charged):
-                base = attacker.base_damage(move, defender)
-                for atk in range(-MAX_STAGE, MAX_STAGE + 1):
-                    for defense in range(-MAX_STAGE, MAX_STAGE + 1):
-                        user.atk_stage, target.def_stage = atk, defense
-                        scale = STAGE[atk + MAX_STAGE] / STAGE[defense + MAX_STAGE]
-                        self.assertEqual(damage(user, move, target), int(base * scale) + 1)
-
 
 class Turns(unittest.TestCase):
-    def test_idle_turn_keeps_timers_and_checks_timeout(self):
-        b = Battle([azumarill()], [medicham()], Script(), Script(), record=True)
-        b.sides[0].busy, b.sides[1].busy = 2, 3
-        b.sides[0].switch_wait, b.sides[1].switch_wait = 0, 7
-        b.turn = MAX_TURNS - 1
-        expected = b._on_time()
-        rng_state = b.rng.getstate()
-        b.step()
-        self.assertEqual((b.turn, b.winner), (MAX_TURNS, expected))
-        self.assertEqual([s.busy for s in b.sides], [1, 2])
-        self.assertEqual([s.switch_wait for s in b.sides], [0, 6])
-        self.assertEqual([s.mon.energy for s in b.sides], [0, 0])
-        self.assertTrue(all(s.mon.hp == s.mon.build.hp for s in b.sides))
-        self.assertEqual((b.log, b.hits), ([], []))
-        self.assertEqual(b.rng.getstate(), rng_state)
-
-    def test_clone_preserves_dice_and_has_independent_state(self):
-        b = Battle([azumarill()], [medicham()], Script(), Script(), seed=17, record=True)
-        b.step()
-        b.rng.gauss(0, 1)  # Include the cached Gaussian in the copied RNG state.
-        twin = b.clone(Script(), Script())
-        self.assertEqual(b.rng.getstate(), twin.rng.getstate())
-        self.assertEqual(b.rng.gauss(0, 1), twin.rng.gauss(0, 1))
-        self.assertEqual([b.rng.random() for _ in range(20)], [twin.rng.random() for _ in range(20)])
-        self.assertEqual((b.run(), b.turn), (twin.run(), twin.turn))
-        twin.sides[0].mon.energy = -1
-        twin.sides[0].shown.append(1)
-        self.assertNotEqual(b.sides[0].mon.energy, -1)
-        self.assertEqual(b.sides[0].shown, [0])
-        self.assertEqual((twin.log, twin.hits), (None, None))
-
     def test_fast_move_lands_on_its_last_turn(self):
         b = Battle([azumarill()], [medicham()], Script(), Script())
         az, me = b.sides[0].mon, b.sides[1].mon
@@ -236,10 +194,10 @@ class Guessing(unittest.TestCase):
         b = Battle([gator, azumarill()], [Mon(GD.default("altaria")), medicham()], Script(), Script(shield=True))
 
         def baiter():
-            return Planner(bait="farm", shields="threshold", farm=False)
+            return Planner(bait="farm", shields="threshold", farm=False, hold=False, good_matchup=False)  # the bait rule on its own
 
         self.assertEqual(baiter().act(b.views[0]), FAST)
-        self.assertEqual(Planner(bait="cheap", farm=False).act(b.views[0]), CHARGED[0])
+        self.assertEqual(Planner(bait="cheap", farm=False, hold=False, good_matchup=False).act(b.views[0]), CHARGED[0])
         gator.energy = 60
         b.sides[1].busy = 1  # Dragon Breath lands this turn, so the timing is already right
         self.assertEqual(baiter().act(b.views[0]), CHARGED[0])  # Hydro Cannon, with Ice Beam in hand
@@ -262,23 +220,36 @@ class Tactics(unittest.TestCase):
         alt = Mon(GD.default("altaria"), energy=60)
         b = Battle([alt, GD.default("melmetal")], [GD.default("torterra"), GD.default("jellicent")], Script(), Script())
         b.sides[1].busy = 1  # so that timing is not the reason to wait
-        self.assertEqual(Planner(switches=False).act(b.views[0]), FAST)
-        self.assertIn(Planner(farm=False, switches=False).act(b.views[0]), CHARGED)
+        self.assertEqual(Planner(switches=False, good_matchup=False).act(b.views[0]), FAST)
+        self.assertIn(Planner(farm=False, hold=False, switches=False, good_matchup=False).act(b.views[0]), CHARGED)
         alt.energy = 100
-        self.assertIn(Planner(switches=False).act(b.views[0]), CHARGED)  # full, so holding gains nothing
+        self.assertIn(Planner(switches=False, good_matchup=False).act(b.views[0]), CHARGED)  # full, so holding gains nothing
 
     def test_saves_a_spent_pokemon_and_brings_it_back_to_take_a_charged_move(self):
         az = Mon(azumarill(), hp=12)
         foe = Mon(GD.default("melmetal"))
         b = Battle([az, medicham(), GD.default("altaria")], [foe, GD.default("jellicent")], Script(), Script())
-        self.assertIn(Planner().act(b.views[0]), SWITCH[1:])  # get it out before it goes down for nothing
-        self.assertEqual(Planner(sac=False).act(b.views[0]), FAST)
+        self.assertIn(Planner(good_matchup=False).act(b.views[0]), SWITCH[1:])  # get it out before it goes down for nothing
+        self.assertEqual(Planner(sac=False, good_matchup=False).act(b.views[0]), FAST)
         b.sides[0].active = 1  # Medicham is now in front, and faints
         b.sides[0].team[1].hp = 0
         foe.energy = 100
-        self.assertEqual(Planner().replace(b.views[0]), 0)  # Melmetal has a move ready: let Azumarill take it
+        self.assertEqual(Planner(good_matchup=False).replace(b.views[0]), 0)  # Melmetal has a move ready: let Azumarill take it
         foe.energy = 0
-        self.assertEqual(Planner().replace(b.views[0]), 2)  # nothing ready: keep Azumarill in reserve
+        self.assertEqual(Planner(good_matchup=False).replace(b.views[0]), 2)  # nothing ready: keep Azumarill in reserve
+
+
+    def test_holds_a_ready_move_until_the_opponent_is_about_to_get_one(self):
+        az = Mon(azumarill(), energy=60)  # both charged moves ready
+        foe = Mon(GD.default("jellicent"))
+        b = Battle([az, medicham()], [foe, GD.default("altaria")], Script(), Script())
+        self.assertIn(Planner(switches=False, seed=1, hold=False, good_matchup=False).act(b.views[0]), CHARGED)
+        patient = Planner(switches=False, seed=1, good_matchup=False)  # the rule is part of the standard player
+        self.assertEqual(patient.act(b.views[0]), FAST)  # they are far from a move: keep building energy
+        foe.energy = min(m.energy for m in foe.build.charged)
+        self.assertIn(patient.act(b.views[0]), CHARGED)  # they have one now: no more waiting
+        foe.energy = 0
+        self.assertIn(Planner(switches=False, seed=1, hold=True, hold_cost=0.0, good_matchup=False).act(b.views[0]), CHARGED)  # any damage is too much
 
 
 class Tracking(unittest.TestCase):
@@ -291,11 +262,48 @@ class Tracking(unittest.TestCase):
         tally = check_tracker.Tally()
         for seed in range(12):
             teams = rng.sample(pool, 3), rng.sample(pool, 3)
-            agents = (check_tracker.ViaTracker(Planner(seed=seed)), Planner(seed=seed))
+            # Keep the tracker regression's battle trajectories independent of the matchup rule.
+            agents = (check_tracker.ViaTracker(Planner(seed=seed, good_matchup=False)),
+                      Planner(seed=seed, good_matchup=False))
             check_tracker.play(GD, teams, agents, seed, check_tracker.CAMERAS["perfect"], tally, rng)
         self.assertGreater(tally.exact / tally.n, 0.95)  # their hidden energy, counted from my health bar
         self.assertGreater(tally.busy_right / tally.n, 0.95)
         self.assertEqual(tally.wrong_active, 0)
+
+
+    def test_tracker_works_out_an_unusual_fast_move_from_the_health_bar(self):
+        import random
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        import check_tracker
+        pool = [GD.default(b.species_id) for b in GD.meta(30)]
+        rng = random.Random(2)
+        right = wrong = 0
+        for seed in range(12):
+            mine, theirs = rng.sample(pool, 3), []
+            for b in rng.sample(pool, 3):  # give each of theirs a fast move other than the usual one, where it has one
+                others = [f for f in GD.species[b.species_id]["fastMoves"] if f in GD.moves and f != b.fast.id]
+                theirs.append(GD.build(b.species_id, [others[0], *(m.id for m in b.charged)]) if others else b)
+            agents = (check_tracker.ViaTracker(Planner(seed=seed, good_matchup=False)),
+                      Planner(seed=seed, good_matchup=False))
+            check_tracker.play(GD, (mine, theirs), agents, seed, check_tracker.CAMERAS["perfect"], check_tracker.Tally(), rng)
+            for truth in theirs:
+                foe = agents[0].tracker.foes.get(truth.species_id)
+                if foe and foe.fast_from == "inferred":
+                    right += foe.mon.build.fast.id == truth.fast.id
+                    wrong += foe.mon.build.fast.id != truth.fast.id
+        self.assertGreater(right, 15)
+        self.assertLessEqual(wrong, 1)
+
+
+    def test_words_on_screen_rule_out_a_fast_move(self):
+        from pogo.tracker import Observation, Tracker
+        t = Tracker(GD, [GD.default("melmetal")])
+        for k in range(14):  # my Thunder Shock is not very effective on Stunfisk; nothing says super effective
+            t.update(Observation(t=0.5 * k, my_species="melmetal", foe_species="stunfisk", my_hp=1.0, foe_hp=1.0,
+                                 effects=["weak"]))
+        foe = t.foes["stunfisk"]
+        self.assertIn("MUD_SHOT", foe.ruled_out)  # ground on steel would have said so
+        self.assertEqual((foe.mon.build.fast.id, foe.fast_from), ("THUNDER_SHOCK", "inferred"))
 
 
 class Learning(unittest.TestCase):

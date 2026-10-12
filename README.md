@@ -112,8 +112,13 @@ Every script prints its options with `--help`.
 | `python3 scripts/arena.py --parts` | What each `Planner` rule is worth against the `Masher` |
 | `python3 scripts/arena.py --show 7` | One battle, seed 7, printed move by move |
 | `python3 scripts/team.py melmetal jellicent altaria --grid` | A report on one team piloted by the `Planner`: record, best lead, hardest opponents, every one-on-one |
+| `python3 scripts/rule_trial.py "hold=False" "win_switch=0.2"` | A change to the `Planner`'s options against the standard `Planner`: head to head, and against the crowd on the same battles |
+| `python3 scripts/compare_models.py runs/A/q.npz:0.02 runs/B/q.npz:0.05` | Trained models on the same battles, then against each other |
+| `python3 scripts/roster_teams.py --rival bot --listed 0.8` | The best line-ups from the owner's own Pokémon (about 45 minutes on three cores) |
 
-**Train** (unattended, one core, low priority; each ends with a test on fresh battles)
+**Train** (unattended, low priority, one core unless `--workers N` is given; each ends
+with a test on fresh battles). `--workers 4` generates examples on four cores at once,
+which gives about four times the examples in the same time.
 
 | Command | What it does |
 |---|---|
@@ -200,6 +205,17 @@ planner_choice)` and add the head with its number of options to `Q_HEADS` in
 network's input reserves three slots for the `Planner`'s own pick, so a head can have at
 most three options unless that is widened.
 
+The `mid_swap` head offers stay or either living bench Pokémon during an already judged
+matchup, when switching is available and the opponent can reach its cheapest charged move
+within two of its fast moves (including a move already ready). Models without this head
+keep their previous behavior. `Learner(mid_swap=False)` disables it explicitly.
+For a training ablation, use `scripts/decide.py --no-mid-swap` for the control and the same
+`--examples-per-round N` for both runs. Each round collects for its allotted time, samples
+exactly N fresh decisions uniformly across the enabled heads, and fits on all retained
+rounds. It fails if too few examples were collected. `training.json` records collected and
+retained counts; equal total counts do not imply equal counts per head. Evaluate the two
+saved models with `scripts/compare_models.py` on a seed not used to choose their margins.
+
 **A new kind of opponent.** Return it from the `crowd` function. Keep the old crowd as a
 second test so results stay comparable over time.
 
@@ -210,19 +226,24 @@ from pogo.learner import Learner, QNet
 bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
 ```
 
-It beats the `Planner` by 13.6 ± 1.9 points on random teams (3,000 fresh battles). All
-its results are against the `Planner` and its variations. Nothing yet says how it does
-against an outside opponent or a person.
+It beats today's `Planner` by 10.8 ± 2.0 points (3,000 battles, the same for both), and a
+model trained specifically to beat it gets only 51.2% ± 1.6 against it. All its results
+are against the `Planner`, its variations and models trained the same way. Nothing yet
+says how it does against an outside opponent or a person.
 
 ## What to do next
 
+**Strategy, training and team choice:** `docs/tasks.md` opens with how to test a strategy rule,
+how to train, and how to choose a team, each with its commands and its rule for accepting a result.
+Tasks 18 to 21 there are the open work. The list below is older and covers the rest.
+
 In order. `docs/status.md` has the reasoning.
 
-1. **Upgrade the opponents.** Run the `--resume --opponents ... --teams ...` command from
-   the training table. It reports against the new crowd and against the old crowd as a
-   fixed yardstick. Accept the new model only if the yardstick score does not fall below
-   the current +13.6 points. First check in `docs/status.md` whether `data/teams.json` is
-   the wide team list; if not, run `scripts/teams.py` first.
+1. **Find the next source of gain.** One more hour of the same training against tougher
+   opponents changed nothing (see "Tried and did not help"), so more of the same is not
+   the answer. The candidates are tasks 8, 14 and 15 in `docs/tasks.md`: predicting the
+   hidden team, training against an opponent built to beat the bot, and training through
+   the tracker's uncertain picture.
 2. **Test against PvPoke's AI.** The port is specified in
    `handoff/pvpoke_port_instructions.md`. When `pogo/pvpoke_ai.py` exists, run
    `scripts/check_pvpoke_ai.py`; it must print 108 of 108. Then measure the best bot
@@ -251,7 +272,8 @@ In order. `docs/status.md` has the reasoning.
 
 ## Working rules
 
-- Training and testing run unattended on one core, with no language model in the loop.
+- Training and testing run unattended, with no language model in the loop, on one core
+  by default.
 - After a result, update `docs/status.md`: add it to the results or to "Tried and did not
   help". That file is how the next agent avoids repeating work.
 - The owner is short on assistant usage. Prefer small, local changes that one command

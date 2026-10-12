@@ -36,6 +36,9 @@ PARTS = {  # one flaw at a time, to see which matters
 }
 
 
+ENERGY = "hits" if "--hits" in sys.argv else "rhythm"  # how the tracker counts energy
+
+
 class Camera:
     """What one player's screen would show after each turn of a simulated battle."""
 
@@ -134,7 +137,7 @@ def play(gd, teams, agents, seed, camera: dict, tally: Tally | None, rng, path=N
     watched = []
     for i, agent in enumerate(agents):
         if isinstance(agent, ViaTracker):
-            agent.tracker = Tracker(gd, teams[i], path=path)
+            agent.tracker = Tracker(gd, teams[i], path=path, energy=ENERGY)
             cam = Camera(battle, i, rng, **camera)
             first = cam.look(certain=True)
             agent.tracker.update(first)
@@ -161,6 +164,7 @@ def play(gd, teams, agents, seed, camera: dict, tally: Tally | None, rng, path=N
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--pairings", type=int, default=400)
+    parser.add_argument("--hits", action="store_true", help="count energy from the steps in the health bars, not from the rhythm of fast moves")
     parser.add_argument("--game", action="store_true", help="write one game's event file to games/example.jsonl")
     parser.add_argument("--parts", action="store_true", help="test one camera flaw at a time")
     args = parser.parse_args()

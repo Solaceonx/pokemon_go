@@ -88,6 +88,8 @@ required.
 | `my_charged` | text | We threw a charged move since the last look: its name if shown, otherwise `"left"` or `"right"` for the button |
 | `foe_charged` | true | They threw a charged move since the last look |
 | `foe_move` | text | Its name, only if the screen named it |
+| `effects` | list | Which of `"super"` (SUPER EFFECTIVE!) and `"weak"` (NOT VERY EFFECTIVE...) are on screen in this look. `[]` if you read the text and it showed neither; leave it out if you did not read it. The tracker uses it to work out the opponent's fast move |
+| `paused` | number | Seconds since the last look in which the fight stood still for a reason other than a charged move: a side choosing its next Pokémon after a faint. Leave it out otherwise |
 | `note` | text | Anything worth flagging about this look |
 
 Example lines:
@@ -183,8 +185,10 @@ opponent
 
 Each Pokémon has `species`, `hp`, `hp_max`, `hp_share`, `energy`, `fainted`, stat stages,
 its `fast_move` and `charged_moves`, and `known_from`: `"team_sheet"` (you told it),
-`"seen"` (shown on screen) or `"guessed"` (the usual choice for the species). The
-opponent's `energy_range` is the lowest and highest their energy can be.
+`"seen"` (shown on screen), `"guessed"` (the usual choice for the species) or, for an
+opponent's fast move, `"inferred"` (worked out from the size and rhythm of the steps in
+our health bar). The opponent's `energy_range` is the lowest and highest their energy can
+be by counting hits; `energy_by_clock` is a second estimate that assumes they never pause.
 
 ## Extra checks with the tracker
 

@@ -1,0 +1,212 @@
+{
+  "schema": "vod-layouts-v1",
+  "layouts": {
+    "henry-20261007": {
+      "channel": "homeslicehenry",
+      "dataset_role": "development",
+      "source_ids": [
+        "2894502346"
+      ],
+      "views": [
+        {
+          "id": "pov",
+          "base_profile": "henry-great.json",
+          "viewport": [
+            706,
+            0,
+            508,
+            1080
+          ]
+        }
+      ],
+      "notes": [
+        "Measured on this recording; a creator name alone does not establish a layout.",
+        "The recording has been inspected for calibration and is development data."
+      ]
+    },
+    "official-louisville-20261010": {
+      "channel": "pokemongo",
+      "dataset_role": "exposed_regression",
+      "source_ids": [
+        "2897295240"
+      ],
+      "broadcast_regions": [
+        {
+          "kind": "replay",
+          "rect": [
+            810,
+            680,
+            300,
+            130
+          ],
+          "cue": "REPLAY"
+        }
+      ],
+      "views": [
+        {
+          "id": "left",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            508,
+            56,
+            448,
+            976
+          ]
+        },
+        {
+          "id": "right",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            970,
+            56,
+            448,
+            976
+          ]
+        }
+      ],
+      "notes": [
+        "Two perspectives of the same matches: count a paired interval once.",
+        "Read the broadcaster's REPLAY badge separately and exclude those intervals.",
+        "The central tournament logo can cover gameplay details; covered fields must remain unknown.",
+        "This excerpt starts during an existing battle.",
+        "Inspected for layout calibration; not an untouched test source."
+      ]
+    },
+    "official-louisville-sample-a": {
+      "channel": "pokemongo",
+      "dataset_role": "reserved_state_evaluation",
+      "source_ids": [
+        "2897166800"
+      ],
+      "broadcast_regions": [
+        {
+          "kind": "replay",
+          "rect": [
+            810,
+            680,
+            300,
+            130
+          ],
+          "cue": "REPLAY"
+        },
+        {
+          "kind": "match_win",
+          "rect": [
+            650,
+            220,
+            650,
+            650
+          ],
+          "cue": "GAMEWIN",
+          "cues": [
+            "GAMEWIN",
+            "GAMIWIN",
+            "MATCHWIN"
+          ]
+        }
+      ],
+      "views": [
+        {
+          "id": "left",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            508,
+            56,
+            448,
+            976
+          ]
+        },
+        {
+          "id": "right",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            970,
+            56,
+            448,
+            976
+          ]
+        }
+      ],
+      "notes": [
+        "Original official pokemongo championship broadcast, not a rebroadcast VOD.",
+        "Both camera rectangles visually checked at source seconds 360 and 600; they match the earlier Louisville layout.",
+        "Reserve games for state evaluation; geometry/boundary inspection is disclosed and recognition rules are frozen at 7fd4650.",
+        "Instant replays are excluded; left/right perspectives share one unique battle ID.",
+        "The full-screen GAME WIN graphic replaces phone result screens; it is boundary evidence, not a state label."
+      ],
+      "label_prefix": "Louisville 2026-10-10 · VOD A",
+      "sample_export": {
+        "unique_battles": 5,
+        "scan_end_seconds": 2700
+      }
+    },
+    "official-louisville-sample-b": {
+      "channel": "pokemongo",
+      "dataset_role": "reserved_state_evaluation",
+      "source_ids": [
+        "2897312743"
+      ],
+      "broadcast_regions": [
+        {
+          "kind": "replay",
+          "rect": [
+            810,
+            680,
+            300,
+            130
+          ],
+          "cue": "REPLAY"
+        },
+        {
+          "kind": "match_win",
+          "rect": [
+            650,
+            220,
+            650,
+            650
+          ],
+          "cue": "GAMEWIN",
+          "cues": [
+            "GAMEWIN",
+            "GAMIWIN",
+            "MATCHWIN"
+          ]
+        }
+      ],
+      "views": [
+        {
+          "id": "left",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            508,
+            56,
+            448,
+            976
+          ]
+        },
+        {
+          "id": "right",
+          "base_profile": "reis-great.json",
+          "viewport": [
+            970,
+            56,
+            448,
+            976
+          ]
+        }
+      ],
+      "notes": [
+        "Original official pokemongo championship broadcast, not a rebroadcast VOD.",
+        "Both camera rectangles visually checked at source seconds 360 and 600; they match the earlier Louisville layout.",
+        "Reserve games for state evaluation; geometry/boundary inspection is disclosed and recognition rules are frozen at 7fd4650.",
+        "Instant replays are excluded; left/right perspectives share one unique battle ID.",
+        "The full-screen GAME WIN graphic replaces phone result screens; it is boundary evidence, not a state label."
+      ],
+      "label_prefix": "Louisville 2026-10-10 · VOD B",
+      "sample_export": {
+        "unique_battles": 5,
+        "scan_end_seconds": 2400
+      }
+    }
+  }
+}

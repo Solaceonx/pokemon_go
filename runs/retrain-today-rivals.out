@@ -1,0 +1,42 @@
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner, half of them using learned decisions from 1 model(s)
+workers: 4
+
+round 1: 76550 battles in 60.1 min; examples so far: 441506 shield, 165389 throw, 308932 swap, 72382 replace
+  shield: average result by option 51.9% 50.5%
+  throw: average result by option 52.2% 49.9% 49.8% 46.5% 33.0%
+  swap: average result by option 53.1% 49.6% 51.0%
+  replace: average result by option 45.5% 45.7%
+  overrule when ahead by 0.02: +11.3 ± 3.2 points against the Planner
+  overrule when ahead by 0.05: +8.6 ± 2.7 points against the Planner
+  overrule when ahead by 0.1: +3.4 ± 2.0 points against the Planner
+
+round 2: 63906 battles in 60.2 min; examples so far: 838990 shield, 301422 throw, 578287 swap, 130746 replace
+  shield: average result by option 56.6% 54.8%
+  throw: average result by option 56.7% 54.7% 54.3% 50.8% 36.7%
+  swap: average result by option 57.9% 54.2% 55.5%
+  replace: average result by option 49.5% 49.9%
+  overrule when ahead by 0.02: +8.3 ± 3.1 points against the Planner
+  overrule when ahead by 0.05: +7.3 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +4.5 ± 2.0 points against the Planner
+
+round 3: 60530 battles in 60.2 min; examples so far: 1225421 shield, 439460 throw, 835468 swap, 186472 replace
+  shield: average result by option 58.5% 56.4%
+  throw: average result by option 58.6% 56.7% 56.3% 52.6% 38.2%
+  swap: average result by option 59.6% 55.9% 57.3%
+  replace: average result by option 51.2% 51.8%
+  overrule when ahead by 0.02: +11.9 ± 3.3 points against the Planner
+  overrule when ahead by 0.05: +10.1 ± 2.7 points against the Planner
+  overrule when ahead by 0.1: +4.9 ± 2.0 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.02
+  with learned decisions   63.6% ± 1.7
+  Planner, same teams      51.2% ± 1.8
+  difference               +12.4 ± 1.9 points (same battles for both); overruled the Planner per battle: replace 0.03, shield 1.17, swap 0.52, throw 1.20
+
+the same test against the old crowd (Planner variations only), as a fixed yardstick
+  with learned decisions   66.0% ± 1.7
+  Planner, same teams      55.0% ± 1.8
+  difference               +11.0 ± 1.9 points (same battles for both); overruled the Planner per battle: replace 0.03, shield 1.15, swap 0.49, throw 1.14
+files: runs/retrain-today-rivals/q.npz, margin.txt, examples.npz

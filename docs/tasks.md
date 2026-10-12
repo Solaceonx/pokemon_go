@@ -6,6 +6,101 @@ can pick it up. Read [`status.md`](status.md) first, then the task.
 To take a task, put your name after its title in this file and push that change before
 starting, so two people do not do the same one.
 
+## Where things stand (2026-10-11)
+
+- **The bot** is a set of hand-written rules (the `Planner` in `pogo/agents.py`) with a small learned
+  layer on top that may overrule it at four kinds of decision (`Learner` in `pogo/learner.py`, model in
+  `runs/general-decide/q.npz`). On today's rules the learned layer adds 10.8 ± 2.0 points.
+- **Four rules from the owner went in on 10 and 11 October** and are now the default: farm until the
+  opponent is about to reach a move, throw before fainting, keep charged-move timing while farming, and
+  counter-swap to win the switch. Today's rules beat the rules of 10 October 57.2% ± 1.2 head to head.
+- **The learned layer was trained before those rules.** A retrain on them with one hour of examples came
+  out worse than the old model (task 19).
+- **Real recordings** from the owner's iPhone go through `scripts/recording/run.py` to tracked game
+  states with a pass/fail verdict. That work has its own notes: `scripts/recording/README.md` and
+  `handoff/`.
+- **Team choice** has a first tool, `scripts/roster_teams.py`. Its first run used opponents that were too
+  weak and gave a misleading order (task 21).
+
+The three sections below are how to carry on with strategy, training and team choice. Tasks 18 to 21
+are the open work in each. `docs/status.md` has every result so far, including what did not help.
+
+## How to test a strategy rule
+
+About a minute per setting, one core, nothing to install beyond `numpy`.
+
+1. Write the rule in the `Planner` behind a constructor option that defaults to off. The existing ones
+   to copy from are `hold`, `last_gasp`, `timed_farm` and `win_switch`.
+2. Try it against the standard player:
+
+   ```bash
+   python3 scripts/rule_trial.py "my_rule=True" "my_rule=True,my_threshold=0.2" --battles 4000
+   ```
+
+   Each quoted setting is played head to head against the standard `Planner` on random teams (every
+   pair of teams both ways round), and against the usual crowd on the same battles as the standard
+   player. It prints both scores with margins, and the energy thrown away on fainted Pokémon.
+3. Head to head is the number that matters most: the opponent there is as good as we are. The crowd
+   is a little weaker than the standard player.
+4. If you tried several settings, run the one you picked again with `--seed` set to a new number. The
+   best of several is flattered by luck.
+5. A rule counts when it is ahead by more than its margin on that second run. Then make it the
+   default, give it to the crowd in `varied_settings` (on in about 80% of opponents, like the others),
+   add `my_rule=False` to any test that isolates another rule, and run the checks in step 6.
+6. `python3 -m unittest discover -s tests`, `python3 scripts/check_pvpoke.py` (108 of 108), and
+   `python3 scripts/speedcheck.py save` because behaviour changed on purpose.
+7. Check the learned layer still helps on top:
+   `python3 scripts/compare_models.py runs/general-decide/q.npz:0.02`.
+8. Write the result in `docs/status.md` under "Strategy guidance from the project owner", with the
+   numbers, whether or not it helped.
+
+The owner is a former top player. Their principles are in that section of `status.md`. Ask them before
+inventing a rule; implement what they describe and measure it.
+
+## How to train the learned layer
+
+Training plays battles, freezes each one at a decision, plays out every option from there with the same
+dice, and fits a network to predict the result of each option ("How per-decision learning works" in
+`status.md`). The bot then overrules the `Planner` when another option is rated higher by a margin.
+
+```bash
+python3 scripts/decide.py --run my-run --minutes 180 --rounds 3 --teams data/teams.json --workers 4 > runs/my-run.out
+python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/my-run/q.npz:$(cat runs/my-run/margin.txt) --battles 4000
+```
+
+- `--minutes` is the time spent generating examples; `--workers` is how many cores do it. Examples
+  are what matter: one core-hour gives about 30,000 shield examples, and the current model has 336,000.
+- The run tests itself against the `Planner` at the end. That is not the acceptance test. The second
+  command is: it plays the current model and the new one on the same battles against the crowd, and
+  then against each other.
+- **A new model replaces the current one only if** it is ahead of it by more than the margin against
+  the crowd and scores above 50% beyond the margin head to head. Then copy it to
+  `runs/general-decide/q.npz` (keep the old one beside it as `q_v5.npz` and so on), put its margin in
+  `margin.txt`, and record the table in `status.md`.
+- Useful options: `--opponents runs/general-decide/q.npz` makes half the opposing pilots use a learned
+  model; `--resume` carries on a run; `--team a b c` trains for one team (the general model has done
+  better than a one-team model so far).
+- Example files (`runs/*/examples.npz`) are not in git. `--resume` without them starts collecting
+  again from the saved model.
+- It runs at low priority and needs nobody watching. The owner's Mac should not run this for hours;
+  use another machine for long runs.
+
+## How to choose a team
+
+```bash
+python3 scripts/roster_teams.py --rival bot --listed 0.8
+```
+
+It plays every line-up from the owner's Pokémon (`data/owner_team.json` and `data/owner_roster.json`,
+with their IVs and moves) on the same battles, drops the weak ones in stages, scores the survivors on
+fresh battles and writes `data/roster_teams.json`. About 45 minutes on three cores.
+
+`--rival bot` gives the opponent the same pilot as ours; `--listed 0.8` draws 80% of opposing teams
+from the good-team list in `data/teams.json`. Both matter. The owner's test for any result here: at their
+level the game is close to 50-50, so a line-up that wins 80% means the opposition is wrong, and the
+order of teams changes when the opposition is fixed. `--recheck` re-scores the saved line-ups under
+different opponents in a few minutes.
+
 ## Overview
 
 | # | Task | Needs | Depends on |
@@ -24,7 +119,17 @@ starting, so two people do not do the same one.
 | 12 | Measure real timings from footage | Video access | 1 |
 | 13 | Live loop on the phone | The owner's iPhone and Mac | 3, 4 |
 | 14 | Adversarial training against stronger AI | Python, numpy, hours of computing | 6 helps |
-| 15 | Train the AI to handle uncertain battle information | Python, numpy | 4 helps |
+| 15 | Train the AI to handle uncertain battle information (on hold until real-game testing) | Python, numpy | 4 helps |
+| 16, 17 | Public and official footage (Codex) | Video access | |
+| 18 | More strategy rules from the owner | Python | nothing |
+| 19 | Retrain the learned layer on today's rules, with enough examples | Python, numpy, about 12 core-hours | nothing |
+| 20 | A learned decision for swapping in the middle of a matchup | Python, numpy | 19 helps |
+| 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, an hour or two a round | nothing |
+
+Status of the older ones: 2, 3, 4 and 12 are largely done for the owner's own recordings by
+`scripts/recording/` (see `status.md` from "First real recording"); what is left of them is in tasks 16
+and 17 and in `handoff/`. Task 14 ran two rounds and stopped: the second exploiter gets 51.2% ± 1.6
+against the bot. Tasks 5 to 11 and 13 are untouched.
 
 Tasks 1 to 5 are the footage pipeline, in order. Tasks 6 to 11, 14 and 15 are independent
 of it and of each other.
@@ -107,6 +212,11 @@ frames it tests on (a few hundred small crops, not whole videos).
 of frames; shields, Pokémon left and the charged-move flag right on 99%; median time per
 frame under 50 ms with text reading off. Report each number.
 
+**Started.** The `screen-reader-video-pipeline` branch is a first version, built for
+recorded video. [`screen_reader_review.md`](screen_reader_review.md) says what was
+measured on it and lists the seven things it must show before it can drive the tracker,
+chief among them a settled health value for both sides in 99% of half-seconds of fighting.
+
 ## 4. Make the tracker cope with real games
 
 **Why.** `pogo/tracker.py` was tested only on simulated cameras. Real games break its
@@ -161,6 +271,12 @@ with a bundle. **Done when** `python3 scripts/check_pvpoke_ai.py` prints 108 of 
 A second stage, porting PvPoke's `TrainingAI.js` (team play and switching), follows it.
 
 ## 7. Opponent stats from CP, move priority and damage
+
+**Read first.** `scripts/ivs.py` and the "IVs" section of `status.md`: a first look found
+that CP leaves 92 to 433 combinations and that fast-move clues barely narrow them. The
+enumeration this task needs already exists (`GameData.spreads`, `cp_at`, `with_ivs`). The
+part worth doing is charged-move damage as a clue, and predicting the damage values that
+matter rather than the IVs themselves.
 
 **Why.** We assume typical stats for the opponent. The screen gives clues to the real ones.
 
@@ -270,7 +386,7 @@ run `scripts/probe.py --drag` to find out whether iPhone Mirroring passes synthe
 drags, then connect capture, `pogo/vision.py`, the tracker, the bot and taps, logging
 the time of each step against the targets in `status.md`.
 
-## 14. Adversarial training against stronger AI
+## 14. Adversarial training against stronger AI (Claude Code: first exploiter run started 2026-10-09)
 
 **Why.** Every opponent our bot has trained against is the hand-written Planner or a
 variation of it, and the bot now beats those by a wide margin. It has never faced
@@ -308,6 +424,9 @@ with each version beating the last but losing to an older one.
 
 ## 15. Train the AI to handle uncertain battle information
 
+**On hold.** The owner has decided this waits until testing in real games begins. Do not
+start it before then.
+
 **Why.** The bot is trained and tested with exact information: the opponent's precise
 energy, exact health, the right moves and stats. In a real game it sees the tracker's
 picture instead: their energy as a range, health read off a bar, some looks missed,
@@ -338,3 +457,127 @@ camera, on the same battles.
 **Done when.** From the rough camera the new bot scores higher than the current bot by
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
+
+## 16. Public VOD screen tracking — Codex
+
+The first implementation reads the 23 calibrated Twitch player-view clips and
+publishes screen readings, a persistent evidence ledger, model states, events,
+and consistency results to the video viewer. Reproduction and measured limits
+are in `scripts/recording/VOD_README.md`; portable compressed results are in
+`games/twitch/`. This does not establish full game-state accuracy.
+
+Next acceptance work: label fainting and charged-attack transitions, measure each
+field against those labels, identify forms, resolve energy-count disagreements,
+and reserve a new untouched source before tuning. Keep both tournament views
+of a match in the same evaluation group. Exact HP needs independent maximum-HP
+evidence; a visible bar alone cannot determine it.
+
+## 17. Official paired evaluation sample — Codex
+
+Collected ten reviewed complete battles from two original official pokemongo
+Twitch VODs, with both views kept together as twenty clips. The viewer's
+**New official sample** filter keeps these separate from earlier exposed clips.
+Selection, source/frame provenance, boundary evidence, measured storage and
+verification receipts are in `data/vod_additional_sample.json`; reproduction is
+in `docs/official_sample.md`. State recognition remains frozen and analysis of
+these new clips is pending. Next: independently adjudicate state labels and
+evaluate the frozen reader before using these sources to tune recognition.
+
+## 18. More strategy rules from the owner
+
+**Why.** Each of the owner's rules measured so far was worth one to three points, and they are general:
+they hold for any team and any position. These are the ones they have described that are not built.
+
+**Do.** One at a time, by "How to test a strategy rule" above.
+
+1. **Set up a sweeper.** The owner: if you lose the lead and swap, and they swap too, and the new
+   matchup is winnable, the options are to try to win the switch (built: `win_switch`) or, more rarely,
+   to set up a sweeper: spend this Pokémon drawing shields or building energy so that another one of
+   ours can run through what is left. Needs a test for "which of mine sweeps their last two once the
+   shields are gone", which `_outlook` in `pogo/agents.py` is close to.
+2. **Fainting with a shield in hand.** The owner: whether to spend a shield on a Pokémon that is nearly
+   down "depends on the other matchups". Compare the remaining matchups with and without that shield
+   and let that decide. Today the shield choice looks ahead from the present matchup only.
+3. **Catch a charged move with a switch.** When their move is about to land on something it hurts,
+   swap to something that resists it. This is a read, so it needs their energy and likely move
+   (`TrackedView.foe_energy_odds` and `foe_move_odds` exist for the tracker's picture). Task 20 is the
+   learned version of the same decision.
+4. **Wasted energy.** Fainted Pokémon still take 8.0 energy a battle with them while a move was ready
+   (14.4 before the throw-before-fainting rule). `rule_trial.py` prints this for every setting.
+5. **Get into the good matchup.** Use the one-on-one table (`data/matchups.json`, or `matchups()` in
+   `scripts/teams.py`) to steer switches toward matchups we win, the way a player uses PvPoke's matrix.
+
+**Deliver.** For each rule: the option in the `Planner`, the `rule_trial.py` output saved under
+`runs/`, and a paragraph in `status.md`.
+
+**Done when.** Each of the five is either the default with a confirmed gain on a second seed, or
+written up under "Tried and did not help" with its numbers.
+
+**Already tried, no gain:** weighting the shield decision by the odds of each move (+0.7 ± 2.5), a
+shield bonus for staying the winner of the matchup while a switch clock runs (`switch_worth`, 50.4% ±
+0.7 head to head), and timed farming on its own (neutral; kept on because
+it raises well-timed throws from 64% to 66%).
+
+## 19. Retrain the learned layer on today's rules, with enough examples
+
+**Why.** The current model was trained when the `Planner` played by older rules, so its examples were
+played out by a weaker player than today's. A retrain with one core-hour of examples (30,000 shield
+examples against the old model's 336,000) lost to the old model: −4.2 ± 1.8 against the crowd and
+44.6% ± 1.8 head to head. Fitting on old and new examples together changed nothing (+0.6 ± 1.7). So the
+open question is what a retrain with the full amount of examples is worth.
+
+**Do.** Run the two commands in "How to train the learned layer" on a machine that can give it about
+twelve core-hours (`--minutes 180 --workers 4`, or more cores for less time). Then, as a second run,
+the same with `--opponents runs/general-decide/q.npz` so that half the opponents are as good as the bot,
+and compare both.
+
+**Deliver.** The models under `runs/`, both logs, and the `compare_models.py` table in `status.md`.
+
+**Done when.** The table is in `status.md` with margins, and the current model has been replaced or
+kept by the rule in "How to train the learned layer". Say plainly if neither run beats it.
+
+## 20. A learned decision for swapping in the middle of a matchup
+
+**Why.** The learned layer decides four things: whether to shield, whether to throw or hold, whether to
+swap when a new matchup begins, and whom to send in after a faint. Nothing decides a swap in the middle
+of a matchup, such as bringing in a resist as their charged move comes (task 18, rule 3).
+
+**Do.** Follow "A new learned decision" in the README: add a head to `Q_HEADS`, route the choice
+through `Learner._decide`, and let `scripts/decide.py` play out its options. Offer the decision only
+when the switch is available and their next charged move is within about two fast moves, so it does
+not slow every turn.
+
+**Done when.** A model trained with the new head is compared with one trained the same way without it,
+both on the same amount of examples, by `compare_models.py`. Report it either way.
+
+## 21. Opposing teams as good as ours, for choosing a team
+
+**Why.** The owner's goal: from their own Pokémon, simulate against the teams they will meet and play
+one of the best line-ups. The first search (`status.md`, "Best teams from the owner's own Pokémon")
+used a weaker opposing pilot on random teams from the top 100. Its best line-up won 82%, which the
+owner rejected at once, and re-scoring the same line-ups against the same bot on good teams brought
+them to 50 to 60% and put a different one on top. The full search rerun that way
+(`--rival bot --listed 0.8`) still has a best line-up at 74%, and its winners are counters to the list:
+Stunfisk, Ninetales and Feraligatr line-ups that fall to 49 to 61% against other opposing teams, where
+the owner's current three come first (`status.md`, "The team search again"). So the order of teams is
+decided by the opposing list, and the list is what is wrong: `data/teams.json` was found with the
+`Planner` as pilot, among the top 50 only, against a field that was half random, and it is heavy with
+Steel types (Tinkaton in 39 of 81 teams, Corviknight in 25). A real field would not keep bringing teams
+that lose three games in four to a counter.
+
+**Do.**
+
+1. Rebuild the list so that it is self-consistent: the best teams in it should score about 50% against
+   the list itself, with the trained bot piloting both sides and the top 100 as the pool. One way:
+   start from the current list, find the teams that do best against it (`scripts/teams.py` has the
+   quick one-on-one score for picking candidates), add them, re-weight every team by how it does
+   against the current mix, and repeat until the best newcomer gains less than the margin.
+2. Add the teams met in real games as they come in (the `seen` counts; task 5).
+3. Rerun `scripts/roster_teams.py` against the new list and compare its order with the one against the
+   old list.
+
+**Deliver.** The new `data/teams.json` with how it was built, and the roster ranking against it.
+
+**Done when.** The best team found anywhere in the top 100 scores under 55% against the list on fresh
+battles, and the owner's ten best line-ups are reported against both lists on the same battles.
+

@@ -5,7 +5,7 @@
 
 The folder must hold:
     team.json           the Pokémon on our side that we know about (may be fewer than three)
-    observations.jsonl  one look per line, in time order
+    observations.jsonl  one look per line, in time order (or observations.jsonl.gz)
 
 It writes, in the same folder:
     state.json          the game state after the last look
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import dataclasses
 import difflib
+import gzip
 import json
 import sys
 from collections import Counter
@@ -28,6 +29,15 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.tracker import Observation, Tracker, state  # noqa: E402
 
 FIELDS = {f.name for f in dataclasses.fields(Observation)}
+
+
+def observation_lines(folder: Path):
+    path = folder / "observations.jsonl"
+    if not path.exists():
+        path = path.with_name(path.name + ".gz")
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8") as stream:
+        yield from stream
 
 
 def species_id(gd: GameData, text: str) -> str:
@@ -63,6 +73,9 @@ def charged_index(gd: GameData, tracker: Tracker, look: dict, number: int) -> in
     mon = next((m for m in tracker.me.team if m.build.species_id == look.get("my_species")), tracker.me.mon)
     ids = [m.id for m in mon.build.charged]
     if mid not in ids:
+        learned = tracker.learn_my_move(look["t"], tracker.me.team.index(mon), mid)
+        if learned is not None:
+            return learned
         print(f"line {number}: our {mon.build.name} threw {value}, which is not among the moves listed for it ({', '.join(ids)})")
         return 0
     return ids.index(mid)
@@ -75,25 +88,37 @@ def load_team(gd: GameData, sheet: dict):
         if entry.get("fast") and entry.get("charged"):
             ivs = tuple(entry["ivs"]) if entry.get("ivs") else None
             moves = [move_id(gd, entry["fast"]), *(move_id(gd, m) for m in entry["charged"])]
-            builds.append(gd.build(sid, moves, level=entry.get("level"), ivs=ivs))
+            builds.append(gd.build(sid, moves, level=entry.get("level"), ivs=ivs, allow_forms=True))
             known.append(True)
         else:
-            builds.append(gd.default(sid))  # moves not given: assume the usual ones
+            default = gd.default(sid, allow_forms=True)
+            if entry.get("model_fast"):
+                # Public-footage inference is a model hypothesis, with default
+                # IVs and unobserved charged moves. It is never a team sheet.
+                fast = move_id(gd, entry["model_fast"])
+                if fast not in gd.species[sid]["fastMoves"]:
+                    raise ValueError(f"{fast} is not a legal fast move for {sid}")
+                default = gd.build(sid, [fast, *(m.id for m in default.charged)], allow_forms=True)
+            builds.append(default)  # moves not given: assume the usual ones
             known.append(False)
     return builds, known
 
 
 def main() -> int:
+    energy = "hits" if "--hits" in sys.argv else "rhythm"  # --hits: count energy from health-bar steps instead
+    blind = "--blind" in sys.argv  # compare our counted energy with the buttons without correcting it
+    sys.argv = [a for a in sys.argv if a not in ("--hits", "--blind")]
     if len(sys.argv) != 2 or sys.argv[1] in ("-h", "--help"):
         print(__doc__)
         return 0 if len(sys.argv) == 2 else 2
     folder = Path(sys.argv[1])
     gd = GameData()
     builds, known = load_team(gd, json.loads((folder / "team.json").read_text()))
-    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known)
+    tracker = Tracker(gd, builds, path=folder / "events.jsonl", moves_known=known, energy=energy, trust_my_energy=not blind,
+                      foe_fast=json.loads((folder / "foes.json").read_text()) if (folder / "foes.json").exists() else None)
     looks = problems = 0
     with (folder / "states.jsonl").open("w") as states:
-        for number, line in enumerate((folder / "observations.jsonl").read_text().splitlines(), start=1):
+        for number, line in enumerate(observation_lines(folder), start=1):
             if not line.strip():
                 continue
             try:
@@ -129,6 +154,10 @@ def main() -> int:
     events = Counter(json.loads(line)["event"] for line in (folder / "events.jsonl").read_text().splitlines())
     print(f"{looks} looks read, {problems} rejected; events: " + ", ".join(f"{n} {e}" for e, n in sorted(events.items())))
     print(f"unexplained changes: {tracker.warnings} (each is listed in events.jsonl)")
+    (folder / "track.json").write_text(json.dumps({"looks": looks, "rejected": problems, "unexplained": tracker.warnings,
+                                                    "energy": energy, "events": dict(sorted(events.items())),
+                                                    "my_energy_looks": tracker.energy_checks, "my_energy_overruled": tracker.energy_fixed,
+                                                    "my_energy_off_on_average": round(tracker.energy_off / max(tracker.energy_checks, 1), 2)}) + "\n")
     return 1 if problems else 0
 
 

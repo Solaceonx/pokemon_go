@@ -126,6 +126,21 @@ class Build:
         return value
 
 
+def spread(weights: dict, total: float) -> dict:
+    """Share `total` out in proportion to the weights, with no share above 1 (a move is in a moveset once)."""
+    out, free, left = {k: 0.0 for k in weights}, {k: v for k, v in weights.items() if v > 0}, total
+    while free and left > 1e-9:
+        whole = sum(free.values())
+        full = [k for k, v in free.items() if left * v / whole >= 1.0]
+        if not full:
+            out.update({k: left * v / whole for k, v in free.items()})
+            break
+        for k in full:
+            out[k], left = 1.0, left - 1.0
+            del free[k]
+    return out
+
+
 class GameData:
     def __init__(self, folder: Path = DATA):
         gm = json.loads((folder / "gamemaster.json").read_text())
@@ -135,6 +150,31 @@ class GameData:
         self._folder = folder
         self._rankings: dict[int, list] = {}
         self._defaults: dict = {}
+        self._odds: dict = {}
+
+    def move_odds(self, species_id: str, league: int = 1500) -> dict:
+        """What an opponent's Pokémon of this species is likely to have, before anything is seen.
+
+        {"fast": {move id: chance it is their fast move},
+         "charged": {move id: chance it is one of their two charged moves}}
+
+        The weights are how often PvPoke's simulations prefer each move, a stand-in until we have counts from
+        real battles. A species PvPoke gives no numbers for gets its recommended moves at three times the rest."""
+        key = (species_id, league)
+        if key not in self._odds:
+            entry = next((e for e in self.rankings(league) if e["speciesId"] == species_id), None)
+            uses = {x["moveId"]: float(x.get("uses") or 0) for g in ("fastMoves", "chargedMoves")
+                    for x in (entry["moves"][g] if entry else [])}
+            usual = set(entry["moveset"]) if entry else set()
+            out = {}
+            for kind, slots in (("fast", 1.0), ("charged", 2.0)):
+                ids = [m for m in self.species[species_id][kind + "Moves"] if m in self.moves]
+                weights = {m: uses.get(m, 0.0) for m in ids}
+                if sum(weights.values()) <= 0:
+                    weights = {m: 3.0 if m in usual else 1.0 for m in ids}
+                out[kind] = spread(weights, min(slots, len(ids)))
+            self._odds[key] = out
+        return self._odds[key]
 
     def cpm(self, level: float) -> float:
         return self._cpm[round((level - 1) * 2)]
@@ -149,10 +189,14 @@ class GameData:
         return "formChange" not in self.species[species_id]
 
     def build(self, species_id: str, moveset: list[str], league: int = 1500,
-              level: float | None = None, ivs: tuple[int, int, int] | None = None) -> Build:
-        """A Pokémon with the given [fast, charged, charged] moves, at PvPoke's default level and IVs for the league."""
+              level: float | None = None, ivs: tuple[int, int, int] | None = None, allow_forms: bool = False) -> Build:
+        """A Pokémon with the given [fast, charged, charged] moves, at PvPoke's default level and IVs for the league.
+
+        allow_forms builds a form-changing Pokémon in its starting form, for following a real
+        game; the simulator still cannot play its form change.
+        """
         p = self.species[species_id]
-        if not self.supported(species_id):
+        if not allow_forms and not self.supported(species_id):
             raise ValueError(f"{species_id} changes form in battle, which is not modelled")
         if level is None or ivs is None:
             level, *ivs = p["defaultIVs"][f"cp{league}"]
@@ -175,15 +219,59 @@ class GameData:
             charged=tuple(self.moves[m] for m in moveset[1:]),
         )
 
-    def default(self, species_id: str, league: int = 1500) -> Build:
+    def default(self, species_id: str, league: int = 1500, allow_forms: bool = False) -> Build:
         """A Pokémon with PvPoke's recommended moveset and default level and IVs."""
-        key = (species_id, league)
+        key = (species_id, league, allow_forms)
         if key not in self._defaults:
             entry = next((e for e in self.rankings(league) if e["speciesId"] == species_id), None)
             if entry is None:
                 raise KeyError(f"{species_id} is not in the {league} rankings")
-            self._defaults[key] = self.build(species_id, entry["moveset"], league)
+            moves = [m for m in entry["moveset"] if m in self.moves]  # a form's special move may not be in the list
+            self._defaults[key] = self.build(species_id, moves, league, allow_forms=allow_forms)
         return self._defaults[key]
+
+    def cp_at(self, species_id: str, level: float, ivs: tuple[int, int, int]) -> int:
+        base = self.species[species_id]["baseStats"]
+        a, d, s = ivs
+        c = self.cpm(level)
+        return max(10, int((base["atk"] + a) * math.sqrt(base["def"] + d) * math.sqrt(base["hp"] + s) * c * c / 10))
+
+    def level_for(self, species_id: str, ivs: tuple[int, int, int], league: int = 1500, max_level: float = 50.0) -> float | None:
+        """The highest level, in half steps, at which these IVs stay within the league's CP cap."""
+        best = None
+        for i in range(int((max_level - 1) * 2) + 1):
+            level = 1 + i / 2
+            if self.cp_at(species_id, level, ivs) > league:
+                break
+            best = level
+        return best
+
+    def spreads(self, species_id: str, league: int = 1500, max_level: float = 50.0) -> list[dict]:
+        """Every IV combination at its best level for the league, best stat product first.
+
+        Stat product (attack x defence x HP) is the usual measure of a spread; rank 1 is the highest.
+        """
+        base = self.species[species_id]["baseStats"]
+        out = []
+        for a in range(16):
+            for d in range(16):
+                for s in range(16):
+                    level = self.level_for(species_id, (a, d, s), league, max_level)
+                    if level is None:
+                        continue
+                    c = self.cpm(level)
+                    atk, de, hp = (base["atk"] + a) * c, (base["def"] + d) * c, max(int((base["hp"] + s) * c), 10)
+                    out.append({"ivs": (a, d, s), "level": level, "atk": atk, "def": de, "hp": hp,
+                                "product": atk * de * hp, "cp": self.cp_at(species_id, level, (a, d, s))})
+        out.sort(key=lambda e: -e["product"])
+        for rank, entry in enumerate(out, start=1):
+            entry["rank"] = rank
+        return out
+
+    def with_ivs(self, build: Build, ivs: tuple[int, int, int], league: int = 1500) -> Build:
+        """The same Pokémon and moves with different IVs, at the best level those IVs allow."""
+        level = self.level_for(build.species_id, ivs, league)
+        return self.build(build.species_id, [build.fast.id, *(m.id for m in build.charged)], league, level=level, ivs=ivs)
 
     def meta(self, n: int = 50, league: int = 1500) -> list[Build]:
         """The n highest-ranked supported Pokémon in the league, each with its recommended moveset."""

@@ -1,0 +1,80 @@
+Task 20 experiment, 2026-10-11
+
+Full training runs, executed sequentially in the order below. Environment limits
+NumPy/BLAS to one thread per worker. Both retain 60,000 new decision examples per
+round, for 180,000 total per model; this is a total-example budget across heads.
+The shell's nice request is denied by the sandbox; the Python processes retain
+their inherited low priority (nice=5), as recorded in the logs.
+
+nice -n 10 env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /usr/bin/time -p /Users/marco/Developer/pokemon_go/.venv/bin/python -u scripts/decide.py --run task20-with --minutes 60 --rounds 3 --teams data/teams.json --workers 3 --examples-per-round 60000 --seed 20000 > runs/task20-with.out 2>&1
+
+nice -n 10 env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /usr/bin/time -p /Users/marco/Developer/pokemon_go/.venv/bin/python -u scripts/decide.py --run task20-without --no-mid-swap --minutes 60 --rounds 3 --teams data/teams.json --workers 3 --examples-per-round 60000 --seed 20000 > runs/task20-without.out 2>&1
+
+Training seeds: 20001..20003, 21001..21003, 22001..22003 (one per worker per round).
+Example subsampling seeds: 30001..30003.
+Margin selection: 20051..20053; candidates 0.02, 0.05, 0.1.
+Training scripts' final fresh battles: seed 20999, 3,000 battles.
+Acceptance comparison reserved in advance: seed 20261020 for the crowd,
+20261021 for head to head, 4,000 battles. These are not used for tuning.
+
+Acceptance comparisons, executed sequentially after both training runs finished:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/compare_models.py runs/task20-without/q.npz:0.02 runs/task20-with/q.npz:0.02 runs/general-decide/q.npz:0.02 --battles 4000 --seed 20261020 --workers 3 > runs/task20/compare.out 2>&1
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/task20-with/q.npz:0.02 --battles 4000 --seed 20261020 --workers 3 > runs/task20/compare-current.out 2>&1
+
+Artifact and unchanged-input checks:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /Users/marco/Developer/pokemon_go/.venv/bin/python runs/task20/verify_artifacts.py > runs/task20/artifacts.out 2>&1
+shasum -a 256 -c runs/task20/general-decide-before.sha256
+shasum -a 256 -c runs/task20/experiment-inputs.sha256
+
+Checks:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/speedcheck.py
+
+Check outputs:
+  unittest: Ran 111 tests in 1.331s; OK (skipped=6).
+  PyAV is absent; the six skipped checks are existing video tests.
+  PvPoke: 108 of 108 PvPoke battles reproduced exactly.
+  speedcheck (saved baseline, then this run; this is not a before/after task comparison):
+    engine only (Masher v Masher)      7063.5 -> 6982.1 battles per CPU second (0.99x) results identical: True
+    Planner v the crowd                 196.4 -> 114.4 battles per CPU second (0.58x) results identical: False
+    learned bot v learned bot           104.3 -> 71.8 battles per CPU second (0.69x) results identical: False
+  The saved baseline is stale even for the unchanged Planner. It was left untouched.
+  The direct pre-edit compatibility command below printed:
+    100 of 100 old-model battle logs identical to pre-edit Learner
+  Both shasum checks printed OK for every listed file: the six files under
+  runs/general-decide/, the four runtime source files, and both data files.
+  Artifact verification printed:
+    task20-with: 720555 collected; 180000 retained; 60.07 collection minutes
+      shield=38053, throw=13510, swap=25493, replace=5672, mid_swap=97272
+    task20-without: 692086 collected; 180000 retained; 60.03 collection minutes
+      shield=84661, throw=29039, swap=54257, replace=12043, mid_swap=0
+    PASS: same training settings and 60,000 retained examples per round; only the with model has mid_swap
+
+Direct compatibility check against the pre-edit source (the saved speed baseline
+is stale for the unchanged Planner as well as the learned bot):
+git show HEAD:pogo/learner.py > /tmp/task20-learner-before.py
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /Users/marco/Developer/pokemon_go/.venv/bin/python - <<'PY'
+import importlib.util
+import random
+from pogo.agents import Planner
+from pogo.battle import Battle
+from pogo.gamedata import GameData
+from pogo.learner import Learner, QNet
+spec = importlib.util.spec_from_file_location('pogo.task20_before', '/tmp/task20-learner-before.py')
+before = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(before)
+q = QNet.load('runs/general-decide/q.npz')
+pool = GameData().meta(50)
+rng = random.Random(20040)
+for seed in range(100):
+    teams = rng.sample(pool, 3), rng.sample(pool, 3)
+    a = Battle(*teams, before.Learner(q=q, seed=seed), Planner(seed=seed + 1), seed=seed, record=True)
+    b = Battle(*teams, Learner(q=q, seed=seed), Planner(seed=seed + 1), seed=seed, record=True)
+    assert a.run() == b.run() and a.log == b.log, seed
+print('100 of 100 old-model battle logs identical to pre-edit Learner')
+PY
+
+Small pipeline smoke tests only (not evidence of model strength):
+nice -n 10 env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /Users/marco/Developer/pokemon_go/.venv/bin/python -u scripts/decide.py --run task20-smoke --minutes 0.5 --rounds 1 --teams data/teams.json --workers 3 --examples-per-round 500 --val-battles 20 --final-battles 40 --seed 19000 > runs/task20/smoke.out 2>&1
+nice -n 10 env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 /Users/marco/Developer/pokemon_go/.venv/bin/python -u scripts/decide.py --run task20-smoke-control --no-mid-swap --minutes 0.05 --rounds 1 --teams data/teams.json --workers 3 --examples-per-round 100 --val-battles 20 --final-battles 40 --seed 19000 > runs/task20/smoke-control.out 2>&1

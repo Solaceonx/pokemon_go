@@ -1,11 +1,12 @@
 """A player that learns its key decisions by playing.
 
-The Learner is a Planner whose four judgement calls come from small neural
+The Learner is a Planner whose judgement calls come from small neural
 networks instead of hand-written rules:
 
     shield   shield the incoming charged move, or not
     throw    with a charged move ready: hold, throw the first, or throw the second
     swap     at a new matchup with the switch ready: stay, or bring in a bench Pokémon
+    mid_swap in an ongoing matchup, near their charged move: stay, or bring in either bench Pokémon
     replace  which Pokémon to send in after a faint
 
 Everything mechanical (legal moves, finishing with a fast move, the sacrifice
@@ -24,12 +25,12 @@ from pathlib import Path
 import numpy as np
 
 from .agents import Planner, duel, fasts_to_wait
-from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH_TURNS, View, damage
+from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, View, damage
 
 # Decisions judged option by option. For a throw: hold for one more fast move, throw the first
 # charged move, throw the second, hold for four fast moves, hold for ten.
 # A swap: stay, or bring in the first or second of the other two. A replacement: the first or second of them.
-Q_HEADS = {"shield": 2, "throw": 5, "swap": 3, "replace": 2}
+Q_HEADS = {"shield": 2, "throw": 5, "swap": 3, "replace": 2, "mid_swap": 3}
 HOLDS = {0: 1, 3: 4, 4: 10}  # throw options that mean "only fast moves for this many turns"
 
 HEADS = {"shield": 2, "throw": 3, "swap": 3, "replace": 2}
@@ -205,13 +206,14 @@ class Learner(Planner):
     """
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
-                 q: QNet | None = None, margin: float = 0.03, **settings):
+                 q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, **settings):
         super().__init__(**settings)
         self.policy = policy
         self.log = log
         self.greedy = greedy
         self.q = q  # with a QNet, shields and throws go to the option it rates best
         self.margin = margin  # ... but only when that beats the Planner's pick by this much
+        self.mid_swap = mid_swap
         self.departed = 0  # how often it overruled the Planner
         self.departures: dict = {}  # (decision, Planner's pick, its pick) -> count
         self.forced: dict = {}  # decision -> the choice it must make next time, for trying options out
@@ -256,7 +258,7 @@ class Learner(Planner):
             if choice != advice:
                 self.departed += 1
                 self.departures[head, advice, choice] = self.departures.get((head, advice, choice), 0) + 1
-        elif self.policy is None:
+        elif self.policy is None or head not in self.policy.params:
             choice = advice
         else:
             choice = self.policy.choose(head, x, mask, self.rng, self.greedy)
@@ -298,6 +300,32 @@ class Learner(Planner):
 
         choice = self._decide("swap", view, (True, others[0] in bench, others[1] in bench), planner_choice)
         return None if choice == 0 else others[choice - 1]
+
+    def _pick_switch(self, view: View) -> int | None:
+        me, foe = view.me, view.foe
+        # Old models keep their original path, without describing extra positions. Logging
+        # and forced choices also enable the head before it has been fitted for the first time.
+        enabled = self.mid_swap and (self.log is not None or "mid_swap" in self.forced
+                                    or (self.q is not None and "mid_swap" in self.q.params))
+        if (not enabled or me.busy or me.mon.hp <= 0 or me.switch_wait or not me.bench()
+                or self._judged != (me.active, foe.build.uid)
+                or foe.energy + 2 * foe.build.fast.energy_gain
+                < min((move.energy for move in foe.build.charged), default=float("inf"))):
+            return Planner._pick_switch(self, view)
+
+        others = [j for j in range(3) if j != me.active]
+        bench = me.bench()
+
+        def planner_choice() -> int:
+            # Preserve the Planner's sacrifice/rescue advice as the default option.
+            action = Planner._pick_switch(self, view)
+            return 0 if action is None else others.index(action - SWITCH[0]) + 1
+
+        choice = self._decide("mid_swap", view, (True, others[0] in bench, others[1] in bench), planner_choice)
+        if choice == 0:
+            return None
+        self._hold = 0
+        return SWITCH[others[choice - 1]]
 
     def replace(self, view: View) -> int:
         me = view.me

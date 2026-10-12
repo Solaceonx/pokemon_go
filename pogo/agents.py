@@ -8,9 +8,12 @@ An agent answers three questions, each from a View of the battle:
 from __future__ import annotations
 
 import copy
+import json
 import random
+from functools import lru_cache
 
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, View, apply_buffs, damage
+from .gamedata import DATA, effectiveness
 
 
 class Masher:
@@ -37,6 +40,13 @@ _MASHER = Masher()
 _seeds = random.Random(20261009)
 
 
+@lru_cache(maxsize=1)
+def _sweeper_field() -> tuple:
+    """A prior for an unseen last Pokémon, never the hidden battle roster."""
+    from .gamedata import GameData
+    return tuple(GameData().meta(50))
+
+
 def duel(mine: Mon, theirs: Mon, my_shields: int, their_shields: int, coming_in: bool = False) -> float:
     """Play out a one-on-one between two mashers from the given states.
 
@@ -51,6 +61,13 @@ def duel(mine: Mon, theirs: Mon, my_shields: int, their_shields: int, coming_in:
 
 
 _safety: dict = {}
+
+
+@lru_cache(maxsize=1)
+def _matchup_table() -> dict:
+    """Saved fresh one-on-ones, averaged over 0, 1 and 2 shields by scripts/teams.py."""
+    path = DATA / "matchups.json"
+    return json.loads(path.read_text()) if path.exists() else {}
 
 
 def safety(build, field: list) -> float:
@@ -120,11 +137,18 @@ class Planner:
     shields:  "always"; "never" (until the last Pokémon); "threshold" shields hits that
               would knock out or take a large share of health; "lookahead" plays the rest
               of the visible battle both ways and shields only if that leaves it better off.
+    shield_matchups: for lookahead on a nearly fainted Pokémon, let both sides choose
+              switches and replacements by their remaining matchups in each rollout.
+              Compare spending the shield here with keeping it for the teammates.
+              shield_matchup_hp sets the maximum share of full health for this rule.
     guess:    for "lookahead", when either charged move could be coming: "worst" assumes
               the harder hit; "mix" weighs all four outcomes and varies; "read" goes by
               which one this opponent has thrown in that spot before.
     switches: plays out each one-on-one in advance to choose replacements and to leave a
               losing matchup when the switch timer allows.
+    good_matchup: blend the saved one-on-one table into those choices. matchup_weight is
+              the table's share; the rest uses current health, energy and shields. Missing
+              pairs use the live duel alone. The table assumes the usual builds and moves.
     field:    the Pokémon opponents tend to bring. With it, a swap can weigh how well the
               incoming Pokémon holds up against whatever answers it (safe_weight 1) and
               not only how it does against the one in front of it (safe_weight 0).
@@ -135,11 +159,19 @@ class Planner:
     sac:      keep a nearly fainted Pokémon as a third shield: swap it out before it
               goes down for nothing, and bring it back to take a charged move the
               opponent has ready.
+    catch:    read an affordable charged move while the opponent is free to throw,
+              and switch to a surviving resist. catch_gain is the minimum health
+              saved, measured as fractions of each Pokémon's full health.
     replace_by: choose the replacement after a faint by the one-on-one "outlook" or by
               playing the visible battle forward ("lookahead").
     value:    a trained ValueModel. With it (and a field), the lookahead judges what is
               left after the visible battle by the model's win chance against the
               opponent's unseen Pokémon, not by adding up health and shields.
+    sweeper:  extra value per shield saved or drawn while setting up a teammate after
+              losing the lead and being counter-swapped. Zero disables the rule.
+              sweep_chance is the required fraction of shieldless two-opponent
+              continuations that teammate wins; unseen opponents use field (or the
+              top-50 prior), never the hidden team.
     """
 
     def __init__(self, moves: bool = True, timing: bool = True, bait: str = "mix", shields: str = "lookahead",
@@ -148,19 +180,32 @@ class Planner:
                  expect_shield: float = 0.7, expect_bait: float = 0.5, belief: float = 2.0,
                  field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
                  punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
-                 sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None):
+                 sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
+                 odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
+                 last_gasp: bool = True, timed_farm: bool = True,
+                 win_switch: float | None = 0.1, switch_worth: float = 0.0,
+                 good_matchup: bool = True, matchup_weight: float = 0.75,
+                 sweeper: float = 0.0, sweep_chance: float = 0.75,
+                 shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
+                 catch: bool = False, catch_gain: float = 0.2):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
             raise ValueError(f"unknown shield rule {shields!r}")
         if guess not in ("worst", "mix", "read"):
             raise ValueError(f"unknown guess rule {guess!r}")
+        if not 0.0 <= matchup_weight <= 1.0:
+            raise ValueError("matchup_weight must be between 0 and 1")
+        if sweeper < 0 or not 0 < sweep_chance <= 1:
+            raise ValueError("sweeper must be nonnegative and sweep_chance in (0, 1]")
         self.moves = moves
         self.timing = timing
         self.bait = bait
         self.shields = shields
         self.guess = guess
         self.switches = switches
+        self.good_matchup = good_matchup
+        self.matchup_weight = matchup_weight
         self.shield_share = shield_share  # threshold rule: shield a hit worth this share of full health
         self.shield_worth = shield_worth  # lookahead: one unused shield, in units of one full Pokémon
         self.energy_worth = energy_worth  # lookahead: 100 stored energy, in the same units
@@ -171,10 +216,37 @@ class Planner:
         self.punish = punish
         self.farm = farm
         self.farm_cost = farm_cost  # farm if it costs no more than this share of current health
+        # Hold a charged move that is ready and keep building energy for as long as the opponent cannot throw
+        # one of theirs, provided their fast moves in that time cost no more than this share of current health.
+        self.hold, self.hold_cost = hold, hold_cost
+        # Throw before you faint: with a move ready and a knock-out coming before the next chance to act
+        # (their fast moves, or a charged move that would not be blocked), throw now instead of taking the
+        # energy down with the Pokémon.
+        self.last_gasp = last_gasp
+        # While farming or holding, plan the throw for a turn that suits the opponent's fast move instead of
+        # farming until forced to throw at a bad moment.
+        self.timed_farm = timed_farm
+        # Winning the switch (the owner's rule). When the opponent has just swapped they cannot swap again for
+        # 45 seconds, so the matchup is ours to choose: if we are not already winning it, bring the Pokémon
+        # that wins it by at least `win_switch` more than staying would (None: the ordinary swap rule only).
+        self.win_switch = win_switch
+        # And then win it: while a switch clock is running on either side, coming out of the present matchup
+        # on top is worth this much extra when weighing a shield, on top of what is left on each side.
+        self.switch_worth = switch_worth
+        self.sweeper, self.sweep_chance = sweeper, sweep_chance
+        self._setup_swap = None  # (our safe-swap slot, their original lead uid)
+        self._setup_checked = False
+        self._sweep_plan = None  # (safe-swap slot, counter-swap uid, sweeper slot)
+        self.shield_matchups = shield_matchups
+        self.shield_matchup_hp = shield_matchup_hp
+        self.catch, self.catch_gain = catch, catch_gain
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
         self.value = value if field else None
+        # Weigh every charged move the opponent may have by its chance, where the view offers the chances
+        # (the Tracker's does), instead of taking their usual two moves as certain.
+        self.odds = odds
         self._sac_checked = None
         self.rng = random.Random(_seeds.getrandbits(32) if seed is None else seed)
         self._judged = None  # the matchup last considered for a switch
@@ -200,11 +272,29 @@ class Planner:
             return FAST
         fast = mon.build.fast
         hit = [damage(mon, move, foe) for move in moves]
+        if self.last_gasp:
+            # Before anything else, including finishing them with a fast move that I may not live to land.
+            both = mon.energy >= 2 * min(move.energy for move in moves)  # two throws need a turn more
+            if self._doomed(view, fast.turns + int(both)):
+                lethal = [k for k in ready if hit[k] >= foe.hp]
+                return CHARGED[min(lethal, key=lambda k: moves[k].energy) if lethal else max(ready, key=lambda k: hit[k])]
         if foe.hp <= damage(mon, fast, foe):
             return FAST  # the fast move finishes it; keep the energy
 
+        planned = False  # the farm or hold rule has already chosen this turn as the one to throw on
         if self.farm and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_farm(view):
-            return FAST
+            if not self.timed_farm:
+                return FAST
+            room = (ENERGY_CAP - mon.energy) // fast.energy_gain
+            to_finish = -(-foe.hp // damage(mon, fast, foe))
+            if to_finish <= room or self._latest_good_turn(view, room) > 0:
+                return FAST  # fast moves finish it, or a better moment to throw is still ahead
+            planned = True
+        if not planned and self.hold and mon.energy + fast.energy_gain <= ENERGY_CAP:
+            wait = self._hold_plan(view)
+            if wait:
+                return FAST
+            planned = self.timed_farm and wait == 0
 
         def short_of(k: int) -> bool:
             """True if move k is not ready yet and it is safe to keep building towards it."""
@@ -241,7 +331,7 @@ class Planner:
             if choice not in ready:
                 choice = max(ready, key=lambda k: hit[k])
 
-        if self.timing:
+        if self.timing and not planned:
             wait = fasts_to_wait(fast.turns, foe.build.fast.turns, view.foe_busy)
             if (wait and mon.energy + wait * fast.energy_gain <= ENERGY_CAP
                     and not self._may_faint(view, wait * fast.turns)):
@@ -287,6 +377,51 @@ class Planner:
         incoming = landing * damage(foe, foe_fast, mon) + throws * max(damage(foe, m, mon) for m in foe.build.charged)
         return incoming <= self.farm_cost * mon.hp
 
+    def _hold_plan(self, view: View) -> int | None:
+        """How many more fast moves to use before throwing, under the owner's rule: farm until they are about
+        to get a move, unless it hurts. None when the rule does not apply (they have a move already, or the
+        wait costs too much health); 0 to throw now."""
+        mon, foe = view.me.mon, view.foe
+        fast, foe_fast = mon.build.fast, foe.build.fast
+        need = min(m.energy for m in foe.build.charged) - foe.energy
+        if need <= 0:
+            return None  # they have a move already
+        hits = -(-need // foe_fast.energy_gain)  # their fast moves still to land before they do
+        reach = (view.foe_busy or foe_fast.turns) + (hits - 1) * foe_fast.turns  # turns until then, counting this one
+        if hits * damage(foe, foe_fast, mon) > self.hold_cost * mon.hp:
+            return None
+        room = min((reach - 1) // fast.turns, (ENERGY_CAP - mon.energy) // fast.energy_gain)
+        if not self.timed_farm:
+            return 1 if room >= 1 else 0
+        return self._latest_good_turn(view, room)
+
+    def _can_hold(self, view: View) -> bool:
+        return bool(self._hold_plan(view))
+
+    def _latest_good_turn(self, view: View, room: int) -> int:
+        """Of the next `room` fast moves of mine, after how many is the best moment to throw: the one that
+        leaves the opponent's fast move in progress the fewest turns to run (a charged move lets it land in
+        full), and of equally good moments the latest, so as to farm the longest."""
+        mine, theirs = view.me.mon.build.fast.turns, view.foe.build.fast.turns
+        phase = (theirs - view.foe_busy) % theirs
+        free = lambda j: theirs - 1 - (phase + j * mine) % theirs  # turns given away by throwing after j more
+        return min(range(room + 1), key=lambda j: (free(j), -j))
+
+    def _doomed(self, view: View, turns: int) -> bool:
+        """Will I be knocked out within that many turns, counting a charged move of theirs I would not block?"""
+        mon, foe = view.me.mon, view.foe
+        foe_fast = foe.build.fast
+        phase = (foe_fast.turns - view.foe_busy) % foe_fast.turns
+        landing = (phase + turns) // foe_fast.turns
+        incoming = landing * damage(foe, foe_fast, mon)
+        if incoming >= mon.hp:
+            return True
+        energy = min(ENERGY_CAP, foe.energy + landing * foe_fast.energy_gain)
+        worst = max((damage(foe, move, mon) for move in foe.build.charged if move.energy <= energy), default=0)
+        if incoming + worst < mon.hp:
+            return False
+        return view.me.shields == 0 or not self.shield(view, energy)
+
     def _may_faint(self, view: View, turns: int) -> bool:
         """Could this Pokémon faint within that many turns, if the opponent keeps attacking?"""
         mon, foe = view.me.mon, view.foe
@@ -307,6 +442,18 @@ class Planner:
         if self.shields == "never":
             return False
         mon, foe = view.me.mon, view.foe
+        may_have = getattr(view, "foe_move_odds", None) if self.odds and self.shields == "lookahead" else None
+        if may_have and any(0.03 < p < 0.97 for _, p in may_have):
+            # Their moves are not settled: a move is coming, and each one they may have and could pay for is
+            # weighed by the chance of both.
+            energy = view.foe_energy_odds
+            weights = [(move, p * sum(q for e, q in energy.items() if e >= move.energy)) for move, p in may_have]
+            total = sum(w for _, w in weights)
+            if total > 0:
+                left = view.me.shields
+                gain = sum(w * (self._after_hit(view, move, True, left) - self._after_hit(view, move, False, left))
+                           for move, w in weights if w > 0.02 * total)
+                return gain > 0
         threats = [move for move in foe.build.charged if move.energy <= foe_energy]
         if not threats:
             return True
@@ -318,9 +465,19 @@ class Planner:
             worst = damage(foe, hard, mon)
             return worst >= mon.hp or worst >= self.shield_share * mon.build.hp
         left = view.me.shields
+        at_stake = self.switch_worth and view.me.left() > 1 and view.foe_left > 1 \
+            and (view.foe_switch_wait > 0 or view.me.switch_wait > 0)
+
+        def after(move, shielded: bool) -> float:
+            worth = self._after_hit(view, move, shielded, left)
+            if at_stake:  # does this choice leave me the winner of the matchup we are in?
+                hurt, thrower = self._hit_state(view, move, shielded)
+                worth += self.switch_worth * (hurt.hp > 0 and duel(hurt, thrower, left - shielded, view.foe_shields) > 0)
+            return worth
+
         if soft is hard or self.guess == "worst":
-            return self._after_hit(view, hard, True, left) > self._after_hit(view, hard, False, left)
-        value = {(m.id, s): self._after_hit(view, m, s, left) for m in (soft, hard) for s in (True, False)}
+            return after(hard, True) > after(hard, False)
+        value = {(m.id, s): after(m, s) for m in (soft, hard) for s in (True, False)}
         if self.guess == "read":
             q = self._bait_seen[0] / self._bait_seen[1]  # how likely the softer move is
             return (q * value[soft.id, True] + (1 - q) * value[hard.id, True]
@@ -330,15 +487,22 @@ class Planner:
 
     # looking ahead
 
-    def _after_hit(self, view: View, move, shielded: bool, shields: int) -> float:
-        """Where I stand after the opponent's charged move lands or is shielded."""
-        me = view.me
-        hurt, thrower = me.mon.copy(), view.foe.copy()
-        hurt.hp -= 1 if shielded else damage(view.foe, move, me.mon)
+    def _hit_state(self, view: View, move, shielded: bool) -> tuple[Mon, Mon]:
+        """My active Pokémon and theirs just after their charged move lands or is shielded."""
+        hurt, thrower = view.me.mon.copy(), view.foe.copy()
+        hurt.hp -= 1 if shielded else damage(view.foe, move, view.me.mon)
         thrower.energy -= move.energy
         if move.buff_chance >= 1:
             apply_buffs(thrower, hurt, move)
-        return self._play_out(view, hurt, thrower, shields - shielded, view.foe_shields)
+        return hurt, thrower
+
+    def _after_hit(self, view: View, move, shielded: bool, shields: int) -> float:
+        """Where I stand after the opponent's charged move lands or is shielded."""
+        hurt, thrower = self._hit_state(view, move, shielded)
+        matchups = (self.shield_matchups and view.me.left() > 1 and shields > 0
+                    and view.me.mon.hp <= self.shield_matchup_hp * view.me.mon.build.hp)
+        return self._play_out(view, hurt, thrower, shields - shielded, view.foe_shields,
+                              matchups=matchups)
 
     def _after_throw(self, view: View, k: int, shielded: bool) -> float:
         """Where I stand after throwing charged move k, shielded or not."""
@@ -356,7 +520,8 @@ class Planner:
             + self.shield_worth * shields
 
     def _play_out(self, view: View, mine: Mon, theirs: Mon, my_shields: int, foe_shields: int,
-                  bench: list[Mon] | None = None, switch_wait: int | None = None) -> float:
+                  bench: list[Mon] | None = None, switch_wait: int | None = None,
+                  matchups: bool = False) -> float:
         """Play the rest of the battle against the Pokémon seen so far, from the given active pair.
 
         Returns what I have left minus what they have left: health, unused shields
@@ -364,6 +529,10 @@ class Planner:
         options rather than predicting the result.
         """
         me = view.me
+        # A specific setup opportunity, not a general bonus to saving shields.
+        # Reward the immediate shield trade; the ordinary rollout still prices
+        # the health and alignment lost by spending the safe swap this way.
+        setup = self.sweeper * (my_shields - foe_shields) if self._sweeper_slot(view) is not None else 0.0
         if bench is None:
             bench = [m for j, m in enumerate(me.team) if j != me.active and m.hp > 0]
         if switch_wait is None:
@@ -375,17 +544,18 @@ class Planner:
             orders = [[lead] + [m for m in bench if m is not lead] for lead in bench]
         unseen = view.foe_left - sum(m.hp > 0 for m in view.foe_shown)
         if not foes or not orders:
-            return self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
+            return setup + self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
         best = None
         for order in orders:
-            battle = Battle([m.copy() for m in order], [m.copy() for m in foes], _rollout(), _rollout(), seed=0,
+            battle = Battle([m.copy() for m in order], [m.copy() for m in foes],
+                            _rollout(matchups), _rollout(matchups), seed=0,
                             shields=(my_shields, foe_shields), switch_wait=(switch_wait, view.foe_switch_wait))
             battle.run()
             a, b = battle.sides
             value = self._standing(a.team, a.active, a.shields, a.switch_wait, b.team, b.shields, unseen,
                                    view.turn + battle.turn)
             best = value if best is None else max(best, value)
-        return best
+        return setup + best
 
     def _standing(self, mine: list[Mon], active: int, my_shields: int, switch_wait: int,
                   theirs: list[Mon], foe_shields: int, unseen: int, turn: int) -> float:
@@ -405,8 +575,82 @@ class Planner:
 
     # switching
 
+    def _sweep_chance(self, view: View, slot: int) -> float:
+        """Can this teammate beat their last two once the counter-swap is removed?
+
+        Carry health, energy and shields through both opponents, in both orders.
+        Unknown last Pokémon are averaged over the supplied field, excluding
+        species already revealed. This is a prior, not knowledge of their team.
+        """
+        known = [m for m in view.foe_shown if m is not view.foe and m.hp > 0]
+        unseen = view.foe_left - sum(m.hp > 0 for m in view.foe_shown)
+        if len(known) + unseen != 2 or unseen > 1:
+            return 0.0
+        if unseen:
+            shown = {m.build.species_id for m in view.foe_shown}
+            field = self.field if self.field is not None else _sweeper_field()
+            teams = [known + [Mon(b)] for b in field if b.species_id not in shown]
+        else:
+            teams = [known]
+        if not teams:
+            return 0.0
+        wins = 0
+        for team in teams:
+            # Count a team only if it can be swept in either order; two fresh
+            # independent duels would overestimate a sweep by resetting our HP.
+            swept = True
+            for order in (team, team[::-1]):
+                mine = view.me.team[slot].copy()
+                mine.atk_stage = mine.def_stage = 0
+                foes = [m.copy() for m in order]
+                for foe in foes:
+                    foe.atk_stage = foe.def_stage = 0
+                battle = Battle([mine], foes, _MASHER, _MASHER, seed=0,
+                                shields=(view.me.shields, 0))
+                if battle.run() != 0:
+                    swept = False
+                    break
+            wins += swept
+        return wins / len(teams)
+
+    def _sweeper_slot(self, view: View) -> int | None:
+        """Recognize the owner's losing-lead / safe-swap / counter-swap sequence."""
+        if not self.sweeper or self._setup_swap is None:
+            return None
+        me = view.me
+        slot, lead = self._setup_swap
+        if me.active != slot or not me.switch_wait:
+            self._sweep_plan = None
+            self._setup_swap = None
+            return None
+        if self._sweep_plan is not None:
+            _, counter, sweeper = self._sweep_plan
+            if view.foe_switch_wait and view.foe.build.uid == counter and me.team[sweeper].hp > 0:
+                return sweeper
+            self._sweep_plan = None
+            self._setup_swap = None
+            return None
+        if self._setup_checked or view.foe.build.uid == lead or not view.foe_switch_wait:
+            return None
+        self._setup_checked = True
+        if self._outlook(view, me.active) <= 0:
+            return None  # an unwinnable counter-swap is outside this rule
+        candidates = [(self._sweep_chance(view, j), j) for j in me.bench()]
+        chance, sweeper = max(candidates, default=(0.0, -1))
+        if chance >= self.sweep_chance:
+            self._sweep_plan = (slot, view.foe.build.uid, sweeper)
+            return sweeper
+        return None
+
     def _outlook(self, view: View, slot: int) -> float:
-        return duel(view.me.team[slot], view.foe, view.me.shields, view.foe_shields, coming_in=slot != view.me.active)
+        mine, foe = view.me.team[slot], view.foe
+        live = duel(mine, foe, view.me.shields, view.foe_shields, coming_in=slot != view.me.active)
+        if not self.good_matchup or not self.matchup_weight or mine.hp <= 0 or foe.hp <= 0:
+            return live
+        table = _matchup_table().get(mine.build.species_id, {}).get(foe.build.species_id)
+        if table is None:
+            return live
+        return (1 - self.matchup_weight) * live + self.matchup_weight * table
 
     def _pick_switch(self, view: View) -> int | None:
         me, mon = view.me, view.me.mon
@@ -418,6 +662,10 @@ class Planner:
                 slot = self._pick_rescue(view)
             if slot is not None:
                 return SWITCH[slot]
+        if self.catch:
+            slot = self._pick_catch(view)
+            if slot is not None:
+                return SWITCH[slot]
         matchup = (me.active, view.foe.build.uid)
         if matchup == self._judged:
             return None
@@ -425,12 +673,58 @@ class Planner:
         slot = self._swap_choice(view)
         return None if slot is None else SWITCH[slot]
 
+    def _pick_catch(self, view: View) -> int | None:
+        """Read a throw from visible energy and move choices, without seeing their action.
+
+        Into shields, use the opponent's observed soft/hard bait rate. Without
+        shields, expect the cheapest knockout or the best damage per energy.
+        Energy being ready is only a read: they can still farm or switch instead.
+        """
+        me, mon, foe = view.me, view.me.mon, view.foe
+        if me.switch_wait or me.busy or view.foe_busy or mon.hp <= 0 or foe.hp <= 0:
+            return None
+        ready = [m for m in foe.build.charged if m.energy <= foe.energy]
+        if not ready:
+            return None
+        hits = {m: damage(foe, m, mon) for m in ready}
+        if me.shields:
+            soft, hard = min(ready, key=hits.get), max(ready, key=hits.get)
+            bait = self._bait_seen[0] / self._bait_seen[1]
+            threats = [(soft, 1.0)] if soft is hard else [(soft, bait), (hard, 1 - bait)]
+        else:
+            lethal = [m for m in ready if hits[m] >= mon.hp]
+            move = min(lethal, key=lambda m: m.energy) if lethal else max(ready, key=lambda m: hits[m] / m.energy)
+            threats = [(move, 1.0)]
+        threats = [(m, p) for m, p in threats if p > 0]
+        incoming = sum(p * min(hits[m], mon.hp) / mon.build.hp for m, p in threats)
+        best, best_gain = None, self.catch_gain
+        for j in me.bench():
+            target = me.team[j].copy()
+            target.atk_stage = target.def_stage = 0
+            # A catch preserves a living resist; sacrificing a spent Pokémon is
+            # handled separately above. Require resistance to every plausible bait.
+            if any(effectiveness(m.type, target.build.types) >= 1 or damage(foe, m, target) >= target.hp
+                   for m, _ in threats):
+                continue
+            caught = sum(p * damage(foe, m, target) / target.build.hp for m, p in threats)
+            gain = incoming - caught
+            if gain > best_gain:
+                best, best_gain = j, gain
+        return best
+
     def _swap_choice(self, view: View) -> int | None:
         """Faced with a new matchup and free to switch: the slot to bring in, or None to stay."""
         me, mon = view.me, view.me.mon
         if self._spent(mon):
             return None  # too hurt to fight elsewhere; any rescue was decided above
         staying = self._outlook(view, me.active)
+        if self.win_switch is not None and view.foe_switch_wait > 0:
+            if staying >= 0.15:
+                return None  # winning as it stands: stay in and keep the switch for later
+            best = max(me.bench(), key=lambda j: self._outlook(view, j))
+            gain = self._outlook(view, best) - max(staying, 0.0)
+            if gain >= self.win_switch and not self._spent(me.team[best]):
+                return best
         if staying > self.bad_matchup:
             return None
         w = 0.0 if self.punish and view.foe_switch_wait else self.safe_weight
@@ -488,13 +782,23 @@ class Planner:
         if self.switches:
             switch = self._pick_switch(view)
             if switch is not None:
+                if (self.sweeper and view.me.shown == [0] and view.me.active == 0
+                        and len(view.foe_shown) == 1 and view.foe_switch_wait == 0
+                        and self._outlook(view, 0) < self.bad_matchup):
+                    self._setup_swap = (SWITCH.index(switch), view.foe.build.uid)
+                    self._setup_checked = False
+                    self._sweep_plan = None
                 return switch
+        self._sweeper_slot(view)
         if self.moves:
             return self._pick_move(view)
         return _MASHER.act(view)
 
     def replace(self, view: View) -> int:
         me = view.me
+        sweeper = self._sweeper_slot(view)
+        if sweeper is not None:
+            return sweeper  # inherit the shield advantage and farm the remainder
         if not self.switches:
             return me.bench()[0]
         if self.sac:
@@ -512,9 +816,15 @@ class Planner:
         return max(me.bench(), key=lambda j: self._outlook(view, j))
 
 
-def _rollout() -> Planner:
-    """The quick player used to play positions forward inside the lookahead."""
-    return Planner(timing=False, bait="cheap", shields="threshold", switches=False, farm=False, sac=False, seed=0)
+def _rollout(matchups: bool = False) -> Planner:
+    """The quick player used inside lookahead, optionally choosing remaining matchups.
+
+    Threshold shielding and outlook replacements keep this from nesting lookaheads.
+    Only revealed opponents enter the rollout; hidden teammates are never inspected.
+    """
+    # The shield_matchups experiment was measured with rollouts that switch by the live duel alone.
+    return Planner(timing=False, bait="cheap", shields="threshold", switches=matchups,
+                   farm=False, sac=False, shield_matchups=False, good_matchup=not matchups, seed=0)
 
 
 def expert(field: list | None = None) -> Planner:
@@ -551,6 +861,10 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         shield_share=min(0.9, near(0.4, 0.3)), shield_worth=near(0.35, 0.4),
         switch_margin=near(0.35, 0.4), bad_matchup=-near(0.2, 0.5),
         farm=rng.random() < 0.8, farm_cost=near(0.35, 0.4), sac=rng.random() < 0.8,
+        hold=rng.random() < 0.8, hold_cost=near(0.5, 0.4),
+        last_gasp=rng.random() < 0.8, timed_farm=rng.random() < 0.8,
+        win_switch=near(0.1, 0.4) if rng.random() < 0.8 else None,
+        good_matchup=rng.random() < 0.8,
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),
