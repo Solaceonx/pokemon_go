@@ -84,6 +84,29 @@ Do not re-propose these without a new angle.
   crowd on the same battles as the baseline. No confirmed gain; `sweeper=0.0`
   remains the default. Details and limitations are under the owner's guidance below.
 
+- **Fainting with a shield in hand, task 18 rule 2 (2026-10-11).** This attempt did
+  not help. `Planner(shield_matchups=True, shield_matchup_hp=0.3)` compares shielding
+  a nearly fainted Pokémon with saving that shield for its teammates. The existing
+  lookahead already includes revealed bench Pokémon; this option lets both rollout
+  players choose switches and replacements by one-on-one matchups instead of staying
+  in and using a fixed replacement order. Remaining shields carry into those matchups;
+  future shield choices still use the quick threshold rule. Unrevealed opponents are
+  not guessed. Health cutoffs of 20%, 30% and 50% were tried with `rule_trial.py`,
+  4,000 battles per setting, seed 181 (`runs/t18-shield-tuning.out`, selection data
+  only). The best head-to-head setting, 30%, was fixed before testing fresh seed 9181:
+  **49.7% ± 0.8 head to head**, and against the crowd **56.2% ± 1.5 versus the
+  standard player's 56.0% ± 1.5**, a paired difference of **+0.2 ± 0.6 points**
+  (`runs/t18-shield-confirm.out`). Each score uses 4,000 battles; head-to-head teams
+  are played both ways and all margins are 95%. The separate 800-battle energy
+  diagnostic was 6.5 versus 6.6 energy left on fainted Pokémon with a move ready.
+  The fresh-seed gain did not exceed its margin, so `shield_matchups` stays **off**
+  by default and the crowd is unchanged. The 107-test suite passes, with six existing
+  PyAV-dependent skips (`runs/t18-shield-tests.out`), including new checks that the
+  remaining teammate can change the shield choice, hidden opponents cannot affect
+  it, and rollouts preserve the live state. No promotion, standalone PvPoke command,
+  speed-baseline save or learned-layer comparison was run. The other four rules in
+  task 18 were not attempted.
+
 ## How per-decision learning works
 
 At a decision met in ordinary play, the battle is frozen and played out once for each

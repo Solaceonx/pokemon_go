@@ -137,6 +137,10 @@ class Planner:
     shields:  "always"; "never" (until the last Pokémon); "threshold" shields hits that
               would knock out or take a large share of health; "lookahead" plays the rest
               of the visible battle both ways and shields only if that leaves it better off.
+    shield_matchups: for lookahead on a nearly fainted Pokémon, let both sides choose
+              switches and replacements by their remaining matchups in each rollout.
+              Compare spending the shield here with keeping it for the teammates.
+              shield_matchup_hp sets the maximum share of full health for this rule.
     guess:    for "lookahead", when either charged move could be coming: "worst" assumes
               the harder hit; "mix" weighs all four outcomes and varies; "read" goes by
               which one this opponent has thrown in that spot before.
@@ -178,7 +182,8 @@ class Planner:
                  last_gasp: bool = True, timed_farm: bool = True,
                  win_switch: float | None = 0.1, switch_worth: float = 0.0,
                  good_matchup: bool = True, matchup_weight: float = 0.75,
-                 sweeper: float = 0.0, sweep_chance: float = 0.75):
+                 sweeper: float = 0.0, sweep_chance: float = 0.75,
+                 shield_matchups: bool = False, shield_matchup_hp: float = 0.3):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -228,6 +233,8 @@ class Planner:
         self._setup_swap = None  # (our safe-swap slot, their original lead uid)
         self._setup_checked = False
         self._sweep_plan = None  # (safe-swap slot, counter-swap uid, sweeper slot)
+        self.shield_matchups = shield_matchups
+        self.shield_matchup_hp = shield_matchup_hp
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -487,7 +494,10 @@ class Planner:
     def _after_hit(self, view: View, move, shielded: bool, shields: int) -> float:
         """Where I stand after the opponent's charged move lands or is shielded."""
         hurt, thrower = self._hit_state(view, move, shielded)
-        return self._play_out(view, hurt, thrower, shields - shielded, view.foe_shields)
+        matchups = (self.shield_matchups and view.me.left() > 1 and shields > 0
+                    and view.me.mon.hp <= self.shield_matchup_hp * view.me.mon.build.hp)
+        return self._play_out(view, hurt, thrower, shields - shielded, view.foe_shields,
+                              matchups=matchups)
 
     def _after_throw(self, view: View, k: int, shielded: bool) -> float:
         """Where I stand after throwing charged move k, shielded or not."""
@@ -505,7 +515,8 @@ class Planner:
             + self.shield_worth * shields
 
     def _play_out(self, view: View, mine: Mon, theirs: Mon, my_shields: int, foe_shields: int,
-                  bench: list[Mon] | None = None, switch_wait: int | None = None) -> float:
+                  bench: list[Mon] | None = None, switch_wait: int | None = None,
+                  matchups: bool = False) -> float:
         """Play the rest of the battle against the Pokémon seen so far, from the given active pair.
 
         Returns what I have left minus what they have left: health, unused shields
@@ -531,7 +542,8 @@ class Planner:
             return setup + self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
         best = None
         for order in orders:
-            battle = Battle([m.copy() for m in order], [m.copy() for m in foes], _rollout(), _rollout(), seed=0,
+            battle = Battle([m.copy() for m in order], [m.copy() for m in foes],
+                            _rollout(matchups), _rollout(matchups), seed=0,
                             shields=(my_shields, foe_shields), switch_wait=(switch_wait, view.foe_switch_wait))
             battle.run()
             a, b = battle.sides
@@ -756,9 +768,15 @@ class Planner:
         return max(me.bench(), key=lambda j: self._outlook(view, j))
 
 
-def _rollout() -> Planner:
-    """The quick player used to play positions forward inside the lookahead."""
-    return Planner(timing=False, bait="cheap", shields="threshold", switches=False, farm=False, sac=False, seed=0)
+def _rollout(matchups: bool = False) -> Planner:
+    """The quick player used inside lookahead, optionally choosing remaining matchups.
+
+    Threshold shielding and outlook replacements keep this from nesting lookaheads.
+    Only revealed opponents enter the rollout; hidden teammates are never inspected.
+    """
+    # The shield_matchups experiment was measured with rollouts that switch by the live duel alone.
+    return Planner(timing=False, bait="cheap", shields="threshold", switches=matchups,
+                   farm=False, sac=False, shield_matchups=False, good_matchup=not matchups, seed=0)
 
 
 def expert(field: list | None = None) -> Planner:
