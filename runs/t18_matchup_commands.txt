@@ -1,0 +1,158 @@
+Task 18, rule 5: commands and outputs
+Working directory: /Users/marco/Developer/pokemon_go-wt/t18-matchup
+
+Trials ran before promotion: standard Planner and varied_settings had good_matchup off.
+After the fresh-seed confirmation, Planner defaults became good_matchup=True,
+matchup_weight=0.75; 80% of the crowd enables it. Re-running the original trial
+commands on the promoted defaults would therefore use a different baseline/crowd.
+All percentages below include 95% margins. Tuning results are not held-out evidence.
+Only one simulation job ran at a time. The sandbox denied further lowering priority;
+the inherited process priority was already 5 (below normal).
+
+Focused tests before tuning:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests -p test_matchup_rule.py
+Output:
+nice: setpriority: Operation not permitted
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.021s
+
+OK
+
+Tuning only; not validation
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py 'good_matchup=True,matchup_weight=0.25' 'good_matchup=True,matchup_weight=0.5' 'good_matchup=True,matchup_weight=0.75' --battles 4000 --seed 41 > runs/t18_matchup_tuning.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+battles: 4000; seed: 41
+standard player against the crowd: 55.0% ± 1.5; energy thrown away with a move ready: 6.6 a battle
+good_matchup=True,matchup_weight=0.25: head to head 51.0% ± 0.9 | against the crowd 56.5% ± 1.5, +1.4 ± 1.0 | energy thrown away 7.1 a battle
+good_matchup=True,matchup_weight=0.5: head to head 51.3% ± 1.1 | against the crowd 58.1% ± 1.5, +3.1 ± 1.2 | energy thrown away 6.8 a battle
+good_matchup=True,matchup_weight=0.75: head to head 51.9% ± 1.2 | against the crowd 58.2% ± 1.5, +3.1 ± 1.4 | energy thrown away 6.5 a battle
+
+Fresh confirmation, frozen setting
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py 'good_matchup=True,matchup_weight=0.75' --battles 4000 --seed 18051 > runs/t18_matchup_fresh.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+battles: 4000; seed: 18051
+standard player against the crowd: 56.3% ± 1.5; energy thrown away with a move ready: 7.6 a battle
+good_matchup=True,matchup_weight=0.75: head to head 52.0% ± 1.2 | against the crowd 58.4% ± 1.5, +2.1 ± 1.4 | energy thrown away 7.5 a battle
+
+First suite after promotion; tracker fixture failure retained
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18_matchup_tests.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+.......................................................F...............................................ssssss
+======================================================================
+FAIL: test_tracker_works_out_an_unusual_fast_move_from_the_health_bar (test_rules.Tracking.test_tracker_works_out_an_unusual_fast_move_from_the_health_bar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/tests/test_rules.py", line 292, in test_tracker_works_out_an_unusual_fast_move_from_the_health_bar
+    self.assertLessEqual(wrong, 1)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+AssertionError: 4 not less than or equal to 1
+
+----------------------------------------------------------------------
+Ran 109 tests in 1.115s
+
+FAILED (failures=1, skipped=6)
+
+Final suite after isolating tracker fixtures from the new pilot
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18_matchup_tests_final.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+.......................................................................................................ssssss
+----------------------------------------------------------------------
+Ran 109 tests in 1.150s
+
+OK (skipped=6)
+
+Reference duels
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py > runs/t18_matchup_pvpoke.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+108 of 108 PvPoke battles reproduced exactly
+
+Intentional behavior baseline update
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/speedcheck.py save > runs/t18_matchup_speed.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+baseline saved
+  engine only (Masher v Masher)      6170.3 battles per CPU second
+  Planner v the crowd                 106.2 battles per CPU second
+  learned bot v learned bot            57.7 battles per CPU second
+
+Model comparison; priority error retained
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/compare_models.py runs/general-decide/q.npz:0.02 --battles 4000 --seed 18061 --workers 1 > runs/t18_matchup_models.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 41, in play
+    os.nice(10)
+    ~~~~~~~^^^^
+PermissionError: [Errno 1] Operation not permitted
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 80, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 62, in main
+    got = dict(workers.map(play, jobs, chunksize=1))
+               ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 774, in get
+    raise self._value
+PermissionError: [Errno 1] Operation not permitted
+
+Temporary wrapper created before this command:
+cat > /tmp/t18_matchup_compare.py <<'PY'
+"""Run the repository model comparison while retaining an existing low priority if lowering it is denied."""
+import os
+import sys
+
+_original_nice = os.nice
+
+
+def keep_low_priority(increment):
+    try:
+        return _original_nice(increment)
+    except PermissionError:
+        current = os.getpriority(os.PRIO_PROCESS, 0)
+        if current <= 0:
+            raise
+        print(f"priority change denied; retaining below-normal priority {current}", flush=True)
+        return current
+
+
+os.nice = keep_low_priority
+sys.path.insert(0, "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts")
+import compare_models
+
+if __name__ == "__main__":
+    compare_models.main()
+PY
+
+Model comparison through priority wrapper; fresh battles
+$ env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/t18_matchup_compare.py runs/general-decide/q.npz:0.02 --battles 4000 --seed 18061 --workers 1 > runs/t18_matchup_models_final.out 2>&1
+Output:
+nice: setpriority: Operation not permitted
+priority change denied; retaining below-normal priority 5
+priority change denied; retaining below-normal priority 5
+same 4000 battles for all
+  Planner alone                                55.1% ± 1.5
+  runs/general-decide/q.npz:0.02               64.1% ± 1.5   +8.9 ± 1.6 over the Planner
+
+Final whitespace check:
+$ git diff --check
+Output: none (exit 0).

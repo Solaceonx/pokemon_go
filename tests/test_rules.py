@@ -194,10 +194,10 @@ class Guessing(unittest.TestCase):
         b = Battle([gator, azumarill()], [Mon(GD.default("altaria")), medicham()], Script(), Script(shield=True))
 
         def baiter():
-            return Planner(bait="farm", shields="threshold", farm=False, hold=False)  # the bait rule on its own
+            return Planner(bait="farm", shields="threshold", farm=False, hold=False, good_matchup=False)  # the bait rule on its own
 
         self.assertEqual(baiter().act(b.views[0]), FAST)
-        self.assertEqual(Planner(bait="cheap", farm=False, hold=False).act(b.views[0]), CHARGED[0])
+        self.assertEqual(Planner(bait="cheap", farm=False, hold=False, good_matchup=False).act(b.views[0]), CHARGED[0])
         gator.energy = 60
         b.sides[1].busy = 1  # Dragon Breath lands this turn, so the timing is already right
         self.assertEqual(baiter().act(b.views[0]), CHARGED[0])  # Hydro Cannon, with Ice Beam in hand
@@ -220,36 +220,36 @@ class Tactics(unittest.TestCase):
         alt = Mon(GD.default("altaria"), energy=60)
         b = Battle([alt, GD.default("melmetal")], [GD.default("torterra"), GD.default("jellicent")], Script(), Script())
         b.sides[1].busy = 1  # so that timing is not the reason to wait
-        self.assertEqual(Planner(switches=False).act(b.views[0]), FAST)
-        self.assertIn(Planner(farm=False, hold=False, switches=False).act(b.views[0]), CHARGED)
+        self.assertEqual(Planner(switches=False, good_matchup=False).act(b.views[0]), FAST)
+        self.assertIn(Planner(farm=False, hold=False, switches=False, good_matchup=False).act(b.views[0]), CHARGED)
         alt.energy = 100
-        self.assertIn(Planner(switches=False).act(b.views[0]), CHARGED)  # full, so holding gains nothing
+        self.assertIn(Planner(switches=False, good_matchup=False).act(b.views[0]), CHARGED)  # full, so holding gains nothing
 
     def test_saves_a_spent_pokemon_and_brings_it_back_to_take_a_charged_move(self):
         az = Mon(azumarill(), hp=12)
         foe = Mon(GD.default("melmetal"))
         b = Battle([az, medicham(), GD.default("altaria")], [foe, GD.default("jellicent")], Script(), Script())
-        self.assertIn(Planner().act(b.views[0]), SWITCH[1:])  # get it out before it goes down for nothing
-        self.assertEqual(Planner(sac=False).act(b.views[0]), FAST)
+        self.assertIn(Planner(good_matchup=False).act(b.views[0]), SWITCH[1:])  # get it out before it goes down for nothing
+        self.assertEqual(Planner(sac=False, good_matchup=False).act(b.views[0]), FAST)
         b.sides[0].active = 1  # Medicham is now in front, and faints
         b.sides[0].team[1].hp = 0
         foe.energy = 100
-        self.assertEqual(Planner().replace(b.views[0]), 0)  # Melmetal has a move ready: let Azumarill take it
+        self.assertEqual(Planner(good_matchup=False).replace(b.views[0]), 0)  # Melmetal has a move ready: let Azumarill take it
         foe.energy = 0
-        self.assertEqual(Planner().replace(b.views[0]), 2)  # nothing ready: keep Azumarill in reserve
+        self.assertEqual(Planner(good_matchup=False).replace(b.views[0]), 2)  # nothing ready: keep Azumarill in reserve
 
 
     def test_holds_a_ready_move_until_the_opponent_is_about_to_get_one(self):
         az = Mon(azumarill(), energy=60)  # both charged moves ready
         foe = Mon(GD.default("jellicent"))
         b = Battle([az, medicham()], [foe, GD.default("altaria")], Script(), Script())
-        self.assertIn(Planner(switches=False, seed=1, hold=False).act(b.views[0]), CHARGED)
-        patient = Planner(switches=False, seed=1)  # the rule is part of the standard player
+        self.assertIn(Planner(switches=False, seed=1, hold=False, good_matchup=False).act(b.views[0]), CHARGED)
+        patient = Planner(switches=False, seed=1, good_matchup=False)  # the rule is part of the standard player
         self.assertEqual(patient.act(b.views[0]), FAST)  # they are far from a move: keep building energy
         foe.energy = min(m.energy for m in foe.build.charged)
         self.assertIn(patient.act(b.views[0]), CHARGED)  # they have one now: no more waiting
         foe.energy = 0
-        self.assertIn(Planner(switches=False, seed=1, hold=True, hold_cost=0.0).act(b.views[0]), CHARGED)  # any damage is too much
+        self.assertIn(Planner(switches=False, seed=1, hold=True, hold_cost=0.0, good_matchup=False).act(b.views[0]), CHARGED)  # any damage is too much
 
 
 class Tracking(unittest.TestCase):
@@ -262,7 +262,9 @@ class Tracking(unittest.TestCase):
         tally = check_tracker.Tally()
         for seed in range(12):
             teams = rng.sample(pool, 3), rng.sample(pool, 3)
-            agents = (check_tracker.ViaTracker(Planner(seed=seed)), Planner(seed=seed))
+            # Keep the tracker regression's battle trajectories independent of the matchup rule.
+            agents = (check_tracker.ViaTracker(Planner(seed=seed, good_matchup=False)),
+                      Planner(seed=seed, good_matchup=False))
             check_tracker.play(GD, teams, agents, seed, check_tracker.CAMERAS["perfect"], tally, rng)
         self.assertGreater(tally.exact / tally.n, 0.95)  # their hidden energy, counted from my health bar
         self.assertGreater(tally.busy_right / tally.n, 0.95)
@@ -281,7 +283,8 @@ class Tracking(unittest.TestCase):
             for b in rng.sample(pool, 3):  # give each of theirs a fast move other than the usual one, where it has one
                 others = [f for f in GD.species[b.species_id]["fastMoves"] if f in GD.moves and f != b.fast.id]
                 theirs.append(GD.build(b.species_id, [others[0], *(m.id for m in b.charged)]) if others else b)
-            agents = (check_tracker.ViaTracker(Planner(seed=seed)), Planner(seed=seed))
+            agents = (check_tracker.ViaTracker(Planner(seed=seed, good_matchup=False)),
+                      Planner(seed=seed, good_matchup=False))
             check_tracker.play(GD, (mine, theirs), agents, seed, check_tracker.CAMERAS["perfect"], check_tracker.Tally(), rng)
             for truth in theirs:
                 foe = agents[0].tracker.foes.get(truth.species_id)

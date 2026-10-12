@@ -43,13 +43,16 @@ def main() -> None:
     draw = drawer(gd, pool)
     crowd = lambda rng: varied(rng, pool)  # noqa: E731
     base = field_results(None, pool, lambda: Planner(), crowd, args.battles, args.seed + 1, draw=draw)
-    print(f"standard player against the crowd: {100 * sum(base) / len(base):.1f}%; energy thrown away with a move ready: {wasted(pool, draw, {}, 800, args.seed + 2):.1f} a battle", flush=True)
+    mean, margin = mean_and_margin(base)
+    print(f"battles: {args.battles}; seed: {args.seed}", flush=True)
+    print(f"standard player against the crowd: {100 * mean:.1f}% ± {100 * margin:.1f}; energy thrown away with a move ready: {wasted(pool, draw, {}, 800, args.seed + 2):.1f} a battle", flush=True)
     for text in args.settings:
         settings = eval(f"dict({text})")  # noqa: S307 - our own command line
         head = compare(lambda: Planner(**settings), lambda: Planner(), pool, pairings=args.battles // 2, seed=args.seed)
         mine = field_results(None, pool, lambda: Planner(**settings), crowd, args.battles, args.seed + 1, draw=draw)
+        mean, mine_margin = mean_and_margin(mine)
         diff, margin = mean_and_margin([a - b for a, b in zip(mine, base)])
-        print(f"{text}: head to head {100 * head.score:.1f}% ± {100 * head.margin:.1f} | against the crowd {100 * sum(mine) / len(mine):.1f}%, "
+        print(f"{text}: head to head {100 * head.score:.1f}% ± {100 * head.margin:.1f} | against the crowd {100 * mean:.1f}% ± {100 * mine_margin:.1f}, "
               f"{100 * diff:+.1f} ± {100 * margin:.1f} | energy thrown away {wasted(pool, draw, settings, 800, args.seed + 2):.1f} a battle", flush=True)
 
 

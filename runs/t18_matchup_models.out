@@ -1,0 +1,30 @@
+nice: setpriority: Operation not permitted
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 41, in play
+    os.nice(10)
+    ~~~~~~~^^^^
+PermissionError: [Errno 1] Operation not permitted
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 80, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marco/Developer/pokemon_go-wt/t18-matchup/scripts/compare_models.py", line 62, in main
+    got = dict(workers.map(play, jobs, chunksize=1))
+               ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 774, in get
+    raise self._value
+PermissionError: [Errno 1] Operation not permitted

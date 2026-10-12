@@ -225,6 +225,56 @@ rule) on the same 4,000 battles:
 
 Today's rules beat the rules of 10 October 57.2% ± 1.2 head to head.
 
+### Get into the good matchup (task 18, rule 5; 2026-10-11): confirmed gain
+
+`Planner(good_matchup=True, matchup_weight=0.75)` blends the saved one-on-one table
+(`data/matchups.json`, fresh Pokémon averaged over zero, one and two shields) with the
+existing duel from the current health, energy and shields. The table has 75% of the
+weight. This guides ordinary swaps, counter-swaps, rescue destinations and replacements
+chosen by outlook; switch cooldowns and sacrifice priorities still apply. Missing pairs
+and a fainted opponent use the live duel alone. The table assumes usual builds and moves,
+so this is a heuristic, not a fresh simulation of every possible moveset or state.
+
+The option started off. Weights 0.25, 0.5 and 0.75 were tried with
+`scripts/rule_trial.py --battles 4000 --seed 41`; those are tuning results only, saved in
+`runs/t18_matchup_tuning.out`. The best head-to-head setting, 0.75, was frozen and tested
+on seed 18051, with 4,000 fresh battles per comparison:
+
+| Comparison | Win share or paired gain, with 95% margin |
+|---|---|
+| Rule against the standard player, each team pairing both ways | 52.0% ± 1.2 |
+| Standard player against the crowd | 56.3% ± 1.5 |
+| Rule against the same crowd on the same battles | 58.4% ± 1.5 |
+| Rule's paired gain against the crowd | +2.1 ± 1.4 points |
+
+The head-to-head gain exceeds its margin on the second seed, so the rule is now the
+default, and 80% of `varied_settings` opponents use it. `good_matchup=False` restores the
+previous rule for comparisons. Both trials preceded promotion: their standard player
+and crowd had the new rule off. The trial script now prints margins for absolute crowd
+scores as well as the paired difference. Fresh results: `runs/t18_matchup_fresh.out`.
+
+Validation: 109 unit tests ran, passing with six PyAV-dependent video tests skipped;
+108 of 108 PvPoke battles reproduced exactly; `scripts/speedcheck.py save` refreshed the
+intentionally changed behavior fingerprints. Tests that isolate earlier tactics disable
+the new rule. The initial suite exposed four wrong unusual-fast-move inferences in a
+tracker fixture (limit one) after the new pilot changed its battle trajectories. Both
+tracker fixtures now explicitly retain the old pilot, rather than changing tracker code
+or loosening their assertions. This does not validate tracker inference on the new
+pilot's unusual-moveset trajectories. Logs are under `runs/t18_matchup_*`.
+
+The learned layer still helps after promotion. `scripts/compare_models.py` with
+`runs/general-decide/q.npz:0.02`, 4,000 fresh battles, seed 18061 and one worker, against
+the updated crowd: Planner **55.1% ± 1.5**, learned layer **64.1% ± 1.5**, paired gain
+**+8.9 ± 1.6 points**. The direct command stopped when the sandbox denied its worker's
+priority change; a temporary wrapper reran the same comparison while retaining the
+existing below-normal priority of 5. `nice` was requested for every long job, and
+numerical threads and workers were limited to one. Exact commands, wrapper source and
+outputs are recorded in `runs/t18_matchup_commands.txt`; the successful model log is
+`runs/t18_matchup_models_final.out`.
+
+Rule 5's "Done when" check ran and passed: a confirmed second-seed gain, followed by
+promotion and all required checks. Rules 1–4 of task 18 were outside this change.
+
 ## Adversarial training (task 14)
 
 An exploiter is a model trained the same way as the bot, but with the bot itself as its
@@ -1084,6 +1134,37 @@ played out under slightly older ones, and adding the new examples to the old cha
 Matching the old volume with new-rule examples would take about eleven core-hours; the expected gain is a
 few points at most, so it has not been run. Log: `runs/general-rules2.out`, `runs/compare_models_1.out`.
 
+### Task 19: the full-size retrain (2026-10-12)
+
+Two runs of `decide.py --minutes 180 --rounds 3 --teams data/teams.json --workers 4` (12 core-hours each):
+`runs/retrain-today` (today's crowd) and `runs/retrain-today-rivals` (the same with
+`--opponents runs/general-decide/q.npz`, so half the opposing pilots use the old model). Each ended with
+1.2 to 1.4 million shield examples, about four times the old model's 336k.
+
+`compare_models.py`, all three on the same 4,000 battles (seed 19019, `runs/compare_task19.out`):
+
+| Pilot | Score | Over the Planner | Against the old model |
+|---|---|---|---|
+| Planner alone | 55.6% ± 1.5 | | |
+| Old model (version 3) | 64.3% ± 1.5 | +8.7 ± 1.7 | |
+| Retrained | 66.3% ± 1.5 | +10.7 ± 1.6 | +2.0 ± 1.5 |
+| Retrained with learned opponents | 67.5% ± 1.4 | +11.9 ± 1.6 | +3.2 ± 1.5 |
+
+Head to head against the old model: retrained 50.9% ± 1.3; retrained with learned opponents 51.8% ± 1.3.
+
+Only the second meets both parts of the rule. Picked from two, so it was rechecked alone on fresh battles
+(seed 29029, `runs/compare_task19_confirm.out`): 68.4% ± 1.4 against 65.8% ± 1.5, **+2.6 ± 1.5** against the
+crowd, and **53.6% ± 1.3** head to head. **It replaces the old model** in `runs/general-decide/q.npz`
+(margin 0.02). Version 3 is kept as `q_v5.npz`, the name the hand-off asks for.
+
+With the good-matchup rule on as well (seed 39039, `runs/compare_rule5_with_new_model.out`), the new model
+is still ahead of version 3, by less: +1.6 ± 1.5 against the crowd, 51.5% ± 1.2 head to head.
+
+A third run with the good-matchup rule on during training (`runs/retrain-rule5`, `--minutes 90 --workers 8`,
+the same 12 core-hours, 1.2 million shield examples, half the opponents on the new model) did not beat the
+new model: −1.9 ± 1.4 and +0.0 ± 1.4 against the crowd, 49.5% ± 1.2 and 49.6% ± 1.3 head to head (seeds 49049
+and 59059, `runs/compare_rule5_a.out`, `_b.out`). The new model stays.
+
 ## Best teams from the owner's own Pokémon (2026-10-11)
 
 **Do not use the table in this section to pick a team.** The owner rejected it: at their level the game
@@ -1164,4 +1245,3 @@ The order of teams is decided by what the opponents bring, and that is the missi
 opposing teams whose own best teams score about 50% against it (task 21 in `tasks.md`), or the teams the
 owner actually meets. The script now prints a caution, and writes it into `data/roster_teams.json`, when
 its best line-up wins more than 65%.
-

@@ -8,9 +8,12 @@ An agent answers three questions, each from a View of the battle:
 from __future__ import annotations
 
 import copy
+import json
 import random
+from functools import lru_cache
 
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, View, apply_buffs, damage
+from .gamedata import DATA
 
 
 class Masher:
@@ -51,6 +54,13 @@ def duel(mine: Mon, theirs: Mon, my_shields: int, their_shields: int, coming_in:
 
 
 _safety: dict = {}
+
+
+@lru_cache(maxsize=1)
+def _matchup_table() -> dict:
+    """Saved fresh one-on-ones, averaged over 0, 1 and 2 shields by scripts/teams.py."""
+    path = DATA / "matchups.json"
+    return json.loads(path.read_text()) if path.exists() else {}
 
 
 def safety(build, field: list) -> float:
@@ -125,6 +135,9 @@ class Planner:
               which one this opponent has thrown in that spot before.
     switches: plays out each one-on-one in advance to choose replacements and to leave a
               losing matchup when the switch timer allows.
+    good_matchup: blend the saved one-on-one table into those choices. matchup_weight is
+              the table's share; the rest uses current health, energy and shields. Missing
+              pairs use the live duel alone. The table assumes the usual builds and moves.
     field:    the Pokémon opponents tend to bring. With it, a swap can weigh how well the
               incoming Pokémon holds up against whatever answers it (safe_weight 1) and
               not only how it does against the one in front of it (safe_weight 0).
@@ -151,19 +164,24 @@ class Planner:
                  sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
                  odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
                  last_gasp: bool = True, timed_farm: bool = True,
-                 win_switch: float | None = 0.1, switch_worth: float = 0.0):
+                 win_switch: float | None = 0.1, switch_worth: float = 0.0,
+                 good_matchup: bool = True, matchup_weight: float = 0.75):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
             raise ValueError(f"unknown shield rule {shields!r}")
         if guess not in ("worst", "mix", "read"):
             raise ValueError(f"unknown guess rule {guess!r}")
+        if not 0.0 <= matchup_weight <= 1.0:
+            raise ValueError("matchup_weight must be between 0 and 1")
         self.moves = moves
         self.timing = timing
         self.bait = bait
         self.shields = shields
         self.guess = guess
         self.switches = switches
+        self.good_matchup = good_matchup
+        self.matchup_weight = matchup_weight
         self.shield_share = shield_share  # threshold rule: shield a hit worth this share of full health
         self.shield_worth = shield_worth  # lookahead: one unused shield, in units of one full Pokémon
         self.energy_worth = energy_worth  # lookahead: 100 stored energy, in the same units
@@ -518,7 +536,14 @@ class Planner:
     # switching
 
     def _outlook(self, view: View, slot: int) -> float:
-        return duel(view.me.team[slot], view.foe, view.me.shields, view.foe_shields, coming_in=slot != view.me.active)
+        mine, foe = view.me.team[slot], view.foe
+        live = duel(mine, foe, view.me.shields, view.foe_shields, coming_in=slot != view.me.active)
+        if not self.good_matchup or not self.matchup_weight or mine.hp <= 0 or foe.hp <= 0:
+            return live
+        table = _matchup_table().get(mine.build.species_id, {}).get(foe.build.species_id)
+        if table is None:
+            return live
+        return (1 - self.matchup_weight) * live + self.matchup_weight * table
 
     def _pick_switch(self, view: View) -> int | None:
         me, mon = view.me, view.me.mon
@@ -673,6 +698,7 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         hold=rng.random() < 0.8, hold_cost=near(0.5, 0.4),
         last_gasp=rng.random() < 0.8, timed_farm=rng.random() < 0.8,
         win_switch=near(0.1, 0.4) if rng.random() < 0.8 else None,
+        good_matchup=rng.random() < 0.8,
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),
