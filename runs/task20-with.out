@@ -1,0 +1,58 @@
+nice: setpriority: Operation not permitted
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner
+workers: 3
+mid-matchup swap: True; examples per round: 60000
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+collected this round: 51850 shield, 19258 throw, 35687 swap, 8201 replace, 151402 mid_swap
+
+round 1: 8788 battles in 20.0 min; examples so far: 11669 shield, 4423 throw, 8111 swap, 1807 replace, 33990 mid_swap
+  shield: average result by option 56.8% 55.6%
+  throw: average result by option 57.4% 55.6% 53.7% 52.5% 37.8%
+  swap: average result by option 59.0% 55.2% 56.2%
+  replace: average result by option 50.8% 49.7%
+  mid_swap: average result by option 57.6% 49.9% 50.4%
+  overrule when ahead by 0.02: +3.4 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +5.2 ± 2.9 points against the Planner
+  overrule when ahead by 0.1: +4.8 ± 1.9 points against the Planner
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+collected this round: 49293 shield, 17838 throw, 34020 swap, 7564 replace, 121354 mid_swap
+
+round 2: 8147 battles in 20.0 min; examples so far: 24506 shield, 9063 throw, 17062 swap, 3787 replace, 65582 mid_swap
+  shield: average result by option 58.9% 56.8%
+  throw: average result by option 58.7% 57.2% 55.3% 53.2% 38.4%
+  swap: average result by option 60.9% 56.2% 56.6%
+  replace: average result by option 51.5% 51.7%
+  mid_swap: average result by option 59.4% 50.9% 51.9%
+  overrule when ahead by 0.02: +6.2 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +7.1 ± 2.9 points against the Planner
+  overrule when ahead by 0.1: +2.1 ± 2.1 points against the Planner
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+collected this round: 50087 shield, 17148 throw, 31824 swap, 7075 replace, 117954 mid_swap
+
+round 3: 7674 battles in 20.0 min; examples so far: 38053 shield, 13510 throw, 25493 swap, 5672 replace, 97272 mid_swap
+  shield: average result by option 60.3% 58.2%
+  throw: average result by option 59.8% 58.3% 57.1% 54.1% 39.6%
+  swap: average result by option 62.5% 57.8% 58.3%
+  replace: average result by option 53.3% 52.8%
+  mid_swap: average result by option 61.1% 53.0% 53.9%
+  overrule when ahead by 0.02: +9.6 ± 3.5 points against the Planner
+  overrule when ahead by 0.05: +7.1 ± 3.1 points against the Planner
+  overrule when ahead by 0.1: +6.3 ± 2.2 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.02
+  with learned decisions   64.4% ± 1.7
+  Planner, same teams      55.4% ± 1.8
+  difference               +8.9 ± 2.0 points (same battles for both); overruled the Planner per battle: mid_swap 0.59, replace 0.02, shield 1.39, swap 0.30, throw 0.67
+files: runs/task20-with/q.npz, margin.txt, examples.npz
+real 3874.57
+user 10858.95
+sys 186.09

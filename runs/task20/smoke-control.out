@@ -1,0 +1,26 @@
+nice: setpriority: Operation not permitted
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner
+workers: 3
+mid-matchup swap: False; examples per round: 100
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+priority: retaining inherited nice=5 (sandbox denied lowering it further)
+collected this round: 296 shield, 126 throw, 189 swap, 49 replace, 0 mid_swap
+
+round 1: 52 battles in 0.1 min; examples so far: 40 shield, 23 throw, 32 swap, 5 replace, 0 mid_swap
+  shield: average result by option 46.2% 37.5%
+  throw: average result by option 58.7% 37.0% 63.9% 39.1% 34.8%
+  swap: average result by option 57.8% 39.1% 50.0%
+  replace: average result by option 60.0% 60.0%
+  overrule when ahead by 0.02: -55.0 ± 26.5 points against the Planner
+  overrule when ahead by 0.05: -45.0 ± 26.5 points against the Planner
+  overrule when ahead by 0.1: -45.0 ± 26.5 points against the Planner
+
+final test on 40 fresh battles, overruling when ahead by 0.05
+  with learned decisions   20.0% ± 12.6
+  Planner, same teams      60.0% ± 15.4
+  difference               -40.0 ± 16.9 points (same battles for both); overruled the Planner per battle: shield 2.15, swap 0.65, throw 6.53
+files: runs/task20-smoke-control/q.npz, margin.txt, examples.npz

@@ -6,6 +6,8 @@ says how to run things.
 
 Last updated 2026-10-11.
 
+Last updated 2026-10-12.
+
 ## Goal
 
 A bot that plays Pokémon GO trainer battles (Great League, three against three). Given
@@ -76,6 +78,13 @@ Do not re-propose these without a new angle.
   head to head. `q.npz` is still the first model. The method looks to have levelled off
   with its current inputs.
 - **A fixed roster of crude opponent styles**: rejected as unrepresentative of real play.
+- **A learned mid-matchup swap head at a fixed total example budget (task 20).** Two fresh
+  models, each trained on 180,000 retained decisions after 60 minutes of collection with
+  three workers, differed by +0.6 ± 1.5 points against the crowd; the new head scored
+  51.3% ± 1.3 head to head against the control, on 4,000 fresh battles. No clear overall
+  improvement established. It also lost to the model current at the time (version 3, since replaced by the task 19 model), 44.6% ± 1.3 head to head.
+  The head remains available for experiments; the current model is unchanged. Full
+  counts, commands and comparisons are below.
 - **Shortlisting teams by one-on-one coverage score**: a team that ranked 3,818th of
   19,024 on that score came 4th in real battles, so the score is a poor filter.
 - **Setting up a sweeper after a losing-lead swap** (task 18, rule 1):
@@ -1278,6 +1287,101 @@ A third run with the good-matchup rule on during training (`runs/retrain-rule5`,
 the same 12 core-hours, 1.2 million shield examples, half the opponents on the new model) did not beat the
 new model: −1.9 ± 1.4 and +0.0 ± 1.4 against the crowd, 49.5% ± 1.2 and 49.6% ± 1.3 head to head (seeds 49049
 and 59059, `runs/compare_rule5_a.out`, `_b.out`). The new model stays.
+
+## Learned mid-matchup swaps (task 20, 2026-10-12)
+
+`Q_HEADS` now includes `mid_swap`: stay, or bring in either living bench Pokémon. The
+`Learner` offers it in an already judged matchup when the switch is ready, our active
+Pokémon can act, and the opponent is at most two of its fast moves from its cheapest
+charged move, including a move already ready. It uses `Learner._decide`, with the
+Planner's sacrifice/rescue choice as its default; the training script plays out each
+legal option with the same dice. Choosing a switch clears any pending fast-move hold.
+Models without the head keep their previous behavior. `Learner(mid_swap=False)` and
+`scripts/decide.py --no-mid-swap` provide explicit ablations.
+
+**Training.** Both models started fresh, with the same seed (20000), three rounds,
+three workers, team source (half `data/teams.json`, half random top-50 threes), usual
+Planner crowd, network/fit settings, and margin-selection procedure. The new-head run
+finished before the control started. Each collected for 60 minutes: 60.07 and 60.03
+measured minutes, respectively; including fitting, validation and the final test, they
+took 64.6 and 64.7 minutes. Both selected margin 0.02 on validation seeds 20051–20053.
+
+Equal wall time can produce different amounts of data, so `--examples-per-round 60000`
+retained exactly 60,000 fresh decisions per round, uniformly sampled across heads,
+and each fit used all retained rounds. Generated totals were 720,555 with the new head
+and 692,086 without; each final model was fitted on **180,000** decisions. The cap was
+fixed before either full run or acceptance test. Per-head retained counts:
+
+| Model | Shield | Throw | New-matchup swap | Replacement | Mid-matchup swap | Total |
+|---|---:|---:|---:|---:|---:|---:|
+| `runs/task20-with/q.npz` | 38,053 | 13,510 | 25,493 | 5,672 | 97,272 | 180,000 |
+| `runs/task20-without/q.npz` | 84,661 | 29,039 | 54,257 | 12,043 | 0 | 180,000 |
+
+This measures a fixed total decision budget: the new head uses about 54% of it, leaving
+fewer examples for each original head. The result applies to that allocation. Each
+run's `training.json` records generated and retained counts by round; the ignored
+`examples.npz` files retain the actual fitting samples.
+
+**Fresh evaluation.** The training scripts' final tests used seed 20999, 3,000 battles,
+separate from margin selection. With the new head: 64.4% ± 1.7 against 55.4% ± 1.8 for
+the Planner, a paired +8.9 ± 2.0 points. Without it: 64.4% ± 1.7 against the same
+55.4% ± 1.8, a paired +9.0 ± 1.8 points. These are supporting checks; the task's
+acceptance comparison uses `scripts/compare_models.py` on 4,000 other battles, seed
+20261020, reserved before training and never used for tuning:
+
+| Pilot, margin 0.02 for each model | Against the crowd | Over the Planner | Against the control, paired |
+|---|---|---|---|
+| Planner | 54.9% ± 1.5 | | |
+| Control, without the new head | 65.4% ± 1.5 | +10.4 ± 1.6 | |
+| With the new head | 66.0% ± 1.5 | +11.0 ± 1.7 | +0.6 ± 1.5 |
+| Current model, `runs/general-decide/q.npz` | 65.2% ± 1.5 | +10.2 ± 1.7 | −0.2 ± 1.6 |
+
+Head to head uses seed 20261021, 2,000 random team pairings played both ways (4,000
+battles), also unused for tuning:
+
+| Match | First named player's score |
+|---|---|
+| With the new head against the control | 51.3% ± 1.3 |
+| Current model against the control | 53.5% ± 1.3 |
+| With the new head against the current model | 44.6% ± 1.3 |
+
+The second `compare_models.py` command directly compared the new model with the current
+one, repeating the same crowd battles and adding their direct match. Its paired crowd
+difference was +0.8 ± 1.7 points; both crowd scores reproduced the first command exactly.
+
+**Outcome.** No clear overall improvement from the new head at this budget: the paired
+crowd gain is smaller than its margin, and the head-to-head result is near the 50%
+boundary. Task 20's **Done when check was run**: equally sized training sets were
+verified and the two trained models were compared with `compare_models.py`. The new
+model also loses clearly to the current model head to head and fails the replacement
+criteria. No files in `runs/general-decide/` were replaced or changed.
+
+**Reproduction and checks.** Exact commands, including environment settings and seeds,
+are in [`runs/task20/commands.txt`](../runs/task20/commands.txt). Full training output:
+[`task20-with.out`](../runs/task20-with.out) and
+[`task20-without.out`](../runs/task20-without.out). Acceptance output:
+[`compare.out`](../runs/task20/compare.out) and
+[`compare-current.out`](../runs/task20/compare-current.out). Every reported score above is win share
+with a 95% margin on battles excluded from tuning; validation scores in the training
+logs are tuning diagnostics.
+
+The full suite passed: 111 tests run, with six existing video checks skipped because
+PyAV is absent from the requested interpreter. All 108 PvPoke reference battles
+reproduced exactly.
+Tests cover the two-fast-move boundary, switch availability, masks, slot mappings,
+catching an actual charged move, forced play-outs, old models/policies, and sampling.
+An additional 100 old-model battle logs matched the pre-edit `Learner` exactly. The
+saved `speedcheck.py` baseline is stale for the unchanged Planner too; it was not
+overwritten. Artifact checks verify array shapes, finite model weights, equal training
+settings and totals, and the presence/absence of the new head. Input hashes and every
+file in `runs/general-decide/` also verified unchanged. Comparison workers now reset
+pilot seeds per job so worker reuse does not change the comparison's random choices.
+
+All long commands were invoked with `nice`, with one NumPy/BLAS thread per worker.
+The sandbox denied further priority reductions; the scripts retained their inherited
+low priority (`nice=5`), with at most three workers. Models and logs are small; large
+example archives remain ignored. These are simulator results against the existing
+crowd and learned models, with exact battle information.
 
 ## Best teams from the owner's own Pokémon (2026-10-11)
 

@@ -11,6 +11,7 @@ each option, dice and all else equal:
     throw     first charged move / second / hold for one, four or ten more fast moves
     swap      at a new matchup with the switch ready: stay / bring in either of the others
     replace   after a faint: which of the others to send in
+    mid_swap  in an ongoing matchup, within two of their fast moves of a charge: stay / either bench
 
 A network is then trained to predict, from what the player can see, the chance
 of winning after each option. The Learner follows the Planner except where the
@@ -23,6 +24,7 @@ One core, low priority. Files go to runs/general-decide/ or runs/<team>-decide/.
 from __future__ import annotations
 
 import argparse
+import json
 import multiprocessing
 import os
 import random
@@ -37,7 +39,7 @@ import numpy as np  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import Planner, varied, varied_settings  # noqa: E402
-from pogo.arena import field_results, mean_and_margin  # noqa: E402
+from pogo.arena import field_results, low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import N_FEATURES, Q_HEADS, Learner, QNet  # noqa: E402
@@ -72,7 +74,7 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
-            pvpoke_share: float = 0.0):
+            pvpoke_share: float = 0.0, mid_swap: bool = True):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
@@ -85,11 +87,11 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
     while time.time() < stop:
         log: list = []
         if pvpoke_share and rng.random() < pvpoke_share:
-            me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), PvpokeOpponent()
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, seed=rng.getrandbits(32)), PvpokeOpponent()
             battle = Battle(rng.sample(pool, 1), rng.sample(pool, 1), me, them, seed=rng.getrandbits(32))
             pvpoke_battles += 1
         else:
-            me, them = Learner(q=q, margin=margin, log=log, seed=rng.getrandbits(32)), crowd(rng)
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, seed=rng.getrandbits(32)), crowd(rng)
             battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         while battle.winner is None:
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
@@ -106,6 +108,24 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
         battles += 1
     return {head: (np.array(x).reshape(-1, N_FEATURES), np.array(y).reshape(-1, Q_HEADS[head]))
             for head, (x, y) in data.items()}, battles, pvpoke_battles
+
+
+def sample_examples(data, count: int, seed: int):
+    """Keep exactly count decision examples, sampled uniformly across all heads.
+
+    Use the same count each round in ablations: equal wall time alone gives different
+    amounts of training data when an extra decision needs more play-outs.
+    """
+    total = sum(len(x) for x, _ in data.values())
+    if total < count:
+        raise ValueError(f"collected {total} examples, fewer than the requested {count}; increase --minutes")
+    selected = np.sort(np.random.default_rng(seed).choice(total, count, replace=False))
+    sampled, offset = {}, 0
+    for head, (x, y) in data.items():
+        rows = selected[(selected >= offset) & (selected < offset + len(x))] - offset
+        sampled[head] = x[rows], y[rows]
+        offset += len(x)
+    return sampled
 
 
 def world(config: dict):
@@ -139,10 +159,10 @@ def world(config: dict):
 def collect_job(job):
     """One worker's share of a round of collecting."""
     config, q_params, margin, seconds, seed = job
-    os.nice(10)
+    low_priority()
     _, pool, team, draw, crowd = world(config)
     return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
-                   pvpoke_share=config.get("pvpoke_share", 0.0))
+                   pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"])
 
 
 def main() -> None:
@@ -158,6 +178,9 @@ def main() -> None:
     parser.add_argument("--run", help="name of the run folder under runs/")
     parser.add_argument("--minutes", type=float, default=30, help="time spent generating examples, over all rounds")
     parser.add_argument("--rounds", type=int, default=2)
+    parser.add_argument("--no-mid-swap", action="store_true", help="train the four original heads only (controlled ablation)")
+    parser.add_argument("--examples-per-round", type=int,
+                        help="fit on exactly this many fresh decision examples per round, sampled after collection; fail if too few")
     parser.add_argument("--workers", type=int, default=1,
                         help="processes generating examples at once; each uses one core, so 4 gives four times the examples in the same time")
     parser.add_argument("--val-battles", type=int, default=1000, help="battles used to choose how readily to overrule the Planner")
@@ -166,10 +189,14 @@ def main() -> None:
     parser.add_argument("--pvpoke-share", type=float, default=0.0,
                         help="share of example battles played 1v1 against PvPoke's AI (shield and throw decisions only)")
     args = parser.parse_args()
+    if args.examples_per_round is not None and args.examples_per_round <= 0:
+        parser.error("--examples-per-round must be positive")
+    if args.minutes <= 0 or args.rounds <= 0 or args.workers <= 0:
+        parser.error("--minutes, --rounds and --workers must be positive")
 
-    os.nice(10)
+    low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
-              "pvpoke_share": args.pvpoke_share}
+              "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -183,13 +210,14 @@ def main() -> None:
     else:
         print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""))
     print(f"workers: {args.workers}", flush=True)
+    print(f"mid-matchup swap: {config['mid_swap']}; examples per round: {args.examples_per_round or 'all'}", flush=True)
 
     def versus_planner(q, margin, battles, seed, on_team, against=None):
         pilots = []
         against = against or crowd
 
         def pilot():
-            pilots.append(Learner(q=q, margin=margin))
+            pilots.append(Learner(q=q, margin=margin, mid_swap=config["mid_swap"]))
             return pilots[-1]
 
         learned = field_results(on_team, pool, pilot, against, battles, seed, draw)
@@ -215,9 +243,14 @@ def main() -> None:
         margin = float((folder / "margin.txt").read_text()) if (folder / "margin.txt").exists() else margin
         if (folder / "examples.npz").exists():  # not kept in git; without it, start collecting afresh from the saved model
             saved = np.load(folder / "examples.npz")
-            stored = {head: (saved[f"{head}_x"], saved[f"{head}_y"]) for head in Q_HEADS}
+            stored.update({head: (saved[f"{head}_x"], saved[f"{head}_y"])
+                           for head in Q_HEADS if f"{head}_x" in saved})
+        if args.no_mid_swap:
+            q.params.pop("mid_swap", None)
+            stored["mid_swap"] = (np.zeros((0, N_FEATURES)), np.zeros((0, Q_HEADS["mid_swap"])))
         print(f"resuming with {sum(len(x) for x, _ in stored.values())} examples already collected", flush=True)
         args.seed += 1000 + sum(len(x) for x, _ in stored.values()) % 1000  # so new battles differ from the earlier ones
+    receipt = {"arguments": vars(args), "rounds": []}
     for round_no in range(1, args.rounds + 1):
         t0 = time.time()
         seconds = 60 * args.minutes / args.rounds
@@ -231,14 +264,24 @@ def main() -> None:
             pvpoke_battles = sum(part[2] for part in parts)
         else:
             fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
-                                                     pvpoke_share=args.pvpoke_share)
+                                                     pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"])
+        collected = {head: len(x) for head, (x, _) in fresh.items()}
+        collection_seconds = time.time() - t0
+        if args.examples_per_round is not None:
+            fresh = sample_examples(fresh, args.examples_per_round, args.seed + 10000 + round_no)
         for head in Q_HEADS:
             stored[head] = (np.vstack([stored[head][0], fresh[head][0]]), np.vstack([stored[head][1], fresh[head][1]]))
         np.savez_compressed(folder / "examples.npz", **{f"{h}_{k}": a for h, xy in stored.items() for k, a in zip("xy", xy)})
-        print(f"\nround {round_no}: {battles} battles ({pvpoke_battles} of them 1v1 against PvPoke) in "
-              f"{(time.time() - t0) / 60:.1f} min; examples so far: "
+        receipt["rounds"].append({"round": round_no, "battles": battles, "pvpoke_battles": pvpoke_battles, "collection_seconds": collection_seconds,
+                                  "collected": collected, "retained": {h: len(x) for h, (x, _) in fresh.items()},
+                                  "cumulative": {h: len(x) for h, (x, _) in stored.items()}})
+        (folder / "training.json").write_text(json.dumps(receipt, indent=2) + "\n")
+        print("collected this round: " + ", ".join(f"{n} {h}" for h, n in collected.items()), flush=True)
+        print(f"\nround {round_no}: {battles} battles ({pvpoke_battles} of them 1v1 against PvPoke) in {(time.time() - t0) / 60:.1f} min; examples so far: "
               + ", ".join(f"{len(stored[h][0])} {h}" for h in Q_HEADS), flush=True)
         q = QNet(seed=args.seed)
+        # A missing head must fall back to the Planner, never use random untrained weights.
+        q.params = {h: ps for h, ps in q.params.items() if len(stored[h][0])}
         for head, (x, y) in stored.items():
             if len(x):
                 print(f"  {head}: average result by option " + " ".join(f"{100 * r:.1f}%" for r in np.nanmean(y, axis=0)))

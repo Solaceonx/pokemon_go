@@ -22,10 +22,11 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", 
     os.environ[_v] = "1"
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import Planner, varied  # noqa: E402
-from pogo.arena import compare, field_results, mean_and_margin  # noqa: E402
+from pogo.arena import compare, field_results, low_priority, mean_and_margin  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
+import pogo.agents as agents  # noqa: E402
 
 
 def pilot_for(spec):
@@ -38,7 +39,8 @@ def pilot_for(spec):
 
 def play(job):
     spec, battles, seed = job
-    os.nice(10)
+    low_priority()
+    agents._seeds.seed(seed)  # a reused worker must give every model the same pilot dice
     gd = GameData()
     pool = gd.meta(50)
     return spec, field_results(None, pool, pilot_for(spec), lambda rng: varied(rng, pool), battles, seed, draw=drawer(gd, pool))
@@ -46,7 +48,8 @@ def play(job):
 
 def duel(job):
     spec, first, battles, seed = job
-    os.nice(10)
+    low_priority()
+    agents._seeds.seed(seed)
     return spec, compare(pilot_for(spec), pilot_for(first), GameData().meta(50), pairings=battles // 2, seed=seed)
 
 

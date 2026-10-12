@@ -205,6 +205,17 @@ planner_choice)` and add the head with its number of options to `Q_HEADS` in
 network's input reserves three slots for the `Planner`'s own pick, so a head can have at
 most three options unless that is widened.
 
+The `mid_swap` head offers stay or either living bench Pokémon during an already judged
+matchup, when switching is available and the opponent can reach its cheapest charged move
+within two of its fast moves (including a move already ready). Models without this head
+keep their previous behavior. `Learner(mid_swap=False)` disables it explicitly.
+For a training ablation, use `scripts/decide.py --no-mid-swap` for the control and the same
+`--examples-per-round N` for both runs. Each round collects for its allotted time, samples
+exactly N fresh decisions uniformly across the enabled heads, and fits on all retained
+rounds. It fails if too few examples were collected. `training.json` records collected and
+retained counts; equal total counts do not imply equal counts per head. Evaluate the two
+saved models with `scripts/compare_models.py` on a seed not used to choose their margins.
+
 **A new kind of opponent.** Return it from the `crowd` function. Keep the old crowd as a
 second test so results stay comparable over time.
 
