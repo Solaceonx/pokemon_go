@@ -46,8 +46,8 @@ means the same teams and battles for both pilots.
 | Per-decision learning, one team, shield and throw decisions only | +8.1 ± 1.8 points over the Planner, 3,000 battles |
 | Tracker with a perfect simulated camera | Opponent's energy exact on 99% of turns; Planner plays as well from it as from the truth (50.6% ± 4.0) |
 | Tracker with a rough camera (1 look in 5 missed, coarse bars, move not named) | Costs about 7 points (42.7% ± 4.0) |
-| PvPoke's AI (`pogo/pvpoke_ai.py`), one-on-one, 2,000 battles per seed, seeds 101 and 202 | Beats the Planner (42.6% / 44.4%, ± 1.4) and the Learner (40.8% / 42.0%, ± 1.4) |
-| PvPoke's fast/charged choice in the final one-on-one only (`pogo/hybrid.py`), `scripts/check_endgame_throws.py`, seeds 101 and 202 | Against PvPoke one-on-one: 49.3% / 49.0% ± 0.6 for both players (mostly a mirror there). 3v3 unchanged within margins, no consistent sign: Learner against varied / expert / Planner moves +0.8 / +1.3 / −1.8 on seed 101 and −0.5 / −2.7 / +0.1 on seed 202 (margins about ± 2.5 per cell) |
+| PvPoke's AI (`pogo/pvpoke_ai.py`), one-on-one, 2,000 battles per seed, seeds 101 and 202, today's rules and model (2026-10-11) | Beats the Planner (43.3% / 43.3%, ± 1.3) and the Learner (42.5% / 43.2%, ± 1.4) |
+| PvPoke's fast/charged choice in the final one-on-one only (`pogo/hybrid.py`), `scripts/check_endgame_throws.py`, seeds 101 and 202, today's rules and model | Against PvPoke one-on-one: 49.3% / 49.0% ± 0.6 for both players (mostly a mirror there). 3v3 no cost: Learner against varied / expert / Planner moves +1.1 / +1.2 / +0.5 on seed 101 and +0.3 / +0.4 / −0.6 on seed 202; Planner +0.2 to +1.6 (margins about ± 2.5 per cell, ± 1.3 against the Planner) |
 
 Worth of each hand-written rule, head-to-head against the same player without it:
 move timing 56.4% ± 0.8; shields by lookahead 55.8% ± 1.0; sacrifice play 52.2% ± 1.0;
