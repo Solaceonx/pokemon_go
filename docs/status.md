@@ -1581,3 +1581,34 @@ of 3 (`runs/teams_v2_full.out`, 408.7 minutes, ten rounds from `data/teams_v2.js
 `data/teams_v2_full.json`. The strongest counter found now scores **58.3% ± 1.7** against the list (was 62.7%
 ± 3.0), still above 55%, so the check still fails. The roster comparison against this fuller list had not
 finished when this was written.
+
+## Reserved official sample: frozen state evaluation (2026-10-11)
+
+The latest GitHub handoff at 0fd98ff requested the twenty reserved views' readings
+without tuning the state tracker on them. All ten games are now read at 15 FPS
+and three text looks per second: 56,034 screen readings,
+2,534 published model states and matching lossless
+continuity records. Videos stay local. Both sources retain the reserved role.
+The three protected tracker files and all nine pixel-reader hashes are unchanged.
+New source IDs inherit identical prior button geometry, with no numeric fit.
+
+The exact before/fitted `--told` comparison on these ten games gives mean energy
+disagreement 16.32 → 14.15
+and within-two-fast-move agreement
+73.4% → 75.7%.
+These compare eligible looks against the other camera's imperfect saved readings,
+not independently verified truth. Full per-field results and denominators are in
+`docs/reserved_state_evaluation.md` and `data/vod_reserved_state_evaluation.json`.
+Strict ending checks fail in 20 of twenty views. A reviewed frame shows combat by
+4.517 seconds while one view starts its battle model at 20.7 seconds. Forms,
+exact HP and unobserved events remain unresolved; nothing was tuned on this case.
+
+All 102 pipeline tests and 108 reference duels pass. Export audits cover all
+twenty clips; browser checks cover four player views, playback and twelve seeks,
+populated live values, single-view decompression and dataset separation. Current
+new data occupies 55.36 MB, retained history
+10.16 MB and portable exports
+15.31 MB, alongside the unchanged 774.40 MB
+of cropped video. The 61-view HTML is 58.92 MB
+and embeds no video. Earlier collection and 23-view reports remain historical
+measurements, separate from these results.

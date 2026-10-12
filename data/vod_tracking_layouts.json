@@ -2,9 +2,164 @@
   "schema": "vod-tracking-calibration-v1",
   "coordinate_basis": "508x1080 normalized phone crop",
   "layouts": {
-    "2894502346:pov": {"centers_x": [156, 351], "center_y": 963, "radius": 39},
-    "2897295240:left": {"centers_x": [156, 351], "center_y": 971, "radius": 39},
-    "2897295240:right": {"centers_x": [146, 341], "center_y": 971, "radius": 39}
+    "2894502346:pov": {
+      "centers_x": [
+        156,
+        351
+      ],
+      "center_y": 963,
+      "radius": 39
+    },
+    "2897295240:left": {
+      "centers_x": [
+        156,
+        351
+      ],
+      "center_y": 971,
+      "radius": 39
+    },
+    "2897295240:right": {
+      "centers_x": [
+        146,
+        341
+      ],
+      "center_y": 971,
+      "radius": 39
+    },
+    "2897166800:left": {
+      "centers_x": [
+        156,
+        351
+      ],
+      "center_y": 971,
+      "radius": 39
+    },
+    "2897166800:right": {
+      "centers_x": [
+        146,
+        341
+      ],
+      "center_y": 971,
+      "radius": 39
+    },
+    "2897312743:left": {
+      "centers_x": [
+        156,
+        351
+      ],
+      "center_y": 971,
+      "radius": 39
+    },
+    "2897312743:right": {
+      "centers_x": [
+        146,
+        341
+      ],
+      "center_y": 971,
+      "radius": 39
+    }
   },
-  "notes": "Measured from visible discs. These refine UI reading without changing cuts. Energy fill remains an estimate and requires independent evaluation."
+  "notes": "Measured on the earlier pilot discs. The reserved official sources inherit those unchanged positions because both source and clip crops match. No numeric parameters were fitted on the reserved sample. Energy fill remains an estimate and requires independent evaluation.",
+  "calibration_inheritance": [
+    {
+      "new_layout": "2897166800:left",
+      "inherited_from": "2897295240:left",
+      "identical_source_crop": [
+        508,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          156,
+          351
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897166800:right",
+      "inherited_from": "2897295240:right",
+      "identical_source_crop": [
+        970,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          146,
+          341
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897312743:left",
+      "inherited_from": "2897295240:left",
+      "identical_source_crop": [
+        508,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          156,
+          351
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    },
+    {
+      "new_layout": "2897312743:right",
+      "inherited_from": "2897295240:right",
+      "identical_source_crop": [
+        970,
+        56,
+        448,
+        976
+      ],
+      "identical_clip_viewport": [
+        0,
+        0,
+        448,
+        976
+      ],
+      "parameters": {
+        "centers_x": [
+          146,
+          341
+        ],
+        "center_y": 971,
+        "radius": 39
+      },
+      "new_numeric_parameters_fitted": false
+    }
+  ]
 }

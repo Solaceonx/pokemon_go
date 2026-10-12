@@ -13,8 +13,10 @@ clips, saves compressed results, and opens the viewer with its live values table
 
 The two new official Louisville sample options export five complete games each,
 with both player views kept together. Select **New official sample** in the viewer
-to find them. Their state readings are pending. Keep these reserved games out of
-recognition calibration and broad tracking runs until the evaluation is ready.
+to find them. All twenty views now have full-clip screen readings, retained
+state and live-table values. The requested frozen before/fitted comparison is in
+`docs/reserved_state_evaluation.md`; it measures view agreement, not independent
+accuracy. Keep these reserved games out of recognition calibration.
 
 ## Track the saved clips
 
