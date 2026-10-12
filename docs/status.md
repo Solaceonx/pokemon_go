@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-10.
+Last updated 2026-10-11.
 
 ## Goal
 
@@ -78,6 +78,11 @@ Do not re-propose these without a new angle.
 - **A fixed roster of crude opponent styles**: rejected as unrepresentative of real play.
 - **Shortlisting teams by one-on-one coverage score**: a team that ranked 3,818th of
   19,024 on that score came 4th in real battles, so the score is a poor filter.
+- **Setting up a sweeper after a losing-lead swap** (task 18, rule 1):
+  `Planner(sweeper=0.5, sweep_chance=0.5)` scored **50.1% ± 0.6 head to head**
+  on 4,000 fresh battles (seed 90317), and **+0.1 ± 0.2 points** against the
+  crowd on the same battles as the baseline. No confirmed gain; `sweeper=0.0`
+  remains the default. Details and limitations are under the owner's guidance below.
 
 ## How per-decision learning works
 
@@ -210,8 +215,8 @@ and for the counter to be better by 0.35. The gain is in taking small edges too.
 
 **Valuing the win when shielding** (`switch_worth`): while a switch clock is running, add a
 bonus to the shield choice that leaves us the winner of the present matchup. No difference at
-0.2 or 0.5 (50.4% ± 0.7 and 50.2% ± 0.8 head to head). Left at zero. Setting up a sweeper is
-not attempted.
+0.2 or 0.5 (50.4% ± 0.7 and 50.2% ± 0.8 head to head). Left at zero. Setting up a sweeper
+is tested separately below.
 
 Where the standard player stands, against today's crowd (four in five opponents use each
 rule) on the same 4,000 battles:
@@ -274,6 +279,62 @@ outputs are recorded in `runs/t18_matchup_commands.txt`; the successful model lo
 
 Rule 5's "Done when" check ran and passed: a confirmed second-seed gain, followed by
 promotion and all required checks. Rules 1–4 of task 18 were outside this change.
+
+### Set up a sweeper (2026-10-11, task 18 rule 1): no confirmed gain
+
+`Planner(sweeper=0.0, sweep_chance=0.75)` adds an off-by-default experiment.
+After our losing lead swaps and the opponent counter-swaps, a winnable new
+matchup can become a setup opportunity. Each bench candidate plays through the
+other two opponents with their shields removed, carrying health, energy and our
+remaining shields through both opponents. It must win in both orders. A hidden
+last Pokémon is averaged over `field`, or the top 50 if no field was supplied;
+the actual hidden roster is never read. `sweep_chance` is the required fraction
+of those candidate teams swept. For a qualifying teammate, `sweeper` adds value
+to shields saved and drawn in the existing shield and charged-move lookahead.
+If our setup Pokémon faints while the matchup is still locked, that teammate
+comes in; the existing farming rule can build its energy from the remainder.
+
+Three settings were tried on seed 41, each with `--battles 4000`: shield bonus
+0.5 with sweep thresholds 0.5 and 0.75, and bonus 1.0 with threshold 0.5.
+Those are selection data only, in `runs/t18-sweeper-tuning-seed41.out`.
+The reported head-to-head scores tied; the smaller bonus and less restrictive
+gate were selected before the fresh run (`runs/t18-sweeper-selection.txt`).
+No setting was retuned on the confirmation battles.
+
+**Held-out result**, seed 90317, 4,000 head-to-head battles (2,000 team pairings,
+each played both ways), plus 4,000 paired battles against the unchanged crowd:
+
+| Measure | `sweeper=0.5, sweep_chance=0.5` |
+|---|---|
+| Head to head against the standard Planner | 50.1% ± 0.6 |
+| Against the crowd | 54.9% ± 1.5 |
+| Standard Planner against the same crowd battles | 54.8% ± 1.5 |
+| Paired difference against the crowd | +0.1 ± 0.2 points |
+
+All margins are 95%. Energy discarded on faints with a charged move ready was
+6.5 per battle for both, over the separate 800-battle diagnostic. Raw output:
+`runs/t18-sweeper-confirm-seed90317.out`. `rule_trial.py` now reports margins on
+the absolute crowd scores too, and repeats pilot seeds across settings so its
+paired comparisons share the pilot's dice as well as teams and opponents.
+Exact commands and check results are in `runs/t18-sweeper-commands.txt`.
+
+**Did not help measurably.** The fresh head-to-head advantage is smaller than
+its margin, so rule 1's gain check ran and failed. The negative outcome is
+recorded under "Tried and did not help"; the option remains off, and the crowd
+and other rule defaults stay unchanged. This tests a narrow setup heuristic:
+the sweep projection assumes the current counter-swap is removed, uses simple
+duel pilots, and treats an unseen last opponent as a field prior. It does not
+prove that a real player's setup judgment cannot help.
+
+All 111 unit tests pass (six existing skips), including nine setup tests and
+the existing 108 PvPoke reference duels. The setup tests cover the losing-lead
+sequence, continuous sweep resources, hidden-team independence, a real changed
+shield decision, replacement, plan expiry and cloning. No promotion, crowd
+change, speed-baseline save, or learned-layer comparison was done because the
+fresh gain was not confirmed. Rules 2–5 and task 18's full five-rule completion
+check are outside this run. Jobs were sequential with numerical-library thread
+limits of one; `nice -n 10` was invoked but the sandbox denied its priority
+change and allowed the jobs to continue.
 
 ## Adversarial training (task 14)
 

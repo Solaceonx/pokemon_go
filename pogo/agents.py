@@ -40,6 +40,13 @@ _MASHER = Masher()
 _seeds = random.Random(20261009)
 
 
+@lru_cache(maxsize=1)
+def _sweeper_field() -> tuple:
+    """A prior for an unseen last Pokémon, never the hidden battle roster."""
+    from .gamedata import GameData
+    return tuple(GameData().meta(50))
+
+
 def duel(mine: Mon, theirs: Mon, my_shields: int, their_shields: int, coming_in: bool = False) -> float:
     """Play out a one-on-one between two mashers from the given states.
 
@@ -153,6 +160,11 @@ class Planner:
     value:    a trained ValueModel. With it (and a field), the lookahead judges what is
               left after the visible battle by the model's win chance against the
               opponent's unseen Pokémon, not by adding up health and shields.
+    sweeper:  extra value per shield saved or drawn while setting up a teammate after
+              losing the lead and being counter-swapped. Zero disables the rule.
+              sweep_chance is the required fraction of shieldless two-opponent
+              continuations that teammate wins; unseen opponents use field (or the
+              top-50 prior), never the hidden team.
     """
 
     def __init__(self, moves: bool = True, timing: bool = True, bait: str = "mix", shields: str = "lookahead",
@@ -165,7 +177,8 @@ class Planner:
                  odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
                  last_gasp: bool = True, timed_farm: bool = True,
                  win_switch: float | None = 0.1, switch_worth: float = 0.0,
-                 good_matchup: bool = True, matchup_weight: float = 0.75):
+                 good_matchup: bool = True, matchup_weight: float = 0.75,
+                 sweeper: float = 0.0, sweep_chance: float = 0.75):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -174,6 +187,8 @@ class Planner:
             raise ValueError(f"unknown guess rule {guess!r}")
         if not 0.0 <= matchup_weight <= 1.0:
             raise ValueError("matchup_weight must be between 0 and 1")
+        if sweeper < 0 or not 0 < sweep_chance <= 1:
+            raise ValueError("sweeper must be nonnegative and sweep_chance in (0, 1]")
         self.moves = moves
         self.timing = timing
         self.bait = bait
@@ -209,6 +224,10 @@ class Planner:
         # And then win it: while a switch clock is running on either side, coming out of the present matchup
         # on top is worth this much extra when weighing a shield, on top of what is left on each side.
         self.switch_worth = switch_worth
+        self.sweeper, self.sweep_chance = sweeper, sweep_chance
+        self._setup_swap = None  # (our safe-swap slot, their original lead uid)
+        self._setup_checked = False
+        self._sweep_plan = None  # (safe-swap slot, counter-swap uid, sweeper slot)
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -494,6 +513,10 @@ class Planner:
         options rather than predicting the result.
         """
         me = view.me
+        # A specific setup opportunity, not a general bonus to saving shields.
+        # Reward the immediate shield trade; the ordinary rollout still prices
+        # the health and alignment lost by spending the safe swap this way.
+        setup = self.sweeper * (my_shields - foe_shields) if self._sweeper_slot(view) is not None else 0.0
         if bench is None:
             bench = [m for j, m in enumerate(me.team) if j != me.active and m.hp > 0]
         if switch_wait is None:
@@ -505,7 +528,7 @@ class Planner:
             orders = [[lead] + [m for m in bench if m is not lead] for lead in bench]
         unseen = view.foe_left - sum(m.hp > 0 for m in view.foe_shown)
         if not foes or not orders:
-            return self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
+            return setup + self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
         best = None
         for order in orders:
             battle = Battle([m.copy() for m in order], [m.copy() for m in foes], _rollout(), _rollout(), seed=0,
@@ -515,7 +538,7 @@ class Planner:
             value = self._standing(a.team, a.active, a.shields, a.switch_wait, b.team, b.shields, unseen,
                                    view.turn + battle.turn)
             best = value if best is None else max(best, value)
-        return best
+        return setup + best
 
     def _standing(self, mine: list[Mon], active: int, my_shields: int, switch_wait: int,
                   theirs: list[Mon], foe_shields: int, unseen: int, turn: int) -> float:
@@ -534,6 +557,73 @@ class Planner:
         return chance + 0.02 * tally  # the tally only separates options the model rates the same
 
     # switching
+
+    def _sweep_chance(self, view: View, slot: int) -> float:
+        """Can this teammate beat their last two once the counter-swap is removed?
+
+        Carry health, energy and shields through both opponents, in both orders.
+        Unknown last Pokémon are averaged over the supplied field, excluding
+        species already revealed. This is a prior, not knowledge of their team.
+        """
+        known = [m for m in view.foe_shown if m is not view.foe and m.hp > 0]
+        unseen = view.foe_left - sum(m.hp > 0 for m in view.foe_shown)
+        if len(known) + unseen != 2 or unseen > 1:
+            return 0.0
+        if unseen:
+            shown = {m.build.species_id for m in view.foe_shown}
+            field = self.field if self.field is not None else _sweeper_field()
+            teams = [known + [Mon(b)] for b in field if b.species_id not in shown]
+        else:
+            teams = [known]
+        if not teams:
+            return 0.0
+        wins = 0
+        for team in teams:
+            # Count a team only if it can be swept in either order; two fresh
+            # independent duels would overestimate a sweep by resetting our HP.
+            swept = True
+            for order in (team, team[::-1]):
+                mine = view.me.team[slot].copy()
+                mine.atk_stage = mine.def_stage = 0
+                foes = [m.copy() for m in order]
+                for foe in foes:
+                    foe.atk_stage = foe.def_stage = 0
+                battle = Battle([mine], foes, _MASHER, _MASHER, seed=0,
+                                shields=(view.me.shields, 0))
+                if battle.run() != 0:
+                    swept = False
+                    break
+            wins += swept
+        return wins / len(teams)
+
+    def _sweeper_slot(self, view: View) -> int | None:
+        """Recognize the owner's losing-lead / safe-swap / counter-swap sequence."""
+        if not self.sweeper or self._setup_swap is None:
+            return None
+        me = view.me
+        slot, lead = self._setup_swap
+        if me.active != slot or not me.switch_wait:
+            self._sweep_plan = None
+            self._setup_swap = None
+            return None
+        if self._sweep_plan is not None:
+            _, counter, sweeper = self._sweep_plan
+            if view.foe_switch_wait and view.foe.build.uid == counter and me.team[sweeper].hp > 0:
+                return sweeper
+            self._sweep_plan = None
+            self._setup_swap = None
+            return None
+        if self._setup_checked or view.foe.build.uid == lead or not view.foe_switch_wait:
+            return None
+        self._setup_checked = True
+        if self._outlook(view, me.active) <= 0:
+            return None  # an unwinnable counter-swap is outside this rule
+        candidates = [(self._sweep_chance(view, j), j) for j in me.bench()]
+        chance, sweeper = max(candidates, default=(0.0, -1))
+        if chance >= self.sweep_chance:
+            self._sweep_plan = (slot, view.foe.build.uid, sweeper)
+            return sweeper
+        return None
 
     def _outlook(self, view: View, slot: int) -> float:
         mine, foe = view.me.team[slot], view.foe
@@ -632,13 +722,23 @@ class Planner:
         if self.switches:
             switch = self._pick_switch(view)
             if switch is not None:
+                if (self.sweeper and view.me.shown == [0] and view.me.active == 0
+                        and len(view.foe_shown) == 1 and view.foe_switch_wait == 0
+                        and self._outlook(view, 0) < self.bad_matchup):
+                    self._setup_swap = (SWITCH.index(switch), view.foe.build.uid)
+                    self._setup_checked = False
+                    self._sweep_plan = None
                 return switch
+        self._sweeper_slot(view)
         if self.moves:
             return self._pick_move(view)
         return _MASHER.act(view)
 
     def replace(self, view: View) -> int:
         me = view.me
+        sweeper = self._sweeper_slot(view)
+        if sweeper is not None:
+            return sweeper  # inherit the shield advantage and farm the remainder
         if not self.switches:
             return me.bench()[0]
         if self.sac:
