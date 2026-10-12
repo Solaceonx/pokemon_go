@@ -1,0 +1,37 @@
+{
+  "battle_start_source_seconds": 4.8,
+  "battle_start_uncertainty_source_seconds": [
+    4.7,
+    4.8
+  ],
+  "reviewed_fighting_intervals": [
+    [
+      5,
+      8.5
+    ],
+    [
+      16,
+      17
+    ]
+  ],
+  "sample_interval_seconds": 0.5,
+  "visible_species_forms": {
+    "Vigoroth": "Vigoroth (Shadow)"
+  },
+  "charged_events": [
+    {
+      "source_seconds": 13.5,
+      "side": "foe",
+      "move": "Body Slam",
+      "evidence": "Visible Vigoroth used Body Slam text in source footage"
+    }
+  ],
+  "team": {
+    "pokemon": [
+      {
+        "species": "Raichu"
+      }
+    ]
+  },
+  "report": "# Reis first battle: partial integration sample\n\nSource: Reis2TheOccasion, https://www.youtube.com/watch?v=qSaL7jM9NbA\n\nBattle opening was visually inspected. Countdown GO fades between source 4.7 and 4.8 seconds; 4.8 is a provisional visual time origin, not a verified input-acceptance boundary. Selected source coverage is 5.0 through 17.0 seconds. This is a deliberately partial sample, not the completed battle or an asserted video cut. Stop here for this integration check.\n\nReviewed fighting windows: 5.0\u20138.5 and 16.0\u201317.0 seconds, sampled every 0.5 seconds when fresh fields are readable. Shield prompt and attack animation between these windows are excluded. Vigoroth used Body Slam text is visible at 13.5 seconds; the event is attached once at the next sampled fighting look at 16.0. The exact first fighting frame after the attack remains unverified. Sparse windows and omitted frames mean this does not meet full continuous battle coverage.\n\nSpecies, CP, shield counts and party markers are exported only from fresh observed fields. Vigoroth's Shadow form is visually supported by its visible shadow aura in this segment. Our lead is visibly Raichu before fighting; no fast move, IVs or level are supplied. The team file does not guess the remaining team.\n\nHealth, numerical energy and switch clocks are omitted. The current bar detector reports colored extent, and pending-damage colors, moving bars, compression and approximately 140 usable pixels can make that unsuitable for reconstructing landed hits. Full health validation is still required. The tracker may initialize omitted health, moves, energy and clocks from assumptions; those output values are not screen observations. Zero unexplained changes with omitted health is not evidence that energy or fast moves are accurate.\n\nScreen information absent from the requested format: battle phase, minigame type and target positions, per-field confidence, timing uncertainty, colored health-bar segments, and attack ownership when the active Pokemon changes during an attack. Source alignment is retained in source_alignment.jsonl alongside the three requested input files.\n\nBefore a complete battle export: confirm the time origin, classify all transitions, measure and verify health, resolve party-marker changes, sample fighting continuously, and end any segment at a verified video cut. Do not force measurements to agree with tracker assumptions.\n\n\n## Completed integration checks\n\nAll 11 exported source frames were visually spot-checked in spot-check.jpg. Time is nondecreasing; observed shields and party counts do not increase. The Body Slam event is followed by our shield count changing from two to one. HP monotonicity and damage checks are not applicable because HP was omitted. At five sampled moments, tracker active species, shields and party counts match the exported screen readings; health and inferred energy were not validated.\n\nTracker run: 11 looks accepted, zero rejected, one foe charged event, zero unexplained changes. With health omitted, this does not test fast-hit inference. The supplied worked example separately accepts all 119 looks with zero rejected lines. Reader and exporter verification: 38 tests pass.\n\nBundle issue confirmed: an empty team raises IndexError on the first update, despite being allowed by the instructions. The bundle source is unchanged. Also, the CLI disregards charged moves when the fast move is unknown and substitutes charged index zero for a name absent from its assumed moveset. These should be addressed in the battle logic before interpreting full exports.\n"
+}
