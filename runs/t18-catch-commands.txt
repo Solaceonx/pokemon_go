@@ -1,0 +1,69 @@
+Task 18, rule 3 only: catch a charged move with a switch (2026-10-11).
+Working directory: /Users/marco/Developer/pokemon_go-wt/t18-catch
+
+All numerical-library thread limits below were set to one. Jobs ran serially.
+Every Python command was invoked through nice, but the OS printed
+"nice: setpriority: Operation not permitted" and continued without applying
+the requested priority adjustment. No network, commits, or branch changes.
+
+1. Focused functional checks
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests -p test_catch.py
+
+Printed:
+nice: setpriority: Operation not permitted
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.010s
+
+OK
+
+2. Parameter selection, not acceptance evidence
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py 'catch=True,catch_gain=0.1' 'catch=True,catch_gain=0.2' 'catch=True,catch_gain=0.3' 'catch=True,catch_gain=0.4' --battles 4000 --seed 41 > runs/t18-catch-tuning.out 2>&1
+
+Full stdout and stderr are in runs/t18-catch-tuning.out. All scores there
+are tuning scores, with 95% margins; they are not held-out estimates.
+The 0.3 and 0.4 settings tied at the printed head-to-head precision.
+Selected 0.4 before confirmation: it had the slightly better crowd result
+and requires a larger health saving before switching.
+
+3. Fresh-seed confirmation, with the implementation and setting frozen
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/rule_trial.py 'catch=True,catch_gain=0.4' --battles 4000 --seed 104729 > runs/t18-catch-confirmation.out 2>&1
+
+Printed (also saved verbatim in runs/t18-catch-confirmation.out):
+nice: setpriority: Operation not permitted
+standard player against the crowd: 55.9% ± 1.5; energy thrown away with a move ready: 6.5 a battle
+catch=True,catch_gain=0.4: head to head 50.5% ± 0.7 | against the crowd 56.1% ± 1.5, +0.2 ± 0.3 | energy thrown away 6.5 a battle
+
+Head to head: 2,000 random team pairings played both ways (4,000 battles).
+Crowd: 4,000 battles for each pilot, paired by teams, opposing settings,
+battle dice, and pilot seeds. All score margins are 95% half-widths.
+Energy is a separate 800-battle diagnostic at seed 104731, also fresh.
+Neither gain exceeds its margin. No changes were made using these battles.
+
+4. Full required test suite
+
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover -s tests > runs/t18-catch-tests.out 2>&1
+
+Full stdout and stderr are in runs/t18-catch-tests.out. Summary:
+Ran 110 tests in 1.109s
+OK (skipped=6)
+
+The six skips are existing video timestamp checks guarded by PyAV availability.
+No failures. The eight new catch tests all ran. The suite includes the
+existing PvPoke reference-duel test; check_pvpoke.py was not run separately.
+
+5. Working-tree whitespace check
+
+git diff --check
+
+Printed nothing; exited 0.
+
+Outcome: the rule-3 acceptance check ran and found no confirmed gain.
+catch=False remains the default; varied_settings is unchanged. The negative
+result is recorded under "Tried and did not help" in docs/status.md.
+The conditional promotion, crowd update, speedcheck.py save and
+compare_models.py checks were not performed because confirmation failed.
+The four other rules in task 18 were not assessed. All changes are uncommitted.

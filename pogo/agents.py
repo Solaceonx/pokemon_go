@@ -13,7 +13,7 @@ import random
 from functools import lru_cache
 
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, View, apply_buffs, damage
-from .gamedata import DATA
+from .gamedata import DATA, effectiveness
 
 
 class Masher:
@@ -159,6 +159,9 @@ class Planner:
     sac:      keep a nearly fainted Pokémon as a third shield: swap it out before it
               goes down for nothing, and bring it back to take a charged move the
               opponent has ready.
+    catch:    read an affordable charged move while the opponent is free to throw,
+              and switch to a surviving resist. catch_gain is the minimum health
+              saved, measured as fractions of each Pokémon's full health.
     replace_by: choose the replacement after a faint by the one-on-one "outlook" or by
               playing the visible battle forward ("lookahead").
     value:    a trained ValueModel. With it (and a field), the lookahead judges what is
@@ -183,7 +186,8 @@ class Planner:
                  win_switch: float | None = 0.1, switch_worth: float = 0.0,
                  good_matchup: bool = True, matchup_weight: float = 0.75,
                  sweeper: float = 0.0, sweep_chance: float = 0.75,
-                 shield_matchups: bool = False, shield_matchup_hp: float = 0.3):
+                 shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
+                 catch: bool = False, catch_gain: float = 0.2):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -235,6 +239,7 @@ class Planner:
         self._sweep_plan = None  # (safe-swap slot, counter-swap uid, sweeper slot)
         self.shield_matchups = shield_matchups
         self.shield_matchup_hp = shield_matchup_hp
+        self.catch, self.catch_gain = catch, catch_gain
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -657,12 +662,55 @@ class Planner:
                 slot = self._pick_rescue(view)
             if slot is not None:
                 return SWITCH[slot]
+        if self.catch:
+            slot = self._pick_catch(view)
+            if slot is not None:
+                return SWITCH[slot]
         matchup = (me.active, view.foe.build.uid)
         if matchup == self._judged:
             return None
         self._judged = matchup
         slot = self._swap_choice(view)
         return None if slot is None else SWITCH[slot]
+
+    def _pick_catch(self, view: View) -> int | None:
+        """Read a throw from visible energy and move choices, without seeing their action.
+
+        Into shields, use the opponent's observed soft/hard bait rate. Without
+        shields, expect the cheapest knockout or the best damage per energy.
+        Energy being ready is only a read: they can still farm or switch instead.
+        """
+        me, mon, foe = view.me, view.me.mon, view.foe
+        if me.switch_wait or me.busy or view.foe_busy or mon.hp <= 0 or foe.hp <= 0:
+            return None
+        ready = [m for m in foe.build.charged if m.energy <= foe.energy]
+        if not ready:
+            return None
+        hits = {m: damage(foe, m, mon) for m in ready}
+        if me.shields:
+            soft, hard = min(ready, key=hits.get), max(ready, key=hits.get)
+            bait = self._bait_seen[0] / self._bait_seen[1]
+            threats = [(soft, 1.0)] if soft is hard else [(soft, bait), (hard, 1 - bait)]
+        else:
+            lethal = [m for m in ready if hits[m] >= mon.hp]
+            move = min(lethal, key=lambda m: m.energy) if lethal else max(ready, key=lambda m: hits[m] / m.energy)
+            threats = [(move, 1.0)]
+        threats = [(m, p) for m, p in threats if p > 0]
+        incoming = sum(p * min(hits[m], mon.hp) / mon.build.hp for m, p in threats)
+        best, best_gain = None, self.catch_gain
+        for j in me.bench():
+            target = me.team[j].copy()
+            target.atk_stage = target.def_stage = 0
+            # A catch preserves a living resist; sacrificing a spent Pokémon is
+            # handled separately above. Require resistance to every plausible bait.
+            if any(effectiveness(m.type, target.build.types) >= 1 or damage(foe, m, target) >= target.hp
+                   for m, _ in threats):
+                continue
+            caught = sum(p * damage(foe, m, target) / target.build.hp for m, p in threats)
+            gain = incoming - caught
+            if gain > best_gain:
+                best, best_gain = j, gain
+        return best
 
     def _swap_choice(self, view: View) -> int | None:
         """Faced with a new matchup and free to switch: the slot to bring in, or None to stay."""

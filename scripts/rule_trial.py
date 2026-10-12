@@ -38,6 +38,12 @@ def wasted(pool, draw, settings: dict, battles: int, seed: int) -> float:
     return total / battles
 
 
+def pilots(settings: dict, seed: int):
+    """Repeat the same pilot dice for every setting, independent of CLI order."""
+    rng = random.Random(seed)
+    return lambda: Planner(**dict(settings, seed=rng.getrandbits(32)))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("settings", nargs="+")

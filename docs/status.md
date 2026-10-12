@@ -107,6 +107,36 @@ Do not re-propose these without a new angle.
   speed-baseline save or learned-layer comparison was run. The other four rules in
   task 18 were not attempted.
 
+- **Catch a charged move with a switch (task 18, rule 3, 2026-10-11): no confirmed gain.**
+  `Planner(catch=True, catch_gain=0.4)` reads the exact energy and fast-move readiness
+  in the simulator's `View`, including after the initial matchup has been judged.
+  Into shields it weighs affordable moves by the existing soft/hard bait read;
+  without shields it expects the cheapest knockout or the best damage per energy.
+  It chooses a bench Pokémon that resists and survives every move in that read,
+  requiring the expected health saved to exceed `catch_gain` (fractions of each
+  Pokémon's full health). Having energy does not guarantee a throw this turn;
+  the rule does not know the opponent's chosen action.
+  Tried thresholds 0.1, 0.2, 0.3 and 0.4 on seed 41, 4,000 battles per setting.
+  The last two tied at the printed head-to-head precision; 0.4 had the slightly
+  better crowd result and was selected before opening fresh seed 104729.
+  On those **4,000 fresh battles**, head to head was **50.5% ± 0.7**; against
+  the crowd it scored **56.1% ± 1.5**, versus **55.9% ± 1.5** for the standard
+  player on the same battles: **+0.2 ± 0.3 points**. Neither gain exceeds its
+  95% margin. Both left 6.5 energy per battle on fainted Pokémon with a move
+  ready in the separate 800-battle diagnostic. This implementation did not help
+  measurably, so `catch=False` remains the default and the crowd is unchanged.
+  `rule_trial.py` now prints margins for raw crowd scores and uses repeatable
+  pilot seeds independent of setting order, pairing pilot dice as well as teams
+  and opponents. [Tuning output](../runs/t18-catch-tuning.out) is selection data,
+  not evidence of improvement; [confirmation output](../runs/t18-catch-confirmation.out)
+  is the acceptance check. The [full suite](../runs/t18-catch-tests.out) reports
+  110 tests, OK (6 existing video checks skipped because PyAV is unavailable),
+  including 8 new catch tests. The rule-3 "Done when" check was run and the
+  negative result is recorded here; the other four rules were outside this task.
+  Conditional promotion steps 5–8 were not taken (the full suite and this
+  negative write-up were required separately). No speed baseline was saved or
+  learned-layer comparison run. [Exact commands and outputs](../runs/t18-catch-commands.txt).
+
 ## How per-decision learning works
 
 At a decision met in ordinary play, the battle is frozen and played out once for each
