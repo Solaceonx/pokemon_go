@@ -1,0 +1,1134 @@
+{
+ "about": "Owner roster search against both lists, evaluated on matching untouched seeds. Both sides use the same learned bot. Pairings played on both sides; margins cluster by pair. All line-ups face identical opponents within a list; between lists only the drawn listed team changes. Ranks are among finalists, not a proof of the global optimum; nearby ranks can be noise.",
+ "command": "/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/roster_teams.py --rival bot --listed 1 --teams data/teams.json --compare-teams data/teams_v2.json --stages 40:240,160:40,800:12 --finals 4000 --workers 3 --seed 21121 --out data/roster_teams_v2.json",
+ "old_list": "data/teams.json",
+ "new_list": "data/teams_v2.json",
+ "sha256": {
+  "data/teams.json": "faac064132fe7959d6c9e3f909b8b3c199d09939a64d4f3810cc973624141f6d",
+  "data/teams_v2.json": "868eccf951229b36f3d5794480d14ba31ab9ed43ec05f36677182af783c913ef",
+  "/Users/marco/Developer/pokemon_go-wt/t21/runs/general-decide/q.npz": "46342d0511b4e1228866f028e38d2b7f9eb425f5c4ebb0a85965ee3e671f4609",
+  "/Users/marco/Developer/pokemon_go-wt/t21/data/owner_team.json": "a3d445e7e5c1de091254b8b56423bab77d5fdec6530798641874382f7d0f6ce9",
+  "/Users/marco/Developer/pokemon_go-wt/t21/data/owner_roster.json": "7702a4ecd0bf7023e9cafe111e70828366efb42b73a08d344d1d0a4fda684d49",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/battle.py": "50cdad03d0e012b249f1da61c1c029edf433f37335ef565adbc169a024c58a1d",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/agents.py": "88529ef776bbefd1365f606e92d6a3678875a07c2907ca6244ddfbb7078ae82c",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/learner.py": "fac72fa8d9f735160f26144dce8c031451dc9c1c98626e50829bde9ea4031c28",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/gamedata.py": "d9e786d5466788631b18c12ade154f5b628019e6cd6fbdd2ecafa0f5f353fc0e",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/roster.py": "eee42091447552d7015a040d1bbee75ed84d360f2ab346f8730f10d641575d56",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/teamsearch.py": "930c1ac7ca0ce41669b6fa7be908a12268b8ddaa52fb8ccd59f7af9b0e004a7b",
+  "/Users/marco/Developer/pokemon_go-wt/t21/pogo/teamlist.py": "b8358f36b42c379eacf3e891f8a8f6f500b06f26ad2714ee2d3df4d5d14b97ca",
+  "/Users/marco/Developer/pokemon_go-wt/t21/scripts/roster_teams.py": "14c7c3ee0187b98aa9bd2ceed374946392b0434e9d89e740b73312218169e3b8",
+  "/Users/marco/Developer/pokemon_go-wt/t21/data/gamemaster.json": "311752ea88ad93d033d2d9cf114dbb9d094b5ef80c1ba2490899188f71821915",
+  "/Users/marco/Developer/pokemon_go-wt/t21/data/rankings-1500.json": "0152473e1370bbcbf85b0893e78226950c820cf7dfe6a47f42cb0def6cd9a80e",
+  "/Users/marco/Developer/pokemon_go-wt/t21/data/cpm.json": "bb2a5d2505bd6fdeb020728c74abd0dbeab022ec7b4502c91a4f97a36968517a"
+ },
+ "pool": 100,
+ "listed": 1.0,
+ "rival": "bot",
+ "seed": 17983185430498569373,
+ "search_lineups": 3366,
+ "stages": [
+  [
+   40,
+   240
+  ],
+  [
+   160,
+   40
+  ],
+  [
+   800,
+   12
+  ]
+ ],
+ "battles": 4000,
+ "elapsed_seconds": 3837.7740205000155,
+ "teams": [
+  {
+   "team": [
+    "mantine",
+    "jellicent",
+    "umbreon"
+   ],
+   "old_rank": 25,
+   "new_rank": 1,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.4165,
+    "margin": 0.021611136546035834,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.695,
+    "margin": 0.020183291669876736,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.2785,
+    "margin": 0.030211203031231593,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.173,
+    "margin": 0.030087968022281846,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.2055,
+    "margin": 0.029087680938692854,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "ninetales",
+    "melmetal",
+    "jellicent"
+   ],
+   "old_rank": 8,
+   "new_rank": 2,
+   "selected_by": [
+    "data/teams.json",
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.7115,
+    "margin": 0.019691352642326077,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.68225,
+    "margin": 0.019783470393244965,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.02925,
+    "margin": 0.026440080833598896,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.122,
+    "margin": 0.029362095959579754,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.19275,
+    "margin": 0.02762039284659978,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "melmetal",
+    "quagsire_shadow",
+    "azumarill"
+   ],
+   "old_rank": 20,
+   "new_rank": 3,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.5275,
+    "margin": 0.021885769085052093,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.66575,
+    "margin": 0.02063884741358588,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.13825,
+    "margin": 0.030427475169204993,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.062,
+    "margin": 0.03212919836369633,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.17625,
+    "margin": 0.029564131438008488,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "feraligatr",
+    "jellicent",
+    "stunfisk"
+   ],
+   "old_rank": 13,
+   "new_rank": 4,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.68075,
+    "margin": 0.02041897526384252,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6535,
+    "margin": 0.02068701540830024,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.02725,
+    "margin": 0.028958983015614503,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.09125,
+    "margin": 0.0310924236455455,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.164,
+    "margin": 0.030112963296215794,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "empoleon",
+    "ninetales",
+    "feraligatr"
+   ],
+   "old_rank": 23,
+   "new_rank": 5,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.50275,
+    "margin": 0.021792214762665386,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.65025,
+    "margin": 0.020599142756220355,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.1475,
+    "margin": 0.030881415542571174,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.08675,
+    "margin": 0.029888617637524505,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.16075,
+    "margin": 0.029334870288743885,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "empoleon",
+    "jellicent",
+    "feraligatr"
+   ],
+   "old_rank": 24,
+   "new_rank": 6,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.48375,
+    "margin": 0.02184697539516531,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6475,
+    "margin": 0.02094349326055655,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.16375,
+    "margin": 0.030922372892820845,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.10575,
+    "margin": 0.032472368267504756,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.158,
+    "margin": 0.02950638680406524,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "azumarill",
+    "jellicent",
+    "ninetales"
+   ],
+   "old_rank": 16,
+   "new_rank": 7,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.5825,
+    "margin": 0.021607401391593777,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.64625,
+    "margin": 0.020943134822611897,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.06375,
+    "margin": 0.028681540476969955,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.007,
+    "margin": 0.0294628802301426,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.15675,
+    "margin": 0.02852174448564204,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "melmetal",
+    "altaria",
+    "ninetales"
+   ],
+   "old_rank": 18,
+   "new_rank": 8,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.5435,
+    "margin": 0.021736600610561246,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.64475,
+    "margin": 0.02097460810223927,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.10125,
+    "margin": 0.030533444685658807,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.046,
+    "margin": 0.026652357518250434,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.15525,
+    "margin": 0.02686381078914638,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "melmetal",
+    "jellicent",
+    "feraligatr"
+   ],
+   "old_rank": 17,
+   "new_rank": 9,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.5715,
+    "margin": 0.02164934034026405,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6445,
+    "margin": 0.020834290235686274,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.073,
+    "margin": 0.029453747103029265,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.018,
+    "margin": 0.028769016127502038,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.155,
+    "margin": 0.02674560606383525,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "stunfisk",
+    "vigoroth",
+    "umbreon"
+   ],
+   "old_rank": 22,
+   "new_rank": 10,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.52325,
+    "margin": 0.021867791102300364,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6275,
+    "margin": 0.021194329307562404,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.10425,
+    "margin": 0.0283342361820468,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.06625,
+    "margin": 0.028468853622218116,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.138,
+    "margin": 0.029859880961677035,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "empoleon",
+    "araquanid",
+    "umbreon"
+   ],
+   "old_rank": 26,
+   "new_rank": 11,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.329,
+    "margin": 0.02059723307158276,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6195,
+    "margin": 0.02099966639721682,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.2905,
+    "margin": 0.029598199852647434,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.2605,
+    "margin": 0.028364158625759965,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.13,
+    "margin": 0.02880820085007234,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "feraligatr",
+    "umbreon",
+    "empoleon"
+   ],
+   "old_rank": 14,
+   "new_rank": 12,
+   "selected_by": [
+    "data/teams_v2.json"
+   ],
+   "old": {
+    "score": 0.6055,
+    "margin": 0.02140302923957997,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.611,
+    "margin": 0.021338249310611707,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.0055,
+    "margin": 0.025850226554257765,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.016,
+    "margin": 0.030252720352794263,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.1215,
+    "margin": 0.030748704226451606,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "stunfisk",
+    "melmetal",
+    "altaria"
+   ],
+   "old_rank": 1,
+   "new_rank": 13,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.781,
+    "margin": 0.018116722082360946,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.6065,
+    "margin": 0.02141595498136569,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.1745,
+    "margin": 0.027544703940278227,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.1915,
+    "margin": 0.027432076144557494,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.117,
+    "margin": 0.029417512876378858,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "jellicent",
+    "stunfisk",
+    "fearow"
+   ],
+   "old_rank": 7,
+   "new_rank": 14,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.7125,
+    "margin": 0.019840884691784192,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.59275,
+    "margin": 0.021532949912075633,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.11975,
+    "margin": 0.02845362740330665,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.123,
+    "margin": 0.031241104655726486,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.10325,
+    "margin": 0.03195852883554977,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "jellicent",
+    "melmetal",
+    "altaria"
+   ],
+   "old_rank": 19,
+   "new_rank": 15,
+   "selected_by": [],
+   "old": {
+    "score": 0.532,
+    "margin": 0.021874010536901644,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.567,
+    "margin": 0.02172126689486041,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": 0.035,
+    "margin": 0.02969269014292848,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.0575,
+    "margin": 0.03050417360466682,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.0775,
+    "margin": 0.030005548844851015,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "fearow",
+    "ninetales",
+    "stunfisk"
+   ],
+   "old_rank": 11,
+   "new_rank": 16,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.69375,
+    "margin": 0.020045278130713697,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.541125,
+    "margin": 0.021791004243046263,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.152625,
+    "margin": 0.02874598972813817,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.10425,
+    "margin": 0.02791571903488458,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.051625,
+    "margin": 0.033557931853477524,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "ninetales",
+    "stunfisk",
+    "empoleon"
+   ],
+   "old_rank": 2,
+   "new_rank": 17,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.742,
+    "margin": 0.019042304836514496,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.51475,
+    "margin": 0.021694550760879058,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.22725,
+    "margin": 0.02784594700009619,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.1525,
+    "margin": 0.028929480680202558,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.02525,
+    "margin": 0.030568481905272896,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "quagsire_shadow",
+    "jellicent",
+    "stunfisk"
+   ],
+   "old_rank": 9,
+   "new_rank": 18,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.71075,
+    "margin": 0.01987067964375533,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.5085,
+    "margin": 0.021915779084633137,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.20225,
+    "margin": 0.02812876231875111,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.12125,
+    "margin": 0.030163001211269337,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.019,
+    "margin": 0.0308002616751811,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "feraligatr",
+    "melmetal",
+    "altaria"
+   ],
+   "old_rank": 6,
+   "new_rank": 19,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.719,
+    "margin": 0.019594557523513287,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.505,
+    "margin": 0.021917850626556518,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.214,
+    "margin": 0.02992410682517763,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.1295,
+    "margin": 0.028460205470932986,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.0155,
+    "margin": 0.027838261659200333,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "jellicent",
+    "ninetales",
+    "stunfisk"
+   ],
+   "old_rank": 3,
+   "new_rank": 20,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.7365,
+    "margin": 0.019311960286440433,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.49025,
+    "margin": 0.021799378670164033,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.24625,
+    "margin": 0.028375883847768884,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.147,
+    "margin": 0.02892606768117208,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.00075,
+    "margin": 0.032232761206534864,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "feraligatr",
+    "altaria",
+    "stunfisk"
+   ],
+   "old_rank": 4,
+   "new_rank": 21,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.724,
+    "margin": 0.019596273782867154,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.49,
+    "margin": 0.021914562373499747,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.234,
+    "margin": 0.0278722138581182,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.1345,
+    "margin": 0.02958358737748112,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.0005,
+    "margin": 0.02711223075160294,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "melmetal",
+    "altaria",
+    "jellicent"
+   ],
+   "old_rank": 15,
+   "new_rank": 22,
+   "selected_by": [],
+   "old": {
+    "score": 0.5895,
+    "margin": 0.021564935312156832,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.4895,
+    "margin": 0.021914112940591195,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.1,
+    "margin": 0.03124507204766268,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.0,
+    "margin": 0.0,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": 0.0,
+    "margin": 0.0,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "altaria",
+    "melmetal",
+    "jellicent"
+   ],
+   "old_rank": 21,
+   "new_rank": 23,
+   "selected_by": [],
+   "old": {
+    "score": 0.524,
+    "margin": 0.02189368141366183,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.4875,
+    "margin": 0.021912095859878078,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.0365,
+    "margin": 0.030816752754389335,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": -0.0655,
+    "margin": 0.030378418522957674,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": -0.002,
+    "margin": 0.029537632821137482,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "stunfisk",
+    "melmetal",
+    "ninetales"
+   ],
+   "old_rank": 12,
+   "new_rank": 24,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.68675,
+    "margin": 0.02027944149683891,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.4615,
+    "margin": 0.021798841458767305,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.22525,
+    "margin": 0.0307064786953329,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.09725,
+    "margin": 0.029396484323729894,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": -0.028,
+    "margin": 0.027585357869427615,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "stunfisk",
+    "ninetales",
+    "empoleon"
+   ],
+   "old_rank": 5,
+   "new_rank": 25,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.7235,
+    "margin": 0.019607242033750822,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.410625,
+    "margin": 0.021514352613352928,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.312875,
+    "margin": 0.02982355972624449,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.134,
+    "margin": 0.030656575608081323,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": -0.078875,
+    "margin": 0.02672844501414059,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  },
+  {
+   "team": [
+    "quagsire_shadow",
+    "melmetal",
+    "stunfisk"
+   ],
+   "old_rank": 10,
+   "new_rank": 26,
+   "selected_by": [
+    "data/teams.json"
+   ],
+   "old": {
+    "score": 0.69925,
+    "margin": 0.01982056727224266,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new": {
+    "score": 0.3985,
+    "margin": 0.0214625664606901,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_old": {
+    "score": -0.30075,
+    "margin": 0.03022667837511751,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "old_minus_current": {
+    "score": 0.10975,
+    "margin": 0.027580617998779453,
+    "pairs": 2000,
+    "battles": 4000
+   },
+   "new_minus_current": {
+    "score": -0.091,
+    "margin": 0.026870840631400404,
+    "pairs": 2000,
+    "battles": 4000
+   }
+  }
+ ]
+}

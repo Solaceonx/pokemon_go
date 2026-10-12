@@ -4,8 +4,6 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-11.
-
 Last updated 2026-10-12.
 
 ## Goal
@@ -1463,3 +1461,123 @@ The order of teams is decided by what the opponents bring, and that is the missi
 opposing teams whose own best teams score about 50% against it (task 21 in `tasks.md`), or the teams the
 owner actually meets. The script now prints a caution, and writes it into `data/roster_teams.json`, when
 its best line-up wins more than 65%.
+
+## Opposing team mixture (task 21, 2026-10-12): reduced run did not meet the target
+
+**The new list is experimental, not an accepted replacement.**
+`scripts/self_consistent_teams.py` now builds a weighted mixture with the same trained bot on both sides
+(`runs/general-decide/q.npz`, margin 0.02), using the top 100 supported Pokémon. It measures a matrix of
+three-on-three battles, fits a zero-sum mixture by fictitious play, searches for counters among random
+threes and every one-member change to its strongest parents, adds counters and fits again. Earlier teams
+stay in the population. No one-on-one coverage filter is used. `pogo.teamlist.drawer` understands explicit
+mixture weights while preserving the original score/seen weighting for old lists.
+
+The smaller run used eight rounds, 256 random threes per round with every lead, two mutation parents,
+stages of 8 and 64 mirrored pairs, and 12 pairs per matrix entry. It examined 16,185 distinct line-ups
+during fitting and retained 145. None of the eight rounds met the development stopping condition.
+The weights were then frozen in **`data/teams_v2.json`**; `data/teams.json` was not changed.
+
+An independent counter search screened another 3,397 line-ups against the frozen mixture. Its ten
+finalists and every retained member were tested on **1,000 untouched mirrored pairs (2,000 battles) per
+team**, 154 teams altogether. Margins below are 95% intervals across independent pairs, not across their
+two correlated battles. No final-test battles affected fitting, stopping or candidate selection.
+
+| Fresh check | Score against the new list |
+|---|---|
+| Strongest counter found: Shadow Annihilape / Guzzlord / Stunfisk | **62.7% ± 3.0** |
+| Shadow Empoleon / Jellicent / Stunfisk | 62.1% ± 3.0 |
+| Forretress / Jellicent / Stunfisk | 62.0% ± 3.0 |
+| Best retained member: Carbink / Feraligatr / Marowak | 53.2% ± 3.1 |
+
+The eight highest-scoring tested teams were outside the fitted population. The matrix fit holds up much
+better within its retained population than against newcomers: candidate coverage and more counter-search
+rounds are still needed. The task's counter check **ran and failed**, printing:
+
+```text
+Done-when counter check: FAIL (best found under 55%); simultaneous 95% upper-bound check: FAIL
+```
+
+Selected audit candidates were also tested against the old list with matching draw uniforms, pilot seeds
+and battle dice, on the same 1,000 fresh pair indices per column:
+
+| Team | Old list | New list | New minus old, paired points |
+|---|---|---|---|
+| Shadow Annihilape / Guzzlord / Stunfisk | 47.3% ± 3.0 | 62.7% ± 3.0 | +15.4 ± 4.3 |
+| Shadow Empoleon / Jellicent / Stunfisk | 63.5% ± 3.0 | 62.1% ± 3.0 | −1.5 ± 4.2 |
+| Clefable / Hippowdon / Lapras | 65.8% ± 2.9 | 52.1% ± 3.1 | −13.7 ± 4.2 |
+
+So this budget did **not** solve the opposing-field problem. The mix resists Clefable / Hippowdon /
+Lapras better, leaves the Shadow Empoleon counter essentially unchanged, and loses much more often to
+the strongest new counter. A 50% average for a mixture playing itself would be a zero-sum identity,
+not an acceptance test.
+
+The build and audit took 108.2 minutes on three workers. This is a sampled search, not enumeration of
+all 474,270 legal top-100 line-ups. The broader run was not attempted: its first-stage screens alone
+would require several million battles, beyond three hours at the measured rate, before matrix fitting,
+validation and the roster comparison. [The rerun guide](team_mixture.md) gives the exact smaller and
+larger commands, an exhaustive-screening option, the method and its limits.
+`runs/teams_v2.out` contains the printed results; `data/teams_v2.report.json` contains every held-out
+score, simultaneous uncertainty bounds, paired comparisons, settings, seeds and model/code/data hashes.
+
+`--observed` imports cumulative sighting snapshots and preserves `seen` counts without changing fitted
+weights again at draw time. Real-game sighting aggregation (task 5) was not performed; the saved counts
+remain zero. No real ladder distribution is claimed. The battle engine and learned pilot are unchanged.
+All 113 unit tests ran successfully (107 passed, six optional video checks skipped); all 108 PvPoke
+reference battles reproduced exactly. A small end-to-end replay produced identical weights and held-out
+results with one and three workers, and verified cumulative sighting import. All saved source, model,
+input and list hashes matched the audit.
+
+### Owner's roster against both lists
+
+The paired roster search screened all **3,366** legal owner line-ups against each list, using their
+actual IVs and moves. It kept twelve finalists from each search plus every lead of the current three:
+26 distinct line-ups. Each was then tested on **2,000 new mirrored pairs (4,000 battles) per list**,
+with the trained bot on both sides and 100% listed opponents. These final battles were not used to
+select candidates. The draw uniforms, battle dice and pilot seeds match between columns; the selected
+opposing team changes with the list. Within each column every line-up faces identical opponents.
+
+This table contains the ten highest fresh scores under **each** list, plus the current line-up.
+Ranks are among the 26 finalists; close ranks need not be distinguishable. All margins are 95%,
+computed across independent mirrored pairs. These 100%-listed results differ from the earlier
+80%-listed experiment above.
+
+| Owner line-up (lead first) | Old rank | Old list | New rank | New list |
+|---|---:|---|---:|---|
+| Mantine / Jellicent / Umbreon | 25 | 41.6% ± 2.2 | 1 | **69.5% ± 2.0** |
+| Ninetales / Melmetal / Jellicent | 8 | 71.2% ± 2.0 | 2 | 68.2% ± 2.0 |
+| Melmetal / Shadow Quagsire / Azumarill | 20 | 52.8% ± 2.2 | 3 | 66.6% ± 2.1 |
+| Feraligatr / Jellicent / Stunfisk | 13 | 68.1% ± 2.0 | 4 | 65.3% ± 2.1 |
+| Empoleon / Ninetales / Feraligatr | 23 | 50.3% ± 2.2 | 5 | 65.0% ± 2.1 |
+| Empoleon / Jellicent / Feraligatr | 24 | 48.4% ± 2.2 | 6 | 64.8% ± 2.1 |
+| Azumarill / Jellicent / Ninetales | 16 | 58.2% ± 2.2 | 7 | 64.6% ± 2.1 |
+| Melmetal / Altaria / Ninetales | 18 | 54.4% ± 2.2 | 8 | 64.5% ± 2.1 |
+| Melmetal / Jellicent / Feraligatr | 17 | 57.1% ± 2.2 | 9 | 64.5% ± 2.1 |
+| Stunfisk / Vigoroth / Umbreon | 22 | 52.3% ± 2.2 | 10 | 62.7% ± 2.1 |
+| Stunfisk / Melmetal / Altaria | 1 | **78.1% ± 1.8** | 13 | 60.7% ± 2.1 |
+| Jellicent / Stunfisk / Fearow | 7 | 71.2% ± 2.0 | 14 | 59.3% ± 2.2 |
+| Ninetales / Stunfisk / Empoleon | 2 | 74.2% ± 1.9 | 17 | 51.5% ± 2.2 |
+| Shadow Quagsire / Jellicent / Stunfisk | 9 | 71.1% ± 2.0 | 18 | 50.8% ± 2.2 |
+| Feraligatr / Melmetal / Altaria | 6 | 71.9% ± 2.0 | 19 | 50.5% ± 2.2 |
+| Jellicent / Ninetales / Stunfisk | 3 | 73.7% ± 1.9 | 20 | 49.0% ± 2.2 |
+| Feraligatr / Altaria / Stunfisk | 4 | 72.4% ± 2.0 | 21 | 49.0% ± 2.2 |
+| Melmetal / Altaria / Jellicent (current) | 15 | 59.0% ± 2.2 | 22 | 48.9% ± 2.2 |
+| Stunfisk / Ninetales / Empoleon | 5 | 72.4% ± 2.0 | 25 | 41.1% ± 2.2 |
+| Shadow Quagsire / Melmetal / Stunfisk | 10 | 69.9% ± 2.0 | 26 | 39.9% ± 2.1 |
+
+The old winner's score falls **17.4 ± 2.8 percentage points** under the new field, while the new
+winner gains **27.9 ± 3.0 points**. The field still determines the recommendation, and the new list
+still has large vulnerabilities. This does not establish Mantine / Jellicent / Umbreon as the best
+real-world choice. The roster-reporting part of the task's "Done when" check is complete; the
+under-55% counter requirement failed, so task 21 remains unfinished as a validated opponent model.
+
+The comparison took 64.0 minutes, bringing the two reduced experiments to **172.2 minutes** on at most
+three workers. `data/roster_teams_v2.json` holds all 26 rows, paired changes, differences from the
+current line-up, seeds and provenance; `runs/roster_teams_v2.out` has the printed output. The original
+`data/roster_teams.json` is preserved. Exact commands for both results and the larger continuation are
+in [the rerun guide](team_mixture.md).
+
+**Fuller builder run (2026-10-12).** The continuation in the rerun guide, run with `--workers 6` instead
+of 3 (`runs/teams_v2_full.out`, 408.7 minutes, ten rounds from `data/teams_v2.json`), wrote
+`data/teams_v2_full.json`. The strongest counter found now scores **58.3% ± 1.7** against the list (was 62.7%
+± 3.0), still above 55%, so the check still fails. The roster comparison against this fuller list had not
+finished when this was written.

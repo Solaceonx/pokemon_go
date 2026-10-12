@@ -1,0 +1,1416 @@
+{
+ "about": "Approximate self-consistent mixture; explicit weights, trained bot both sides, top supported pool, typical IVs/moves. Not a measured real ladder distribution.",
+ "pilot": "Learner(q=..., margin=0.02)",
+ "pool": 100,
+ "method": "side-balanced empirical zero-sum game; fictitious play; accumulated best responses",
+ "command": "/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/self_consistent_teams.py --pool 100 --rounds 8 --random 256 --parents 2 --stages 8:48,64:12 --add 8 --matrix-pairs 12 --stop-pairs 600 --audit-random 512 --audit-keep 10 --finals 1000 --workers 3 --seed 21021 --out data/teams_v2.json",
+ "config": {
+  "teams": "/Users/marco/Developer/pokemon_go-wt/t21/data/teams.json",
+  "out": "data/teams_v2.json",
+  "observed": [],
+  "model": "/Users/marco/Developer/pokemon_go-wt/t21/runs/general-decide/q.npz",
+  "pool": 100,
+  "rounds": 8,
+  "random": 256,
+  "parents": 2,
+  "stages": [
+   [
+    8,
+    48
+   ],
+   [
+    64,
+    12
+   ]
+  ],
+  "add": 8,
+  "matrix_pairs": 12,
+  "stop_pairs": 600,
+  "audit_random": 512,
+  "audit_keep": 10,
+  "finals": 1000,
+  "workers": 3,
+  "seed": 21021,
+  "exhaustive": false
+ },
+ "sha256": {
+  "runs/general-decide/q.npz": "46342d0511b4e1228866f028e38d2b7f9eb425f5c4ebb0a85965ee3e671f4609",
+  "data/teams.json": "faac064132fe7959d6c9e3f909b8b3c199d09939a64d4f3810cc973624141f6d",
+  "pogo/battle.py": "50cdad03d0e012b249f1da61c1c029edf433f37335ef565adbc169a024c58a1d",
+  "pogo/agents.py": "88529ef776bbefd1365f606e92d6a3678875a07c2907ca6244ddfbb7078ae82c",
+  "pogo/learner.py": "fac72fa8d9f735160f26144dce8c031451dc9c1c98626e50829bde9ea4031c28",
+  "pogo/teamsearch.py": "930c1ac7ca0ce41669b6fa7be908a12268b8ddaa52fb8ccd59f7af9b0e004a7b",
+  "pogo/teamlist.py": "b8358f36b42c379eacf3e891f8a8f6f500b06f26ad2714ee2d3df4d5d14b97ca",
+  "pogo/gamedata.py": "d9e786d5466788631b18c12ade154f5b628019e6cd6fbdd2ecafa0f5f353fc0e",
+  "data/gamemaster.json": "311752ea88ad93d033d2d9cf114dbb9d094b5ef80c1ba2490899188f71821915",
+  "data/rankings-1500.json": "0152473e1370bbcbf85b0893e78226950c820cf7dfe6a47f42cb0def6cd9a80e",
+  "data/cpm.json": "bb2a5d2505bd6fdeb020728c74abd0dbeab022ec7b4502c91a4f97a36968517a",
+  "scripts/self_consistent_teams.py": "28a9f94a4930871746c0440907a0ab2fb21710eca8648e0d059fedc75e30f00b"
+ },
+ "rounds": [
+  {
+   "round": 1,
+   "population": 81,
+   "candidates": 2265,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 2,
+   "population": 89,
+   "candidates": 2250,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 3,
+   "population": 97,
+   "candidates": 2262,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 4,
+   "population": 105,
+   "candidates": 2573,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 5,
+   "population": 113,
+   "candidates": 2598,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 6,
+   "population": 121,
+   "candidates": 2620,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 7,
+   "population": 129,
+   "candidates": 2616,
+   "added": 8,
+   "development_stop": false
+  },
+  {
+   "round": 8,
+   "population": 137,
+   "candidates": 2627,
+   "added": 8,
+   "development_stop": false
+  }
+ ],
+ "searched_lineups": 16185,
+ "teams": [
+  {
+   "team": [
+    "altaria_shadow",
+    "corviknight",
+    "ninetales"
+   ],
+   "weight": 0.05125137102403031,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corviknight_shadow",
+    "electrode_hisuian"
+   ],
+   "weight": 0.050533452986339614,
+   "seen": 0
+  },
+  {
+   "team": [
+    "guzzlord",
+    "jellicent",
+    "stunfisk"
+   ],
+   "weight": 0.046784325456177084,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "corviknight",
+    "ninetales_shadow"
+   ],
+   "weight": 0.04608634958620002,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "dragonair_shadow",
+    "medicham"
+   ],
+   "weight": 0.03844849935187955,
+   "seen": 0
+  },
+  {
+   "team": [
+    "charjabug_shadow",
+    "corviknight",
+    "ninetales_shadow"
+   ],
+   "weight": 0.03802971382989331,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dragonair_shadow",
+    "dondozo",
+    "medicham"
+   ],
+   "weight": 0.03707248977963905,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "annihilape_shadow",
+    "corsola_galarian"
+   ],
+   "weight": 0.03559676936883039,
+   "seen": 0
+  },
+  {
+   "team": [
+    "florges",
+    "annihilape",
+    "tinkaton"
+   ],
+   "weight": 0.03467942965400339,
+   "seen": 0
+  },
+  {
+   "team": [
+    "guzzlord",
+    "pachirisu",
+    "stunfisk"
+   ],
+   "weight": 0.0339016851131718,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "corviknight",
+    "thievul"
+   ],
+   "weight": 0.02907568052647323,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria_shadow",
+    "corsola_galarian",
+    "dondozo"
+   ],
+   "weight": 0.02674244690397846,
+   "seen": 0
+  },
+  {
+   "team": [
+    "swampert",
+    "azumarill",
+    "feraligatr"
+   ],
+   "weight": 0.02660285172998305,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "annihilape_shadow",
+    "dragonair_shadow"
+   ],
+   "weight": 0.02488782530661083,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "annihilape_shadow",
+    "tinkaton"
+   ],
+   "weight": 0.023651410908365738,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corviknight",
+    "malamar_shadow"
+   ],
+   "weight": 0.022694186858111476,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "guzzlord",
+    "tinkaton"
+   ],
+   "weight": 0.021736962807857214,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr",
+    "ninetales_alolan_shadow",
+    "stunfisk"
+   ],
+   "weight": 0.021477714627580018,
+   "seen": 0
+  },
+  {
+   "team": [
+    "talonflame_shadow",
+    "altaria",
+    "corviknight"
+   ],
+   "weight": 0.021278292950443714,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "corsola_galarian",
+    "snorlax_shadow"
+   ],
+   "weight": 0.020520490577325756,
+   "seen": 0
+  },
+  {
+   "team": [
+    "mandibuzz",
+    "annihilape_shadow",
+    "corviknight"
+   ],
+   "weight": 0.018685811147671753,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "melmetal",
+    "stunfisk"
+   ],
+   "weight": 0.016212982351181574,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "corviknight_shadow",
+    "quagsire_shadow"
+   ],
+   "weight": 0.01617309801575431,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr_shadow",
+    "jumpluff",
+    "lapras"
+   ],
+   "weight": 0.01593379200319075,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corviknight",
+    "empoleon"
+   ],
+   "weight": 0.014577724598663874,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "dondozo",
+    "tinkaton"
+   ],
+   "weight": 0.014438129424668461,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "mandibuzz",
+    "ninetales"
+   ],
+   "weight": 0.012743045169009872,
+   "seen": 0
+  },
+  {
+   "team": [
+    "lapras",
+    "annihilape_shadow",
+    "spidops"
+   ],
+   "weight": 0.012144780137600958,
+   "seen": 0
+  },
+  {
+   "team": [
+    "azumarill",
+    "feraligatr",
+    "marowak"
+   ],
+   "weight": 0.011945358460464652,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "feraligatr",
+    "marowak"
+   ],
+   "weight": 0.011466746435337521,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "dondozo",
+    "vigoroth_shadow"
+   ],
+   "weight": 0.011327151261342108,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight_shadow",
+    "annihilape_shadow",
+    "tinkaton"
+   ],
+   "weight": 0.010908365739355868,
+   "seen": 0
+  },
+  {
+   "team": [
+    "guzzlord",
+    "melmetal",
+    "stunfisk"
+   ],
+   "weight": 0.010888423571642238,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "corviknight",
+    "thievul"
+   ],
+   "weight": 0.010369927211087844,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr",
+    "clodsire",
+    "swampert"
+   ],
+   "weight": 0.010250274204806063,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "corsola_galarian",
+    "dondozo"
+   ],
+   "weight": 0.01017050553395154,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "corviknight",
+    "vigoroth_shadow"
+   ],
+   "weight": 0.00973177784425167,
+   "seen": 0
+  },
+  {
+   "team": [
+    "charjabug_shadow",
+    "altaria",
+    "ninetales"
+   ],
+   "weight": 0.009352876657692692,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "corsola_galarian",
+    "electrode_hisuian"
+   ],
+   "weight": 0.009133512812842757,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "carbink",
+    "malamar_shadow"
+   ],
+   "weight": 0.008634958620001994,
+   "seen": 0
+  },
+  {
+   "team": [
+    "clefable",
+    "hippowdon_shadow",
+    "quagsire_shadow"
+   ],
+   "weight": 0.00847542127829295,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "corviknight",
+    "quagsire"
+   ],
+   "weight": 0.008375710439724798,
+   "seen": 0
+  },
+  {
+   "team": [
+    "ninetales_alolan_shadow",
+    "araquanid",
+    "dondozo"
+   ],
+   "weight": 0.008096520091733972,
+   "seen": 0
+  },
+  {
+   "team": [
+    "araquanid_shadow",
+    "jumpluff",
+    "stunfisk"
+   ],
+   "weight": 0.007996809253165819,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "corsola_galarian",
+    "lapras_shadow"
+   ],
+   "weight": 0.0065609731777844255,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "stunfisk",
+    "tinkaton"
+   ],
+   "weight": 0.005803170804666467,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "diggersby",
+    "ninetales_shadow"
+   ],
+   "weight": 0.00508525276697577,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "feraligatr",
+    "swampert"
+   ],
+   "weight": 0.004586698574135009,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "charjabug_shadow",
+    "stunfisk"
+   ],
+   "weight": 0.004347392561571442,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr",
+    "ninetales_shadow",
+    "thievul"
+   ],
+   "weight": 0.003769069697876159,
+   "seen": 0
+  },
+  {
+   "team": [
+    "clefable",
+    "hippowdon",
+    "lapras"
+   ],
+   "weight": 0.003729185362448898,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "mantine",
+    "tinkaton"
+   ],
+   "weight": 0.0036893010270216374,
+   "seen": 0
+  },
+  {
+   "team": [
+    "charjabug",
+    "corsola_galarian",
+    "corviknight"
+   ],
+   "weight": 0.003410110679030811,
+   "seen": 0
+  },
+  {
+   "team": [
+    "empoleon_shadow",
+    "corviknight_shadow",
+    "swampert_shadow"
+   ],
+   "weight": 0.003310399840462658,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "altaria",
+    "corviknight"
+   ],
+   "weight": 0.0029713829893309404,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "feraligatr",
+    "ninetales_alolan_shadow"
+   ],
+   "weight": 0.002871672150762788,
+   "seen": 0
+  },
+  {
+   "team": [
+    "stunfisk",
+    "dunsparce",
+    "swampert"
+   ],
+   "weight": 0.002373117957922026,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "empoleon",
+    "mandibuzz"
+   ],
+   "weight": 0.0021936384484993517,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "altaria_shadow",
+    "melmetal"
+   ],
+   "weight": 0.001774852926513112,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "corsola_galarian",
+    "turtonator"
+   ],
+   "weight": 0.0017150264233722207,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "empoleon",
+    "talonflame_shadow"
+   ],
+   "weight": 0.001435836075381394,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "florges",
+    "thievul"
+   ],
+   "weight": 0.001136703559676937,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "carbink",
+    "melmetal"
+   ],
+   "weight": 0.001136703559676937,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "charjabug",
+    "corviknight"
+   ],
+   "weight": 0.0010369927211087845,
+   "seen": 0
+  },
+  {
+   "team": [
+    "ninetales_alolan_shadow",
+    "diggersby",
+    "sableye"
+   ],
+   "weight": 0.0008973975471133712,
+   "seen": 0
+  },
+  {
+   "team": [
+    "melmetal",
+    "altaria",
+    "jellicent"
+   ],
+   "weight": 0.0008774553793997408,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "carbink",
+    "corsola_galarian"
+   ],
+   "weight": 0.0007378602054043275,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "carbink",
+    "jellicent"
+   ],
+   "weight": 0.0006182071991225446,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "corviknight_shadow",
+    "dondozo"
+   ],
+   "weight": 0.0006182071991225446,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "annihilape_shadow",
+    "tinkaton"
+   ],
+   "weight": 0.0005384385282680228,
+   "seen": 0
+  },
+  {
+   "team": [
+    "guzzlord",
+    "jellicent",
+    "thievul"
+   ],
+   "weight": 0.0005384385282680228,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr",
+    "marowak",
+    "ninetales_alolan_shadow"
+   ],
+   "weight": 0.0004187855219862399,
+   "seen": 0
+  },
+  {
+   "team": [
+    "guzzlord",
+    "shelgon_shadow",
+    "stunfisk"
+   ],
+   "weight": 0.0004187855219862399,
+   "seen": 0
+  },
+  {
+   "team": [
+    "malamar_shadow",
+    "corsola_galarian",
+    "corviknight"
+   ],
+   "weight": 0.00033901685113171804,
+   "seen": 0
+  },
+  {
+   "team": [
+    "jellicent",
+    "corviknight",
+    "thievul"
+   ],
+   "weight": 0.00031907468341808756,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "altaria",
+    "lapras_shadow"
+   ],
+   "weight": 0.0001994216771363047,
+   "seen": 0
+  },
+  {
+   "team": [
+    "swampert",
+    "feraligatr",
+    "ninetales"
+   ],
+   "weight": 9.971083856815236e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "azumarill",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "charjabug_shadow",
+    "corviknight"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria",
+    "corviknight",
+    "feraligatr"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "altaria_shadow",
+    "annihilape_shadow",
+    "corviknight"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "carbink",
+    "guzzlord"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "carbink",
+    "quagsire_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "clodsire",
+    "melmetal"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape",
+    "corviknight",
+    "guzzlord"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "altaria_shadow",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "araquanid",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "carbink",
+    "charjabug"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "carbink",
+    "thievul"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "carbink",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "charjabug_shadow",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "corviknight",
+    "furret"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "electrode_hisuian",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "empoleon",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "hydreigon_shadow",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "jellicent",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "mandibuzz",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "ninetales_shadow",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "annihilape_shadow",
+    "rillaboom",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "annihilape",
+    "carbink"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "araquanid_shadow",
+    "hippowdon"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "azumarill",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "hippowdon",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "mandibuzz",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "empoleon",
+    "corviknight",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "florges",
+    "hippowdon",
+    "ninetales"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "hippowdon",
+    "florges",
+    "thievul"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "hydreigon_shadow",
+    "carbink",
+    "jellicent"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "mandibuzz",
+    "annihilape",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "mandibuzz",
+    "annihilape_shadow",
+    "azumarill"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "melmetal",
+    "annihilape",
+    "carbink"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "carbink",
+    "jellicent"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "carbink",
+    "tinkaton"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "corviknight",
+    "mandibuzz"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "thievul",
+    "empoleon",
+    "hippowdon"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "annihilape",
+    "guzzlord"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "annihilape",
+    "malamar_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "annihilape",
+    "sableye_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "annihilape_shadow",
+    "charjabug"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "carbink",
+    "sableye_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "charjabug_shadow",
+    "empoleon"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corsola_galarian",
+    "sableye_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corsola_galarian",
+    "thievul"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corviknight",
+    "feraligatr"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "corviknight_shadow",
+    "empoleon"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "florges",
+    "rillaboom"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "tinkaton",
+    "mandibuzz",
+    "vigoroth_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "ninetales_shadow",
+    "altaria",
+    "corviknight"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corviknight",
+    "charjabug",
+    "sealeo"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "ninetales_shadow",
+    "altaria",
+    "charjabug_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "talonflame_shadow",
+    "altaria_shadow",
+    "hippowdon"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "sableye",
+    "corviknight",
+    "ninetales_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "dusclops",
+    "pachirisu"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "corviknight",
+    "thievul"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr_shadow",
+    "corviknight",
+    "thievul"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "feraligatr",
+    "ninetales_alolan_shadow",
+    "swampert"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "dondozo",
+    "medicham"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dondozo",
+    "carbink",
+    "medicham"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "dondozo",
+    "medicham"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "dondozo",
+    "dragonair_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "carbink",
+    "annihilape_shadow",
+    "dondozo"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "blastoise",
+    "corsola_galarian",
+    "dondozo"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "dragonair_shadow",
+    "corviknight_shadow",
+    "dondozo"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "annihilape_shadow",
+    "dusclops_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  },
+  {
+   "team": [
+    "corsola_galarian",
+    "dondozo",
+    "sableye_shadow"
+   ],
+   "weight": 1.9942167713630472e-05,
+   "seen": 0
+  }
+ ]
+}
