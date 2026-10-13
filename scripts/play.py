@@ -99,7 +99,7 @@ def sprite(gd: GameData, build) -> dict:
 class Human:
     """The person at the browser. Fast moves unless told otherwise; shields and replacements are asked for."""
 
-    sees_move = True  # the shield prompt names the move coming
+    # Not told which charged move is coming, as on the phone (and as the bot is not told ours).
 
     def __init__(self, game: Game):
         self.game = game
@@ -111,8 +111,7 @@ class Human:
     def shield(self, view, energy: int, move=None) -> bool:
         if view.me.shields == 0:
             return False
-        return bool(self.game.ask("shield", 6.0, False, move=move.name if move else None,
-                                  type=move.type if move else None))
+        return bool(self.game.ask("shield", 6.0, False))
 
     def replace(self, view) -> int:
         bench = view.me.bench()

@@ -237,7 +237,7 @@ function render(s) {
   const pr = s.prompt;
   $("shield-box").classList.toggle("open", !!pr && pr.kind === "shield");
   if (pr && pr.kind === "shield") {
-    $("shield-title").textContent = `${foe.name} used ${pr.move || "a charged move"}!`;
+    $("shield-title").textContent = `${foe.name} is attacking!`;
     $("shield-text").textContent = `${s.me.shields} shield${s.me.shields === 1 ? "" : "s"} left · ${pr.seconds.toFixed(1)} s to decide`;
   }
   $("replace-box").classList.toggle("open", !!pr && pr.kind === "replace");
