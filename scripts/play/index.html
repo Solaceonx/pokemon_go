@@ -83,6 +83,15 @@ body { display: flex; justify-content: center; }
 .big { flex: 1; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 12px; border: 0; cursor: pointer; color: #fff; }
 .yes { background: var(--accent); } .no { background: #3a4a5a; } .go { background: #2f9e6e; }
 .hint { color: var(--dim); font-size: 12px; text-align: center; }
+.evalbar { height: 8px; border-radius: 5px; background: #f0544f55; overflow: hidden; display: none; }
+.evalbar i { display: block; height: 100%; width: 50%; background: var(--hp); transition: width .4s ease; }
+.review { text-align: left; margin: 10px 0 14px; }
+.review svg { width: 100%; height: 110px; background: #0b1118; border-radius: 10px; display: block; }
+.review .swing { font-size: 12px; color: var(--dim); margin-top: 6px; }
+.review .swing b { font-variant-numeric: tabular-nums; }
+.review .up { color: var(--hp); } .review .down { color: var(--hp-low); }
+.review .caption { font-size: 12px; color: var(--dim); margin: 4px 0 2px; }
+.dialog.wide { max-width: 420px; }
 </style>
 </head>
 <body>
@@ -92,6 +101,7 @@ body { display: flex; justify-content: center; }
     <span class="clock" id="clock">4:00</span>
     <span class="tally" id="tally"></span>
   </div>
+  <div class="evalbar" id="evalbar" title="the engine's evaluation: green is how far ahead you are"><i></i></div>
   <div class="field" id="field">
     <div class="side foe">
       <div class="card">
@@ -129,8 +139,9 @@ body { display: flex; justify-content: center; }
   <h2>Choose your next Pokémon</h2><p id="replace-text"></p><div class="row" id="replace-row"></div>
 </div></div>
 <div class="countdown" id="countdown"></div>
-<div class="overlay" id="end-box"><div class="dialog">
+<div class="overlay" id="end-box"><div class="dialog wide">
   <h2 id="end-title"></h2><p id="end-text"></p>
+  <div class="review" id="review"></div>
   <div class="row"><button class="big go" onclick="newBattle()">New battle</button></div>
 </div></div>
 
@@ -146,7 +157,7 @@ function post(path, body) {
 }
 function act(a) { post("/api/act", { a }); }
 function answer(value) { post("/api/answer", { value }); }
-function newBattle() { $("end-box").classList.remove("open"); post("/api/new"); }
+function newBattle() { $("end-box").classList.remove("open"); $("review").dataset.done = ""; $("review").replaceChildren(); post("/api/new"); }
 // A small still sprite for buttons: Showdown's, then PokeAPI's, then a badge.
 function icon(mon) {
   const box = document.createElement("span");
@@ -309,11 +320,37 @@ function render(s) {
       }));
     }
   }
+  if (s.eval !== null && s.eval !== undefined) {
+    $("evalbar").style.display = "block";
+    $("evalbar").querySelector("i").style.width = `${100 * s.eval}%`;
+  }
+  if (s.review && $("review").dataset.done !== "1") showReview(s.review);
   if (s.winner) {
     $("end-title").textContent = { win: "You win", loss: "The bot wins", draw: "A draw" }[s.winner];
     $("end-text").textContent = `Against the ${s.bot}. Saved to games/played/. You ${s.tally.win}, bot ${s.tally.loss}.`;
     $("end-box").classList.add("open");
   }
+}
+
+// The review after a battle: the evaluation over time (above the middle line you were ahead), and the
+// moments it moved most, with what happened then.
+function showReview(r) {
+  const box = $("review");
+  if (!r.points.length) return;
+  box.dataset.done = "1";
+  const W = 380, H = 110, end = Math.max(...r.points.map((p) => p[0]), 1);
+  const xy = (p) => `${(W * p[0] / end).toFixed(1)},${(H * (1 - p[1])).toFixed(1)}`;
+  const line = r.points.map(xy).join(" ");
+  const marks = r.swings.map((sw) => {
+    const x = (W * sw.t / end).toFixed(1);
+    return `<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="${sw.change > 0 ? "#3ddc97" : "#f0544f"}" stroke-opacity=".5" stroke-dasharray="3 3"/>`;
+  }).join("");
+  box.innerHTML = `<div class="caption">${r.learned ? "The engine's evaluation" : "Health and shields left (no trained evaluation found)"}: above the line you were ahead</div>
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="#93a3b3" stroke-opacity=".4"/>
+      ${marks}<polyline points="${line}" fill="none" stroke="#5ab0ff" stroke-width="2"/></svg>` +
+    r.swings.map((sw) => `<div class="swing"><b class="${sw.change > 0 ? "up" : "down"}">${sw.change > 0 ? "+" : ""}${(2 * sw.change).toFixed(2)}</b>
+      at ${clock(240 - sw.t)} — ${sw.what}</div>`).join("");
 }
 
 async function poll() {

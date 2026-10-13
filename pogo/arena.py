@@ -6,8 +6,27 @@ import os
 import random
 from dataclasses import dataclass
 
-from .battle import DRAW, Battle
+from .battle import DRAW, SHIELDS, Battle
 from .gamedata import Build
+
+SHIELD_WORTH = 0.35  # an unused shield, in units of one full Pokémon, as the Planner's lookahead counts it
+
+
+def left_over(side, shield_worth: float = SHIELD_WORTH) -> float:
+    """What one side has left, from 0 (nothing) to 1 (every Pokémon at full health and both shields unused)."""
+    have = sum(max(m.hp, 0) / m.build.hp for m in side.team) + shield_worth * side.shields
+    return have / (len(side.team) + shield_worth * SHIELDS)
+
+
+def decisive(battle: Battle, side: int = 0, bare: float = 0.5) -> float:
+    """How well a finished battle went for `side`, from 0 to 1, counting by how much it was won (the owner's
+    idea): the winner's health and shields left. A win scores from 0.5 + bare / 2 (won with next to nothing
+    left) up to 1 (won without losing anything); a loss mirrors that from the winner's side; a draw is 0.5.
+    So any win scores above any loss. bare = 1 gives back plain win / draw / loss (1, 0.5, 0)."""
+    if battle.winner == DRAW:
+        return 0.5
+    edge = bare + (1 - bare) * left_over(battle.sides[battle.winner])
+    return 0.5 + 0.5 * edge if battle.winner == side else 0.5 - 0.5 * edge
 
 
 def low_priority() -> None:

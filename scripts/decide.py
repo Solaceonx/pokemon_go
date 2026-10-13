@@ -14,7 +14,9 @@ each option, dice and all else equal:
     mid_swap  in an ongoing matchup, within two of their fast moves of a charge: stay / either bench
 
 A network is then trained to predict, from what the player can see, the chance
-of winning after each option. The Learner follows the Planner except where the
+of winning after each option (with --score margin: how decisively each option
+goes on to win or lose, from the winner's health and shields left; see
+pogo.arena.decisive). The Learner follows the Planner except where the
 network rates another option clearly higher. Each round uses the previous
 round's Learner to generate the positions and to play them out. At the end the
 result is tested on fresh battles against the Planner piloting the same teams.
@@ -39,7 +41,7 @@ import numpy as np  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import Planner, varied, varied_settings  # noqa: E402
-from pogo.arena import field_results, low_priority, mean_and_margin  # noqa: E402
+from pogo.arena import decisive, field_results, low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import N_FEATURES, Q_HEADS, Learner, QNet  # noqa: E402
@@ -58,12 +60,32 @@ class PvpokeOpponent(PvpokeAI):
         return PvpokeOpponent()
 
 
-def play_out(snapshot, head: str, option: int) -> float:
-    """Continue the frozen battle with one choice forced. 1 if we go on to win, 0 if we lose."""
+_EVALUATOR = {}
+
+
+def play_out(snapshot, head: str, option: int, score: str = "result", horizon: int = 0) -> float:
+    """Continue the frozen battle with one choice forced. 1 if we go on to win, 0 if we lose; with score
+    "margin", how decisively (pogo.arena.decisive: any win above any loss, and by how much). With a horizon,
+    stop after that many turns and let the engine's evaluation (runs/eval/eval.npz) judge the position reached."""
     battle, me, them = snapshot
     pilot = me.clone()
     pilot.force(head, option)
-    winner = battle.clone(pilot, them.clone()).run()
+    played = battle.clone(pilot, them.clone())
+    if horizon:
+        for _ in range(horizon):
+            if played.winner is not None:
+                break
+            played.step()
+        if played.winner is None:
+            if "eval" not in _EVALUATOR:
+                from pogo.evaluation import Evaluator
+                _EVALUATOR["eval"] = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
+            return _EVALUATOR["eval"](played.views[0])
+        winner = played.winner
+    else:
+        winner = played.run()
+    if score == "margin":
+        return decisive(played)
     return 1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0
 
 
@@ -74,7 +96,7 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
-            pvpoke_share: float = 0.0, mid_swap: bool = True):
+            pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
@@ -102,7 +124,7 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
                     continue
                 y = [NAN] * Q_HEADS[head]
                 for k in options_for(head, mask):
-                    y[k] = play_out(snapshot, head, k)
+                    y[k] = play_out(snapshot, head, k, score, horizon)
                 data[head][0].append(x)
                 data[head][1].append(y)
         battles += 1
@@ -162,7 +184,8 @@ def collect_job(job):
     low_priority()
     _, pool, team, draw, crowd = world(config)
     return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
-                   pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"])
+                   pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"],
+                   score=config.get("score", "result"), horizon=config.get("horizon", 0))
 
 
 def main() -> None:
@@ -186,6 +209,10 @@ def main() -> None:
     parser.add_argument("--val-battles", type=int, default=1000, help="battles used to choose how readily to overrule the Planner")
     parser.add_argument("--final-battles", type=int, default=3000)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--score", choices=("result", "margin"), default="result",
+                        help="what a play-out is worth: the result (win 1, draw 0.5, loss 0), or margin: how decisively it was won or lost")
+    parser.add_argument("--horizon", type=int, default=0,
+                        help="play each option only this many turns ahead and judge the rest with the engine's evaluation (runs/eval/eval.npz); 0 plays to the end")
     parser.add_argument("--pvpoke-share", type=float, default=0.0,
                         help="share of example battles played 1v1 against PvPoke's AI (shield and throw decisions only)")
     args = parser.parse_args()
@@ -196,7 +223,8 @@ def main() -> None:
 
     low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
-              "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap}
+              "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap, "score": args.score,
+              "horizon": args.horizon}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -209,7 +237,8 @@ def main() -> None:
         print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
     else:
         print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""))
-    print(f"workers: {args.workers}", flush=True)
+    print(f"workers: {args.workers}; play-outs scored by: {args.score}"
+          + (f", judged by the evaluation after {args.horizon} turns" if args.horizon else ""), flush=True)
     print(f"mid-matchup swap: {config['mid_swap']}; examples per round: {args.examples_per_round or 'all'}", flush=True)
 
     def versus_planner(q, margin, battles, seed, on_team, against=None):
@@ -264,7 +293,8 @@ def main() -> None:
             pvpoke_battles = sum(part[2] for part in parts)
         else:
             fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
-                                                     pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"])
+                                                     pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"], score=args.score,
+                                                     horizon=args.horizon)
         collected = {head: len(x) for head, (x, _) in fresh.items()}
         collection_seconds = time.time() - t0
         if args.examples_per_round is not None:

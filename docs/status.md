@@ -1798,3 +1798,70 @@ screen for two seconds (`--charged-pause`) while the clock loses ten. The oppone
 battle is saved to `games/played/` (teams, every turn, every choice) with a running tally in
 `games/played/results.jsonl`, so games against people can be studied like the recordings. Tested end to end in
 a headless browser (`tests/test_play.py` for the player logic); not yet played by a person.
+
+## How decisive a win was, and an engine's evaluation (2026-10-13, the owner's idea)
+
+**The score.** `pogo.arena.decisive(battle, side)` says how well a finished battle went, from 0 to 1: the
+winner's health share left on each Pokémon plus 0.35 per unused shield (the worth the Planner's lookahead gives a
+shield), over the most it could have (`left_over`), blended so that any win scores above any loss. A narrow win
+is 0.75, a win losing nothing 1.0, a narrow loss 0.25, a rout 0, a draw 0.5. Over 200 ordinary battles, wins
+scored 0.75 to 0.87 and losses 0.13 to 0.25: the typical winner keeps about 15% of what it started with.
+`tests/test_decisive.py`.
+
+**Learning from it.** `scripts/decide.py --score margin` scores each played-out option by this instead of by win
+or loss alone. Win/loss says nothing when every option wins (or every option loses); the score still ranks them
+by how comfortably. The test is two fresh models on exactly the same number of decisions and the same battles
+(`--examples-per-round 40000 --rounds 3 --teams data/teams.json --opponents runs/general-decide/q.npz`), one
+scored each way: `runs/score-result/` and `runs/score-margin/` (120,000 decisions each; the second was resumed
+after its second round fell 192 decisions short of the quota, so its later battles differ). On the same 4,000
+fresh battles (`runs/compare_score.out`):
+
+| Pilot | Against the crowd | Over the Planner |
+|---|---|---|
+| Planner | 56.3% ± 1.5 | |
+| Scored by win / loss | 60.5% ± 1.5 | +4.2 ± 1.3 |
+| Scored by decisiveness | 60.9% ± 1.5 | +4.5 ± 1.4 (+0.4 ± 1.4 over win / loss; 51.4% ± 1.2 head to head) |
+| Current model, about ten times the decisions | 66.2% ± 1.5 | +9.8 ± 1.6 |
+
+So scoring by decisiveness is at most a small help at this budget, inside the margin; the amount of training is
+what decides strength. Each model's own final test had suggested +5.0 against +3.0, but those were different
+battles.
+
+**Its weights.** `scripts/score_study.py`: 800 positions from ordinary battles, each played on 30 times with fresh
+dice for its true chance of winning (`runs/score_study.out`, raw play-outs in `runs/score_study.json`). One
+play-out's plain result explains 93.7% of the spread in true chances; decisiveness with a bare win at 0.5 (as
+used) 93.5%, at 0.75 93.8%, at 0.25 90.1%; the shield weight hardly matters. In the 45 contested positions (true
+chance 20% to 80%) the order is the same (28.2% for the plain result, 27.0% as used). As a predictor of who
+wins, decisiveness is no better than the result; whatever it adds is in ranking options within wins and within
+losses. Only 45 of 800 random positions were contested at all: most simulated battles are settled early, largely
+by the teams.
+
+**An engine's evaluation.** A chess engine has an evaluation (how good a position is) and a search (which moves
+lead to the best positions). `pogo.evaluation.Evaluator` is the first: from what one player can see (the same 45
+numbers the trained bot reads), the expected decisiveness of the battle from here. `pogo.evaluation.material` is
+the plain count to beat, as a chess player counts pieces: health and shields on each side, unseen Pokémon taken as
+untouched. `scripts/train_eval.py` trains the evaluation on positions from simulated battles (the trained bot
+against the crowd and against itself) and tests it on battles kept back: 777,318 positions from 39,997 battles,
+3,999 battles held out (`runs/eval/eval.npz`, `runs/eval/report.json`, `runs/eval_train.out`).
+
+| Points to the eventual winner | Early (first third) | Middle | Late | All |
+|---|---|---|---|---|
+| Learned evaluation | 65.6% | 74.0% | 86.8% | 74.5% |
+| Material count | 58.0% | 68.5% | 80.6% | 68.0% |
+
+Off by 0.188 from the final decisiveness on average, against 0.259 for the count. It is an expected
+decisiveness, not a win chance: positions rated 0.6 to 0.7 were won 72% of the time, 0.7 to 0.8 91%, 0.4 to 0.5
+36%. The browser game uses it for its review when the file is there.
+
+How the rest of a chess engine maps onto this game:
+
+| Chess engine | Here | State |
+|---|---|---|
+| Evaluation | `Evaluator` (learned) or `material` | built (above) |
+| Search | look a few turns ahead at each option, against a sample of what the opponent may do, and judge the result with the evaluation. Both players choose at once, so a choice is a small game to solve (`solve_2x2` exists), not a minimax; hidden information (their energy, unseen Pokémon) is handled by sampling it, as poker and bridge programs do | not built: the bot plays each option to the end once instead (training) or follows rules (play) |
+| Endgame tablebase | `pogo/endgame.py`, Marco's exact solver for at most two Pokémon a side | built; too slow for most two-against-two |
+| Opening book | the lead and team choice | the team searches |
+| Game review | the evaluation over a battle, and the moments it swung | in the browser game's end screen |
+
+The difference from chess that matters most: a decision has to be made within a fraction of a 500 ms turn, so
+the search must be shallow and the evaluation cheap, which is why the evaluation is a small network.

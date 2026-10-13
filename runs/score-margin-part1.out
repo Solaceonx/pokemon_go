@@ -1,0 +1,25 @@
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner, half of them using learned decisions from 1 model(s)
+workers: 2; play-outs scored by: margin
+mid-matchup swap: True; examples per round: 40000
+collected this round: 9147 shield, 3425 throw, 6049 swap, 1475 replace, 28869 mid_swap
+
+round 1: 1572 battles (0 of them 1v1 against PvPoke) in 15.0 min; examples so far: 7520 shield, 2814 throw, 4920 swap, 1180 replace, 23566 mid_swap
+  shield: average result by option 52.5% 51.6%
+  throw: average result by option 51.1% 49.7% 49.4% 46.9% 38.7%
+  swap: average result by option 52.9% 50.4% 50.4%
+  replace: average result by option 47.9% 48.4%
+  mid_swap: average result by option 52.7% 47.7% 48.2%
+  overrule when ahead by 0.02: +1.9 ± 3.1 points against the Planner
+  overrule when ahead by 0.05: +0.7 ± 2.1 points against the Planner
+  overrule when ahead by 0.1: +0.3 ± 1.1 points against the Planner
+Traceback (most recent call last):
+  File "/home/user/pokemon_go/scripts/decide.py", line 322, in <module>
+    main()
+    ~~~~^^
+  File "/home/user/pokemon_go/scripts/decide.py", line 280, in main
+    fresh = sample_examples(fresh, args.examples_per_round, args.seed + 10000 + round_no)
+  File "/home/user/pokemon_go/scripts/decide.py", line 127, in sample_examples
+    raise ValueError(f"collected {total} examples, fewer than the requested {count}; increase --minutes")
+ValueError: collected 39808 examples, fewer than the requested 40000; increase --minutes

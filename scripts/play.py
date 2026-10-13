@@ -37,12 +37,15 @@ from pogo.agents import Planner, varied  # noqa: E402
 from pogo.battle import CHARGED, DRAW, FAST, MAX_TURNS, SWITCH, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
+from pogo.arena import decisive  # noqa: E402
+from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
 TURN = 0.5  # game seconds a turn takes (the clock on screen counts these)
 PAGE = Path(__file__).resolve().parent / "play" / "index.html"
 SAVED = ROOT / "games" / "played"
 MODEL = ROOT / "runs" / "general-decide" / "q.npz"
+EVALUATION = ROOT / "runs" / "eval" / "eval.npz"  # the engine's evaluation (scripts/train_eval.py); without it, the plain count
 
 
 # teams
@@ -120,7 +123,8 @@ class Human:
 
 class Game:
     def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float, slow: float = 1.5,
-                 my_charged_pause: float = 4.0, countdown: float = 3.0):
+                 my_charged_pause: float = 4.0, countdown: float = 3.0, evaluator: Evaluator | None = None,
+                 eval_bar: bool = False):
         self.gd, self.bot_name, self.charged_pause, self.my_charged_pause = gd, bot_name, charged_pause, my_charged_pause
         self.real_turn = TURN * slow  # real seconds a turn takes: slower than the game by `slow`
         self.human = Human(self)
@@ -132,6 +136,8 @@ class Game:
         self.pause_until = 0.0
         self.countdown = countdown
         self.begins = None  # set when the page first looks: 3, 2, 1 from then before the first turn
+        self.evaluator, self.eval_bar = evaluator, eval_bar
+        self.evals = []  # (game seconds, evaluation from our side) each turn, for the review after the battle
         self.thread = threading.Thread(target=self.run, daemon=True)
 
     # from the page
@@ -170,6 +176,8 @@ class Game:
         while battle.winner is None and not self.stopped:
             started = time.time()
             seen = len(battle.log)
+            if self.evaluator and battle.sides[0].mon.hp > 0 and battle.sides[1].mon.hp > 0:
+                self.evals.append((round(battle.turn * TURN, 1), round(self.evaluator(battle.views[0]), 3)))
             battle.step()
             if battle.winner is not None:
                 break
@@ -181,6 +189,7 @@ class Game:
             time.sleep(max(0.0, (hold or self.real_turn) - (time.time() - started)))
         self.finished = time.time()
         if battle.winner is not None:
+            self.evals.append((round(battle.turn * TURN, 1), round(decisive(battle, 0), 3)))
             self.save()
 
     def save(self) -> None:
@@ -191,10 +200,25 @@ class Game:
         record = {"started": stamp, "bot": self.bot_name, "result": result, "turns": battle.turn,
                   "mine": [m.build.species_id for m in battle.sides[0].team],
                   "theirs": [m.build.species_id for m in battle.sides[1].team],
-                  "log": battle.log, "my_choices": self.choices}
+                  "log": battle.log, "my_choices": self.choices, "evaluation": self.evals,
+                  "decisiveness": round(decisive(battle, 0), 3)}
         (SAVED / f"{stamp}.json").write_text(json.dumps(record, indent=1) + "\n")
         with (SAVED / "results.jsonl").open("a") as out:
             out.write(json.dumps({k: record[k] for k in ("started", "bot", "result", "mine", "theirs", "turns")}) + "\n")
+
+    def review(self) -> dict:
+        """After the battle: how the evaluation went, and the moments it swung most, with what happened then."""
+        points = self.evals
+        swings = []
+        for (t0, e0), (t1, e1) in zip(points, points[1:]):
+            happened = [(side, re.sub(r" -?\d+/\d+hp \d+e", "", text)) for turn, side, text in self.battle.log
+                        if t0 <= turn * TURN < t1 + 0.01 and ("throws" in text or "sends in" in text or "faints" in text)]
+            if happened:
+                swings.append({"t": t0, "change": round(e1 - e0, 3),
+                               "what": "; ".join(("You: " if side == 0 else "Bot: ") + text for side, text in happened[:3])})
+        swings.sort(key=lambda s: -abs(s["change"]))
+        return {"points": points, "swings": sorted(swings[:5], key=lambda s: s["t"]),
+                "learned": bool(self.evaluator and self.evaluator.model is not None)}
 
     # to the page
 
@@ -227,6 +251,8 @@ class Game:
                     "seen": [foe.team[j].build.name for j in foe.shown]},
             # Without the health and energy the engine's log adds ("Florges 110/110hp 0e"): the phone shows neither.
             "log": [{"turn": t, "side": s, "text": re.sub(r" -?\d+/\d+hp \d+e", "", x)} for t, s, x in (battle.log or [])[-8:]],
+            "eval": self.evals[-1][1] if self.eval_bar and self.evals else None,
+            "review": self.review() if battle.winner is not None and self.finished else None,
         }
 
 
@@ -240,6 +266,7 @@ class Server:
         self.pool = self.gd.meta(50)
         self.draw = drawer(self.gd, self.pool)
         self.net = QNet.load(str(MODEL)) if args.bot == "learner" else None
+        self.evaluator = Evaluator.load(EVALUATION) if EVALUATION.exists() else Evaluator()
         self.rng = random.Random()
         self.game = None
         self.new()
@@ -260,7 +287,7 @@ class Server:
         else:
             bot = Planner()
         self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow,
-                         self.args.my_charged_pause)
+                         self.args.my_charged_pause, evaluator=self.evaluator, eval_bar=self.args.eval_bar)
         self.game.thread.start()
 
     def tally(self) -> dict:
@@ -323,6 +350,8 @@ def main() -> None:
     parser.add_argument("--my-charged-pause", type=float, default=4.0, help="the same for yours")
     parser.add_argument("--slow", type=float, default=1.5,
                         help="how much slower than the real game a turn runs (1 is the game's own half-second; default 1.5)")
+    parser.add_argument("--eval-bar", action="store_true",
+                        help="show the engine's evaluation during the battle, as chess sites do (more than the phone shows)")
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
     server = Server(args)
