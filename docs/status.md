@@ -1886,7 +1886,13 @@ engine trusts it the worse it does. With the trained bot itself playing both sid
 player measured in this project so far, by a wide margin. Two cautions before believing the size: it is the best of
 four variants on 500 pairings, and head to head the engine imagines its opponent as the trained bot, which is
 exactly what it is playing, so the head-to-head figure is flattered; the crowd figure is the fairer one and has a
-wide margin. A confirmation on fresh battles is running (`runs/engine_D_confirm.out`, 800 pairings, seed 71).
+wide margin.
+
+**Confirmed on fresh battles** (seed 71, 800 pairings, the settings fixed beforehand; `runs/engine_D_confirm.out`):
+head to head **65.0% ± 1.9** against the trained bot; against the crowd 71.4% ± 3.1 against 66.1% ± 3.3 for the
+trained bot on the same battles, **+5.4 ± 3.7 points**. The crowd is not what the engine imagines its opponents
+to be, so that is the fairer figure, and it is now clear of its margin. It changed the trained bot's pick at 15%
+of the 54,059 decisions it searched.
 
 Cost: a searched decision takes a median of 45 ms, 141 ms at the 90th percentile and 273 ms at worst (one core,
 shared), against 10 ms budgeted for a decision in live play. Fine inside the browser game's 0.75 s turns:
