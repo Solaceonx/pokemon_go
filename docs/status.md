@@ -1963,3 +1963,27 @@ on the particular position. The way to keep it is to teach the bot the engine's 
 Real players' decisions (`runs/real_decisions/`, above) say the same at much smaller size: where the bot wanted
 to switch out but the player held and kept fast-moving, the player did better (14 of 18 clear cases; bot -5.6 ±
 5.2 points over 34), the only direction close to a margin, and too small to build on yet.
+
+### Teaching the bot the engine's judgement (distillation): worse (2026-10-13)
+
+If the engine's edge is not in rules, perhaps a network can learn it: `scripts/distill.py collect` (6,000 battles,
+seed 301, the engine against training's crowd on teams half from the list) wrote down, at 136,208 throw, swap and
+replacement decisions, what the bot's networks see and the look-ahead's worth of every option;
+`scripts/distill.py fit` refitted the throw, swap and replacement networks to those worths, starting from the
+trained bot's (`runs/distill/q.npz`) or from scratch. On held-out decisions the refitted swap network follows the
+engine's preferences far better than the trained bot's does (correlation 0.48 against 0.21); throws and
+replacements no better (0.32 against 0.32, 0.28 against 0.27). In battles it is worse
+(`runs/compare_distill.out`, seed 7301, 4,000 battles against the crowd, the same for all; head to head against
+the trained bot, every pair both ways):
+
+| Model | Against the crowd, minus the trained bot | Head to head against the trained bot |
+|---|---|---|
+| The trained bot with the distilled swap network | -3.5 ± 1.1 | 46.5% ± 1.1 |
+| ... and the distilled replacement network | -3.4 ± 1.1 | 46.7% ± 1.1 |
+| All three distilled (margin 0.02) | -3.5 ± 1.4 | 45.7% ± 1.2 |
+| All three distilled, margin 0 | -6.7 ± 1.6 | 43.8% ± 1.3 |
+
+The look-ahead's worths are short-sighted: it plays 20 turns (10 seconds) and judges the position there, while a
+swap mostly pays later; the trained bot's networks learned from whole battles played out. The engine does well
+because it leaves the trained bot's pick only when its search is clearly convinced (edge 0.03), not because its
+worths are better values. Not adopted; the engine stays the strongest player and the trained bot the fast one.
