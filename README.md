@@ -134,6 +134,8 @@ which gives about four times the examples in the same time.
 |---|---|
 | `python3 scripts/track.py games/example` | Builds the game state from `team.json` and `observations.jsonl` in that folder; writes `state.json`, `states.jsonl`, `events.jsonl` |
 | `python3 scripts/advise.py games/example --look 45 --q runs/general-decide/q.npz` | From a game state: what to do now, what to do with the next shield, the chance of winning, one typical continuation |
+| `python3 scripts/play.py` | Play the trained bot yourself in a browser, in real time, on the same engine (your team from `data/owner_team.json`; `--team`, `--foe`, `--bot planner`). Every battle is saved to `games/played/` |
+| `python3 scripts/real_decisions.py games/<tracked game> ...` | The bot against a real player's decisions in tracked battles: how often it agrees, and where it does not, which choice wins more when played on |
 | `python3 scripts/recording/live_replay.py games/<recording>/raw --text-delay 1` | Plays a recorded battle back as if live (only readings seen so far, text read late) and sets the tracker's picture against the offline one |
 
 **Phone** (parked)

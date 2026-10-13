@@ -53,7 +53,8 @@ class Watched:
 
 def mon_from(gd: GameData, p: dict, energy: int | None = None) -> Mon:
     moves = [p["fast_move"]["id"], *(m["id"] for m in p["charged_moves"])]
-    mon = Mon(gd.build(p["species"], moves, level=p["level"], ivs=tuple(p["ivs"])), hp=p["hp"],
+    # Pokémon that change form in battle (Cramorant, Mimikyu) are taken in the form they start in.
+    mon = Mon(gd.build(p["species"], moves, level=p["level"], ivs=tuple(p["ivs"]), allow_forms=True), hp=p["hp"],
               energy=p["energy"] if energy is None else energy)
     mon.atk_stage, mon.def_stage = p["attack_stage"], p["defense_stage"]
     return mon
@@ -65,7 +66,8 @@ def rebuild(gd: GameData, state: dict, pool, rng: random.Random, me_agent, foe_a
     mine = [mon_from(gd, p) for p in me["pokemon"]]
     theirs = [mon_from(gd, p, rng.randint(*p["energy_range"])) for p in foe["pokemon"]]
     taken = {m.build.species_id for m in theirs}
-    theirs += [Mon(b) for b in rng.sample([b for b in pool if b.species_id not in taken], foe["unseen"])]
+    unseen = max(0, min(foe["unseen"], 3 - len(theirs)))  # a tracker that saw a form change can count four
+    theirs += [Mon(b) for b in rng.sample([b for b in pool if b.species_id not in taken], unseen)]
     battle = Battle(mine, theirs, me_agent, foe_agent, seed=rng.getrandbits(32), shields=(me["shields"], foe["shields"]),
                     switch_wait=(round(me["switch_ready_in"] * 2), round(foe["switch_ready_in"] * 2)), record=True)
     battle.sides[0].active, battle.sides[1].active = me["active"], foe["active"]

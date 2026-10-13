@@ -1753,3 +1753,48 @@ incremental; the replay is the yardstick it must match.
 
 What this does not cover: the readings are the recorded ones, at 15 frames a second and with text every third
 of a second; a live reader on the phone will be slower and rougher. Phone capture and taps are still unmeasured.
+
+## The bot against real players' decisions (2026-10-13)
+
+`scripts/real_decisions.py` takes tracked battles and, at every decision the player on our side made, rebuilds
+the position from the tracker's state and asks the trained bot what it would do: throw or keep fast-moving (and
+which move), shield or not, switch or stay. Where the two differ, the position is played on 200 times each way
+with the same dice, the player's choice first and then the bot's, both continued by the bot against the varied
+crowd (their unseen Pokémon and exact energy drawn as `advise.py` does). 47 tracked views: the owner's four
+recordings, 15 HomeSliceHenry clips and 28 official broadcast views (20 of them the reserved sample, used here
+only to score, not to tune). Cramorant and Mimikyu are played in the form they start in. Rows are in
+`runs/real_decisions/`.
+
+| Decisions, all 47 views | How many | Bot agrees with the player | Where they differ: the bot's choice wins more often by | Bot better / player better (by over 2 points) |
+|---|---|---|---|---|
+| Throw or hold, which move | 694 | 51% | +1.8 ± 1.8 points | 91 / 61 |
+| Shield | 197 | 71% | +1.6 ± 3.6 | 20 / 17 |
+| Switch or stay | 261 | 61% | +0.2 ± 3.4 | 39 / 29 |
+
+By player: the owner (four recordings) 58% / 77% / 60% agreement on throws / shields / switches, and on the
+owner's 8 switch decisions where the bot differed the owner's choice did better in 6 (-10.6 ± 17.1 points for the
+bot); the official broadcast's players 44 to 50% / 64 to 66% / 56 to 69%; Henry 53% / 81% / 64%.
+
+What it says: the bot and good players make different choices about half the time, and where they do, neither is
+clearly better even when judged by the bot's own simulator, which favours the bot (it is the world the bot was
+trained in, and the bot plays on after either choice). The commonest difference by far: **the player keeps
+fast-moving where the bot would throw** (187 of 337 throw disagreements), against 69 the other way, 50 where
+the bot would switch instead and 31 where both throw but different moves. Real players hold ready charged moves
+far more than the bot does, which is the owner's hold rule pushed further. Shields split both ways (32 shielded
+where the bot would not, 25 the reverse); switches lean towards players switching where the bot stays (56
+against 38).
+
+Limits: our side's energy in public footage is off by about 10 on average, so a "hold" there is counted only when
+the buttons showed enough energy; the opponent's energy is the tracker's estimate; players' fast moves and IVs
+in public footage are guessed; and the judge is the simulator, not the result of the real battle.
+
+## Playing the bot in a browser (2026-10-13)
+
+`python3 scripts/play.py` opens a page where a person plays the trained bot in real time on the same engine:
+sprites (Pokémon Showdown's, falling back to PokeAPI's, then a badge), both health bars, our energy on the two
+charged-move buttons, shields, party, the switch timer and a shield prompt when the bot throws. Fast moves are
+used all the time, as if holding the screen; charged moves count as fully charged (no swiping), and hold the
+screen for two seconds (`--charged-pause`) while the clock loses ten. The opponent's energy is not shown. Each
+battle is saved to `games/played/` (teams, every turn, every choice) with a running tally in
+`games/played/results.jsonl`, so games against people can be studied like the recordings. Tested end to end in
+a headless browser (`tests/test_play.py` for the player logic); not yet played by a person.
