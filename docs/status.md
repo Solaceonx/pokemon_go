@@ -1900,6 +1900,9 @@ trained bot on the same battles, **+5.4 ± 3.7 points**. The crowd is not what t
 to be, so that is the fairer figure, and it is now clear of its margin. It changed the trained bot's pick at 15%
 of the 54,059 decisions it searched.
 
+Looking 40 turns ahead instead of 20, with the trained bot inside (seed 81, 300 pairings,
+`runs/engine_E_bot_h40.out`): 66.2% ± 3.4 head to head, -1.8 ± 6.3 against the crowd. No better; 20 stays.
+
 Cost: a searched decision takes a median of 45 ms, 141 ms at the 90th percentile and 273 ms at worst (one core,
 shared), against 10 ms budgeted for a decision in live play. Fine inside the browser game's 0.75 s turns:
 `python3 scripts/play.py --bot engine`.
