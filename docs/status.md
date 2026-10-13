@@ -1987,3 +1987,30 @@ The look-ahead's worths are short-sighted: it plays 20 turns (10 seconds) and ju
 swap mostly pays later; the trained bot's networks learned from whole battles played out. The engine does well
 because it leaves the trained bot's pick only when its search is clearly convinced (edge 0.03), not because its
 worths are better values. Not adopted; the engine stays the strongest player and the trained bot the fast one.
+
+### Thinking while the fast move plays out (2026-10-13, the owner's idea)
+
+The 10 ms for a decision in the latency table is a target from when the brain was the trained bot alone, not a
+rule of the game. What the game asks is that the next action be ready when the current fast move ends, and while
+a fast move plays out there is nothing to choose. `scripts/engine_timing.py` (600 battles against the crowd, seed
+401, `runs/engine_timing.out`) has the engine predict, each time it starts a fast move, the position when that move
+ends, from what it can see and assuming the opponent keeps fast-moving; at its next decision the prediction is
+checked, and every searched decision is timed (one cloud core each, three at once).
+
+| What came before the searched decision (13,377) | Share | Search time, median / 90th / worst (ms) | Ready in time |
+|---|---|---|---|
+| Our fast move of 1 turn, predicted exactly | 28% | 45 / 114 / 395 | 99.9% within 300 ms |
+| Our fast move of 2 turns, predicted exactly | 27% | 46 / 114 / 337 | 100% within 800 ms |
+| Our fast move of 3 or 4 turns, predicted exactly | 9% | 45 / 118 / 273 | 100% within 1.3 s |
+| A charged move (theirs, or ours) | 19% | 41 / 98 / 258 | the game pauses for it |
+| A faint, or choosing the replacement | 10% | 30 / 57 / 173 | an animation, and a choice of replacement |
+| The start of the battle | 4% | 76 / 108 / 174 | the countdown |
+| They switched during our fast move | 3% | 42 / 103 / 209 | whatever is left of our fast move |
+
+"Ready in time" is the fast move's length at 500 ms a turn, less 200 ms for seeing the screen and for the tap.
+The prediction never failed except for something the player sees happen (a charged move, a switch, a faint): when
+the opponent only fast-moves, the position at the end of our fast move is known exactly. So the engine as it is
+fits live play if it starts searching when its fast move starts: 64% of its searches are then done well ahead
+of time, almost all of the rest follow a pause, and the few that cannot finish (their switch in the last turn of
+our fast move, or the slowest 0.1% after a one-turn move) can fall back on the trained bot's own pick, which takes
+about a millisecond.
