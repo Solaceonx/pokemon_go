@@ -119,8 +119,9 @@ class Human:
 
 
 class Game:
-    def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float, slow: float = 1.5):
-        self.gd, self.bot_name, self.charged_pause = gd, bot_name, charged_pause
+    def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float, slow: float = 1.5,
+                 my_charged_pause: float = 4.0, countdown: float = 3.0):
+        self.gd, self.bot_name, self.charged_pause, self.my_charged_pause = gd, bot_name, charged_pause, my_charged_pause
         self.real_turn = TURN * slow  # real seconds a turn takes: slower than the game by `slow`
         self.human = Human(self)
         self.battle = Battle(mine, theirs, self.human, bot, seed=random.getrandbits(32), record=True)
@@ -129,6 +130,8 @@ class Game:
         self.choices = []  # (turn, side, what) for the saved record
         self.started, self.finished, self.stopped = time.time(), None, False
         self.pause_until = 0.0
+        self.countdown = countdown
+        self.begins = None  # set when the page first looks: 3, 2, 1 from then before the first turn
         self.thread = threading.Thread(target=self.run, daemon=True)
 
     # from the page
@@ -162,14 +165,20 @@ class Game:
 
     def run(self) -> None:
         battle = self.battle
+        while (self.begins is None or time.time() < self.begins) and not self.stopped:
+            time.sleep(0.05)
         while battle.winner is None and not self.stopped:
             started = time.time()
-            before = battle.turn
+            seen = len(battle.log)
             battle.step()
-            thrown = battle.turn - before > 1
-            if thrown:
-                self.pause_until = time.time() + self.charged_pause
-            time.sleep(max(0.0, (self.charged_pause if thrown else self.real_turn) - (time.time() - started)))
+            if battle.winner is not None:
+                break
+            # A charged move holds the screen: longer for ours, so there is time to see it and choose what next.
+            throwers = {side for _, side, text in battle.log[seen:] if " throws " in text}
+            hold = max([self.my_charged_pause] * (0 in throwers) + [self.charged_pause] * (1 in throwers), default=0.0)
+            if hold:
+                self.pause_until = time.time() + hold
+            time.sleep(max(0.0, (hold or self.real_turn) - (time.time() - started)))
         self.finished = time.time()
         if battle.winner is not None:
             self.save()
@@ -190,6 +199,8 @@ class Game:
     # to the page
 
     def state(self) -> dict:
+        if self.begins is None:
+            self.begins = time.time() + self.countdown  # someone is watching: start counting down
         battle, gd = self.battle, self.gd
         me, foe = battle.sides
 
@@ -208,6 +219,7 @@ class Game:
             "clock": round(max(0, MAX_TURNS - battle.turn) * TURN, 1),
             "winner": None if battle.winner is None else {DRAW: "draw", 0: "win", 1: "loss"}[battle.winner],
             "charging": time.time() < self.pause_until,
+            "countdown": round(max(0.0, self.begins - time.time()), 1) if self.begins else self.countdown,
             "prompt": prompt, "bot": self.bot_name,
             "me": {"active": me.active, "shields": me.shields, "switch_wait": round(me.switch_wait * TURN),
                    "team": [mon(m, True) for m in me.team]},
@@ -247,7 +259,8 @@ class Server:
             bot = varied(self.rng, self.pool)
         else:
             bot = Planner()
-        self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow)
+        self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow,
+                         self.args.my_charged_pause)
         self.game.thread.start()
 
     def tally(self) -> dict:
@@ -306,7 +319,8 @@ def main() -> None:
     parser.add_argument("--bot", choices=("learner", "planner", "crowd"), default="learner")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--charged-pause", type=float, default=2.0,
-                        help="real seconds a charged move holds the screen (the game takes about 10; the clock still loses 10)")
+                        help="real seconds the bot's charged move holds the screen (the game takes about 10; the clock still loses 10)")
+    parser.add_argument("--my-charged-pause", type=float, default=4.0, help="the same for yours")
     parser.add_argument("--slow", type=float, default=1.5,
                         help="how much slower than the real game a turn runs (1 is the game's own half-second; default 1.5)")
     parser.add_argument("--no-browser", action="store_true")

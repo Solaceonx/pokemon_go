@@ -52,13 +52,26 @@ body { display: flex; justify-content: center; }
 .charge.ready { border-color: #fff; box-shadow: 0 0 14px #fff8; }
 .charge:disabled { cursor: default; }
 .swap { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--line); background: var(--panel); color: var(--ink);
-  font-weight: 700; cursor: pointer; }
-.swap:disabled { color: var(--dim); cursor: default; }
-.bench { display: none; gap: 8px; }
-.bench.open { display: flex; }
-.pick { flex: 1; background: var(--panel); border: 1px solid var(--line); color: var(--ink); border-radius: 12px; padding: 8px; cursor: pointer; text-align: left; }
+  font-weight: 700; display: grid; place-items: center; font-size: 13px; text-align: center; }
+.swap.wait { color: var(--dim); }
+.bench { display: flex; gap: 8px; }
+.pick { flex: 1; display: flex; align-items: center; gap: 8px; background: var(--panel); border: 2px solid var(--line); color: var(--ink);
+  border-radius: 14px; padding: 6px 10px 6px 6px; cursor: pointer; text-align: left; min-height: 72px; }
+.pick:not(:disabled):hover { border-color: var(--accent); }
+.pick .icon { width: 60px; height: 60px; flex: none; display: grid; place-items: center; }
+.pick .icon img { width: 60px; height: 60px; image-rendering: pixelated; object-fit: contain; }
+.pick .icon .badge { width: 52px; height: 52px; font-size: 9px; border-width: 2px; }
+.pick b { display: block; font-size: 14px; }
 .pick small { display: block; color: var(--dim); }
-.pick:disabled { opacity: .45; cursor: default; }
+.pick .bar { margin-top: 4px; }
+.pick kbd { margin-left: auto; color: var(--dim); font: 12px ui-monospace, monospace; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
+.pick:disabled { opacity: .4; cursor: default; }
+.pick.out { display: none; }
+.countdown { position: fixed; inset: 0; display: none; place-items: center; background: rgba(5, 9, 14, .55); font-size: 120px; font-weight: 800; }
+.countdown.open { display: grid; }
+.big .icon { width: 56px; height: 56px; margin: 0 auto 4px; display: grid; place-items: center; }
+.big .icon img { width: 56px; height: 56px; image-rendering: pixelated; object-fit: contain; }
+.big .icon .badge { width: 50px; height: 50px; font-size: 9px; }
 .log { font-size: 12px; color: var(--dim); min-height: 64px; }
 .log div.foe { color: #f3b0ae; }
 .overlay { position: fixed; inset: 0; background: rgba(5, 9, 14, .72); display: none; align-items: center; justify-content: center; padding: 16px; }
@@ -101,10 +114,10 @@ body { display: flex; justify-content: center; }
   <div class="bench" id="bench"></div>
   <div class="controls">
     <button class="charge" id="c0" onclick="act('c0')"><div class="fill"></div><div class="fill2"></div><span></span><em></em></button>
-    <button class="swap" id="swap" onclick="toggleBench()">Swap</button>
+    <div class="swap" id="swap">Swap</div>
     <button class="charge" id="c1" onclick="act('c1')"><div class="fill"></div><div class="fill2"></div><span></span><em></em></button>
   </div>
-  <div class="hint">You fast-move all the time. Keys: 1 and 2 throw, S swaps, Y / N to shield.</div>
+  <div class="hint">You fast-move all the time. Keys: 1 and 2 throw, 3 and 4 swap to the Pokémon above, Y / N to shield.</div>
   <div class="log" id="log"></div>
 </div>
 
@@ -115,6 +128,7 @@ body { display: flex; justify-content: center; }
 <div class="overlay" id="replace-box"><div class="dialog">
   <h2>Choose your next Pokémon</h2><p id="replace-text"></p><div class="row" id="replace-row"></div>
 </div></div>
+<div class="countdown" id="countdown"></div>
 <div class="overlay" id="end-box"><div class="dialog">
   <h2 id="end-title"></h2><p id="end-text"></p>
   <div class="row"><button class="big go" onclick="newBattle()">New battle</button></div>
@@ -130,10 +144,32 @@ let state = null, lastHp = {}, lastSprite = {};
 function post(path, body) {
   return fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
 }
-function act(a) { post("/api/act", { a }); $("bench").classList.remove("open"); }
+function act(a) { post("/api/act", { a }); }
 function answer(value) { post("/api/answer", { value }); }
 function newBattle() { $("end-box").classList.remove("open"); post("/api/new"); }
-function toggleBench() { $("bench").classList.toggle("open"); }
+// A small still sprite for buttons: Showdown's, then PokeAPI's, then a badge.
+function icon(mon) {
+  const box = document.createElement("span");
+  box.className = "icon";
+  const urls = [`https://play.pokemonshowdown.com/sprites/gen5/${mon.sprite.showdown}.png`,
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${mon.sprite.dex}.png`];
+  const img = new Image();
+  let k = 0;
+  img.alt = mon.name;
+  let timer = setTimeout(() => img.onerror(), 3000);
+  img.onload = () => clearTimeout(timer);
+  img.onerror = () => {
+    clearTimeout(timer);
+    k += 1;
+    if (k < urls.length) { img.src = urls[k]; timer = setTimeout(() => img.onerror(), 3000); return; }
+    const badge = document.createElement("span");
+    badge.className = "badge"; badge.style.background = TYPES[mon.types[0]] || "#666"; badge.textContent = mon.name;
+    box.replaceChildren(badge);
+  };
+  img.src = urls[0];
+  box.append(img);
+  return box;
+}
 
 // Sprites: Pokémon Showdown's animated ones, then its still ones, then PokeAPI's by Dex number, then a badge.
 function spriteEl(slot, mon, back) {
@@ -151,9 +187,12 @@ function spriteEl(slot, mon, back) {
   img.className = "sprite" + (s.shadow ? " shadowmon" : "");
   img.alt = mon.name;
   let k = 0;
+  let timer = setTimeout(() => img.onerror(), 3000);  // a site that does not answer counts as missing
+  img.onload = () => clearTimeout(timer);
   img.onerror = () => {
+    clearTimeout(timer);
     k += 1;
-    if (k < urls.length) { img.src = urls[k]; return; }
+    if (k < urls.length) { img.src = urls[k]; timer = setTimeout(() => img.onerror(), 3000); return; }
     const badge = document.createElement("div");
     badge.className = "badge";
     badge.style.background = TYPES[mon.types[0]] || "#666";
@@ -214,18 +253,33 @@ function render(s) {
   });
   for (let k = me.charged.length; k < 2; k++) $("c" + k).style.display = "none";
   // switching
+  // The two on the bench are always on screen: one tap (or 3 / 4) swaps.
+  const locked = s.me.switch_wait > 0 || !!s.winner;
   const swap = $("swap");
-  swap.disabled = s.me.switch_wait > 0 || !!s.winner;
-  swap.textContent = s.me.switch_wait > 0 ? `${s.me.switch_wait}s` : "Swap";
-  if (swap.disabled) $("bench").classList.remove("open");
-  $("bench").replaceChildren(...s.me.team.map((m, j) => {
-    if (j === s.me.active) return document.createTextNode("");
-    const p = document.createElement("button");
-    p.className = "pick"; p.disabled = m.hp <= 0 || swap.disabled;
-    p.innerHTML = `${m.name}<small>${m.hp}/${m.hp_max} · ${m.energy} energy</small>`;
-    p.onclick = () => act("s" + j);
-    return p;
-  }));
+  swap.classList.toggle("wait", locked);
+  swap.textContent = s.me.switch_wait > 0 ? `${s.me.switch_wait}s` : "Swap ready";
+  const benchSlots = s.me.team.map((m, j) => j).filter((j) => j !== s.me.active);
+  const benchKey = benchSlots.map((j) => s.me.team[j].species).join(",");
+  if ($("bench").dataset.key !== benchKey) {
+    $("bench").dataset.key = benchKey;
+    $("bench").replaceChildren(...benchSlots.map((j, n) => {
+      const m = s.me.team[j], p = document.createElement("button");
+      p.className = "pick"; p.dataset.slot = j; p.onclick = () => act("s" + j);
+      const text = document.createElement("span"); text.style.flex = "1";
+      text.innerHTML = `<b>${m.name}</b><small></small><div class="bar"><i></i></div>`;
+      const key = document.createElement("kbd"); key.textContent = String(n + 3);
+      p.append(icon(m), text, key);
+      return p;
+    }));
+  }
+  $("bench").querySelectorAll(".pick").forEach((p) => {
+    const m = s.me.team[Number(p.dataset.slot)], share = m.hp / m.hp_max;
+    p.disabled = locked || m.hp <= 0;
+    p.querySelector("small").textContent = m.hp > 0 ? `${m.hp}/${m.hp_max} · ${m.energy} energy` : "fainted";
+    const bar = p.querySelector(".bar i"); bar.style.width = `${100 * share}%`; bar.style.background = hpColour(share);
+  });
+  $("countdown").classList.toggle("open", s.countdown > 0);
+  if (s.countdown > 0) $("countdown").textContent = Math.ceil(s.countdown);
   // what just happened
   $("log").replaceChildren(...s.log.slice().reverse().slice(0, 5).map((e) => {
     const d = document.createElement("div"); d.className = e.side ? "foe" : ""; d.textContent = (e.side ? "Bot: " : "You: ") + e.text; return d;
@@ -242,13 +296,16 @@ function render(s) {
   }
   $("replace-box").classList.toggle("open", !!pr && pr.kind === "replace");
   if (pr && pr.kind === "replace") {
-    $("replace-text").textContent = `${pr.seconds.toFixed(0)} s to choose`;
+    $("replace-text").textContent = `${pr.seconds.toFixed(0)} s to choose (keys 1 and 2); the game waits for you`;
     const key = pr.options.join(",");
     if ($("replace-row").dataset.key !== key) {
       $("replace-row").dataset.key = key;
       $("replace-row").replaceChildren(...pr.options.map((j) => {
         const m = s.me.team[j], b = document.createElement("button");
-        b.className = "big go"; b.textContent = `${m.name} (${m.hp}/${m.hp_max})`; b.onclick = () => answer(j); return b;
+        b.className = "big go"; b.onclick = () => answer(j);
+        const label = document.createElement("span"); label.textContent = `${m.name} (${m.hp}/${m.hp_max})`;
+        b.append(icon(m), label);
+        return b;
       }));
     }
   }
@@ -269,7 +326,10 @@ document.addEventListener("keydown", (e) => {
   if (pr && pr.kind === "replace") { const j = pr.options[Number(e.key) - 1]; if (j !== undefined) answer(j); return; }
   if (e.key === "1") act("c0");
   if (e.key === "2") act("c1");
-  if (e.key === "s") toggleBench();
+  if (e.key === "3" || e.key === "4") {
+    const pick = $("bench").querySelectorAll(".pick")[Number(e.key) - 3];
+    if (pick && !pick.disabled) pick.click();
+  }
   if (e.key === "Enter" && state && state.winner) newBattle();
 });
 poll();
