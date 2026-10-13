@@ -1840,6 +1840,11 @@ over the Planner on 1,000 validation battles). Against the current model on the 
 to head. Not better than the current model, which was trained on more than twice as many decisions; the current
 model stays.
 
+Resumed for a fourth round (`runs/general-margin-part2.out`; 772,000 decisions, +9.8 ± 3.0 over the Planner on
+its validation battles, margin 0.02); another container restart stopped the fifth during collection. Against the
+current model on the same 4,000 battles (`runs/compare_general_margin_round4.out`): 64.5% ± 1.5 against
+66.4% ± 1.5, -1.8 ± 1.4 points, and 46.3% ± 1.3 head to head. Still not better; this run stops here.
+
 **Its weights.** `scripts/score_study.py`: 800 positions from ordinary battles, each played on 30 times with fresh
 dice for its true chance of winning (`runs/score_study.out`, raw play-outs in `runs/score_study.json`). One
 play-out's plain result explains 93.7% of the spread in true chances; decisiveness with a bare win at 0.5 (as
