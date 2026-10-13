@@ -76,6 +76,11 @@ Do not re-propose these without a new angle.
   head to head. `q.npz` is still the first model. The method looks to have levelled off
   with its current inputs.
 - **A fixed roster of crude opponent styles**: rejected as unrepresentative of real play.
+- **Racing a Pokémon with no shields left** (`Planner(rush=True)`, 2026-10-13): 47.5% ± 0.9 head to head,
+  -3.4 ± 0.9 against the crowd. Only once holding no longer pays (`rush_threat=True`): 50.1% ± 0.7. Details
+  under the owner's guidance below.
+- **Switching freely to a counter of a team seen in full** (`Planner(known_team=True)`, 2026-10-13): 50.2% ±
+  0.6 head to head; the chance comes about once in three battles and the rule acted on it rarely.
 - **A learned mid-matchup swap head at a fixed total example budget (task 20).** Two fresh
   models, each trained on 180,000 retained decisions after 60 minutes of collection with
   three workers, differed by +0.6 ± 1.5 points against the crowd; the new head scored
@@ -289,6 +294,37 @@ rule) on the same 4,000 battles:
 | Trained bot on top (not yet retrained on these rules) | 65.2% ± 1.5 (+10.5 ± 1.6) |
 
 Today's rules beat the rules of 10 October 57.2% ± 1.2 head to head.
+
+### No shields left: knock them out fast; their team known: switch freely (2026-10-13): no gain
+
+Two more rules from the owner, both off by default (`tests/test_owner_rules_2.py`):
+
+- **When they have no shields, kill their Pokémon as fast as you can before it does too much**
+  (`Planner(rush=True)`). Once their shields are gone the player stops holding and farming and plays the
+  shortest way, in turns, to knock the Pokémon out with its own moves (a search over our energy and their
+  health), still timing a throw to their fast move when that does not make the knock-out later, and still
+  throwing before fainting. `rush_threat=True` does this only once holding no longer pays: they have a
+  charged move ready or soon, or waiting costs too much health.
+- **If you know their whole team, you can sometimes switch freely when one of yours counters several of
+  theirs** (`Planner(known_team=True)`). Once every Pokémon they have left has been seen and we are not
+  already winning the matchup, swap in a bench Pokémon that beats at least two of them (one-on-one ahead by
+  `known_edge`), without the usual margin, since whatever they switch to is a matchup we win.
+
+`scripts/rule_trial.py --battles 4000 --seed 41` (`runs/t22_*.out`):
+
+| Setting | Head to head against the standard player | Against the crowd, same battles |
+|---|---|---|
+| `rush=True` | 47.5% ± 0.9 | -3.4 ± 0.9 (energy lost on faints 7.9 a battle, against 6.3) |
+| `rush=True, rush_threat=True` | 50.1% ± 0.7 | -0.3 ± 0.4 |
+| `known_team=True` (beaten by 0.15) | 50.2% ± 0.6 | -0.0 ± 0.1 |
+| `known_team=True, known_edge=0.0` | 50.3% ± 0.7 | +0.1 ± 0.2 |
+
+Racing every unshielded Pokémon loses: the hold rule's banked energy is worth more than the turns saved, and
+the existing play with no shields already takes a knock-out with the cheapest move that does it. Racing only
+once they threaten is neutral. Seeing their whole team with two or more left came up in 31 of 100 battles,
+and a bench Pokémon beating two of them while the present matchup was not already won was found once; the
+simulated opponents may also counter-swap less than people do, which is what this rule protects against.
+Nothing gained on the first seed, so no second seed was run.
 
 ### Get into the good matchup (task 18, rule 5; 2026-10-11): confirmed gain
 

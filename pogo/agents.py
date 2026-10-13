@@ -8,6 +8,7 @@ An agent answers three questions, each from a View of the battle:
 from __future__ import annotations
 
 import copy
+import heapq
 import json
 import random
 from functools import lru_cache
@@ -167,6 +168,12 @@ class Planner:
     value:    a trained ValueModel. With it (and a field), the lookahead judges what is
               left after the visible battle by the model's win chance against the
               opponent's unseen Pokémon, not by adding up health and shields.
+    rush:     once the opponent has no shields, stop holding and farming and knock their Pokémon out in
+              as few turns as our moves allow, before it does too much (the owner). With rush_threat,
+              only once holding no longer pays (they have a move ready or soon, or waiting hurts).
+    known_team: once every Pokémon they have left has been seen, swap in a bench Pokémon that beats at
+              least two of them even without the usual margin: whatever they switch to, it is a matchup
+              we win (the owner). known_edge is how far ahead a one-on-one must be to count as beaten.
     sweeper:  extra value per shield saved or drawn while setting up a teammate after
               losing the lead and being counter-swapped. Zero disables the rule.
               sweep_chance is the required fraction of shieldless two-opponent
@@ -187,7 +194,8 @@ class Planner:
                  good_matchup: bool = True, matchup_weight: float = 0.75,
                  sweeper: float = 0.0, sweep_chance: float = 0.75,
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
-                 catch: bool = False, catch_gain: float = 0.2):
+                 catch: bool = False, catch_gain: float = 0.2,
+                 rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.15):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -240,6 +248,9 @@ class Planner:
         self.shield_matchups = shield_matchups
         self.shield_matchup_hp = shield_matchup_hp
         self.catch, self.catch_gain = catch, catch_gain
+        self.rush = rush
+        self.rush_threat = rush_threat  # only once holding no longer pays: they have a move coming, or it hurts
+        self.known_team, self.known_edge = known_team, known_edge
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -280,6 +291,18 @@ class Planner:
                 return CHARGED[min(lethal, key=lambda k: moves[k].energy) if lethal else max(ready, key=lambda k: hit[k])]
         if foe.hp <= damage(mon, fast, foe):
             return FAST  # the fast move finishes it; keep the energy
+        if self.rush and view.foe_shields == 0 and (not self.rush_threat or self._hold_plan(view) is None):
+            turns, first = self._fastest_kill(view, hit)
+            if first != FAST and self.timing:
+                # Time the throw to their fast move as usual, as long as that does not make the knock-out later.
+                wait = fasts_to_wait(fast.turns, foe.build.fast.turns, view.foe_busy)
+                if wait and mon.energy + fast.energy_gain <= ENERGY_CAP and not self._may_faint(view, wait * fast.turns):
+                    after = foe.copy()
+                    after.hp = max(0, foe.hp - damage(mon, fast, foe))
+                    later, _ = self._fastest_kill(view, hit, hp=after.hp, energy=mon.energy + fast.energy_gain)
+                    if fast.turns + later <= turns:
+                        return FAST
+            return first
 
         planned = False  # the farm or hold rule has already chosen this turn as the one to throw on
         if self.farm and mon.energy + fast.energy_gain <= ENERGY_CAP and self._can_farm(view):
@@ -348,6 +371,31 @@ class Planner:
                 odds = solve_2x2(value[cheap, True], value[cheap, False], value[dear, True], value[dear, False])
                 choice = cheap if self.rng.random() < odds else dear
         return CHARGED[choice]
+
+    def _fastest_kill(self, view: View, hit: list[int], hp: int | None = None, energy: int | None = None) -> tuple[int, int]:
+        """The shortest way, in turns, to knock their Pokémon out with our own moves alone (no shields left to
+        stop them), from its health and our energy now (or those given): (turns, first step). A charged move
+        takes one turn; ties go to doing damage sooner."""
+        mon, foe = view.me.mon, view.foe
+        fast, moves = mon.build.fast, mon.build.charged
+        fast_hit = damage(mon, fast, foe)
+        start = (foe.hp if hp is None else hp, mon.energy if energy is None else energy)
+        best = {start: 0}
+        queue = [(0, 0, start[0], start[1], None)]  # turns, -damage so far, health left, energy, first step
+        while queue:
+            turns, _, hp, energy, first = heapq.heappop(queue)
+            if hp <= 0:
+                return turns, FAST if first is None else first
+            if best.get((hp, energy), turns) < turns:
+                continue
+            steps = [(CHARGED[k], 1, hit[k], energy - m.energy) for k, m in enumerate(moves) if energy >= m.energy]
+            steps.append((FAST, fast.turns, fast_hit, min(ENERGY_CAP, energy + fast.energy_gain)))
+            for action, cost, dealt, left in steps:
+                state, when = (max(0, hp - dealt), left), turns + cost
+                if when < best.get(state, 1 << 30):
+                    best[state] = when
+                    heapq.heappush(queue, (when, -(start[0] - state[0]), state[0], left, first if first is not None else action))
+        return 0, FAST
 
     def saw_shield(self, view: View, shielded: bool) -> None:
         self._shield_seen[0] += shielded
@@ -725,6 +773,10 @@ class Planner:
             gain = self._outlook(view, best) - max(staying, 0.0)
             if gain >= self.win_switch and not self._spent(me.team[best]):
                 return best
+        if self.known_team and staying < self.known_edge:
+            slot = self._known_counter(view, staying)
+            if slot is not None:
+                return slot
         if staying > self.bad_matchup:
             return None
         w = 0.0 if self.punish and view.foe_switch_wait else self.safe_weight
@@ -735,6 +787,28 @@ class Planner:
 
         slot = max(me.bench(), key=appeal)
         return slot if appeal(slot) - staying >= self.switch_margin else None
+
+    def _known_counter(self, view: View, staying: float) -> int | None:
+        """With every Pokémon they have left on show: a bench Pokémon of ours that beats two or more of them
+        and does better here than staying, or None."""
+        me = view.me
+        living = [f for f in view.foe_shown if f.hp > 0]
+        if len(living) < 2 or len(living) != view.foe_left:
+            return None  # someone of theirs is still unseen
+        def edge(j: int, foe: Mon) -> float:
+            mine = me.team[j]
+            live = duel(mine, foe, me.shields, view.foe_shields, coming_in=True)
+            table = _matchup_table().get(mine.build.species_id, {}).get(foe.build.species_id) if self.good_matchup else None
+            return live if table is None else (1 - self.matchup_weight) * live + self.matchup_weight * table
+        options = []
+        for j in me.bench():
+            if self._spent(me.team[j]):
+                continue
+            beaten = sum(edge(j, f) >= self.known_edge for f in living)
+            here = self._outlook(view, j)
+            if beaten >= 2 and here > staying:
+                options.append((beaten, here, j))
+        return max(options)[2] if options else None
 
     def _spent(self, mon: Mon) -> bool:
         return mon.hp <= 0.3 * mon.build.hp
