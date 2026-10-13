@@ -1858,10 +1858,37 @@ How the rest of a chess engine maps onto this game:
 | Chess engine | Here | State |
 |---|---|---|
 | Evaluation | `Evaluator` (learned) or `material` | built (above) |
-| Search | look a few turns ahead at each option, against a sample of what the opponent may do, and judge the result with the evaluation. Both players choose at once, so a choice is a small game to solve (`solve_2x2` exists), not a minimax; hidden information (their energy, unseen Pokémon) is handled by sampling it, as poker and bridge programs do | not built: the bot plays each option to the end once instead (training) or follows rules (play) |
+| Search | `pogo.engine.Engine`: at each judgement call (throw or hold, swap or stay, which replacement), play each option a few turns ahead in several imagined battles (their unseen Pokémon drawn at random, the same dice for every option) and judge where it ends up with the evaluation; take the best if it beats the trained bot's pick by `edge`. Both players choose at once, so a fuller search would treat a choice as a small game to solve (`solve_2x2` exists) rather than a minimax | first version built; see below |
 | Endgame tablebase | `pogo/endgame.py`, Marco's exact solver for at most two Pokémon a side | built; too slow for most two-against-two |
 | Opening book | the lead and team choice | the team searches |
 | Game review | the evaluation over a battle, and the moments it swung | in the browser game's end screen |
 
 The difference from chess that matters most: a decision has to be made within a fraction of a 500 ms turn, so
 the search must be shallow and the evaluation cheap, which is why the evaluation is a small network.
+
+### The first search (2026-10-13)
+
+`scripts/engine_trial.py`: the engine against the trained bot (`runs/general-decide/q.npz`, margin 0.02), head to
+head on random teams with every pair played both ways, and both against the usual crowd on the same battles.
+Judged by the learned evaluation unless said otherwise; 20 turns ahead, 6 imagined battles per option.
+
+| Variant (seed 51 for the first two, 61 for the rest) | Head to head | Against the crowd, engine minus bot | Decisions changed |
+|---|---|---|---|
+| Quick players inside the look-ahead, 2,000 pairings | 37.0% ± 1.4 | -8.0 ± 2.6 | 33% |
+| The same judged by the plain count | 35.3% ± 1.3 | -9.3 ± 2.6 | 31% |
+| Quick players, override only when ahead by 0.05 (500) | 44.2% ± 2.6 | -2.1 ± 4.7 | 13% |
+| Quick players, switches and replacements only (500) | 42.9% ± 2.6 | -1.6 ± 4.7 | 43% of those |
+| Quick players, 40 turns ahead (500) | 36.7% ± 2.6 | -8.4 ± 5.3 | 31% |
+| **The trained bot playing both sides inside the look-ahead**, 4 per option, edge 0.03 (500) | **65.0% ± 2.5** | **+6.8 ± 4.8** | 15% |
+
+With cheap players inside, the look-ahead imagines a different game from the one being played, and the more the
+engine trusts it the worse it does. With the trained bot itself playing both sides inside, it is the strongest
+player measured in this project so far, by a wide margin. Two cautions before believing the size: it is the best of
+four variants on 500 pairings, and head to head the engine imagines its opponent as the trained bot, which is
+exactly what it is playing, so the head-to-head figure is flattered; the crowd figure is the fairer one and has a
+wide margin. A confirmation on fresh battles is running (`runs/engine_D_confirm.out`, 800 pairings, seed 71).
+
+Cost: a searched decision takes a median of 45 ms, 141 ms at the 90th percentile and 273 ms at worst (one core,
+shared), against 10 ms budgeted for a decision in live play. Fine inside the browser game's 0.75 s turns:
+`python3 scripts/play.py --bot engine`.
+

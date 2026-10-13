@@ -11,8 +11,9 @@ landing on their last turn, charged moves taking 10 s off the clock. You attack 
 moves, switches and shields; a charged move always counts as fully charged (no swiping). The opponent's
 energy is not shown, as on the phone.
 
-Opponents: --bot learner (default, the trained bot), planner (the hand-written rules) or crowd (a
-varied Planner, as in training). Without --foe, each battle draws a team the way the simulations do (half
+Opponents: --bot learner (default, the trained bot), engine (the trained bot with a look-ahead at its judgement
+calls, pogo.engine; needs runs/eval/eval.npz), planner (the hand-written rules) or crowd (a varied Planner, as in
+training). Without --foe, each battle draws a team the way the simulations do (half
 from data/teams.json, half random from the top 50).
 
 Every battle is saved to games/played/: the teams, every turn, every choice on both sides and the result,
@@ -38,6 +39,7 @@ from pogo.battle import CHARGED, DRAW, FAST, MAX_TURNS, SWITCH, Battle  # noqa: 
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.arena import decisive  # noqa: E402
+from pogo.engine import Engine  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
@@ -265,7 +267,7 @@ class Server:
         self.owned = owner_builds(self.gd)
         self.pool = self.gd.meta(50)
         self.draw = drawer(self.gd, self.pool)
-        self.net = QNet.load(str(MODEL)) if args.bot == "learner" else None
+        self.net = QNet.load(str(MODEL)) if args.bot in ("learner", "engine") else None
         self.evaluator = Evaluator.load(EVALUATION) if EVALUATION.exists() else Evaluator()
         self.rng = random.Random()
         self.game = None
@@ -282,6 +284,9 @@ class Server:
         theirs = self.team(self.args.foe) if self.args.foe else self.draw(self.rng)
         if self.args.bot == "learner":
             bot = Learner(q=self.net, margin=0.02)
+        elif self.args.bot == "engine":
+            # The trained bot with a look-ahead at its judgement calls (pogo.engine), as tested in scripts/engine_trial.py.
+            bot = Engine(self.evaluator, self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02)
         elif self.args.bot == "crowd":
             bot = varied(self.rng, self.pool)
         else:
@@ -343,7 +348,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--team", nargs=3, help="your three, lead first (default: the first three in data/owner_team.json)")
     parser.add_argument("--foe", nargs=3, help="the bot's three (default: drawn as in the simulations)")
-    parser.add_argument("--bot", choices=("learner", "planner", "crowd"), default="learner")
+    parser.add_argument("--bot", choices=("learner", "engine", "planner", "crowd"), default="learner")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--charged-pause", type=float, default=2.0,
                         help="real seconds the bot's charged move holds the screen (the game takes about 10; the clock still loses 10)")
