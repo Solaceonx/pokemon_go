@@ -1,17 +1,32 @@
-"""Usage: python3 scripts/punish_count.py BATTLES.
+#!/usr/bin/env python3
+"""When the opponent has just switched (and so cannot switch again) and our switch is ready: how often the
+trained bot and the engine bring in a counter, by how the matchup stands and how much better the counter is.
 
-When the opponent has just switched and our switch is ready: how often the engine and the trained bot bring a counter."""
-import random, sys
-sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parent.parent))
-from pogo.gamedata import GameData
-from pogo.battle import Battle
-from pogo.agents import Planner, varied
-from pogo.engine import Engine
-from pogo.evaluation import Evaluator
-from pogo.learner import Learner, QNet
-from pogo.teamlist import drawer
-gd = GameData(); pool = gd.meta(50); draw = drawer(gd, pool)
-net = QNet.load(str(__import__('pathlib').Path(__file__).resolve().parent.parent / 'runs/general-decide/q.npz')); ev = Evaluator.load(str(__import__('pathlib').Path(__file__).resolve().parent.parent / 'runs/eval/eval.npz'))
+    python3 scripts/punish_count.py [BATTLES]     default 300, against the crowd
+
+The owner's complaint was that the bot does not punish with harder counters. Outlooks are the Planner's
+one-on-one estimates (-1 to +1); only the pilot's own decisions count, not those inside the engine's look-ahead.
+"""
+import random
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+from pogo.agents import varied  # noqa: E402
+from pogo.battle import Battle  # noqa: E402
+from pogo.engine import Engine  # noqa: E402
+from pogo.evaluation import Evaluator  # noqa: E402
+from pogo.gamedata import GameData  # noqa: E402
+from pogo.learner import Learner, QNet  # noqa: E402
+from pogo.teamlist import drawer  # noqa: E402
+
+battles = int(sys.argv[1]) if len(sys.argv) > 1 else 300
+gd = GameData()
+pool = gd.meta(50)
+draw = drawer(gd, pool)
+net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
+ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
 for name, make in (("trained bot", lambda s: Learner(q=net, margin=0.02, seed=s)),
                    ("engine", lambda s: Engine(ev, pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=s))):
     rows = []
@@ -26,11 +41,10 @@ for name, make in (("trained bot", lambda s: Learner(q=net, margin=0.02, seed=s)
         if locked:
             rows.append((stay, gain, choice))
         return choice
-    cls = Engine if name == "engine" else Learner
     saved = Learner._swap_choice
     Learner._swap_choice = spy
     rng = random.Random(3)
-    for i in range(int(sys.argv[1])):
+    for i in range(battles):
         pilot = make(i)
         pilot.counted = True
         Battle(draw(rng), draw(rng), pilot, varied(rng, pool), seed=i).run()
