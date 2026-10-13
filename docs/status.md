@@ -79,6 +79,12 @@ Do not re-propose these without a new angle.
 - **Racing a Pokémon with no shields left** (`Planner(rush=True)`, 2026-10-13): 47.5% ± 0.9 head to head,
   -3.4 ± 0.9 against the crowd. Only once holding no longer pays (`rush_threat=True`): 50.1% ± 0.7. Details
   under the owner's guidance below.
+- **Punishing harder** (`Planner(punish_gain=...)`, 2026-10-13, the owner: the bot does not punish with harder
+  counters): when they have just switched and are locked in, bring the counter that beats staying by 0.3 (or 0.5)
+  even when already ahead. 50.6% ± 0.7 and 50.2% ± 0.6 head to head, +0.0 against the crowd
+  (`runs/t23_*.out`). A count over 300 battles first showed that the bot already brings a counter in 70 of the
+  82 moments when it was losing the matchup with a counter at least 0.3 better on the bench; the moments this rule
+  adds (already ahead, or only a little behind) come up a few times in 262.
 - **Switching freely to a counter of a team seen in full** (`Planner(known_team=True)`, 2026-10-13): 50.2% ±
   0.6 head to head; the chance comes about once in three battles and the rule acted on it rarely.
 - **A learned mid-matchup swap head at a fixed total example budget (task 20).** Two fresh
