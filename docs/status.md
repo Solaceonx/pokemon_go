@@ -1833,6 +1833,13 @@ So scoring by decisiveness is at most a small help at this budget, inside the ma
 what decides strength. Each model's own final test had suggested +5.0 against +3.0, but those were different
 battles.
 
+**A longer run.** `runs/general-margin/`: the same settings scored by decisiveness, two cores, every decision kept,
+stopped by a container restart during its fourth round; the round-3 model has about 540,000 decisions (+8.2 ± 3.2
+over the Planner on 1,000 validation battles). Against the current model on the same 4,000 fresh battles
+(`runs/compare_general_margin.out`): 64.2% ± 1.5 against 66.3% ± 1.5, -2.1 ± 1.4 points, and 47.9% ± 1.3 head
+to head. Not better than the current model, which was trained on more than twice as many decisions; the current
+model stays.
+
 **Its weights.** `scripts/score_study.py`: 800 positions from ordinary battles, each played on 30 times with fresh
 dice for its true chance of winning (`runs/score_study.out`, raw play-outs in `runs/score_study.json`). One
 play-out's plain result explains 93.7% of the spread in true chances; decisiveness with a bare win at 0.5 (as
