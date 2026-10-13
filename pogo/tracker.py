@@ -57,6 +57,10 @@ class Observation:
     # Seconds since the last look in which the fight stood still for a reason other than a charged move:
     # a side choosing its next Pokémon after a faint.
     paused: float | None = None
+    # Live, a change of their Pokémon can be learnt a second or two after it happened (the header is read now and
+    # then). On the first look to show the new one: how many seconds it has been out. Its fast moves are counted
+    # from then, not from this look.
+    foe_out_for: float | None = None
 
 
 class Foe:
@@ -202,6 +206,7 @@ class Tracker:
         self.quiet_looks = 0  # how many quiet looks in a row; the words from a charged move linger for a moment
         self.my_switch_at = 0.0  # time at which my switch is ready again
         self.foe_switch_at = 0.0
+        self._turns = [(0.0, 0)]  # (time, fighting turns so far) after each look, to place a change learnt late
         self._file = open(path, "w") if path else None
         self._note(0.0, "start", my_team=[b.species_id for b in my_team])
 
@@ -275,7 +280,19 @@ class Tracker:
             if hits > 0:
                 self.my_beat += hits * fast.turns
                 was_mine.energy = min(ENERGY_CAP, was_mine.energy + hits * fast.energy_gain)
-        if self.by_rhythm and was_theirs:
+        came_out = None  # the fighting turn on which their new Pokémon really came out, when told it was a while ago
+        if self.by_rhythm and was_theirs and they_changed in ("switch", "faint") and obs.foe_out_for:
+            came_out = min(self.turn, self._turn_when(obs.t - obs.foe_out_for))
+            if came_out < self.beat:
+                # Looks given since then credited the old one with fast moves that were the new one's.
+                over = (self.beat - came_out) // was_theirs.mon.build.fast.turns
+                was_theirs.lo = max(0, was_theirs.lo - over * was_theirs.mon.build.fast.energy_gain)
+                was_theirs.hi = max(0, was_theirs.hi - over * was_theirs.mon.build.fast.energy_gain)
+                was_theirs.mon.energy = (was_theirs.lo + was_theirs.hi) // 2
+            now, self.turn = self.turn, max(came_out, self.beat)
+            self._their_rhythm(was_theirs)
+            self.turn = now
+        elif self.by_rhythm and was_theirs:
             # A fast move of theirs still in the air when I throw a charged move lands after it.
             # The turn they spent throwing a charged move or switching had no fast move in it.
             self._their_rhythm(was_theirs, in_air=obs.my_charged is not None and not obs.foe_charged,
@@ -342,6 +359,9 @@ class Tracker:
         if thrown or i_changed or they_changed:
             if thrown or they_changed or not self.by_rhythm:
                 self.beat = self.turn  # they start afresh after a charged move or a change of their Pokémon
+            if came_out is not None and not thrown:
+                self.beat = came_out + (they_changed == "switch")  # a switch costs its turn
+                self._their_rhythm(self.foe)
             if thrown or i_changed:
                 self.my_beat = self.turn
             self.ahead = 0
@@ -357,6 +377,14 @@ class Tracker:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
         self.t = obs.t
+        self._turns.append((obs.t, self.turn))
+
+    def _turn_when(self, t: float) -> int:
+        """The fighting turn at time t, from the turns counted at the looks around it."""
+        k = max(i for i, (when, _) in enumerate(self._turns) if when <= t or i == 0)
+        when, turn = self._turns[k]
+        nxt = self._turns[k + 1][1] if k + 1 < len(self._turns) else self.turn
+        return min(nxt, turn + max(0, round((t - when) / TURN)))
 
     def _my_active(self, obs: Observation) -> str | None:
         """Notice my active Pokémon changing. Returns "switch", "faint" or None."""

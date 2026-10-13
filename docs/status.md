@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-12.
+Last updated 2026-10-13.
 
 ## Goal
 
@@ -1612,3 +1612,108 @@ new data occupies 55.36 MB, retained history
 of cropped video. The 61-view HTML is 58.92 MB
 and embeds no video. Earlier collection and 23-view reports remain historical
 measurements, separate from these results.
+
+## Tracking live, replayed from recordings (2026-10-13)
+
+Until now every tracked game was built after the battle, from the whole recording: `assemble.py` smooths a
+health bar with later frames, takes back a step that later frames contradict, works out a faint from the
+header up to six seconds later, and closes the battle from the result screen. A live bot has only what has
+been seen so far. `scripts/recording/live_replay.py` measures what that costs. At every half-second t it
+rebuilds the looks from the readings up to t only (`assemble(..., now=t)`), with each text reading arriving
+`--text-delay` seconds after its frame, and hands the tracker the looks for that half-second as soon as they
+exist; a look that only appears later is lost, since the tracker cannot go back. No video is needed: it runs
+on the saved readings in `games/*/raw/`.
+
+`assemble.py` is now a function as well as a command (`assemble(rows, texts, argv, span, now)`); the command's
+output is byte-identical to before on all 47 recordings and clips with saved readings. With the whole battle
+in hand, live mode gives exactly the offline looks (`tests/test_live_assembly.py`).
+
+**Bugs that only show live, found and fixed.** Each was a rule written for a finished recording:
+
+- "The battle ended on our charged move" fired at every moment one of our moves was still playing. It now
+  needs the result screen.
+- On public footage, a charged move still playing was taken for the clip ending on a named attack, so the
+  tracker was told of the same move up to seven times and spent the opponent's energy each time. This alone
+  had live public tracking at 72.9% (energy within two fast moves) against 79.2% offline.
+- A gap in the buttons that had not closed yet counted as a pause even after the replacement was out and
+  fighting (20 energy short on one Talonflame). It now ends when a Pokémon comes out.
+- With text read late, the effectiveness words never reached a look; they now go to the look in which they
+  are read.
+
+**Your recordings, against the offline picture** (four battles, every half-second; offline is not the truth
+but it is what seeing the future gives):
+
+| Live, text read on time | Agrees with offline |
+|---|---|
+| Who is out, shields, Pokémon left, both sides | 98 to 100% |
+| Health within 3%, both sides | 99.4% (ours), 99.8% (theirs) |
+| Their energy within one fast move | 93.0% (95.1% before the change below) |
+| Every switch, faint and charged move | all 71 seen, at the same look; our own switches 1.0 s later |
+
+Waiting a second before believing a look (`--lag 1`) changes little: our energy agrees with offline 84.4% at
+no wait and 86.6% at one second (the buttons are smoothed over frames that come after), their energy 95.1% either
+way (measured before the late-switch change below).
+
+**The opponent's energy against the truth.** In the three two-screen matches already used for fitting
+(`2897295240`, both views each), each view's count of the opponent's energy is set against the other
+player's own buttons:
+
+| | Average error | Within one fast move | Within two |
+|---|---|---|---|
+| Offline | 9.2 | 64.3% | 79.2% |
+| Live, text on time | 7.7 | 71.0% | 81.0% |
+| Live, text 1 s late | 8.9 | 60.1% | 81.2% |
+| Live, text 1 s late, buttons stop the fight (below) | 8.7 | 63.4% | 79.8% |
+| Live, text on time, buttons stop the fight | 8.0 | 67.5% | 81.2% |
+
+So live tracking is no worse than offline; if anything better (offline's look-ahead rules were fitted to
+these same matches, and some of them were costing it). Text read a second late costs about ten points within
+one fast move and nothing within two. Who is out, health, shields and Pokémon left are the same live as
+offline (96.7%, 89.2% within 3%, 100%, 99.6%).
+
+Settings were then fixed and the same replay run once on the reserved sample (ten matches, twenty views, never
+used for any of the above):
+
+| Reserved sample, 744 to 750 moments | Average error | Within one fast move | Within two |
+|---|---|---|---|
+| Offline | 15.1 | 59.0% | 73.3% |
+| Live, text on time | 14.3 | 59.9% | 75.7% |
+| Live, text 1 s late | 14.8 | 57.3% | 73.5% |
+
+Who is out 95.6 to 96.1%, health within 3% 77.9%, shields 95.0 to 95.1%, Pokémon left 99.5 to 99.6% in all
+three. So on footage nothing was tuned on, tracking live is as good as tracking afterwards, and reading text a
+second late costs about two points within one fast move. The opponent's energy remains the weak part, as it
+is offline: about one moment in four is more than two fast moves out. Seeing the future was never what held
+it back.
+
+**Charged moves from pixels.** The two charged-move buttons vanish the moment either side starts a charged
+move. On your four recordings they went before the text cue every time: for the opponent's 21 moves a median
+0.4 s before "Attack incoming!" was read (0.07 to 1.2 s), for our 20 a median 1.0 s before "Get Ready!" (in
+play the bot knows its own taps anyway). Of 160 other gaps in the buttons, 130 were flickers under 0.25 s and
+30 were switches, faints and the wobble as fighting resumes. So "buttons gone for 0.25 s" is a signal that a
+charged move (or a faint or switch) has begun, from pixels, before any text. Used to hold looks back until the
+text says why (`--buttons-stop 0.25`), it made no measurable difference to the opponent's energy (table
+above), so it is off by default; it stays the way to know a charged move has started without reading text.
+
+Why late text costs energy: looks given in the first second of a charged move the tracker has not been told
+of yet credit fighting turns; when the charged move arrives, the tracker's clock would go negative and is held
+at zero, so those turns stay counted.
+
+**A change of their Pokémon learnt late.** Live, the header shows a new opponent a second or two after it came
+out, and the tracker used to give all that time to the one that left. A look may now say how long the new one
+has been out (`Observation.foe_out_for`), and the tracker counts from then. Tested
+(`tests/test_live_assembly.py`), but no measurable gain on the two-screen matches (7.7 against 7.8 average error).
+
+**Energy only goes down when a charged move is thrown** (the owner). The tracker already keeps to it for the
+opponent: their energy fell between charged moves 4 times in 1,333 live looks, each when it re-identified the
+fast move and recounted. Our button reading does not: 7 of 231 readings fell with no charged move of ours,
+by 6 to 58 energy, mostly the wrong helping of a button that had filled once. `--monotone-buttons yes` sets
+such a reading aside unless four frames in a row agree on it. On the four recordings it changed how far our
+count sits from the buttons by nothing measurable (5.3 against 5.4), so it is off by default.
+
+**Speed.** Rebuilding from scratch every half-second takes 3 ms early in a battle and 150 ms by its end (one
+core), too slow to run live in a 500 ms turn next to recognition. The live path needs the assembly made
+incremental; the replay is the yardstick it must match.
+
+What this does not cover: the readings are the recorded ones, at 15 frames a second and with text every third
+of a second; a live reader on the phone will be slower and rougher. Phone capture and taps are still unmeasured.

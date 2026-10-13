@@ -134,6 +134,7 @@ which gives about four times the examples in the same time.
 |---|---|
 | `python3 scripts/track.py games/example` | Builds the game state from `team.json` and `observations.jsonl` in that folder; writes `state.json`, `states.jsonl`, `events.jsonl` |
 | `python3 scripts/advise.py games/example --look 45 --q runs/general-decide/q.npz` | From a game state: what to do now, what to do with the next shield, the chance of winning, one typical continuation |
+| `python3 scripts/recording/live_replay.py games/<recording>/raw --text-delay 1` | Plays a recorded battle back as if live (only readings seen so far, text read late) and sets the tracker's picture against the offline one |
 
 **Phone** (parked)
 
