@@ -5,9 +5,9 @@
     python3 scripts/play.py --team medicham azumarill registeel --bot planner
     python3 scripts/play.py --foe tinkaton corviknight mandibuzz --port 8765
 
-Then open http://localhost:8765 (it opens by itself). The battle runs in real time on the same engine as
-every simulation here: half-second turns, fast moves landing on their last turn, charged moves taking 10 s
-off the clock. You attack with your fast move all the time, as if holding the screen, and choose charged
+Then open http://localhost:8765 (it opens by itself). The battle runs on the same engine as every simulation
+here, 1.5 times slower than the real game unless --slow says otherwise: half-second turns, fast moves
+landing on their last turn, charged moves taking 10 s off the clock. You attack with your fast move all the time, as if holding the screen, and choose charged
 moves, switches and shields; a charged move always counts as fully charged (no swiping). The opponent's
 energy is not shown, as on the phone.
 
@@ -39,7 +39,7 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
-TURN = 0.5  # seconds a turn takes
+TURN = 0.5  # game seconds a turn takes (the clock on screen counts these)
 PAGE = Path(__file__).resolve().parent / "play" / "index.html"
 SAVED = ROOT / "games" / "played"
 MODEL = ROOT / "runs" / "general-decide" / "q.npz"
@@ -120,8 +120,9 @@ class Human:
 
 
 class Game:
-    def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float):
+    def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float, slow: float = 1.5):
         self.gd, self.bot_name, self.charged_pause = gd, bot_name, charged_pause
+        self.real_turn = TURN * slow  # real seconds a turn takes: slower than the game by `slow`
         self.human = Human(self)
         self.battle = Battle(mine, theirs, self.human, bot, seed=random.getrandbits(32), record=True)
         self.queued = None
@@ -169,7 +170,7 @@ class Game:
             thrown = battle.turn - before > 1
             if thrown:
                 self.pause_until = time.time() + self.charged_pause
-            time.sleep(max(0.0, (self.charged_pause if thrown else TURN) - (time.time() - started)))
+            time.sleep(max(0.0, (self.charged_pause if thrown else self.real_turn) - (time.time() - started)))
         self.finished = time.time()
         if battle.winner is not None:
             self.save()
@@ -247,7 +248,7 @@ class Server:
             bot = varied(self.rng, self.pool)
         else:
             bot = Planner()
-        self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause)
+        self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow)
         self.game.thread.start()
 
     def tally(self) -> dict:
@@ -307,6 +308,8 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--charged-pause", type=float, default=2.0,
                         help="real seconds a charged move holds the screen (the game takes about 10; the clock still loses 10)")
+    parser.add_argument("--slow", type=float, default=1.5,
+                        help="how much slower than the real game a turn runs (1 is the game's own half-second; default 1.5)")
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
     server = Server(args)
