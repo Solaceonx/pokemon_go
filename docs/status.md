@@ -1900,6 +1900,20 @@ trained bot on the same battles, **+5.4 ± 3.7 points**. The crowd is not what t
 to be, so that is the fairer figure, and it is now clear of its margin. It changed the trained bot's pick at 15%
 of the 54,059 decisions it searched.
 
+**Does it punish?** (the owner's complaint that the bot does not punish with harder counters;
+`scripts/punish_count.py 300`, `runs/punish_engine.out`). Moments when the opponent has just switched and our
+switch is ready, 300 battles against the crowd each:
+
+| Matchup now, and the best counter on our bench | Trained bot brings a counter | Engine brings a counter |
+|---|---|---|
+| Losing, a counter 0.3 or more better | 70 of 82 (85%) | 74 of 85 (87%) |
+| Losing, a counter less than 0.3 better | 37 of 80 (46%) | 48 of 78 (62%) |
+| Even or ahead, a counter 0.3 or more better | 8 of 11 | 10 of 11 |
+| Ahead, a counter less than 0.3 better | 18 of 89 (20%) | 29 of 101 (29%) |
+
+The engine punishes more often, most of all when only a little behind, in the direction the owner described; the
+hand-written version of the same idea (`punish_gain`, above) gained nothing, the search does it with judgement.
+
 Looking 40 turns ahead instead of 20, with the trained bot inside (seed 81, 300 pairings,
 `runs/engine_E_bot_h40.out`): 66.2% ± 3.4 head to head, -1.8 ± 6.3 against the crowd. No better; 20 stays.
 
