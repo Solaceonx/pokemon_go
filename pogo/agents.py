@@ -171,6 +171,8 @@ class Planner:
     rush:     once the opponent has no shields, stop holding and farming and knock their Pokémon out in
               as few turns as our moves allow, before it does too much (the owner). With rush_threat,
               only once holding no longer pays (they have a move ready or soon, or waiting hurts).
+    punish_gain: once they have switched and are locked in, bring the bench Pokémon that beats staying by
+              at least this much, even when already ahead (the owner: punish with the harder counter).
     known_team: once every Pokémon they have left has been seen, swap in a bench Pokémon that beats at
               least two of them even without the usual margin: whatever they switch to, it is a matchup
               we win (the owner). known_edge is how far ahead a one-on-one must be to count as beaten.
@@ -195,7 +197,8 @@ class Planner:
                  sweeper: float = 0.0, sweep_chance: float = 0.75,
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
                  catch: bool = False, catch_gain: float = 0.2,
-                 rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.15):
+                 rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.15,
+                 punish_gain: float | None = None):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -251,6 +254,9 @@ class Planner:
         self.rush = rush
         self.rush_threat = rush_threat  # only once holding no longer pays: they have a move coming, or it hurts
         self.known_team, self.known_edge = known_team, known_edge
+        # Punish harder (the owner): when they have just switched and cannot switch again, bring the bench
+        # Pokémon that beats staying by at least this much, even if we are already winning or only a little behind.
+        self.punish_gain = punish_gain
         self.sac = sac
         self.sac_margin = sac_margin
         self.replace_by = replace_by
@@ -766,6 +772,11 @@ class Planner:
         if self._spent(mon):
             return None  # too hurt to fight elsewhere; any rescue was decided above
         staying = self._outlook(view, me.active)
+        if self.punish_gain is not None and view.foe_switch_wait > 0:
+            fresh = [j for j in me.bench() if not self._spent(me.team[j])]
+            best = max(fresh, key=lambda j: self._outlook(view, j), default=None)
+            if best is not None and self._outlook(view, best) - staying >= self.punish_gain:
+                return best
         if self.win_switch is not None and view.foe_switch_wait > 0:
             if staying >= 0.15:
                 return None  # winning as it stands: stay in and keep the switch for later
