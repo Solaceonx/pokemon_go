@@ -1928,3 +1928,38 @@ Cost: a searched decision takes a median of 45 ms, 141 ms at the 90th percentile
 shared), against 10 ms budgeted for a decision in live play. Fine inside the browser game's 0.75 s turns:
 `python3 scripts/play.py --bot engine`.
 
+
+### What the engine does differently, and whether it makes rules (2026-10-13)
+
+`scripts/engine_habits.py` (2,000 battles against the crowd, seed 91, `runs/engine_habits.json`, reports in
+`runs/engine_habits.out`, `runs/engine_habits_spots.out`, `runs/engine_habits_rules.out`): the engine as
+confirmed above, writing down every decision it searched (45,856) with the trained bot's pick, its own, and the
+look-ahead's worth of each option. It overruled the bot at 14% of throws, 16% of swaps and 22% of replacements.
+Where it overrules most often, by one or two simple conditions:
+
+| The bot's pick | Engine's change | Most often when | Rate there |
+|---|---|---|---|
+| Stay in | Switch to the bench's better matchup | Losing, and they have a charged move ready / their switch is locked | 31% / 28% |
+| Hold the charged move | Throw the cheaper one | They have a move ready and we would faint within two of their fast moves; or losing with a move of theirs ready | 21% / 18% |
+| Throw the cheaper move | Hold and keep fast-moving | They have both shields and we are winning the matchup | 21% |
+| After a faint, bring the better matchup | Bring the other one | Their Pokémon is under a third of its health | 28% |
+
+So the tendencies are: get out of a losing matchup before their charged move lands, throw rather than faint holding
+energy, don't throw cheap moves into two shields while winning, and don't spend the best answer on a Pokémon that
+is nearly finished. None of them is a habit: even in the best spot the engine overrules less than a third of the
+time.
+
+**As rules they gain nothing.** Scored by the look-ahead's own worths, "in this situation always do X" (every
+choice X, under every one or two of 24 simple conditions, 300 or more decisions each) never beats the bot's pick:
+the best of each kind is within its margin of zero or below it (the best, always staying in at a swap, is
++0.0006 ± 0.0010; always switching to the better matchup when one is 0.3 better and their switch is locked,
+-0.0008 ± 0.0053). Rules with up to three numeric thresholds (energy over each move's cost, their energy, fast
+moves to a knockout each way, outlooks, Pokémon left, turn), searched for on half the decisions and scored on the
+other half, do no better: what looks best on the first half is at or below zero on the second. This agrees with
+the hand-written owner rules above (`rush`, `known_team`, `punish_gain`), none of which gained: the trained bot
+already plays the simple strategies about as well as simple conditions allow, and what the engine adds depends
+on the particular position. The way to keep it is to teach the bot the engine's worths (below), not more rules.
+
+Real players' decisions (`runs/real_decisions/`, above) say the same at much smaller size: where the bot wanted
+to switch out but the player held and kept fast-moving, the player did better (14 of 18 clear cases; bot -5.6 ±
+5.2 points over 34), the only direction close to a margin, and too small to build on yet.

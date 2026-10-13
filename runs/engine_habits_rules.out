@@ -1,0 +1,63 @@
+== throw: always 'cheap'; everywhere -0.0270 ± 0.0010
+   -0.0043 ± 0.0046  (n 374)  their shields 2 & theirs knocks us out
+   -0.0055 ± 0.0047  (n 453)  their health under 1/3 & theirs knocks us out
+   -0.0059 ± 0.0048  (n 472)  a bench Pokémon beats staying by 0.3 & theirs knocks us out
+   -0.0066 ± 0.0030  (n 1314)  more Pokémon left than them & our shields 2
+   -0.0082 ± 0.0039  (n 1023)  theirs knocks us out & we are knocked out within two of their fast moves
+
+== throw: always 'dear'; everywhere -0.0393 ± 0.0013
+   -0.0111 ± 0.0038  (n 825)  more Pokémon left than them & our shields 2
+   -0.0126 ± 0.0067  (n 381)  first two minutes & their fast moves alone finish us in 2 or fewer
+   -0.0139 ± 0.0076  (n 379)  our switch is ready & their fast moves alone finish us in 2 or fewer
+   -0.0142 ± 0.0072  (n 327)  last Pokémon each & our health over 2/3
+   -0.0175 ± 0.0066  (n 638)  a bench Pokémon beats staying by 0.3 & they have a move ready
+
+== throw: always 'hold'; everywhere -0.0101 ± 0.0008
+   -0.0014 ± 0.0024  (n 1656)  more Pokémon left than them & our health over 2/3
+   -0.0016 ± 0.0014  (n 3449)  our shields 2 & winning the matchup
+   -0.0016 ± 0.0010  (n 7097)  our health over 2/3 & their health over 2/3
+   -0.0016 ± 0.0014  (n 4170)  our health over 2/3 & winning the matchup
+   -0.0019 ± 0.0013  (n 4541)  our health over 2/3 & our shields 2
+
+== swap: always 'stay'; everywhere -0.0000 ± 0.0001
+   +0.0006 ± 0.0010  (n 499)  our shields 1 & their shields 2
+   +0.0004 ± 0.0009  (n 534)  more Pokémon left than them & their shields 2
+   +0.0004 ± 0.0008  (n 620)  a bench Pokémon beats staying by 0.3 & our shields 1
+   +0.0004 ± 0.0007  (n 647)  a bench Pokémon beats staying by 0.3 & more Pokémon left than them
+   +0.0004 ± 0.0007  (n 671)  losing the matchup & more Pokémon left than them
+
+== swap: always 'switch to the better'; everywhere -0.0578 ± 0.0026
+   -0.0008 ± 0.0053  (n 697)  a bench Pokémon beats staying by 0.3 & their switch is locked
+   -0.0033 ± 0.0087  (n 575)  a bench Pokémon beats staying by 0.3 & their shields 0
+   -0.0046 ± 0.0058  (n 726)  losing the matchup & their switch is locked
+   -0.0057 ± 0.0057  (n 805)  our shields 2 & their switch is locked
+   -0.0062 ± 0.0075  (n 620)  a bench Pokémon beats staying by 0.3 & our shields 1
+
+== swap: always 'switch to the worse'; everywhere -0.0937 ± 0.0039
+   -0.0390 ± 0.0141  (n 307)  our health under 1/3 & their shields 0
+   -0.0417 ± 0.0102  (n 529)  their shields 0
+   -0.0417 ± 0.0102  (n 529)  our switch is ready & their shields 0
+   -0.0432 ± 0.0158  (n 327)  they will have a move within two fast moves & we are knocked out within two of their fast moves
+   -0.0438 ± 0.0124  (n 360)  more Pokémon left than them & their shields 0
+
+== replace: always 'bring the better'; everywhere -0.0022 ± 0.0024
+   +0.0023 ± 0.0035  (n 309)  first two minutes & theirs knocks us out
+   +0.0023 ± 0.0035  (n 309)  first two minutes & they have a move ready
+   +0.0023 ± 0.0031  (n 551)  first two minutes & they will have a move within two fast moves
+   +0.0007 ± 0.0038  (n 379)  fewer Pokémon left than them & their shields 0
+   +0.0005 ± 0.0044  (n 309)  their health under 1/3 & their shields 1
+
+== replace: always 'bring the worse'; everywhere -0.0402 ± 0.0056
+   -0.0259 ± 0.0082  (n 644)  our switch is ready & their health under 1/3
+   -0.0270 ± 0.0126  (n 308)  their health under 1/3 & their shields 1
+   -0.0278 ± 0.0087  (n 623)  first two minutes & their health under 1/3
+   -0.0279 ± 0.0139  (n 339)  their health under 1/3 & their shields 0
+   -0.0284 ± 0.0080  (n 841)  their health under 1/3
+
+rules with up to 3 thresholds, found on 22928 decisions and scored on the other 22928
+   throw, always hold: +0.0059 where found, -0.0053 ± 0.0041 on unseen decisions (n 336); when their fast moves to finish us > 53 & best bench outlook over staying > -0.067 & outlook <= -0.0392
+   throw, always cheap: +0.0015 where found, -0.0068 ± 0.0075 on unseen decisions (n 244); when our fast move's turns > 3 & outlook <= 0.1364 & their fast moves to finish us <= 34.1
+   throw, always dear: -0.0092 where found, -0.0159 ± 0.0112 on unseen decisions (n 246); when outlook <= -0.348 & our energy over the cheaper move <= 12 & their fast move's turns <= 3
+   swap, always stay: +0.0003 where found, +0.0001 ± 0.0002 on unseen decisions (n 265); when their energy over their cheaper move > 0 & our energy over the dearer move <= -23 & Pokémon left, ours minus theirs <= 1
+   swap, always switch to the better: +0.0050 where found, +0.0007 ± 0.0074 on unseen decisions (n 285); when outlook <= -0.292 & our fast moves to finish them > 41 & our health > 0.296
+   swap, always switch to the worse: -0.0400 where found, -0.0417 ± 0.0136 on unseen decisions (n 284); when turn > 191 & best bench outlook over staying > -0.18095 & their Pokémon seen > 1
