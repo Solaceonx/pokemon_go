@@ -70,6 +70,50 @@ misses, duplicates, merges and false splits. Whole-source scan coverage must not
 be reported as perfect battle recall. Changing overlays, unlabelled replays,
 non-English cues and unreadable headers remain cases to test on new footage.
 
+Official layouts also read the displayed player names. Sustained changes of
+matchup split edited highlight sequences into separate partial excerpts. These
+are retained as footage, without counting them as complete new games or assuming
+they are duplicates. Superseded mixed cuts remain on disk but are hidden from
+the active library. Empty selections never retire existing clips.
+
+`--reuse-broadcast-labels` can reuse a completed label scan when source hash,
+duration and geometry match. Its receipt retains the original reading fingerprint
+and limitation: result-marker windows are not expanded. Ordinary runs rescan the
+needed label regions when the cache no longer matches.
+
+## Measured run, 2026-10-13
+
+The two official recordings, 2897166800 and 2897312743, were scanned across all
+15,206 seconds (4 hours 13 minutes). They produced 32 ordinary battle interval
+candidates and 10 partial edited excerpts, each with both player views: 84 saved
+videos. The 10 excerpts came from two highlight montages; they can repeat earlier
+games. Forty-two candidates therefore does not mean forty-two unique games.
+
+All 760,904 decoded frames passed source/crop/timestamp verification, with maximum
+alignment error 0.0016671 seconds. No uncovered run of detected HUD frames lasting
+ten seconds remained outside the selected footage or labelled replay exclusions.
+This is a coverage check against the detector's own observations, not independent
+recall. On the previously reviewed Henry and Reis YouTube recordings, all 18
+reviewed intervals matched distinct predictions with intersection-over-union
+at least 0.5 and no extra predictions. These exposed fixtures are regression data.
+
+The protected twenty evaluation clips' metadata, viewer packages and raw reading
+files retained their original hashes. The new clips remain unassigned; all cuts
+from these reserved sources must stay out of recognition/tracking parameter
+fitting. New clips display pending analysis. Existing tracked clips still populate
+the playback table. Browser checks covered four new and four tracked player clips,
+twelve tracked seeks, sample filters, and no JavaScript errors. All 187 repository
+tests and 108 reference duels pass after two upstream Windows compatibility fixes.
+
+The originals occupy 11.86 GB, selected clips 2.63 GB, and their saved data 73.08 MB
+(decimal units; saved data includes existing analysis and archives). Original
+sources are stored once and 19 earlier cuts were reused. Four superseded montage
+videos are retained outside the active selection. The viewer has 126 active views,
+a 58.93 MB HTML file, and no embedded video copies. The complete measured receipt,
+source and code hashes, per-clip intervals and storage are in
+`data/vod_full_extraction_validation.json`. Full game-state accuracy is a separate,
+unfinished acceptance target.
+
 The earlier reserved state comparison and its settings remain intact. The
 ten-battle sampling commands are still available explicitly in
 `official_sample.md`; the Windows launcher now performs full extraction.
