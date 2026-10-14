@@ -1,0 +1,27 @@
+team: any (random threes from the top 50)
+teams: half from data/teams.json, half random
+opponents: variations of the Planner, half of them using learned decisions from 1 model(s)
+workers: 3; play-outs scored by: result
+mid-matchup swap: False; examples per round: all
+resuming with 167129 examples already collected
+collected this round: 79080 shield, 25524 throw, 51895 swap, 12065 replace, 0 mid_swap
+
+round 1: 8506 battles (0 of them 1v1 against PvPoke) in 40.1 min; examples so far: 157120 shield, 51221 throw, 103355 swap, 23997 replace, 0 mid_swap
+  shield: average result by option 53.1% 52.1%
+  throw: average result by option 54.2% 52.2% 52.3% 48.2% 34.3%
+  swap: average result by option 55.8% 50.5% 52.8%
+  replace: average result by option 47.5% 48.1%
+  overrule when ahead by 0.02: +8.0 ± 10.6 points against the Planner
+  overrule when ahead by 0.05: +0.0 ± 8.7 points against the Planner
+  overrule when ahead by 0.1: -1.0 ± 5.9 points against the Planner
+
+final test on 100 fresh battles, overruling when ahead by 0.02
+  with learned decisions   72.0% ± 8.7
+  Planner, same teams      51.0% ± 9.8
+  difference               +21.0 ± 8.8 points (same battles for both); overruled the Planner per battle: replace 0.02, shield 0.87, swap 0.50, throw 1.17
+
+the same test against the old crowd (Planner variations only), as a fixed yardstick
+  with learned decisions   65.5% ± 9.3
+  Planner, same teams      57.0% ± 9.8
+  difference               +8.5 ± 10.9 points (same battles for both); overruled the Planner per battle: replace 0.05, shield 0.90, swap 0.59, throw 1.05
+files: runs/both/q.npz, margin.txt, examples.npz

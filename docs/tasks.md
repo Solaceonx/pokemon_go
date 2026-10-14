@@ -99,7 +99,9 @@ python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/my-run/q.n
   are what matter: one core-hour gives about 30,000 shield examples, and the current model was fitted on
   about 1.3 million (task 19). Runs of a similar size since then have not beaten it, and neither did a
   network five times the size or extra inputs describing their Pokémon off the field (`--hidden`, `--wide`;
-  `status.md`, 14 October). The trained bot looks to have reached what this method gives against this crowd.
+  `status.md`, 14 October). One change did move head to head play: `--both-sides 0.5`, battles of the bot
+  against itself that teach both players (+2 points head to head at equal cost; `status.md`, "Learning from
+  both sides"). Use it for the next full-size run.
 - The run tests itself against the `Planner` at the end. That is not the acceptance test. The second
   command is: it plays the current model and the new one on the same battles against the crowd, and
   then against each other.

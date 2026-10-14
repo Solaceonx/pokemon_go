@@ -2109,3 +2109,32 @@ option at a decision; they do not change which option is better. Not adopted (th
 training (more examples, a bigger network, more information) leave it where it is. A side result: 564,000
 decisions played out by the current bot give a model level with it (head to head 48.7% ± 1.2 for the refit),
 from far fewer examples than it was trained on.
+
+## Learning from both sides of the bot's battles against itself: better head to head (2026-10-14, the owner's idea)
+
+In every training battle so far only our side's decisions became examples; the opponent's were thrown away,
+even when the opponent was a copy of the bot. `decide.py --both-sides SHARE` makes that share of battles the
+learner against itself and plays out and keeps both players' decisions, each scored from its own side
+(`play_out(..., side=1)`; `tests/test_both_sides.py` checks that replaying either player's real choice gives
+the real result).
+
+The test copies the known-foes run above in everything else (the current bot piloting every round, its model
+put back before each; three 40-minute rounds on three workers; teams half from the list; half the crowd on the
+current model; no mid-matchup swaps; then `scripts/fit_examples.py`), with `--both-sides 0.5`
+(`runs/both-collect-*.out`). Battles of the bot against itself are slower, but each teaches two players:
+8,500 to 8,800 battles a round against 13,300 to 14,500, and 512,000 decisions in all against 564,000. The
+control is that run's network without the extra inputs (`runs/wide/q_narrow.npz`), made the same way from
+crowd battles only.
+
+| Model, margin 0.02 | Seed 81081: against the control, crowd / head to head | Seed 91091: against the current model, crowd / head to head |
+|---|---|---|
+| Control (crowd battles only) | | -1.0 ± 1.4 / 49.3% ± 1.2 |
+| Half its battles against itself, both sides kept | -1.1 ± 1.5 / **52.8% ± 1.3** | -1.3 ± 1.4 / 51.0% ± 1.3 |
+| Current model | +1.8 ± 1.4 / 51.8% ± 1.2 | |
+
+(`runs/compare_both.out`, `runs/compare_both_confirm.out`.) Learning from both sides gains about two points head
+to head at the same cost, clear of the margin on the first seed and in the same direction on the second, and
+costs nothing measurable against the crowd. From 40% of the current model's examples it is level with it: not
+yet the replacement the rule asks for (ahead against the crowd and above 50% head to head, both beyond the
+margin), but the first change since task 19 that moves head to head play, which is the test against opponents
+as good as the bot. The next step is the full-size version: more rounds, with the newest model on both sides.
