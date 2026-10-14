@@ -44,7 +44,7 @@ from pogo.agents import Planner, varied, varied_settings  # noqa: E402
 from pogo.arena import decisive, field_results, low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
-from pogo.learner import N_FEATURES, Q_HEADS, Learner, QNet  # noqa: E402
+from pogo.learner import N_FEATURES, N_KNOWN, Q_HEADS, Learner, QNet  # noqa: E402
 from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -96,7 +96,8 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
-            pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0):
+            pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0,
+            wide: bool = False):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
@@ -109,11 +110,11 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
     while time.time() < stop:
         log: list = []
         if pvpoke_share and rng.random() < pvpoke_share:
-            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, seed=rng.getrandbits(32)), PvpokeOpponent()
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), PvpokeOpponent()
             battle = Battle(rng.sample(pool, 1), rng.sample(pool, 1), me, them, seed=rng.getrandbits(32))
             pvpoke_battles += 1
         else:
-            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, seed=rng.getrandbits(32)), crowd(rng)
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), crowd(rng)
             battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         while battle.winner is None:
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
@@ -128,7 +129,8 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
                 data[head][0].append(x)
                 data[head][1].append(y)
         battles += 1
-    return {head: (np.array(x).reshape(-1, N_FEATURES), np.array(y).reshape(-1, Q_HEADS[head]))
+    inputs = N_FEATURES + (N_KNOWN if wide else 0)
+    return {head: (np.array(x).reshape(-1, inputs), np.array(y).reshape(-1, Q_HEADS[head]))
             for head, (x, y) in data.items()}, battles, pvpoke_battles
 
 
@@ -185,7 +187,7 @@ def collect_job(job):
     _, pool, team, draw, crowd = world(config)
     return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
                    pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"],
-                   score=config.get("score", "result"), horizon=config.get("horizon", 0))
+                   score=config.get("score", "result"), horizon=config.get("horizon", 0), wide=config.get("wide", False))
 
 
 def main() -> None:
@@ -215,6 +217,9 @@ def main() -> None:
                         help="play each option only this many turns ahead and judge the rest with the engine's evaluation (runs/eval/eval.npz); 0 plays to the end")
     parser.add_argument("--pvpoke-share", type=float, default=0.0,
                         help="share of example battles played 1v1 against PvPoke's AI (shield and throw decisions only)")
+    parser.add_argument("--wide", action="store_true",
+                        help="the networks also see their Pokémon seen off the field and our one-on-ones against them (pogo.learner.known_foes)")
+    parser.add_argument("--hidden", type=int, default=48, help="hidden units in each network")
     args = parser.parse_args()
     if args.examples_per_round is not None and args.examples_per_round <= 0:
         parser.error("--examples-per-round must be positive")
@@ -224,7 +229,7 @@ def main() -> None:
     low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
               "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap, "score": args.score,
-              "horizon": args.horizon}
+              "horizon": args.horizon, "wide": args.wide}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -266,7 +271,8 @@ def main() -> None:
               + ", ".join(f"{h} {n:.2f}" for h, n in sorted(overruled.items())), flush=True)
 
     q, margin = None, 0.03
-    stored = {head: (np.zeros((0, N_FEATURES)), np.zeros((0, n))) for head, n in Q_HEADS.items()}
+    inputs = N_FEATURES + (N_KNOWN if args.wide else 0)
+    stored = {head: (np.zeros((0, inputs)), np.zeros((0, n))) for head, n in Q_HEADS.items()}
     if args.resume and (folder / "q.npz").exists():
         q = QNet.load(folder / "q.npz")
         margin = float((folder / "margin.txt").read_text()) if (folder / "margin.txt").exists() else margin
@@ -274,9 +280,12 @@ def main() -> None:
             saved = np.load(folder / "examples.npz")
             stored.update({head: (saved[f"{head}_x"], saved[f"{head}_y"])
                            for head in Q_HEADS if f"{head}_x" in saved})
+        if any(x.shape[1] != inputs for x, _ in stored.values()) or (q.wide and not args.wide):
+            parser.error("the saved model or examples were made with a different --wide setting")
+        # A narrower saved model may pilot the first round of a --wide run: it reads the inputs it knows.
         if args.no_mid_swap:
             q.params.pop("mid_swap", None)
-            stored["mid_swap"] = (np.zeros((0, N_FEATURES)), np.zeros((0, Q_HEADS["mid_swap"])))
+            stored["mid_swap"] = (np.zeros((0, inputs)), np.zeros((0, Q_HEADS["mid_swap"])))
         print(f"resuming with {sum(len(x) for x, _ in stored.values())} examples already collected", flush=True)
         args.seed += 1000 + sum(len(x) for x, _ in stored.values()) % 1000  # so new battles differ from the earlier ones
     receipt = {"arguments": vars(args), "rounds": []}
@@ -294,7 +303,7 @@ def main() -> None:
         else:
             fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
                                                      pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"], score=args.score,
-                                                     horizon=args.horizon)
+                                                     horizon=args.horizon, wide=args.wide)
         collected = {head: len(x) for head, (x, _) in fresh.items()}
         collection_seconds = time.time() - t0
         if args.examples_per_round is not None:
@@ -309,7 +318,7 @@ def main() -> None:
         print("collected this round: " + ", ".join(f"{n} {h}" for h, n in collected.items()), flush=True)
         print(f"\nround {round_no}: {battles} battles ({pvpoke_battles} of them 1v1 against PvPoke) in {(time.time() - t0) / 60:.1f} min; examples so far: "
               + ", ".join(f"{len(stored[h][0])} {h}" for h in Q_HEADS), flush=True)
-        q = QNet(seed=args.seed)
+        q = QNet(seed=args.seed, hidden=args.hidden, inputs=inputs)
         # A missing head must fall back to the Planner, never use random untrained weights.
         q.params = {h: ps for h, ps in q.params.items() if len(stored[h][0])}
         for head, (x, y) in stored.items():

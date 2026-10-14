@@ -2061,3 +2061,14 @@ fits live play if it starts searching when its fast move starts: 64% of its sear
 of time, almost all of the rest follow a pause, and the few that cannot finish (their switch in the last turn of
 our fast move, or the slowest 0.1% after a one-turn move) can fall back on the trained bot's own pick, which takes
 about a millisecond.
+
+## Is the network too small? No (2026-10-14)
+
+The last two long training runs gave models no better than the current one, so before more of the same: the
+bot's networks have 48 hidden units each. Refitted at 48, 128 and 256 on the same 772,000 saved decisions
+(`runs/general-margin/examples.npz`, nine tenths fitted, one tenth held out; `runs/capacity/h*.out`), the
+held-out squared error barely moves (throw 0.0539, 0.0532, 0.0530; replacement 0.0585, 0.0575, 0.0575;
+shield, swap and mid-matchup swap the same to the third digit). In battles, against the current model on the
+same 4,000 (`runs/compare_capacity.out`, seed 61061): -2.8 ± 1.4, -3.3 ± 1.5 and -2.5 ± 1.4 points against the
+crowd, 47.3%, 45.9% and 45.9% (± 1.3) head to head. Size makes no difference; the noise of a single play-out
+per option is what limits how well the networks can predict, and 48 stays.

@@ -24,7 +24,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .agents import Planner, duel, fasts_to_wait
+from .agents import Planner, _matchup_table, duel, fasts_to_wait
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, View, damage
 
 # Decisions judged option by option. For a throw: hold for one more fast move, throw the first
@@ -36,6 +36,7 @@ HOLDS = {0: 1, 3: 4, 4: 10}  # throw options that mean "only fast moves for this
 HEADS = {"shield": 2, "throw": 3, "swap": 3, "replace": 2}
 N_SITUATION = 42
 N_FEATURES = N_SITUATION + 3  # plus which option the Planner would pick
+N_KNOWN = 12  # optional extra inputs ("wide" models): their Pokémon seen off the field; see known_foes()
 
 
 def describe(agent: Learner, view: View, foe_energy: int | None = None) -> list[float]:
@@ -73,6 +74,28 @@ def describe(agent: Learner, view: View, foe_energy: int | None = None) -> list[
             x += [1.0, m.hp / m.build.hp, m.energy / ENERGY_CAP, agent.outlook(view, j)]
         else:
             x += [0.0, 0.0, 0.0, 0.0]
+    return x
+
+
+def known_foes(view: View) -> list[float]:
+    """Their Pokémon seen but not in play, up to two in the order they were seen: whether it is still up, its
+    health and energy, and the saved one-on-one (data/matchups.json) of each of ours against it: the one in play
+    first, then the other two in team order (as describe() orders them). Zeros where there is none."""
+    me, table = view.me, _matchup_table()
+    ours = [me.active] + [j for j in range(3) if j != me.active]
+    others = [m for m in view.foe_shown if m is not view.foe][:2]
+    x = []
+    for k in range(2):
+        if k >= len(others):
+            x += [0.0] * 6
+            continue
+        foe = others[k]
+        up = foe.hp > 0
+        x += [float(up), max(foe.hp, 0) / foe.build.hp, foe.energy / ENERGY_CAP]
+        for j in ours:
+            mine = me.team[j] if j < len(me.team) else None
+            fits = up and mine is not None and mine.hp > 0
+            x.append(table.get(mine.build.species_id, {}).get(foe.build.species_id, 0.0) if fits else 0.0)
     return x
 
 
@@ -150,13 +173,19 @@ class QNet:
     Trained on played-out examples: the same position continued once for each option.
     """
 
-    def __init__(self, params: dict[str, list[np.ndarray]] | None = None, hidden: int = 48, seed: int = 0):
+    def __init__(self, params: dict[str, list[np.ndarray]] | None = None, hidden: int = 48, seed: int = 0,
+                 inputs: int = N_FEATURES):
         rng = np.random.default_rng(seed)
         self.params = params or {
-            head: [rng.normal(0, np.sqrt(2 / N_FEATURES), (N_FEATURES, hidden)), np.zeros(hidden),
+            head: [rng.normal(0, np.sqrt(2 / inputs), (inputs, hidden)), np.zeros(hidden),
                    rng.normal(0, 0.01, (hidden, n)), np.zeros(n)]
             for head, n in Q_HEADS.items()
         }
+
+    @property
+    def wide(self) -> bool:
+        """Whether the networks also take known_foes() as input."""
+        return any(ps[0].shape[0] > N_FEATURES for ps in self.params.values())
 
     def values(self, head: str, x) -> np.ndarray:
         w1, b1, w2, b2 = self.params[head]
@@ -206,8 +235,12 @@ class Learner(Planner):
     """
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
-                 q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, **settings):
+                 q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
+                 **settings):
         super().__init__(**settings)
+        # Also describe their Pokémon seen off the field (known_foes): on for models trained that way, or when
+        # logging examples for one (decide.py --wide).
+        self.wide = (q is not None and q.wide) if wide is None else wide
         self.policy = policy
         self.log = log
         self.greedy = greedy
@@ -249,8 +282,10 @@ class Learner(Planner):
         if self.policy is None and self.q is None and self.log is None:
             return advice
         x = describe(self, view, foe_energy) + [float(advice == k) for k in range(3)]
+        if self.wide:
+            x += known_foes(view)
         if self.q is not None and head in self.q.params:
-            v = self.q.values(head, x)
+            v = self.q.values(head, x[:self.q.params[head][0].shape[0]])  # an older, narrower model reads the first part
             if head == "throw":  # holding is worth whatever the best length of hold is worth
                 v = [max(v[0], v[3], v[4]), v[1], v[2]]
             best = max((k for k in range(len(mask)) if mask[k]), key=lambda k: v[k])
