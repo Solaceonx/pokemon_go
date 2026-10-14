@@ -585,3 +585,22 @@ that lose three games in four to a counter.
 **Done when.** The best team found anywhere in the top 100 scores under 55% against the list on fresh
 battles, and the owner's ten best line-ups are reported against both lists on the same battles.
 
+## 22. Extract whole recordings into individual battles — Codex
+
+The owner accepts clipped beginnings and endings. The importer and Windows
+launcher now scan completed Twitch or YouTube recordings without the earlier
+five-battle / 40–45-minute sample limits. Long charged animations no longer create
+the observed false restart, readable-header lookahead catches the reviewed
+missed restart, and official player-name changes split edited highlight montages.
+
+Completed validation: two whole official recordings, 32 ordinary interval
+candidates plus 10 partial highlight excerpts, 84 POV clips, 760,904 verified
+decoded frames; 18/18 previously reviewed YouTube intervals matched with no extras.
+The twenty protected tracked views are unchanged. Receipts and limitations:
+`data/vod_full_extraction_validation.json`; usage: `docs/full_vod_extraction.md`.
+
+Remaining acceptance work: independently label all actual games in unfamiliar
+recordings, measure misses/false splits/merges, and test layout changes and
+unlabelled same-matchup replays. Source-frame agreement and full scanning do not
+establish universal battle recall or accurate game-state reconstruction.
+

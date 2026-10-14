@@ -36,7 +36,7 @@ class MixtureWeights(unittest.TestCase):
         gd = GameData()
         entries = [{"team": ["altaria", "charjabug", "corviknight"], "weight": 0, "seen": 1000},
                    {"team": ["melmetal", "altaria", "jellicent"], "weight": 1, "seen": 0}]
-        with tempfile.TemporaryDirectory(dir="/tmp") as tmp:
+        with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "teams.json"
             path.write_text(json.dumps({"teams": entries}))
             draw = drawer(gd, gd.meta(100), path, share=1)

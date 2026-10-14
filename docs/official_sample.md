@@ -1,5 +1,10 @@
 # Official broadcast sample
 
+This page records the earlier reserved ten-battle collection. The Windows
+launcher now scans whole recordings and keeps partial battles; see
+`full_vod_extraction.md`. The explicit sampling commands below still reproduce
+the original five-games-per-source selection.
+
 The owner requested about ten battles from the official `pokemongo` Twitch
 channel, with both players' views. `data/vod_additional_sample_plan.json` reserves
 two original Louisville broadcasts and fixes the selection rule before gameplay

@@ -14,7 +14,9 @@ sys.path.insert(0, str(HERE))
 import vod_media
 from vod_segments import annotate_segments, coarse_scan, discover_segments, pair_perspectives
 from vod_broadcast import cue_matches, filter_broadcast, marker_scan
-from vod import align_paired_coverage, coalesce_paired_fragments, compatible_export, refine_result_markers, result_refinement_windows, select_battles
+from vod import align_paired_coverage, coalesce_paired_fragments, compatible_export, refine_result_markers, result_refinement_windows, select_battles, reuse_existing_candidates, retire_previous_full_cuts
+from vod_layout import candidate_rectangles, even_crop, resolve_layout
+from vod_fixture import fixture_parts
 
 
 @unittest.skipUnless(importlib.util.find_spec("av"), "video checks require the reader's PyAV environment")
@@ -121,6 +123,22 @@ class TimestampTests(unittest.TestCase):
                 self.assertTrue(markers)
                 self.assertTrue(all(.5 <= m['t'] < 1.5 for m in markers))
 
+    def test_targeted_result_scan_keeps_replay_checks_outside_edge_windows(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = self.source(folder, all_keyframes=True)
+            vod_media.normalize_source(path)
+            fake_ocr = SimpleNamespace(read=lambda image: [{'text':'REPLAY GAME WIN', 'confidence':1}])
+            regions = [{'rect':[0,0,20,20], 'kind':'replay', 'cue':'REPLAY'},
+                       {'rect':[0,0,20,20], 'kind':'match_win', 'cue':'GAMEWIN'}]
+            with patch.dict(sys.modules, {'local_ocr':SimpleNamespace(LocalOCR=lambda:fake_ocr)}):
+                markers = marker_scan(path, regions, Path(folder)/'windowed.gz', match_windows=[[1,1.5]])
+            wins = [m for m in markers if m['kind'] == 'match_win']
+            replay = [m for m in markers if m['kind'] == 'replay']
+            self.assertTrue(wins)
+            self.assertTrue(all(1 <= m['t'] < 1.5 for m in wins))
+            self.assertTrue(any(m['t'] < 1 for m in replay))
+            self.assertTrue(any(m['t'] >= 1.5 for m in replay))
+
     def test_incomplete_duration_is_rejected_before_original_is_changed(self):
         with tempfile.TemporaryDirectory() as folder:
             path = self.source(folder)
@@ -133,6 +151,145 @@ class TimestampTests(unittest.TestCase):
 
 
 class BoundaryTests(unittest.TestCase):
+    def test_retiring_revised_cuts_keeps_reserved_data_and_saved_media(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            for identity,role in [('tw-source-full-left-001','unassigned'),('tw-source-left-001','reserved_state_evaluation')]:
+                p=root/identity;p.mkdir()
+                (p/'battle.json').write_text(json.dumps({'id':identity,'reference_id':'source','boundary_candidate':{'dataset_role':role}}))
+                (p/'video.mp4').write_bytes(b'saved-media')
+            retired=retire_previous_full_cuts(root,'source',['replacement'])
+            self.assertEqual(retired,['tw-source-full-left-001'])
+            self.assertEqual((root/retired[0]/'video.mp4').read_bytes(),b'saved-media')
+            reserved=json.loads((root/'tw-source-left-001/battle.json').read_text())
+            self.assertNotIn('segment_status',reserved)
+
+    def test_edited_broadcast_montage_is_separate_partial_footage(self):
+        reads=[{'t':t,'hud':True,'confidence':[.95,.95],'players':pair} for t,pair in
+               [(2,['Alpha','Bravo']),(6,['Alpha','Bravo']),(22,['Charlie','Delta']),(26,['Charlie','Delta'])]]
+        parts=fixture_parts({'start':0,'end':40},reads)
+        self.assertEqual(len(parts),2)
+        self.assertEqual(parts[0]['end'],8)
+        self.assertEqual(parts[1]['start'],20.5)
+
+    def test_player_text_noise_is_not_a_new_battle(self):
+        reads=[{'t':t,'hud':True,'confidence':[.95,.95],'players':pair} for t,pair in
+               [(2,['DOONEBUG97','HURRICANEKAZ']),(6,['D0ONEBUG97.','HURRICANEKAZ']),
+                (10,['DOONEBUG97','HURRICANEKAZ'])]]
+        self.assertEqual(fixture_parts({'start':0,'end':40},reads),[])
+
+    def test_charge_animation_does_not_delay_confirmation_of_a_real_restart(self):
+        rows = [{'t':t,'hud':not 76 <= t <= 90,'party':[3,1] if t < 75 else [3,3],
+                 'shields_total':None} for t in range(150)]
+        clips = self.discover(rows,150)
+        self.assertEqual(len(clips),2)
+        self.assertEqual(clips[1]['first_hud_seconds'],75)
+
+    def test_old_attack_message_does_not_hide_new_game_after_long_intermission(self):
+        rows = [{'t':t,'hud':t<30 or t>=120,'party':[3,3],'shields_total':None,
+                 'context_text':'Attack incoming!' if 30 <= t < 40 else ''} for t in range(200)]
+        self.assertEqual(len(self.discover(rows,200)),2)
+
+    def test_stale_legacy_shield_minimum_cannot_split_new_games_first_charge(self):
+        rows = [{'t':t,'hud':True,'party':[3,3], 'shields_total':4 if t in (0,20,21) else None} for t in range(100)]
+        def starts(facts, identity):
+            return [{'start':t,'first_hud_seconds':t,'cues':[{'kind':kind}]} for t,kind in
+                    [(0,'first_visible_hud'),(20,'party_and_shields_reset')]]
+        with patch.dict(sys.modules, {'segment_battles':SimpleNamespace(propose_segments=starts)}):
+            self.assertEqual(len(discover_segments(rows,'source',100)),1)
+
+    def test_full_intake_joins_camera_fragments_without_requiring_result_graphic(self):
+        views = self.fragmented_pair()
+        for clips in views.values():
+            for clip in clips:
+                clip['completeness'] = 'result_unseen_or_edited'
+        merged = coalesce_paired_fragments(views, allow_unverified=True)
+        self.assertEqual(len(merged['right']),1)
+        self.assertEqual(merged['right'][0]['completeness'],'result_unseen_or_edited')
+        self.assertFalse(merged['right'][0]['eligible_for_complete_battle_evaluation'])
+        views['right'][1]['cues'] = [{'kind':'countdown'}]
+        self.assertEqual(len(coalesce_paired_fragments(views, allow_unverified=True)['right']),2)
+
+    def test_partial_camera_is_paired_by_shared_source_interval(self):
+        views = {'left':[self.candidate(100,300)],'right':[self.candidate(160,299,'right')]}
+        self.assertEqual(len(pair_perspectives(views,'source',allow_partial=True)),1)
+        self.assertEqual(views['left'][0]['match_id'],views['right'][0]['match_id'])
+
+    def test_long_attack_animation_is_not_a_lobby_gap(self):
+        rows = [{'t':t, 'hud': not 35 <= t <= 70, 'party':[3,3], 'shields_total':None,
+                 'context_text':'Attack incoming! Use a Protect Shield?' if 35 <= t <= 70 else ''}
+                for t in range(120)]
+        self.assertEqual(len(self.discover(rows,120)),1)
+
+    def test_one_faint_then_full_party_reset_starts_new_game_without_full_shields(self):
+        rows = [{'t':t,'hud':True,'party':[2,3] if 30 <= t < 75 else [3,3],
+                 'shields_total': 4 if t == 75 else 3} for t in range(150)]
+        clips = self.discover(rows,150)
+        self.assertEqual(len(clips),2)
+        self.assertEqual(clips[1]['first_hud_seconds'],75)
+
+    def test_inferred_crop_can_be_encoded_even_at_an_odd_source_edge(self):
+        self.assertEqual(even_crop([711,0,498,1059], 1920, 1080), [711,0,498,1060])
+        self.assertEqual(even_crop([0,0,721,1081], 721, 1081), [0,0,720,1080])
+
+    @unittest.skipUnless(importlib.util.find_spec('numpy'), 'screen layout checks require numpy')
+    def test_new_layout_finds_an_off_center_phone_with_vertical_padding(self):
+        import numpy as np
+        image = np.zeros((720, 1280, 3), dtype='uint8')
+        image[20:670, 110:410] = 200
+        self.assertIn([110, 20, 300, 650], candidate_rectangles(image, {}))
+
+    def test_full_intake_keeps_a_short_midbattle_recording_fragment(self):
+        rows = [{'t': t, 'hud': True, 'party': [1, 2], 'shields_total': None} for t in range(7)]
+        legacy = SimpleNamespace(propose_segments=lambda *args: [])
+        with patch.dict(sys.modules, {'segment_battles': legacy}):
+            candidates = discover_segments(rows, 'fragment', 7, min_duration=3)
+            self.assertEqual(len(candidates), 1)
+            self.assertEqual(discover_segments(rows, 'fragment', 7), [])
+        clips = annotate_segments(candidates, rows, 'fragment', 'pov', 7, min_duration=3)
+        self.assertEqual(len(clips), 1)
+        self.assertTrue(clips[0]['incomplete_start'])
+        self.assertTrue(clips[0]['incomplete_end'])
+        pair_perspectives({'pov': clips}, 'fragment')
+        self.assertEqual(len(select_battles({'pov': clips})), 1)
+        self.assertEqual(select_battles({'pov': clips}, complete_only=True), [])
+
+    def test_existing_cut_keeps_its_reserved_role_and_only_matches_same_camera(self):
+        candidate = {'id':'tw-source-left-001', 'source_id':'source', 'view_id':'left',
+            'match_id':'tw-source-match-001', 'start':10, 'end':80, 'first_hud_seconds':12,
+            'dataset_role':'reserved_state_evaluation'}
+        fingerprint = {'source_sha256':'source-hash', 'reader_sha256':{'extract_battles.py':'reader-hash'},
+            'layout':{'views':[{'id':'left','viewport':[0,0,400,900]}, {'id':'right','viewport':[500,0,400,900]}]}}
+        meta = {'id':candidate['id'], 'reference_id':'source', 'view_id':'left', 'boundary_candidate':candidate,
+            'source_sha256':'source-hash', 'source_viewport':[0,0,400,900], 'encoding_crf':23,
+            'vod_intake_fingerprint':fingerprint}
+        views = {'left':[{**candidate,'dataset_role':'unassigned'}],
+                 'right':[{**candidate,'id':'other','view_id':'right','dataset_role':'unassigned'}]}
+        with tempfile.TemporaryDirectory() as folder:
+            target = Path(folder) / candidate['id']; target.mkdir()
+            record = target / 'battle.json'; record.write_text(json.dumps(meta))
+            original = record.read_bytes()
+            found = reuse_existing_candidates(views, folder, fingerprint, 'twitch', 'source')
+            self.assertEqual(found['left'][0], candidate)
+            self.assertEqual(found['right'][0]['id'], 'tw-source-full-right-001')
+            self.assertEqual(found['right'][0]['match_id'], candidate['match_id'])
+            self.assertEqual(record.read_bytes(), original)
+            close = {'left': [{**candidate, 'start':9, 'end':82, 'first_hud_seconds':13}]}
+            self.assertEqual(reuse_existing_candidates(close, folder, fingerprint, 'twitch', 'source')['left'][0], candidate)
+            separate = {'left': [{**candidate, 'start':100, 'end':180, 'first_hud_seconds':102}]}
+            self.assertEqual(reuse_existing_candidates(separate, folder, fingerprint, 'twitch', 'source')['left'][0]['id'],
+                             'tw-source-full-left-001')
+        self.assertEqual(views['left'][0]['dataset_role'], 'unassigned')
+
+    def test_explicit_layout_is_reusable_on_new_source_and_resolution(self):
+        layout = {'source_ids':['older-source'], 'views':[{'id':'pov','viewport':[706,0,508,1080]}],
+                  'broadcast_regions':[{'rect':[0,0,120,90]}]}
+        found = resolve_layout('known', {'known':layout}, 'new-source', {'width':1280,'height':720},
+                               Path('.'), Path('unused.mp4'), Path('unused.json'))
+        self.assertEqual(found['views'][0]['viewport'], [471,0,340,720])
+        self.assertEqual(found['broadcast_regions'][0]['rect'], [0,0,80,60])
+        self.assertEqual(layout['views'][0]['viewport'], [706,0,508,1080])
+
     def test_result_refinement_skips_known_peer_ends_and_partial_source_edges(self):
         base = {'start':100,'end':280,'completeness':'result_unseen_or_edited',
                 'eligible_for_complete_battle_evaluation':True}
@@ -215,6 +372,11 @@ class BoundaryTests(unittest.TestCase):
     def test_existing_replay_cue_keeps_its_single_cue_behavior(self):
         self.assertTrue(cue_matches({'cue':'REPLAY'}, 'REPLAY'))
         self.assertFalse(cue_matches({'cue':'REPLAY'}, 'GAME WIN!'))
+
+    def test_generic_replay_detection_does_not_match_commentary_sentences(self):
+        region = {'cue':'REPLAY', 'exact_record':True}
+        self.assertTrue(cue_matches(region, 'REPLAY'))
+        self.assertFalse(cue_matches(region, 'Watch the replay later'))
 
     def selection_candidates(self):
         return {view: [{'id': f'{view}-{i}', 'match_id': f'match-{i}', 'view_id': view,

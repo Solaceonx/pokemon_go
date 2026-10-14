@@ -1,19 +1,22 @@
 # Twitch intake, battle cuts and state tracking
 
-This pilot downloads a completed Twitch VOD, keeps one playable original, and
-exports each visible battle candidate as a cropped MP4 with its source timestamps.
+The intake accepts a completed Twitch VOD or YouTube video, keeps one playable
+original, and exports visible battle candidates as cropped MP4s with source timestamps.
 A separate tracking stage reads each full clip and publishes its evidence and
 model states to the viewer. Full recognition accuracy is not yet established.
 
-On the owner's Windows PC, double-click `Cut Twitch VOD.cmd`, then choose the
-recording. It uses the existing `pokemon-go-screen-reader` media folder when that
+On the owner's Windows PC, double-click `Cut Twitch VOD.cmd`, then choose a
+recording or paste a video link. It scans the whole recording and keeps partial
+battles. It uses the existing `pokemon-go-screen-reader` media folder when that
 folder is beside this checkout. Matching completed downloads and cuts are reused.
 After cutting, double-click `Track Battle Videos.cmd`. It reads the calibrated
 clips, saves compressed results, and opens the viewer with its live values table.
 
-The two new official Louisville sample options export five complete games each,
-with both player views kept together. Select **New official sample** in the viewer
-to find them. All twenty views now have full-clip screen readings, retained
+`docs/full_vod_extraction.md` explains full extraction, automatic layout probes,
+scope receipts and the distinction between successful cuts and accurate state
+tracking. The former five-game limit is available only through explicit sampling
+flags. The earlier Louisville sample remains under **New official sample** in
+the viewer. All twenty reserved views have full-clip screen readings, retained
 state and live-table values. The requested frozen before/fitted comparison is in
 `docs/reserved_state_evaluation.md`; it measures view agreement, not independent
 accuracy. Keep these reserved games out of recognition calibration.

@@ -64,7 +64,7 @@ def schedule(teams, weights, ids, dex, pairs: int, seed: int, listed: float = 1.
 def setup(model: str, pool_size: int) -> None:
     try:
         os.nice(10)
-    except OSError:  # some sandboxes deny even lowering priority; callers also use nice
+    except (OSError, AttributeError):  # Windows has no nice; sandboxes may deny lowering priority
         pass
     gd = GameData()
     _state.update(net=QNet.load(model), usual={b.species_id: b for b in gd.meta(pool_size)},

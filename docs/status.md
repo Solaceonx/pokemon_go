@@ -1760,6 +1760,49 @@ incremental; the replay is the yardstick it must match.
 What this does not cover: the readings are the recorded ones, at 15 frames a second and with text every third
 of a second; a live reader on the phone will be slower and rougher. Phone capture and taps are still unmeasured.
 
+### Whole-recording battle extraction — 2026-10-13
+
+The owner's extraction target accepts clipped starts and endings. The former
+Windows menu silently applied five-game limits and 40–45-minute scans. Full
+intake now accepts completed Twitch/YouTube links, scans the entire recording,
+keeps partial fragments down to three seconds, and offers automatic phone-crop
+proposals for unfamiliar source IDs. Unknown layouts fail explicitly for review.
+The earlier sample workflow remains available only through explicit limits.
+
+Observed false splits during long charged animations and stale party/shield
+resets across lobbies were corrected. Readable-HUD lookahead catches a reviewed
+restart even when a shield was spent before the next usable sample. Asymmetric
+camera coverage can retain paired partial starts. Displayed player-name changes
+separate official highlight montages into partial excerpts instead of combining
+several matchups into one apparent game.
+
+The two official sources were scanned across 15,206 seconds: 32 ordinary game
+interval candidates and ten edited excerpts, each with two views, yield 84 clips.
+This is not a claim of 42 unique games. All 760,904 decoded frames passed source,
+crop and timestamp verification (maximum error 0.0016671 seconds). Coverage checks
+found no ten-second uncovered detected-HUD runs outside selections and labelled
+replay exclusions. Both reviewed YouTube sources match all nine known battle
+intervals each at IoU >= 0.5, with no extras. Independent recall on unfamiliar
+recordings remains unmeasured.
+
+The twenty reserved clips' four protected files per view retain their original
+hashes. Their state-evaluation report is unchanged; no state-engine or fitted
+recognition parameter changes are included. New footage from these sources stays
+outside training. New clips are pending analysis, and the existing tracked clips
+still populate the playback table. Browser checks pass for both POVs of ordinary
+and edited new clips, both POVs of both tracked sources, twelve tracked seeks,
+and sample separation. All 187 repository tests and 108 reference duels pass;
+two upstream Linux-only assumptions were made portable to Windows.
+
+Sources occupy 11.86 GB; selected clip media 2.63 GB; saved clip data 73.08 MB.
+Nineteen earlier cuts were reused. Four superseded montage clips (106.04 MB)
+remain on disk and are hidden from the active viewer. The viewer has 126 active
+views and a 58.93 MB HTML file with zero embedded video bytes. Receipts, code and
+source hashes, per-clip storage, and limitations are in
+`data/vod_full_extraction_validation.json`. Double-click `Extract all battles.cmd`;
+details are in `docs/full_vod_extraction.md`. Accurate full game-state tracking
+and independently measured whole-VOD battle recall remain separate next work.
+
 ## The bot against real players' decisions (2026-10-13)
 
 `scripts/real_decisions.py` takes tracked battles and, at every decision the player on our side made, rebuilds

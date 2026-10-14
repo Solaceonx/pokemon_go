@@ -14,24 +14,48 @@ from vod_media import sha256, write_json
 VERSION = "vod-keyframe-refine-v2"
 
 
-def discover_segments(rows, source_id, duration, interval=.5):
+def discover_segments(rows, source_id, duration, interval=.5, *, min_duration=15):
     """Add lobby gaps and sustained party resets when shield colours are unreadable."""
     from segment_battles import propose_segments
     initial = propose_segments({"samples": rows, "duration_seconds": duration,
                                 "sample_interval_seconds": interval}, source_id)
     starts = list(initial)
     last_hud, minimum_party, low_run = None, 6, 0
+    last_hud_index = None
     result_since_hud = False
     for index, row in enumerate(rows):
         if row.get("result"):
             result_since_hud = True
         if not row["hud"]:
             continue
+        # The legacy reader drops starts whose remaining footage is under 15s.
+        # Intake can still keep that visible fragment at a recording edge.
+        if last_hud is None and not any(abs(c["first_hud_seconds"] - row["t"]) <= 8 for c in starts):
+            starts.append({"start": max(0, row["t"] - 1.5), "first_hud_seconds": row["t"],
+                           "cues": [{"t": row["t"], "kind": "first_visible_hud", "sample_index": index}],
+                           "start_method": "first_hud_context", "sampling_resolution_seconds": interval,
+                           "start_uncertainty_seconds": max(interval, 1.5), "confidence": "medium"})
         total = sum(row["party"]) if row.get("party") else None
         gap = row["t"] - last_hud if last_hud is not None else 0
-        nearby = [r for r in rows[index + 1:index + 4] if r["hud"]]
-        reset = total == 6 and minimum_party <= 4 and any(r.get("party") == [3, 3] for r in nearby)
-        kind = "hud_after_visible_result" if result_since_hud else "hud_after_lobby_gap" if gap > 25 else "sustained_party_reset" if reset else None
+        nearby = []
+        for following in rows[index + 1:]:
+            if following['t'] - row['t'] > 30:
+                break
+            if following['hud']:
+                nearby.append(following)
+                if len(nearby) == 3:
+                    break
+        reset = total == 6 and minimum_party <= 5 and any(r.get("party") == [3, 3] for r in nearby)
+        gap_rows = rows[last_hud_index + 1:index] if last_hud_index is not None and gap > 25 else []
+        def context_key(r):
+            return re.sub(r"[^A-Z0-9]", "", r.get("context_text", "").upper())
+        attack_context = any(any(r.get("cp") or []) or any(cue in context_key(r) for cue in
+            ("ATTACKINCOMING", "PROTECTSHIELD", "EFFECTIVE", "GETREADY")) or re.search(r"CP\d", context_key(r))
+            for r in gap_rows)
+        lobby_context = any(r.get("battle_starting") or any(cue in context_key(r) for cue in
+            ("FINDINGOPPONENT", "CHOOSEYOURLEAGUE", "BASICREWARDS", "GOBATTLELEAGUE")) for r in gap_rows)
+        new_gap = gap > 25 and (lobby_context or not attack_context or gap > 60)
+        kind = "hud_after_visible_result" if result_since_hud else "hud_after_lobby_gap" if new_gap else "sustained_party_reset" if reset else None
         if kind:
             starts.append({"start": max(0, row["t"] - 1.5), "first_hud_seconds": row["t"],
                            "cues": [{"t": row["t"], "kind": kind, "sample_index": index}],
@@ -43,6 +67,7 @@ def discover_segments(rows, source_id, duration, interval=.5):
         if low_run >= 2:
             minimum_party = total
         last_hud = row["t"]
+        last_hud_index = index
     grouped = []
     for start in sorted(starts, key=lambda c: c["first_hud_seconds"]):
         if grouped and start["first_hud_seconds"] - grouped[-1]["first_hud_seconds"] <= 8:
@@ -54,6 +79,20 @@ def discover_segments(rows, source_id, duration, interval=.5):
                 preferred["cues"].extend(cue for cue in start["cues"] if cue not in preferred["cues"])
             continue
         grouped.append(copy.deepcopy(start))
+    # The legacy reader's low shield/party counters can survive a lobby when
+    # the first new header has an unreadable shield. Its later return to four
+    # then looks like another restart. Require depletion in the current game.
+    accepted = []
+    for start in grouped:
+        reset_only = all(cue['kind'] in ('party_and_shields_reset', 'sustained_party_reset') for cue in start['cues'])
+        if accepted and reset_only:
+            prior = [r for r in rows if accepted[-1]['first_hud_seconds'] <= r['t'] < start['first_hud_seconds'] and r['hud']]
+            depleted = [r for r in prior if r.get('party') and sum(r['party']) < 6
+                        or r.get('shields_total') is not None and r['shields_total'] < 4]
+            if len(depleted) < 2:
+                continue
+        accepted.append(start)
+    grouped = accepted
     output = []
     for index, start in enumerate(grouped):
         ceiling = grouped[index + 1]["start"] if index + 1 < len(grouped) else duration
@@ -64,7 +103,7 @@ def discover_segments(rows, source_id, duration, interval=.5):
         if not active:
             continue
         end = min(ceiling, results[0]["t"] + 2) if results else min(ceiling, active[-1]["t"] + 12)
-        if end - start["start"] < 15:
+        if end - start["start"] < min_duration:
             continue
         output.append({**start, "id": f"{source_id}-candidate-{len(output) + 1:03d}",
                        "source_id": source_id, "end": end,
@@ -169,7 +208,7 @@ def coarse_scan(video, profiles, cache, *, rescan=False, scan_end=None):
     return result
 
 
-def refine_scan(video, profile, rows, candidates, duration, *, interval=.25):
+def refine_scan(video, profile, rows, candidates, duration, *, interval=.25, min_duration=15):
     """Read narrow entrance/end windows at full decode cadence; retain coarse interiors."""
     import av
     from local_ocr import LocalOCR
@@ -210,10 +249,10 @@ def refine_scan(video, profile, rows, candidates, duration, *, interval=.25):
         return any(start <= t < end for start, end in windows)
     combined = sorted([r for r in rows if not in_window(r["t"])] + fine, key=lambda row: row["t"])
     facts = {"samples": combined, "duration_seconds": duration, "sample_interval_seconds": interval}
-    return combined, discover_segments(combined, profile["id"], duration, interval)
+    return combined, discover_segments(combined, profile["id"], duration, interval, min_duration=min_duration)
 
 
-def annotate_segments(candidates, rows, source_id, view_id, duration):
+def annotate_segments(candidates, rows, source_id, view_id, duration, *, min_duration=15):
     """Keep partial edges explicit and bound the clip at the first result after its HUD."""
     output = []
     for candidate in candidates:
@@ -232,7 +271,9 @@ def annotate_segments(candidates, rows, source_id, view_id, duration):
             # not turn the whole intervening lobby into a battle clip.
             c["end"] = min(c["end"], active[-1]["t"] + 12, duration)
             c["end_method"] = "last_hud_plus_resolution_tail_result_unverified"
-        starts_at_edge = c["first_hud_seconds"] < 6 and not any(q["kind"] == "countdown" for q in c["cues"])
+        has_countdown = any(q['kind'] == 'countdown' for q in c['cues'])
+        first_party = active[0].get('party') if active else None
+        starts_at_edge = (c["first_hud_seconds"] < 6 or bool(first_party and sum(first_party) < 6)) and not has_countdown
         ends_at_edge = c["end"] >= duration - 1 and not results
         c["incomplete_start"], c["incomplete_end"] = starts_at_edge, ends_at_edge
         c["eligible_for_complete_battle_evaluation"] = not (starts_at_edge or ends_at_edge)
@@ -240,13 +281,13 @@ def annotate_segments(candidates, rows, source_id, view_id, duration):
         c["name"] = f"Twitch battle {len(output) + 1:02d} · {view_id}"
         c["review_required"], c["timing_validated"] = True, False
         if starts_at_edge:
-            c["notes"].append("Recording starts during this battle; the missing beginning cannot be recovered.")
-        if c["end"] - c["start"] >= 15:
+            c["notes"].append("The first visible header is at a source edge or already has depleted party markers; the battle beginning is unverified.")
+        if c["end"] - c["start"] >= min_duration:
             output.append(c)
     return output
 
 
-def pair_perspectives(views, source_id):
+def pair_perspectives(views, source_id, *, allow_partial=False):
     """Give overlapping simultaneous viewpoints one match ID, without counting twice."""
     groups = []
     for view_id, candidates in views.items():
@@ -256,7 +297,8 @@ def pair_perspectives(views, source_id):
                 representative = group[0]
                 overlap = max(0, min(candidate["end"], representative["end"]) - max(candidate["start"], representative["start"]))
                 shortest = min(candidate["end"] - candidate["start"], representative["end"] - representative["start"])
-                if not any(item["view_id"] == view_id for item in group) and overlap / shortest >= .75 and abs(candidate["start"] - representative["start"]) <= 12:
+                start_tolerance = max(12, .5 * max(candidate['end']-candidate['start'], representative['end']-representative['start'])) if allow_partial else 12
+                if not any(item["view_id"] == view_id for item in group) and overlap / shortest >= .75 and abs(candidate["start"] - representative["start"]) <= start_tolerance:
                     matches.append((overlap / shortest, group))
             if matches:
                 max(matches, key=lambda pair: pair[0])[1].append(candidate)
