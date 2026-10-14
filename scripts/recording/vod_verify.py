@@ -9,10 +9,10 @@ from vod import ROOT, bootstrap, reader_location
 from vod_media import sha256, write_json
 
 
-def verify(source_id, library):
+def verify(source_id, library, run_dir=None):
     import av
     library = Path(library).resolve()
-    run = ROOT / '.vod/runs' / str(source_id)
+    run = Path(run_dir) if run_dir else ROOT / '.vod/runs' / str(source_id)
     manifest = json.loads((run / 'battle-candidates.json').read_text(encoding='utf-8'))
     clips, failures = [], []
     selected = manifest.get('export_selection', {}).get('clip_ids')
@@ -85,12 +85,13 @@ def verify(source_id, library):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('source_id', type=int)
+    parser.add_argument('source_id')
+    parser.add_argument('--run-dir', type=Path)
     parser.add_argument('--library', type=Path, default=ROOT / '.vod/battles')
     parser.add_argument('--reader-dir', type=Path)
     args = parser.parse_args()
     bootstrap(reader_location(args.reader_dir))
-    report = verify(args.source_id, args.library)
+    report = verify(args.source_id, args.library, args.run_dir)
     print(json.dumps(report))
     return int(not report['media_checks_passed'])
 

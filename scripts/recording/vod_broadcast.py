@@ -13,10 +13,11 @@ from vod_media import sha256
 
 def cue_matches(region, text):
     key = re.sub(r"[^A-Z]", "", text.upper())
-    return any(cue in key for cue in region.get("cues", [region["cue"]]))
+    return any(key == cue if region.get('exact_record') else cue in key
+               for cue in region.get("cues", [region["cue"]]))
 
 
-def marker_scan(video, regions, cache, *, scan_end=None):
+def marker_scan(video, regions, cache, *, scan_end=None, match_windows=None):
     import av
     import numpy as np
     from local_ocr import LocalOCR
@@ -25,6 +26,8 @@ def marker_scan(video, regions, cache, *, scan_end=None):
                    "code_sha256": sha256(__file__)}
     if scan_end is not None:
         fingerprint["scan_end_seconds"] = scan_end
+    if match_windows is not None:
+        fingerprint['match_windows'] = match_windows
     if cache.exists():
         with gzip.open(cache, "rt", encoding="utf-8") as source:
             found = json.load(source)
@@ -44,11 +47,18 @@ def marker_scan(video, regions, cache, *, scan_end=None):
             if scan_end is not None and t >= scan_end:
                 break
             for region in regions:
+                if region['kind'] == 'match_win' and match_windows is not None and not any(
+                        start <= t < end for start, end in match_windows):
+                    continue
                 x, y, w, h = region["rect"]
                 if x < 0 or y < 0 or x + w > frame.width or y + h > frame.height:
                     raise ValueError("Broadcast label region is outside the video")
-                text = " ".join(item["text"] for item in ocr.read(rgb[y:y+h, x:x+w])
-                                if item["confidence"] >= .75)
+                records = [item['text'] for item in ocr.read(rgb[y:y+h, x:x+w]) if item['confidence'] >= .75]
+                if region.get('exact_record'):
+                    records = [text for text in records if cue_matches(region, text)]
+                text = " ".join(records)
+                if region.get('exact_record') and records:
+                    text = records[0]
                 if cue_matches(region, text):
                     markers.append({"t": round(t, 6), "kind": region["kind"], "text": text})
             if time.monotonic() >= progress:
