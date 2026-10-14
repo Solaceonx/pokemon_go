@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-13.
+Last updated 2026-10-14.
 
 ## Goal
 
@@ -25,7 +25,10 @@ taps come later. Automating the real game breaks Niantic's terms and risks a ban
 | Opponent crowd | `varied()` in `pogo/agents.py` | The Planner with every habit jittered, drawn fresh each battle |
 | Per-decision learner | `pogo/learner.py`, `scripts/decide.py` | **The method that works**; see results |
 | Bounded exact endgame player | `pogo/endgame.py` | Revealed positions with at most two survivors each; Learner fallback; [checks and results](endgame.md) |
-| State tracker | `pogo/tracker.py`, `scripts/track.py` | Builds the full game state from "looks" at the screen; tested on simulated cameras only |
+| State tracker | `pogo/tracker.py`, `scripts/track.py` | Builds the full game state from "looks" at the screen; tested on the owner's recordings and public footage, and replayed as if live (`scripts/recording/live_replay.py`) |
+| Screen reading of recordings | `scripts/recording/` | Owner's iPhone recordings and Twitch/YouTube footage to looks and tracked games; whole recordings cut into battles |
+| Search player ("engine") | `pogo/engine.py`, `pogo/evaluation.py` | **Strongest player measured** (65.0% ± 1.9 against the trained bot); too slow for live play until task 23 |
+| Browser game | `scripts/play.py` | Play the trained bot or the engine in real time, with sprites |
 | Advice from a state | `scripts/advise.py` | Next action, shield advice, win chance, one typical continuation |
 | Team search | `scripts/teams.py` | Done: `data/teams.json` holds 81 teams from the wide search (random starts plus breeding), 25 of them with every lead tested |
 | Phone link | `helper/phonectl.swift`, `pogo/phone.py` | Compiles; never run against a phone |
@@ -1039,26 +1042,22 @@ the way to let it solve more positions.
 
 ## Open directions
 
-Each of these has a full brief in [`tasks.md`](tasks.md). Strategy rules, retraining and team choice
-are tasks 18 to 21 there, with the commands for each at the top of that file.
+Each of these has a full brief in [`tasks.md`](tasks.md), with its state and the commands at the top of
+that file.
 
-- **PvPoke's AI as an outside opponent.** Brief and bundle are in `handoff/`
-  (`pvpoke_port_instructions.md`). Acceptance test: `scripts/check_pvpoke_ai.py`.
-- **Opponents that use our own learned decisions**, mixed with the old crowd, keeping the
-  old crowd as a fixed yardstick (`scripts/decide.py --opponents ... --resume`). Built,
-  not yet run.
-- **Larger exact endgames.** Task 9 implemented bounded search and measured a small gain;
-  many two-against-two positions still exceed the budget. See [`endgame.md`](endgame.md).
-- **Predicting the opponent's hidden Pokémon** from real team combinations (task 8).
-- **Adversarial training**: an opponent trained to beat our bot, then training against it
-  (task 14).
-- **Handling uncertain information**: training through the tracker with flawed cameras
-  and wrong assumptions (task 15).
-- **Opponent stats from CP, charge-move priority and damage per hit.** Secondary.
-- **Team list weighted by teams seen in real games** (`seen` counts in `data/teams.json`).
-- **Footage.** `docs/what_to_see.md` lists what recognition must read;
-  `docs/agent_instructions.md` is the brief for an agent turning videos into looks.
-- **The phone.** Whether iPhone Mirroring passes synthetic drags is untested.
+- **The engine in real time** (task 23): search during our own fast moves, with a deadline and the trained
+  bot's pick as the fallback. Measured to fit; not built.
+- **Live assembly** (task 24): incremental, so a live update is not a rebuild of the whole battle.
+- **Shields in the engine** (task 25).
+- **Opposing teams as good as ours** (task 21), so team choice is not decided by a lopsided list.
+- **Learn from tracked games** (task 5) and **predict hidden teams** (task 8), now that footage is tracked.
+- **Opponent stats from CP, charge-move priority and damage per hit** (task 7). Secondary.
+- **Form-changing Pokémon** (task 10).
+- **Handling uncertain information** (task 15): on hold until real-game testing.
+- **The phone** (task 13, the owner only): whether iPhone Mirroring passes synthetic drags is untested.
+
+Not worth repeating without a new idea: more strategy rules of the simple kind, more training of the
+current kind, and distilling the engine (all in the results above).
 
 ## Rules for proposing a change
 

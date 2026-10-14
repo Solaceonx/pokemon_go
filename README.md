@@ -81,6 +81,11 @@ battles was tried and did not work.
 | `pogo/tracker.py` | `Tracker`: builds the full game state from `Observation`s (looks at the screen); `state()` writes it out |
 | `pogo/teamlist.py` | Draws opponent teams from `data/teams.json` |
 | `pogo/value.py` | A position-value model. Tried, did not help, off by default |
+| `pogo/engine.py` | `Engine`: the search player. At a judgement call it imagines the battle from what it can see, plays each option ahead and judges the result; the strongest player so far, too slow for live play yet |
+| `pogo/evaluation.py` | `Evaluator`: a learned judgement of a position (expected decisiveness), used by the engine; `material()` is the plain count |
+| `pogo/endgame.py`, `pogo/pvpoke_ai.py`, `pogo/hybrid.py` | Exact late-game solver; PvPoke's battle AI ported; PvPoke's move choice in the final one-on-one |
+| `scripts/recording/` | Screen reading of recordings: video to looks to tracked games, live replay; see its README |
+| `scripts/play.py`, `scripts/play/` | The browser game against the bot or the engine |
 | `pogo/phone.py`, `helper/phonectl.swift` | Screenshot, text reading and taps through iPhone Mirroring. Never run against a phone |
 | `scripts/` | One script per job; see the next section |
 | `tests/test_rules.py` | 24 tests of stats, damage, turn rules, tracker and learner |
@@ -229,40 +234,36 @@ from pogo.learner import Learner, QNet
 bot = Learner(q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
 ```
 
-It beats today's `Planner` by 10.8 ± 2.0 points (3,000 battles, the same for both), and a
-model trained specifically to beat it gets only 51.2% ± 1.6 against it. All its results
-are against the `Planner`, its variations and models trained the same way. Nothing yet
-says how it does against an outside opponent or a person.
+It beats today's `Planner` by about 9 points against the crowd (+8.9 ± 1.6, 4,000 battles, the same for
+both), and a model trained specifically to beat it gets only 51.2% ± 1.6 against it. All its results are
+against the `Planner`, its variations and models trained the same way, plus a comparison with real players'
+decisions in tracked games (`scripts/real_decisions.py`).
+
+The engine is stronger still (65.0% ± 1.9 head to head against this bot), at about 45 ms a decision:
+
+```python
+from pogo.engine import Engine
+from pogo.evaluation import Evaluator
+from pogo.gamedata import GameData
+gd = GameData()
+engine = Engine(Evaluator.load("runs/eval/eval.npz"), gd.meta(50), rollout="bot", samples=4, edge=0.03,
+                q=QNet.load("runs/general-decide/q.npz"), margin=0.02)
+```
 
 ## What to do next
 
-**Strategy, training and team choice:** `docs/tasks.md` opens with how to test a strategy rule,
-how to train, and how to choose a team, each with its commands and its rule for accepting a result.
-Tasks 18 to 21 there are the open work. The list below is older and covers the rest.
+`docs/tasks.md` has the list, each task's state, and a self-contained brief for each. It opens with how to
+test a strategy rule, how to train, and how to choose a team, each with its commands and its rule for
+accepting a result. The most promising open work, in order:
 
-In order. `docs/status.md` has the reasoning.
-
-1. **Find the next source of gain.** One more hour of the same training against tougher
-   opponents changed nothing (see "Tried and did not help"), so more of the same is not
-   the answer. The candidates are tasks 8, 14 and 15 in `docs/tasks.md`: predicting the
-   hidden team, training against an opponent built to beat the bot, and training through
-   the tracker's uncertain picture.
-2. **Test against PvPoke's AI.** The port is specified in
-   `handoff/pvpoke_port_instructions.md`. When `pogo/pvpoke_ai.py` exists, run
-   `scripts/check_pvpoke_ai.py`; it must print 108 of 108. Then measure the best bot
-   against it. It does not switch, so treat it as a fixed outside test, not the only
-   training partner.
-3. **Use real games.** `docs/agent_instructions.md` tells an agent how to turn footage
-   into looks. Run `scripts/track.py` on what comes back, then count the teams and Pokémon
-   seen and put the counts in the `seen` field of `data/teams.json`.
-4. **Late-game solving.** Positions with every Pokémon revealed can be solved exactly
-   from the position reached. Measured scope is in `docs/status.md`; it is small for the
-   final one-on-one.
-5. **Opponent stats** from CP, charge-move priority and damage per hit. The tracker logs
-   an `unexplained` event where the assumed stats do not fit.
-6. **The phone.** Run `scripts/probe.py --drag` with iPhone Mirroring open. Whether
-   synthetic drags reach the phone is the open question; ball throws and charged-move
-   swipes need them.
+1. **The engine in real time** (task 23): it is the strongest player, and it fits a live turn if it searches
+   while its own fast move plays out.
+2. **Live assembly that does not rebuild every half-second** (task 24), so tracking keeps up live.
+3. **Shields in the engine** (task 25).
+4. **Opposing teams as good as ours** (task 21), so team choice is not decided by a lopsided list.
+5. **The phone** (task 13, the owner only). Run `scripts/probe.py --drag` with iPhone Mirroring open.
+   Whether synthetic drags reach the phone is the open question; ball throws and charged-move swipes need
+   them.
 
 ## Working together
 
@@ -295,6 +296,15 @@ In order. `docs/status.md` has the reasoning.
 - A cheap score used as a filter can throw away good candidates (the first team search).
 - Overruling the `Planner` too readily on little training data is badly wrong; the margin
   is chosen on separate battles for that reason.
+- Every strategy rule tried after the good-matchup rule (11 October) measured as nothing, and the engine's own look-ahead
+  says rules of the "in this situation always do X" kind no longer beat the trained bot. Screen an idea
+  with `scripts/engine_habits.py --from-saved --rules` before building it.
+- Look-ahead values judged 20 turns out are short-sighted as training targets: distilling them into the
+  bot made it worse. The engine wins because it leaves the bot's pick only when clearly convinced.
+- Changing code while a long experiment is running changes the experiment: worker processes import it
+  afresh. Finish or stop the run first.
+- Cloud containers are reclaimed when idle, which kills long runs. Write results as you go (training
+  saves each round) and expect to resume.
 
 ## Data and credit
 

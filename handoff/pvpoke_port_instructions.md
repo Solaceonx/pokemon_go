@@ -1,5 +1,7 @@
 # Task: port PvPoke's battle AI into our Python simulator
 
+**Done (2026-10-09).** The port is `pogo/pvpoke_ai.py` and prints 108 of 108 in `scripts/check_pvpoke_ai.py`. Kept as a record.
+
 You are being asked to translate one piece of an open-source JavaScript project into
 Python, and to prove the translation is exact using a test we supply. Everything you need
 is in this file and in `pvpoke_port_bundle.zip`. You cannot see the rest of our project

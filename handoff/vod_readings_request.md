@@ -1,5 +1,7 @@
 # Request: publish the readings of the reserved two-screen sample
 
+**Done (2026-10-11).** The readings are published and the frozen test was run: `docs/reserved_state_evaluation.md`. Kept as a record; the reserved clips stay reserved.
+
 The ten reserved official battles (20 clips, sources `2897166800` and `2897312743`) are cut
 but not read, and only their list and checksums are in the repository. They are the test
 the tracker needs: its timing settings were fitted on the three earlier two-screen matches

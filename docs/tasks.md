@@ -6,28 +6,55 @@ can pick it up. Read [`status.md`](status.md) first, then the task.
 To take a task, put your name after its title in this file and push that change before
 starting, so two people do not do the same one.
 
-## Where things stand (2026-10-11)
+## Where things stand (2026-10-14)
 
 - **The bot** is a set of hand-written rules (the `Planner` in `pogo/agents.py`) with a small learned
-  layer on top that may overrule it at four kinds of decision (`Learner` in `pogo/learner.py`, model in
-  `runs/general-decide/q.npz`). On today's rules the learned layer adds 10.8 ± 2.0 points.
-- **Four rules from the owner went in on 10 and 11 October** and are now the default: farm until the
-  opponent is about to reach a move, throw before fainting, keep charged-move timing while farming, and
-  counter-swap to win the switch. Today's rules beat the rules of 10 October 57.2% ± 1.2 head to head.
-- **The learned layer was trained before those rules.** A retrain on them with one hour of examples came
-  out worse than the old model (task 19).
-- **Real recordings** from the owner's iPhone go through `scripts/recording/run.py` to tracked game
-  states with a pass/fail verdict. That work has its own notes: `scripts/recording/README.md` and
-  `handoff/`.
-- **Team choice** has a first tool, `scripts/roster_teams.py`. Its first run used opponents that were too
-  weak and gave a misleading order (task 21).
+  layer on top that may overrule it at four kinds of decision: shield, throw or hold, swap at a new
+  matchup, replacement (`Learner` in `pogo/learner.py`, model `runs/general-decide/q.npz`, margin 0.02).
+  The learned layer adds about 9 points against the crowd (+8.9 ± 1.6 on 4,000 battles, 13 October). The
+  model is task 19's retrain; two longer runs since (`runs/general-margin`, decisiveness-scored, rounds 3
+  and 4) came out slightly worse (-2.1 ± 1.4, -1.8 ± 1.4), so more training of the same kind is not the
+  next step.
+- **The owner's rules that helped are the default:** hold or farm until the opponent is about to reach a
+  move, throw before fainting, keep charged-move timing while farming, counter-swap to win the switch, get
+  into the good matchup. Tried and no gain: setting up a sweeper, shielding by the other matchups,
+  catching a charged move with a switch, rushing once shields are gone, switching freely once their team
+  is known, punishing with a harder counter (all off-by-default options, in `status.md`).
+- **The engine** (`pogo/engine.py`) is the strongest player measured: at each judgement call it imagines
+  the battle from what it can see, plays each option 20 turns ahead with the trained bot playing both
+  sides, and judges the result with a learned evaluation (`pogo/evaluation.py`, `runs/eval/eval.npz`).
+  Against the trained bot 65.0% ± 1.9 head to head; against the crowd +5.4 ± 3.7 points
+  (`scripts/engine_trial.py`). It needs 45 ms per searched decision (395 ms at worst), so it is not yet in
+  live use. Thinking during its own fast moves would make it fit (task 23).
+- **Its edge is not in rules.** None of its habits, as "in this situation always do X" rules, beats the
+  trained bot by its own look-ahead (`scripts/engine_habits.py --rules`), and teaching its values to the
+  bot's networks made the bot worse (`scripts/distill.py`, -3.5 ± 1.1). Both are written up in `status.md`.
+- **Tracking.** Recordings from the owner's iPhone and public footage go through `scripts/recording/` to
+  tracked game states. Replayed as if live (`scripts/recording/live_replay.py`) the picture matches the
+  offline one: who is out, shields and Pokémon left 98 to 100%, health within 3% 99%+, their energy within
+  one fast move 93%. Live assembly is still rebuilt from scratch every half-second (task 24). Whole
+  recordings can now be cut into battles automatically (task 22, Codex).
+- **Ways to see the bot play.** `python3 scripts/play.py` is a browser game against the trained bot
+  (`--bot engine` for the engine). `scripts/real_decisions.py` compares the bot with real players'
+  decisions in tracked games: it agrees with them on about half of throws and two thirds of shields and
+  switches, and where they differ neither is clearly better.
+- **Team choice.** `scripts/roster_teams.py` ranks the owner's line-ups; its answer depends on the
+  opposing team list, which is still not self-consistent (task 21).
 
-The three sections below are how to carry on with strategy, training and team choice. Tasks 18 to 21
-are the open work in each. `docs/status.md` has every result so far, including what did not help.
+The three sections below are how to carry on with strategy, training and team choice. `docs/status.md`
+has every result so far, including what did not help. Task 23 is the most promising open work.
 
 ## How to test a strategy rule
 
 About a minute per setting, one core, nothing to install beyond `numpy`.
+
+Every rule measured after the good-matchup rule (11 October) has gained nothing, and the engine's own look-ahead says simple rules
+of the "in this situation always do X" kind no longer beat the trained bot (`status.md`, "What the engine
+does differently"). Before building a rule, check whether the look-ahead thinks it helps:
+`python3 scripts/engine_habits.py --from-saved --rules` scores rules made of the conditions in
+`conditions()` against 45,856 recorded decisions in a minute (the recording itself is not in git;
+`python3 scripts/engine_habits.py --battles 2000 --workers 3` remakes it in about 20 minutes). A rule that
+scores at or below zero there is unlikely to win in battles.
 
 1. Write the rule in the `Planner` behind a constructor option that defaults to off. The existing ones
    to copy from are `hold`, `last_gasp`, `timed_farm` and `win_switch`.
@@ -69,7 +96,8 @@ python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/my-run/q.n
 ```
 
 - `--minutes` is the time spent generating examples; `--workers` is how many cores do it. Examples
-  are what matter: one core-hour gives about 30,000 shield examples, and the current model has 336,000.
+  are what matter: one core-hour gives about 30,000 shield examples, and the current model was fitted on
+  about 1.3 million (task 19). Runs of a similar size since then have not beaten it.
 - The run tests itself against the `Planner` at the end. That is not the acceptance test. The second
   command is: it plays the current model and the new one on the same battles against the crowd, and
   then against each other.
@@ -103,36 +131,35 @@ different opponents in a few minutes.
 
 ## Overview
 
-| # | Task | Needs | Depends on |
+| # | Task | State (2026-10-14) | Needs |
 |---|---|---|---|
-| 1 | Catalogue of battle videos, weighted by player skill | Web access | nothing |
-| 2 | Turn videos into looks and game states | Video access, ideally Python | 1 |
-| 3 | Recognition: a frame in, a look out, fast | Python, sample footage | 2 helps |
-| 4 | Make the tracker cope with real games | Python | 2 helps |
-| 5 | Learn from the tracked games | Python, numpy | 2 |
-| 6 | Port PvPoke's battle AI | Python | nothing |
-| 7 | Opponent stats from CP, move priority and damage | Python | nothing |
-| 8 | Predict hidden teams from real team combinations | Python | 1 and 5 for real data |
-| 9 | Solve late-game positions exactly | Python | nothing |
-| 10 | Form-changing Pokémon in the engine | Python, a browser | nothing |
-| 11 | Make the simulator faster | Python | nothing |
-| 12 | Measure real timings from footage | Video access | 1 |
-| 13 | Live loop on the phone | The owner's iPhone and Mac | 3, 4 |
-| 14 | Adversarial training against stronger AI | Python, numpy, hours of computing | 6 helps |
-| 15 | Train the AI to handle uncertain battle information (on hold until real-game testing) | Python, numpy | 4 helps |
-| 16, 17 | Public and official footage (Codex) | Video access | |
-| 18 | More strategy rules from the owner | Python | nothing |
-| 19 | Retrain the learned layer on today's rules, with enough examples | Python, numpy, about 12 core-hours | nothing |
-| 20 | A learned decision for swapping in the middle of a matchup | Python, numpy | 19 helps |
-| 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, an hour or two a round | nothing |
+| 1 | Catalogue of battle videos, weighted by player skill | Partly: `data/video_sources.csv` lists the sources used so far | Web access |
+| 2 | Turn videos into looks and game states | Largely done by `scripts/recording/` (owner's recordings, Twitch, official VODs) | |
+| 3 | Recognition: a frame in, a look out, fast | Working on recorded video (`scripts/recording/`); the brief's per-frame accuracy and 50 ms checks are not reported | |
+| 4 | Make the tracker cope with real games | Much of it done on real recordings (`status.md` from "First real recording"); check the brief's list against that before starting | Python |
+| 5 | Learn from the tracked games | Open | Python, numpy |
+| 6 | Port PvPoke's battle AI | **Done**: `pogo/pvpoke_ai.py`, 108 of 108 | |
+| 7 | Opponent stats from CP, move priority and damage | Open (first look in `status.md`, "IVs") | Python |
+| 8 | Predict hidden teams from real team combinations | Open | Python; real teams |
+| 9 | Solve late-game positions exactly | **Done**: `pogo/endgame.py`, exact, gain not significant under the time budget | |
+| 10 | Form-changing Pokémon in the engine | Open | Python, a browser |
+| 11 | Make the simulator faster | Hot paths done (1.2 to 1.4 times); cheaper look-ahead open | Python |
+| 12 | Measure real timings from footage | Partly, inside the tracker's timing fit | Video access |
+| 13 | Live loop on the phone | Owner only | The owner's iPhone and Mac |
+| 14 | Adversarial training against stronger AI | **Done**, stopped: exploiters gain no more than the margin | |
+| 15 | Train the AI to handle uncertain battle information | On hold until real-game testing | |
+| 16, 17 | Public and official footage | Codex; acceptance work listed in each | Video access |
+| 18 | More strategy rules from the owner | Rules 1, 2, 3 and 5 measured: rule 5 (good matchup) is the default, the others no gain; rule 4 is a count `rule_trial.py` prints | |
+| 19 | Retrain the learned layer with enough examples | **Done**: the retrain replaced the old model (+2.6 ± 1.5) | |
+| 20 | A learned decision for swapping mid-matchup | **Done**, not adopted: +0.6 ± 1.5 | |
+| 21 | Opposing teams as good as ours, for choosing a team | Unfinished: best counter still 58.3% ± 1.7 against the list (target under 55%) | Python, numpy, hours |
+| 22 | Extract whole recordings into battles | Codex; recall on unfamiliar recordings unmeasured | Video access |
+| **23** | **The engine in real time: think during its own fast moves** | **Open, most promising** | Python, numpy |
+| 24 | Live assembly without rebuilding every half-second | Open | Python |
+| 25 | Let the engine search shield decisions | Open | Python, numpy |
 
-Status of the older ones: 2, 3, 4 and 12 are largely done for the owner's own recordings by
-`scripts/recording/` (see `status.md` from "First real recording"); what is left of them is in tasks 16
-and 17 and in `handoff/`. Task 14 ran two rounds and stopped: the second exploiter gets 51.2% ± 1.6
-against the bot. Tasks 5 to 11 and 13 are untouched.
-
-Tasks 1 to 5 are the footage pipeline, in order. Tasks 6 to 11, 14 and 15 are independent
-of it and of each other.
+Tasks 23 to 25 are independent of each other and of the footage work. A task marked done keeps its brief
+below as a record.
 
 ## What every task must do
 
@@ -264,7 +291,7 @@ opponent, and the measurement.
 sample size and is left out if it has fewer than 30 samples; the best bot's score against
 the new opponent is reported with a margin, next to its score against the old crowd.
 
-## 6. Port PvPoke's battle AI
+## 6. Port PvPoke's battle AI (done 2026-10-09)
 
 Fully specified in [`../handoff/pvpoke_port_instructions.md`](../handoff/pvpoke_port_instructions.md),
 with a bundle. **Done when** `python3 scripts/check_pvpoke_ai.py` prints 108 of 108.
@@ -323,7 +350,7 @@ number of held-out teams reported; and the bot with the flag on is measured agai
 bot with it off on the same battles, where opponents' teams are drawn from the table.
 Say plainly if only simulated teams were available.
 
-## 9. Solve late-game positions exactly
+## 9. Solve late-game positions exactly (done; see `endgame.md`)
 
 **Why.** Once every Pokémon is revealed nothing is hidden, and the position can be
 worked out exactly instead of estimated. Read "Endgames, measured" in `status.md` first:
@@ -386,7 +413,7 @@ run `scripts/probe.py --drag` to find out whether iPhone Mirroring passes synthe
 drags, then connect capture, `pogo/vision.py`, the tracker, the bot and taps, logging
 the time of each step against the targets in `status.md`.
 
-## 14. Adversarial training against stronger AI (Claude Code: first exploiter run started 2026-10-09)
+## 14. Adversarial training against stronger AI (done, stopped; see "Adversarial training" in `status.md`)
 
 **Why.** Every opponent our bot has trained against is the hand-written Planner or a
 variation of it, and the bot now beats those by a wide margin. It has never faced
@@ -522,7 +549,14 @@ shield bonus for staying the winner of the matchup while a switch clock runs (`s
 0.7 head to head), and timed farming on its own (neutral; kept on because
 it raises well-timed throws from 64% to 66%).
 
-## 19. Retrain the learned layer on today's rules, with enough examples
+**Measured since (2026-10-11 to 13):** rule 1 (`sweeper`), rule 2 (`shield_matchups`) and rule 3 (`catch`)
+gave no confirmed gain and stay off; rule 5 (`good_matchup`) is the default. Three more rules from the owner
+were built and gave nothing: `rush` (once their shields are gone, knock them out as fast as possible),
+`known_team` (once their whole team is seen, switch to whatever beats two of them) and `punish_gain`
+(punish a switch with the harder counter). The engine does punish more than the bot (59% against 51% of
+chances), but by judgement, not by a rule.
+
+## 19. Retrain the learned layer on today's rules, with enough examples (done 2026-10-12)
 
 **Why.** The current model was trained when the `Planner` played by older rules, so its examples were
 played out by a weaker player than today's. A retrain with one core-hour of examples (30,000 shield
@@ -540,7 +574,7 @@ and compare both.
 **Done when.** The table is in `status.md` with margins, and the current model has been replaced or
 kept by the rule in "How to train the learned layer". Say plainly if neither run beats it.
 
-## 20. A learned decision for swapping in the middle of a matchup
+## 20. A learned decision for swapping in the middle of a matchup (done 2026-10-12, not adopted)
 
 **Why.** The learned layer decides four things: whether to shield, whether to throw or hold, whether to
 swap when a new matchup begins, and whom to send in after a faint. Nothing decides a swap in the middle
@@ -603,4 +637,88 @@ Remaining acceptance work: independently label all actual games in unfamiliar
 recordings, measure misses/false splits/merges, and test layout changes and
 unlabelled same-matchup replays. Source-frame agreement and full scanning do not
 establish universal battle recall or accurate game-state reconstruction.
+
+## 23. The engine in real time: think during its own fast moves
+
+**Why.** The engine is the strongest player in the project (65.0% ± 1.9 head to head against the trained
+bot, +5.4 ± 3.7 against the crowd; `status.md`, "The first search") but a searched decision takes 45 ms
+typically and up to about 400 ms on one core, against the 10 ms the latency table allowed. That table
+assumed the decision starts when it is due. It need not: while our fast move plays out there is nothing to
+choose, and the position when it ends is known in advance whenever the opponent only fast-moves.
+`scripts/engine_timing.py` measured this on 600 battles (`runs/engine_timing.out`): predicted from the start
+of the fast move, 64% of searched decisions are known exactly in advance and 99.9 to 100% of those finish in
+the time the move leaves (its turns at 500 ms, less 200 ms for seeing the screen and the tap). The rest
+follow something the player sees: a charged move (the game pauses), a faint, the start, or a switch by them.
+
+**What exists.** `pogo/engine.py`: `Engine(evaluator, pool, horizon=20, samples=4, edge=0.03,
+rollout="bot", q=..., margin=0.02)` is the confirmed setting (`scripts/engine_trial.py --rollout bot
+--samples 4 --edge 0.03` measures it). `imagine(view, ...)` builds a battle from what a view shows, with the
+opponent's unseen Pokémon drawn from the pool. `scripts/engine_timing.py` has the prediction (`_predict`:
+both sides fast-move until our move ends) and the timing. The prediction there clones the real battle, using
+only what our side can see; a player must build it from its view instead (`imagine` does that).
+
+**Do.**
+
+1. A player (for example `pogo/anticipate.py`) that wraps the engine: when it chooses a fast move, it
+   predicts the position at the end of that move and starts searching it in another process (the search
+   is pure Python, so a thread would only compete for the interpreter). At the decision, if the position is
+   the predicted one, it plays the answer; otherwise it searches afresh.
+2. A deadline for every search. Make the search work sample by sample (each option once, then each again,
+   and so on), stop when time is up, and decide on what is done; with less than one sample of every option,
+   play the trained bot's own pick (about 1 ms). Keep the player's internal state (what it has judged, any
+   hold it has planned) as it would be had it decided on the spot.
+3. Use it in `scripts/play.py --bot engine`, and log at each decision whether the prediction held, how long
+   the decision waited, and whether it fell back.
+
+**Deliver.** The player, tests (the prediction equals what happens when the opponent only fast-moves; a tiny
+deadline falls back to the bot's pick), the change to `play.py`, and a table in `status.md`.
+
+**Done when.**
+- In simulation, each searched decision given the time it would have live (the fast move's turns at 500 ms
+  less 200 ms when predicted; 300 ms otherwise), measured on the machine running the test: the real-time
+  engine is within the margin of the unhurried engine head to head (500 or more pairings, each both ways),
+  and still ahead of the trained bot against the crowd on the same battles. Report both.
+- The wait at the moment of decision (median, 99th percentile, worst), the share answered from the
+  prediction and the share that fell back are reported.
+- `python3 -m unittest discover tests` and `python3 scripts/check_pvpoke.py` pass.
+
+**Optional, if time is still short:** search only the close calls. The engine changed the bot's pick at
+15% of searched decisions; if those are mostly where the bot's own values for the options are close,
+skipping the rest saves most of the time. `scripts/engine_habits.py` records what is needed to check.
+
+## 24. Live assembly without rebuilding every half-second
+
+**Why.** Live, the looks are rebuilt from every reading so far at each half-second
+(`assemble(rows, texts, argv, span, now=t)` in `scripts/recording/assemble.py`). That takes 3 ms early in a
+battle and 150 ms by its end on one core (`status.md`, "Tracking live, replayed from recordings"), too slow
+next to recognition inside a 500 ms turn.
+
+**Do.** Make the assembly incremental: keep what earlier calls worked out and redo only what new readings
+can change. Keep `assemble()` as it is for offline use; add the incremental path to
+`scripts/recording/live_replay.py` behind a flag (for example `--incremental`).
+
+**Done when.** On all 47 recordings and clips with saved readings (`games/*/raw/`), the incremental path
+gives exactly the looks the rebuild gives at every half-second, so `live_replay.py` prints the same
+comparison either way; the worst time per half-second update is reported, before and after; the offline
+command's output is unchanged; `tests/test_live_assembly.py` covers the new path. Do not tune anything on the
+reserved official clips (task 17).
+
+## 25. Let the engine search shield decisions
+
+**Why.** The engine searches throws, swaps and replacements and leaves shields to the trained bot, because
+the defender does not know which charged move is coming. Shields are among the biggest decisions in a battle
+(a shield is worth about a third of a Pokémon in the project's scoring), the bot agrees with real players on
+only 71% of them (`scripts/real_decisions.py`), and the choice is made during the charged-move pause, so
+time is not a problem for it.
+
+**Do.** Add "shield" to what `Engine` can search. For each move the attacker could have thrown (one if only
+one is affordable; otherwise weigh both, for example by how often this opponent has thrown the cheaper one,
+as the Planner's `read` guess does), imagine the battle just after the throw, shielded and unshielded, play
+each 20 turns ahead with the trained bot on both sides and judge it as the engine does now. The battle has no
+way to start in the middle of a charged move, so build the position just after it, as
+`Planner._hit_state` in `pogo/agents.py` does.
+
+**Done when.** `scripts/engine_trial.py --rollout bot --samples 4 --edge 0.03` with shields added to `--heads`
+against the same without, 500 or more pairings both ways, and the better one rechecked on a fresh seed; both
+tables in `status.md`, whichever way they point.
 
