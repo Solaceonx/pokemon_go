@@ -63,14 +63,15 @@ class PvpokeOpponent(PvpokeAI):
 _EVALUATOR = {}
 
 
-def play_out(snapshot, head: str, option: int, score: str = "result", horizon: int = 0) -> float:
+def play_out(snapshot, head: str, option: int, score: str = "result", horizon: int = 0, side: int = 0) -> float:
     """Continue the frozen battle with one choice forced. 1 if we go on to win, 0 if we lose; with score
     "margin", how decisively (pogo.arena.decisive: any win above any loss, and by how much). With a horizon,
-    stop after that many turns and let the engine's evaluation (runs/eval/eval.npz) judge the position reached."""
+    stop after that many turns and let the engine's evaluation (runs/eval/eval.npz) judge the position reached.
+    With side 1 the choice is the opponent's, and the result is scored for them."""
     battle, me, them = snapshot
-    pilot = me.clone()
+    pilot = (me if side == 0 else them).clone()
     pilot.force(head, option)
-    played = battle.clone(pilot, them.clone())
+    played = battle.clone(pilot, them.clone()) if side == 0 else battle.clone(me.clone(), pilot)
     if horizon:
         for _ in range(horizon):
             if played.winner is not None:
@@ -80,13 +81,13 @@ def play_out(snapshot, head: str, option: int, score: str = "result", horizon: i
             if "eval" not in _EVALUATOR:
                 from pogo.evaluation import Evaluator
                 _EVALUATOR["eval"] = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
-            return _EVALUATOR["eval"](played.views[0])
+            return _EVALUATOR["eval"](played.views[side])
         winner = played.winner
     else:
         winner = played.run()
     if score == "margin":
-        return decisive(played)
-    return 1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0
+        return decisive(played, side)
+    return 1.0 if winner == side else 0.5 if winner == DRAW else 0.0
 
 
 def options_for(head: str, mask: tuple) -> list[int]:
@@ -97,37 +98,48 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
             pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0,
-            wide: bool = False):
+            wide: bool = False, both_sides: float = 0.0):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
     faithful only inside a matchup and never switches, so these battles are 1v1 and only give
     shield and throw decisions; there is no switching for the learner to exploit.
+
+    With both_sides, that share of battles is the learner against itself, and both players' decisions are
+    played out and kept, each scored from its own side.
     """
     rng = random.Random(seed)
     data = {head: ([], []) for head in Q_HEADS}
     battles, pvpoke_battles, stop = 0, 0, time.time() + seconds
     while time.time() < stop:
         log: list = []
+        their_log = None
         if pvpoke_share and rng.random() < pvpoke_share:
             me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), PvpokeOpponent()
             battle = Battle(rng.sample(pool, 1), rng.sample(pool, 1), me, them, seed=rng.getrandbits(32))
             pvpoke_battles += 1
+        elif both_sides and rng.random() < both_sides:
+            their_log = []
+            me = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32))
+            them = Learner(q=q, margin=margin, log=their_log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32))
+            battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         else:
             me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), crowd(rng)
             battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
+        logs = [log] if their_log is None else [log, their_log]  # whose decisions this battle teaches
         while battle.winner is None:
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
-            seen = len(log)
+            seen = [len(lg) for lg in logs]
             battle.step()
-            for head, x, mask, _ in log[seen:]:
-                if head == "throw" and rng.random() >= throw_share:
-                    continue
-                y = [NAN] * Q_HEADS[head]
-                for k in options_for(head, mask):
-                    y[k] = play_out(snapshot, head, k, score, horizon)
-                data[head][0].append(x)
-                data[head][1].append(y)
+            for side, lg in enumerate(logs):
+                for head, x, mask, _ in lg[seen[side]:]:
+                    if head == "throw" and rng.random() >= throw_share:
+                        continue
+                    y = [NAN] * Q_HEADS[head]
+                    for k in options_for(head, mask):
+                        y[k] = play_out(snapshot, head, k, score, horizon, side)
+                    data[head][0].append(x)
+                    data[head][1].append(y)
         battles += 1
     inputs = N_FEATURES + (N_KNOWN if wide else 0)
     return {head: (np.array(x).reshape(-1, inputs), np.array(y).reshape(-1, Q_HEADS[head]))
@@ -187,7 +199,8 @@ def collect_job(job):
     _, pool, team, draw, crowd = world(config)
     return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
                    pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"],
-                   score=config.get("score", "result"), horizon=config.get("horizon", 0), wide=config.get("wide", False))
+                   score=config.get("score", "result"), horizon=config.get("horizon", 0), wide=config.get("wide", False),
+                   both_sides=config.get("both_sides", 0.0))
 
 
 def main() -> None:
@@ -220,6 +233,8 @@ def main() -> None:
     parser.add_argument("--wide", action="store_true",
                         help="the networks also see their Pokémon seen off the field and our one-on-ones against them (pogo.learner.known_foes)")
     parser.add_argument("--hidden", type=int, default=48, help="hidden units in each network")
+    parser.add_argument("--both-sides", type=float, default=0.0, metavar="SHARE",
+                        help="share of example battles played by the learner against itself, keeping both players' decisions")
     args = parser.parse_args()
     if args.examples_per_round is not None and args.examples_per_round <= 0:
         parser.error("--examples-per-round must be positive")
@@ -229,7 +244,7 @@ def main() -> None:
     low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
               "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap, "score": args.score,
-              "horizon": args.horizon, "wide": args.wide}
+              "horizon": args.horizon, "wide": args.wide, "both_sides": args.both_sides}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -303,7 +318,7 @@ def main() -> None:
         else:
             fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
                                                      pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"], score=args.score,
-                                                     horizon=args.horizon, wide=args.wide)
+                                                     horizon=args.horizon, wide=args.wide, both_sides=args.both_sides)
         collected = {head: len(x) for head, (x, _) in fresh.items()}
         collection_seconds = time.time() - t0
         if args.examples_per_round is not None:
