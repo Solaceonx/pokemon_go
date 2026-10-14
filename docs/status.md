@@ -2072,3 +2072,40 @@ shield, swap and mid-matchup swap the same to the third digit). In battles, agai
 same 4,000 (`runs/compare_capacity.out`, seed 61061): -2.8 ± 1.4, -3.3 ± 1.5 and -2.5 ± 1.4 points against the
 crowd, 47.3%, 45.9% and 45.9% (± 1.3) head to head. Size makes no difference; the noise of a single play-out
 per option is what limits how well the networks can predict, and 48 stays.
+
+## Does the bot need to see their other Pokémon? Predicts better, plays the same (2026-10-14)
+
+The bot's inputs (`describe()`) cover the matchup in play: how each of ours does against their Pokémon in
+front of us, and nothing about their Pokémon already seen and off the field. The engine sees those, and its
+clearest habit (bring the other Pokémon when theirs is nearly finished) is about them. `pogo.learner.known_foes`
+adds them as twelve optional inputs: for each of their seen Pokémon off the field (up to two), whether it is
+up, its health and energy, and the saved one-on-one of each of ours against it (`data/matchups.json`). A
+model trained with `decide.py --wide` takes them; older models are unaffected.
+
+The test holds everything else fixed. The current bot piloted all the training battles (three 40-minute
+rounds, three workers, its model put back before each; `runs/wide-collect-*.out`), with the new inputs
+recorded: 14,000 battles a round, 564,000 decisions in all (no mid-matchup swaps). Two networks were fitted
+on exactly those examples, one with the new inputs and one without (`scripts/fit_examples.py`, same seed;
+`runs/wide-fit*.out`).
+
+| Held-out squared error (one tenth) | Shield | Throw | Swap | Replacement |
+|---|---|---|---|---|
+| Without the new inputs | 0.1765 | 0.1660 | 0.1796 | 0.1783 |
+| With them | 0.1637 | 0.1515 | 0.1697 | 0.1606 |
+
+They predict the result much better (6 to 10% less error, against under 2% for a network five times the
+size). In battles (`runs/compare_wide.out`, seed 71071, 4,000 against the crowd, then every pair of teams
+both ways):
+
+| Model, margin 0.02 | Against the crowd | Against the one without, same battles | Head to head against it |
+|---|---|---|---|
+| Fitted without the new inputs | 64.2% ± 1.5 | | |
+| Fitted with them | 64.2% ± 1.5 | +0.0 ± 1.3 | 50.3% ± 1.2 |
+| The current model | 65.5% ± 1.5 | +1.4 ± 1.4 | 51.3% ± 1.2 |
+
+No difference. What the new inputs predict is who is winning the battle, which is the same for every
+option at a decision; they do not change which option is better. Not adopted (the option stays, off unless
+`--wide`). With the size test above and the two long runs, three ways of improving the trained bot by
+training (more examples, a bigger network, more information) leave it where it is. A side result: 564,000
+decisions played out by the current bot give a model level with it (head to head 48.7% ± 1.2 for the refit),
+from far fewer examples than it was trained on.

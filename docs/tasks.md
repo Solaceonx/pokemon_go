@@ -97,7 +97,9 @@ python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/my-run/q.n
 
 - `--minutes` is the time spent generating examples; `--workers` is how many cores do it. Examples
   are what matter: one core-hour gives about 30,000 shield examples, and the current model was fitted on
-  about 1.3 million (task 19). Runs of a similar size since then have not beaten it.
+  about 1.3 million (task 19). Runs of a similar size since then have not beaten it, and neither did a
+  network five times the size or extra inputs describing their Pokémon off the field (`--hidden`, `--wide`;
+  `status.md`, 14 October). The trained bot looks to have reached what this method gives against this crowd.
 - The run tests itself against the `Planner` at the end. That is not the acceptance test. The second
   command is: it plays the current model and the new one on the same battles against the crowd, and
   then against each other.
