@@ -92,7 +92,7 @@ the opposition is wrong (the script warns above 65%). `--recheck` re-scores save
 
 ---
 
-## 26. Learn from the bot's own losses (main priority)
+## 26. Learn from the bot's own losses (main priority) — Marco (started 2026-10-16)
 
 **Why.** The owner's idea: go back through the battles the bot lost, find the decisions where a different
 choice would have won, and look for general trends. Training already plays out alternatives, but only at
