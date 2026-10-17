@@ -73,7 +73,8 @@ python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/my-run/q.n
 - Training freezes battles at decisions, plays out every option with the same dice, and fits a network to
   the results. Examples are what matter: a core-hour gives ~30,000 shield examples; the current model
   used ~1.3 million. Bigger networks and extra inputs did not help; `--both-sides 0.5` (the bot against
-  itself, both sides learning) gave +2 points head to head.
+  itself, both sides learning) gave +2 points head to head; at full size (`runs/both-full`) 52.6% ± 1.2 head to
+  head but level against the crowd, so not adopted.
 - **Accept a new model only if** it beats the current one beyond the margin against the crowd *and* scores
   above 50% beyond the margin head to head (the second command prints both). Then copy it to
   `runs/general-decide/q.npz`, keeping the old one as `q_vN.npz`, and record the table in `status.md`.

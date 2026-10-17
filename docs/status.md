@@ -2139,6 +2139,14 @@ yet the replacement the rule asks for (ahead against the crowd and above 50% hea
 margin), but the first change since task 19 that moves head to head play, which is the test against opponents
 as good as the bot. The next step is the full-size version: more rounds, with the newest model on both sides.
 
+**Full size (`runs/both-full`, found unrecorded on 17 October).** The same with `--both-sides`, half the opponents
+using the learned model and 12 workers: 409k shield, 136k throw, 271k swap and 63k replacement examples in one
+round. On the same 4,000 battles (`runs/compare_both_full.out`): +8.4 ± 1.6 over the Planner against the current
+model's +8.8 ± 1.6 (−0.4 ± 1.5 between them), and 52.6% ± 1.2 head to head against the current model. Better head
+to head, level against the crowd: by the acceptance rule (ahead against the crowd beyond the margin, and above 50%
+head to head) it is not adopted. Whether head to head alone should decide is the owner's call: it is the test
+against an opponent as good as ours.
+
 ## Learning from the bot's own losses (task 26, 2026-10-16, the owner's idea): no change survives
 
 `scripts/losses.py` replays every decision of every lost battle of the bot against itself with each other legal
