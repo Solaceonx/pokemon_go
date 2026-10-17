@@ -110,10 +110,11 @@ def setup() -> None:
     _state.update(gd=gd, pool=pool, draw=drawer(gd, pool), net=QNet.load(str(MODEL)))
 
 
-def win_chance(snap, kind, choice, plays, seed) -> float:
+def win_chance(snap, kind, choice, plays, seed, vary: bool = True) -> float:
     """Our win chance if this decision comes out as `choice` and the bot plays on. Right after the decision the
     opponent becomes a variation of the bot (its habits shifted as in the training crowd, as good on average),
-    different in each play-out, so a choice counts only if it is better against many equally good players."""
+    different in each play-out, so a choice counts only if it is better against many equally good players.
+    With vary=False nothing is reseeded or replaced, so replaying the choice actually made repeats the battle."""
     battle, mine, theirs = snap
     points = 0.0
     for k in range(plays):
@@ -121,6 +122,8 @@ def win_chance(snap, kind, choice, plays, seed) -> float:
         twin_holder = {}
 
         def reseed():
+            if not vary:
+                return
             twin = twin_holder["b"]
             twin.rng.seed(r.getrandbits(32))
             if hasattr(forced.inner, "rng"):
@@ -177,8 +180,9 @@ def situation(view) -> dict:
     }
 
 
-def analyse(job):
-    number, seed, screen, confirm = job
+def record(seed):
+    """Play one battle of the bot against itself; return it and, for each step in which side 0 decided
+    something, a snapshot from just before that step and the decisions it made (kind, choice, options)."""
     s = _state
     rng = random.Random(seed)
     teams = [s["draw"](rng), s["draw"](rng)]
@@ -191,6 +195,12 @@ def analyse(job):
         battle.step()
         if me.calls:
             steps.append((snap, list(me.calls)))
+    return battle, steps
+
+
+def analyse(job):
+    number, seed, screen, confirm = job
+    battle, steps = record(seed)
     result = {"battle": number, "won": battle.winner == 0, "draw": battle.winner == DRAW,
               "mine": [m.build.species_id for m in battle.sides[0].team],
               "theirs": [m.build.species_id for m in battle.sides[1].team], "decisions": 0, "swings": []}

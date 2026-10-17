@@ -21,14 +21,13 @@ and push that before starting.
   one fast move 93% of the time.
 - **Team choice**: `scripts/roster_teams.py` ranks the owner's line-ups, but the answer depends on the
   opposing team list, which is not yet self-consistent (task 21).
-- **Main priority**: task 26, learning from the bot's own losses (`scripts/losses.py`, ready, not yet run).
+- **Task 26 (learning from losses)** is done: every change it found costs more in won battles than it gains in lost ones.
 - **Try it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine` for the engine).
 
 ## Open tasks
 
 | # | Task | Needs |
 |---|---|---|
-| **26** | **Learn from the bot's own losses** (main priority, the owner's choice, 2026-10-16) | Python, numpy, about 2 core-hours |
 | 23 | The engine in real time: think during its own fast moves | Python, numpy |
 | 25 | Let the engine search shield decisions | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
@@ -44,7 +43,8 @@ and push that before starting.
 **Done or stopped** (details in `status.md`): 2–4 and 12 (footage to game states, by `scripts/recording/`),
 6 (PvPoke's AI, `pogo/pvpoke_ai.py`), 9 (exact endgames, `pogo/endgame.py`, no significant gain),
 11 (simulator 1.2–1.4× faster), 14 (exploiters gain nothing beyond the margin), 18 (owner's rules),
-19 (retrain, adopted), 20 (mid-matchup swap head, not adopted). Task 1 (catalogue of videos) is partly
+19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
+hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
 ## How to test a strategy rule
@@ -92,7 +92,7 @@ the opposition is wrong (the script warns above 65%). `--recheck` re-scores save
 
 ---
 
-## 26. Learn from the bot's own losses (main priority) — Marco (started 2026-10-16)
+## 26. Learn from the bot's own losses — done 2026-10-16 (Marco): no change survives the balance check
 
 **Why.** The owner's idea: go back through the battles the bot lost, find the decisions where a different
 choice would have won, and look for general trends. Training already plays out alternatives, but only at

@@ -2138,3 +2138,57 @@ costs nothing measurable against the crowd. From 40% of the current model's exam
 yet the replacement the rule asks for (ahead against the crowd and above 50% head to head, both beyond the
 margin), but the first change since task 19 that moves head to head play, which is the test against opponents
 as good as the bot. The next step is the full-size version: more rounds, with the newest model on both sides.
+
+## Learning from the bot's own losses (task 26, 2026-10-16, the owner's idea): no change survives
+
+`scripts/losses.py` replays every decision of every lost battle of the bot against itself with each other legal
+choice (the opponent becomes a different variation of the bot after the changed decision). Checked first:
+with the opponent left unvaried, replaying the choice actually made repeats the battle's result for all 553
+decisions of 8 battles, wins and losses (`tests/test_losses.py`, `win_chance(..., vary=False)`).
+
+**The losses** (`python3 scripts/losses.py --battles 1200 --workers 3 --confirm 48 --seed 3`, `runs/losses.out`;
+`--confirm` doubled from 24 to cut false positives): side 0 lost 598 of 1,200; 25,988 decisions were tried
+every other way. In 432 of the 598 (72%) one different decision would have won (the alternative won at least
+half its 48 fresh play-outs where ours won under a quarter), 4.5 such decisions per battle that had one.
+The earliest such decision in each battle:
+
+| What we did -> what would have won | Share | Typical situation |
+|---|---|---|
+| fast move -> switch | 48% | first minute 72%, all three each 67%, losing the matchup 56%; 190 of all 1,108 at turns 0-9 |
+| shield decision the other way | 15% | split evenly: 86 "no shield -> shield", 79 "shield -> no shield" |
+| fast move -> charged move | 12% | our move ready (100%), their switch locked 70% |
+| everything else | 25% | none above 6% |
+
+**On balance, counting wins** (`scripts/losses_balance.py --kinds "fast->switch,fast->throw,no shield->shield,shield->no shield"
+--battles 600 --workers 3 --confirm 32 --per-battle 2 --seed 11`, `runs/losses_balance.out`): fresh battles,
+won and lost alike; at up to two sampled moments per battle where the change was possible, the best
+alternative of that kind against the bot's own choice on the same 32 play-outs. Change in win chance:
+
+| Change | All battles | Battles won | Battles lost |
+|---|---|---|---|
+| fast move -> switch (1,188 moments) | **−2.5 ± 1.8** | −14.0 ± 2.6 | +7.8 ± 2.2 |
+| fast move -> charged move (1,184) | **−1.8 ± 1.2** | −7.6 ± 2.0 | +3.3 ± 1.4 |
+| no shield -> shield (1,035) | **−6.3 ± 1.7** | −18.2 ± 2.5 | +3.9 ± 2.0 |
+| shield -> no shield (1,121) | **−10.3 ± 2.0** | −25.5 ± 3.3 | +2.8 ± 1.9 |
+
+Every change helps in the battles that were lost and costs more in the ones that were won, so none helps
+on balance. No situation in the split is clearly positive: the best are fast -> switch with all three each
+(+1.2 ± 2.6) and fast -> charged move in the first minute (+0.4 ± 2.1). Switching at the lead (turns 0-4) is
++0.9 ± 5.4 (151 moments); only badly lost leads (matchup below −0.3, a cut chosen after looking) reach
++9.3 ± 12.5, on 30 moments. The 72% above is mostly hindsight: looking only at losses picks the moments
+where the dice later went against us.
+
+**The swap thresholds, as the one change the losses point at** (`rule_trial.py --battles 4000 --seed 2601`,
+`runs/task26_swap_thresholds.out`). The Planner leaves a new matchup only below `bad_matchup` (−0.2) and for a
+bench Pokémon `switch_margin` (0.35) better; neither had been tuned. Switching more readily gains nothing:
+
+| Setting | Head to head | Against the crowd |
+|---|---|---|
+| `switch_margin=0.25` | 50.1% ± 0.7 | −0.0 ± 0.5 |
+| `switch_margin=0.15` | 50.3% ± 0.8 | −0.1 ± 0.7 |
+| `bad_matchup=-0.1` | 50.1% ± 0.8 | −0.2 ± 0.4 |
+| `bad_matchup=-0.1, switch_margin=0.25` | 50.2% ± 0.9 | −0.1 ± 0.7 |
+
+None was close enough to rerun on a fresh seed. Defaults unchanged. Not done: the optional engine-as-side-0
+comparison (step 5), and a weighted retrain on these positions, which the balance numbers give no reason to
+expect to help.

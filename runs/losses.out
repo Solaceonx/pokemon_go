@@ -1,0 +1,78 @@
+  50 battles done
+  100 battles done
+  150 battles done
+  200 battles done
+  250 battles done
+  300 battles done
+  350 battles done
+  400 battles done
+  450 battles done
+  500 battles done
+  550 battles done
+  600 battles done
+  650 battles done
+  700 battles done
+  750 battles done
+  800 battles done
+  850 battles done
+  900 battles done
+  950 battles done
+  1000 battles done
+  1050 battles done
+  1100 battles done
+  1150 battles done
+  1200 battles done
+
+1200 battles of the bot against itself; side 0 lost 598; 25988 of its decisions in those tried every other way
+losses that one different decision would have won (it then wins at least half the time, where ours won under a quarter): 432 of 598 (72%)
+such decisions in all: 1964, 4.5 per battle that had one
+
+every battle-losing decision, by what we did -> what would have won
+  fast -> switch           1108  (56%)
+  fast -> throw             267  (14%)
+  shield -> shield          165  (8%)
+  throw -> switch           154  (8%)
+  throw -> fast              78  (4%)
+  throw -> throw             62  (3%)
+  switch -> fast             53  (3%)
+  switch -> switch           43  (2%)
+  replace -> replace         29  (1%)
+  switch -> throw             5  (0%)
+
+the earliest battle-losing decision in each battle
+  fast -> switch            209  (48%)
+  shield -> shield           66  (15%)
+  fast -> throw              50  (12%)
+  switch -> switch           24  (6%)
+  throw -> fast              23  (5%)
+  switch -> fast             20  (5%)
+  throw -> switch            19  (4%)
+  replace -> replace         11  (3%)
+  throw -> throw              8  (2%)
+  switch -> throw             2  (0%)
+
+situations at the earliest battle-losing decision (share of those decisions)
+  fast -> switch (209): we were losing the matchup 56%; they had a charged move ready 32%; we had a charged move ready 18%; both sides still had all three 67%; last Pokémon each (1 v 1) 0%; we had more shields 12%; we had fewer shields 13%; our switch was free 100%; their switch was locked 12%; in the first minute 72%
+  fast -> throw (50): we were losing the matchup 42%; they had a charged move ready 14%; we had a charged move ready 100%; both sides still had all three 36%; last Pokémon each (1 v 1) 0%; we had more shields 12%; we had fewer shields 28%; our switch was free 32%; their switch was locked 70%; in the first minute 36%
+  replace -> replace (11): we were losing the matchup 55%; they had a charged move ready 82%; we had a charged move ready 36%; both sides still had all three 73%; last Pokémon each (1 v 1) 0%; we had more shields 55%; we had fewer shields 0%; our switch was free 55%; their switch was locked 55%; in the first minute 45%
+  shield -> shield (66): we were losing the matchup 39%; they had a charged move ready 100%; we had a charged move ready 33%; both sides still had all three 47%; last Pokémon each (1 v 1) 2%; we had more shields 23%; we had fewer shields 17%; our switch was free 64%; their switch was locked 33%; in the first minute 55%
+  switch -> fast (20): we were losing the matchup 85%; they had a charged move ready 5%; we had a charged move ready 15%; both sides still had all three 70%; last Pokémon each (1 v 1) 0%; we had more shields 15%; we had fewer shields 20%; our switch was free 100%; their switch was locked 30%; in the first minute 75%
+  switch -> switch (24): we were losing the matchup 96%; they had a charged move ready 0%; we had a charged move ready 0%; both sides still had all three 79%; last Pokémon each (1 v 1) 0%; we had more shields 12%; we had fewer shields 8%; our switch was free 100%; their switch was locked 21%; in the first minute 79%
+  throw -> fast (23): we were losing the matchup 57%; they had a charged move ready 17%; we had a charged move ready 100%; both sides still had all three 30%; last Pokémon each (1 v 1) 0%; we had more shields 13%; we had fewer shields 22%; our switch was free 43%; their switch was locked 39%; in the first minute 35%
+  throw -> switch (19): we were losing the matchup 63%; they had a charged move ready 58%; we had a charged move ready 100%; both sides still had all three 47%; last Pokémon each (1 v 1) 0%; we had more shields 11%; we had fewer shields 37%; our switch was free 100%; their switch was locked 21%; in the first minute 63%
+  throw -> throw (8): we were losing the matchup 50%; they had a charged move ready 25%; we had a charged move ready 100%; both sides still had all three 50%; last Pokémon each (1 v 1) 0%; we had more shields 0%; we had fewer shields 50%; our switch was free 75%; their switch was locked 50%; in the first minute 38%
+  all of them for comparison: we were losing the matchup 56%; they had a charged move ready 38%; we had a charged move ready 39%; both sides still had all three 58%; last Pokémon each (1 v 1) 0%; we had more shields 15%; we had fewer shields 17%; our switch was free 82%; their switch was locked 27%; in the first minute 62%
+
+examples (the earliest battle-losing decision of the first ten such battles)
+  altaria / charjabug / corviknight v tinkaton / vigoroth_shadow / mandibuzz, turn 93: Corviknight (51% health, 30 energy) v Mandibuzz (37%, 72), shields 2-2, left 3-3: we chose fast move (17%), switch to Altaria wins 58%
+  tinkaton / annihilape / guzzlord v mandibuzz / empoleon_shadow / corviknight, turn 117: Guzzlord (86% health, 36 energy) v Corviknight (26%, 56), shields 1-1, left 3-3: we chose no shield (19%), shield wins 94%
+  annihilape_shadow / tinkaton / empoleon v tinkaton / corviknight / feraligatr, turn 4: Annihilape (Shadow) (90% health, 16 energy) v Tinkaton (93%, 18), shields 2-2, left 3-3: we chose fast move (0%), switch to Empoleon wins 75%
+  araquanid_shadow / jellicent / sableye v annihilape_shadow / mandibuzz / jellicent, turn 0: Araquanid (Shadow) (100% health, 0 energy) v Annihilape (Shadow) (100%, 0), shields 2-2, left 3-3: we chose fast move (22%), switch to Jellicent wins 69%
+  tinkaton / carbink / melmetal v tinkaton / annihilape / sableye_shadow, turn 108: Tinkaton (36% health, 2 energy) v Annihilape (100%, 0), shields 1-2, left 3-2: we chose switch to Carbink (2%), switch to Melmetal wins 85%
+  thievul / malamar / marowak v corviknight_shadow / annihilape_shadow / tinkaton, turn 82: Thievul (68% health, 0 energy) v Tinkaton (100%, 0), shields 1-2, left 3-2: we chose switch to Marowak (15%), fast move wins 58%
+  tinkaton / azumarill / snorlax_shadow v annihilape / thievul / corviknight, turn 0: Tinkaton (100% health, 0 energy) v Annihilape (100%, 0), shields 2-2, left 3-3: we chose fast move (6%), switch to Snorlax (Shadow) wins 82%
+  altaria_shadow / annihilape_shadow / corviknight v annihilape_shadow / sableye_shadow / altaria_shadow, turn 1: Altaria (Shadow) (100% health, 4 energy) v Annihilape (Shadow) (97%, 0), shields 2-2, left 3-3: we chose fast move (0%), switch to Corviknight wins 73%
+  annihilape_shadow / tinkaton / carbink v charjabug_shadow / ninetales_shadow / rillaboom, turn 31: Annihilape (Shadow) (61% health, 0 energy) v Charjabug (Shadow) (39%, 48), shields 2-2, left 3-3: we chose fast move (6%), switch to Tinkaton wins 58%
+  vigoroth_shadow / malamar_shadow / annihilape_shadow v thievul / corviknight / charjabug_shadow, turn 56: Vigoroth (Shadow) (27% health, 20 energy) v Corviknight (99%, 0), shields 2-2, left 3-3: we chose switch to Annihilape (Shadow) (19%), switch to Malamar (Shadow) wins 82%
+
+rows: runs/losses/swings.jsonl
