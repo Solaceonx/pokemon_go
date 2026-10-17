@@ -21,13 +21,15 @@ and push that before starting.
   one fast move 93% of the time.
 - **Team choice**: `scripts/roster_teams.py` ranks the owner's line-ups, but the answer depends on the
   opposing team list, which is not yet self-consistent (task 21).
+- **Main priority**: task 26, learning from the bot's own losses (`scripts/losses.py`, ready, not yet run).
 - **Try it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine` for the engine).
 
 ## Open tasks
 
 | # | Task | Needs |
 |---|---|---|
-| **23** | **The engine in real time: think during its own fast moves** (most promising) | Python, numpy |
+| **26** | **Learn from the bot's own losses** (main priority, the owner's choice, 2026-10-16) | Python, numpy, about 2 core-hours |
+| 23 | The engine in real time: think during its own fast moves | Python, numpy |
 | 25 | Let the engine search shield decisions | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
@@ -89,6 +91,50 @@ cores). The owner's test: between equals the game is near 50-50, so a best line-
 the opposition is wrong (the script warns above 65%). `--recheck` re-scores saved line-ups in minutes.
 
 ---
+
+## 26. Learn from the bot's own losses (main priority)
+
+**Why.** The owner's idea: go back through the battles the bot lost, find the decisions where a different
+choice would have won, and look for general trends. Training already plays out alternatives, but only at
+the four decisions the learned layer makes and in every battle alike. This looks only at losses and tries
+*every* legal choice at each moment, including switching in the middle of a matchup, which nothing in the
+bot decides by learning today.
+
+**What exists.** `scripts/losses.py`. The bot (side 0) plays itself on teams drawn half from the good-team
+list and half at random. In each battle side 0 loses, every one of its decisions is replayed with each other
+legal choice (fast move, either charged move, a switch to either bench Pokémon; shield or not; whom to send
+in after a faint). After the changed decision the bot plays on against a different variation of itself in
+each play-out (habits shifted as in the training crowd, as strong on average), because against an identical
+copy every replay comes out 0% or 100%. Choices that look 0.3 better on `--screen` play-outs are re-scored on
+`--confirm` fresh ones. A decision "lost the battle" when its alternative wins at least half the time where
+ours won under a quarter. It prints the share of losses one decision would have won, the kinds of decision
+(what we did -> what would have won), the situations at the earliest such decision in each battle, and ten
+examples in plain words; rows go to `runs/losses/swings.jsonl`. Tried on 6 battles only (2 losses), about
+3.5 seconds a battle on three cores; never run in full.
+
+```bash
+python3 scripts/losses.py --battles 600 --workers 3 > runs/losses.out
+```
+
+**Do.**
+
+1. Check it first: with the opponent left unvaried, replaying our own choice must reproduce the actual
+   loss (add that as a test), and the trial's examples should look sensible.
+2. Run it on at least 600 battles. Report the share of losses that one decision would have won, the kinds
+   and situations, and 20 examples for the owner to judge as a player.
+3. A trend in losses is not yet a mistake: the same change might throw away wins elsewhere. For each kind
+   that makes up 10% or more of the earliest decisions, measure the same change in the same situation in
+   won battles too (extend the script to analyse wins, for example `--all`), and keep only kinds that help
+   on balance.
+4. Turn each kept trend into a change and measure it the usual way: a `Planner` rule (`rule_trial.py`), or
+   training weighted towards those positions, or the mid-matchup switch head from task 20 trained on them.
+   Head to head on a fresh seed decides.
+5. Optional: the same analysis with the engine as side 0, to see which of the bot's mistakes the engine
+   already avoids.
+
+**Done when.** `status.md` has the run's numbers, the examples, which trends held up in step 3, and each
+resulting change's head-to-head score on a fresh seed, whichever way it points. Run it on a machine other
+than the owner's Mac.
 
 ## 23. The engine in real time: think during its own fast moves
 
