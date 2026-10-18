@@ -4,7 +4,7 @@ Open work on the bot, each brief self-contained. Read `AGENTS.md` first (setup, 
 task), then `docs/status.md` for every result so far. To take a task, put your name after its title here
 and push that before starting.
 
-## Where things stand (2026-10-15)
+## Where things stand (2026-10-17)
 
 - **The bot**: hand-written rules (`Planner`, `pogo/agents.py`) plus a learned layer that may overrule
   them at shield, throw-or-hold, swap and replacement decisions (`Learner`, `pogo/learner.py`, model
@@ -12,9 +12,12 @@ and push that before starting.
 - **The owner's rules that helped are on by default**: farm until they are about to reach a move, throw
   before fainting, keep charged-move timing, counter-swap to win the switch, get into the good matchup.
   Seven more were built and gained nothing (task 18 lists them).
-- **The engine** (`pogo/engine.py`) is the strongest player: it plays each option 20 turns ahead and
-  judges the result with a learned evaluation. 65.0% ± 1.9 head to head against the bot, but 45 ms per
-  decision (up to ~400 ms), so not yet live (task 23). Its edge is judgement, not rules: turning its
+- **The engine** (`pogo/engine.py`) is the strongest player: at each judgement call it plays each option 20 turns
+  ahead in 4 imagined battles with the trained bot on both sides, and judges the result with a learned evaluation.
+  65.0% ± 1.9 head to head against the bot, but that is flattered (it imagines its opponent as exactly that bot);
+  the fair figure is against the crowd: +5.4 ± 3.7 points over the bot. It now runs in real time
+  (`pogo/realtime.py`): searches take 18 ms median, 126 ms worst on the owner's Mac against budgets of 300 to
+  2,300 ms, so it uses a small part of the time it has (task 27). Its edge is judgement, not rules: turning its
   habits into rules or into the bot's networks did not help.
 - **Tracking**: owner recordings and public footage go through `scripts/recording/` to game states;
   replayed as if live, shields / Pokémon left / who is out are 98–100% right and their energy is within
@@ -34,8 +37,13 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
+| **25** | **Let the engine search shield decisions** — Marco | Big machine |
+| **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
+| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
+| **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
+| **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
 | 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
-| 25 | Let the engine search shield decisions | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
 | 5 | Learn from the tracked games (teams, movesets, habits seen) | Python |
@@ -52,6 +60,74 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## For Marco: the engine-strength batch (assigned by the owner, 2026-10-17)
+
+The owner's notes for Marco:
+- **Prioritise using Astra agents** for this batch.
+- **Use the machine fully.** The owner allows any number of workers on Marco's machine (128 GB of RAM); the
+  three-worker limit in `AGENTS.md` does not apply to these tasks there. Still use `nice`, one NumPy thread per
+  worker (the scripts set it), runs that save as they go and can resume, and never edit code a running job imports.
+
+Order: 27 and 25 first (cheap and likely to pay), then 28 and 29 (what matters most against strong people),
+then 30 and 31 (the big jobs; start them early in the background if cores are free). Each is independent;
+combine adopted changes at the end and confirm the combination on a fresh seed.
+
+**The code is written and smoke-tested (2026-10-17); this batch is mostly running it at scale.** All new engine
+options are off by default, and with them off the engine plays exactly as before (checked game for game against
+the previous code). `tests/test_engine_options.py` checks each option takes effect.
+
+| Piece | What it is |
+|---|---|
+| `scripts/engine_versus.py` | Engine settings against each other (head to head, both ways), and each against the crowd, PvPoke's AI and the reader, on the same battles; search time per decision; resumes by `--tag` |
+| `pogo/engine.py` options | `heads=...+shield` (task 25), `opponents=mix`, `profile=1`, `unseen=teams` (task 28), `mix=1`, `temperature` (task 29) |
+| `pogo/reader.py` | The reader probe for task 29 |
+| `scripts/calibrate_styles.py` | Measures each imagined opponent style's shield and bait rates, for `profile=1` (task 28) |
+| `scripts/evolve_rules.py` | CMA-ES over 34 rulebook genes, or the engine's settings with `--engine`; resumes; `--final` re-scores the best (task 30) |
+| `scripts/selfplay_eval.py` | The self-play evaluation loop (task 31) |
+
+**Run sheet.** Set `W` to the number of cores to use. Each command saves as it goes; run it again to resume.
+
+```bash
+# 27: time
+python3 scripts/engine_versus.py --tag time-grid --workers $W --pairings 1000 --crowd 1000 --pvpoke 500 \
+  --candidates "samples=8" "samples=16" "samples=32" "horizon=30" "horizon=40" "samples=16,horizon=30" "samples=16,horizon=40" "samples=32,horizon=40"
+# 25: shields
+python3 scripts/engine_versus.py --tag shields --workers $W --pairings 2000 --crowd 2000 --pvpoke 1000 \
+  --candidates "heads=throw+swap+mid_swap+replace+shield"
+# 28: opponents (calibrate first)
+python3 scripts/calibrate_styles.py --battles 4000 --workers $W
+python3 scripts/engine_versus.py --tag opponents --workers $W --pairings 2000 --crowd 2000 --pvpoke 1000 \
+  --candidates "opponents=mix" "opponents=mix,profile=1" "unseen=teams" "opponents=mix,profile=1,unseen=teams"
+# 29: mixing and randomisation
+python3 scripts/engine_versus.py --tag mixing --workers $W --pairings 2000 --crowd 2000 --pvpoke 1000 --reader 1000 \
+  --candidates "mix=1" "temperature=0.01" "temperature=0.03" "mix=1,temperature=0.02"
+# 30: evolution (big; start early)
+python3 scripts/evolve_rules.py --run rules-1 --workers $W --generations 100 --population 32 --pairings 2000
+python3 scripts/evolve_rules.py --run rules-1 --workers $W --final
+python3 scripts/evolve_rules.py --run rules-bot-1 --pilot bot --workers $W --generations 60 --population 24 --pairings 1500
+python3 scripts/evolve_rules.py --run engine-1 --engine --workers $W --generations 30 --population 16 --pairings 300
+# 31: self-play (big)
+python3 scripts/selfplay_eval.py --run selfplay-1 --workers $W --rounds 5 --games 20000 --compare 1500
+```
+
+Each comparison prints the head-to-head score against the baseline and the differences against the crowd, PvPoke's
+AI and the reader, with margins. Confirm the chosen setting of each task on a fresh `--seed` (a new `--tag`) before
+adopting it.
+
+**How to measure an engine change.** The engine imagines its opponent, so beating the trained bot head to head
+flatters it. For every change report, on the same battles:
+1. head to head against the current engine (every pair of teams both ways round);
+2. against the crowd (`varied`), the fairer figure;
+3. against PvPoke's AI (`pogo.pvpoke_ai.PvpokeAI`), an outside opponent nobody here trained against;
+4. time per searched decision (median, 99th percentile, worst) with `scripts/realtime_trial.py --timing`, since the
+   engine must still fit the live budgets in `pogo/realtime.py` on a machine like the owner's Mac.
+
+Use `scripts/engine_versus.py` (above), not `scripts/engine_trial.py`, which plays the engine against the trained bot
+only. Margins on everything; a
+setting chosen from several is confirmed on a fresh `--seed` before it is adopted; every result, including those that
+did not help, goes into `docs/status.md`. Adopted settings go into `RealTime`'s defaults in `scripts/play.py` and the
+website (`python3 scripts/build_pvpbot_site.py`, then the owner publishes).
 
 ## How to test a strategy rule
 
@@ -191,7 +267,116 @@ deadline falls back to the bot's pick), the change to `play.py`, and a table in 
 15% of searched decisions; if those are mostly where the bot's own values for the options are close,
 skipping the rest saves most of the time. `scripts/engine_habits.py` records what is needed to check.
 
-## 25. Let the engine search shield decisions
+## 27. Give the engine the time it has — Marco
+
+**Why.** The engine's settings (4 imagined battles per option, 20 turns ahead) were chosen when every decision had to
+be quick. Live it has 300 ms (unforeseen decisions) to 2,300 ms (during a 5-turn fast move) and uses 18 ms on the
+median. 40 turns ahead was only ever tried with the cheap stand-in players inside the look-ahead (worse, `status.md`,
+"The first search"), never with the trained bot inside.
+
+**Do.**
+1. Run the "27: time" command in the run sheet (the confirmed engine is the baseline). Then edge 0.01, 0.03, 0.05 at
+   the best of the grid with another `--tag`.
+2. The search times it prints are for Marco's machine; time the best on a machine like the owner's Mac (or scale by
+   a measured speed ratio) against the budgets in `pogo/realtime.py`.
+
+**Done when.** The table is in `status.md`; the best setting is confirmed on a fresh seed (2,000 or more pairings) and
+adopted if it beats the current engine head to head beyond the margin and is not worse against the crowd or PvPoke's AI.
+
+## 28. Opponents in the look-ahead that are not our own bot — Marco
+
+**Why.** Inside the look-ahead every opponent is the trained bot (`Engine._look`, `rollout="bot"`). That is why the
+engine wins 65% against the bot but only +5.4 points more than the bot against the crowd. People do not play like
+our bot: in tracked real games players kept fast-moving where the bot would throw in 187 of 337 throw disagreements
+(`status.md`, "The bot against real players' decisions"), and many use a fast move before swapping (`fast_first`).
+
+**Do.**
+Built: `opponents=mix` draws each imagined opponent from `pogo.engine.STYLES` (the bot, the bot with shifted habits,
+a human-like guess, PvPoke's AI); `profile=1` weights them by how well each style's shield and bait rates fit what this
+opponent has done (keeping a tenth of the starting mix); `unseen=teams` draws their unseen Pokémon from a listed team
+holding everyone seen so far.
+
+1. Run `calibrate_styles.py`, then the "28: opponents" command. A smoke run shows the guessed rates in `STYLES` are
+   far off (the bot shields about a third of its chances, not 70%), so calibrate before judging `profile=1`.
+2. Improve the human-like style (`pogo.engine.human_settings`, a first guess: holds longer, fast move before
+   swapping) from real decisions: `runs/real_decisions/` and the owner's games in `games/played/`
+   (`scripts/real_decisions.py` shows how). Say what was changed and why.
+3. Try `data/teams_v2.json` weights for `unseen=teams` as well as `data/teams.json`.
+
+**Done when.** Each part measured as above. Adopted if better against the crowd and PvPoke's AI beyond the margin
+on a fresh seed and not worse head to head against the current engine beyond the margin (it may lose some of its
+edge against the bot itself; report it).
+
+## 29. Mixed choices at simultaneous moments, and plenty of randomisation — Marco
+
+**Why.** Both players choose at once, every turn. The engine always takes the single best-looking option, so a player
+who reads it (when it baits, when it shields, when it throws) can exploit it. The owner wants it hard to read: mix at
+the mind-game moments and randomise a lot elsewhere.
+
+**Do.**
+Built: `mix=1` solves the small game when both sides have a charged move ready (our throw options against theirs:
+farm or each move ready, each cell from look-ahead play-outs with both first choices fixed) and draws our choice from
+the mix; `temperature` chooses among all searched options at random weighted by worth (the trained bot's pick keeps
+its `edge` as a head start). Both draw from the engine's own `_mix_rng`, seeded from its seed, so saved games replay.
+`pogo/reader.py` is the probe; `engine_versus.py --reader N` plays each setting against it.
+
+1. Run the "29: mixing" command.
+2. Extend mixing to the shield decision (with task 25's `shield` head) and to switch timing when both switches are
+   free; vary hold lengths within the hold rule's window. Measure each.
+
+**Done when.** The mixed engine does better against the reader than the current engine beyond the margin, and is not
+worse head to head, against the crowd or against PvPoke's AI beyond the margin, all on a fresh seed.
+
+## 30. Evolve the rulebook and the engine's settings — Marco (big job)
+
+**Why.** The owner's idea. The rules (`Planner`) have about 30 numeric settings (`hold_cost`, `sac_margin`,
+`win_switch`, `matchup_weight`, `switch_margin`, `bad_matchup`, `farm_cost`, `shield_share`, `shield_worth`,
+`expect_shield`, `expect_bait`, `belief`, `sweep_chance`, `catch_gain`, `known_edge`, `fast_first` and more; read the
+constructor), each tuned on its own. Evolution can search them together and find combinations tuning one at a time
+cannot. Thirty numbers suit an evolution strategy; the network's thousands of weights do not (noisy win/loss fitness).
+
+**Do.**
+Built: `scripts/evolve_rules.py` (CMA-ES in plain numpy; 34 genes: 21 numbers, 11 on/off rules, the bait and shield
+styles; fitness head to head against the standard on the same pairings for the whole generation; saves every
+generation; `--final` re-scores the five best on fresh pairings and prints the `rule_trial.py` command to confirm).
+
+1. Run the four "30" commands (rules alone; the trained bot on top of each candidate, `--pilot bot`, which is what
+   would be adopted; the engine's settings, `--engine`).
+2. Confirm the winner with the printed `rule_trial.py` command on a new seed.
+3. If the evolved rules win but the trained bot on top of them does not beat the current bot, retrain the learned
+   layer on the evolved rules (`decide.py --both-sides 0.5`, full size) and compare with `compare_models.py`.
+4. Optional: a league. Keep a population of evolved rule sets and learned models that play each other, breed the
+   winners, keep a hall of fame of earlier champions to play against; report whether the population cycles.
+
+**Done when.** `status.md` has the run (settings, generations, the fitness curve), the fresh-seed confirmation, and the
+bot on top; rules are adopted only if they beat the current ones head to head beyond the margin on a fresh seed and
+the bot on top is not worse.
+
+## 31. Self-play improvement loop: learn the evaluation from whole engine games — Marco (big job)
+
+**Why.** The engine judges where a 20-turn look-ahead ends with `runs/eval/eval.npz`. Teaching the bot the engine's
+look-ahead worths made it worse because those worths are short-sighted (`status.md`, "Teaching the bot the engine's
+judgement"). Learning the evaluation from how whole games between engines actually end fixes that, and a better
+evaluation makes a better search: the AlphaZero loop.
+
+**Do.**
+Built: `scripts/selfplay_eval.py` does the loop (engine-against-engine games with shifted habits, positions with how
+each game ended, a new evaluation fitted on all rounds so far with a tenth of the games held out, then
+`engine_versus.py` head to head and against the crowd; adopted only if it wins beyond the margin; stops otherwise).
+
+1. Run the "31" command. 20,000 engine games a round is a guess at what is needed; if the held-out log loss of the
+   new evaluation is not better than the current one, raise `--games` before concluding.
+2. Only if the evaluation improves: also train the bot's networks to pick what the engine's search picks.
+
+**Done when.** Each adopted round beats the previous engine head to head beyond the margin on a fresh seed and is
+not worse against the crowd or PvPoke's AI; `status.md` has every round, adopted or not.
+
+## 25. Let the engine search shield decisions — Marco
+
+**Built (2026-10-17):** `heads=throw+swap+mid_swap+replace+shield` (`Engine._land_their_throw`: the move drawn from
+those the attacker can afford, the cheaper as often as this opponent has baited, the imagined battle starting just
+after it lands). Run the "25: shields" command in the run sheet; the brief below is the original.
+
 
 **Why.** The engine searches throws, swaps and replacements and leaves shields to the trained bot, because
 the defender does not know which charged move is coming. Shields are among the biggest decisions in a battle
