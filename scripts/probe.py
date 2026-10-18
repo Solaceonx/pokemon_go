@@ -4,6 +4,7 @@
     python3 scripts/probe.py                 look only: status, one screenshot, text, timing
     python3 scripts/probe.py --tap 0.5 0.9   also send one tap and report whether the screen changed
     python3 scripts/probe.py --drag          also send one drag across the middle of the screen
+    python3 scripts/probe.py --path          also send one unbroken zigzag swipe (the minigame's kind of touch)
 
 Open iPhone Mirroring with the phone connected first. Input moves your Mac's pointer.
 """
@@ -47,6 +48,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tap", nargs=2, type=float, metavar=("X", "Y"), help="send one tap at this screen fraction")
     parser.add_argument("--drag", action="store_true", help="send one horizontal drag across the middle of the screen")
+    parser.add_argument("--path", action="store_true", help="send one unbroken zigzag swipe across the middle")
     parser.add_argument("--request", action="store_true", help="ask macOS to show the permission prompts")
     args = parser.parse_args()
 
@@ -78,7 +80,7 @@ def main() -> int:
         print(f"text reading: {shot.ocr_ms:.0f} ms accurate, {fast.ocr_ms:.0f} ms fast")
         print(f"one full look from Python (capture + fast text): {round_trip:.0f} ms")
 
-        if args.tap or args.drag:
+        if args.tap or args.drag or args.path:
             if not status["accessibility"]:
                 print("\nAccessibility permission is missing, so input would be dropped. Run with --request.")
                 return 1
@@ -87,6 +89,9 @@ def main() -> int:
                 check_input(phone, f"tap at ({x}, {y})", lambda: phone.tap(x, y))
             if args.drag:
                 check_input(phone, "drag", lambda: phone.drag(0.75, 0.5, 0.25, 0.5, ms=250))
+            if args.path:
+                zigzag = [(0.25, 0.45), (0.75, 0.5), (0.25, 0.55), (0.75, 0.6)]
+                check_input(phone, "zigzag swipe", lambda: phone.path(zigzag, ms=400))
     except PhoneError as err:
         print("error:", err)
         return 1

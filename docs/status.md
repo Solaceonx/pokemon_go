@@ -2424,3 +2424,10 @@ where the first icons appear. The owner's own swipes in these recordings reached
 touch trail, so the paths can be learned from them. Next: read the owner's touch trails per run, group runs by
 variant, and test replayed paths against the recorded icons; and a continuous multi-point drag in the phone helper
 (`helper/phonectl.swift` lifts the finger between segments today).
+
+The owner confirms the minigame is one pattern per type (not per move), which agrees with the runs above. Reading the
+owner's own swipes off the video is harder than expected: the touch ring is about a quarter of the screen across and
+faint, and vanishes against white Pokémon (Jellicent), so the per-type paths will come from the icon patterns
+combined over several runs of a type. The phone helper now has an unbroken multi-point swipe (`phonectl path`,
+`Phone.path`, used by `Controller` for drags); `python3 scripts/probe.py --path` tests it on the phone.
+

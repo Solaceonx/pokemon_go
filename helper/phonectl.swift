@@ -226,6 +226,30 @@ func drag(from a: CGPoint, to b: CGPoint, duration: Int, hold: Int) {
     mouse(.leftMouseUp, b)
 }
 
+/// One unbroken touch through every point, `duration` ms in all, spread by distance (the minigame's swipes).
+func path(_ points: [CGPoint], duration: Int) {
+    guard let first = points.first else { return }
+    mouse(.mouseMoved, first)
+    usleep(20_000)
+    mouse(.leftMouseDown, first)
+    var lengths: [CGFloat] = [0]
+    for (a, b) in zip(points, points.dropFirst()) { lengths.append(lengths.last! + hypot(b.x - a.x, b.y - a.y)) }
+    let total = max(lengths.last!, 1)
+    var prev = first
+    for (k, (a, b)) in zip(points, points.dropFirst()).enumerated() {
+        let ms = Double(duration) * Double((lengths[k + 1] - lengths[k]) / total)
+        let steps = max(1, Int(ms / 8))
+        for i in 1...steps {
+            let t = CGFloat(i) / CGFloat(steps)
+            let p = CGPoint(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t)
+            mouse(.leftMouseDragged, p, dx: Int64(p.x.rounded() - prev.x.rounded()), dy: Int64(p.y.rounded() - prev.y.rounded()))
+            prev = p
+            usleep(useconds_t(max(ms, 1) * 1000 / Double(steps)))
+        }
+    }
+    mouse(.leftMouseUp, points.last!)
+}
+
 func scroll(at p: CGPoint, dx: Int32, dy: Int32) {
     mouse(.mouseMoved, p)
     usleep(40_000)
@@ -237,7 +261,8 @@ func scroll(at p: CGPoint, dx: Int32, dy: Int32) {
 // MARK: commands
 
 let usage = "usage: phonectl doctor [--request] | shot <out.png> [--ocr] [--fast] | ocr-file <in.png> [--fast]"
-    + " | tap <x> <y> | drag <x1> <y1> <x2> <y2> [ms] [hold_ms] | scroll <x> <y> <dx> <dy>"
+    + " | tap <x> <y> | drag <x1> <y1> <x2> <y2> [ms] [hold_ms] | path <ms> <x1> <y1> <x2> <y2> [<x> <y> ...]"
+    + " | scroll <x> <y> <dx> <dy>"
 
 func fraction(_ args: [String], _ i: Int) throws -> Double {
     guard i < args.count, let v = Double(args[i]), v >= 0, v <= 1 else {
@@ -315,6 +340,20 @@ func run(_ argv: [String]) async throws {
         try requireClear(win, at: [a, b])
         drag(from: a, to: b, duration: duration, hold: hold)
         emit(["ok": true, "ms": duration, "hold_ms": hold])
+
+    case "path":
+        let win = try findWindow()
+        let duration = try integer(args, 0)
+        guard args.count >= 5, (args.count - 1) % 2 == 0 else { throw Fail("path needs ms and at least two x y pairs") }
+        var points: [CGPoint] = []
+        var i = 1
+        while i + 1 < args.count {
+            points.append(win.point(try fraction(args, i), try fraction(args, i + 1)))
+            i += 2
+        }
+        try requireClear(win, at: points)
+        path(points, duration: duration)
+        emit(["ok": true, "ms": duration, "points": points.count])
 
     case "scroll":
         let win = try findWindow()

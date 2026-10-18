@@ -114,5 +114,4 @@ class Controller:
             if g.kind == "tap":
                 self.phone.tap(*g.points[0])
             else:
-                for (x1, y1), (x2, y2) in zip(g.points, g.points[1:]):
-                    self.phone.drag(x1, y1, x2, y2, ms=max(1, g.ms // max(1, len(g.points) - 1)), hold_ms=0)
+                self.phone.path(g.points, ms=g.ms)  # one unbroken touch
