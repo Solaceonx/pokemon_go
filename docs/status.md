@@ -2366,8 +2366,10 @@ and `Pokemon.js`, read on 17 October):
   against it is answered at once by Gulp Missile: 15% of the attacker's maximum health plus 1, unshieldable, even if
   Cramorant fainted, with Defence -1 (Arrokuda) or Attack -2 (Pikachu) on the attacker; then it is back to normal.
   Switching out resets it.
-- **Morpeko**: Hangry after its first charged move (Aura Wheel turns Dark) until it switches out. PvPoke never
-  turns it back to Full Belly; `pogo.battle.MORPEKO_TOGGLES` alternates it instead, if the game does that.
+- **Morpeko**: changes mode with every charged attack (Aura Wheel Electric in Full Belly Mode, Dark in Hangry Mode)
+  and starts each entry in Full Belly Mode, as the game does (Bulbapedia, "Morpeko (GO)"). PvPoke's simulator only
+  ever turns it Hangry; `scripts/check_pvpoke.py` uses that rule (`pogo.battle.MORPEKO_TOGGLES = False`) while it
+  compares with PvPoke's battles.
 
 `tests/data/pvpoke_forms.txt`: 132 one-on-one battles (each of the four against ten common opponents and each other,
 0 to 2 shields) played by PvPoke's own simulator on pvpoke.com. `python3 scripts/check_pvpoke.py --forms`:

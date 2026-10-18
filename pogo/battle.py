@@ -70,10 +70,10 @@ def damage(user: Mon, move: Move, target: Mon) -> int:
     return int(base) + 1
 
 
-# Morpeko's rule is a "toggle", but PvPoke's simulator only ever changes it to Hangry: after its first charged move it
-# stays Hangry until it switches out (tests/data/pvpoke_forms.txt depends on this). True alternates it on every
-# charged move instead, if that is what the game does.
-MORPEKO_TOGGLES = False
+# In the game Morpeko starts each entry in Full Belly Mode and changes mode with every charged attack (Bulbapedia,
+# "Morpeko (GO)", read 2026-10-17). PvPoke's simulator only ever changes it to Hangry, so scripts/check_pvpoke.py sets
+# this to False while it compares with PvPoke's battles (tests/data/pvpoke_forms.txt depends on it).
+MORPEKO_TOGGLES = True
 
 
 def change_form(mon: Mon, form_id: str) -> None:

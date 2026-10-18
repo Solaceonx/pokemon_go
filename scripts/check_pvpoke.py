@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import pogo.battle  # noqa: E402
 from pogo.battle import CHARGED, FAST, Battle, Mon  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 
@@ -68,10 +69,13 @@ def check(gd: GameData, ids, moves, line: str):
     mons = [Mon(gd.build(sid, moves[sid].split(","), allow_forms=True)) for sid in (a, b)]
     battle = Battle([mons[0]], [mons[1]], Replay(seq_a, sh_a), Replay(seq_b, sh_b), seed=0,
                     shields=(int(shields), int(shields)), record=True)
+    toggles, pogo.battle.MORPEKO_TOGGLES = pogo.battle.MORPEKO_TOGGLES, False  # PvPoke never turns Morpeko back
     try:
         battle.run()
     except ValueError as err:
         return f"{a} v {b}, {shields} shields: {err}"
+    finally:
+        pogo.battle.MORPEKO_TOGGLES = toggles
     mine = ",".join(str(v) for m in mons for v in (max(m.hp, 0), m.energy))
     my_hits = [runs([d for side, _, d in battle.hits if side == k]) for k in (0, 1)]
     if (mine, my_hits[0], my_hits[1]) == (final, hits_a, hits_b):

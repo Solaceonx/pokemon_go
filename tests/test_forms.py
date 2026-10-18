@@ -38,6 +38,27 @@ class Forms(unittest.TestCase):
         self.assertAlmostEqual(blade.atk, 172.93, places=1)
         self.assertAlmostEqual(blade.defense, 69.55, places=1)
 
+    def test_morpeko_changes_mode_every_charged_attack(self):
+        from pogo.battle import Battle, CHARGED, FAST
+
+        class ThrowAll:
+            def act(self, view):
+                m = view.me.mon
+                return CHARGED[0] if m.energy >= m.build.charged[0].energy else FAST
+
+            def shield(self, view, energy, *move):
+                return False
+
+            def replace(self, view):
+                return view.me.bench()[0]
+
+        morpeko = Mon(self.gd.default("morpeko_full_belly"), energy=100)
+        battle = Battle([morpeko], [self.gd.default("dondozo")], ThrowAll(), ThrowAll(), seed=1, record=True)
+        battle.step()
+        self.assertEqual(morpeko.build.species_id, "morpeko_hangry")
+        battle.step()
+        self.assertEqual(morpeko.build.species_id, "morpeko_full_belly")
+
     def test_pools_unchanged(self):
         self.assertFalse(any(b.forms for b in self.gd.meta(50)))
         self.assertTrue(any(b.forms for b in self.gd.meta(60, forms=True)))
