@@ -98,6 +98,44 @@ def detect_colour(frame: np.ndarray, colour, tolerance: float = 48.0, radius=(0.
     return [(x / WIDTH, y / sh, r / WIDTH) for x, y, r in out]
 
 
+def detect_symbol(frame: np.ndarray, colour, tolerance: float = 55.0, radius=(0.03, 0.17)) -> list[tuple[float, float, float]]:
+    """Live icons of one type: a crisp white symbol (near-white blob) with a ring of the type's colour around it.
+    Bursting icons (their symbols fade), the move's own effects (no white symbol on a disc) and clouds (no coloured
+    ring) are left out. The icon's radius is taken as where the colour ring ends."""
+    import cv2
+    h, w = frame.shape[:2]
+    small = cv2.resize(frame, (WIDTH, int(h * WIDTH / w)), interpolation=cv2.INTER_AREA)
+    sh = small.shape[0]
+    white = (small.min(axis=2) > 232).astype(np.uint8)
+    white[: int(REGION[0] * sh)] = 0
+    white[int(REGION[1] * sh):] = 0
+    near = np.linalg.norm(small.astype(np.float32) - np.asarray(colour, dtype=np.float32), axis=2) < tolerance
+    count, labels, stats, centres = cv2.connectedComponentsWithStats(white, connectivity=8)
+    rmin, rmax = radius[0] * WIDTH, radius[1] * WIDTH
+    out = []
+    for k in range(1, count):
+        x0, y0, bw, bh, area = stats[k]
+        if area < 6 or area > 0.35 * np.pi * rmax ** 2 or max(bw, bh) > 1.2 * rmax:
+            continue
+        cx, cy = centres[k]
+        g = max(bw, bh) / 2  # the symbol's half-size
+        best = None
+        for r in np.arange(max(rmin, 1.6 * g), min(rmax, 4.0 * g) + 1, 1.0):
+            # the ring between the symbol and r: mostly the type's colour, and not the colour just beyond r
+            angles = np.linspace(0, 2 * np.pi, 48, endpoint=False)
+            inner = [(int(cx + 0.75 * r * np.cos(a)), int(cy + 0.75 * r * np.sin(a))) for a in angles]
+            outer = [(int(cx + 1.25 * r * np.cos(a)), int(cy + 1.25 * r * np.sin(a))) for a in angles]
+            if not all(0 <= x < WIDTH and 0 <= y < sh for x, y in inner):
+                continue
+            ring = np.mean([near[y, x] for x, y in inner])
+            beyond = np.mean([near[y, x] for x, y in outer if 0 <= x < WIDTH and 0 <= y < sh] or [1.0])
+            if ring > 0.8 and (best is None or ring - beyond > best[1]):
+                best = (r, ring - beyond)
+        if best is not None and best[1] > 0.25:
+            out.append((float(cx / WIDTH), float(cy / sh), float(best[0] / WIDTH)))
+    return out
+
+
 @dataclass
 class Icon:
     x: float

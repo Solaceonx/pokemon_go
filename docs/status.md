@@ -2452,3 +2452,34 @@ has is its crisp white type symbol (fist, flame, drop, wing, steel emblem). Next
 cut from clean frames) to find live icons, then rebuild the schedules; and more recordings per type (the owner offered
 to record each type).
 
+**Zones and circling swipes for 14 types** (`scripts/recording/minigame_zones.py`, `data/minigame/<type>.json`,
+2026-10-17). The owner added two recordings for more types ("they're always at the same place"; "most of them you
+can just swipe circles in the same place"), so the library is now a zone per type plus a swipe that circles in it,
+started 1.45 s after the move (the first icon comes 1.30 to 1.54 s after it, by type). Live icons are found by their
+white symbol inside a ring of the type's colour (`pogo.minigame.detect_symbol`): precise, but it misses many, so the
+zone pools every sighting over a type's runs. A plain loop at the zone's edge misses icons in its middle; a spiral
+that breathes in and out does better. Share of detected icons the chosen swipe crosses while they are on screen:
+
+| Type | Runs | Zone (centre) | Loop | Best spiral |
+|---|---|---|---|---|
+| Fire | 3 | 0.51, 0.73 | 65% | 76% |
+| Ice | 2 | 0.52, 0.71 | 65% | 76% |
+| Bug | 1 | 0.21, 0.57 | 67% | 72% |
+| Electric | 1 | 0.60, 0.54 | 32% | 61% |
+| Water | 3 | 0.74, 0.48 | 56% | 57% |
+| Rock | 1 | 0.27, 0.48 | 33% | 53% |
+| Flying | 9 | 0.85, 0.56 | 45% | 51% |
+| Grass | 1 | 0.25, 0.54 | 36% | 48% |
+| Poison | 4 | 0.53, 0.74 | 29% | 43% |
+| Fighting | 3 | 0.51, 0.61 | 35% | 42% |
+| Normal | 1 | 0.42, 0.71 | 20% | 40% |
+| Steel | 6 | 0.55, 0.63 | 28% | 39% |
+| Dark, Fairy | 1 each | 0.48, 0.63 / 0.38, 0.70 | 24% / 19% | 32% / 32% |
+
+These are estimates from the recordings (the detector's icons only, the best of seven shapes chosen on the same runs,
+one run for several types), not the game's count. Missing: Dragon, Ghost, Ground, Psychic. The owner's other idea is
+better still: record their own swipes and replay them. `phonectl record <seconds> <out.jsonl>` (`Phone.record`) now
+listens (never acts) to the mouse in the iPhone Mirroring window and writes each press, drag and release with its time
+and position; the owner plays minigames through iPhone Mirroring with the trackpad, and those swipes become the
+library. It needs the Input Monitoring permission and has not been run yet.
+
