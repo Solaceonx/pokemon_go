@@ -2200,3 +2200,46 @@ bench Pokémon `switch_margin` (0.35) better; neither had been tuned. Switching 
 None was close enough to rerun on a fresh seed. Defaults unchanged. Not done: the optional engine-as-side-0
 comparison (step 5), and a weighted retrain on these positions, which the balance numbers give no reason to
 expect to help.
+
+## The engine in real time (task 23, 2026-10-17)
+
+`pogo/realtime.py`: `RealTime` is the engine with a deadline on every search, set by what came before the
+decision (the owner's point: a fast move of n turns leaves n half-seconds, and charged moves stop the game for
+seconds). Budgets: a predicted decision gets the fast move's turns at 500 ms less 200 ms for seeing and tapping
+(Incinerate: 2.3 s); after a charged move 2 s; after a faint or for a replacement 1 s; the start 2 s; unforeseen
+(their switch, our switch, a failed prediction) 300 ms. The pause lengths are cautious guesses, not measured.
+The search (`pogo/engine.py`) now goes round by round, one imagined battle per option, and decides on the
+complete rounds when time is up; with none it plays the trained bot's pick. Without a deadline it plays exactly
+as before (`tests/test_realtime.py`: same battle logs).
+
+`python3 scripts/realtime_trial.py --timing 300` (`runs/realtime_timing.out`, CPU time on the owner's Mac):
+
+| | Default budgets | Every budget a fifth as long |
+|---|---|---|
+| Searched decisions | 6,736 | 6,690 |
+| Search time, median / 99th percentile / worst | 18 / 69 / 126 ms | 18 / 62 / 129 ms |
+| Cut short by the deadline | 0.0% | 0.8% |
+| No complete round (trained bot's pick) | 0.0% | 0.0% |
+| Decisions with any wait when due | 2.9% (unforeseen only; worst 53 ms) | 3.2% |
+| Predicted from the start of our fast move | 66% | 66% |
+
+So on this machine the real-time engine makes the unhurried engine's choices: nothing is cut, and 97% of
+decisions are ready before they are due. The head-to-head check against the unhurried engine
+(`--pairings 600 --crowd 1000`, hours) only matters on a slower machine or with tighter budgets; it has not
+been run. Searches here are about 2.5 times faster than the 13 October measurement (45 ms median), which used
+wall-clock time on another machine. `scripts/play.py --bot engine` now plays `RealTime` on the wall clock, with
+no search allowed longer than one of the game's turns, and saves every search's timing with the game.
+
+## Learning from games against a person, and the line-up's win chance (2026-10-17)
+
+`scripts/play.py` now saves each game's seeds and exact teams, so `python3 scripts/losses.py --played` can replay
+every saved game the bot lost and try each of its decisions every other way, as task 26 did for the bot against
+itself; after a changed decision the person is played by variations of the bot. Checked: a game saved as the
+browser saves it replays exactly (`tests/test_losses.py`), including a headless game against the real-time
+engine. Games saved before today have no seeds and cannot be replayed.
+
+`pogo/lineup.py` / `python3 scripts/lineup.py A B C --vs D E F`: the chance that one team beats another, both
+known, with both sides played by the bot with shifted habits; also with each of our Pokémon leading. Example:
+Melmetal / Altaria / Jellicent against Corviknight / Tinkaton / Mandibuzz, 300 battles: Melmetal leading 38% ± 5,
+Altaria 66% ± 5, Jellicent 81% ± 4. The browser game shows this number for the two teams after each battle and
+saves it.

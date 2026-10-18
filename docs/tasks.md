@@ -22,13 +22,16 @@ and push that before starting.
 - **Team choice**: `scripts/roster_teams.py` ranks the owner's line-ups, but the answer depends on the
   opposing team list, which is not yet self-consistent (task 21).
 - **Task 26 (learning from losses)** is done: every change it found costs more in won battles than it gains in lost ones.
-- **Try it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine` for the engine).
+- **Play it and learn from it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine`
+  for the real-time engine). Every game is saved with its seeds; `python3 scripts/losses.py --played` then
+  finds the bot's decisions that lost its games against you. `python3 scripts/lineup.py A B C --vs D E F` gives
+  the win chance of two teams lined up against each other.
 
 ## Open tasks
 
 | # | Task | Needs |
 |---|---|---|
-| 23 | The engine in real time: think during its own fast moves | Python, numpy |
+| 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
 | 25 | Let the engine search shield decisions | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |

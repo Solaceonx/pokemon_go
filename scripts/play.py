@@ -39,7 +39,8 @@ from pogo.battle import CHARGED, DRAW, FAST, MAX_TURNS, SWITCH, Battle  # noqa: 
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.arena import decisive  # noqa: E402
-from pogo.engine import Engine  # noqa: E402
+from pogo.lineup import win_chance  # noqa: E402
+from pogo.realtime import RealTime  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
@@ -99,6 +100,11 @@ def sprite(gd: GameData, build) -> dict:
             "shadow": build.species_id.endswith("_shadow")}
 
 
+def describe(build) -> list:
+    """A Pokémon as saved with a game: species, moves (fast first), level and IVs."""
+    return [build.species_id, [build.fast.id, *(m.id for m in build.charged)], build.level, list(build.ivs)]
+
+
 # the human player
 
 class Human:
@@ -126,11 +132,13 @@ class Human:
 class Game:
     def __init__(self, gd: GameData, mine: list, theirs: list, bot, bot_name: str, charged_pause: float, slow: float = 1.5,
                  my_charged_pause: float = 4.0, countdown: float = 3.0, evaluator: Evaluator | None = None,
-                 eval_bar: bool = False):
+                 eval_bar: bool = False, bot_seed: int | None = None):
         self.gd, self.bot_name, self.charged_pause, self.my_charged_pause = gd, bot_name, charged_pause, my_charged_pause
         self.real_turn = TURN * slow  # real seconds a turn takes: slower than the game by `slow`
         self.human = Human(self)
-        self.battle = Battle(mine, theirs, self.human, bot, seed=random.getrandbits(32), record=True)
+        # Seeds are saved with the game, so it can be replayed exactly (scripts/losses.py --played).
+        self.seed, self.bot_seed = random.getrandbits(32), bot_seed
+        self.battle = Battle(mine, theirs, self.human, bot, seed=self.seed, record=True)
         self.queued = None
         self.prompt, self.answer, self.answered = None, None, threading.Event()
         self.choices = []  # (turn, side, what) for the saved record
@@ -141,6 +149,9 @@ class Game:
         self.evaluator, self.eval_bar = evaluator, eval_bar
         self.evals = []  # (game seconds, evaluation from our side) each turn, for the review after the battle
         self.thread = threading.Thread(target=self.run, daemon=True)
+        # The line-up's win chance (pogo.lineup), worked out when the battle is over so it cannot slow the turns.
+        self.teams = [list(mine), list(theirs)]
+        self.lineup, self.lineup_net, self.pool = None, None, None
 
     # from the page
 
@@ -189,6 +200,9 @@ class Game:
             if hold:
                 self.pause_until = time.time() + hold
             time.sleep(max(0.0, (hold or self.real_turn) - (time.time() - started)))
+        if battle.winner is not None and self.lineup_net is not None:
+            chance, margin = win_chance(self.lineup_net, self.pool, *self.teams, battles=200, seed=self.seed)
+            self.lineup = [round(chance, 3), round(margin, 3)]
         self.finished = time.time()
         if battle.winner is not None:
             self.evals.append((round(battle.turn * TURN, 1), round(decisive(battle, 0), 3)))
@@ -203,7 +217,11 @@ class Game:
                   "mine": [m.build.species_id for m in battle.sides[0].team],
                   "theirs": [m.build.species_id for m in battle.sides[1].team],
                   "log": battle.log, "my_choices": self.choices, "evaluation": self.evals,
-                  "decisiveness": round(decisive(battle, 0), 3)}
+                  "decisiveness": round(decisive(battle, 0), 3), "lineup_win_chance": self.lineup}
+        record.update(seed=self.seed, bot_seed=self.bot_seed, teams=[[describe(m.build) for m in side.team] for side in battle.sides])
+        rows = getattr(battle.agents[1], "rows", None)
+        if rows:  # the real-time engine's searches: what came before, kind, ms allowed, ms taken, wait, cut, fell back
+            record["bot_searches"] = [[c, k, round(b), round(s, 1), round(w, 1), cut, fell] for c, k, b, s, w, cut, fell in rows]
         (SAVED / f"{stamp}.json").write_text(json.dumps(record, indent=1) + "\n")
         with (SAVED / "results.jsonl").open("a") as out:
             out.write(json.dumps({k: record[k] for k in ("started", "bot", "result", "mine", "theirs", "turns")}) + "\n")
@@ -219,7 +237,7 @@ class Game:
                 swings.append({"t": t0, "change": round(e1 - e0, 3),
                                "what": "; ".join(("You: " if side == 0 else "Bot: ") + text for side, text in happened[:3])})
         swings.sort(key=lambda s: -abs(s["change"]))
-        return {"points": points, "swings": sorted(swings[:5], key=lambda s: s["t"]),
+        return {"points": points, "swings": sorted(swings[:5], key=lambda s: s["t"]), "lineup": self.lineup,
                 "learned": bool(self.evaluator and self.evaluator.model is not None)}
 
     # to the page
@@ -268,6 +286,7 @@ class Server:
         self.pool = self.gd.meta(50)
         self.draw = drawer(self.gd, self.pool)
         self.net = QNet.load(str(MODEL)) if args.bot in ("learner", "engine") else None
+        self.lineup_net = QNet.load(str(MODEL)) if MODEL.exists() else None
         self.evaluator = Evaluator.load(EVALUATION) if EVALUATION.exists() else Evaluator()
         self.rng = random.Random()
         self.game = None
@@ -282,17 +301,23 @@ class Server:
             self.game.answered.set()
         mine = self.team(self.args.team) if self.args.team else list(self.owned.values())[:3]
         theirs = self.team(self.args.foe) if self.args.foe else self.draw(self.rng)
+        bot_seed = random.getrandbits(30)
         if self.args.bot == "learner":
-            bot = Learner(q=self.net, margin=0.02)
+            bot = Learner(q=self.net, margin=0.02, seed=bot_seed)
         elif self.args.bot == "engine":
-            # The trained bot with a look-ahead at its judgement calls (pogo.engine), as tested in scripts/engine_trial.py.
-            bot = Engine(self.evaluator, self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02)
+            # The trained bot with a look-ahead at its judgement calls (pogo.engine), as tested in scripts/engine_trial.py,
+            # with a deadline on every search on the wall clock (pogo.realtime). Here the search runs inside the game's
+            # own turn, so none may take longer than a turn; in simulation none comes near that.
+            bot = RealTime(self.evaluator, self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02,
+                           turn_ms=1000 * TURN * self.args.slow, after_charged_ms=1000 * self.args.charged_pause,
+                           cap_ms=1000 * TURN * self.args.slow - 50, clock=time.perf_counter, seed=bot_seed)
         elif self.args.bot == "crowd":
             bot = varied(self.rng, self.pool)
         else:
-            bot = Planner()
+            bot = Planner(seed=bot_seed)
         self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow,
-                         self.args.my_charged_pause, evaluator=self.evaluator, eval_bar=self.args.eval_bar)
+                         self.args.my_charged_pause, evaluator=self.evaluator, eval_bar=self.args.eval_bar, bot_seed=bot_seed)
+        self.game.lineup_net, self.game.pool = self.lineup_net, self.pool
         self.game.thread.start()
 
     def tally(self) -> dict:

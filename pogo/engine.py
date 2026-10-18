@@ -12,6 +12,7 @@ little. Shield decisions are left to the trained bot: the defender does not know
 from __future__ import annotations
 
 import random
+import time
 
 from .agents import _rollout
 from .arena import decisive
@@ -68,6 +69,12 @@ class Engine(Learner):
         self.rollout = rollout
         self.looks = 0  # decisions searched
         self.changed = 0  # of those, how many went against the trained bot's pick
+        # A deadline for the search, on `clock` (None: no limit; pogo.realtime sets it per decision). The search
+        # goes round by round, one imagined battle per option each round, and decides on the complete rounds.
+        self.clock, self._deadline = time.process_time, None
+        self.cut = 0  # searches stopped by the deadline before all their rounds
+        self.fell_back = 0  # searches with no complete round, which play the trained bot's pick
+        self._look_time, self._timed_looks = 0.0, 0
 
     def clone(self) -> Engine:
         return super().clone()
@@ -80,13 +87,45 @@ class Engine(Learner):
         if len(options) < 2:
             return pick
         seeds = [self.rng.getrandbits(32) for _ in range(self.samples)]
-        worth = {k: sum(self._look(view, head, k, s) for s in seeds) / len(seeds) for k in options}
+        totals, rounds = dict.fromkeys(options, 0.0), 0
+        for s in seeds:
+            done = {}
+            for k in options:
+                if self._out_of_time():
+                    break
+                done[k] = self._timed_look(view, head, k, s)
+            if len(done) < len(options):
+                break
+            for k in options:
+                totals[k] += done[k]
+            rounds += 1
         self.looks += 1
+        if rounds == 0:
+            self.fell_back += 1
+            return pick
+        self.cut += rounds < len(seeds)
+        worth = {k: totals[k] / rounds for k in options}
         best = max(options, key=lambda k: (worth[k], k == pick))
         if worth[best] - worth[pick] > self.edge:
             self.changed += best != pick
             return best
         return pick
+
+    def _out_of_time(self) -> bool:
+        """Would one more imagined battle, of the average length so far, pass the deadline?"""
+        if self._deadline is None:
+            return False
+        average = self._look_time / self._timed_looks if self._timed_looks else 0.0
+        return self.clock() + average > self._deadline
+
+    def _timed_look(self, view: View, head: str, option: int, seed: int) -> float:
+        if self._deadline is None:
+            return self._look(view, head, option, seed)
+        start = self.clock()
+        worth = self._look(view, head, option, seed)
+        self._look_time += self.clock() - start
+        self._timed_looks += 1
+        return worth
 
     def _look(self, view: View, head: str, option: int, seed: int) -> float:
         """Play one option `horizon` turns ahead in one imagined battle; judge the position reached."""

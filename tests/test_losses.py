@@ -43,3 +43,61 @@ class ReplayRepeatsTheBattle(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Logged:
+    """A player that writes down its choices the way the browser game writes down a person's."""
+
+    def __init__(self, inner):
+        self.inner, self.choices, self.battle = inner, [], None
+
+    def act(self, view):
+        action = self.inner.act(view)
+        if action != 0:
+            self.choices.append([view.turn, 0, action])
+        return action
+
+    def shield(self, view, energy, *move):
+        if view.me.shields == 0:
+            return False
+        answer = bool(self.inner.shield(view, energy))
+        self.choices.append([view.turn, 0, f"shield:{answer}"])
+        return answer
+
+    def replace(self, view):
+        slot = self.inner.replace(view)
+        if len(view.me.bench()) > 1:
+            self.choices.append([view.turn, 0, f"replace:{slot}"])
+        return slot
+
+
+class PlayedGamesReplay(unittest.TestCase):
+    """A game saved as scripts/play.py saves it (seeds, teams, the person's choices) replays exactly."""
+
+    def test_saved_game_replays(self):
+        import json
+        import random
+        import tempfile
+        from pogo.agents import Planner
+        from pogo.battle import Battle
+
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+        import play  # noqa: F401  (describe, as the game uses it)
+        losses.setup()
+        s = losses._state
+        rng = random.Random(8)
+        for game in range(3):
+            teams = [s["draw"](rng), s["draw"](rng)]
+            person, seed, bot_seed = Logged(Planner(seed=rng.getrandbits(30))), rng.getrandbits(32), rng.getrandbits(30)
+            battle = Battle(teams[0], teams[1], person, losses.bot(bot_seed), seed=seed, record=True)
+            battle.run()
+            saved = {"bot": "learner", "seed": seed, "bot_seed": bot_seed, "my_choices": person.choices,
+                     "log": [list(e) for e in battle.log],
+                     "teams": [[play.describe(m.build) for m in side.team] for side in battle.sides]}
+            with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+                json.dump(saved, f)
+            replayed, steps, _, same = losses.replay(f.name)
+            with self.subTest(game=game):
+                self.assertTrue(same)
+                self.assertEqual(replayed.winner, battle.winner)
+                self.assertTrue(steps)

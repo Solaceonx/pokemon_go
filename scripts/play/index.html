@@ -345,7 +345,9 @@ function showReview(r) {
     const x = (W * sw.t / end).toFixed(1);
     return `<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="${sw.change > 0 ? "#3ddc97" : "#f0544f"}" stroke-opacity=".5" stroke-dasharray="3 3"/>`;
   }).join("");
-  box.innerHTML = `<div class="caption">${r.learned ? "The engine's evaluation" : "Health and shields left (no trained evaluation found)"}: above the line you were ahead</div>
+  const lineup = r.lineup ? `<div class="caption">Your line-up against the bot's wins <b>${Math.round(100 * r.lineup[0])}%</b>
+    (± ${Math.round(100 * r.lineup[1])}) when two equally good bots play it, before anyone decides anything.</div>` : "";
+  box.innerHTML = lineup + `<div class="caption">${r.learned ? "The engine's evaluation" : "Health and shields left (no trained evaluation found)"}: above the line you were ahead</div>
     <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
       <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="#93a3b3" stroke-opacity=".4"/>
       ${marks}<polyline points="${line}" fill="none" stroke="#5ab0ff" stroke-width="2"/></svg>` +
