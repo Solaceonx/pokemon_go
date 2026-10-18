@@ -2431,3 +2431,24 @@ faint, and vanishes against white Pokémon (Jellicent), so the per-type paths wi
 combined over several runs of a type. The phone helper now has an unbroken multi-point swipe (`phonectl path`,
 `Phone.path`, used by `Controller` for drags); `python3 scripts/probe.py --path` tests it on the phone.
 
+**Per-type minigame library, first attempt** (`scripts/recording/minigame_library.py`, 2026-10-17; the owner: "a little
+minigame for each type"). The owner's 24 recorded minigames cover five types: Flying (9 Sky Attacks), Steel (6 Double
+Iron Bash), Water, Fire and Fighting (3 each). Steps: the type's icon colour from confident detections, icons found by
+colour (`pogo.minigame.detect_colour`), followed, timed from the first icon, runs grouped into variants, a swipe
+schedule per variant, and each run scored on the schedule built without it. Not usable yet:
+
+| Type | Colour found | Icons followed per run | Variants | Held-out run hit by the schedule |
+|---|---|---|---|---|
+| Fighting | red (209, 58, 84) | 35 to 38 | 3 of 1 run | none to test on |
+| Fire | orange (246, 156, 73) | 38 to 57 | 1 of 3 | 35% |
+| Flying | pale blue (150, 175, 225) | 104 to 145 | 7 + 2 | 10 to 15% |
+| Steel | teal (73, 139, 152) | 79 to 107 | 1 of 6 | 20% |
+| Water | blue (85, 161, 216) | 127 to 143 | 1 of 3 | 27% |
+
+A minigame shows perhaps 15 to 30 icons, so the counts say colour alone also catches other things, and the frames
+show which: collected icons swell into large faded discs as they burst, the move's own animation shares the colour
+(Dynamic Punch's orange fists, Flamethrower's flames), and Flying and Steel are close to the sky. What only a live icon
+has is its crisp white type symbol (fist, flame, drop, wing, steel emblem). Next: match each type's symbol (templates
+cut from clean frames) to find live icons, then rebuild the schedules; and more recordings per type (the owner offered
+to record each type).
+

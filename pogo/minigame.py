@@ -56,6 +56,48 @@ def detect(frame: np.ndarray) -> list[tuple[float, float, float]]:
     return out
 
 
+def ring_colour(frame: np.ndarray, icons: list) -> np.ndarray | None:
+    """The median colour of the discs around these icons (outside their white symbols): a type's icon colour."""
+    import cv2
+    h, w = frame.shape[:2]
+    small = cv2.resize(frame, (WIDTH, int(h * WIDTH / w)), interpolation=cv2.INTER_AREA)
+    yy, xx = np.mgrid[0:small.shape[0], 0:WIDTH]
+    picked = []
+    for x, y, r in icons:
+        cx, cy, rr = x * WIDTH, y * small.shape[0], r * WIDTH
+        d2 = (xx - cx) ** 2 + (yy - cy) ** 2
+        picked.append(small[(d2 > (0.5 * rr) ** 2) & (d2 < (0.85 * rr) ** 2)])
+    return np.median(np.vstack(picked), axis=0) if picked else None
+
+
+def detect_colour(frame: np.ndarray, colour, tolerance: float = 48.0, radius=(0.035, 0.17)) -> list[tuple[float, float, float]]:
+    """Icons of one type, found by their colour: pixels near `colour`, holes (the white symbol) filled, and the
+    centres of the discs taken from the distance to the edge, so overlapping icons of different sizes come apart."""
+    import cv2
+    h, w = frame.shape[:2]
+    small = cv2.resize(frame, (WIDTH, int(h * WIDTH / w)), interpolation=cv2.INTER_AREA).astype(np.float32)
+    sh = small.shape[0]
+    mask = (np.linalg.norm(small - np.asarray(colour, dtype=np.float32), axis=2) < tolerance).astype(np.uint8)
+    mask[: int(REGION[0] * sh)] = 0
+    mask[int(REGION[1] * sh):] = 0
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+    filled = mask.copy()
+    flood = np.zeros((sh + 2, WIDTH + 2), np.uint8)
+    cv2.floodFill(filled, flood, (0, 0), 1)
+    mask = mask | (1 - filled)  # the white symbols become part of their discs
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    dist = cv2.distanceTransform(mask, cv2.DIST_L2, 5)
+    rmin, rmax = radius[0] * WIDTH, radius[1] * WIDTH
+    peaks = (dist == cv2.dilate(dist, np.ones((9, 9), np.uint8))) & (dist >= rmin)
+    out = []
+    for y, x in sorted(zip(*np.nonzero(peaks)), key=lambda p: -dist[p]):
+        r = float(dist[y, x])
+        if r > rmax or any((x - ox) ** 2 + (y - oy) ** 2 < (0.8 * max(r, orr)) ** 2 for ox, oy, orr in out):
+            continue
+        out.append((float(x), float(y), r))
+    return [(x / WIDTH, y / sh, r / WIDTH) for x, y, r in out]
+
+
 @dataclass
 class Icon:
     x: float
