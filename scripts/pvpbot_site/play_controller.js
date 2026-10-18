@@ -3,7 +3,7 @@
 const ACTIONS = { c0: 1, c1: 2, s0: 3, s1: 4, s2: 5 };
 const STORE = "pvpbot-games";
 // The shared store (scripts/pvpbot_store): every game goes there as well, and again when its notes change. Empty: off.
-const STORE_URL = "";
+const STORE_URL = "https://script.google.com/macros/s/AKfycbyN0pYMGhuOa-Nv6TK5Bq55Fn_yhIGurTYAdRBBU19nj7uP0qG5eB0V0oYimn3_jjSV/exec";
 const worker = new Worker("play_worker.js");
 const calls = {};
 let callId = 0, INFO = null, BY_NAME = {}, BY_ID = {}, G = null;
