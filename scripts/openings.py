@@ -9,7 +9,9 @@ team-mate; stay 2, 4 or 8 fast moves then swap; throw our first charged move the
 with shifted habits (as pogo.lineup). A plan goes into the book only if it beats staying in by more than its margin
 (paired battles). Then the check: the bot with the book against the bot without it on --check fresh battles against
 leads drawn from the good-team list, the same battles for both. Writes data/openings/<team>.json.
-Our Pokémon use the owner's builds where they have them.
+Our Pokémon use the owner's builds where they have them. With --field pvpoke the leads are the --leads most used in
+PvPoke's data (Cramorant and Mimikyu included), their back two and the check's teams drawn as that data has them
+(pogo.teamshape.pvpoke_field), and the book goes to data/openings/<team>-pvpoke.json.
 """
 from __future__ import annotations
 
@@ -36,10 +38,14 @@ from pogo.roster import builds  # noqa: E402
 _s: dict = {}
 
 
-def setup(team) -> None:
+def setup(team, field="standard") -> None:
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
+    if field == "pvpoke":
+        from pogo.teamshape import pvpoke_field
+        pool, draw = pvpoke_field(gd)
+        _s.update(field_draw=draw)
     owned = builds(gd)
     listed = json.loads((ROOT / "data" / "teams.json").read_text())["teams"]
     _s.update(gd=gd, pool=pool, net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
@@ -50,6 +56,11 @@ def setup(team) -> None:
 def their_team(lead: str, rng: random.Random):
     s = _s
     gd = s["gd"]
+    if "field_draw" in s:  # a team people bring that holds this lead, put first
+        for _ in range(5000):
+            team = s["field_draw"](rng)
+            if any(b.species_id == lead for b in team):
+                return sorted(team, key=lambda b: b.species_id != lead)
     fitting = [t for t in s["listed"] if t[0] == lead or lead in t]
     dex = lambda sp: gd.species[sp]["dex"]  # noqa: E731
     if fitting and rng.random() < 0.7:
@@ -94,8 +105,11 @@ def check(task):
     with_book, without = [], []
     for n in range(start, start + count):
         rng = random.Random(seed * 7_919 + n)
-        lead = rng.choices(s["listed"], s["weights"])[0][0]
-        theirs = their_team(lead, rng)
+        if "field_draw" in s:
+            theirs = s["field_draw"](rng)
+        else:
+            lead = rng.choices(s["listed"], s["weights"])[0][0]
+            theirs = their_team(lead, rng)
         state = rng.getstate()
         for use, out in ((True, with_book), (False, without)):
             rng.setstate(state)
@@ -113,16 +127,22 @@ def main() -> None:
     parser.add_argument("--check", type=int, default=3000)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=41)
+    parser.add_argument("--field", choices=("standard", "pvpoke"), default="standard")
     args = parser.parse_args()
     gd = GameData()
     names = [gd.species[sp]["speciesName"] for sp in args.team]
     plans = [{"swap": None}]
     for slot in (1, 2):
         plans += [{"swap": slot, "after_fast": n} for n in (0, 2, 4, 8)] + [{"swap": slot, "after_charged": True}]
-    leads = [b.species_id for b in gd.meta(args.leads)]
+    if args.field == "pvpoke":
+        from pogo.teamshape import pvpoke_field, pvpoke_usage
+        usage, field = pvpoke_usage(), {b.species_id for b in pvpoke_field(gd)[0]}
+        leads = [sp for sp in sorted(usage, key=lambda x: -usage[x]) if sp in field][:args.leads]
+    else:
+        leads = [b.species_id for b in gd.meta(args.leads)]
     tasks = [(lead, k, p, args.battles, args.seed + i) for i, lead in enumerate(leads) for k, p in enumerate(plans)]
     results: dict = {}
-    with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.team,)) as pool:
+    with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.team, args.field)) as pool:
         for lead, k, out in pool.imap_unordered(job, tasks, chunksize=2):
             results[(lead, k)] = out
         book, rows = {}, []
@@ -148,9 +168,10 @@ def main() -> None:
     m1, h1 = mean_and_margin(with_book)
     m0, h0 = mean_and_margin(without)
     d, dh = mean_and_margin([a - b for a, b in zip(with_book, without)])
-    print(f"\ncheck on {len(with_book)} fresh battles (leads from the good-team list): with the book {100 * m1:.1f}% ± {100 * h1:.1f}, "
+    where = "teams as PvPoke's data has them" if args.field == "pvpoke" else "leads from the good-team list"
+    print(f"\ncheck on {len(with_book)} fresh battles ({where}): with the book {100 * m1:.1f}% ± {100 * h1:.1f}, "
           f"without {100 * m0:.1f}% ± {100 * h0:.1f}, difference {100 * d:+.1f} ± {100 * dh:.1f} points")
-    out = ROOT / "data" / "openings" / f"{'-'.join(args.team)}.json"
+    out = ROOT / "data" / "openings" / f"{'-'.join(args.team)}{'-pvpoke' if args.field == 'pvpoke' else ''}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"team": args.team, "battles_per_plan": args.battles,
                                "book": {lead: {**plan, "plan": describe(plan, names)} for lead, plan in book.items()},

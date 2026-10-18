@@ -2520,3 +2520,30 @@ are predictions or not Pokémon GO data).
   rarer than guessed (0.2 times its random share). `PVPOKE_WEIGHTS` (1, 0.2, 0.05, 0.01) with `usage=pvpoke_usage()`
   draws 97 / 2 / 1 / 0. The listed teams are the best-scoring ones, so they lean balanced; bots' teams are
   hand-picked; neither is GBL itself.
+
+## The engine, the bot and the opening book against teams as PvPoke's data has them (task 32, 2026-10-18)
+
+The field: `pogo.teamshape.pvpoke_field` (our top 50 with Cramorant and Mimikyu, plus Morpeko, Jumpluff and
+Lickilicky; teams by PvPoke usage and `PVPOKE_WEIGHTS`). `scripts/engine_versus.py --field pvpoke` and
+`scripts/openings.py --field pvpoke`; the same runs on the usual field, same seed, for comparison.
+Cramorant or Mimikyu is in 74% of these battles.
+
+| | usual field | PvPoke field |
+|---|---|---|
+| engine head to head against the bot, 3,000 pairings both ways | 64.4% ± 1.0 | 66.3% ± 1.1 |
+| bot against the crowd, 4,000 | 66.5% ± 1.5 | 67.1% ± 1.4 |
+| engine against the crowd, same battles | 69.0% ± 1.4 (+2.6 ± 1.6) | 71.2% ± 1.4 (+4.0 ± 1.6) |
+
+(`runs/field_standard.out`, `runs/field_pvpoke.out`.) **The engine's edge holds on the realistic field, and the bot
+does not fall off against form-changers.** Split by Cramorant or Mimikyu (`scripts/field_breakdown.py`,
+`runs/field_breakdown.out`): engine against bot 66.1% ± 1.2 with one of them in the battle, 66.8% ± 2.0 without;
+against the crowd the bot is 67.1 / 65.9 / 68.5 (± 2.9) with them on our side / theirs / neither, the engine
+70.1 / 69.2 / 74.9 (± 2.8): perhaps a smaller edge when they are present, within the margins.
+
+**Opening book on the PvPoke field** (Melmetal / Altaria / Jellicent; 30 most-used leads, 300 battles per plan;
+`runs/openings_pvpoke.out`, `data/openings/melmetal-altaria-jellicent-pvpoke.json`): on 4,000 fresh battles **51.9% ±
+1.5 with the book, 46.2% ± 1.5 without, +5.8 ± 1.2 points**, against +2.2 ± 0.9 for the book built on the usual
+field. Cramorant (71% staying in) and Mimikyu (63%) leads: stay in. Changes from the usual-field book: against
+Stunfisk and Araquanid four fast moves then Jellicent; against Melmetal and Clodsire four fast moves then Altaria;
+Deoxys-D two then Altaria; Shadow Ninetales, Ninetales and Shadow Quagsire: Jellicent at once. Note the team itself:
+46.2% without the book here against 53.8% on the usual field; the usual field flatters it.

@@ -30,6 +30,7 @@ SHAPES = ("ABC", "ABB", "AAB", "AAA")
 WEIGHTS = {"ABC": 1.0, "ABB": 0.8, "AAB": 0.15, "AAA": 0.03}  # the owner's rule of thumb, as weights
 PVPOKE_WEIGHTS = {"ABC": 1.0, "ABB": 0.2, "AAB": 0.05, "AAA": 0.01}  # listed teams / random threes, from PvPoke's data
 USAGE = Path(__file__).resolve().parent.parent / "data" / "pvpoke_training_1500.json"
+WIDE = Path(__file__).resolve().parent.parent / "data" / "matchups_wide.json"  # scripts/pvpoke_teams.py writes it
 
 
 def pvpoke_usage(path: Path = USAGE) -> dict:
@@ -100,3 +101,14 @@ def shaped_drawer(gd, pool: list, weights: dict = WEIGHTS, popularity: float = 2
         return rng.sample(ranked, 3)
 
     return draw
+
+
+def pvpoke_field(gd):
+    """(pool, draw): the opposing field as PvPoke's data has it: our top 50 with the form-changers (Cramorant, Mimikyu)
+    plus the other Pokémon PvPoke lists (Morpeko, Jumpluff, Lickilicky), teams drawn by usage and PVPOKE_WEIGHTS."""
+    usage = pvpoke_usage()
+    pool = gd.meta(50, forms=True)
+    have = {b.species_id for b in pool}
+    known = {e["speciesId"] for e in gd.rankings(1500)}
+    pool += [gd.default(sp) for sp in sorted(usage, key=lambda x: -usage[x]) if sp in known and sp not in have]
+    return pool, shaped_drawer(gd, pool, PVPOKE_WEIGHTS, shapes=Shapes(path=WIDE), usage=usage)
