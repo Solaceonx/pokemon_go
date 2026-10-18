@@ -2395,3 +2395,32 @@ Azumarill (Fairy, resists Dark and Fighting) turns the matchup: with it the oppo
 Dark core alone (their mix spreads over Tinkaton, Shadow Annihilape, Corviknight and Thievul), and the owner's mix
 leans on Stunfisk leading with Melmetal and Azumarill behind (22%). Vigoroth is never brought, like Shadow Quagsire.
 One opposing six only; the next question is how each six does against several opposing sixes.
+
+## From decisions to touches on the phone, and the minigame (task 13, 2026-10-17)
+
+**Where to touch** (`pogo/controls.py`). Measured on frames of the owner's recordings
+(`scripts/recording/contact_sheet.py`) and checked by drawing every planned touch onto real frames
+(`scripts/recording/overlay_controls.py`): fast move, a tap on the open field (0.50, 0.45); charged moves, the two
+buttons (0.31 and 0.69 across, 0.89 down); switch, the bench portrait at the right edge (0.915 across; 0.585 the
+earlier team slot, 0.67 the later; with one left it moves to the top); the shield prompt's shield (0.50, 0.815) and
+"Not now" (0.50, 0.95); after a faint, the two choices side by side in team order (0.33 and 0.67, 0.865) or one in
+the middle. Every touch is checked against keep-out zones (the flee button at the top left forfeits the battle), and
+`Controller` sends through `pogo.phone.Phone` only when `live=True`, with a cap on touches per battle and a log.
+`tests/test_controls.py`. Not yet tested on the phone (step 1: does iPhone Mirroring pass synthetic taps and drags).
+
+**The minigame.** It scales a charged move's damage from a quarter to all of it (Excellent: 95% of the icons swiped),
+so every number the engine learned assumes the bot does it well. Icons are discs in the type's colour with a white
+symbol; they vary in size a lot, fade once swiped, and Flying icons are pale against clouds. A first detector
+(`pogo/minigame.py`: circles with a flat colour and a white middle; `scripts/recording/minigame_eval.py` over the 24
+recorded minigames, `runs/minigame_eval_1.out`) finds Water icons well (Surf: 1 to 2 a frame, an estimated 60% swiped
+with 100 ms between seeing and swiping) and others poorly (23% on average at 100 ms, 7% at 300 ms): not usable as is.
+
+What the recordings show instead: **the pattern is fixed for each move, with a few variants.** The first icon appears
+1.5 to 1.65 s after the move starts in every run; two of the three Surfs have icons at the same places at the same
+moments (median 0.07 radii apart), and the six Double Iron Bashes fall into two groups of three that match the same
+way (0.04 to 0.07 radii). Sky Attack and the others cannot be compared yet because the detector misses too many of
+their icons. So the bot does not need to chase icons live: it can replay a swipe path per pattern variant, chosen by
+where the first icons appear. The owner's own swipes in these recordings reached Excellent and the game draws the
+touch trail, so the paths can be learned from them. Next: read the owner's touch trails per run, group runs by
+variant, and test replayed paths against the recorded icons; and a continuous multi-point drag in the phone helper
+(`helper/phonectl.swift` lifts the finger between segments today).
