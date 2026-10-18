@@ -26,7 +26,9 @@ and push that before starting.
   for the real-time engine). Every game is saved with its seeds; `python3 scripts/losses.py --played` then
   finds the bot's decisions that lost its games against you; `--counters` gives the bot a team that should beat
   yours (`scripts/counters.py`). `python3 scripts/lineup_site.py` opens a page
-  (localhost:8767) for the win chance of any two teams, every lead against every lead.
+  (localhost:8767) for the win chance of any two teams, every lead against every lead. Both are also online at
+  solaceonx.github.io/pokemon_go_pvpbot (built by `scripts/build_pvpbot_site.py`; games played there come back
+  through `scripts/import_played.py`).
 
 ## Open tasks
 

@@ -2283,3 +2283,23 @@ always 48.9% ± 1.0 head to head, half the time 49.1% ± 0.8; off by default. As
 the crowd (`varied_settings`: a third never, a third half the time, a third always), which changes the crowd for
 every later measurement. Against it the trained bot is +10.5 ± 1.6 over the Planner (65.8% against 55.3%, 4,000
 battles, `runs/compare_fast_first_crowd.out`), as before.
+
+## On the owner's website (2026-10-17)
+
+`python3 scripts/build_pvpbot_site.py FOLDER` builds `solaceonx.github.io/pokemon_go_pvpbot/` (pushed to the
+website repo `Solaceonx/solaceonx.github.io`, folder `pokemon_go_pvpbot/`). Everything runs in the visitor's
+browser with Pyodide (Python in WebAssembly, with numpy): `bundle.zip` holds the simulator's modules, the game data,
+the trained model and the engine's evaluation (about 0.5 MB; Pyodide and numpy add about 15 MB on first visit).
+
+- **Line-up odds** (`index.html`): any two teams, every lead against every lead, 120 battles a cell; about 10 s on
+  the owner's Mac (three background workers), same numbers as `scripts/lineup_site.py`.
+- **Battle the bot** (`play.html`): the battle screen of `scripts/play.py` driven by `play_api.py` one turn at a
+  time; a shield or replacement prompt winds the turn back and plays it again with the answer. Opponents: random
+  from the top 50, a top team from `data/teams.json`, or custom; the trained bot or the engine (`RealTime`, no search
+  longer than a turn less 100 ms). In the browser the engine's searches took 16 ms median, 218 ms worst over three
+  games on the owner's Mac, inside its limit; a slower device falls back to the trained bot's pick more often.
+  After each game: the line-up's win chance, the engine's evaluation over the battle with its biggest swings, and a
+  notes box. Games and notes stay in that browser; "Download my games" gives a file that
+  `python3 scripts/import_played.py FILE` puts in `games/played/` for `scripts/losses.py --played`. Checked: a game
+  against the trained bot played on the page replays exactly; an engine game replays exactly only if no search was
+  cut (each game saves its search times as `bot_searches`).
