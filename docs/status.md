@@ -2379,3 +2379,19 @@ the pools simulations draw from (`GameData.meta`) still leave the four out unles
 result so far stays comparable. The line-up tools (`lineup.py`, `lineup_site.py`, `sixes.py`, the website build)
 list them. The trained bot and the rules have never played them; their predictions (one-on-one outlooks, damage
 counts) ignore form changes.
+
+**Which six to register** (`runs/sixes_swaps.out`, same opposing six, 40 battles for each of 3,600 pairs each): the
+owner's six with Shadow Quagsire (never brought) replaced.
+
+| Sixth Pokémon | Win chance, both choosing well | Scored on separate battles | Against their best single reply | How often it is brought |
+|---|---|---|---|---|
+| Shadow Quagsire (as registered) | 40% | 38% | 26% | 0% |
+| **Azumarill** | **53%** | **52%** | **48%** | 75% |
+| Mantine | 45% | 45% | 39% | 59% |
+| Fearow | 44% | 43% | 33% | 84% |
+| Vigoroth | 40% | 38% | 26% | 0% |
+
+Azumarill (Fairy, resists Dark and Fighting) turns the matchup: with it the opponent's best answer is no longer the
+Dark core alone (their mix spreads over Tinkaton, Shadow Annihilape, Corviknight and Thievul), and the owner's mix
+leans on Stunfisk leading with Melmetal and Azumarill behind (22%). Vigoroth is never brought, like Shadow Quagsire.
+One opposing six only; the next question is how each six does against several opposing sixes.
