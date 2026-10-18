@@ -2330,3 +2330,24 @@ Corviknight / Mandibuzz / Carbink / Thievul, the Pokémon most common in `data/t
 So with open sheets the six decides much: one of the owner's six is never worth bringing here, and the six has no good
 answer to a Dark core. Choosing which six to register needs these tables for many sixes against many sixes; one
 table costs 144,000 battles, so that search is for a bigger machine or a cache of three-against-three results.
+
+## Real pause lengths (2026-10-17)
+
+`scripts/recording/pause_lengths.py` over the 49 tracked battles with timelines (the owner's recordings and the public
+clips; `runs/pause_lengths.out`):
+
+| Pause | Count | Median | 10th to 90th percentile |
+|---|---|---|---|
+| Charged move: start to its damage on the bar | 280 | 9.4 s | 8.9 to 11.9 |
+| Charged move: damage shown to play resuming | 239 | 0.9 s | 0.4 to 2.2 |
+| Charged move, start to play resuming: unblocked / blocked | 239 / 155 | 10.4 / 9.4 s | 9.6 to 13.3 / 7.6 to 10.8 |
+| Faint: knockout to the replacement in | 137 | 10.6 s | 2.5 to 15.7 |
+| Faint: replacement in to play resuming | 143 | 1.2 s | 0.4 to 2.5 |
+| Start: the lead's "Go" to the first hit | 49 | 3.0 s | 0 to 4.8 |
+
+The guesses in `pogo/realtime.py` (2 s after a charged move, 1 s after a faint) assumed the search starts once the
+outcome is on screen; measured, that leaves only 0.4 s at the 10th percentile. The defaults are now those 10th
+percentiles (400 ms after a charged move, 350 ms after a faint, 2 s for choosing a replacement, 1 s at the start).
+With them nothing is cut either (`runs/realtime_timing_measured.out`: 6,748 searched decisions, worst 132 ms, none
+cut). The bigger opening is the 9 s while a charged move plays: only the shield and which move are unknown, so the
+engine could search those few outcomes during it. That matters once a slower, stronger setting is adopted (task 27).

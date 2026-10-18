@@ -43,7 +43,7 @@ and push that before starting.
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
 | **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
 | **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
-| 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
+| 23 | The engine in real time: built; pauses measured from recordings and set as defaults; nothing cut on the owner's Mac. Open: search the shield and move outcomes during the 9 s a charged move plays (needed if task 27 adopts a slower setting) | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
 | 5 | Learn from the tracked games (teams, movesets, habits seen) | Python |
