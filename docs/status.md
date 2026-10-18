@@ -2483,3 +2483,40 @@ listens (never acts) to the mouse in the iPhone Mirroring window and writes each
 and position; the owner plays minigames through iPhone Mirroring with the trackpad, and those swipes become the
 library. It needs the Input Monitoring permission and has not been run yet.
 
+
+## An opening book: a plan for every opposing lead (2026-10-17, the owner's idea)
+
+`pogo/openings.py` (`Booked` wraps any player with a book {their lead: plan}) and `scripts/openings.py`. Plans: stay
+in; swap to either team-mate at once or after 2, 4 or 8 fast moves; throw our first charged move, then swap. Each of
+the top 50 leads (their back two from listed teams holding it, 70%, else random), 200 battles per plan, trained bot
+with shifted habits on both sides; a plan is kept if it beats staying in by more than its margin. For Melmetal /
+Altaria / Jellicent (`runs/openings_1.out`, `data/openings/melmetal-altaria-jellicent.json`) 20 of 50 leads got a
+plan, e.g. Stunfisk: swap to Jellicent at once; Hippowdon: swap to Altaria at once; Melmetal, Ninetales: two fast
+moves then Jellicent; Clodsire, Deoxys-D: four fast moves then Altaria; Araquanid, Feraligatr: throw first then
+Jellicent. **Check on 3,000 fresh battles: 56.0% ± 1.8 with the book, 53.8% ± 1.8 without, +2.2 ± 0.9 points.**
+The per-lead gains (+8 to +32) are the best of nine plans each and so flattered; the fresh check is the number. Not
+yet in the book: Cramorant and Mimikyu leads (see below), and books for other teams.
+
+## Team shapes, and PvPoke's public team data (2026-10-17, the owner's rule)
+
+The owner: balanced teams (ABC, ABB) are common, BAB and AAA are not. `pogo/teamshape.py` gives each Pokémon a
+letter by its one-on-one record (two share a letter when their records against the pool correlate 0.3 or more) and
+draws opposing teams by shape (`shaped_drawer`, `pogo.teamlist.drawer(style="shaped")`).
+
+Public data: PvPoke publishes usage from its training battles (players and bots at Elite and Champion; 14,540
+Great League teams, updated 2026-10-17): each Pokémon's games, the best-scoring teams with 20+ games, and the 37
+hand-made teams its bots bring. Saved in `data/pvpoke_training_1500.json`; `scripts/pvpoke_teams.py` →
+`runs/pvpoke_teams.out`. No official GBL usage or tournament team lists were found (Silph and Pikalytics pages seen
+are predictions or not Pokémon GO data).
+
+- **Our opponent pool misses the two most-used Pokémon.** Cramorant (8.5% of team slots, the lead in 16% of listed
+  team games) and Mimikyu (8.0%) are left out of `gd.meta()` because they change form; Melmetal (8.5%) and Tinkaton
+  (6.2%) are in. Our pool holds 60% of team slots, 76% with the form-changers; Morpeko, Jumpluff and Lickilicky
+  (1.1, 1.0, 0.6%) are not in our top 50 at all. Every model and measurement so far has met neither Cramorant nor
+  Mimikyu.
+- **Shapes** (letters over 65 Pokémon: our pool with form-changers plus everything PvPoke lists, one-on-ones in
+  `data/matchups_wide.json`): listed teams ABC 94 / ABB 6 / AAB 0 / AAA 0 (98 / 2 / 0 / 0 by games), bot teams
+  92 / 3 / 5 / 0, random threes by usage 73 / 8 / 19 / 0. So the owner's rule holds for AAB and AAA, and ABB is
+  rarer than guessed (0.2 times its random share). `PVPOKE_WEIGHTS` (1, 0.2, 0.05, 0.01) with `usage=pvpoke_usage()`
+  draws 97 / 2 / 1 / 0. The listed teams are the best-scoring ones, so they lean balanced; bots' teams are
+  hand-picked; neither is GBL itself.

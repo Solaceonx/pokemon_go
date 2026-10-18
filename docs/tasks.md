@@ -38,6 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
+| 32 | Opponents as people bring them: add Cramorant and Mimikyu (8.5% and 8% of PvPoke usage, never met so far) to the opposing pool, draw teams with `teamshape.shaped_drawer(..., PVPOKE_WEIGHTS, usage=pvpoke_usage())`, rebuild the opening book with them, and remeasure the bot (status: "Team shapes, and PvPoke's public team data"). Owner to decide whether measurements switch to this pool. | Owner's call, then any machine |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
