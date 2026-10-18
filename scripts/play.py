@@ -292,6 +292,22 @@ class Server:
         self.game = None
         self.new()
 
+    def counter(self, mine):
+        """With --counters, a team that should beat ours, from scripts/counters.py's list for our team."""
+        if not self.args.counters:
+            return None
+        path = ROOT / "data" / "counters" / ("-".join(b.species_id for b in mine) + ".json")
+        if not path.exists():
+            print(f"no list of counters for this team yet; make it with: python3 scripts/counters.py "
+                  f"{' '.join(b.species_id for b in mine)}")
+            return None
+        teams = json.loads(path.read_text())["teams"]
+        if not teams:
+            return None
+        pick = self.rng.choice(teams)
+        print(f"the bot brings {' / '.join(pick['team'])}: it should win {100 * pick['win_chance']:.0f}% (bot against bot)")
+        return [self.gd.default(sid) for sid in pick["team"]]
+
     def team(self, names):
         return [species_build(self.gd, n, self.owned) for n in names]
 
@@ -300,7 +316,7 @@ class Server:
             self.game.stopped = True
             self.game.answered.set()
         mine = self.team(self.args.team) if self.args.team else list(self.owned.values())[:3]
-        theirs = self.team(self.args.foe) if self.args.foe else self.draw(self.rng)
+        theirs = self.team(self.args.foe) if self.args.foe else self.counter(mine) or self.draw(self.rng)
         bot_seed = random.getrandbits(30)
         if self.args.bot == "learner":
             bot = Learner(q=self.net, margin=0.02, seed=bot_seed)
@@ -374,6 +390,8 @@ def main() -> None:
     parser.add_argument("--team", nargs=3, help="your three, lead first (default: the first three in data/owner_team.json)")
     parser.add_argument("--foe", nargs=3, help="the bot's three (default: drawn as in the simulations)")
     parser.add_argument("--bot", choices=("learner", "engine", "planner", "crowd"), default="learner")
+    parser.add_argument("--counters", action="store_true",
+                        help="the bot brings a team that should beat yours (from scripts/counters.py)")
     parser.add_argument("--port", type=int, default=8765)
     parser.add_argument("--charged-pause", type=float, default=2.0,
                         help="real seconds the bot's charged move holds the screen (the game takes about 10; the clock still loses 10)")

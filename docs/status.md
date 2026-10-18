@@ -2243,3 +2243,12 @@ known, with both sides played by the bot with shifted habits; also with each of 
 Melmetal / Altaria / Jellicent against Corviknight / Tinkaton / Mandibuzz, 300 battles: Melmetal leading 38% ± 5,
 Altaria 66% ± 5, Jellicent 81% ± 4. The browser game shows this number for the two teams after each battle and
 saves it.
+
+**Teams that should beat the owner's** (`python3 scripts/counters.py`, 2026-10-17): 543 candidates (the good-team
+list with each lead, and 300 random threes from the top 50) scored against Melmetal / Altaria / Jellicent as the
+browser game builds it, Melmetal leading, both sides the bot with shifted habits; 25 survivors on 300 fresh
+battles each won 88 to 99% (Corviknight / Mandibuzz / Thievul 99%). Saved to
+`data/counters/melmetal-altaria-jellicent.json`; `python3 scripts/play.py --counters` draws the bot's team from it.
+The lead decides much of it: against Annihilape / Mandibuzz / Tinkaton the owner's three win 8% ± 4 with Melmetal
+leading and 87% ± 5 with Altaria (`scripts/lineup.py`). Lopsided numbers like 0% between equal players say the
+bot, on the losing side, rarely finds a way back; games against the owner will show whether a person does.

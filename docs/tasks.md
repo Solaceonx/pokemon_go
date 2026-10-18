@@ -24,7 +24,8 @@ and push that before starting.
 - **Task 26 (learning from losses)** is done: every change it found costs more in won battles than it gains in lost ones.
 - **Play it and learn from it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine`
   for the real-time engine). Every game is saved with its seeds; `python3 scripts/losses.py --played` then
-  finds the bot's decisions that lost its games against you. `python3 scripts/lineup.py A B C --vs D E F` gives
+  finds the bot's decisions that lost its games against you; `--counters` gives the bot a team that should beat
+  yours (`scripts/counters.py`). `python3 scripts/lineup.py A B C --vs D E F` gives
   the win chance of two teams lined up against each other.
 
 ## Open tasks
