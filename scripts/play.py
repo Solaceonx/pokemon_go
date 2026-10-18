@@ -195,11 +195,15 @@ class Game:
             if battle.winner is not None:
                 break
             # A charged move holds the screen: longer for ours, so there is time to see it and choose what next.
+            # The hold starts once the move has landed, so time spent on the shield prompt does not use it up and
+            # a second charged move straight after cannot arrive before the first one's outcome has been seen.
             throwers = {side for _, side, text in battle.log[seen:] if " throws " in text}
             hold = max([self.my_charged_pause] * (0 in throwers) + [self.charged_pause] * (1 in throwers), default=0.0)
             if hold:
                 self.pause_until = time.time() + hold
-            time.sleep(max(0.0, (hold or self.real_turn) - (time.time() - started)))
+                time.sleep(hold)
+            else:
+                time.sleep(max(0.0, self.real_turn - (time.time() - started)))
         if battle.winner is not None and self.lineup_net is not None:
             chance, margin = win_chance(self.lineup_net, self.pool, *self.teams, battles=200, seed=self.seed)
             self.lineup = [round(chance, 3), round(margin, 3)]
