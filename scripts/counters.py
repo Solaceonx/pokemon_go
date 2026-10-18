@@ -7,8 +7,9 @@ Our team is lead first and built as the browser game builds it (the owner's own 
 the browser game's default team. Candidates: every team in the good-team list (data/teams.json) with each of its
 three leading, and random legal threes from the top 50. Each is scored by its win chance against ours with both
 sides played by the trained bot with shifted habits (pogo.lineup), in stages that keep the better ones; the
-survivors are scored again on fresh battles, and those whose chance is above --least are saved, best first, to
-data/counters/<our team>.json.
+survivors are scored again on fresh battles, and those whose chance is between --least and --most are saved,
+best first, to data/counters/<our team>.json. With --most below 1 the stages keep the teams nearest the middle of
+that band instead of the best (--least 0.7 --most 0.9: unfavourable but winnable).
 """
 from __future__ import annotations
 
@@ -91,7 +92,9 @@ def main() -> None:
             for team, chance, n in workers.imap_unordered(score, [(t, battles, args.seed + number) for t in alive], chunksize=4):
                 totals[team][0] += chance * n
                 totals[team][1] += n
-            alive.sort(key=lambda t: -totals[t][0] / totals[t][1])
+            # The best ones, or with --most below 1 the ones nearest the middle of the band asked for.
+            middle = (args.least + args.most) / 2
+            alive.sort(key=lambda t: -totals[t][0] / totals[t][1] if args.most >= 1 else abs(totals[t][0] / totals[t][1] - middle))
             alive = alive[:keep]
             print(f"stage {number}: kept {len(alive)}, best so far {100 * totals[alive[0]][0] / totals[alive[0]][1]:.0f}%", flush=True)
         final = list(workers.imap_unordered(score, [(t, args.final, args.seed + 1000) for t in alive], chunksize=1))
@@ -105,7 +108,7 @@ def main() -> None:
     print(f"\nfresh battles, {args.final} each (their win chance against ours):")
     for t, c, _ in final:
         print(f"  {' / '.join(t):50s} {100 * c:.0f}%")
-    print(f"saved {len(saved)} teams above {100 * args.least:.0f}% to {out.relative_to(ROOT)}")
+    print(f"saved {len(saved)} teams between {100 * args.least:.0f}% and {100 * args.most:.0f}% to {out.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

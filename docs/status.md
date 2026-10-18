@@ -2249,6 +2249,10 @@ list with each lead, and 300 random threes from the top 50) scored against Melme
 browser game builds it, Melmetal leading, both sides the bot with shifted habits; 25 survivors on 300 fresh
 battles each won 88 to 99% (Corviknight / Mandibuzz / Thievul 99%). Saved to
 `data/counters/melmetal-altaria-jellicent.json`; `python3 scripts/play.py --counters` draws the bot's team from it.
+At the owner's request the saved list is now the band below that (`--least 0.7 --most 0.9`, stages keeping the
+teams nearest 80%): 30 teams winning 77 to 89% on 300 fresh battles each, for example Tinkaton / Thievul /
+Galarian Corsola 89%, Corviknight / Guzzlord / Altaria 85%, Quagsire / Azumarill / Thievul 80%. The owner's own
+three with Jellicent leading are in it at 78%.
 The lead decides much of it: against Annihilape / Mandibuzz / Tinkaton the owner's three win 8% ± 4 with Melmetal
 leading and 87% ± 5 with Altaria (`scripts/lineup.py`). Lopsided numbers like 0% between equal players say the
 bot, on the losing side, rarely finds a way back; games against the owner will show whether a person does.
