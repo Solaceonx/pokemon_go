@@ -2,6 +2,8 @@
 // The battle itself runs in play_worker.js (Python, play_api.py); the battle screen is scripts/play/index.html's.
 const ACTIONS = { c0: 1, c1: 2, s0: 3, s1: 4, s2: 5 };
 const STORE = "pvpbot-games";
+// The shared store (scripts/pvpbot_store): every game goes there as well, and again when its notes change. Empty: off.
+const STORE_URL = "";
 const worker = new Worker("play_worker.js");
 const calls = {};
 let callId = 0, INFO = null, BY_NAME = {}, BY_ID = {}, G = null;
@@ -34,6 +36,35 @@ function listGames() {
     ${r.lineup_win_chance ? `· line-up ${Math.round(100 * r.lineup_win_chance[0])}%` : ""}
     ${r.notes ? `<div class="note">${r.notes.replace(/</g, "&lt;")}</div>` : ""}</div>`).join("") : `<div class="small">No games yet.</div>`;
 }
+const unsent = (g) => g.stored !== true && g.stored !== "refused";  // older games, from before the store, count too
+let sending = false;
+async function flush() {  // send every game the store has not confirmed; the rest wait for the next try
+  if (!STORE_URL || sending) return;
+  sending = true;
+  try {
+    for (const r of games().filter(unsent)) {
+      const { stored, ...game } = r;
+      let answer = null;
+      try {
+        const res = await fetch(STORE_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(game) });
+        answer = await res.json();
+      } catch (e) { /* offline or the store is down: try again later */ }
+      if (!answer) break;
+      const list = games(), i = list.findIndex((g) => g.started === r.started && (g.notes || "") === (r.notes || ""));
+      if (i >= 0) { list[i].stored = answer.ok === true ? true : "refused"; keep(list); }  // refused: never resent
+    }
+  } finally { sending = false; }
+  const waiting = games().filter(unsent).length;
+  if ($("store-state")) $("store-state").textContent = waiting ? `They are also sent to the owner as you play; ${waiting} not sent yet, they will be next time.` : "They are also sent to the owner as you play: all of yours have arrived.";
+}
+setInterval(flush, 60000);
+$("notes").addEventListener("change", saveNotes);  // typing notes then closing the tab still keeps them
+addEventListener("pagehide", () => {
+  saveNotes();
+  if (!STORE_URL || !navigator.sendBeacon) return;
+  for (const { stored, ...game } of games().filter(unsent).slice(-5))
+    navigator.sendBeacon(STORE_URL, new Blob([JSON.stringify(game)], { type: "text/plain;charset=utf-8" }));
+});
 $("download").onclick = () => {
   const who = ($("player").value.trim() || "player").replace(/[^A-Za-z0-9_-]/g, "");
   const blob = new Blob([JSON.stringify(games(), null, 1)], { type: "application/json" });
@@ -103,7 +134,7 @@ function saveNotes() {
   if (!G || !G.record) return;
   const list = games(), i = list.findIndex((r) => r.started === G.record.started);
   G.record.notes = $("notes").value;
-  if (i >= 0) { list[i].notes = G.record.notes; keep(list); }
+  if (i >= 0 && (list[i].notes || "") !== G.record.notes) { list[i].notes = G.record.notes; list[i].stored = false; keep(list); flush(); }
 }
 function screen() {
   const s = G.state, now = Date.now();
@@ -153,11 +184,13 @@ async function play(config) {
   rec.started = stamp(G.started);
   rec.player = $("player").value.trim();
   try { localStorage.setItem("pvpbot-player", rec.player); } catch (e) { /* nothing kept */ }
+  rec.stored = false;
   const list = games(); list.push(rec); keep(list);
+  flush();
   G.record = rec;
   G.review = rec.review;  // the advantage over the battle, drawn by the battle screen's own review
   const [chance, margin] = rec.lineup_win_chance;
-  G.endText = `Before anyone decided anything, your line-up wins ${Math.round(100 * chance)}% (± ${Math.round(100 * margin)}) against this one when two equally good bots play it. Saved in this browser; add notes below.`;
+  G.endText = `Before anyone decided anything, your line-up wins ${Math.round(100 * chance)}% (± ${Math.round(100 * margin)}) against this one when two equally good bots play it. ${STORE_URL ? "Sent to the owner and saved in this browser" : "Saved in this browser"}; add notes below.`;
 }
 
 (async () => {
@@ -170,4 +203,5 @@ async function play(config) {
     INFO.top.map((t, i) => `<option value="${i}">${t.team.map(name).join(" / ")}</option>`).join("");
   try { $("player").value = localStorage.getItem("pvpbot-player") || ""; } catch (e) { /* nothing kept */ }
   listGames();
+  flush();
 })();
