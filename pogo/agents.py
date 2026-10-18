@@ -198,7 +198,7 @@ class Planner:
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
                  catch: bool = False, catch_gain: float = 0.2,
                  rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.15,
-                 punish_gain: float | None = None):
+                 punish_gain: float | None = None, fast_first: float = 0.0):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -267,6 +267,11 @@ class Planner:
         self._sac_checked = None
         self.rng = random.Random(_seeds.getrandbits(32) if seed is None else seed)
         self._judged = None  # the matchup last considered for a switch
+        # The owner's observation: many players, above all with a fast move of two turns or more, use one fast move
+        # in a new matchup before swapping out of it. fast_first is the chance of that, drawn once per matchup.
+        self.fast_first = fast_first
+        self._fasted = self._fast_first_for = None  # matchups in which we have fast-moved / drawn the chance
+        self._fast_first_now = False
         # What this opponent has done so far, starting from an assumption worth `belief` observations.
         self._shield_seen = [expect_shield * belief, belief]  # times they shielded, of times they could
         self._bait_seen = [expect_bait * belief, belief]  # times they threw the softer move, of times either could come
@@ -723,6 +728,11 @@ class Planner:
         matchup = (me.active, view.foe.build.uid)
         if matchup == self._judged:
             return None
+        if self.fast_first and mon.build.fast.turns >= 2 and self._fasted != matchup:
+            if self._fast_first_for != matchup:
+                self._fast_first_for, self._fast_first_now = matchup, self.rng.random() < self.fast_first
+            if self._fast_first_now:
+                return None  # one fast move first; the matchup is judged after it
         self._judged = matchup
         slot = self._swap_choice(view)
         return None if slot is None else SWITCH[slot]
@@ -876,7 +886,10 @@ class Planner:
                 return switch
         self._sweeper_slot(view)
         if self.moves:
-            return self._pick_move(view)
+            action = self._pick_move(view)
+            if action == FAST:
+                self._fasted = (view.me.active, view.foe.build.uid)
+            return action
         return _MASHER.act(view)
 
     def replace(self, view: View) -> int:
@@ -953,6 +966,8 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         field=field, safe_weight=rng.choice((0.0, 0.0, 0.35, 0.7)), punish=rng.random() < 0.5,
         expect_shield=min(0.95, max(0.3, rng.gauss(0.7, 0.15))), expect_bait=min(0.9, max(0.1, rng.gauss(0.5, 0.2))),
         seed=rng.getrandbits(32),
+        # The owner: many players use one fast move of two turns or more before swapping out of a new matchup.
+        fast_first=rng.choice((0.0, 0.5, 1.0)),
     )
 
 

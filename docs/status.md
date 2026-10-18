@@ -2256,3 +2256,30 @@ three with Jellicent leading are in it at 78%.
 The lead decides much of it: against Annihilape / Mandibuzz / Tinkaton the owner's three win 8% ± 4 with Melmetal
 leading and 87% ± 5 with Altaria (`scripts/lineup.py`). Lopsided numbers like 0% between equal players say the
 bot, on the losing side, rarely finds a way back; games against the owner will show whether a person does.
+
+## Holes by lead, and a fast move before swapping (2026-10-17, the owner's points)
+
+**Averages hide holes.** The owner: a team that scores well on average can still have no answer to a lead, for
+example Shadow Empoleon / Jellicent / Stunfisk into a Charjabug lead. `scripts/lead_holes.py` plays a team against
+each of the top 50 as the opposing lead (random back two from the top 50, both sides the bot with shifted habits,
+60 battles per lead; `runs/lead_holes_1.out`):
+
+| Team (lead first) | Average over leads | Leads it loses to | Worst leads |
+|---|---|---|---|
+| Shadow Annihilape / Guzzlord / Stunfisk | 63% | 9 of 50 | Galarian Corsola 20%, Shadow Sableye 27%, Sableye 34% |
+| Melmetal / Altaria / Jellicent | 56% | 16 | Stunfisk 13%, Shadow Charjabug 18%, Annihilape 30% |
+| Clefable / Hippowdon / Lapras | 51% | 20 | Corviknight 7%, Shadow Corviknight 7%, Shadow Ninetales 17% |
+| Shadow Empoleon / Jellicent / Stunfisk | 50% | 21 | Thievul 10%, Charjabug 15%, Marowak 18% |
+| Ninetales / Melmetal / Jellicent | 49% | 30 | Shadow Hydreigon 22%, Mantine 27%, Guzzlord 27% |
+
+The team that looked most robust against the two opposing lists (Shadow Empoleon / Jellicent / Stunfisk, about
+62% against both) is only level against random teams by lead, with the Charjabug hole the owner named. Which team
+is best still depends on what the opponents bring; a lead-by-lead table shows where a team breaks.
+
+**A fast move before swapping.** The owner: players, above all with fast moves of two turns or more, often use one
+fast move in a new matchup before swapping out. `Planner(fast_first=p)` does that with chance p per matchup (fast
+moves of 2+ turns only). For our own side it does not help (`rule_trial.py --seed 2701`, `runs/fast_first_trial.out`):
+always 48.9% ± 1.0 head to head, half the time 49.1% ± 0.8; off by default. As a habit of opponents it is now in
+the crowd (`varied_settings`: a third never, a third half the time, a third always), which changes the crowd for
+every later measurement. Against it the trained bot is +10.5 ± 1.6 over the Planner (65.8% against 55.3%, 4,000
+battles, `runs/compare_fast_first_crowd.out`), as before.
