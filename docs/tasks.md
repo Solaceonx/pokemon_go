@@ -25,8 +25,8 @@ and push that before starting.
 - **Play it and learn from it**: `python3 scripts/play.py` is a browser game against the bot (`--bot engine`
   for the real-time engine). Every game is saved with its seeds; `python3 scripts/losses.py --played` then
   finds the bot's decisions that lost its games against you; `--counters` gives the bot a team that should beat
-  yours (`scripts/counters.py`). `python3 scripts/lineup.py A B C --vs D E F` gives
-  the win chance of two teams lined up against each other.
+  yours (`scripts/counters.py`). `python3 scripts/lineup_site.py` opens a page
+  (localhost:8767) for the win chance of any two teams, every lead against every lead.
 
 ## Open tasks
 
