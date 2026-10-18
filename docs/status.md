@@ -2303,3 +2303,30 @@ the trained model and the engine's evaluation (about 0.5 MB; Pyodide and numpy a
   `python3 scripts/import_played.py FILE` puts in `games/played/` for `scripts/losses.py --played`. Checked: a game
   against the trained bot played on the page replays exactly; an engine game replays exactly only if no search was
   cut (each game saves its search times as `bot_searches`).
+
+## Six against six: which three to bring (2026-10-17, the owner's question)
+
+The Play! Pokémon GO format: both players register six and see each other's six; before each game each picks three
+in secret, the first leading. That is a simultaneous zero-sum game with 60 choices a side. `scripts/sixes.py`
+(`pogo/sixes.py`) simulates every choice against every choice (both sides the trained bot with shifted habits, the
+same battles down each column) and solves the table (regret matching+, averaged); the mix is also found on half the
+battles and scored on the other half. Each game is treated on its own: choices that depend on earlier games of a
+set are not modelled.
+
+First case (40 battles for each of 3,600 pairs, 9 minutes on three cores, `runs/sixes_1.out`): the owner's
+Melmetal / Altaria / Jellicent / Stunfisk / Shadow Quagsire / Umbreon (their IVs) against Tinkaton / Shadow Annihilape /
+Corviknight / Mandibuzz / Carbink / Thievul, the Pokémon most common in `data/teams.json`.
+
+- When both sides choose well the owner wins 40% (38% when the mix is scored on battles it was not found on).
+- The opponent's right answer is nearly always the Dark core: Mandibuzz, Thievul and Shadow Annihilape together in
+  75% of their mix, mostly Mandibuzz or Thievul leading.
+- The owner's mix brings Melmetal 97% and Stunfisk 92% of the time, Altaria 58%, Umbreon 36%, Jellicent 18%,
+  Shadow Quagsire never. Leads: Melmetal 27%, Umbreon 33%, Stunfisk 23%, Jellicent 18%.
+- Best single choice without mixing: Stunfisk leading, Melmetal and Altaria behind: 40% against their mix, 22% at worst.
+- The choice that is best on average against a random three of theirs (Stunfisk / Melmetal / Jellicent, 72% on
+  average) gets only 33% against their right answer: averages over the opponent's choices mislead when the opponent
+  chooses too.
+
+So with open sheets the six decides much: one of the owner's six is never worth bringing here, and the six has no good
+answer to a Dark core. Choosing which six to register needs these tables for many sixes against many sixes; one
+table costs 144,000 battles, so that search is for a bigger machine or a cache of three-against-three results.
