@@ -58,7 +58,7 @@ def main() -> None:
     species = []
     for entry in gd.rankings():
         sid = entry["speciesId"]
-        if gd.supported(sid):
+        if any(m in gd.moves for m in entry["moveset"][:1]):
             b = gd.default(sid)
             species.append({"id": sid, "name": b.name, "dex": gd.species[sid]["dex"], "showdown": sprite(gd, b)["showdown"]})
     listed = sorted(json.loads((ROOT / "data" / "teams.json").read_text())["teams"], key=lambda e: -e["score"])[:30]

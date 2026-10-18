@@ -74,8 +74,8 @@ def main() -> None:
     args = parser.parse_args()
     gd = GameData()
     for sp in args.mine + args.vs:
-        if sp not in gd.species or not gd.supported(sp):
-            raise SystemExit(f"unknown or unsupported Pokémon: {sp}")
+        if sp not in gd.species:
+            raise SystemExit(f"unknown Pokémon: {sp}")
     ours, theirs = choices(args.mine), choices(args.vs)
     name = lambda sp: gd.species[sp]["speciesName"]  # noqa: E731
     label = lambda c: f"{name(c[0])} leading, {name(c[1])} and {name(c[2])} behind"  # noqa: E731

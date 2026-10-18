@@ -49,14 +49,13 @@ and push that before starting.
 | 5 | Learn from the tracked games (teams, movesets, habits seen) | Python |
 | 8 | Predict hidden teams from real team combinations | Python, real teams (task 5) |
 | 7 | Opponent stats from CP, move priority and damage | Python |
-| 10 | Form-changing Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) | Python, a browser |
 | 16, 17, 22 | Footage: acceptance work on public VODs, the reserved official sample, whole-VOD splitting | Codex; video access |
 | 15 | Train the bot on the tracker's uncertain picture | **On hold** until real-game testing |
 | 13 | Live loop on the phone | Owner only |
 
 **Done or stopped** (details in `status.md`): 2–4 and 12 (footage to game states, by `scripts/recording/`),
 6 (PvPoke's AI, `pogo/pvpoke_ai.py`), 9 (exact endgames, `pogo/endgame.py`, no significant gain),
-11 (simulator 1.2–1.4× faster), 14 (exploiters gain nothing beyond the margin), 18 (owner's rules),
+10 (form-changing Pokémon, 132 of 132 PvPoke battles; not yet in the training pools), 11 (simulator 1.2–1.4× faster), 14 (exploiters gain nothing beyond the margin), 18 (owner's rules),
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.

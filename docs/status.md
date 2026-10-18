@@ -2351,3 +2351,29 @@ percentiles (400 ms after a charged move, 350 ms after a faint, 2 s for choosing
 With them nothing is cut either (`runs/realtime_timing_measured.out`: 6,748 searched decisions, worst 132 ms, none
 cut). The bigger opening is the 9 s while a charged move plays: only the shield and which move are unknown, so the
 engine could search those few outcomes during it. That matters once a slower, stronger setting is adopted (task 27).
+
+## Form-changing Pokémon in the engine (task 10, 2026-10-17)
+
+Aegislash, Mimikyu, Cramorant and Morpeko now change form in battle as PvPoke's simulator does (its `Battle.js`
+and `Pokemon.js`, read on 17 October):
+
+- **Aegislash** fights in Shield form (fast moves do 1 damage and give 6 energy), takes Blade form just before a
+  charged move (at a level recomputed to fit the league: for the default build, level 22, attack 172.9, defence
+  69.5, health kept at 139) and goes back to Shield form when it shields or switches out.
+- **Mimikyu**: the first unshielded charged move against it does 1 damage (its disguise), then it is Busted for the
+  rest of the battle, with Defence one stage lower, switches included.
+- **Cramorant**: after Surf or Dive it is Gulping (above half health) or Gorging. The next unshielded charged move
+  against it is answered at once by Gulp Missile: 15% of the attacker's maximum health plus 1, unshieldable, even if
+  Cramorant fainted, with Defence -1 (Arrokuda) or Attack -2 (Pikachu) on the attacker; then it is back to normal.
+  Switching out resets it.
+- **Morpeko**: Hangry after its first charged move (Aura Wheel turns Dark) until it switches out. PvPoke never
+  turns it back to Full Belly; `pogo.battle.MORPEKO_TOGGLES` alternates it instead, if the game does that.
+
+`tests/data/pvpoke_forms.txt`: 132 one-on-one battles (each of the four against ten common opponents and each other,
+0 to 2 shields) played by PvPoke's own simulator on pvpoke.com. `python3 scripts/check_pvpoke.py --forms`:
+**132 of 132 reproduced exactly** (130 before matching PvPoke's Morpeko); the original 108 still all match, and the
+speed check's results are identical. Every Pokémon is now built with its forms by default (`allow_forms=True`);
+the pools simulations draw from (`GameData.meta`) still leave the four out unless `forms=True`, so every model and
+result so far stays comparable. The line-up tools (`lineup.py`, `lineup_site.py`, `sixes.py`, the website build)
+list them. The trained bot and the rules have never played them; their predictions (one-on-one outlooks, damage
+counts) ignore form changes.

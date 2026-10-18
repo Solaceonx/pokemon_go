@@ -141,7 +141,7 @@ $("run").onclick = async () => {
       <table>${head}${rows}</table>
       <div class="note">${r.battles} battles a cell (± about ${pct(r.margin)}). Both sides are the trained bot with its habits shifted a little each
       battle, so this is how the two teams do between equally good players, not a promise about any one game. Form-changing
-      Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) are not in the list: the simulator cannot play them.</div></div>`;
+      Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) change form as PvPoke plays them.</div></div>`;
     $("status").textContent = `Done in ${r.seconds}s.`;
   } catch (e) { $("status").textContent = "Something went wrong: " + e; }
   $("run").disabled = false;
@@ -166,7 +166,7 @@ def main() -> None:
     species = []
     for entry in gd.rankings():
         sid = entry["speciesId"]
-        if gd.supported(sid):
+        if any(m in gd.moves for m in entry["moveset"][:1]):
             b = gd.default(sid)
             species.append({"id": sid, "name": b.name, "dex": gd.species[sid]["dex"], "showdown": sprite(gd, b)["showdown"]})
     mine_default = list(owned)[:3]  # the owner's current three, as in data/owner_team.json
