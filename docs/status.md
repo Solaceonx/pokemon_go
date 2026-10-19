@@ -3334,3 +3334,30 @@ fainted Altaria left against a fresh Clodsire (8%) where Jellicent won 75%. The 
 health (33%; no shield 83%), and Corviknight switching to Shadow Annihilape (0%) where Altaria won 54%. Its Moonblasts
 into Jellicent (the owner's note) were not among its losing choices: neutral on Jellicent and its hardest-hitting
 move. Hindsight flatters losses (task 26); these are examples to judge, not rules.
+
+## Bait rates, and calls calibrated to the risk and reward of each bait (2026-10-19, the owner): measured, not adopted
+
+`scripts/bait_rates.py` (`runs/bait_rates.out`): in 4,000 battles on the mixed field, of 29,918 charged moves thrown
+while the defender had a shield and the thrower could pay for both, the softer move came 34% of the time: 30% from
+the trained bot, 47% from the crowd; 57–61% when the softer move would knock out, 20% (bot) and 45% (crowd) when only
+the harder would, 25% and 44% when neither would. Shields and health matter little. Defenders shielded the harder
+move or let the softer through 48% of the time (not shielding a hard hit can be a choice, so this is not an error rate).
+
+The owner: a bait rate calibrated to how risky or rewarding the bait is. As a two-by-two game, the bait rate at
+which the defender is indifferent is p = saves / (saves + wastes) (what shielding the harder move saves, what
+shielding a bait wastes); the shield rate at which the thrower is indifferent is the matching ratio of what the
+harder move adds if taken to what it loses if shielded. `bait="calibrated"` and `guess="calibrated"` start from
+those, move towards the opponent's record (worth `belief` observations), play the mix while the record is within
+0.05, and best-respond once it is not. The trained bot on top, against the current bot, mixed field, 4,000 pairings
+both ways and 4,000 crowd battles (`bot_on_rules.py ... --field mixed`, seed 3101, `runs/bait_calibrated_1.out`):
+
+| | head to head | crowd, paired |
+|---|---|---|
+| both calibrated | 49.2% ± 0.6 | −1.1 ± 0.8 |
+| shield calls only | 49.1% ± 0.6 | −1.1 ± 0.8 |
+| bait choice only | 49.8% ± 0.5 | −0.2 ± 0.2 |
+
+No gain, a small loss from the shield calls. The current defaults stay (`bait="mix"`, already the equilibrium mix
+from the same values; `guess="read"`, a 50% prior read towards the opponent's record). Starting the read from the
+equilibrium and mixing loses against players who are not at it: these opponents bait far less than evenly (the bot
+a quarter of the time), and a fixed 50% that is soon corrected exploits that better than playing the safe mix.

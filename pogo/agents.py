@@ -134,7 +134,11 @@ class Planner:
               the dearer move, so the defender cannot tell which is coming, then throws
               the cheaper; "mix" does the same but weighs all four outcomes and varies;
               "read" does the same but picks by how often this opponent has shielded;
-              "even" does the same but picks at random, half and half.
+              "even" does the same but picks at random, half and half; "calibrated" (the owner: a bait
+              rate calibrated to how risky or rewarding the bait is) starts from the shield rate that would
+              leave us indifferent between the two moves, given what each costs and gains, moves it towards
+              this opponent's record as that builds up, plays the mix while it is close to that, and takes the
+              better move once the record says they shield more or less than that.
     shields:  "always"; "never" (until the last Pokémon); "threshold" shields hits that
               would knock out or take a large share of health; "lookahead" plays the rest
               of the visible battle both ways and shields only if that leaves it better off.
@@ -144,7 +148,10 @@ class Planner:
               shield_matchup_hp sets the maximum share of full health for this rule.
     guess:    for "lookahead", when either charged move could be coming: "worst" assumes
               the harder hit; "mix" weighs all four outcomes and varies; "read" goes by
-              which one this opponent has thrown in that spot before.
+              which one this opponent has thrown in that spot before; "calibrated" starts from the bait rate
+              that would leave us indifferent between shielding and not (what shielding their harder move
+              saves against what shielding a bait wastes: p = saves / (saves + wastes)), moves it towards this
+              opponent's record, plays the mix while it is close, and the better answer once it is not.
     switches: plays out each one-on-one in advance to choose replacements and to leave a
               losing matchup when the switch timer allows.
     good_matchup: blend the saved one-on-one table into those choices. matchup_weight is
@@ -199,11 +206,11 @@ class Planner:
                  catch: bool = False, catch_gain: float = 0.2,
                  rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.4,
                  punish_gain: float | None = None, fast_first: float = 0.0):
-        if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
+        if bait not in ("cheap", "never", "farm", "mix", "read", "even", "calibrated"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
             raise ValueError(f"unknown shield rule {shields!r}")
-        if guess not in ("worst", "mix", "read"):
+        if guess not in ("worst", "mix", "read", "calibrated"):
             raise ValueError(f"unknown guess rule {guess!r}")
         if not 0.0 <= matchup_weight <= 1.0:
             raise ValueError("matchup_weight must be between 0 and 1")
@@ -275,6 +282,7 @@ class Planner:
         # What this opponent has done so far, starting from an assumption worth `belief` observations.
         self._shield_seen = [expect_shield * belief, belief]  # times they shielded, of times they could
         self._bait_seen = [expect_bait * belief, belief]  # times they threw the softer move, of times either could come
+        self._belief, self._prior = belief, (expect_shield, expect_bait)
 
     def clone(self) -> Planner:
         """A copy that will make the same choices from here, including the random ones."""
@@ -353,7 +361,7 @@ class Planner:
                 if short_of(dear):
                     return FAST  # keep the defender guessing: wait until either move could be coming
                 choice = cheap
-                if dear in ready and self.bait in ("mix", "read", "even"):
+                if dear in ready and self.bait in ("mix", "read", "even", "calibrated"):
                     undecided = (cheap, dear)
         else:
             lethal = [k for k in ready if hit[k] >= foe.hp]
@@ -378,10 +386,31 @@ class Planner:
             if self.bait == "read":
                 p = self._shield_seen[0] / self._shield_seen[1]  # how likely they are to shield
                 choice = max(undecided, key=lambda k: p * value[k, True] + (1 - p) * value[k, False])
+            elif self.bait == "calibrated" and self._bait_lean(value, cheap, dear) is not None:
+                choice = self._bait_lean(value, cheap, dear)
             else:
                 odds = solve_2x2(value[cheap, True], value[cheap, False], value[dear, True], value[dear, False])
                 choice = cheap if self.rng.random() < odds else dear
         return CHARGED[choice]
+
+    def _lean(self, seen: list, prior: float, fair: float) -> float | None:
+        """This opponent's rate (of shielding, or of baiting), starting from `fair` instead of the fixed prior and
+        moved by what they have done; None while it is too close to `fair` to choose by (then play the mix)."""
+        done, chances = seen[0] - prior * self._belief, seen[1] - self._belief  # their own record, without the prior
+        q = (self._belief * fair + done) / (self._belief + chances)
+        return None if chances < 1 or abs(q - fair) < 0.05 else q
+
+    def _bait_lean(self, value: dict, cheap: int, dear: int) -> int | None:
+        """The move to throw when this opponent's shield record says which is better; None to play the mix."""
+        gain = value[dear, False] - value[cheap, False]  # what the harder move adds if they take it
+        loss = value[cheap, True] - value[dear, True]  # what throwing it into a shield costs over the bait
+        if gain <= 0 or loss <= 0:
+            return None
+        fair = gain / (gain + loss)  # the shield rate at which both moves are worth the same
+        p = self._lean(self._shield_seen, self._prior[0], fair)
+        if p is None:
+            return None
+        return cheap if p > fair else dear
 
     def _fastest_kill(self, view: View, hit: list[int], hp: int | None = None, energy: int | None = None) -> tuple[int, int]:
         """The shortest way, in turns, to knock their Pokémon out with our own moves alone (no shields left to
@@ -541,6 +570,14 @@ class Planner:
             q = self._bait_seen[0] / self._bait_seen[1]  # how likely the softer move is
             return (q * value[soft.id, True] + (1 - q) * value[hard.id, True]
                     > q * value[soft.id, False] + (1 - q) * value[hard.id, False])
+        if self.guess == "calibrated":
+            saves = value[hard.id, True] - value[hard.id, False]  # what shielding their harder move saves
+            wastes = value[soft.id, False] - value[soft.id, True]  # what shielding a bait throws away
+            if saves > 0 and wastes > 0:
+                fair = saves / (saves + wastes)  # the bait rate at which shielding and not are worth the same
+                q = self._lean(self._bait_seen, self._prior[1], fair)
+                if q is not None:
+                    return q * wastes < (1 - q) * saves  # shield unless baits are likelier than they are worth
         odds = solve_2x2(value[soft.id, True], value[hard.id, True], value[soft.id, False], value[hard.id, False])
         return self.rng.random() < odds
 

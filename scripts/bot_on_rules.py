@@ -26,11 +26,15 @@ from pogo.teamlist import drawer  # noqa: E402
 _s = {}
 
 
-def setup(settings, other=None):
+def setup(settings, other=None, field="usual"):
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
-    _s.update(pool=pool, draw=drawer(gd, pool), q=QNet.load(f"{ROOT}/runs/general-decide/q.npz"), settings=settings, other=other or {})
+    draw = drawer(gd, pool)
+    if field == "mixed":
+        from pogo.teamshape import mixed_field
+        pool, draw = mixed_field(gd)
+    _s.update(pool=pool, draw=draw, field=field, q=QNet.load(f"{ROOT}/runs/general-decide/q.npz"), settings=settings, other=other or {})
 
 
 def bot(evolved, seed):
@@ -41,7 +45,8 @@ def bot(evolved, seed):
 def h2h(job):
     seed, n = job
     r = random.Random(seed)
-    res = compare(lambda: bot(True, r.getrandbits(30)), lambda: bot(False, r.getrandbits(30)), _s["pool"], pairings=n, seed=seed)
+    res = compare(lambda: bot(True, r.getrandbits(30)), lambda: bot(False, r.getrandbits(30)), _s["pool"], pairings=n, seed=seed,
+                  draw=_s["draw"] if _s["field"] == "mixed" else None)
     return res.score, n
 
 
@@ -63,6 +68,11 @@ def mm(v):
 
 
 def main():
+    field = "usual"
+    if "--field" in sys.argv:  # --field mixed: teams as people bring them (pogo.teamshape.mixed_field)
+        k = sys.argv.index("--field")
+        field = sys.argv[k + 1]
+        del sys.argv[k:k + 2]
     settings = eval(f"dict({sys.argv[1]})")  # noqa: S307 - our own command line
     other = eval(f"dict({sys.argv[6]})") if len(sys.argv) > 6 else {}  # the opposing bot's rules; standard if absent
     pairings = int(sys.argv[2]) if len(sys.argv) > 2 else 4000
@@ -70,10 +80,11 @@ def main():
     workers = int(sys.argv[4]) if len(sys.argv) > 4 else 3
     seed = int(sys.argv[5]) if len(sys.argv) > 5 else 3030
     chunk = 50
-    with multiprocessing.get_context("spawn").Pool(workers, initializer=setup, initargs=(settings, other)) as pool:
+    with multiprocessing.get_context("spawn").Pool(workers, initializer=setup, initargs=(settings, other, field)) as pool:
         heads = pool.map(h2h, [(seed * 1000 + k, chunk) for k in range(pairings // chunk)])
         fields = pool.map(crowd, [(seed * 7000 + k, chunk) for k in range(battles // chunk)])
     chunk_scores = [s for s, _ in heads]
+    print(f"{field} field")
     print(f"bot on the first rules vs bot on the second (standard if not given), head to head ({pairings} pairings both ways): "
           "%.1f%% ± %.1f (margin over chunks of 50 pairings)" % mm(chunk_scores))
     evolved = [x for e, _ in fields for x in e]
