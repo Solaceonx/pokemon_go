@@ -3225,22 +3225,32 @@ on fresh battles, no loss on the usual) and is the one to use: `data/openings/me
 (18 of 55 leads get a plan; Cramorant and Mimikyu: stay in). The usual book is the most even across fields, a
 sign that much of what a book learns is about our own team, not the field.
 
-### Task 30, the engine's own settings: interim (2026-10-19, still running)
+### Task 30, the engine's own settings: interim, stopped after 12 of 30 generations (2026-10-19)
 
 `evolve_rules.py --run engine-1 --engine --generations 30 --population 16 --pairings 300` (`runs/engine-1.out`; three
 workers for generation 1, then twelve; `engine_versus.py` with the cache fix). Fitness is head to head against the current
-engine on 300 pairings per candidate, so each score is noisy (about ± 3) and the best of 16 is flattered. After 8 generations:
+engine on 300 pairings per candidate, so each score is noisy (about ± 3) and the best of 16 is flattered.
 
-| Generation | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-|---|---|---|---|---|---|---|---|---|
-| Best | 52.8% | 56.8% | 54.3% | 56.5% | 56.2% | 56.0% | 59.8% | 56.5% |
-| Median | 48.6% | 50.8% | 52.0% | 51.8% | 52.4% | 52.8% | 54.6% | 54.2% |
+| Generation | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Best | 52.8% | 56.8% | 54.3% | 56.5% | 56.2% | 56.0% | 59.8% | 56.5% | 57.2% | 52.8% | 55.9% | 55.2% |
+| Median | 48.6% | 50.8% | 52.0% | 51.8% | 52.4% | 52.8% | 54.6% | 54.2% | 54.5% | 51.2% | 54.0% | 53.6% |
 
-The search is moving towards about 30 imagined battles and a 60-turn look-ahead (the best seen: samples 31, horizon 60,
-edge 0.067, margin 0.028), which is why generations have slowed from under an hour to about two. Caution: task 27 found that
-a longer look-ahead can win head to head without helping against the crowd or PvPoke's AI, and this fitness is head to head
-only, so the final re-score must report all three, and the search time against the live budgets. The plan: stop after
-generation 15, run `--final`, and confirm the best on a fresh seed with `engine_versus.py` (head to head, crowd, PvPoke).
+The median rose to about 54% by generation 7 and has not improved since. The search moved towards about 30 imagined
+battles and a 60-turn look-ahead (the best seen: samples 31, horizon 60, edge 0.067, margin 0.028), so generations slowed
+from under an hour to about two and a half. It was stopped after generation 12 (about 20 hours) to free the machine.
+
+**Not yet established.** Nothing here has been re-scored on fresh battles, and the fitness is head to head only: task 27
+found that a longer look-ahead can win head to head without helping against the crowd or PvPoke's AI. No setting is adopted
+from this run. To finish it, from the repository root (the saved state is in `runs/evolve/engine-1/state.json`):
+
+```bash
+python3 scripts/evolve_rules.py --run engine-1 --engine --workers 12 --generations 30 --population 16 --pairings 300   # resume, or skip
+python3 scripts/evolve_rules.py --run engine-1 --engine --workers 12 --final --final-pairings 600                     # re-score the five best
+```
+
+then confirm the best with `engine_versus.py` on a fresh seed (head to head, crowd, PvPoke) and time it with
+`realtime_trial.py --timing` against the live budgets.
 
 ## Team choice on the mixed field, cross-checked on the usual one (2026-10-18)
 
