@@ -1,0 +1,123 @@
+nice: setpriority: Operation not permitted
+1400 jobs to run on 3 workers
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+  240 results, 1 min
+  485 results, 2 min
+  760 results, 3 min
+  820 results, 4 min
+  890 results, 5 min
+  950 results, 6 min
+  1015 results, 7 min
+  1065 results, 8 min
+  1120 results, 10 min
+  1170 results, 11 min
+  1225 results, 12 min
+  1275 results, 13 min
+  1330 results, 14 min
+  1390 results, 15 min
+  1440 results, 16 min
+  1495 results, 17 min
+  1685 results, 18 min
+  1895 results, 19 min
+  2125 results, 20 min
+  2285 results, 21 min
+  2345 results, 22 min
+  2405 results, 23 min
+  2460 results, 24 min
+  2515 results, 25 min
+  2560 results, 26 min
+  2610 results, 27 min
+  2665 results, 28 min
+  2710 results, 30 min
+  2760 results, 31 min
+  2810 results, 32 min
+  2865 results, 33 min
+  2915 results, 34 min
+  2965 results, 35 min
+  3045 results, 36 min
+  3215 results, 37 min
+  3380 results, 38 min
+  3555 results, 39 min
+  3755 results, 40 min
+  3805 results, 41 min
+  3860 results, 43 min
+  3920 results, 44 min
+  3970 results, 45 min
+  4020 results, 46 min
+  4060 results, 47 min
+  4095 results, 48 min
+  4130 results, 49 min
+  4170 results, 50 min
+  4205 results, 51 min
+  4245 results, 53 min
+  4280 results, 54 min
+  4315 results, 55 min
+  4355 results, 56 min
+  4385 results, 57 min
+  4415 results, 58 min
+  4455 results, 59 min
+  4495 results, 60 min
+  4605 results, 61 min
+  4725 results, 62 min
+  4835 results, 63 min
+  4945 results, 64 min
+  5060 results, 65 min
+  5185 results, 66 min
+  5270 results, 67 min
+  5315 results, 69 min
+  5350 results, 70 min
+  5395 results, 71 min
+  5435 results, 72 min
+  5470 results, 73 min
+  5525 results, 74 min
+  5580 results, 75 min
+  5640 results, 76 min
+  5700 results, 78 min
+  5760 results, 79 min
+  5815 results, 80 min
+  5885 results, 81 min
+  5935 results, 82 min
+  5995 results, 83 min
+  6250 results, 84 min
+  6505 results, 85 min
+  6770 results, 86 min
+  6830 results, 87 min
+  6895 results, 88 min
+  6960 results, 89 min
+
+baseline: the confirmed engine
+  against the crowd: 66.6% ± 4.1
+  against the pvpoke: 76.0% ± 5.3
+  against the reader: 50.8% ± 3.5
+
+candidate 1: heads=throw+swap+mid_swap+replace+shield
+  head to head against the baseline, 500 pairings both ways: 49.2% ± 2.6
+  against the crowd: 64.5% ± 4.2, -2.1 ± 4.3 points on the baseline
+  against the pvpoke: 72.2% ± 5.6, -3.8 ± 6.1 points on the baseline
+  against the reader: 49.1% ± 3.6, -1.7 ± 4.3 points on the baseline
+  search time per searched decision: median 29 ms, 99th percentile 116, worst 230 (this machine)
+
+candidate 2: heads=throw+swap+mid_swap+replace+shield,mix_shield=1
+  head to head against the baseline, 500 pairings both ways: 46.0% ± 2.5
+  against the crowd: 59.7% ± 4.3, -6.9 ± 4.5 points on the baseline
+  against the pvpoke: 71.4% ± 5.6, -4.6 ± 6.2 points on the baseline
+  against the reader: 48.2% ± 3.7, -2.6 ± 4.6 points on the baseline
+  search time per searched decision: median 35 ms, 99th percentile 160, worst 320 (this machine)
+
+candidate 3: mix_switch=1
+  head to head against the baseline, 500 pairings both ways: 41.4% ± 2.6
+  against the crowd: 56.0% ± 4.3, -10.6 ± 5.0 points on the baseline
+  against the pvpoke: 69.8% ± 5.7, -6.2 ± 6.4 points on the baseline
+  against the reader: 41.3% ± 3.7, -9.5 ± 4.8 points on the baseline
+  search time per searched decision: median 49 ms, 99th percentile 290, worst 825 (this machine)
+
+candidate 4: random_hold=1
+  head to head against the baseline, 500 pairings both ways: 50.6% ± 2.5
+  against the crowd: 68.1% ± 4.1, +1.5 ± 2.1 points on the baseline
+  against the pvpoke: 74.8% ± 5.4, -1.2 ± 2.4 points on the baseline
+  against the reader: 47.9% ± 3.5, -2.9 ± 2.3 points on the baseline
+  search time per searched decision: median 31 ms, 99th percentile 110, worst 190 (this machine)
+
+results: runs/engine_versus/mixing-extensions-isolated.json

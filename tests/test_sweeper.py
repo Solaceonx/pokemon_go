@@ -1,7 +1,13 @@
 """The losing-lead setup rule, including its information boundary."""
 import unittest
 
-from pogo.agents import Masher, Planner, duel
+from pogo.agents import Masher, Planner as _Planner, duel, STANDARD_RULES
+
+
+def Planner(**settings):
+    """These tests pin rule mechanisms down under the rulebook's standard values (pogo.agents.STANDARD_RULES), not
+    the evolved ones that became the default on 2026-10-19."""
+    return _Planner(**{**STANDARD_RULES, **settings})
 from pogo.battle import SWITCH, Battle, Mon
 from pogo.gamedata import GameData
 

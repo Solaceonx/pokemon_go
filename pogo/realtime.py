@@ -143,3 +143,10 @@ class RealTime(Engine):
         slot = self._timed(lambda: super(RealTime, self).replace(view), "replacing a fainted Pokémon", PAUSE, self.replace_ms)
         self._last = "faint"
         return slot
+
+    def shield(self, view, foe_energy):
+        # Advice requested inside another search shares its deadline; an actual shield prompt has a pause.
+        if self._deadline is not None or "shield" not in self.heads:
+            return super().shield(view, foe_energy)
+        return self._timed(lambda: super(RealTime, self).shield(view, foe_energy),
+                           "incoming charged move", PAUSE, self.after_charged_ms)

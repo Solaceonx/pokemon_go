@@ -37,14 +37,14 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
+| **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **33** | **Retrain the bot's networks: form inputs, two play-outs per option, mixed opponents (one job)** — Marco | Marco's machine, 4 workers, ~7 h |
 | 32 | Opponents as people bring them: **done 2026-10-18.** The engine's edge holds on the PvPoke field (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu. Owner's rule: realistic but not overfit, so new measurements, team choice and books use `--field mixed` and must not lose on `--field standard`. Opening book on the mixed field: +5.2 ± 1.1 there, +1.2 ± 0.7 on the usual (the PvPoke-only book is overfit). Team choice on the mixed field, cross-checked: the owner's three are best with Jellicent leading (59.4% mixed, 71.2% usual); Vigoroth-lead winners are overfit. Answers to every arrival (`scripts/answers.py`) add nothing beyond the opening book. Open: an opening book for a Jellicent lead. | Python |
-| **25** | **Let the engine search shield decisions** — Marco | Big machine |
-| **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
-| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
-| **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
-| **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
+| **25** | **Let the engine search shield decisions** — Marco; measured 2026-10-18: no gain, keep off | Done; results in `status.md` |
+| **28** | **Opponents in the look-ahead that are not our own bot** — Marco; measured, not adopted: outside gains but fresh head-to-head regression | Complete, 2026-10-18 |
+| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco; done 2026-10-18: no confirmed gain | Done |
+| **30** | **Evolve the rulebook and the engine's settings** — Marco; rulebook done 2026-10-18: **evolved rules confirmed** (54.0% ± 0.9 alone, bot on top 51.6% ± 0.8), **made the default 2026-10-19 (owner)**; the crowd keeps the standard values (`STANDARD_RULES`); the engine-settings run (`engine-1`) stopped after 12 of 30 generations, not yet re-scored (status.md) | Engine part paused |
+| **31** | **Self-play improvement loop** — Marco; done 2026-10-18: round 1 predicts better but plays no better (49.2% ± 1.5); stopped | Done |
 | 23 | The engine in real time: built; pauses measured from recordings and set as defaults; nothing cut on the owner's Mac. Open: search the shield and move outcomes during the 9 s a charged move plays (needed if task 27 adopts a slower setting) | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
@@ -77,9 +77,8 @@ is what limits them (status: "Is the network too small? No"). One run changes al
 - `--start runs/general-decide/q.npz`: the current model (widened with zero weights) pilots the first round, so the
   first positions come from a good player. Every round still fits a new network on all examples.
 
-**Before.** Merge `engine-batch` into `main` first. If the owner has made `EVOLVED_RULES` the default by then, this
-run trains on those rules without any change here (the bot's networks sit on top of the rules); if not, leave the
-rules alone, and retrain on them later only after that decision.
+**Before.** Done 2026-10-19: `engine-batch` is merged into `main`, and the evolved rulebook is the default (the
+owner's yes), so this run trains the networks on top of it. Pull first.
 
 **Run** (4 workers, `nice`; about 4 h collecting, 1 h fitting and validating; saves after every round):
 
@@ -305,7 +304,7 @@ deadline falls back to the bot's pick), the change to `play.py`, and a table in 
 15% of searched decisions; if those are mostly where the bot's own values for the options are close,
 skipping the rest saves most of the time. `scripts/engine_habits.py` records what is needed to check.
 
-## 27. Give the engine the time it has — Marco
+## 27. Give the engine the time it has — Marco: evaluator-cache isolation fixed; corrected measurements running
 
 **Why.** The engine's settings (4 imagined battles per option, 20 turns ahead) were chosen when every decision had to
 be quick. Live it has 300 ms (unforeseen decisions) to 2,300 ms (during a 5-turn fast move) and uses 18 ms on the
@@ -321,7 +320,17 @@ median. 40 turns ahead was only ever tried with the cheap stand-in players insid
 **Done when.** The table is in `status.md`; the best setting is confirmed on a fresh seed (2,000 or more pairings) and
 adopted if it beats the current engine head to head beyond the margin and is not worse against the crowd or PvPoke's AI.
 
-## 28. Opponents in the look-ahead that are not our own bot — Marco
+## 28. Opponents in the look-ahead that are not our own bot — Marco; measured 2026-10-18, not adopted: fresh head-to-head regression
+
+**Result.** Calibrated and measured all four run-sheet settings, the stronger human-style attempt and the
+v2 team prior. Fixed a shared evaluator cache that made the original harness depend on worker job order,
+then reran all six. The selected mixture + profiling gained +3.4 ± 2.1 crowd points and +5.6 ± 2.6 PvPoke
+points on fresh seed 280281, but scored 48.4% ± 1.3 against the current engine and failed the adoption rule.
+No playing defaults changed. Human-style and v2-prior extensions added no gain beyond their margins.
+Dedicated timing: median 24.41 ms (95% interval 22.69–26.02), 99th percentile 96.82 ms (91.05–101.69),
+observed maximum 172.66 ms; no cuts or fallbacks in 6,974 searches. All results, including invalid exploratory
+runs and the unchanged trained-bot edge, are in [status.md](status.md#task-28-mixed-look-ahead-opponents-and-listed-teams-2026-10-18)
+and [the exact command log](../runs/task28/commands.txt). Final suite: 228 tests, seven skips; PvPoke 108/108.
 
 **Why.** Inside the look-ahead every opponent is the trained bot (`Engine._look`, `rollout="bot"`). That is why the
 engine wins 65% against the bot but only +5.4 points more than the bot against the crowd. People do not play like
@@ -345,7 +354,7 @@ holding everyone seen so far.
 on a fresh seed and not worse head to head against the current engine beyond the margin (it may lose some of its
 edge against the bot itself; report it).
 
-## 29. Mixed choices at simultaneous moments, and plenty of randomisation — Marco
+## 29. Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain — Marco
 
 **Why.** Both players choose at once, every turn. The engine always takes the single best-looking option, so a player
 who reads it (when it baits, when it shields, when it throws) can exploit it. The owner wants it hard to read: mix at
@@ -409,7 +418,15 @@ each game ended, a new evaluation fitted on all rounds so far with a tenth of th
 **Done when.** Each adopted round beats the previous engine head to head beyond the margin on a fresh seed and is
 not worse against the crowd or PvPoke's AI; `status.md` has every round, adopted or not.
 
-## 25. Let the engine search shield decisions — Marco
+## 25. Let the engine search shield decisions — Marco — measured 2026-10-18: no gain, keep off
+
+**Result.** The full run-sheet comparison (seed 2701, 2,000 head-to-head pairings both ways, 2,000 crowd
+battles and 1,000 PvPoke battles per setting) found 49.2% ± 1.3 head to head, −2.4 ± 2.2 points against
+the crowd and −3.2 ± 3.0 against PvPoke. All margins are 95%. No gain, so no fresh-seed strength
+confirmation or promotion. `realtime_trial.py --timing 300 --workers 3 --seed 2501` measured both settings;
+with shields enabled, shield searches took 26 / 70 / 94 ms median / 99th / worst, with no cuts or fallbacks.
+`RealTime` now times and bounds shield searches, and the timing script accepts `--heads`.
+Full results and exact commands are in `status.md` and `runs/task25/commands.txt`.
 
 **Built (2026-10-17):** `heads=throw+swap+mid_swap+replace+shield` (`Engine._land_their_throw`: the move drawn from
 those the attacker can afford, the cheaper as often as this opponent has baited, the imagined battle starting just

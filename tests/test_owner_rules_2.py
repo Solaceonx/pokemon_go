@@ -2,7 +2,13 @@
 beats several of a team we have seen in full."""
 import unittest
 
-from pogo.agents import Masher, Planner
+from pogo.agents import Masher, Planner as _Planner, STANDARD_RULES
+
+
+def Planner(**settings):
+    """These tests pin rule mechanisms down under the rulebook's standard values (pogo.agents.STANDARD_RULES), not
+    the evolved ones that became the default on 2026-10-19."""
+    return _Planner(**{**STANDARD_RULES, **settings})
 from pogo.battle import CHARGED, FAST, SWITCH, Battle, Mon, damage
 from pogo.gamedata import GameData
 

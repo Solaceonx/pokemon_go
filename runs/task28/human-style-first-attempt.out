@@ -1,0 +1,56 @@
+nice: setpriority: Operation not permitted
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/check_human_style.py", line 42, in job
+    ds = decisions(folder)
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/real_decisions.py", line 80, in decisions
+    states, looks = lines(folder, "states.jsonl"), lines(folder, "observations.jsonl")
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/real_decisions.py", line 48, in lines
+    with opener(path, "rt", encoding="utf-8") as f:
+         ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/gzip.py", line 66, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/gzip.py", line 203, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+                               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/marco/Developer/pokemon_go-wt/e28/games/screenrecording-10-10-2026-03-05-46-1/states.jsonl.gz'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/check_human_style.py", line 115, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/check_human_style.py", line 91, in main
+    games = list(workers.imap(job, [(f, args.repeats, args.seed) for f in folders]))
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 873, in next
+    raise value
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/marco/Developer/pokemon_go-wt/e28/games/screenrecording-10-10-2026-03-05-46-1/states.jsonl.gz'

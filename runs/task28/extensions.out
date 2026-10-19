@@ -1,0 +1,45 @@
+nice: setpriority: Operation not permitted
+2600 jobs to run on 3 workers
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+  240 results, 1 min
+  480 results, 2 min
+  725 results, 3 min
+  980 results, 4 min
+  1220 results, 5 min
+  1470 results, 6 min
+  1720 results, 7 min
+  1950 results, 8 min
+  2270 results, 9 min
+  2600 results, 10 min
+  2930 results, 11 min
+  3045 results, 12 min
+  3100 results, 13 min
+  3170 results, 14 min
+  3230 results, 15 min
+  3290 results, 17 min
+Process SpawnPoolWorker-2:
+Process SpawnPoolWorker-1:
+Process SpawnPoolWorker-3:
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 856, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/engine_versus.py", line 219, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marco/Developer/pokemon_go-wt/e28/scripts/engine_versus.py", line 179, in main
+    for kind, spec, out, searches in pool.imap_unordered(job, plan):
+                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 861, in next
+    self._cond.wait(timeout)
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/threading.py", line 359, in wait
+    waiter.acquire()
+    ~~~~~~~~~~~~~~^^
+KeyboardInterrupt

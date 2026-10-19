@@ -1,0 +1,27 @@
+nice: setpriority: Operation not permitted
+real-time engine, pauses: defaults (pogo/realtime.py)
+searched heads: throw+swap+mid_swap+replace+shield
+
+--- timing: 300 battles against the crowd
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+8759 searched decisions; search time median 27 ms, 99th percentile 116, worst 202
+cut short by the deadline 0.0%, no complete round (trained bot's pick) 0.0%
+wait at the moment of decision: median 0 ms, 99th percentile 29, worst 107; decisions with any wait 2.4%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   22% |    300ms |     26 |  125 |   173 |      0.0% |       0.0%
+predicted, fast move of 2      | predicted  |   22% |    800ms |     32 |  120 |   200 |      0.0% |       0.0%
+shielding a charged move       | pause      |   21% |   2000ms |     26 |   70 |    94 |      0.0% |       0.0%
+a charged move came            | pause      |   10% |   2000ms |     27 |  110 |   191 |      0.0% |       0.0%
+predicted, fast move of 3      | predicted  |    6% |   1300ms |     30 |  148 |   202 |      0.0% |       0.0%
+after our charged move         | pause      |    4% |   2000ms |     16 |   97 |   160 |      0.0% |       0.0%
+start                          | pause      |    3% |   2000ms |     53 |   79 |    84 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    3% |   1000ms |     18 |   42 |    53 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |   1000ms |     17 |   50 |   102 |      0.0% |       0.0%
+they switched                  | unforeseen |    2% |    300ms |     28 |   89 |    97 |      0.0% |       0.0%
+a faint came                   | pause      |    2% |   1000ms |     17 |  100 |   133 |      0.0% |       0.0%
+predicted, fast move of 4      | predicted  |    1% |   1800ms |     21 |  150 |   159 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     12 |   92 |   107 |      0.0% |       0.0%
+mispredicted                   | unforeseen |    0% |    300ms |      4 |    4 |     4 |      0.0% |       0.0%

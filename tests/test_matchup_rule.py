@@ -3,7 +3,13 @@ import random
 import unittest
 from unittest.mock import patch
 
-from pogo.agents import Planner, varied_settings
+from pogo.agents import Planner as _Planner, varied_settings, STANDARD_RULES
+
+
+def Planner(**settings):
+    """These tests pin rule mechanisms down under the rulebook's standard values (pogo.agents.STANDARD_RULES), not
+    the evolved ones that became the default on 2026-10-19."""
+    return _Planner(**{**STANDARD_RULES, **settings})
 from pogo.battle import SWITCH, Battle
 from pogo.gamedata import GameData
 
@@ -82,6 +88,8 @@ class GoodMatchup(unittest.TestCase):
     def test_confirmed_setting_is_default_and_usual_in_the_crowd(self):
         self.assertTrue(Planner().good_matchup)
         self.assertEqual(Planner().matchup_weight, 0.75)
+        self.assertEqual(_Planner().matchup_weight, 0.741)  # the evolved default
+        self.assertEqual(varied_settings(random.Random(0))["matchup_weight"], 0.75)  # the crowd as before
         rng = random.Random(18)
         enabled = sum(varied_settings(rng)["good_matchup"] for _ in range(1000))
         self.assertGreater(enabled, 750)

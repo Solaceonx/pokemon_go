@@ -18,5 +18,10 @@ runs/teams_first_pass.json
 *.MP4
 *.part
 *.incomplete*
+# engine_versus.py checkpoints hold every battle and every search time (megabytes); the printed summaries
+# and exact commands are kept as small .out files under runs/.
+runs/engine_versus/*.json
+# Self-play positions from selfplay_eval.py (its command makes them again).
+runs/selfplay/*/positions_*.npz
 # the website store URL and read key (scripts/pvpbot_store)
 .pvpbot_store.json

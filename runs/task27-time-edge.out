@@ -1,0 +1,125 @@
+nice: setpriority: Operation not permitted
+1800 jobs to run on 7 workers
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+  585 results, 1 min
+  1250 results, 2 min
+  1505 results, 3 min
+  1545 results, 4 min
+  1580 results, 5 min
+  1620 results, 6 min
+  1660 results, 7 min
+  1700 results, 8 min
+  1745 results, 10 min
+  1795 results, 11 min
+  1835 results, 12 min
+  1870 results, 13 min
+  1915 results, 14 min
+  1950 results, 15 min
+  1990 results, 16 min
+  2035 results, 17 min
+  2075 results, 19 min
+  2120 results, 20 min
+  2155 results, 21 min
+  2195 results, 22 min
+  2230 results, 23 min
+  2265 results, 24 min
+  2305 results, 25 min
+  2350 results, 26 min
+  2395 results, 28 min
+  2430 results, 29 min
+  2480 results, 30 min
+  2545 results, 31 min
+  2655 results, 32 min
+  2745 results, 33 min
+  2850 results, 34 min
+  2945 results, 35 min
+  3040 results, 36 min
+  3135 results, 37 min
+  3230 results, 38 min
+  3325 results, 39 min
+  3430 results, 40 min
+  3535 results, 41 min
+  3670 results, 42 min
+  3790 results, 43 min
+  3920 results, 44 min
+  4005 results, 46 min
+  4045 results, 47 min
+  4080 results, 48 min
+  4120 results, 49 min
+  4160 results, 50 min
+  4195 results, 51 min
+  4240 results, 52 min
+  4270 results, 54 min
+  4295 results, 55 min
+  4335 results, 56 min
+  4380 results, 57 min
+  4410 results, 58 min
+  4445 results, 59 min
+  4480 results, 60 min
+  4525 results, 61 min
+  4560 results, 62 min
+  4595 results, 63 min
+  4625 results, 64 min
+  4660 results, 65 min
+  4700 results, 67 min
+  4735 results, 68 min
+  4775 results, 69 min
+  4815 results, 70 min
+  4850 results, 71 min
+  4895 results, 72 min
+  4930 results, 73 min
+  4970 results, 74 min
+  5040 results, 76 min
+  5135 results, 77 min
+  5235 results, 78 min
+  5330 results, 79 min
+  5420 results, 80 min
+  5530 results, 81 min
+  5610 results, 82 min
+  5695 results, 83 min
+  5790 results, 84 min
+  5880 results, 85 min
+  5985 results, 86 min
+  6100 results, 87 min
+  6235 results, 88 min
+  6345 results, 89 min
+  6465 results, 91 min
+  6505 results, 92 min
+  6545 results, 93 min
+  6580 results, 94 min
+  6615 results, 95 min
+  6660 results, 96 min
+Process SpawnPoolWorker-5:
+Process SpawnPoolWorker-2:
+Process SpawnPoolWorker-3:
+Process SpawnPoolWorker-6:
+Process SpawnPoolWorker-1:
+Process SpawnPoolWorker-7:
+Process SpawnPoolWorker-4:
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 856, in next
+    item = self._items.popleft()
+IndexError: pop from an empty deque
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/marco/Developer/pokemon_go-wt/e27/scripts/engine_versus.py", line 217, in <module>
+    main()
+    ~~~~^^
+  File "/Users/marco/Developer/pokemon_go-wt/e27/scripts/engine_versus.py", line 177, in main
+    for kind, spec, out, searches in pool.imap_unordered(job, plan):
+                                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/multiprocessing/pool.py", line 861, in next
+    self._cond.wait(timeout)
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/threading.py", line 359, in wait
+    waiter.acquire()
+    ~~~~~~~~~~~~~~^^
+KeyboardInterrupt

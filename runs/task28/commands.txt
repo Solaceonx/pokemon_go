@@ -1,0 +1,161 @@
+Task 28 measurements, 2026-10-17/18
+Working directory: /Users/marco/Developer/pokemon_go-wt/e28
+Interpreter: /Users/marco/Developer/pokemon_go/.venv/bin/python
+Every simulation pool uses --workers 3; numerical-library threads are set to one.
+All long commands request nice -n 10. The sandbox rejects further priority changes;
+the jobs retain inherited nice=15 through pogo.arena.low_priority().
+
+PRE-FLIGHT, BEFORE REPOSITORY CHANGES
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests
+Printed: Ran 219 tests in 7.925s; FAILED (errors=2, skipped=7).
+Both errors were PermissionError from scripts/losses.py setup(), os.nice(10).
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+Printed: 108 of 108 PvPoke battles reproduced exactly.
+
+The first process-local test retry caught PermissionError but called os.nice(0)
+as its fallback; that is also denied. It printed Ran 219 tests in 7.635s;
+FAILED (errors=2, skipped=7). The successful process-local retry was:
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python -c 'import os, runpy, sys
+original_nice = os.nice
+def sandbox_nice(increment):
+    try:
+        return original_nice(increment)
+    except PermissionError:
+        return os.getpriority(os.PRIO_PROCESS, 0)
+os.nice = sandbox_nice
+sys.argv = ["unittest", "discover", "tests"]
+runpy.run_module("unittest", run_name="__main__")'
+Printed: Ran 222 tests in 7.912s; OK (skipped=7).
+No repository code was changed for these retries.
+
+ORIGINAL RUN SHEET
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/calibrate_styles.py --battles 4000 --workers 3 > /tmp/task28-calibration-original.out 2>&1
+Completed; copied the log to runs/task28/calibration-original.out and the generated
+data/opponent_styles.json to runs/task28/opponent_styles-original.json.
+The original script printed rounded rates without margins. The later rerun adds
+exact counts and 95% margins across battles without changing the rates used by search.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --candidates 'opponents=mix' 'opponents=mix,profile=1' 'unseen=teams' 'opponents=mix,profile=1,unseen=teams' > runs/task28/opponents.out 2>&1
+Completed on default seed 2701: 4600 jobs; all 23,000 result rows saved (31,000 battles).
+Full printed scores and times: runs/task28/opponents.out.
+Checkpoint: runs/engine_versus/opponents.json.
+The hashes in runs/task28/original-inputs.json were verified unchanged after the run.
+
+CODE CHECKS AFTER THE ORIGINAL RUN
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests > runs/task28/tests-options.out 2>&1
+Printed: Ran 227 tests in 10.625s; OK (skipped=7).
+scripts/losses.py now uses the existing low_priority() fallback, so no wrapper is needed.
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py > runs/task28/pvpoke-options.out 2>&1
+Printed: 108 of 108 PvPoke battles reproduced exactly.
+
+HUMAN-STYLE AUDIT
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_human_style.py --workers 3 --repeats 16 --seed 28028 --save runs/task28/human-style.json > runs/task28/human-style.out 2>&1
+First attempt failed because the folder glob included an untracked/raw-only folder
+without states.jsonl. Its full output is preserved as runs/task28/human-style-first-attempt.out.
+Discovery was corrected to the exact saved development-summary stems. The identical
+command then completed on 15 Henry clips and four owner recordings, with no official footage.
+Full printed agreement, hold rates and clustered 95% margins: runs/task28/human-style.out.
+The best nondefault setting on Henry's throw agreement was frozen in
+runs/task28/extension-plan.json: hold_cost=1.5, farm=True, farm_cost=0.7.
+Its agreement gains did not exceed their margins on either Henry or the owner.
+
+CALIBRATION WITH UNCERTAINTY AND RESUMABLE CHECKPOINTS
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/calibrate_styles.py --battles 4000 --workers 3 --tag task28-original > runs/task28/calibration-with-margins.out 2>&1
+Completed all 320 chunks. Verified the "styles" object exactly equals the original calibration.
+Printed shield / bait rates with 95% margins (whole-battle ratio estimates):
+bot 36.2% ± 0.5 / 55.9% ± 0.9; varied 40.7% ± 0.6 / 61.4% ± 0.9;
+human 38.6% ± 0.5 / 59.4% ± 0.9; PvPoke 96.4% ± 0.4 / 56.0% ± 1.1.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/calibrate_styles.py --battles 4000 --workers 3 --tag task28-original > runs/task28/calibration-resume-check.out 2>&1
+Printed: 0 calibration chunks to run on 3 workers; identical rates and margins.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/calibrate_styles.py --battles 4000 --workers 3 --tag task28-human --human-settings '{"hold_cost":1.5,"farm":true,"farm_cost":0.7}' --output runs/task28/opponent_styles-human.json > runs/task28/calibration-human.out 2>&1
+Completed all 320 chunks. Human shield 38.5% ± 0.5 (7546/19613), bait 59.8% ± 0.9 (9515/15904).
+Other styles reproduced the original rates exactly. The original calibration file was preserved.
+
+EXTENSIONS, SAME SELECTION BATTLES
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-extensions --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --seed 2701 --candidates 'opponents=mix,profile=1,unseen=teams,style_file=runs/task28/opponent_styles-human.json' 'opponents=mix,profile=1,unseen=teams,team_file=data/teams_v2.json' > runs/task28/extensions.out 2>&1
+The tested structures and the selection rule were frozen beforehand in extension-plan.json;
+source/model/data hashes are in extension-inputs.json. Full output: extensions.out.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-isolated --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --seed 2701 --candidates opponents=mix opponents=mix,profile=1 unseen=teams opponents=mix,profile=1,unseen=teams opponents=mix,profile=1,unseen=teams,style_file=runs/task28/opponent_styles-human.json opponents=mix,profile=1,unseen=teams,team_file=data/teams_v2.json > runs/task28/isolated.out 2>&1
+
+REPRODUCIBILITY CORRECTION (before the corrected grid above)
+
+The unchanged baseline differed across the two seed-2701 runs: 142/2000 crowd
+outcomes and 43/1000 PvPoke outcomes. A direct two-team Evaluator.features check
+found stale matchup features at indices 33, 37 and 41. The shared Evaluator in
+engine_versus cached matchup values across unrelated teams. The extension run was
+interrupted with 3290 saved rows; its partial results and traceback are preserved.
+The first grid and partial extension are exploratory only, invalid for adoption.
+The comparison and timing harnesses now share only model weights, giving each
+player a fresh evaluator cache; the engine policy within a game is unchanged.
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests > runs/task28/tests-isolated.out 2>&1
+Printed: Ran 228 tests in 10.779s; OK (skipped=7).
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py > runs/task28/pvpoke-isolated.out 2>&1
+Printed: 108 of 108 PvPoke battles reproduced exactly.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task28-repro.py > runs/task28/reproducibility.out 2>&1
+Printed: All 30 battle scores reproduce exactly after reversing job order in the same 3-worker pool.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python runs/task28/batch.py > runs/task28/batch.out 2>&1
+Runs the corrected six-candidate grid, freezes the choice, confirms with seed 280281,
+times with seed 280282, and compares both engines with the trained bot on seed 280283.
+Each child command is appended here automatically before execution. Input hashes
+are checked between every stage; no source/model edits are allowed during the batch.
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-confirm --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --seed 280281 --candidates opponents=mix,profile=1 > runs/task28/confirmation.out 2>&1
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 300 --workers 3 --seed 280282 --settings opponents=mix,profile=1 --save runs/task28/timing.json > runs/task28/timing.out 2>&1
+
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-bot-confirm --baseline bot --workers 3 --pairings 1000 --crowd 0 --pvpoke 0 --seed 280283 --candidates '' opponents=mix,profile=1 > runs/task28/bot-confirmation.out 2>&1
+
+COMPLETED RESULTS
+
+Corrected grid: all 33,000 result rows, 45,000 battles, seed 2701.
+Full output: isolated.out; compact scores and per-battle outcomes:
+opponents-isolated-summary.json. Frozen choice: opponents=mix,profile=1.
+All 22 frozen source/model/data hashes match after the complete batch.
+
+Fresh confirmation (seed 280281, 2,000 mirrored pairs / 2,000 crowd / 1,000 PvPoke):
+baseline crowd 70.5% ± 2.0; PvPoke 76.3% ± 2.6.
+selected head to head 48.4% ± 1.3; crowd 73.9% ± 1.9, +3.4 ± 2.1 points;
+PvPoke 81.9% ± 2.4, +5.6 ± 2.6 points. All margins 95%.
+Fails adoption because its head-to-head upper 95% limit is 49.644%, below 50%.
+Full printed output: confirmation.out. No playing defaults adopted.
+
+Dedicated timing (seed 280282, 300 battles, 6,974 searched decisions):
+printed median 24 ms / 99th percentile 97 ms / observed maximum 173 ms.
+Exact median 24.41 ms, 95% interval [22.69, 26.02]; 99th 96.82 ms [91.05, 101.69].
+No deadline cuts or fallbacks; one-sided upper 95% bound on battles affected 0.994% each.
+Decisions requiring wait 2.72% [2.37, 3.10]; observed maximum wait 85.77 ms.
+Full per-cause output: timing.out; exact summary: timing.json.
+
+Trained-bot check (seed 280283, 1,000 mirrored pairings per engine):
+current engine 63.9% ± 1.8; selected 64.1% ± 1.8; paired change +0.2 ± 2.1 points.
+No measurable change in its edge against the bot. All margins 95%.
+Descriptive search median / 99th / maximum: current 33 / 114 / 239 ms;
+selected 31 / 103 / 231 ms. Full output: bot-confirmation.out.
+Reader was not used in task 28.
+
+FINAL CHECKS
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests > runs/task28/tests-final.out 2>&1
+Printed: Ran 228 tests in 10.503s; OK (skipped=7).
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py > runs/task28/pvpoke-final.out 2>&1
+Printed: 108 of 108 PvPoke battles reproduced exactly.
+
+git diff --check
+Printed nothing; passed. No git history or branch changes; every change is uncommitted.

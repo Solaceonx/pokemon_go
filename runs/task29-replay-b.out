@@ -1,0 +1,27 @@
+nice: setpriority: Operation not permitted
+110 jobs to run on 3 workers
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+  83 results, 1 min
+
+baseline: the confirmed engine
+  against the crowd: 80.0% ± 26.1
+  against the pvpoke: 80.0% ± 26.1
+  against the reader: 55.0% ± 9.8
+
+candidate 1: mix=1
+  head to head against the baseline, 10 pairings both ways: 55.0% ± 17.6
+  against the crowd: 80.0% ± 26.1, +0.0 ± 0.0 points on the baseline
+  against the pvpoke: 80.0% ± 26.1, +0.0 ± 0.0 points on the baseline
+  against the reader: 65.0% ± 15.0, +10.0 ± 13.1 points on the baseline
+  search time per searched decision: median 32 ms, 99th percentile 208, worst 258 (this machine)
+
+candidate 2: mix_switch=1
+  head to head against the baseline, 10 pairings both ways: 42.5% ± 10.5
+  against the crowd: 50.0% ± 32.7, -30.0 ± 29.9 points on the baseline
+  against the pvpoke: 90.0% ± 19.6, +10.0 ± 35.2 points on the baseline
+  against the reader: 25.0% ± 21.9, -30.0 ± 21.7 points on the baseline
+  search time per searched decision: median 42 ms, 99th percentile 233, worst 446 (this machine)
+
+results: runs/engine_versus/mixing-replay-b.json

@@ -1,0 +1,398 @@
+Task 29: mixed choices and randomisation
+Working directory: /Users/marco/Developer/pokemon_go-wt/e29
+Interpreter: /Users/marco/Developer/pokemon_go/.venv/bin/python
+At most three simulation workers; numerical-library threads limited to one.
+No network or git history changes. All changes remain uncommitted.
+
+Before repository changes:
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests
+Printed: Ran 219 tests in 7.985s; FAILED (errors=2, skipped=7).
+Both errors were PermissionError from scripts/losses.py:107, os.nice(10).
+The errors prevented three additional tests in that class from running.
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+Printed: 108 of 108 PvPoke battles reproduced exactly
+
+Before repository changes, reran the complete suite with only the priority workaround:
+/Users/marco/Developer/pokemon_go/.venv/bin/python - <<'PY'
+import os, runpy, sys
+original_nice = os.nice
+def keep_low_priority(increment):
+    try:
+        return original_nice(increment)
+    except PermissionError:
+        priority = os.getpriority(os.PRIO_PROCESS, 0)
+        if priority <= 0:
+            raise
+        print(f'priority: retaining inherited nice={priority} (sandbox denied lowering it further)', flush=True)
+        return priority
+os.nice = keep_low_priority
+sys.argv = ['unittest', 'discover', 'tests']
+runpy.run_module('unittest', run_name='__main__')
+PY
+Printed: Ran 222 tests in 8.045s; OK (skipped=7).
+Priority messages: retaining inherited nice=15 (sandbox denied lowering it further).
+
+After implementation, before measurement:
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests
+Printed: Ran 228 tests in 11.185s; OK (skipped=7).
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+Printed: 108 of 108 PvPoke battles reproduced exactly
+
+git diff --check
+Printed nothing; exit 0.
+
+Timing smoke check (three games, not a strength comparison):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 3 --workers 3 --settings 'mix=1,mix_shield=1,mix_switch=1,random_hold=1,heads=throw+swap+mid_swap+replace+shield' > /tmp/task29-timing-smoke.out 2>&1
+Printed: 81 searched decisions; median 41 ms, 99th percentile 194, worst 214;
+cut short 0.0%, no complete round 0.0%; wait median 0 ms, 99th percentile 7,
+worst 35; decisions with any wait 1.2%.
+Timing statistics are empirical observations, not confidence intervals.
+
+Default compatibility check (original engine read with git show HEAD:pogo/engine.py):
+Five full games using the confirmed settings, seeds 0 through 4, versus Learner;
+compared every recorded event with the original Engine imported from /tmp.
+Printed: 5/5 default-engine battle logs exactly match the original engine.
+
+Run sheet's task-29 command (default seed 2701), unmodified counts and candidates:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --reader 1000 --candidates 'mix=1' 'temperature=0.01' 'temperature=0.03' 'mix=1,temperature=0.02' > runs/task29-mixing.out 2>&1
+Full printed output: runs/task29-mixing.out
+Legacy checkpoint: runs/engine_versus/mixing.json (resumable at this point in the history; now rejected by the later cache-method guard)
+Source, model and data hashes at launch: runs/task29-inputs.json
+
+Original grid finished (28,000 rows / 41,000 battles): all 14 launch hashes unchanged.
+Full scores and search-time summary: runs/task29-mixing.out (final summary).
+No original-grid setting improves the reader score beyond its 95% margin.
+
+After implementing the full simultaneous first-action table and shield-choice gate:
+/Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests
+Printed: Ran 231 tests in 11.227s; OK (skipped=7).
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+Printed: 108 of 108 PvPoke battles reproduced exactly
+
+git diff --check
+Printed nothing; exit 0.
+
+Exact resume check (also migrates timing lists to exact rounded-ms frequency counts):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --reader 1000 --candidates 'mix=1' 'temperature=0.01' 'temperature=0.03' 'mix=1,temperature=0.02' > runs/task29-mixing-resume-check.out 2>&1
+Printed: 0 jobs to run on 3 workers, followed by the identical original summary.
+All 28,000 scores and every saved timing frequency compared exactly with the raw checkpoint retained in /tmp.
+Checkpoint shrank from 3,971,221 to 475,715 bytes. No observations removed.
+The first verification expected the zero-jobs line to be first; nice's sandbox warning preceded it.
+Allowing that warning, all score, timing and full-summary equality assertions passed.
+
+Compatibility check:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-compatibility.py > runs/task29-compatibility.out 2>&1
+Full printed output: runs/task29-compatibility.out.
+
+Extension input hashes: runs/task29-inputs-extensions.json.
+
+Compatibility output: 25/25 battle logs match; default and all original-grid settings unchanged.
+
+Post-fix extension functionality smoke (not a strength result):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 3 --workers 3 --settings 'mix=1,mix_shield=1,mix_switch=1,random_hold=1,heads=throw+swap+mid_swap+replace+shield' > runs/task29-extension-smoke.out 2>&1
+Printed: 81 searched decisions; median 66 ms, 99th percentile 371, worst 413;
+cut short 0.0%, no complete round 0.0%; wait median 0 ms, 99th percentile 6,
+worst 32; decisions with any wait 1.2%.
+
+Extension selection screen (one quarter of the original counts, same selection seed):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-extensions --seed 2701 --workers 3 --pairings 500 --crowd 500 --pvpoke 250 --reader 250 --candidates 'heads=throw+swap+mid_swap+replace+shield' 'heads=throw+swap+mid_swap+replace+shield,mix_shield=1' 'mix_switch=1' 'random_hold=1' > runs/task29-extensions.out 2>&1
+Full printed output: runs/task29-extensions.out.
+Checkpoint: runs/engine_versus/mixing-extensions.json.
+The first setting is a shield-search control, not an adoption candidate for mixing.
+The mixing candidate will also be compared against that control on paired field battles.
+
+Measurement validity issue found after the extension baseline:
+The same seeded baseline differed from the original grid in 8/500 crowd battles,
+6/250 PvPoke battles and 41/250 reader pairs. This was not a source/model hash change.
+Evaluator shares one Learner._outlooks cache across players and games; its key is
+(slot, foe uid, shields, coarse health), omitting our Pokemon. A direct check warmed
+one Evaluator with Altaria then evaluated Stunfisk against the same Melmetal:
+Altaria outlook -0.5616438356164384; cached Stunfisk outlook -0.5616438356164384;
+fresh Stunfisk outlook +0.5116279069767442. All other state was held fixed.
+Stopped extension session 98870 with Ctrl-C; exit 130. Imported source was edited only after exit.
+The saved partial run is retained and INVALIDATED as adoption evidence:
+baseline crowd 67.5% ±4.1 (500), PvPoke 78.4% ±5.1 (250), reader 49.8% ±3.8 (250 pairs);
+shield-only control H2H 50.7% ±4.4 over 140 pairings (incomplete).
+The completed original grid is also retained as legacy diagnostic output, not reliable adoption evidence.
+
+Correction: engine_versus and realtime_trial now create a private Evaluator cache
+for each player while sharing immutable loaded model weights. No production defaults or
+model weights change. Checkpoints carry evaluator_cache=per_player; legacy shared-cache
+tags cannot silently resume under the new measurement method.
+
+After the measurement fix:
+TMPDIR=/tmp /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests
+Printed: Ran 232 tests in 11.280s; OK (skipped=7).
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py
+Printed: 108 of 108 PvPoke battles reproduced exactly
+git diff --check
+Printed nothing; exit 0.
+
+Repeatability check A (small functionality sample, not strength evidence):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-replay-a --seed 2900029 --workers 3 --pairings 10 --crowd 10 --pvpoke 10 --reader 10 --candidates 'mix=1' 'mix_switch=1' > runs/task29-replay-a.out 2>&1
+
+Repeatability check B, deliberately changing task boundaries:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-replay-b --seed 2900029 --workers 3 --chunk 1 --pairings 10 --crowd 10 --pvpoke 10 --reader 10 --candidates 'mix=1' 'mix_switch=1' > runs/task29-replay-b.out 2>&1
+Both checks completed successfully. Full small-sample summaries with 95% margins are in their .out files.
+Comparing the JSON results printed: 110/110 seeded scores identical with chunk sizes 5 and 1
+across three workers, including both candidates and all four comparisons. Timing observations differ normally.
+These are repeatability checks only, not candidate-selection or strength evidence.
+
+Compatibility with separate, fresh evaluator caches for original and modified players:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-compatibility.py > runs/task29-compatibility-isolated.out 2>&1
+
+Fresh-cache compatibility printed: 25/25 battle logs match; default and all original-grid settings unchanged.
+All 16 corrected-input hashes match; models, data and unchanged dependencies match the original launch.
+
+Corrected prescribed grid (same four settings and counts, including reader; new tag required to keep legacy rows separate):
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-isolated --seed 2701 --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --reader 1000 --candidates 'mix=1' 'temperature=0.01' 'temperature=0.03' 'mix=1,temperature=0.02' > runs/task29-mixing-isolated.out 2>&1
+Full output: runs/task29-mixing-isolated.out.
+Checkpoint: runs/engine_versus/mixing-isolated.json; method evaluator_cache=per_player.
+Source/model/data hashes: runs/task29-inputs-isolated.json. Imports frozen throughout this run.
+
+During the corrected grid, fixed independent browser-game factories (not imported by this run):
+play.py now creates private evaluator caches for each new bot and display;
+play_api.py does the same using a fresh per-game view_ev for its graph.
+Added two integration regressions in tests/test_game_evaluators.py.
+AST parse of these three files passed; all 16 active-run input hashes remain unchanged.
+Full tests and an offline site build are pending until the current three workers exit.
+Strategy parameters have not been adopted or changed.
+
+Corrected full grid completed: 28,000 rows / 41,000 battles; all 16 frozen hashes unchanged.
+baseline: the confirmed engine
+  against the crowd: 67.6% ± 2.0
+  against the pvpoke: 76.2% ± 2.6
+  against the reader: 51.4% ± 1.8
+
+candidate 1: mix=1
+  head to head against the baseline, 2000 pairings both ways: 50.0% ± 1.2
+  against the crowd: 67.0% ± 2.1, -0.6 ± 1.3 points on the baseline
+  against the pvpoke: 77.2% ± 2.6, +0.9 ± 1.8 points on the baseline
+  against the reader: 51.3% ± 1.8, -0.1 ± 1.7 points on the baseline
+  search time per searched decision: median 32 ms, 99th percentile 225, worst 487 (this machine)
+
+candidate 2: temperature=0.01
+  head to head against the baseline, 2000 pairings both ways: 48.8% ± 1.3
+  against the crowd: 67.8% ± 2.0, +0.1 ± 1.6 points on the baseline
+  against the pvpoke: 75.9% ± 2.6, -0.3 ± 1.9 points on the baseline
+  against the reader: 50.3% ± 1.8, -1.1 ± 1.8 points on the baseline
+  search time per searched decision: median 29 ms, 99th percentile 106, worst 243 (this machine)
+
+candidate 3: temperature=0.03
+  head to head against the baseline, 2000 pairings both ways: 42.4% ± 1.3
+  against the crowd: 60.4% ± 2.1, -7.2 ± 2.2 points on the baseline
+  against the pvpoke: 70.2% ± 2.8, -6.1 ± 2.8 points on the baseline
+  against the reader: 43.0% ± 1.9, -8.5 ± 2.3 points on the baseline
+  search time per searched decision: median 31 ms, 99th percentile 105, worst 248 (this machine)
+
+candidate 4: mix=1,temperature=0.02
+  head to head against the baseline, 2000 pairings both ways: 46.1% ± 1.3
+  against the crowd: 64.9% ± 2.1, -2.7 ± 2.1 points on the baseline
+  against the pvpoke: 72.4% ± 2.8, -3.9 ± 2.7 points on the baseline
+  against the reader: 46.3% ± 1.8, -5.1 ± 2.2 points on the baseline
+  search time per searched decision: median 34 ms, 99th percentile 233, worst 524 (this machine)
+
+results: runs/engine_versus/mixing-isolated.json
+
+TMPDIR=/tmp /Users/marco/Developer/pokemon_go/.venv/bin/python -m unittest discover tests > runs/task29-tests-before-extensions.out 2>&1
+..............................................priority: retaining inherited nice=15 (sandbox denied lowering it further)
+.priority: retaining inherited nice=15 (sandbox denied lowering it further)
+...............................................................................................................................................................................sssssss.....
+----------------------------------------------------------------------
+Ran 234 tests in 11.797s
+
+OK (skipped=7)
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/check_pvpoke.py > runs/task29-pvpoke-before-extensions.out 2>&1
+108 of 108 PvPoke battles reproduced exactly
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python scripts/build_pvpbot_site.py '/tmp/task29-site-isolated-p_c71y69' > runs/task29-site-build.out 2>&1
+built /tmp/task29-site-isolated-p_c71y69: bundle.zip 507 KB, index.html 10 KB, play.html 35 KB, play_worker.js 1 KB, species.json 85 KB, worker.js 1 KB
+
+TMPDIR=/tmp /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-site-smoke.py '/tmp/task29-site-isolated-p_c71y69' > runs/task29-site-smoke.out 2>&1
+Traceback (most recent call last):
+  File "/tmp/task29-site-smoke.py", line 24, in <module>
+    assert Path(play_api.__file__).resolve().parent == extracted
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+The scratch smoke assertion compared a resolved /private/tmp path with lexical /tmp. Normalised its extraction path with resolve(); no repository code changed.
+TMPDIR=/tmp /Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-site-smoke.py '/tmp/task29-site-isolated-p_c71y69' > runs/task29-site-smoke-verified.out 2>&1
+Offline bundle: 15 Python modules parse; two games each advance five turns; bot/display caches isolated and reset.
+Extracted only to /private/tmp/task29-site-bundle-8wgcsl10; no server, network or publication.
+
+git diff --check
+Printed nothing; exit 0.
+
+Corrected extension screen; shield-only is a control, not a task-29 adoption candidate:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-extensions-isolated --seed 2701 --workers 3 --pairings 500 --crowd 500 --pvpoke 250 --reader 250 --candidates 'heads=throw+swap+mid_swap+replace+shield' 'heads=throw+swap+mid_swap+replace+shield,mix_shield=1' 'mix_switch=1' 'random_hold=1' > runs/task29-extensions-isolated.out 2>&1
+Full output: runs/task29-extensions-isolated.out.
+Checkpoint: runs/engine_versus/mixing-extensions-isolated.json.
+20 frozen input hashes: runs/task29-inputs-extensions-isolated.json.
+
+Full repeated-baseline check at the extension baseline checkpoint:
+1000/1000 baseline scores exactly match the corrected full grid: 500 crowd, 250 PvPoke, 250 reader pairs.
+Same seed2701, different job plan; no scores pooled or counted twice.
+
+Selection rule before the final screen finishes: exclude the shield-search control; among candidates without a clear head-to-head, crowd or PvPoke loss (95% upper bound still reaches 50% head to head or zero paired field change), choose the largest mean paired reader change. Break an exact tie by more reader pairs, then the original candidate order. Freeze the choice and raw metrics in runs/task29-selection.json before seed2902027 is run. Fresh adoption requires reader paired gain beyond its 95% margin and no clear loss in the other three comparisons. A shield-mixing choice would also require a fresh control comparison to attribute its effect. Do not switch candidates after seeing confirmation.
+
+Corrected extension screen completed: 7,000 rows / 10,250 battles; all 20 frozen hashes unchanged.
+baseline: the confirmed engine
+  against the crowd: 66.6% ± 4.1
+  against the pvpoke: 76.0% ± 5.3
+  against the reader: 50.8% ± 3.5
+
+candidate 1: heads=throw+swap+mid_swap+replace+shield
+  head to head against the baseline, 500 pairings both ways: 49.2% ± 2.6
+  against the crowd: 64.5% ± 4.2, -2.1 ± 4.3 points on the baseline
+  against the pvpoke: 72.2% ± 5.6, -3.8 ± 6.1 points on the baseline
+  against the reader: 49.1% ± 3.6, -1.7 ± 4.3 points on the baseline
+  search time per searched decision: median 29 ms, 99th percentile 116, worst 230 (this machine)
+
+candidate 2: heads=throw+swap+mid_swap+replace+shield,mix_shield=1
+  head to head against the baseline, 500 pairings both ways: 46.0% ± 2.5
+  against the crowd: 59.7% ± 4.3, -6.9 ± 4.5 points on the baseline
+  against the pvpoke: 71.4% ± 5.6, -4.6 ± 6.2 points on the baseline
+  against the reader: 48.2% ± 3.7, -2.6 ± 4.6 points on the baseline
+  search time per searched decision: median 35 ms, 99th percentile 160, worst 320 (this machine)
+
+candidate 3: mix_switch=1
+  head to head against the baseline, 500 pairings both ways: 41.4% ± 2.6
+  against the crowd: 56.0% ± 4.3, -10.6 ± 5.0 points on the baseline
+  against the pvpoke: 69.8% ± 5.7, -6.2 ± 6.4 points on the baseline
+  against the reader: 41.3% ± 3.7, -9.5 ± 4.8 points on the baseline
+  search time per searched decision: median 49 ms, 99th percentile 290, worst 825 (this machine)
+
+candidate 4: random_hold=1
+  head to head against the baseline, 500 pairings both ways: 50.6% ± 2.5
+  against the crowd: 68.1% ± 4.1, +1.5 ± 2.1 points on the baseline
+  against the pvpoke: 74.8% ± 5.4, -1.2 ± 2.4 points on the baseline
+  against the reader: 47.9% ± 3.5, -2.9 ± 2.3 points on the baseline
+  search time per searched decision: median 31 ms, 99th percentile 110, worst 190 (this machine)
+
+results: runs/engine_versus/mixing-extensions-isolated.json
+
+Paired shield-mixing effect beyond the shield-search control:
+shield mixing minus shield-only control, crowd: -4.8 ± 3.4 points
+shield mixing minus shield-only control, pvpoke: -0.8 ± 4.7 points
+shield mixing minus shield-only control, reader: -0.9 ± 3.5 points
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-freeze-selection.py > runs/task29-selection.out 2>&1
+mix=1: reader delta -0.1 ± 1.7 points; eligible
+temperature=0.01: reader delta -1.1 ± 1.8 points; eligible
+temperature=0.03: reader delta -8.5 ± 2.3 points; clear loss in h2h, crowd, pvpoke
+mix=1,temperature=0.02: reader delta -5.1 ± 2.2 points; clear loss in h2h, crowd, pvpoke
+heads=throw+swap+mid_swap+replace+shield,mix_shield=1: reader delta -2.6 ± 4.6 points; clear loss in h2h, crowd
+mix_switch=1: reader delta -9.5 ± 4.8 points; clear loss in h2h, crowd
+random_hold=1: reader delta -2.9 ± 2.3 points; eligible
+FROZEN: mix=1
+Fresh confirmation: {'tag': 'mixing-confirm-2902027', 'seed': 2902027, 'workers': 3, 'pairings': 2000, 'crowd': 2000, 'pvpoke': 1000, 'reader': 1000, 'candidates': ['mix=1']}
+20/20 frozen source/model/data hashes unchanged.
+
+Choice and raw metrics frozen in runs/task29-selection.json before any confirmation results. No screened setting shows a reader gain beyond its margin.
+
+Fresh confirmation:
+nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag mixing-confirm-2902027 --seed 2902027 --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --reader 1000 --candidates 'mix=1' > runs/task29-confirm-2902027.out 2>&1
+Full output: runs/task29-confirm-2902027.out.
+Checkpoint: runs/engine_versus/mixing-confirm-2902027.json.
+Same 20 frozen input hashes as runs/task29-inputs-extensions-isolated.json.
+
+Completed fresh H2H: 48.662500% ± 1.232947; upper 95% bound 49.895447% < 50%. Adoption criterion fails; remaining requested comparisons and timing will still complete.
+
+Fresh confirmation completed: 10,000 rows / 14,000 battles. Pool exited with status 0.
+baseline: the confirmed engine
+  against the crowd: 68.8% ± 2.0
+  against the pvpoke: 74.7% ± 2.7
+  against the reader: 50.9% ± 1.8
+
+candidate 1: mix=1
+  head to head against the baseline, 2000 pairings both ways: 48.7% ± 1.2
+  against the crowd: 67.5% ± 2.0, -1.3 ± 1.5 points on the baseline
+  against the pvpoke: 75.1% ± 2.7, +0.4 ± 1.7 points on the baseline
+  against the reader: 51.7% ± 1.8, +0.8 ± 1.7 points on the baseline
+  search time per searched decision: median 35 ms, 99th percentile 238, worst 571 (this machine)
+
+results: runs/engine_versus/mixing-confirm-2902027.json
+
+/Users/marco/Developer/pokemon_go/.venv/bin/python /tmp/task29-finalize-confirmation.py > runs/task29-confirmation-summary.out 2>&1
+h2h: 48.7% ± 1.2
+crowd: 67.5% ± 2.0; baseline 68.8% ± 2.0; paired -1.3 ± 1.5 points
+pvpoke: 75.1% ± 2.7; baseline 74.7% ± 2.7; paired +0.4 ± 1.7 points
+reader: 51.7% ± 1.8; baseline 50.9% ± 1.8; paired +0.8 ± 1.7 points
+Input hashes: 20/20 unchanged; both selection datasets unchanged
+Frozen acceptance checks: {'reader_gain_beyond_margin': False, 'no_clear_h2h_loss': False, 'no_clear_crowd_loss': True, 'no_clear_pvpoke_loss': True}
+Adopt: False
+Summary: runs/task29-confirmation-summary.json
+
+Required timing, candidate first; no overlapping simulation pools:
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 TMPDIR=/tmp nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 300 --workers 3 --seed 2903027 --settings 'mix=1' > runs/task29-timing-mix1.out 2>&1
+nice: setpriority: Operation not permitted
+real-time engine, pauses: defaults (pogo/realtime.py)
+engine settings: mix=1
+
+--- timing: 300 battles against the crowd
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+6689 searched decisions; search time median 31 ms, 99th percentile 251, worst 478
+cut short by the deadline 0.0%, no complete round (trained bot's pick) 0.0%
+wait at the moment of decision: median 0 ms, 99th percentile 34, worst 238; decisions with any wait 3.0%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   27% |    300ms |     31 |  240 |   332 |      0.1% |       0.0%
+predicted, fast move of 2      | predicted  |   27% |    800ms |     34 |  256 |   478 |      0.0% |       0.0%
+a charged move came            | pause      |   14% |   2000ms |     29 |  187 |   419 |      0.0% |       0.0%
+predicted, fast move of 3      | predicted  |    8% |   1300ms |     38 |  345 |   422 |      0.0% |       0.0%
+after our charged move         | pause      |    5% |   2000ms |     18 |  147 |   232 |      0.0% |       0.0%
+start                          | pause      |    4% |   2000ms |     50 |   78 |   118 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   1000ms |     23 |   47 |    79 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |   1000ms |     20 |   54 |    94 |      0.0% |       0.0%
+a faint came                   | pause      |    3% |   1000ms |     21 |  104 |   186 |      0.0% |       0.0%
+they switched                  | unforeseen |    3% |    300ms |     25 |   81 |    98 |      0.0% |       0.0%
+predicted, fast move of 4      | predicted  |    1% |   1800ms |     34 |  308 |   354 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     30 |  223 |   238 |      0.0% |       0.0%
+
+Timing note: overall 0.0% cuts is rounded, not zero cuts. The one-turn fast-move subgroup prints 0.1% cuts and a 332 ms worst search for its 300 ms budget. CPU times are observed descriptive quantiles, not score estimates.
+
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 MKL_NUM_THREADS=1 TMPDIR=/tmp nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 300 --workers 3 --seed 2903027 --settings '' > runs/task29-timing-baseline.out 2>&1
+nice: setpriority: Operation not permitted
+real-time engine, pauses: defaults (pogo/realtime.py)
+engine settings: confirmed defaults
+
+--- timing: 300 battles against the crowd
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+6638 searched decisions; search time median 28 ms, 99th percentile 107, worst 231
+cut short by the deadline 0.0%, no complete round (trained bot's pick) 0.0%
+wait at the moment of decision: median 0 ms, 99th percentile 33, worst 101; decisions with any wait 2.9%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   28% |    300ms |     30 |  124 |   231 |      0.0% |       0.0%
+predicted, fast move of 2      | predicted  |   26% |    800ms |     30 |  106 |   152 |      0.0% |       0.0%
+a charged move came            | pause      |   14% |   2000ms |     28 |   93 |   159 |      0.0% |       0.0%
+predicted, fast move of 3      | predicted  |    9% |   1300ms |     30 |  116 |   135 |      0.0% |       0.0%
+after our charged move         | pause      |    5% |   2000ms |     15 |   73 |   105 |      0.0% |       0.0%
+start                          | pause      |    5% |   2000ms |     50 |   79 |   115 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   1000ms |     21 |   47 |    84 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |   1000ms |     19 |   48 |    52 |      0.0% |       0.0%
+a faint came                   | pause      |    3% |   1000ms |     18 |   95 |   102 |      0.0% |       0.0%
+they switched                  | unforeseen |    3% |    300ms |     25 |   84 |    96 |      0.0% |       0.0%
+predicted, fast move of 4      | predicted  |    1% |   1800ms |     25 |  105 |   132 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     17 |   95 |   101 |      0.0% |       0.0%
+
+Both required timing runs exited 0. No simulation pool remains from this task. No randomisation setting adopted; all flags remain off.
+docs/status.md contains all valid and invalidated results. Only task 29's Open tasks row and brief heading changed in docs/tasks.md; existing Marco claim preserved.
+
+Final read-only verification (full output runs/task29-final-checks.out):
+Frozen input hashes: 20/20 unchanged after confirmation and both timing runs.
+Selection, selection datasets and completed fresh checkpoint unchanged; adopt=False.
+Only task 29 table row and brief heading changed; Marco claim and all other task content preserved.
+git diff --check: no output, exit 0.
+Tracked changes are modifications only; no staged changes, deletions or renames.
+39 new text/source files; largest runs/engine_versus/mixing.json: 475715 bytes; no binary artifacts.
+Previously completed unchanged-source gates: 234 tests, OK (skipped=7); PvPoke 108/108.
+
+Final recommendation: adopt no randomisation setting. Keep all task-29 flags off; retain the private evaluator-cache correctness fix and the off-by-default experimental options. The task's performance criterion was not met.
+Files changed: docs/status.md; docs/tasks.md; pogo/engine.py; pogo/realtime.py; scripts/engine_versus.py; scripts/realtime_trial.py; scripts/losses.py; scripts/play.py; scripts/pvpbot_site/play_api.py; tests/test_engine_mixing.py; tests/test_engine_measurement.py; tests/test_game_evaluators.py; small text/JSON records under runs/task29-* and runs/engine_versus/.

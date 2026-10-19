@@ -184,20 +184,20 @@ class Planner:
     """
 
     def __init__(self, moves: bool = True, timing: bool = True, bait: str = "mix", shields: str = "lookahead",
-                 guess: str = "read", switches: bool = True, shield_share: float = 0.4, shield_worth: float = 0.35,
-                 energy_worth: float = 0.0, switch_margin: float = 0.35, seed: int | None = None,
-                 expect_shield: float = 0.7, expect_bait: float = 0.5, belief: float = 2.0,
-                 field: list | None = None, safe_weight: float = 0.0, bad_matchup: float = -0.2,
-                 punish: bool = False, farm: bool = True, farm_cost: float = 0.35,
-                 sac: bool = True, sac_margin: float = 0.1, replace_by: str = "outlook", value=None,
-                 odds: bool = False, hold: bool = True, hold_cost: float = 0.5,
+                 guess: str = "read", switches: bool = True, shield_share: float = 0.9724, shield_worth: float = 0.3918,
+                 energy_worth: float = 0.5, switch_margin: float = 0.0577, seed: int | None = None,
+                 expect_shield: float = 0.4458, expect_bait: float = 0.5011, belief: float = 1.8395,
+                 field: list | None = None, safe_weight: float = 0.2118, bad_matchup: float = -0.1786,
+                 punish: bool = False, farm: bool = True, farm_cost: float = 0.3869,
+                 sac: bool = True, sac_margin: float = 0.0286, replace_by: str = "outlook", value=None,
+                 odds: bool = False, hold: bool = True, hold_cost: float = 0.9031,
                  last_gasp: bool = True, timed_farm: bool = True,
-                 win_switch: float | None = 0.1, switch_worth: float = 0.0,
-                 good_matchup: bool = True, matchup_weight: float = 0.75,
+                 win_switch: float | None = 0.0, switch_worth: float = 0.2886,
+                 good_matchup: bool = True, matchup_weight: float = 0.741,
                  sweeper: float = 0.0, sweep_chance: float = 0.75,
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
                  catch: bool = False, catch_gain: float = 0.2,
-                 rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.15,
+                 rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.4,
                  punish_gain: float | None = None, fast_first: float = 0.0):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even"):
             raise ValueError(f"unknown bait rule {bait!r}")
@@ -920,8 +920,9 @@ def _rollout(matchups: bool = False) -> Planner:
     Threshold shielding and outlook replacements keep this from nesting lookaheads.
     Only revealed opponents enter the rollout; hidden teammates are never inspected.
     """
-    # The shield_matchups experiment was measured with rollouts that switch by the live duel alone.
-    return Planner(timing=False, bait="cheap", shields="threshold", switches=matchups,
+    # The shield_matchups experiment was measured with rollouts that switch by the live duel alone. The rollout keeps
+    # the standard values: the evolved rules were found and confirmed with this rollout inside them.
+    return Planner(**STANDARD_RULES, timing=False, bait="cheap", shields="threshold", switches=matchups,
                    farm=False, sac=False, shield_matchups=False, good_matchup=not matchups, seed=0)
 
 
@@ -946,6 +947,23 @@ def varied(rng: random.Random, field: list | None = None) -> Planner:
     return Planner(**varied_settings(rng, field))
 
 
+# The rulebook evolved by CMA-ES (task 30, docs/status.md "Evolving the rulebook"): Planner(**EVOLVED_RULES) beat the
+# standard rules 54.0% ± 0.9 head to head and +3.4 ± 1.0 against the crowd on a fresh seed, and the trained bot on top of it
+# beat the bot on the standard rules 51.6% ± 0.8. The default since 2026-10-19 (the owner); STANDARD_RULES are the
+# values before, which the crowd (varied_settings) stays centred on so that it measures as it always has.
+EVOLVED_RULES = dict(
+    shield_share=0.9724, shield_worth=0.3918, energy_worth=0.5, switch_margin=0.0577, expect_shield=0.4458,
+    expect_bait=0.5011, belief=1.8395, safe_weight=0.2118, bad_matchup=-0.1786, farm_cost=0.3869, sac_margin=0.0286,
+    hold_cost=0.9031, win_switch=0.0, matchup_weight=0.741, switch_worth=0.2886, known_edge=0.4,
+)
+
+STANDARD_RULES = dict(
+    shield_share=0.4, shield_worth=0.35, energy_worth=0.0, switch_margin=0.35, expect_shield=0.7, expect_bait=0.5,
+    belief=2.0, safe_weight=0.0, bad_matchup=-0.2, farm_cost=0.35, sac_margin=0.1, hold_cost=0.5, win_switch=0.1,
+    matchup_weight=0.75, switch_worth=0.0, known_edge=0.15,
+)
+
+
 def varied_settings(rng: random.Random, field: list | None = None) -> dict:
     """The shifted habits themselves, for building any Planner-based player."""
     def near(value: float, spread: float) -> float:
@@ -968,6 +986,8 @@ def varied_settings(rng: random.Random, field: list | None = None) -> dict:
         seed=rng.getrandbits(32),
         # The owner: many players use one fast move of two turns or more before swapping out of a new matchup.
         fast_first=rng.choice((0.0, 0.5, 1.0)),
+        # not drawn above: the standard values, as before the evolved rules became the default
+        **{k: STANDARD_RULES[k] for k in ("energy_worth", "belief", "sac_margin", "matchup_weight", "switch_worth", "known_edge")},
     )
 
 
