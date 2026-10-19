@@ -32,6 +32,8 @@ body { display: flex; justify-content: center; }
 .energy > i { position: absolute; left: 0; top: 0; bottom: 0; background: #e7b416; border-radius: 3px; }
 .energy .tick { position: absolute; top: -1px; bottom: -1px; width: 2px; background: var(--ink, #fff); opacity: 0.7; }
 .energy-text { display: block; margin-top: 3px; font-size: 11px; color: var(--dim); }
+.energy-toggle { margin-top: 4px; padding: 1px 6px; font-size: 10px; color: var(--dim); background: none; border: 1px solid var(--dim); border-radius: 6px; cursor: pointer; }
+.hide-foe-energy .foe-energy { display: none; }
 .dots { display: flex; gap: 4px; }
 .dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 1px solid #0008; }
 .dot.out { background: #555; }
@@ -112,8 +114,9 @@ body { display: flex; justify-content: center; }
         <div class="name"><span id="foe-name">?</span><small id="foe-cp"></small></div>
         <div class="bar"><i id="foe-hp"></i></div>
         <div class="marks"><span class="dots" id="foe-left"></span><span class="dots" id="foe-shields"></span></div>
-        <div class="energy" title="their energy (the game hides it; good players count it); ticks: their charged moves' costs"><i id="foe-energy-bar"></i><span id="foe-energy-ticks"></span></div>
-        <small class="energy-text" id="foe-energy"></small>
+        <div class="energy foe-energy" title="their energy (the game hides it; good players count it); ticks: their charged moves' costs"><i id="foe-energy-bar"></i><span id="foe-energy-ticks"></span></div>
+        <small class="energy-text foe-energy" id="foe-energy"></small>
+        <button class="energy-toggle" id="foe-energy-toggle" title="show or hide their energy (E)">their energy: on</button>
       </div>
       <div id="foe-sprite"></div>
     </div>
@@ -247,7 +250,7 @@ function render(s) {
   const fs = foe.hp / foe.hp_max;
   $("foe-hp").style.width = `${100 * fs}%`; $("foe-hp").style.background = hpColour(fs);
   dots($("foe-left"), s.foe.left, 3, "dot"); dots($("foe-shields"), s.foe.shields, 2, "shield");
-  if (foe.energy !== undefined) {  // their energy, with ticks at their charged moves' costs
+  if (foe.energy !== undefined && !document.body.classList.contains("hide-foe-energy")) {  // their energy, ticks at their move costs
     $("foe-energy-bar").style.width = `${foe.energy}%`;
     const ticks = (foe.costs || []).join(",");
     if ($("foe-energy-ticks").dataset.key !== ticks) {
@@ -389,6 +392,17 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "Enter" && state && state.winner) newBattle();
 });
+// Their energy on or off (the button, or E); remembered in this browser.
+(() => {
+  const KEY = "pvpbot-foe-energy", body = document.body, button = document.getElementById("foe-energy-toggle");
+  let on = true;
+  try { on = localStorage.getItem(KEY) !== "off"; } catch (e) { /* nothing kept */ }
+  const show = () => { body.classList.toggle("hide-foe-energy", !on); button.textContent = `their energy: ${on ? "on" : "off"}`; };
+  const flip = () => { on = !on; try { localStorage.setItem(KEY, on ? "on" : "off"); } catch (e) { /* nothing kept */ } show(); };
+  button.addEventListener("click", (e) => { e.stopPropagation(); flip(); button.blur(); });
+  document.addEventListener("keydown", (e) => { if ((e.key === "e" || e.key === "E") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) flip(); });
+  show();
+})();
 poll();
 </script>
 </body>
