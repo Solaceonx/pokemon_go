@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-14.
+Last updated 2026-10-18.
 
 ## Goal
 
@@ -2330,3 +2330,214 @@ Corviknight / Mandibuzz / Carbink / Thievul, the Pokémon most common in `data/t
 So with open sheets the six decides much: one of the owner's six is never worth bringing here, and the six has no good
 answer to a Dark core. Choosing which six to register needs these tables for many sixes against many sixes; one
 table costs 144,000 battles, so that search is for a bigger machine or a cache of three-against-three results.
+
+## Task 28: mixed look-ahead opponents and listed teams (2026-10-18)
+
+**No setting adopted.** On fresh seed 280281, the selected `opponents=mix,profile=1` gains +3.4 ± 2.1
+points against the crowd and +5.6 ± 2.6 against PvPoke, but scores 48.4% ± 1.3 head to head against the
+current engine. That head-to-head loss exceeds its margin and fails task 28's adoption rule. Playing
+defaults remain unchanged. Timing is comfortably inside the simulated budgets on this Mac.
+The original run sheet completed, but a shared evaluator cache made its outcomes depend on worker job order.
+Those numbers are retained below as exploratory only; all six candidates were remeasured with independent
+player caches before selection and confirmation.
+[Exact commands and outputs](../runs/task28/commands.txt) accompany the results.
+
+All jobs use `/Users/marco/Developer/pokemon_go/.venv/bin/python`, `nice -n 10`, at most three workers and one
+numerical-library thread per worker. The sandbox denies further priority changes; the existing helper retains
+inherited nice=15. No network, git-history changes, other worktrees, or reserved official footage were used.
+
+**Calibrate before profiling.** `calibrate_styles.py --battles 4000 --workers 3` ran before the comparisons.
+The original script printed rounded rates only. It now checkpoints by tag, retains exact event counts, and
+reports 95% margins treating battles as independent clusters. Repeating all 4,000 battles per style reproduced
+every probability used by the first comparison exactly; a second invocation resumed with zero new chunks.
+
+| Imagined opponent | Shields used / opportunities | Shield rate | Cheaper throws / opportunities with both moves ready | Cheaper-throw rate |
+|---|---:|---|---:|---|
+| Trained bot | 7,394 / 20,449 | 36.2% ± 0.5 | 8,511 / 15,232 | 55.9% ± 0.9 |
+| Bot with varied habits | 7,553 / 18,574 | 40.7% ± 0.6 | 9,113 / 14,837 | 61.4% ± 0.9 |
+| Original human-like guess | 7,557 / 19,572 | 38.6% ± 0.5 | 9,306 / 15,665 | 59.4% ± 0.9 |
+| PvPoke AI | 8,000 / 8,302 | 96.4% ± 0.4 | 5,593 / 9,993 | 56.0% ± 1.1 |
+
+Rates and counts are in `data/opponent_styles.json`; the original rates are also preserved under
+`runs/task28/`. The mixture weights remain 0.4 / 0.3 / 0.2 / 0.1. These are simulated style rates against the
+crowd, not estimates of real players' shield or bait frequencies.
+
+**Original grid, seed 2701 — invalid for adoption because of shared evaluator caches.** Each candidate played 2,000 team pairings both ways against the confirmed engine
+(4,000 battles), plus 2,000 crowd and 1,000 PvPoke battles. The field battles, teams and dice are paired across
+settings. All score margins below are 95%; head-to-head margins use the independent team-pair averages.
+The baseline retains four samples, 20 turns, edge 0.03, trained-bot rollouts and margin 0.02.
+
+| Setting | Head to head vs current engine | Crowd score | Paired crowd change | PvPoke score | Paired PvPoke change |
+|---|---|---|---|---|---|
+| Current engine | — | 68.0% ± 2.0 | — | 75.8% ± 2.7 | — |
+| `opponents=mix` | 49.6% ± 1.3 | 71.6% ± 2.0 | +3.7 ± 2.2 | 79.8% ± 2.5 | +4.0 ± 2.7 |
+| `opponents=mix,profile=1` | 49.0% ± 1.3 | 71.4% ± 2.0 | +3.5 ± 2.1 | 81.8% ± 2.4 | +5.9 ± 2.7 |
+| `unseen=teams` | 49.4% ± 1.3 | 67.7% ± 2.0 | −0.3 ± 2.1 | 73.6% ± 2.7 | −2.2 ± 2.8 |
+| `opponents=mix,profile=1,unseen=teams` | 50.1% ± 1.3 | 71.5% ± 2.0 | +3.6 ± 2.2 | 80.9% ± 2.4 | +5.1 ± 2.7 |
+
+Changes are percentage points, calculated before rounding. These are the margins printed by the original
+script; cross-battle cache dependence undermines their independence assumption. They must not be used to
+claim a gain or select the final candidate. The reader probe was not used (`--reader 0`).
+
+`engine_versus.py` printed descriptive search times (median / 99th percentile / observed worst, CPU ms):
+28 / 106 / 267 for the plain mixture; 29 / 106 / 244 with profiling; 31 / 114 / 243 for the team prior alone;
+28 / 102 / 228 for the combination. These are its capped per-chunk timing samples; the dedicated
+`realtime_trial.py --timing` measurement is separate. The original grid took about 201 minutes on this Mac.
+All source/model/data fingerprints recorded before that run were unchanged afterward.
+Full output: [`opponents.out`](../runs/task28/opponents.out); compact exploratory scores:
+[`opponents-exploratory.json`](../runs/task28/opponents-exploratory.json). Large resumable checkpoints,
+including raw search-time arrays, remain local and are ignored by git.
+
+**Human-style attempt: stronger existing holding and farming settings.** `check_human_style.py` uses the
+15 Henry development clips for selection and reports the four owner recordings separately. It follows
+`real_decisions.py`'s reconstructed-state method, averaging 16 seeded style draws per decision. No official
+recordings are loaded. `games/played/` is absent in this worktree. Henry held in 228 of 290 recorded throw
+decisions; the owner held in 57 of 81. This motivated changing existing hold/farm settings, without adding a
+new tactical rule or changing our own pilot's rules.
+
+| Human-style variant | Henry throw agreement | Paired change | Owner throw agreement | Paired change |
+|---|---|---|---|---|
+| Original | 54.1% ± 3.6 | — | 60.3% ± 17.5 | — |
+| `hold_cost=1.5` | 54.5% ± 3.7 | +0.4 ± 0.6 | 60.5% ± 17.2 | +0.2 ± 0.6 |
+| `farm=True,farm_cost=0.7` | 55.0% ± 3.6 | +0.9 ± 1.2 | 60.5% ± 17.4 | +0.2 ± 2.4 |
+| Both | 55.4% ± 3.7 | +1.3 ± 1.4 | 60.6% ± 17.3 | +0.3 ± 2.4 |
+
+These margins resample whole games and pair variants within the same games. **None establishes better
+imitation beyond its margin.** The best attempted change on Henry's throw agreement, both settings, was frozen
+for an engine test; the owner check did not choose it. Predicted hold rates changed from 52.4% ± 4.9 to
+54.4% ± 5.1 on Henry and from 60.8% ± 14.0 to 63.6% ± 15.1 on the owner. Shield agreement stayed at
+82.2% ± 6.8 on Henry (57 decisions) and 71.3% ± 11.8 on the owner (22); switch agreement stayed at
+64.0% ± 7.6 (86) and 70.3% ± 14.8 (20), respectively. Full results for every variant, including hold rates,
+are in [`human-style.out`](../runs/task28/human-style.out) and its JSON.
+
+The stronger variant uses `hold_cost=1.5` instead of the original jittered value around 0.9, and always enables
+farming with `farm_cost=0.7` instead of the varied settings around 0.35. Fast-first behavior, last-gasp frequency,
+the learned model and its margin distribution are unchanged. A separate 4,000-battle-per-style calibration
+records human shielding 38.5% ± 0.5 (7,546 / 19,613), cheaper throws 59.8% ± 0.9 (9,515 / 15,904);
+the other three styles reproduce the original rates exactly. `style_file` supplies the calibrated rates and
+optional `human_settings` together, so testing this variant does not silently replace the original mixture.
+
+**The v2 prior needs its actual weights and species.** The original engine hard-coded `data/teams.json`,
+floored explicit weights at 0.02 and substituted pool members for listed species outside the top 50.
+`team_file` now selects the prior; `weights_for()` preserves its explicit mixture weights, zero-weight matches
+are excluded, and listed unseen builds are retained. If no positive-weight team matches what was seen, the
+fallback remains the original top-50 pool. The original list contains no out-of-pool species and all its seen
+counts are zero, so its behavior is preserved. The v2 list contains 21 out-of-pool species.
+
+The two extension candidates use the combined setting above: one with the stronger human-style file, one with
+`team_file=data/teams_v2.json`. Both are included at the full original counts on seed 2701 in the corrected grid
+below. The structure choice and rule for selecting a final candidate were saved before these trials in
+`runs/task28/extension-plan.json`: avoid a head-to-head loss beyond its margin, then maximize the smaller of
+the crowd and PvPoke paired lower 95% bounds. The best setting must still pass on a new seed and tag.
+
+**Why the measurements were restarted.** Comparing the unchanged baseline on the same seed found 142 of
+2,000 crowd outcomes and 43 of 1,000 PvPoke outcomes differed between runs. `engine_versus.evaluator()`
+returned one cached `Evaluator` per worker, shared by every player and game. Its internal `Learner.outlook()`
+cache is indexed by team slot, opposing build, shields and coarse health, without our build; its entries
+therefore carry unrelated teams' values into later games. A direct two-team check reproduced three wrong
+outlook features. This is an existing evaluation-harness issue, independent of the new opponent settings.
+
+The extension run was stopped with 3,290 saved rows (the 3,000 baseline rows and 290 partial head-to-head
+pairings). Its checkpoint and log remain; partial scores are preserved in
+[`opponents-extensions-exploratory.json`](../runs/task28/opponents-extensions-exploratory.json).
+The harness now shares only immutable network weights and creates an independent evaluator for each player.
+The timing harness does the same. The engine's decision rules and its within-player cache behavior are
+unchanged. A three-worker check repeated 30 battles across three settings in reversed job order: all scores
+matched exactly. A regression test checks that a player's evaluator cannot inherit another team's cache.
+The normal suite then passed 228 tests (seven optional skips); PvPoke remained 108/108.
+
+The corrected grid, tag `opponents-isolated`, evaluated all six settings together on seed 2701 and the full
+2,000 / 2,000 / 1,000 counts. Its source/data hashes and unchanged selection rule are frozen in
+`runs/task28/isolated-inputs.json`. `runs/task28/batch.py` ran that grid, froze one choice, confirmed it on
+seed 280281, timed it on seed 280282, and compared it and the old engine against the trained bot on seed
+280283, sequentially with three workers. Corrected results, not the exploratory table above, decide adoption.
+
+**Corrected selection grid, seed 2701.** All 33,000 result rows completed (45,000 battles), with 2,000 mirrored
+head-to-head pairings, 2,000 crowd games and 1,000 PvPoke games per candidate. Every player has its own evaluator
+cache. All recorded source/model/data fingerprints matched after the run. Margins below are 95%; changes are
+paired percentage-point differences from the current engine on the same teams and seeds.
+
+| Setting | Head to head vs current engine | Crowd score | Paired crowd change | PvPoke score | Paired PvPoke change |
+|---|---|---|---|---|---|
+| Current engine | — | 67.6% ± 2.0 | — | 76.2% ± 2.6 | — |
+| Mixture | 49.3% ± 1.3 | 72.5% ± 2.0 | +4.9 ± 2.1 | 78.7% ± 2.5 | +2.5 ± 2.7 |
+| Mixture + profiling | 49.4% ± 1.3 | 72.0% ± 2.0 | +4.4 ± 2.1 | 82.6% ± 2.4 | +6.3 ± 2.6 |
+| Original team prior only | 50.4% ± 1.2 | 67.5% ± 2.1 | −0.2 ± 1.9 | 73.7% ± 2.7 | −2.6 ± 2.6 |
+| Mixture + profiling + original team prior | 49.9% ± 1.2 | 71.3% ± 2.0 | +3.7 ± 2.2 | 81.1% ± 2.4 | +4.9 ± 2.7 |
+| Same combination, stronger human style | 49.9% ± 1.2 | 71.8% ± 2.0 | +4.1 ± 2.2 | 80.8% ± 2.4 | +4.5 ± 2.7 |
+| Same combination, v2 team prior | 49.2% ± 1.3 | 71.7% ± 2.0 | +4.1 ± 2.2 | 81.0% ± 2.4 | +4.7 ± 2.8 |
+
+The human-style change alone, compared with the original combination, adds +0.4 ± 0.6 crowd points and
+−0.4 ± 0.7 PvPoke points. Replacing the prior with v2 adds +0.4 ± 1.9 and −0.2 ± 2.2, respectively.
+Neither extension helps beyond its margin. The original team prior alone does not help; the plain mixture
+does not clear its PvPoke margin. The predeclared rule selects **mixture + profiling**: its weaker paired
+lower bound is +2.27 points. This is a selection result, not a confirmed gain. The exact choice and rule were
+written to [`selection.json`](../runs/task28/selection.json) before starting seed 280281.
+
+Descriptive `engine_versus.py` search times, in table order after baseline (median / 99th / observed maximum,
+CPU ms): 28 / 103 / 204; 27 / 99 / 215; 29 / 108 / 236; 25 / 96 / 228; 27 / 97 / 225; 27 / 100 / 238.
+These capped per-chunk samples do not replace the dedicated timing run. Reader was not used. Full printed
+output: [`isolated.out`](../runs/task28/isolated.out). The small
+[`opponents-isolated-summary.json`](../runs/task28/opponents-isolated-summary.json) retains exact scores,
+margins and all individual outcomes as quarter-point strings in battle-number order.
+
+**Fresh-seed confirmation, seed 280281, tag `opponents-confirm`.** The frozen mixture + profiling candidate
+completed another 2,000 mirrored pairings, 2,000 crowd games and 1,000 PvPoke games. The score and paired-change
+margins are 95%.
+
+| Player | Head to head vs current engine | Crowd | Paired crowd change | PvPoke | Paired PvPoke change |
+|---|---|---|---|---|---|
+| Current engine | — | 70.5% ± 2.0 | — | 76.3% ± 2.6 | — |
+| Mixture + profiling | 48.4% ± 1.3 | 73.9% ± 1.9 | +3.4 ± 2.1 | 81.9% ± 2.4 | +5.6 ± 2.6 |
+
+The exact head-to-head upper confidence limit is 49.644%, below 50%. Although both outside-opponent gains
+exceed their margins, **the full acceptance criterion fails**. No alternative was chosen after inspecting
+this confirmation seed. No engine setting is promoted to desktop or website defaults, and no site build or
+publication is needed. Full output: [`confirmation.out`](../runs/task28/confirmation.out); exact scores and
+outcomes: [`opponents-confirm-summary.json`](../runs/task28/opponents-confirm-summary.json);
+machine-readable decision: [`verdict.json`](../runs/task28/verdict.json). Its descriptive search times were
+27 / 101 / 231 CPU ms (median / 99th / observed maximum).
+
+**Dedicated real-time measurement, seed 280282.** `realtime_trial.py --timing 300 --workers 3
+--settings 'opponents=mix,profile=1'` measured 6,974 searched decisions with the real-time wrapper's default
+budgets, independent evaluator caches, and process CPU time on macOS 26.6.2 arm64 / Python 3.13.13.
+Whole-battle bootstrap 95% intervals:
+
+| Measurement | Estimate | 95% interval |
+|---|---:|---|
+| Median search time | 24.41 ms | 22.69–26.02 ms |
+| 99th-percentile search time | 96.82 ms | 91.05–101.69 ms |
+| Decisions requiring any wait | 2.72% | 2.37–3.10% |
+
+The observed maximum search was **172.66 ms** and maximum wait **85.77 ms**. These are sample maxima,
+not population limits with inferential margins. No search was cut short and none fell back to the trained
+bot; the exact one-sided 95% upper bound on the probability of a battle having either observed-zero event
+is 0.994% for each event type. A zero-event bootstrap alone would incorrectly suggest no uncertainty.
+The smallest simulated search budget was 300 ms; all observed searches fit. CPU timing on this native Mac
+does not establish loaded wall-clock or browser/Pyodide performance. Full per-cause table:
+[`timing.out`](../runs/task28/timing.out); exact measurements: [`timing.json`](../runs/task28/timing.json).
+
+**Its edge against the trained bot, fresh seed 280283.** Each engine played 1,000 mirrored pairings against
+the trained bot (2,000 battles each). The current engine scored **63.9% ± 1.8**; mixture + profiling scored
+**64.1% ± 1.8**, a paired change of **+0.2 ± 2.1 points** (all 95%). There is no measured shrinkage or gain
+in this edge. This secondary comparison was not used for selection or adoption. Its descriptive search times
+were 33 / 114 / 239 CPU ms for the current engine and 31 / 103 / 231 for the candidate (median / 99th / maximum).
+Full output: [`bot-confirmation.out`](../runs/task28/bot-confirmation.out); exact scores, paired difference and
+individual outcomes: [`opponents-bot-confirm-summary.json`](../runs/task28/opponents-bot-confirm-summary.json).
+
+**Checks and unsuccessful execution attempts.** The initial exact unit command failed only at two raw
+`os.nice(10)` calls in `scripts/losses.py`. A process-local priority fallback passed all 222 tests with seven
+optional skips before any repository change. `losses.py` now uses the existing `low_priority()` helper;
+the normal command passed 227 tests after the option changes, with the same seven skips, including new checks for weighted unseen teams,
+out-of-pool species, missing calibration files and human-style routing. PvPoke reproduces 108/108 before and
+after these changes. The first human audit included a raw-only folder without tracked states; discovery was
+corrected to the exact saved development-summary names and the failed log was preserved. No game or tracker
+data was changed. The initial command and its failed fallback, successful retries, and logs are in
+[`commands.txt`](../runs/task28/commands.txt).
+
+**Final checks.** The full normal suite passed **228 tests, seven optional skips**, in 10.503 seconds;
+`check_pvpoke.py` reproduced **108/108** battles exactly. All 22 frozen source/model/data fingerprints still
+matched after the complete corrected batch. `git diff --check` passed. The learned networks, battle rules,
+team-list data and desktop/website defaults were not changed. All changes remain uncommitted. Large raw
+checkpoints are retained locally for resumption and excluded by exact `.gitignore` entries; the retained
+text/JSON summaries contain the scores needed to verify every reported margin.

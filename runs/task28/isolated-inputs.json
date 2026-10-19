@@ -1,0 +1,38 @@
+{
+  "workers": 3,
+  "seed": 2701,
+  "candidates": [
+    "opponents=mix",
+    "opponents=mix,profile=1",
+    "unseen=teams",
+    "opponents=mix,profile=1,unseen=teams",
+    "opponents=mix,profile=1,unseen=teams,style_file=runs/task28/opponent_styles-human.json",
+    "opponents=mix,profile=1,unseen=teams,team_file=data/teams_v2.json"
+  ],
+  "hashes": {
+    "pogo/engine.py": "4414b85a7d762b10e8c2601b0f556e4ab1d8ae21e2375d0475ff12148b98de05",
+    "pogo/realtime.py": "e6f0129d3ca0127d46e2fd8721fcd94d53ae1f7c6bbd09a69ec8ccc9345c0007",
+    "pogo/agents.py": "05c1741f4dda8fa1c489d196916ecb8fdb80b715eb846dc93c95bf7f9988ec90",
+    "pogo/learner.py": "a166d28113279dfedc5434dbaa9b96fc4489ffa7693018d0e3b84005ea772a91",
+    "pogo/battle.py": "50cdad03d0e012b249f1da61c1c029edf433f37335ef565adbc169a024c58a1d",
+    "pogo/evaluation.py": "e210b464926a8bd8efb38961d3dca4d9aff3869e9dd707a005462803bf6daaaf",
+    "pogo/pvpoke_ai.py": "89ef8f3a893caaf4070db1385238189b6ccf2990677430c87fb3b8537fd0b868",
+    "pogo/teamlist.py": "b8358f36b42c379eacf3e891f8a8f6f500b06f26ad2714ee2d3df4d5d14b97ca",
+    "pogo/gamedata.py": "d9e786d5466788631b18c12ade154f5b628019e6cd6fbdd2ecafa0f5f353fc0e",
+    "scripts/engine_versus.py": "0bc4734d0ab47310e1458f73c5099075eaba108818c38267a3da37d479598748",
+    "data/teams.json": "faac064132fe7959d6c9e3f909b8b3c199d09939a64d4f3810cc973624141f6d",
+    "data/teams_v2.json": "868eccf951229b36f3d5794480d14ba31ab9ed43ec05f36677182af783c913ef",
+    "data/opponent_styles.json": "5a138ca1194fcd209a4e388eff3af05e90dda1f9aebe46b09c120c97cad5383e",
+    "data/gamemaster.json": "311752ea88ad93d033d2d9cf114dbb9d094b5ef80c1ba2490899188f71821915",
+    "data/rankings-1500.json": "0152473e1370bbcbf85b0893e78226950c820cf7dfe6a47f42cb0def6cd9a80e",
+    "data/cpm.json": "bb2a5d2505bd6fdeb020728c74abd0dbeab022ec7b4502c91a4f97a36968517a",
+    "data/matchups.json": "405ca461261d2a8c5e0f25f52a237ab3aeff4f75dfec1bf6e5835f15c2c3939c",
+    "runs/general-decide/q.npz": "bd7f56ef72742b4d4543e759e233e3c779b54c2b11067c573109cb2f1ac9dfb2",
+    "runs/eval/eval.npz": "5feec2e1798c2f8fdc54422285d6772da491a700496bb2f86e079dec254fc5fc",
+    "runs/task28/opponent_styles-human.json": "f18abdf0866025f5eb13bc044e78fce58208d48aa3d0b1fb3c21b1e6b9d2d413",
+    "scripts/realtime_trial.py": "94f64f5223d27d02a8d7b11383fb883d8f94561065881e58f99666cf5894436a",
+    "runs/task28/batch.py": "9b44683cdf4a8f22769e1620f5522b5087bce41f323b6c02d31b90939bf209a0"
+  },
+  "rule": "No head-to-head loss beyond its 95% margin; maximize the smaller lower 95% bound for paired crowd/PvPoke improvement.",
+  "correction": "Each player receives an independent evaluator matchup cache. Only network weights are shared."
+}

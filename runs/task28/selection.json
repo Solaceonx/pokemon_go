@@ -1,0 +1,27 @@
+{
+  "spec": "opponents=mix,profile=1",
+  "source_tag": "opponents-isolated",
+  "source_seed": 2701,
+  "stats": {
+    "h2h": {
+      "mean": 0.494125,
+      "margin95": 0.012686260204902516,
+      "n": 2000
+    },
+    "changes": {
+      "crowd": {
+        "mean": 0.04375,
+        "margin95": 0.021033553526139333,
+        "n": 2000
+      },
+      "pvpoke": {
+        "mean": 0.0635,
+        "margin95": 0.02584612409106113,
+        "n": 1000
+      }
+    },
+    "eligible": true,
+    "selection_score": 0.022716446473860664
+  },
+  "rule": "No head-to-head loss beyond its 95% margin; maximize the smaller lower 95% bound for paired crowd/PvPoke improvement."
+}
