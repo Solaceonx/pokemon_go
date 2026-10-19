@@ -1068,6 +1068,11 @@ current kind, and distilling the engine (all in the results above).
   loop.
 - The owner is short on assistant usage: prefer changes that are small, local and cheap
   to verify.
+- **Opponents (owner, 2026-10-18): realistic, but do not overfit.** New measurements, team choice and opening
+  books use the mixed field (`--field mixed`, `pogo.teamshape.mixed_field`: teams as PvPoke's usage data has them
+  three times in four, the usual broad draw otherwise). A change is adopted only if it gains on the mixed field,
+  confirmed on a fresh seed, and does not lose beyond its margin on the usual field (`--field standard`).
+  PvPoke's data is one snapshot of its training battles, not GBL; refresh it rather than tuning to it.
 
 ## Twitch intake pilot (2026-10-10)
 
@@ -3201,3 +3206,21 @@ against unhurried (`realtime_trial.py --pairings 600 --crowd 1000 --samples 32 -
 point against the crowd and nothing head to head. Live, 32 imagined battles keeps its head-to-head gain and is about level
 with the current engine against the crowd (+1.7 ± 1.9 unhurried, less about 1.2). If the owner prefers a margin for slower
 machines, 16 imagined battles (51.4% ± 1.7, +4.6 ± 2.7 crowd unhurried, median 116 ms) would be cut far less often.
+
+### Which opening book fits only its own field (2026-10-18, the owner: "try not to overfit")
+
+Three books for Melmetal / Altaria / Jellicent, built on the usual field, the PvPoke field and the mixed field
+(`--field mixed`: 30 most-used leads plus the usual top 50, 55 leads; `runs/openings_mixed.out`), each checked on
+4,000 fresh battles (seed 77, not used to build any of them) on every field (`--book`, `runs/openings_cross.out`).
+Points gained over the bot without a book:
+
+| book built on \ checked on | usual field | PvPoke field | mixed field |
+|---|---|---|---|
+| usual | +2.8 ± 0.9 | +4.6 ± 1.2 | +3.9 ± 1.1 |
+| PvPoke | +0.2 ± 0.9 | +5.4 ± 1.2 | +4.3 ± 1.1 |
+| mixed | +1.2 ± 0.7 | +5.4 ± 1.2 | +5.2 ± 1.1 |
+
+The PvPoke-only book is overfit: nothing on the usual field. The mixed book meets the rule (gains on the mixed field
+on fresh battles, no loss on the usual) and is the one to use: `data/openings/melmetal-altaria-jellicent-mixed.json`
+(18 of 55 leads get a plan; Cramorant and Mimikyu: stay in). The usual book is the most even across fields, a
+sign that much of what a book learns is about our own team, not the field.
