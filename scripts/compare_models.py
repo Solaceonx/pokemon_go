@@ -3,7 +3,7 @@
 
     python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/general-rules2/q.npz:0.05 [--battles 4000] [--workers 3]
 
-Each model is given as FILE:MARGIN (how far ahead another option must be rated before the model overrules
+Each model is given as FILE:MARGIN, or FILE:auto for the margin saved next to it (how far ahead another option must be rated before the model overrules
 the Planner). Every model, and the Planner alone, plays the same battles: teams drawn half from the good-team
 list and half at random, against the usual crowd. Reported: each one's score, its gain over the Planner, and
 its gain over the first model named, with margins. Then each later model plays the first one directly, every
@@ -37,6 +37,8 @@ def pilot_for(spec):
     if spec is None:
         return Planner
     path, _, margin = spec.rpartition(":")
+    if margin == "auto":  # the margin decide.py chose, saved next to the model
+        margin = (Path(path).parent / "margin.txt").read_text().strip()
     net = QNet.load(path)
     return lambda: Learner(q=net, margin=float(margin))
 
