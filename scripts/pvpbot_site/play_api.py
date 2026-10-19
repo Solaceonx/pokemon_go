@@ -80,11 +80,12 @@ def new(job: str) -> str:
     """job: {"mine": [3 ids], "theirs": [3 ids], "owned": bool, "bot": "learner" | "engine", "tick_ms": real ms a turn}"""
     j = json.loads(job)
     gd, s = _s["gd"], _s
+    s["ev"] = Evaluator(s["ev"].model)  # a fresh review cache for this game's team
     mine = [(s["owned"].get(sid) if j["owned"] else None) or gd.default(sid) for sid in j["mine"]]
     theirs = [gd.default(sid) for sid in j["theirs"]]
     seed, bot_seed = random.getrandbits(32), random.getrandbits(30)
     if j["bot"] == "engine":
-        bot = RealTime(s["ev"], s["pool"], rollout="bot", samples=4, edge=0.03, q=s["net"], margin=0.02, seed=bot_seed,
+        bot = RealTime(Evaluator(s["ev"].model), s["pool"], rollout="bot", samples=4, edge=0.03, q=s["net"], margin=0.02, seed=bot_seed,
                        turn_ms=j["tick_ms"], cap_ms=max(50, j["tick_ms"] - 100), clock=time.perf_counter)
     else:
         bot = Learner(q=s["net"], margin=0.02, seed=bot_seed)

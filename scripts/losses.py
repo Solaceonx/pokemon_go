@@ -33,6 +33,7 @@ for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from pogo.agents import duel, varied_settings  # noqa: E402
+from pogo.arena import low_priority  # noqa: E402
 from pogo.battle import CHARGED, DRAW, FAST, SWITCH, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
@@ -104,7 +105,7 @@ def bot(seed):
 
 
 def setup() -> None:
-    os.nice(10)
+    low_priority()
     gd = GameData()
     pool = gd.meta(50)
     _state.update(gd=gd, pool=pool, draw=drawer(gd, pool), net=QNet.load(str(MODEL)))

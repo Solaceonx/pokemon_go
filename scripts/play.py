@@ -319,6 +319,8 @@ class Server:
         if self.game:
             self.game.stopped = True
             self.game.answered.set()
+        # The review and the bot each need their own cache for this game's team.
+        self.evaluator = Evaluator(self.evaluator.model)
         mine = self.team(self.args.team) if self.args.team else list(self.owned.values())[:3]
         theirs = self.team(self.args.foe) if self.args.foe else self.counter(mine) or self.draw(self.rng)
         bot_seed = random.getrandbits(30)
@@ -328,7 +330,7 @@ class Server:
             # The trained bot with a look-ahead at its judgement calls (pogo.engine), as tested in scripts/engine_trial.py,
             # with a deadline on every search on the wall clock (pogo.realtime). Here the search runs inside the game's
             # own turn, so none may take longer than a turn; in simulation none comes near that.
-            bot = RealTime(self.evaluator, self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02,
+            bot = RealTime(Evaluator(self.evaluator.model), self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02,
                            turn_ms=1000 * TURN * self.args.slow, after_charged_ms=1000 * self.args.charged_pause,
                            cap_ms=1000 * TURN * self.args.slow - 50, clock=time.perf_counter, seed=bot_seed)
         elif self.args.bot == "crowd":

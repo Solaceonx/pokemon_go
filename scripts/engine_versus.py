@@ -45,6 +45,7 @@ from pogo.realtime import RealTime  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
+CACHE_POLICY = "per-player"
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
 _state: dict = {}
 
@@ -82,8 +83,10 @@ def setup() -> None:
 def evaluator(path: str | None) -> Evaluator:
     path = path or str(ROOT / "runs" / "eval" / "eval.npz")
     if path not in _state["evals"]:
-        _state["evals"][path] = Evaluator.load(path)
-    return _state["evals"][path]
+        _state["evals"][path] = Evaluator.load(path).model
+    # Share immutable weights only: the evaluator's outlook cache belongs to one player
+    # in one battle, otherwise prior jobs and the opposing player's searches affect it.
+    return Evaluator(_state["evals"][path])
 
 
 def pilot(settings: dict | None, seed: int, cls=RealTime):
@@ -156,9 +159,13 @@ def main() -> None:
     path = ROOT / "runs" / "engine_versus" / f"{args.tag}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
+    if saved and saved.get("evaluator_cache") != CACHE_POLICY:
+        raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
         raise SystemExit(f"{path} was made with seed {saved.get('seed')}; use that seed or another tag")
-    saved.update(seed=args.seed, baseline=args.baseline)
+    if saved and saved.get("baseline") != args.baseline:
+        raise SystemExit(f"{path} used a different baseline; use that baseline or another tag")
+    saved.update(seed=args.seed, baseline=args.baseline, evaluator_cache=CACHE_POLICY)
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
     times = saved.setdefault("search_ms", {})
     named = {"baseline": args.baseline, **{f"candidate {k + 1}": c for k, c in enumerate(args.candidates)}}

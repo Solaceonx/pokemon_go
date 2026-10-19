@@ -1,0 +1,27 @@
+Waiting for the running time-grid sweep.
+Selected after time-grid: samples=16,horizon=40
+Starting task27-time-edge.out
+Traceback (most recent call last):
+  File "/tmp/task27_pipeline.py", line 63, in <module>
+    run('scripts/engine_versus.py', ['--tag', 'time-edge', '--workers', 7, '--pairings', 1000, '--crowd', 1000, '--pvpoke', 500,
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        '--seed', 2701, '--candidates', *[f'{base_spec},edge={edge}' for edge in (0.01, 0.03, 0.05)]], 'task27-time-edge.out')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/task27_pipeline.py", line 50, in run
+    result = subprocess.run(command, env=ENV, stdout=output, stderr=subprocess.STDOUT)
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/subprocess.py", line 556, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/subprocess.py", line 1214, in communicate
+    self.wait()
+    ~~~~~~~~~^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/subprocess.py", line 1280, in wait
+    return self._wait(timeout=timeout)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/subprocess.py", line 2085, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Caskroom/miniforge/base/lib/python3.13/subprocess.py", line 2043, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

@@ -1,0 +1,34 @@
+[
+  {
+    "argv": [
+      "nice",
+      "-n",
+      "10",
+      "/Users/marco/Developer/pokemon_go/.venv/bin/python",
+      "scripts/engine_versus.py",
+      "--tag",
+      "time-edge",
+      "--workers",
+      "7",
+      "--pairings",
+      "1000",
+      "--crowd",
+      "1000",
+      "--pvpoke",
+      "500",
+      "--seed",
+      "2701",
+      "--candidates",
+      "samples=16,horizon=40,edge=0.01",
+      "samples=16,horizon=40,edge=0.03",
+      "samples=16,horizon=40,edge=0.05"
+    ],
+    "log": "runs/task27-time-edge.out",
+    "environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    }
+  }
+]

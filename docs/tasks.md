@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
+| **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco; shared evaluator-cache interference found and fixed; corrected measurements running | Big machine |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
@@ -267,7 +267,7 @@ deadline falls back to the bot's pick), the change to `play.py`, and a table in 
 15% of searched decisions; if those are mostly where the bot's own values for the options are close,
 skipping the rest saves most of the time. `scripts/engine_habits.py` records what is needed to check.
 
-## 27. Give the engine the time it has — Marco
+## 27. Give the engine the time it has — Marco: evaluator-cache isolation fixed; corrected measurements running
 
 **Why.** The engine's settings (4 imagined battles per option, 20 turns ahead) were chosen when every decision had to
 be quick. Live it has 300 ms (unforeseen decisions) to 2,300 ms (during a 5-turn fast move) and uses 18 ms on the

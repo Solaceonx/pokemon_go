@@ -1,0 +1,28 @@
+real-time engine, settings: {'samples': 32, 'horizon': 20, 'edge': 0.03}, clock: cpu, pauses: defaults (pogo/realtime.py)
+
+--- head to head, real-time engine against the unhurried engine, 600 pairings both ways: 50.7% ± 2.0
+27190 searched decisions; search time median 277 ms, 99th percentile 800, worst 1396
+cut short by the deadline 16.2%, no complete round (trained bot's pick) 0.1%
+wait at the moment of decision: median 0 ms, 99th percentile 297, worst 306; decisions with any wait 6.2%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   28% |    300ms |    290 |  303 |   317 |     48.8% |       0.1%
+predicted, fast move of 2      | predicted  |   27% |    800ms |    306 |  798 |   807 |      2.3% |       0.0%
+a charged move came            | pause      |   11% |   2000ms |    241 |  847 |  1311 |      0.0% |       0.0%
+predicted, fast move of 3      | predicted  |    8% |   1300ms |    341 | 1129 |  1304 |      0.4% |       0.0%
+after our charged move         | pause      |    5% |   2000ms |    195 |  766 |  1396 |      0.0% |       0.0%
+start                          | pause      |    4% |   2000ms |    412 |  603 |   881 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   1000ms |    193 |  436 |   551 |      0.0% |       0.0%
+they switched                  | unforeseen |    4% |    300ms |    256 |  301 |   306 |     41.2% |       1.8%
+after a faint                  | pause      |    3% |   1000ms |    193 |  492 |   663 |      0.0% |       0.0%
+a faint came                   | pause      |    2% |   1000ms |    184 |  796 |   997 |      0.3% |       0.0%
+predicted, fast move of 4      | predicted  |    2% |   1800ms |    364 |  952 |  1263 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |    137 |  299 |   301 |     27.0% |       0.0%
+mispredicted                   | unforeseen |    0% |    300ms |     67 |  283 |   296 |     12.5% |       0.0%
+
+--- against the crowd, 1000 battles, the same for all three
+  real-time engine   71.5% ± 2.8
+  unhurried engine   71.4% ± 2.8
+  trained bot        67.2% ± 2.9
+  rt minus bot: +4.3 ± 2.9 points
+  rt minus engine: +0.1 ± 0.8 points

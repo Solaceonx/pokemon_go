@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-14.
+Last updated 2026-10-18.
 
 ## Goal
 
@@ -2330,3 +2330,110 @@ Corviknight / Mandibuzz / Carbink / Thievul, the Pokémon most common in `data/t
 So with open sheets the six decides much: one of the owner's six is never worth bringing here, and the six has no good
 answer to a Dark core. Choosing which six to register needs these tables for many sixes against many sixes; one
 table costs 144,000 battles, so that search is for a bigger machine or a cache of three-against-three results.
+
+## More engine samples and longer look-ahead (task 27, 2026-10-18): initial runs superseded by cache-isolation fix
+
+**Superseded selection data; not valid for adoption.** The prescribed `time-grid` command ran with seven workers,
+seed 2701, 1,000 head-to-head team pairings (each both ways), 1,000 crowd battles and 500 PvPoke AI battles per
+setting. Baseline: 4 samples, 20 turns, edge 0.03, bot rollouts, margin 0.02. Every score and paired difference
+has its 95% margin; timing columns are observed CPU-time quantiles, not confidence intervals. No reader probe
+was requested for this task. The code, models and data hashed before the run remained unchanged throughout it.
+
+The baseline scored 69.5% ± 2.8 against the crowd and 76.7% ± 3.7 against PvPoke's AI. Parentheses below are paired
+percentage-point differences from that baseline; all grid settings use edge 0.03.
+
+| Samples / horizon | Head to head | Crowd score (difference) | PvPoke score (difference) | Search CPU ms, median / p99 / maximum |
+|---|---|---|---|---|
+| 8 / 20 | 51.8% ± 1.7 | 72.1% ± 2.8 (+2.6 ± 2.9) | 79.0% ± 3.6 (+2.3 ± 3.6) | 57 / 208 / 488 |
+| 16 / 20 | 52.2% ± 1.7 | 73.2% ± 2.7 (+3.8 ± 2.8) | 79.2% ± 3.6 (+2.5 ± 3.5) | 123 / 455 / 1193 |
+| 32 / 20 | 53.0% ± 1.7 | 75.0% ± 2.7 (+5.6 ± 2.8) | 78.0% ± 3.6 (+1.3 ± 3.5) | 250 / 921 / 2403 |
+| 4 / 30 | 48.7% ± 1.9 | 67.6% ± 2.9 (-1.8 ± 3.1) | 71.6% ± 4.0 (-5.1 ± 4.0) | 42 / 153 / 362 |
+| 4 / 40 | 48.4% ± 1.9 | 65.6% ± 2.9 (-3.8 ± 3.2) | 71.9% ± 3.9 (-4.8 ± 4.4) | 48 / 185 / 395 |
+| 16 / 30 | 50.9% ± 1.8 | 73.2% ± 2.7 (+3.8 ± 3.1) | 77.4% ± 3.7 (+0.7 ± 3.8) | 168 / 592 / 1404 |
+| 16 / 40 | 55.0% ± 1.9 | 71.8% ± 2.8 (+2.4 ± 3.2) | 75.9% ± 3.7 (-0.8 ± 4.1) | 190 / 728 / 1543 |
+| 32 / 40 | 54.1% ± 1.8 | 74.5% ± 2.7 (+5.1 ± 3.1) | 77.8% ± 3.6 (+1.1 ± 4.0) | 384 / 1453 / 3526 |
+
+The highest eligible head-to-head score selected **16 samples / 40 turns**. Longer horizons with only four
+samples did not help: both lost ground against PvPoke beyond the margin, and 40 turns also lost ground against
+the crowd. More samples at 20 turns helped in these selection battles, but 32 samples / 40 turns scored lower against the baseline
+than 16 / 40 did; those two settings were not compared directly. Grid times use the search rows retained by `engine_versus.py`; the separate
+`realtime_trial.py --timing` checks will measure the deadline-limited player before any live recommendation.
+
+**The repeatability check failed before confirmation.** Repeating 16 / 40 / edge 0.03 on seed 2701 changed
+223 of 1,000 head-to-head pair results, 44 of 1,000 crowd results and 20 of 500 PvPoke results. Even the
+unchanged baseline changed 39 of 1,000 crowd results and 23 of 500 PvPoke results. Source/model hashes were
+unchanged. `engine_versus.py` shared one mutable `Evaluator` across players and worker jobs; its cached
+matchup features are keyed by team slot and opposing species, not our team's identity. Evaluating another
+team first changed three features for the same subsequent position in a small reproducer. Thus worker
+assignment and preceding searches could alter the supposedly paired games.
+
+The queue was stopped before opening reserved confirmation seed **272701**. The partial edge results are
+retained in [the interrupted-run summary](../runs/task27-time-edge-interrupted-summary.out). These original
+tables describe what printed, but do not establish a reliable setting ranking or a gain. Corrected runs
+will use new tags so that their checkpoints cannot mix cache-sharing policies.
+
+The fix shares only model weights, with a fresh evaluation cache for each player in each battle. It applies
+to the comparison and timing harnesses and isolates the local/website bot from the human-side review cache.
+It does not change the model, the simulator, or a player's existing within-game look-ahead. The regression
+check in `tests/test_engine_versus.py` covers interference from another player and from a preceding battle.
+After this fix, the direct full suite ran **223 tests: OK, seven skipped**, and the reference check printed
+**108 of 108 PvPoke battles reproduced exactly**. A seven-worker repeat with chunk sizes 1 and 5 matched every score exactly (10 head-to-head pairings,
+10 crowd and 5 PvPoke battles per candidate, plus baseline fields); these are reproducibility checks, not
+strength estimates. Logs: [first](../runs/task27-repeat-a.out), [second](../runs/task27-repeat-b.out),
+[exact comparison](../runs/task27-repeat-check.out). The harness rejects checkpoints without the new
+cache-policy metadata.
+
+The corrected run is underway with tag `time-grid-isolated`; it repeats the full prescribed grid. It will
+then run `time-edge-isolated`, confirm only the selected setting on untouched seed 272701 with tag
+`time-confirm-isolated-seed272701` (2,000 pairings, 2,000 crowd, 1,000 PvPoke), and measure baseline/candidate
+timing on 300 battles using CPU and wall clocks, including the 400 ms website cap.
+[Corrected input hashes](../runs/task27-isolated-provenance.json) and
+[exact launched commands](../runs/task27-isolated-pipeline-commands.json) are saved.
+No new sample/horizon/edge defaults have been adopted.
+
+Outputs: [grid](../runs/task27-time-grid.out), [resumable scores](../runs/engine_versus/time-grid.json),
+[selection](../runs/task27-time-grid-selection.json), [input hashes and selection rule](../runs/task27-provenance.json).
+All long jobs request `nice -n 10`; the sandbox refuses further lowering and the workers retain inherited
+`nice=15`. NumPy threads are limited to one per worker, with at most seven workers in this task.
+
+Before repository edits, the PvPoke reference check reproduced **108 of 108** battles exactly. The initial
+unit command hit two sandbox `os.nice(10)` errors; a temporary launcher retaining the already-low priority
+then ran **222 tests: OK, seven skipped**. `scripts/losses.py` now uses the existing `low_priority()` helper
+so the suite can run directly. `scripts/realtime_trial.py` now accepts samples, horizon, edge, clock
+and a search cap instead of measuring only the fixed old settings. Neither script was imported by the
+running grid. The final acceptance result remains pending.
+
+### Task 27, corrected runs (after the cache-isolation fix): 32 imagined battles adopted
+
+The grid again, with isolated caches (`engine_versus.py --tag time-grid-isolated --workers 7 --pairings 1000 --crowd 1000
+--pvpoke 500 --seed 2701`, `runs/task27-time-grid-isolated.out`; interrupted once when the agent running it stopped, resumed
+by tag). Baseline: 4 imagined battles, 20 turns, edge 0.03. Differences are paired, in points:
+
+| Setting | Head to head | Crowd | PvPoke | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| samples 8 | — (see file) | | | 58 / 212 / 526 |
+| samples 16 | 51.4% ± 1.7 | +4.6 ± 2.7 | +3.1 ± 3.3 | 116 / 430 / 1,075 |
+| **samples 32** | **53.7% ± 1.7** | **+6.6 ± 2.9** | **+3.7 ± 3.3** | 240 / 885 / 2,132 |
+| horizon 30 | 48.9% ± 1.9 | −0.2 ± 3.2 | −3.9 ± 4.0 | 41 / 145 / 314 |
+| horizon 40 | 50.3% ± 1.9 | −1.8 ± 3.3 | −3.7 ± 4.4 | 46 / 181 / 337 |
+| samples 16, horizon 30 | 51.1% ± 1.8 | +5.0 ± 3.1 | +2.3 ± 3.9 | 164 / 581 / 1,375 |
+| samples 16, horizon 40 | 53.4% ± 1.8 | +3.5 ± 3.3 | −0.1 ± 4.0 | 193 / 726 / 1,604 |
+| samples 32, horizon 40 | 55.0% ± 1.9 | +6.3 ± 3.2 | +1.3 ± 4.0 | 390 / 1,453 / 3,404 |
+
+More imagined battles help; a longer look-ahead does not. 32 / 20 was taken forward over 32 / 40: level head to head
+within the margins, better against PvPoke, and its worst search fits the live budgets (300–2,300 ms) where 32 / 40's does
+not. Edge at 32 samples (`--tag time-edge-isolated`, same battles): 0.01 49.8% ± 1.8 (+3.0 ± 3.0, +2.1 ± 3.4); 0.03 as above;
+0.05 53.5% ± 1.8 (+8.0 ± 2.8, +2.9 ± 3.6). Level, so edge stays 0.03.
+
+**Confirmed on the untouched seed 272701** (`--tag time-confirm-isolated-seed272701 --pairings 2000 --crowd 2000 --pvpoke 1000`,
+`runs/task27-time-confirm-isolated.out`): samples 32 against the current engine, **head to head 53.4% ± 1.2; against the crowd
++1.7 ± 1.9; against PvPoke's AI +5.5 ± 2.4** (82.3% against 76.8%). Better head to head beyond the margin and not worse
+against either field: adopted.
+
+**In real time** (`realtime_trial.py --timing 300 --samples 32 --seed 2704`, CPU clock, `runs/task27-timing-samples32.out`):
+7,069 searched decisions, median 225 ms, 99th percentile 782, worst 1,233; 12.7% cut short by the deadline (41.6% of those
+after a one-turn fast move, which has 300 ms), 0.0% left with no complete round; 4.5% of decisions wait at all, worst 302 ms.
+Cut short, it still plays as well as unhurried (`realtime_trial.py --pairings 600 --crowd 1000 --samples 32 --seed 2705`,
+`runs/task27-realtime-vs-unhurried-samples32.out`): real-time against unhurried 50.7% ± 2.0 head to head; against the crowd
+71.5% against 71.4%, +0.1 ± 0.8; real-time minus the trained bot +4.3 ± 2.9. These times are on Marco's Mac (Apple
+silicon); the owner's Mac should be checked with the same `--timing` command before relying on the margins.
