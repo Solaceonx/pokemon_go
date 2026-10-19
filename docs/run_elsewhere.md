@@ -42,12 +42,13 @@ Same options as the real run, tiny sizes, to see that everything works (`--worke
 python scripts/decide.py --run trial-33 --forms --playouts 2 --field mixed --both-sides 0.5 --start runs/general-decide/q.npz --minutes 1 --rounds 1 --workers 2 --val-battles 20 --final-battles 20
 ```
 
-It prints lines like these (numbers vary; on the owner's Mac about 7,000 examples a minute with 2 workers):
+It prints lines like these (numbers vary; on the owner's Mac about 4,500 examples a minute with 2 workers):
 
 ```
-first round piloted by runs/general-decide/q.npz (margin 0.02)
 field: mixed; form inputs: True; play-outs per option: 2
-collected this round: 1600 shield, 520 throw, 1100 swap, 240 replace, 3500 mid_swap
+...
+first round piloted by runs/general-decide/q.npz (margin 0.02)
+collected this round: 1040 shield, 340 throw, 730 swap, 160 replace, 2300 mid_swap
 ...
 final test on 20 fresh battles, overruling when ahead by 0.1
 files: runs/trial-33/q.npz, margin.txt, examples.npz
