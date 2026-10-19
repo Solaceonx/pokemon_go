@@ -1,0 +1,53 @@
+{
+  "recorded_at_utc": "2026-10-18T19:47:51.465960+00:00",
+  "chosen": "mix=1",
+  "seed": 2902027,
+  "score_units": "fractions; multiply by 100 for percentages or percentage points",
+  "selection_sha256": "dc8d531454ff109f5bbc4790987afbcdd3857f0d9d3c6a0dd591530de45f52e4",
+  "checkpoint": "runs/engine_versus/mixing-confirm-2902027.json",
+  "checkpoint_sha256": "8e3484f2a0fe810efd474d3988c4c5f418f528967f14f65323a5f5aa93db9957",
+  "source_manifest_sha256": "7997808288051788e11301255b9fac6ac6d7bf062b4222361a611a2769dcf0ee",
+  "input_hashes_verified": 20,
+  "metrics": {
+    "h2h": {
+      "cases": 2000,
+      "score": 0.486625,
+      "margin95": 0.012329469566749362
+    },
+    "crowd": {
+      "cases": 2000,
+      "score": 0.6755,
+      "margin95": 0.020477493588616648,
+      "baseline_score": 0.68825,
+      "baseline_margin95": 0.020264629213202354,
+      "paired_delta": -0.01275,
+      "paired_margin95": 0.014766437410116682
+    },
+    "pvpoke": {
+      "cases": 1000,
+      "score": 0.751,
+      "margin95": 0.02681593654625646,
+      "baseline_score": 0.747,
+      "baseline_margin95": 0.02692270152598839,
+      "paired_delta": 0.004,
+      "paired_margin95": 0.017482888370798054
+    },
+    "reader": {
+      "cases": 1000,
+      "score": 0.51725,
+      "margin95": 0.01835795736182265,
+      "baseline_score": 0.509,
+      "baseline_margin95": 0.018321689734157015,
+      "paired_delta": 0.00825,
+      "paired_margin95": 0.016839840002544897
+    }
+  },
+  "adoption_rule": "On this one fresh seed, reader paired_delta - paired_margin95 must exceed zero; H2H score + margin95 must reach 0.5; crowd and PvPoke paired_delta + paired_margin95 must reach zero. If shield mixing is selected, require positive reader gain beyond the margin against its shield-search control too. Do not change candidate after confirmation.",
+  "checks": {
+    "reader_gain_beyond_margin": false,
+    "no_clear_h2h_loss": false,
+    "no_clear_crowd_loss": true,
+    "no_clear_pvpoke_loss": true
+  },
+  "adopt": false
+}

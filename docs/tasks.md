@@ -40,7 +40,7 @@ and push that before starting.
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
-| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
+| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain** — Marco | Big machine |
 | **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
 | **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
 | 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
@@ -307,7 +307,7 @@ holding everyone seen so far.
 on a fresh seed and not worse head to head against the current engine beyond the margin (it may lose some of its
 edge against the bot itself; report it).
 
-## 29. Mixed choices at simultaneous moments, and plenty of randomisation — Marco
+## 29. Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain — Marco
 
 **Why.** Both players choose at once, every turn. The engine always takes the single best-looking option, so a player
 who reads it (when it baits, when it shields, when it throws) can exploit it. The owner wants it hard to read: mix at

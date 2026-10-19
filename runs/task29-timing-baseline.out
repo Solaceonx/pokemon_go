@@ -1,0 +1,25 @@
+nice: setpriority: Operation not permitted
+real-time engine, pauses: defaults (pogo/realtime.py)
+engine settings: confirmed defaults
+
+--- timing: 300 battles against the crowd
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+priority: retaining inherited nice=15 (sandbox denied lowering it further)
+6638 searched decisions; search time median 28 ms, 99th percentile 107, worst 231
+cut short by the deadline 0.0%, no complete round (trained bot's pick) 0.0%
+wait at the moment of decision: median 0 ms, 99th percentile 33, worst 101; decisions with any wait 2.9%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   28% |    300ms |     30 |  124 |   231 |      0.0% |       0.0%
+predicted, fast move of 2      | predicted  |   26% |    800ms |     30 |  106 |   152 |      0.0% |       0.0%
+a charged move came            | pause      |   14% |   2000ms |     28 |   93 |   159 |      0.0% |       0.0%
+predicted, fast move of 3      | predicted  |    9% |   1300ms |     30 |  116 |   135 |      0.0% |       0.0%
+after our charged move         | pause      |    5% |   2000ms |     15 |   73 |   105 |      0.0% |       0.0%
+start                          | pause      |    5% |   2000ms |     50 |   79 |   115 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   1000ms |     21 |   47 |    84 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |   1000ms |     19 |   48 |    52 |      0.0% |       0.0%
+a faint came                   | pause      |    3% |   1000ms |     18 |   95 |   102 |      0.0% |       0.0%
+they switched                  | unforeseen |    3% |    300ms |     25 |   84 |    96 |      0.0% |       0.0%
+predicted, fast move of 4      | predicted  |    1% |   1800ms |     25 |  105 |   132 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     17 |   95 |   101 |      0.0% |       0.0%

@@ -5,7 +5,8 @@
     python3 scripts/realtime_trial.py --pairings 600 --crowd 1000  is it as good (hours: hand to another machine)
 
 Both use the engine's confirmed settings (the trained bot inside the look-ahead, 4 imagined battles per option,
-20 turns, edge 0.03). Pause lengths are options (milliseconds); the defaults are cautious guesses.
+20 turns, edge 0.03) unless --settings overrides them, as in engine_versus.py (for example --settings "mix=1").
+Pause lengths are options (milliseconds); the defaults are cautious guesses.
 
 --timing: the real-time engine plays the usual crowd. For every searched decision: what came before it, the time
 it had, the time it took, how often the deadline cut the search short or left no complete round (then it plays
@@ -42,6 +43,7 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.realtime import RealTime  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
+from engine_versus import parse  # noqa: E402
 
 PAUSES = ("turn_ms", "see_and_tap_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")
 
@@ -51,20 +53,21 @@ def points(winner: int, side: int) -> float:
 
 
 def job(task) -> dict:
-    mode, pauses, start, count, seed = task
+    mode, pauses, start, count, seed, settings = task
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
     draw = drawer(gd, pool)
     net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
-    ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
-    confirmed = dict(rollout="bot", samples=4, edge=0.03, q=net, margin=0.02)
+    confirmed = dict(settings)
+    ev = Evaluator.load(confirmed.pop("eval", ROOT / "runs" / "eval" / "eval.npz"))
+    confirmed.update(rollout="bot", q=net)
 
     def realtime(s):
-        return RealTime(ev, pool, seed=s, **confirmed, **pauses)
+        return RealTime(Evaluator(ev.model), pool, seed=s, **confirmed, **pauses)
 
     def engine(s):
-        return Engine(ev, pool, seed=s, **confirmed)
+        return Engine(Evaluator(ev.model), pool, seed=s, **confirmed)
 
     out = {"rows": [], "head": [], "rt": [], "engine": [], "bot": []}
     for n in range(start, start + count):
@@ -93,9 +96,10 @@ def job(task) -> dict:
     return out
 
 
-def run(mode, battles, workers, seed, pauses) -> dict:
+def run(mode, battles, workers, seed, pauses, settings=None) -> dict:
     per = -(-battles // workers)
-    tasks = [(mode, pauses, w * per, min(per, battles - w * per), seed) for w in range(workers) if w * per < battles]
+    tasks = [(mode, pauses, w * per, min(per, battles - w * per), seed, settings or parse(""))
+             for w in range(workers) if w * per < battles]
     with multiprocessing.get_context("spawn").Pool(len(tasks)) as pool:
         parts = pool.map(job, tasks)
     return {k: [x for p in parts for x in p[k]] for k in parts[0]}
@@ -127,22 +131,27 @@ def main() -> None:
     parser.add_argument("--crowd", type=int, default=0, help="battles against the crowd for real-time, unhurried and the bot")
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=2301)
+    parser.add_argument("--settings", default="", help="engine settings, as in engine_versus.py (e.g. mix=1)")
     for name in PAUSES:
         parser.add_argument("--" + name.replace("_", "-"), type=float, default=None)
     args = parser.parse_args()
+    settings = parse(args.settings)
+    if settings is None:
+        parser.error("--settings must describe an engine, not 'bot'")
     pauses = {name: getattr(args, name) for name in PAUSES if getattr(args, name) is not None}
     print(f"real-time engine, pauses: {pauses or 'defaults (pogo/realtime.py)'}")
+    print(f"engine settings: {args.settings or 'confirmed defaults'}")
     if args.timing:
         print(f"\n--- timing: {args.timing} battles against the crowd")
-        timing_table(run("timing", args.timing, args.workers, args.seed, pauses)["rows"])
+        timing_table(run("timing", args.timing, args.workers, args.seed, pauses, settings)["rows"])
     if args.pairings:
-        got = run("pairings", args.pairings, args.workers, args.seed + 1, pauses)
+        got = run("pairings", args.pairings, args.workers, args.seed + 1, pauses, settings)
         m, h = mean_and_margin(got["head"])
         print(f"\n--- head to head, real-time engine against the unhurried engine, {len(got['head'])} pairings both ways: "
               f"{100 * m:.1f}% ± {100 * h:.1f}")
         timing_table(got["rows"])
     if args.crowd:
-        got = run("crowd", args.crowd, args.workers, args.seed + 2, pauses)
+        got = run("crowd", args.crowd, args.workers, args.seed + 2, pauses, settings)
         print(f"\n--- against the crowd, {args.crowd} battles, the same for all three")
         for name, label in (("rt", "real-time engine"), ("engine", "unhurried engine"), ("bot", "trained bot")):
             m, h = mean_and_margin(got[name])

@@ -84,13 +84,15 @@ def new(job: str) -> str:
     theirs = [gd.default(sid) for sid in j["theirs"]]
     seed, bot_seed = random.getrandbits(32), random.getrandbits(30)
     if j["bot"] == "engine":
-        bot = RealTime(s["ev"], s["pool"], rollout="bot", samples=4, edge=0.03, q=s["net"], margin=0.02, seed=bot_seed,
+        bot = RealTime(Evaluator(s["ev"].model), s["pool"], rollout="bot", samples=4, edge=0.03,
+                       q=s["net"], margin=0.02, seed=bot_seed,
                        turn_ms=j["tick_ms"], cap_ms=max(50, j["tick_ms"] - 100), clock=time.perf_counter)
     else:
         bot = Learner(q=s["net"], margin=0.02, seed=bot_seed)
     person = Person()
     s.pop("lineup_win_chance", None)
     s["evals"] = []  # (game seconds, the engine's evaluation from our side) after each turn, for the graph at the end
+    s["view_ev"] = Evaluator(s["ev"].model)  # a separate cache for this game's human-side evaluation graph
     s.update(battle=Battle(mine, theirs, person, bot, seed=seed, record=True), person=person, bot=bot,
              record={"bot": j["bot"], "seed": seed, "bot_seed": bot_seed, "mine": j["mine"], "theirs": j["theirs"],
                      "teams": [[_describe(b) for b in mine], [_describe(b) for b in theirs]], "owned": j["owned"]})
@@ -116,7 +118,7 @@ def step(job: str) -> str:
         return json.dumps({"need": need.kind, "options": need.options, "state": state()})
     throwers = sorted({side for _, side, text in battle.log[seen:] if " throws " in text})
     if battle.winner is None and battle.sides[0].mon.hp > 0 and battle.sides[1].mon.hp > 0:
-        s["evals"].append((round(battle.turn * TURN, 1), round(float(s["ev"](battle.views[0])), 3)))
+        s["evals"].append((round(battle.turn * TURN, 1), round(float(s["view_ev"](battle.views[0])), 3)))
     return json.dumps({"throwers": throwers, "took": person.took, "state": state()})
 
 
