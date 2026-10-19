@@ -3300,3 +3300,37 @@ comparable: the crowd (`varied_settings` now sets the six values it used to take
 evolved rules were found). Rule tests that pin mechanisms down use `STANDARD_RULES`. Checks: 257 tests OK (7
 skipped), PvPoke 108 of 108 and 132 of 132 with form-changers. Follow-up: task 33 retrains the networks on these rules;
 numbers for "the bot" measured before today are on the standard rules.
+
+## The owner's team played out thousands of times against PvPoke's most-played teams (2026-10-19, the owner)
+
+`scripts/best_lines.py` (the trained bot on our side choosing at random a third of the time at shields, swaps and
+replacements and a tenth at throws; their side the bot with shifted habits; each battle summed up as a line: what
+our lead did, our first three shield calls, the lead's first charged move, whom we sent in after the first faint).
+Melmetal / Altaria / Jellicent, Melmetal leading, against the five most-played teams in PvPoke's data, 3,000 battles
+each plus 600 of the bot alone (`runs/best_lines_1.out`, `runs/best_lines/melmetal-altaria-jellicent.json`):
+
+| Their team | bot alone | what stands out |
+|---|---|---|
+| Melmetal / Galarian Corsola / Cramorant | 8% ± 2 | swapping Melmetal out at once to Altaria 30% ± 5 against staying 11% ± 1 (the bot stays three times in four) |
+| Melmetal / Altaria / Shadow Ninetales | 74% ± 3 | Melmetal stays and opens with Dynamic Punch (41% against 21% for Double Iron Bash); swapping out at once 10–20% |
+| Cramorant / Jumpluff / Stunfisk | 67% ± 4 | stay a while, then Jellicent; Double Iron Bash first; Altaria after the first faint |
+| Cramorant / Marowak / Shadow Sableye | 97% ± 1 | the bot's own play is close to perfect |
+| Stunfisk / Cramorant / Mimikyu | 7% ± 2 | no line above 12%: a team problem, not a play problem |
+
+Line scores include the random choices made elsewhere in those battles, so they are compared with each other, not
+with the bot's own score; lines seen fewer than about 50 times are flattered as the best of many small groups.
+
+## The website games, replayed from their logs (2026-10-19)
+
+22 games came back from the store (`import_played.py --store`): 14 by the owner (6 won, 8 lost against the engine),
+8 by a friend with a Water team against an all-Fire team (all won; line-up 100%). `scripts/losses.py --played` now
+replays a game from its log (the person's choices and the bot's logged moves, `Logged`), so a game replays exactly
+whatever version of the bot played it (13 of 14; one has two of the bot's switches logged on the same turn), and
+tries every other choice at the loser's decisions: the owner's in games they lost, the bot's in games it lost
+(`runs/losses_website_2.out`, `runs/losses/played.jsonl`). With Melmetal / Altaria / Jellicent, choices better by 0.3
+or more: staying in with Melmetal against Annihilape (25–38%) where swapping to Altaria at once won 62–75% (the
+opening book's plan too); Double Iron Bash into Thievul (8%) where waiting for Dynamic Punch won 75%; a nearly
+fainted Altaria left against a fresh Clodsire (8%) where Jellicent won 75%. The bot's: a Corviknight shield at 34%
+health (33%; no shield 83%), and Corviknight switching to Shadow Annihilape (0%) where Altaria won 54%. Its Moonblasts
+into Jellicent (the owner's note) were not among its losing choices: neutral on Jellicent and its hardest-hitting
+move. Hindsight flatters losses (task 26); these are examples to judge, not rules.

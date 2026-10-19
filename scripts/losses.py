@@ -142,6 +142,14 @@ def win_chance(snap, kind, choice, plays, seed, vary: bool = True, side: int = 0
             twin._sees_move[foe] = getattr(new, "sees_move", False)
 
         forced = Forced(mine.clone(), kind, choice, reseed)
+        if getattr(mine, "scripted", False):  # a replayed person or logged bot: the trained bot plays on after the decision
+            take_over = reseed
+
+            def reseed(take_over=take_over, forced=forced, r=r):
+                forced.inner = Learner(q=_state["net"], margin=0.02, seed=r.getrandbits(32))
+                take_over()
+
+            forced.reseed = reseed
         twin = battle.clone(*((forced, theirs.clone()) if side == 0 else (theirs.clone(), forced)))
         twin_holder["b"] = twin
         winner = twin.run()
@@ -205,6 +213,7 @@ def record(seed):
 
 class Replay:
     """The person's side of a game saved by scripts/play.py, choice by choice; fast moves otherwise."""
+    scripted = True  # in a play-out, the trained bot takes over after the decision being tried
 
     def __init__(self, choices):
         self.acts, self.shields, self.replaces = {}, {}, {}
@@ -231,6 +240,71 @@ class Replay:
 
     def clone(self):
         return self
+
+
+class Logged:
+    """The bot's side of a saved game, from the game's log: its throws, switches and replacements at the turns they
+    happened, its shields where the person's throws were shielded, fast moves otherwise. So a game replays exactly
+    whatever version of the bot played it."""
+    scripted = True
+
+    def __init__(self, log):
+        self.acts, self.shields, self.replaces = {}, {}, {}
+        fainted = set()
+        for turn, side, text in log:
+            if side == 1 and text.endswith("faints"):
+                fainted.add(turn)
+            elif side == 1 and text.startswith("sends in "):
+                name = text[len("sends in "):].rsplit(" ", 2)[0]
+                (self.replaces if turn in fainted else self.acts)[turn] = ("switch", name)
+            elif side == 1 and " throws " in text:
+                self.acts[turn] = ("throw", text.split(" throws ", 1)[1].split(":")[0])
+            elif side == 0 and " throws " in text:
+                self.shields[turn] = text.endswith(": shielded")
+
+    def act(self, view):
+        what = self.acts.get(view.turn)
+        if what is None:
+            return FAST
+        kind, name = what
+        if kind == "throw":
+            moves = [m.name for m in view.me.mon.build.charged]
+            action = CHARGED[moves.index(name)] if name in moves else FAST
+        else:
+            slot = next((j for j, m in enumerate(view.me.team) if m.build.name == name), None)
+            action = SWITCH[slot] if slot is not None else FAST
+        return action if action in view.legal() else FAST
+
+    def shield(self, view, energy, *move):
+        return view.me.shields > 0 and self.shields.get(view.turn, False)
+
+    def replace(self, view):
+        bench, name = view.me.bench(), self.replaces.get(view.turn, ("", ""))[1]
+        slot = next((j for j in bench if view.me.team[j].build.name == name), None)
+        return slot if slot is not None else bench[0]
+
+    def clone(self):
+        return self
+
+
+def replay_logged(path, side: int):
+    """A saved game played again with the person's choices and the bot's logged moves; `side`'s decisions recorded."""
+    s, saved = _state, json.loads(Path(path).read_text())
+    gd = s["gd"]
+    teams = [[gd.build(sid, moves, level=level, ivs=tuple(ivs)) for sid, moves, level, ivs in team] for team in saved["teams"]]
+    agents = [Replay(saved["my_choices"]), Logged(saved["log"])]
+    rec = Recorder(agents[side])
+    agents[side] = rec
+    battle = Battle(teams[0], teams[1], agents[0], agents[1], seed=saved["seed"], record=True)
+    steps = []
+    while battle.winner is None:
+        snap = (battle.clone(None, None), rec.inner.clone(), battle.agents[1 - side])
+        rec.calls = []
+        battle.step()
+        if rec.calls:
+            steps.append((snap, list(rec.calls)))
+    same = [list(entry) for entry in battle.log] == saved["log"]
+    return battle, steps, saved, same
 
 
 def replay(path):
@@ -300,15 +374,18 @@ def analyse(job):
 
 
 def analyse_played(job):
-    """One game against a person: if the bot lost, its decisions tried every other way."""
+    """One game against a person, replayed from its log: the loser's decisions tried every other way (the bot's if
+    it lost, the person's if they lost)."""
     path, screen, confirm = job
-    battle, steps, saved, same = replay(path)
+    saved = json.loads(Path(path).read_text())
+    side = 1 if saved["result"] == "win" else 0  # the person's result: a win means the bot lost
+    battle, steps, saved, same = replay_logged(path, side)
     result = {"battle": Path(path).stem, "bot": saved["bot"], "won": battle.winner == 1, "draw": battle.winner == DRAW,
-              "replayed": same, "mine": [m.build.species_id for m in battle.sides[1].team],
+              "replayed": same, "side": side, "mine": [m.build.species_id for m in battle.sides[1].team],
               "theirs": [m.build.species_id for m in battle.sides[0].team], "decisions": 0, "swings": []}
-    if battle.winner != 0 or not same:
+    if battle.winner not in (0, 1) or not same:
         return result
-    return swings(battle, steps, 1, saved["seed"] % 100003, screen, confirm, result)
+    return swings(battle, steps, side, saved["seed"] % 100003, screen, confirm, result)
 
 
 def main() -> None:
@@ -391,7 +468,7 @@ def main() -> None:
 
 
 def played(args) -> None:
-    """The bot's losses in games against a person: which of its decisions would have turned them, in plain words."""
+    """Games against a person, replayed from their logs: the loser's decisions (yours or the bot's) that would have turned them."""
     paths = args.played or sorted(str(p) for p in (ROOT / "games" / "played").glob("*.json"))
     usable = [p for p in paths if "seed" in json.loads(Path(p).read_text())]
     print(f"{len(paths)} saved games, {len(usable)} with seeds to replay (games saved before 17 October have none)")
@@ -401,26 +478,26 @@ def played(args) -> None:
     with (OUT / "played.jsonl").open("w") as out:
         for r in results:
             out.write(json.dumps(r) + "\n")
-    lost = [r for r in results if not r["won"] and not r["draw"]]
     broken = [r["battle"] for r in results if not r["replayed"]]
-    print(f"the bot won {sum(r['won'] for r in results)}, lost {len(lost)}, drew {sum(r['draw'] for r in results)}"
-          + (f"; could not replay exactly, so left out: {', '.join(broken)}" if broken else ""))
-    decisive = lambda w: w["theirs"] >= 0.5 and w["ours"] < 0.25  # noqa: E731
+    print(f"the bot won {sum(r['won'] for r in results)}, lost {sum(not r['won'] and not r['draw'] for r in results)}, "
+          f"drew {sum(r['draw'] for r in results)}" + (f"; could not replay exactly, so left out: {', '.join(broken)}" if broken else ""))
     kinds = collections.Counter()
-    for r in lost:
-        if not r["replayed"]:
+    for r in results:
+        if not r["replayed"] or r["draw"]:
             continue
-        found = [w for w in r["swings"] if decisive(w)]
-        print(f"\n{r['battle']} ({r['bot']}): the bot's {' / '.join(r['mine'])} lost to {' / '.join(r['theirs'])}; "
-              f"{r['decisions']} decisions tried, {len(found)} that would have won")
+        who = "your" if r.get("side") == 0 else "the bot's"
+        loser, winner = (r["theirs"], r["mine"]) if r.get("side") == 0 else (r["mine"], r["theirs"])
+        found = [w for w in r["swings"] if w["theirs"] - w["ours"] >= 0.3]
+        print(f"\n{r['battle']} ({r['bot']}): {who} {' / '.join(loser)} lost to {' / '.join(winner)}; "
+              f"{r['decisions']} decisions tried, {len(found)} with a choice better by 0.3 or more")
         for w in found:
             x = w["situation"]
-            kinds[f"{w['kind']} -> {w['better_kind']}"] += 1
+            kinds[f"{'you' if r.get('side') == 0 else 'bot'}: {w['kind']} -> {w['better_kind']}"] += 1
             print(f"  turn {x['turn']}: {x['mon']} ({100 * x['hp'][0]:.0f}%, {x['energy'][0]} energy) v {x['foe']} "
                   f"({100 * x['hp'][1]:.0f}%, {x['energy'][1]}), shields {x['shields'][0]}-{x['shields'][1]}, left "
                   f"{x['left'][0]}-{x['left'][1]}: chose {w['chosen']} ({100 * w['ours']:.0f}%), {w['better']} wins {100 * w['theirs']:.0f}%")
     if kinds:
-        print("\nall of them, by what the bot did -> what would have won: "
+        print("\nall of them, by what was done -> what would have won: "
               + ", ".join(f"{k} {n}" for k, n in kinds.most_common()))
     print("\nAfter a changed decision the person is played by variations of the bot, so 'would have won' means against"
           "\nplayers like the bot from there on. Hindsight flatters losses (task 26): judge the examples, and count a"
