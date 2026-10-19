@@ -3392,3 +3392,22 @@ Deciding the last Pokémon's shields by the rulebook's look-ahead instead (`last
 the current bot, mixed field, seed 3201, `runs/last_shield_1.out`): 48.9% ± 0.5 head to head, −1.0 ± 0.5 against the
 crowd. Worse on average against these opponents, who rarely bait at full energy; `last_always` stays True. A real fix
 needs the endgame solved as this game is (the guessing between baits and shield timing), not a look-ahead.
+
+## Last-Pokémon fights solved as a game (2026-10-19, the owner): neutral, +1 against a baiter, not adopted
+
+`pogo/finale.py`: once both sides are on their last Pokémon, `Finale` solves the rest as `mirror.py` does (plans of
+the next two throws: cheaper move at once, the bait at the dearer move's energy, or the dearer; and the next two
+shield calls: shield, take it, or shield only if the dearer move was affordable; every plan against every plan from
+the position as it stands, both mixes solved), plays a plan drawn from its mix, and solves again after every charged
+move (about 0.4 s a solve, about one a battle). `scripts/finale_trial.py`, mixed field, seed 4401
+(`runs/finale_trial_1.out`):
+
+| | solved | as it is |
+|---|---|---|
+| head to head, 2,000 pairings both ways | 50.0% ± 0.6 | |
+| against the crowd, 3,000 battles (paired) | 66.0% ± 1.7 | 66.5% ± 1.7 (−0.5 ± 0.6) |
+| against a baiter that opens every last-Pokémon fight with the bait at full energy, 2,000 pairings | 51.2% ± 0.6 | 50.2% ± 0.6 (+1.0 ± 0.6) |
+
+The baiter hardly punishes the bot's always-shield (50.2%): few endgames turn on that one bait. Solving them gains
+a point against it and nothing against the bot or the crowd, so it stays an option (`Finale`), off by default; worth
+switching on if real opponents turn out to bait at full energy on their last Pokémon often.
