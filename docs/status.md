@@ -3189,3 +3189,15 @@ field. Cramorant (71% staying in) and Mimikyu (63%) leads: stay in. Changes from
 Stunfisk and Araquanid four fast moves then Jellicent; against Melmetal and Clodsire four fast moves then Altaria;
 Deoxys-D two then Altaria; Shadow Ninetales, Ninetales and Shadow Quagsire: Jellicent at once. Note the team itself:
 46.2% without the book here against 53.8% on the usual field; the usual field flatters it.
+
+**Task 27 under the measured pauses (2026-10-18).** After the pauses measured from recordings became the defaults in
+`pogo/realtime.py` (400 ms after a charged move, 350 ms after a faint, where the guesses were 2,000 and 1,000), 32
+imagined battles was timed again on the merged code (`realtime_trial.py --timing 300 --samples 32 --seed 2706`,
+`runs/task27-timing-samples32-new-pauses.out`): median 244 ms, 99th percentile 791, worst 1,241; 19.8% cut short by the
+deadline (45% after a one-turn fast move, 23% after their charged move), 0.2% left with no complete round. Real time
+against unhurried (`realtime_trial.py --pairings 600 --crowd 1000 --samples 32 --seed 2707`,
+`runs/task27-realtime-vs-unhurried-samples32-new-pauses.out`): **head to head 49.8% ± 1.9; against the crowd 73.4% against
+74.6%, −1.2 ± 0.9**; real time minus the trained bot +7.6 ± 3.0. So under the measured pauses the deadlines cost about a
+point against the crowd and nothing head to head. Live, 32 imagined battles keeps its head-to-head gain and is about level
+with the current engine against the crowd (+1.7 ± 1.9 unhurried, less about 1.2). If the owner prefers a margin for slower
+machines, 16 imagined battles (51.4% ± 1.7, +4.6 ± 2.7 crowd unhurried, median 116 ms) would be cut far less often.
