@@ -54,11 +54,15 @@ def games(task) -> dict:
     pool = gd.meta(50)
     draw = drawer(gd, pool)
     net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
-    ev, features = Evaluator.load(eval_path), Evaluator()
+    model = Evaluator.load(eval_path).model
     rng = random.Random(seed)
     xs, ys, game_ids = [], [], []
     for n in range(count):
-        players = [Engine(ev, pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, **varied_settings(rng, pool))
+        # A fresh evaluation cache for each player and for the recorder in every game: the cache is keyed by team slot
+        # and opposing species, not by our team, so sharing it lets one game or player change another's features.
+        features = Evaluator()
+        players = [Engine(Evaluator(model), pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02,
+                          **varied_settings(rng, pool))
                    for _ in range(2)]
         battle = Battle(draw(rng), draw(rng), *players, seed=rng.getrandbits(32))
         seen = []
