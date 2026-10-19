@@ -28,6 +28,10 @@ body { display: flex; justify-content: center; }
 .bar { height: 9px; background: #0006; border-radius: 6px; overflow: hidden; margin-top: 6px; }
 .bar i { display: block; height: 100%; background: var(--hp); border-radius: 6px; transition: width .35s ease, background .35s; }
 .marks { display: flex; gap: 10px; align-items: center; margin-top: 6px; font-size: 12px; color: var(--dim); }
+.energy { position: relative; height: 5px; margin-top: 6px; background: var(--line, #3334); border-radius: 3px; overflow: hidden; }
+.energy > i { position: absolute; left: 0; top: 0; bottom: 0; background: #e7b416; border-radius: 3px; }
+.energy .tick { position: absolute; top: -1px; bottom: -1px; width: 2px; background: var(--ink, #fff); opacity: 0.7; }
+.energy-text { display: block; margin-top: 3px; font-size: 11px; color: var(--dim); }
 .dots { display: flex; gap: 4px; }
 .dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 1px solid #0008; }
 .dot.out { background: #555; }
@@ -108,6 +112,8 @@ body { display: flex; justify-content: center; }
         <div class="name"><span id="foe-name">?</span><small id="foe-cp"></small></div>
         <div class="bar"><i id="foe-hp"></i></div>
         <div class="marks"><span class="dots" id="foe-left"></span><span class="dots" id="foe-shields"></span></div>
+        <div class="energy" title="their energy (the game hides it; good players count it); ticks: their charged moves' costs"><i id="foe-energy-bar"></i><span id="foe-energy-ticks"></span></div>
+        <small class="energy-text" id="foe-energy"></small>
       </div>
       <div id="foe-sprite"></div>
     </div>
@@ -241,6 +247,18 @@ function render(s) {
   const fs = foe.hp / foe.hp_max;
   $("foe-hp").style.width = `${100 * fs}%`; $("foe-hp").style.background = hpColour(fs);
   dots($("foe-left"), s.foe.left, 3, "dot"); dots($("foe-shields"), s.foe.shields, 2, "shield");
+  if (foe.energy !== undefined) {  // their energy, with ticks at their charged moves' costs
+    $("foe-energy-bar").style.width = `${foe.energy}%`;
+    const ticks = (foe.costs || []).join(",");
+    if ($("foe-energy-ticks").dataset.key !== ticks) {
+      $("foe-energy-ticks").dataset.key = ticks;
+      $("foe-energy-ticks").replaceChildren(...(foe.costs || []).map((c) => {
+        const t = document.createElement("i"); t.className = "tick"; t.style.left = `${c}%`; return t;
+      }));
+    }
+    const ready = (foe.costs || []).filter((c) => foe.energy >= c).length;
+    $("foe-energy").textContent = `${foe.energy} energy` + (foe.costs && foe.costs.length ? ` · ${ready ? ready + " move" + (ready > 1 ? "s" : "") + " ready" : "no move ready"}` : "");
+  }
   flashIfHit("foe:" + foe.species, foe.hp, spriteEl("foe-sprite", foe, false));
   // us
   $("my-name").textContent = me.name;

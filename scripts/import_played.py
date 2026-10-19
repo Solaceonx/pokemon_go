@@ -14,7 +14,6 @@ from __future__ import annotations
 import json
 import re
 import sys
-import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -24,8 +23,9 @@ SAVED = ROOT / "games" / "played"
 
 def from_store() -> list:
     cfg = json.loads((ROOT / ".pvpbot_store.json").read_text())
-    query = urllib.parse.urlencode({"key": cfg["read_key"]})
-    with urllib.request.urlopen(f"{cfg['url']}?{query}", timeout=120) as r:
+    body = json.dumps({"read_key": cfg["read_key"]}).encode()  # in the body, never in the address
+    request = urllib.request.Request(cfg["url"], data=body, headers={"Content-Type": "text/plain;charset=utf-8"})
+    with urllib.request.urlopen(request, timeout=120) as r:
         reply = json.loads(r.read())
     if not reply.get("ok"):
         raise SystemExit(f"the store said: {reply.get('error')}")

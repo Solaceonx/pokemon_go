@@ -9,7 +9,7 @@ Then open http://localhost:8765 (it opens by itself). The battle runs on the sam
 here, 1.5 times slower than the real game unless --slow says otherwise: half-second turns, fast moves
 landing on their last turn, charged moves taking 10 s off the clock. You attack with your fast move all the time, as if holding the screen, and choose charged
 moves, switches and shields; a charged move always counts as fully charged (no swiping). The opponent's
-energy is not shown, as on the phone.
+energy is shown, with ticks where their charged moves become affordable (the phone hides it; players count it).
 
 Opponents: --bot learner (default, the trained bot), engine (the trained bot with a look-ahead at its judgement
 calls, pogo.engine; needs runs/eval/eval.npz), planner (the hand-written rules) or crowd (a varied Planner, as in
@@ -258,6 +258,8 @@ class Game:
             if own:
                 out.update(energy=m.energy, fast={"name": m.build.fast.name, "type": m.build.fast.type},
                            charged=[{"name": c.name, "type": c.type, "energy": c.energy} for c in m.build.charged])
+            else:  # the game hides it; good players count it from their fast moves (the owner asked to see it)
+                out.update(energy=m.energy, costs=[c.energy for c in m.build.charged])
             return out
 
         prompt = dict(self.prompt) if self.prompt else None

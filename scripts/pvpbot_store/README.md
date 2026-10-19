@@ -23,4 +23,4 @@ Changing Code.gs later needs Deploy → Manage deployments → edit → new vers
 
     python3 scripts/import_played.py --store
 
-fetches every game, writes new ones to games/played/ and updates the notes of games already there.
+fetches every game (the read key goes in the request body), writes new ones to games/played/ and updates the notes of games already there.

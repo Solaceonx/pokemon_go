@@ -175,6 +175,8 @@ def state() -> dict:
         if own:
             out.update(energy=m.energy, fast={"name": m.build.fast.name, "type": m.build.fast.type},
                        charged=[{"name": c.name, "type": c.type, "energy": c.energy} for c in m.build.charged])
+        else:  # the game hides it; good players count it from their fast moves (the owner asked to see it)
+            out.update(energy=m.energy, costs=[c.energy for c in m.build.charged])
         return out
 
     return {
