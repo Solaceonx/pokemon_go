@@ -138,3 +138,7 @@ class RealTime(Engine):
         slot = self._timed(lambda: super(RealTime, self).replace(view), "replacing a fainted Pokémon", PAUSE, self.replace_ms)
         self._last = "faint"
         return slot
+
+    def shield(self, view, foe_energy):
+        return self._timed(lambda: super(RealTime, self).shield(view, foe_energy),
+                           "shielding a charged move", PAUSE, self.after_charged_ms)

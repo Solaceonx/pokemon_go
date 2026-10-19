@@ -38,7 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
-| **25** | **Let the engine search shield decisions** — Marco | Big machine |
+| **25** | **Let the engine search shield decisions** — Marco; measured 2026-10-18: no gain, keep off | Done; results in `status.md` |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
 | **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
@@ -371,7 +371,15 @@ each game ended, a new evaluation fitted on all rounds so far with a tenth of th
 **Done when.** Each adopted round beats the previous engine head to head beyond the margin on a fresh seed and is
 not worse against the crowd or PvPoke's AI; `status.md` has every round, adopted or not.
 
-## 25. Let the engine search shield decisions — Marco
+## 25. Let the engine search shield decisions — Marco — measured 2026-10-18: no gain, keep off
+
+**Result.** The full run-sheet comparison (seed 2701, 2,000 head-to-head pairings both ways, 2,000 crowd
+battles and 1,000 PvPoke battles per setting) found 49.2% ± 1.3 head to head, −2.4 ± 2.2 points against
+the crowd and −3.2 ± 3.0 against PvPoke. All margins are 95%. No gain, so no fresh-seed strength
+confirmation or promotion. `realtime_trial.py --timing 300 --workers 3 --seed 2501` measured both settings;
+with shields enabled, shield searches took 26 / 70 / 94 ms median / 99th / worst, with no cuts or fallbacks.
+`RealTime` now times and bounds shield searches, and the timing script accepts `--heads`.
+Full results and exact commands are in `status.md` and `runs/task25/commands.txt`.
 
 **Built (2026-10-17):** `heads=throw+swap+mid_swap+replace+shield` (`Engine._land_their_throw`: the move drawn from
 those the attacker can afford, the cheaper as often as this opponent has baited, the imagined battle starting just

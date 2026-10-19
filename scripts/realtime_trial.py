@@ -2,6 +2,7 @@
 """The engine in real time (pogo.realtime): how its time is spent, and whether it plays as well as unhurried.
 
     python3 scripts/realtime_trial.py --timing 200                 where the time goes (minutes on three cores)
+    python3 scripts/realtime_trial.py --timing 200 --heads throw+swap+mid_swap+replace+shield
     python3 scripts/realtime_trial.py --pairings 600 --crowd 1000  is it as good (hours: hand to another machine)
 
 Both use the engine's confirmed settings (the trained bot inside the look-ahead, 4 imagined battles per option,
@@ -51,7 +52,7 @@ def points(winner: int, side: int) -> float:
 
 
 def job(task) -> dict:
-    mode, pauses, start, count, seed = task
+    mode, pauses, start, count, seed, heads = task
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
@@ -59,6 +60,8 @@ def job(task) -> dict:
     net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
     ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
     confirmed = dict(rollout="bot", samples=4, edge=0.03, q=net, margin=0.02)
+    if heads is not None:
+        confirmed["heads"] = heads
 
     def realtime(s):
         return RealTime(ev, pool, seed=s, **confirmed, **pauses)
@@ -93,9 +96,9 @@ def job(task) -> dict:
     return out
 
 
-def run(mode, battles, workers, seed, pauses) -> dict:
+def run(mode, battles, workers, seed, pauses, heads=None) -> dict:
     per = -(-battles // workers)
-    tasks = [(mode, pauses, w * per, min(per, battles - w * per), seed) for w in range(workers) if w * per < battles]
+    tasks = [(mode, pauses, w * per, min(per, battles - w * per), seed, heads) for w in range(workers) if w * per < battles]
     with multiprocessing.get_context("spawn").Pool(len(tasks)) as pool:
         parts = pool.map(job, tasks)
     return {k: [x for p in parts for x in p[k]] for k in parts[0]}
@@ -127,22 +130,28 @@ def main() -> None:
     parser.add_argument("--crowd", type=int, default=0, help="battles against the crowd for real-time, unhurried and the bot")
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=2301)
+    parser.add_argument("--heads", help="searched decisions joined by '+', e.g. throw+swap+mid_swap+replace+shield")
     for name in PAUSES:
         parser.add_argument("--" + name.replace("_", "-"), type=float, default=None)
     args = parser.parse_args()
+    heads = tuple(args.heads.split("+")) if args.heads is not None else None
+    if heads is not None and (not heads or set(heads) - {"throw", "swap", "mid_swap", "replace", "shield"}):
+        parser.error("--heads must contain search heads joined by '+'")
     pauses = {name: getattr(args, name) for name in PAUSES if getattr(args, name) is not None}
     print(f"real-time engine, pauses: {pauses or 'defaults (pogo/realtime.py)'}")
+    if heads is not None:
+        print(f"searched heads: {'+'.join(heads)}")
     if args.timing:
         print(f"\n--- timing: {args.timing} battles against the crowd")
-        timing_table(run("timing", args.timing, args.workers, args.seed, pauses)["rows"])
+        timing_table(run("timing", args.timing, args.workers, args.seed, pauses, heads)["rows"])
     if args.pairings:
-        got = run("pairings", args.pairings, args.workers, args.seed + 1, pauses)
+        got = run("pairings", args.pairings, args.workers, args.seed + 1, pauses, heads)
         m, h = mean_and_margin(got["head"])
         print(f"\n--- head to head, real-time engine against the unhurried engine, {len(got['head'])} pairings both ways: "
               f"{100 * m:.1f}% ± {100 * h:.1f}")
         timing_table(got["rows"])
     if args.crowd:
-        got = run("crowd", args.crowd, args.workers, args.seed + 2, pauses)
+        got = run("crowd", args.crowd, args.workers, args.seed + 2, pauses, heads)
         print(f"\n--- against the crowd, {args.crowd} battles, the same for all three")
         for name, label in (("rt", "real-time engine"), ("engine", "unhurried engine"), ("bot", "trained bot")):
             m, h = mean_and_margin(got[name])
