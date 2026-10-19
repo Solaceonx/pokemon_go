@@ -2911,3 +2911,51 @@ plays no better, on 1,500 pairings both ways and 1,500 crowd battles (comparison
 crowd **−1.7 ± 2.4** points (current engine 70.7% ± 2.3). The loop's rule (head to head above 50% beyond the margin and not
 worse against the crowd) stopped it after round 1. As with the extra inputs (status: "Does the bot need to see their
 other Pokémon?"), a better-predicting evaluation does not by itself make better decisions.
+
+## Evolving the rulebook (task 30, 2026-10-18, the owner's idea): a confirmed gain
+
+`python3 scripts/evolve_rules.py --run rules-1 --workers 3 --generations 100 --population 32 --pairings 2000` (`runs/rules-1.out`,
+about 15 hours on three cores): CMA-ES over the `Planner`'s 34 genes, fitness head to head against the standard rules on the
+same 2,000 pairings for the whole generation. Best / median of each generation (the best is the top of 32, so flattered):
+
+| Generation | 1 | 10 | 25 | 50 | 75 | 100 |
+|---|---|---|---|---|---|---|
+| Best | 51.0% | 52.1% | 53.8% | 54.1% | 53.7% | 55.0% |
+| Median | 46.9% | 50.2% | 52.2% | 53.0% | 52.8% | 53.7% |
+
+`--final` re-scored the five best on 5,000 fresh pairings each (`runs/rules-1-final.out`): 54.9%, 54.7%, 54.6%, 54.4%, 54.2%
+against the standard. The best (generation 93) was confirmed with the printed command on a new seed
+(`rule_trial.py ... --battles 8000 --seed 3008`, `runs/rules-1-confirm.out`): **head to head 54.0% ± 0.9; against the crowd
+59.1% ± 1.1 against 55.8% ± 1.1, +3.4 ± 1.0 points.**
+
+**The trained bot on top** (`jobs/bot_on_evolved.py`, outside the repo; `runs/rules-1-bot-on-top.out`, seed 3030): the bot on
+the evolved rules against the bot on the standard rules, 4,000 pairings both ways, **51.6% ± 0.8** head to head (margin over
+chunks of 50 pairings); against the crowd on the same 4,000 battles 67.9% ± 1.4 against 67.3% ± 1.5, **+0.6 ± 1.1**. So the bot
+on top is not worse, and is better head to head. Both conditions for adoption hold.
+
+The settings that changed (the on/off rules and the bait and shield styles kept their defaults; `catch_gain`,
+`shield_matchup_hp` and `sweep_chance` belong to rules that stay off, so their values do nothing):
+
+| Setting | Standard | Evolved |
+|---|---|---|
+| `switch_margin` | 0.35 | 0.058 |
+| `shield_share` | 0.4 | 0.972 |
+| `energy_worth` | 0.0 | 0.5 |
+| `hold_cost` | 0.5 | 0.903 |
+| `switch_worth` | 0.0 | 0.289 |
+| `safe_weight` | 0.0 | 0.212 |
+| `win_switch` | 0.1 | 0.0 |
+| `expect_shield` | 0.7 | 0.446 |
+| `known_edge` | 0.15 | 0.4 |
+| `sac_margin` | 0.1 | 0.029 |
+| `shield_worth` | 0.35 | 0.392 |
+| `belief` | 2.0 | 1.840 |
+| `bad_matchup` | −0.2 | −0.179 |
+| `farm_cost` | 0.35 | 0.387 |
+| `matchup_weight` | 0.75 | 0.741 |
+
+The largest change is a much lower `switch_margin`: swap for a bench Pokémon only slightly better, where the standard needed
+0.35. Lowering it on its own gained nothing (task 26: 0.25 and 0.15, 50.1–50.3% head to head), so the gain comes from the
+combination, which is what the evolution was for. Still running when this was written: `rules-bot-1` (the bot on top
+during evolution) and `engine-1` (the engine's settings). Not yet done: making these the defaults, the crowd's
+`varied_settings` around them, and a retrain of the learned layer on the new rules.
