@@ -3361,3 +3361,23 @@ No gain, a small loss from the shield calls. The current defaults stay (`bait="m
 from the same values; `guess="read"`, a 50% prior read towards the opponent's record). Starting the read from the
 equilibrium and mixing loses against players who are not at it: these opponents bait far less than evenly (the bot
 a quarter of the time), and a fixed 50% that is soon corrected exploits that better than playing the safe mix.
+
+## The Melmetal mirror, one on one, solved (2026-10-19, the owner)
+
+`scripts/mirror.py` (`runs/mirror_melmetal.out`): each side has 72 plans (cheaper or dearer move for each of its first
+three throws while the other has a shield; shield, take it, or shield only if the dearer move was affordable for the
+first two throws it faces), every plan against every plan, the table solved for both sides' best mixes; the trained
+bot against itself as a check (it agrees in every case). Owner's Melmetal (attack 119.9, 145 HP) against PvPoke's
+default (attack 121.0, 146 HP), from full health:
+
+| shields ours-theirs | ours wins, best play | ours wins with the higher attack (`--swap`) |
+|---|---|---|
+| 2-2 | 0% | 100% |
+| 2-1 | 100% | 100% |
+| 1-2 | 0% | 0% |
+| 1-1 | 50% (every line a draw: both Dynamic Punches land, both faint together) | 50% |
+
+Both reach 45 energy on the same turn, so both throw Dynamic Punch together and the stronger attack goes first;
+with two shields each the third punch decides, and the faster one lands it. No choice of bait or shield changes any
+of these: the mirror is decided by shields in hand and by attack, not by play. The owner's Melmetal loses the tie to
+a default-IV one; the opening book's answer to a Melmetal lead (four fast moves, then Altaria) fits.
