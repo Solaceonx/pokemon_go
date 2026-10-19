@@ -21,6 +21,10 @@ plays as before (docs/tasks.md, 25, 28 and 29):
   draw our choice from the mix; temperature > 0: choose among close options at random, weighted by worth
   (task 29). Those draws use their own generator (`_mix_rng`), so a probe that copies the engine's search cannot
   copy its dice.
+- mix_shield=True (with the shield head): shield or not when multiple incoming moves are affordable.
+  mix_switch=True: all legal first actions against their fast move, ready throws and living bench when both
+  switches are free. Unseen bench slots are imagined, never read from the real battle.
+  random_hold=True: vary the hold rule's equally well-timed throw moments inside its safe window.
 """
 from __future__ import annotations
 
@@ -128,13 +132,17 @@ class Engine(Learner):
     def __init__(self, evaluator, pool: list, horizon: int = 20, samples: int = 6, edge: float = 0.0,
                  heads: tuple = ("throw", "swap", "mid_swap", "replace"), rollout: str = "quick",
                  opponents: str = "bot", profile: bool = False, unseen: str = "pool",
-                 mix: bool = False, temperature: float = 0.0, **settings):
+                 mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
+                 mix_switch: bool = False, random_hold: bool = False, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
         # Who plays inside the look-ahead: "quick", the cheap rollout player, or "bot", the trained bot itself.
         self.rollout = rollout
         self.opponents, self.profile, self.unseen, self.mix, self.temperature = opponents, profile, unseen, mix, temperature
+        self.mix_shield, self.mix_switch, self.random_hold = mix_shield, mix_switch, random_hold
+        self._hold_window = False
+        self._mix_fallback = False
         self._styles = styles() if opponents == "mix" else None
         self._teams = None
         if unseen == "teams":
@@ -197,8 +205,32 @@ class Engine(Learner):
 
     # deciding
 
+    def act(self, view: View) -> int:
+        theirs = self._mixed_actions("simultaneous", view) if self.switches and "mid_swap" in self.heads else []
+        if not theirs:
+            return super().act(view)
+        # The whole first action is simultaneous: staying can mean a fast move or either ready throw.
+        # First obtain the trained bot's fallback and update its remembered matchup/hold as usual.
+        self._mix_fallback = True
+        try:
+            pick = super().act(view)
+        finally:
+            self._mix_fallback = False
+        options = view.legal()
+        seeds = [self.rng.getrandbits(32) for _ in range(self.samples)]
+        choice = self._mixed(view, "simultaneous", options, seeds, theirs, pick)
+        if choice is None:
+            self.looks += 1
+            self.fell_back += 1
+            return pick
+        if choice == FAST:
+            self._fasted = (view.me.active, view.foe.build.uid)
+        else:
+            self._hold = 0
+        return choice
+
     def _decide(self, head: str, view: View, mask: tuple, planner_choice, foe_energy: int | None = None) -> int:
-        if head in self.forced or head not in self.heads:
+        if self._mix_fallback or head in self.forced or head not in self.heads:
             return super()._decide(head, view, mask, planner_choice, foe_energy)
         options = [k for k in range(len(mask)) if mask[k]]
         pick = super()._decide(head, view, mask, planner_choice, foe_energy)  # the trained bot's choice
@@ -206,8 +238,9 @@ class Engine(Learner):
             return pick
         self._foe_energy = foe_energy if foe_energy is not None else view.foe.energy
         seeds = [self.rng.getrandbits(32) for _ in range(self.samples)]
-        if self.mix and head == "throw" and self._their_throws(view):
-            mixed = self._mixed(view, head, options, seeds)
+        theirs = self._mixed_actions(head, view)
+        if theirs:
+            mixed = self._mixed(view, head, options, seeds, theirs, pick)
             if mixed is not None:
                 return mixed
         totals, rounds = dict.fromkeys(options, 0.0), 0
@@ -247,10 +280,44 @@ class Engine(Learner):
         ready = [CHARGED[k] for k, m in enumerate(foe.build.charged) if foe.energy >= m.energy]
         return [FAST, *ready] if ready and view.foe_busy == 0 else []
 
-    def _mixed(self, view: View, head: str, options: list, seeds: list) -> int | None:
-        """Both sides can throw: our options against theirs as a small game, solved; our choice drawn from the mix."""
+    def _mixed_actions(self, head: str, view: View) -> list:
+        if self.mix and head == "throw":
+            return self._their_throws(view)
+        if self.mix_shield and head == "shield":
+            energy = self._foe_energy if self._foe_energy is not None else view.foe.energy
+            ready = [CHARGED[k] for k, m in enumerate(view.foe.build.charged) if energy >= m.energy]
+            return ready if len(ready) > 1 else []  # a known incoming move has no opposing choice to mix against
+        if (self.mix_switch and head == "simultaneous" and not view.me.switch_wait and not view.me.busy
+                and not view.foe_switch_wait and not view.foe_busy and view.me.bench()):
+            # imagine() orders the opposing side as the visible slots followed by guessed slots.
+            seen = view.foe_shown
+            bench = [i for i, m in enumerate(seen) if m is not view.foe and m.hp > 0]
+            unseen = max(0, view.foe_left - sum(m.hp > 0 for m in seen))
+            bench += list(range(len(seen), len(seen) + unseen))
+            if bench:
+                return [*(self._their_throws(view) or [FAST]), *(SWITCH[i] for i in bench)]
+        return []
+
+    def _hold_plan(self, view: View) -> int | None:
+        self._hold_window = self.random_hold
+        try:
+            return super()._hold_plan(view)
+        finally:
+            self._hold_window = False
+
+    def _latest_good_turn(self, view: View, room: int) -> int:
+        latest = super()._latest_good_turn(view, room)
+        if not self._hold_window:
+            return latest
+        mine, theirs = view.me.mon.build.fast.turns, view.foe.build.fast.turns
+        phase = (theirs - view.foe_busy) % theirs
+        best_phase = (phase + latest * mine) % theirs
+        choices = [j for j in range(room + 1) if (phase + j * mine) % theirs == best_phase]
+        return self._mix_rng.choice(choices)
+
+    def _mixed(self, view: View, head: str, options: list, seeds: list, theirs: list, pick: int) -> int | None:
+        """Our options against their fixed first choices, with the same imagined state and dice in every cell."""
         from .sixes import solve
-        theirs = self._their_throws(view)
         totals = [[0.0] * len(theirs) for _ in options]
         rounds = 0
         for s in seeds:
@@ -276,7 +343,10 @@ class Engine(Learner):
         _, p, _ = solve(table, rounds=3000)
         self.looks += 1
         self.mixed += 1
-        return self._mix_rng.choices(options, list(p))[0]
+        self.cut += rounds < len(seeds)
+        choice = self._mix_rng.choices(options, list(p))[0]
+        self.changed += choice != pick
+        return choice
 
     def _out_of_time(self) -> bool:
         """Would one more imagined battle, of the average length so far, pass the deadline?"""
@@ -299,7 +369,9 @@ class Engine(Learner):
         rng = random.Random(seed)
         others = [j for j in range(3) if j != view.me.active]
         first = None
-        if head == "throw":
+        if head == "simultaneous":
+            first = option  # the matrix rows are actual legal action codes
+        elif head == "throw":
             first = FAST if option == 0 else CHARGED[option - 1]
         elif head in ("swap", "mid_swap"):
             first = None if option == 0 else SWITCH[others[option - 1]]
@@ -308,7 +380,7 @@ class Engine(Learner):
             them = self._imagined_opponent(rng)
         else:
             us, them = _rollout(), _rollout()
-        if self._their_first is not None:
+        if self._their_first is not None and head != "shield":
             them = _First(them, self._their_first)
         battle = imagine(view, rng, self.pool, _First(us, first), them, teams=self._teams)
         if head == "replace":
@@ -343,7 +415,10 @@ class Engine(Learner):
         if not ready:
             return
         bait = self._bait_seen[0] / self._bait_seen[1] if self._bait_seen[1] else 0.5
-        move = ready[0] if len(ready) == 1 or rng.random() < bait else ready[-1]
+        if self.mix_shield and self._their_first in CHARGED:
+            move = thrower.build.charged[self._their_first - CHARGED[0]]
+        else:
+            move = ready[0] if len(ready) == 1 or rng.random() < bait else ready[-1]
         thrower.energy = energy - move.energy
         if shielded:
             ours.shields -= 1

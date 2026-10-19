@@ -1,0 +1,37 @@
+nice: setpriority: Operation not permitted
+0 jobs to run on 3 workers
+
+baseline: the confirmed engine
+  against the crowd: 68.5% ± 2.0
+  against the pvpoke: 76.2% ± 2.6
+  against the reader: 51.7% ± 1.8
+
+candidate 1: mix=1
+  head to head against the baseline, 2000 pairings both ways: 50.0% ± 1.2
+  against the crowd: 68.0% ± 2.0, -0.5 ± 1.6 points on the baseline
+  against the pvpoke: 77.8% ± 2.6, +1.6 ± 2.1 points on the baseline
+  against the reader: 51.4% ± 1.9, -0.3 ± 1.9 points on the baseline
+  search time per searched decision: median 34 ms, 99th percentile 243, worst 572 (this machine)
+
+candidate 2: temperature=0.01
+  head to head against the baseline, 2000 pairings both ways: 48.8% ± 1.3
+  against the crowd: 67.8% ± 2.0, -0.7 ± 1.7 points on the baseline
+  against the pvpoke: 75.7% ± 2.7, -0.5 ± 2.0 points on the baseline
+  against the reader: 50.5% ± 1.8, -1.2 ± 1.8 points on the baseline
+  search time per searched decision: median 31 ms, 99th percentile 112, worst 283 (this machine)
+
+candidate 3: temperature=0.03
+  head to head against the baseline, 2000 pairings both ways: 42.2% ± 1.3
+  against the crowd: 59.9% ± 2.1, -8.6 ± 2.3 points on the baseline
+  against the pvpoke: 68.5% ± 2.9, -7.8 ± 2.8 points on the baseline
+  against the reader: 44.5% ± 1.9, -7.2 ± 2.4 points on the baseline
+  search time per searched decision: median 31 ms, 99th percentile 107, worst 234 (this machine)
+
+candidate 4: mix=1,temperature=0.02
+  head to head against the baseline, 2000 pairings both ways: 45.7% ± 1.3
+  against the crowd: 64.8% ± 2.1, -3.8 ± 2.1 points on the baseline
+  against the pvpoke: 72.6% ± 2.8, -3.6 ± 2.7 points on the baseline
+  against the reader: 45.4% ± 1.8, -6.3 ± 2.4 points on the baseline
+  search time per searched decision: median 35 ms, 99th percentile 239, worst 648 (this machine)
+
+results: runs/engine_versus/mixing.json

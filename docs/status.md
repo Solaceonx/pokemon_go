@@ -2437,3 +2437,179 @@ Cut short, it still plays as well as unhurried (`realtime_trial.py --pairings 60
 `runs/task27-realtime-vs-unhurried-samples32.out`): real-time against unhurried 50.7% ± 2.0 head to head; against the crowd
 71.5% against 71.4%, +0.1 ± 0.8; real-time minus the trained bot +4.3 ± 2.9. These times are on Marco's Mac (Apple
 silicon); the owner's Mac should be checked with the same `--timing` command before relying on the margins.
+
+## Mixed choices and randomisation (task 29, 2026-10-18): no confirmed gain
+
+**Adopt no randomisation setting.** All seven policies were measured, and the best screened candidate,
+`mix=1`, failed fresh-seed confirmation: head to head **48.7% ± 1.2**, reader paired change
+**+0.8 ± 1.7 points** (95% margins). It loses head to head and has no clear reader improvement.
+The task's performance criterion was not met. All mixing and randomisation flags remain off; retain the
+cache-isolation correctness fix described below.
+
+**Measurement correction.** The original grid and partial extension results below used a
+worker-shared evaluator cache and are retained as diagnostics, **not adoption evidence**. Repeating the
+same seeded baseline changed 8 of 500 crowd outcomes, 6 of 250 PvPoke outcomes and 41 of 250 reader pairs.
+`Evaluator` keeps `Learner._outlooks` across players and battles, but its key omits our Pokémon. With the
+same Melmetal opponent, warming the cache with Altaria makes Stunfisk inherit an outlook of −0.562
+instead of its fresh +0.512. This exposes worker-history dependence despite fixed seeds and inputs.
+The extension run was stopped before code changes. Its saved baseline is 67.5% ± 4.1 crowd (500),
+78.4% ± 5.1 PvPoke (250), 49.8% ± 3.8 reader (250 pairs); its incomplete shield-only control is
+50.7% ± 4.4 head to head (140 pairings). No extension candidate completed.
+
+The comparison and timing scripts now give each player a private evaluator cache while sharing the
+loaded model weights. Production defaults and models are unchanged. Legacy checkpoints are explicitly
+rejected for resumption under the corrected method; new runs use new tags. The suite passes 234 tests
+with seven skips and PvPoke remains 108/108. The chunk-size repeatability check passes: all 110 scores
+match with chunks of five and one on three workers. With a separate fresh evaluator for each original
+and modified player, all 25 compatibility game logs also match exactly. The corrected full grid completed
+under tag `mixing-isolated`, with the prescribed counts and reader (28,000 rows / 41,000 battles). All 16
+input hashes in `runs/task29-inputs-isolated.json` remain unchanged.
+
+The same cache sharing also affected the browser game factories. `scripts/play.py` and the website's
+`play_api.py` now give each new bot and its human-side evaluation graph separate caches, sharing only
+model weights. These modules were not imported by the running comparison. Both new integration
+regressions pass in the full suite (234 tests, seven skips); PvPoke remains 108/108. An offline website
+build passes ZIP and syntax checks for all 15 Python modules, then loads its models and advances two new
+games five turns each with independent, reset caches. The smoke script's initial path assertion needed
+`/tmp` normalized to `/private/tmp`; no repository code needed changing. No randomisation setting has been adopted.
+
+Completed corrected selection grid (`mixing-isolated`; private evaluator caches; 95% margins):
+
+| Setting | Head to head, 2,000 pairings both ways | Crowd, 2,000 battles | PvPoke, 1,000 battles | Reader, 1,000 pairings both ways |
+|---|---|---|---|---|
+| Confirmed baseline | — | 67.6% ± 2.0 | 76.2% ± 2.6 | 51.4% ± 1.8 |
+| `mix=1` | 50.0% ± 1.2 | 67.0% ± 2.1; paired −0.6 ± 1.3 points | 77.2% ± 2.6; paired +0.9 ± 1.8 points | 51.3% ± 1.8; paired −0.1 ± 1.7 points |
+| `temperature=0.01` | 48.8% ± 1.3 | 67.8% ± 2.0; paired +0.1 ± 1.6 points | 75.9% ± 2.6; paired −0.3 ± 1.9 points | 50.3% ± 1.8; paired −1.1 ± 1.8 points |
+| `temperature=0.03` | 42.4% ± 1.3 | 60.4% ± 2.1; paired −7.2 ± 2.2 points | 70.2% ± 2.8; paired −6.1 ± 2.8 points | 43.0% ± 1.9; paired −8.5 ± 2.3 points |
+| `mix=1,temperature=0.02` | 46.1% ± 1.3 | 64.9% ± 2.1; paired −2.7 ± 2.1 points | 72.4% ± 2.8; paired −3.9 ± 2.7 points | 46.3% ± 1.8; paired −5.1 ± 2.2 points |
+
+The first two candidates show no clear improvement. `temperature=0.03` loses beyond the margin
+on all four comparisons, as does the combined setting. These are selection data, not a fresh-seed
+confirmation. Grid search times (median / p99 / worst, ms) are 32 / 225 / 487 for `mix=1`,
+29 / 106 / 243 for temperature 0.01, 31 / 105 / 248 for temperature 0.03, and 34 / 233 / 524 for
+the combined setting. The separate `realtime_trial.py --timing` measurement is recorded below.
+
+The corrected extension screen completed as `mixing-extensions-isolated`, seed 2701, three workers,
+500 head-to-head pairings, 500 crowd battles, 250 PvPoke battles and 250 reader pairings per setting.
+It includes a shield-head control, shield mixing with that head, simultaneous-switch mixing and variable
+hold lengths. Its 20 frozen input hashes are in `runs/task29-inputs-extensions-isolated.json`.
+All 1,000 baseline scores exactly match the corresponding corrected full-grid scores despite the
+different job plan: 500 crowd, 250 PvPoke and 250 reader pairs. These repeated cases are not pooled as
+additional evidence. The extension baseline is **66.6% ± 4.1 crowd**, **76.0% ± 5.3 PvPoke** and
+**50.8% ± 3.5 reader**. Completed extension blocks (95% margins):
+
+| Setting | Head to head, 500 pairings both ways | Crowd, 500 battles | PvPoke, 250 battles | Reader, 250 pairings both ways |
+|---|---|---|---|---|
+| Shield-search control (`heads=throw+swap+mid_swap+replace+shield`) | 49.2% ± 2.6 | 64.5% ± 4.2; paired −2.1 ± 4.3 points | 72.2% ± 5.6; paired −3.8 ± 6.1 points | 49.1% ± 3.6; paired −1.7 ± 4.3 points |
+| Shield mixing (control plus `mix_shield=1`) | 46.0% ± 2.5 | 59.7% ± 4.3; paired −6.9 ± 4.5 points | 71.4% ± 5.6; paired −4.6 ± 6.2 points | 48.2% ± 3.7; paired −2.6 ± 4.6 points |
+| Simultaneous-switch mixing (`mix_switch=1`) | 41.4% ± 2.6 | 56.0% ± 4.3; paired −10.6 ± 5.0 points | 69.8% ± 5.7; paired −6.2 ± 6.4 points | 41.3% ± 3.7; paired −9.5 ± 4.8 points |
+| Variable hold lengths (`random_hold=1`) | 50.6% ± 2.5 | 68.1% ± 4.1; paired +1.5 ± 2.1 points | 74.8% ± 5.4; paired −1.2 ± 2.4 points | 47.9% ± 3.5; paired −2.9 ± 2.3 points |
+
+The control shows no clear change and is not a task-29 adoption candidate. Shield mixing has clear
+head-to-head and crowd losses, with no reader benefit. Its paired effect versus shield search alone is
+**−4.8 ± 3.4 points crowd**, **−0.8 ± 4.7 points PvPoke** and **−0.9 ± 3.5 points reader**: the crowd
+loss is attributable to mixing. Simultaneous-switch mixing has clear head-to-head, crowd and reader losses;
+its PvPoke difference is not clear at this sample size. Variable hold lengths show no clear head-to-head
+or field change, but lose against the reader beyond the margin. Extension grid search times (median /
+p99 / worst, ms) are 29 / 116 / 230 for the shield control, 35 / 160 / 320 for shield mixing,
+49 / 290 / 825 for simultaneous-switch mixing, and 31 / 110 / 190 for variable holds. All 20 input
+hashes remained unchanged over the 7,000 result rows / 10,250 battles.
+
+**Choice frozen before confirmation:** `mix=1`. The rule selects the largest mean paired reader change
+among settings with no clear head-to-head, crowd or PvPoke loss; exact ties prefer more reader cases,
+then the original candidate order. This selects `mix=1` (−0.1 ± 1.7 reader points) over temperature 0.01
+(−1.1 ± 1.8) and variable holds (−2.9 ± 2.3). The other settings have clear losses in the required
+comparisons; the shield control is not a task-29 adoption candidate. **No screened setting demonstrates
+a gain.** The fixed choice, raw metrics, dataset hashes, input manifest and acceptance rule are in
+`runs/task29-selection.json`. Fresh confirmation completed with seed **2902027**, tag
+`mixing-confirm-2902027`, three workers and the full prescribed counts. The choice was not changed after
+reading that result. All 20 input hashes and both selection datasets remained unchanged.
+
+| Setting | Head to head, 2,000 pairings both ways | Crowd, 2,000 battles | PvPoke, 1,000 battles | Reader, 1,000 pairings both ways |
+|---|---|---|---|---|
+| Confirmed baseline | — | 68.8% ± 2.0 | 74.7% ± 2.7 | 50.9% ± 1.8 |
+| Frozen `mix=1` candidate | 48.7% ± 1.2 | 67.5% ± 2.0; paired −1.3 ± 1.5 points | 75.1% ± 2.7; paired +0.4 ± 1.7 points | 51.7% ± 1.8; paired +0.8 ± 1.7 points |
+
+The fresh head-to-head upper 95% bound is below 50%, using unrounded values. The reader change does not
+exceed its paired margin; crowd and PvPoke differences are also unclear. The frozen adoption criterion
+therefore fails on both head-to-head safety and reader improvement. No alternative was selected after
+confirmation. The complete checkpoint has 10,000 rows / 14,000 battles; raw metrics and acceptance checks
+are in `runs/task29-confirmation-summary.json`. This grid's CPU search times (median / p99 / worst) were
+35 / 238 / 571 ms; the required real-time timing measurement is recorded separately below.
+
+**Legacy shared-cache runs below are invalidated as adoption evidence.**
+
+The prescribed four-candidate grid completed with three workers, seed 2701 and tag `mixing`,
+including the reader probe (28,000 result rows, 41,000 battles). It is retained only as legacy output.
+The exact command and check history are in [`runs/task29-commands.txt`](../runs/task29-commands.txt);
+the output is [`runs/task29-mixing.out`](../runs/task29-mixing.out), with a saved legacy checkpoint
+at `runs/engine_versus/mixing.json`. Source, model and data hashes at launch are in
+[`runs/task29-inputs.json`](../runs/task29-inputs.json). These legacy tags cannot resume under the corrected method.
+
+Legacy grid (printed win shares and nominal 95% margins; invalidated as adoption evidence):
+
+| Setting | Head to head, 2,000 pairings both ways | Crowd, 2,000 battles | PvPoke, 1,000 battles | Reader, 1,000 pairings both ways |
+|---|---|---|---|---|
+| Confirmed baseline | — | 68.5% ± 2.0 | 76.2% ± 2.6 | 51.7% ± 1.8 |
+| `mix=1` | 50.0% ± 1.2 | 68.0% ± 2.0; paired −0.5 ± 1.6 points | 77.8% ± 2.6; paired +1.6 ± 2.1 points | 51.4% ± 1.9; paired −0.3 ± 1.9 points |
+| `temperature=0.01` | 48.8% ± 1.3 | 67.8% ± 2.0; paired −0.7 ± 1.7 points | 75.7% ± 2.7; paired −0.5 ± 2.0 points | 50.5% ± 1.8; paired −1.2 ± 1.8 points |
+| `temperature=0.03` | 42.2% ± 1.3 | 59.9% ± 2.1; paired −8.6 ± 2.3 points | 68.5% ± 2.9; paired −7.8 ± 2.8 points | 44.5% ± 1.9; paired −7.2 ± 2.4 points |
+| `mix=1,temperature=0.02` | 45.7% ± 1.3 | 64.8% ± 2.1; paired −3.8 ± 2.1 points | 72.6% ± 2.8; paired −3.6 ± 2.7 points | 45.4% ± 1.8; paired −6.3 ± 2.4 points |
+
+The printed legacy grid had no apparent gain. These figures are retained for diagnosis and were not
+used to select or adopt a setting; the corrected runs above replace them as measurement evidence.
+Legacy grid CPU times (median / p99 / worst, ms), in the table's candidate order, were
+34 / 243 / 572, 31 / 112 / 283, 31 / 107 / 234 and 35 / 239 / 648.
+
+Three additional options are implemented, off by default, and measured in the corrected screen above:
+`mix_shield=1` solves shielding against the affordable incoming moves (requires the shield head);
+`mix_switch=1` solves all legal first actions (fast moves, ready charged moves, switches) against their
+possible actions when both switches are free and both active Pokémon idle, including ongoing matchups
+without a learned mid-swap head, using imagined hidden bench slots; `random_hold=1` samples equally well-timed moments inside the hold rule's
+existing safe window. Each uses the private, cloneable mixing generator. Mixed searches now record changed
+choices and incomplete rounds; real shield prompts receive a timed charged-move pause.
+`scripts/realtime_trial.py --settings SPEC` selects the engine setting to time.
+
+Before changes, the exact full-suite command encountered two sandbox `os.nice(10)` permission errors.
+The untouched suite then passed with a priority-only wrapper: 222 tests, seven optional skips. PvPoke
+reproduced 108 of 108 battles. `scripts/losses.py` now uses the existing `low_priority()` helper, which
+retains an inherited positive nice level when further lowering is denied. After implementation, the exact
+suite passed: 228 tests, seven optional skips, and PvPoke remained 108 of 108. Five default-engine game logs
+matched the original engine exactly. The mixing seed hash also matched in three fresh Python processes.
+The sandbox retains inherited nice=15; all long jobs request `nice`, with at most three workers and one
+numerical-library thread per worker.
+
+The legacy grid retained all 14 launch hashes. After the extension changes, 231 tests passed with seven
+skips and PvPoke remained 108 of 108; 25 complete game logs (five per original setting, including baseline)
+matched the original engine exactly. Before the cache-method guard was added, a zero-job resume preserved
+every score and timing frequency and printed the identical summary; exact timing histograms reduced the
+checkpoint from 3,971,221 to 475,715 bytes.
+
+The two three-game functionality smokes combined all mixing flags and the shield head, before the
+cache correction. Each recorded 81 searched decisions. CPU median / p99 / worst was 41 / 194 / 214 ms
+before the switch-action correction and 66 / 371 / 413 ms afterward; both had 0.0% deadline cuts and
+0.0% fallbacks. Wait median / p99 / worst was 0 / 7 / 35 ms and 0 / 6 / 32 ms respectively, with 1.2%
+of decisions waiting in each. These were functionality checks, not the final timing measurement or
+strength evidence.
+
+The required `realtime_trial.py --timing 300` runs completed sequentially, with three workers, one
+numerical-library thread per worker and seed **2903027**, using the default real-time budgets:
+
+| Setting | Searched decisions | CPU search median / p99 / worst | Wait median / p99 / worst | Decisions with any wait |
+|---|---|---|---|---|
+| `mix=1` | 6,689 | 31 / 251 / 478 ms | 0 / 34 / 238 ms | 3.0% |
+| Confirmed baseline | 6,638 | 28 / 107 / 231 ms | 0 / 33 / 101 ms | 2.9% |
+
+Both print 0.0% overall deadline cuts and 0.0% fallbacks, rounded to one decimal. **The mixed run did
+have cuts:** its one-turn fast-move group prints 0.1% cuts, with a 332 ms worst search against a 300 ms
+budget. The baseline prints 0.0% cuts in every group. Timing quantiles and wait rates are observed
+measurements, not strength scores or confidence intervals; these use the script's CPU clock, not
+wall-clock scheduling latency under other workloads. Full per-cause tables are in
+`runs/task29-timing-mix1.out` and `runs/task29-timing-baseline.out`.
+
+Final source matches the tested version: **234 tests, OK (seven optional skips)**, and
+**108 of 108 PvPoke battles reproduced exactly**. The 20 frozen source/model/data hashes remain
+unchanged after confirmation and timing. The task-29 table row and heading record the negative finding,
+preserving the existing owner claim. No randomisation defaults or models changed; all work is uncommitted.
+The exact experiment and check commands, including failures and discarded measurements, are in
+[`runs/task29-commands.txt`](../runs/task29-commands.txt).

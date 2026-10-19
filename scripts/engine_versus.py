@@ -8,13 +8,15 @@
 A setting is "key=value,key=value" on top of the confirmed engine (samples 4, horizon 20, edge 0.03, the trained bot
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
-temperature, eval (path to an evaluation .npz). The setting "bot" is the trained bot alone.
+temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1),
+eval (path to an evaluation .npz). The setting "bot" is the trained bot alone.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
 round), against the crowd, against PvPoke's AI, and against a reader (pogo.reader: an engine that predicts its
 opponent's next throw decision and plays the best reply), with margins; also the search time per decision. Teams are
 drawn half from the good-team list and half at random from the top 50. Results go to runs/engine_versus/<tag>.json
-as they come in; a run started again with the same tag skips what is done.
+as they come in; a run started again with the same tag skips what is done. Each player has a private evaluator
+cache, so another battle or a different worker schedule cannot change its cached matchup outlooks.
 """
 from __future__ import annotations
 
@@ -25,6 +27,7 @@ import os
 import random
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "MKL_NUM_THREADS"):
@@ -63,7 +66,7 @@ def parse(spec: str) -> dict | None:
             out[key] = int(value)
         elif key in ("edge", "margin", "temperature"):
             out[key] = float(value)
-        elif key in ("profile", "mix"):
+        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval"):
             out[key] = value
@@ -94,7 +97,8 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
     if settings is None:
         return Learner(q=s["net"], margin=0.02, seed=seed)
     kw = dict(settings)
-    ev = evaluator(kw.pop("eval", None))
+    # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
+    ev = Evaluator(evaluator(kw.pop("eval", None)).model)
     margin = kw.pop("margin")
     extra = NO_LIMIT if cls is RealTime else {}
     return cls(ev, s["pool"], rollout="bot", q=s["net"], margin=margin, seed=seed, **kw, **extra)
@@ -159,15 +163,20 @@ def main() -> None:
     path = ROOT / "runs" / "engine_versus" / f"{args.tag}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
-    if saved and saved.get("evaluator_cache") != CACHE_POLICY:
+    if saved and saved.get("evaluator_cache") not in (CACHE_POLICY, "per_player"):  # task 29 wrote "per_player"
         raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
         raise SystemExit(f"{path} was made with seed {saved.get('seed')}; use that seed or another tag")
     if saved and saved.get("baseline") != args.baseline:
         raise SystemExit(f"{path} used a different baseline; use that baseline or another tag")
-    saved.update(seed=args.seed, baseline=args.baseline, evaluator_cache=CACHE_POLICY)
+    saved.update(seed=args.seed, baseline=args.baseline, evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY))
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
     times = saved.setdefault("search_ms", {})
+    # Exact frequencies of the rounded timings keep checkpoints small without dropping tail observations.
+    for spec, recorded in times.items():
+        if isinstance(recorded, list):  # resume checkpoints from before timing histograms
+            times[spec] = dict(Counter(str(float(ms)) for ms in recorded))
+    saved["timing_storage"] = "rounded_ms_counts"
     named = {"baseline": args.baseline, **{f"candidate {k + 1}": c for k, c in enumerate(args.candidates)}}
     plan = []
     for name, spec in named.items():
@@ -183,7 +192,10 @@ def main() -> None:
         with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup) as pool:
             for kind, spec, out, searches in pool.imap_unordered(job, plan):
                 results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
-                times.setdefault(spec, []).extend(round(x, 1) for x in searches[:200])
+                hist = times.setdefault(spec, {})
+                for ms in searches[:200]:
+                    key = str(round(ms, 1))
+                    hist[key] = hist.get(key, 0) + 1
                 if time.time() - last > 60:
                     path.write_text(json.dumps(saved))
                     last = time.time()
@@ -213,7 +225,7 @@ def main() -> None:
                 diff = [x - y for x, y in zip(v, base[kind])]
                 m, h = mean_and_margin(diff)
                 print(f"  against the {kind}: {summary(v)}, {100 * m:+.1f} ± {100 * h:.1f} points on the baseline")
-        t = np.array(times.get(spec, []))
+        t = np.array([float(ms) for ms, count in times.get(spec, {}).items() for _ in range(count)])
         if len(t):
             print(f"  search time per searched decision: median {np.median(t):.0f} ms, 99th percentile "
                   f"{np.percentile(t, 99):.0f}, worst {t.max():.0f} (this machine)")

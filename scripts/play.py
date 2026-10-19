@@ -324,6 +324,7 @@ class Server:
         mine = self.team(self.args.team) if self.args.team else list(self.owned.values())[:3]
         theirs = self.team(self.args.foe) if self.args.foe else self.counter(mine) or self.draw(self.rng)
         bot_seed = random.getrandbits(30)
+        # Share model weights across games, but keep the bot's and display's matchup caches separate.
         if self.args.bot == "learner":
             bot = Learner(q=self.net, margin=0.02, seed=bot_seed)
         elif self.args.bot == "engine":
@@ -338,7 +339,8 @@ class Server:
         else:
             bot = Planner(seed=bot_seed)
         self.game = Game(self.gd, mine, theirs, bot, self.args.bot, self.args.charged_pause, self.args.slow,
-                         self.args.my_charged_pause, evaluator=self.evaluator, eval_bar=self.args.eval_bar, bot_seed=bot_seed)
+                         self.args.my_charged_pause, evaluator=Evaluator(self.evaluator.model),
+                         eval_bar=self.args.eval_bar, bot_seed=bot_seed)
         self.game.lineup_net, self.game.pool = self.lineup_net, self.pool
         self.game.thread.start()
 

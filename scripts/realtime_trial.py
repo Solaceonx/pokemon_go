@@ -5,8 +5,9 @@
     python3 scripts/realtime_trial.py --pairings 600 --crowd 1000  is it as good (hours: hand to another machine)
 
 Both default to the engine's confirmed settings (the trained bot inside the look-ahead, 4 imagined battles per
-option, 20 turns, edge 0.03). --samples, --horizon and --edge measure other settings. Pause lengths are options
-(milliseconds); the defaults are cautious guesses.
+option, 20 turns, edge 0.03). --samples, --horizon and --edge measure other settings, and --settings takes any setting
+in engine_versus.py's form (for example --settings "mix=1"). Pause lengths are options (milliseconds); the defaults
+are cautious guesses.
 
 --timing: the real-time engine plays the usual crowd. For every searched decision: what came before it, the time
 it had, the time it took, how often the deadline cut the search short or left no complete round (then it plays
@@ -45,6 +46,7 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.realtime import RealTime  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
+from engine_versus import parse  # noqa: E402
 
 PAUSES = ("turn_ms", "see_and_tap_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms",
           "cap_ms")
@@ -61,8 +63,10 @@ def job(task) -> dict:
     pool = gd.meta(50)
     draw = drawer(gd, pool)
     net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
-    ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
-    confirmed = dict(rollout="bot", q=net, margin=0.02, **settings)
+    confirmed = dict(settings)
+    ev = Evaluator.load(confirmed.pop("eval", ROOT / "runs" / "eval" / "eval.npz"))
+    confirmed.setdefault("margin", 0.02)
+    confirmed.update(rollout="bot", q=net)
 
     def realtime(s):
         timer = time.perf_counter if clock == "wall" else time.process_time
@@ -133,16 +137,22 @@ def main() -> None:
     parser.add_argument("--crowd", type=int, default=0, help="battles against the crowd for real-time, unhurried and the bot")
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=2301)
-    parser.add_argument("--samples", type=int, default=4)
-    parser.add_argument("--horizon", type=int, default=20)
-    parser.add_argument("--edge", type=float, default=0.03)
+    parser.add_argument("--samples", type=int, default=None, help="imagined battles per option (default 4)")
+    parser.add_argument("--horizon", type=int, default=None, help="turns ahead (default 20)")
+    parser.add_argument("--edge", type=float, default=None, help="default 0.03")
+    parser.add_argument("--settings", default="", help="engine settings, as in engine_versus.py (e.g. mix=1)")
     parser.add_argument("--clock", choices=("cpu", "wall"), default="cpu")
     for name in PAUSES:
         parser.add_argument("--" + name.replace("_", "-"), type=float, default=None)
     args = parser.parse_args()
-    if args.samples < 1 or args.horizon < 1 or args.workers < 1:
+    settings = parse(args.settings)
+    if settings is None:
+        parser.error("--settings must describe an engine, not 'bot'")
+    for key in ("samples", "horizon", "edge"):
+        if getattr(args, key) is not None:
+            settings[key] = getattr(args, key)
+    if settings["samples"] < 1 or settings["horizon"] < 1 or args.workers < 1:
         parser.error("samples, horizon and workers must be positive")
-    settings = dict(samples=args.samples, horizon=args.horizon, edge=args.edge)
     pauses = {name: getattr(args, name) for name in PAUSES if getattr(args, name) is not None}
     print(f"real-time engine, settings: {settings}, clock: {args.clock}, "
           f"pauses: {pauses or 'defaults (pogo/realtime.py)'}")

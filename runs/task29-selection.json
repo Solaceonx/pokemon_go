@@ -1,0 +1,303 @@
+{
+  "frozen_at_utc": "2026-10-18T17:56:41.086410+00:00",
+  "chosen": "mix=1",
+  "rule": "Largest mean paired reader change among candidates with no clear H2H/crowd/PvPoke loss; exact ties prefer more reader pairs, then original order. Shield-search control is not an adoption candidate.",
+  "score_units": "fractions; multiply by 100 for percentages or percentage points",
+  "selection_seed": 2701,
+  "input_sha256": {
+    "runs/engine_versus/mixing-isolated.json": "6882bd96b533932eff7755a1a5845b1768fed2b4113c6f180d6fca5d35612efb",
+    "runs/engine_versus/mixing-extensions-isolated.json": "c5a548a15a2df5428d43d0951698e8dca75674673fe56d16d1d1d37eae14bdf6"
+  },
+  "source_manifest": "runs/task29-inputs-extensions-isolated.json",
+  "source_manifest_sha256": "7997808288051788e11301255b9fac6ac6d7bf062b4222361a611a2769dcf0ee",
+  "candidates": [
+    {
+      "spec": "mix=1",
+      "source_tag": "mixing-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 2000,
+          "score": 0.4995,
+          "margin95": 0.0121990113426814
+        },
+        "crowd": {
+          "cases": 2000,
+          "score": 0.67,
+          "margin95": 0.02055478361756169,
+          "paired_delta": -0.00625,
+          "paired_margin95": 0.01332094563258454
+        },
+        "pvpoke": {
+          "cases": 1000,
+          "score": 0.772,
+          "margin95": 0.025979553552799996,
+          "paired_delta": 0.0095,
+          "paired_margin95": 0.018149377275694486
+        },
+        "reader": {
+          "cases": 1000,
+          "score": 0.513,
+          "margin95": 0.017779726890149023,
+          "paired_delta": -0.0015,
+          "paired_margin95": 0.016537794745825545
+        }
+      },
+      "eligible": true,
+      "clear_losses": []
+    },
+    {
+      "spec": "temperature=0.01",
+      "source_tag": "mixing-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 2000,
+          "score": 0.487625,
+          "margin95": 0.012567843802196867
+        },
+        "crowd": {
+          "cases": 2000,
+          "score": 0.67775,
+          "margin95": 0.02045778493464569,
+          "paired_delta": 0.0015,
+          "paired_margin95": 0.01622581020036686
+        },
+        "pvpoke": {
+          "cases": 1000,
+          "score": 0.7595,
+          "margin95": 0.026448516397325948,
+          "paired_delta": -0.003,
+          "paired_margin95": 0.01936223958951861
+        },
+        "reader": {
+          "cases": 1000,
+          "score": 0.50325,
+          "margin95": 0.01796486736827076,
+          "paired_delta": -0.01125,
+          "paired_margin95": 0.01750508284543165
+        }
+      },
+      "eligible": true,
+      "clear_losses": []
+    },
+    {
+      "spec": "temperature=0.03",
+      "source_tag": "mixing-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 2000,
+          "score": 0.424,
+          "margin95": 0.012946956052892035
+        },
+        "crowd": {
+          "cases": 2000,
+          "score": 0.60425,
+          "margin95": 0.021386734714791793,
+          "paired_delta": -0.072,
+          "paired_margin95": 0.02249511920381835
+        },
+        "pvpoke": {
+          "cases": 1000,
+          "score": 0.7015,
+          "margin95": 0.028291709337140043,
+          "paired_delta": -0.061,
+          "paired_margin95": 0.028300627765686256
+        },
+        "reader": {
+          "cases": 1000,
+          "score": 0.42975,
+          "margin95": 0.01886035728656742,
+          "paired_delta": -0.08475,
+          "paired_margin95": 0.023460570459097243
+        }
+      },
+      "eligible": false,
+      "clear_losses": [
+        "h2h",
+        "crowd",
+        "pvpoke"
+      ]
+    },
+    {
+      "spec": "mix=1,temperature=0.02",
+      "source_tag": "mixing-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 2000,
+          "score": 0.4605,
+          "margin95": 0.012790395572829431
+        },
+        "crowd": {
+          "cases": 2000,
+          "score": 0.64925,
+          "margin95": 0.020902422232305727,
+          "paired_delta": -0.027,
+          "paired_margin95": 0.02085278773157414
+        },
+        "pvpoke": {
+          "cases": 1000,
+          "score": 0.724,
+          "margin95": 0.027685547998332415,
+          "paired_delta": -0.0385,
+          "paired_margin95": 0.027120282043114858
+        },
+        "reader": {
+          "cases": 1000,
+          "score": 0.46325,
+          "margin95": 0.018194576711804036,
+          "paired_delta": -0.05125,
+          "paired_margin95": 0.022234524316287304
+        }
+      },
+      "eligible": false,
+      "clear_losses": [
+        "h2h",
+        "crowd",
+        "pvpoke"
+      ]
+    },
+    {
+      "spec": "heads=throw+swap+mid_swap+replace+shield,mix_shield=1",
+      "source_tag": "mixing-extensions-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 500,
+          "score": 0.4595,
+          "margin95": 0.025275801936378874
+        },
+        "crowd": {
+          "cases": 500,
+          "score": 0.597,
+          "margin95": 0.04290297544231177,
+          "paired_delta": -0.069,
+          "paired_margin95": 0.04540060257560969
+        },
+        "pvpoke": {
+          "cases": 250,
+          "score": 0.714,
+          "margin95": 0.055991554383219226,
+          "paired_delta": -0.046,
+          "paired_margin95": 0.06221468125656051
+        },
+        "reader": {
+          "cases": 250,
+          "score": 0.482,
+          "margin95": 0.03698788044209068,
+          "paired_delta": -0.026,
+          "paired_margin95": 0.046279501755430816
+        }
+      },
+      "eligible": false,
+      "clear_losses": [
+        "h2h",
+        "crowd"
+      ],
+      "versus_shield_control": {
+        "crowd": {
+          "paired_delta": -0.048,
+          "paired_margin95": 0.03439830801636583
+        },
+        "pvpoke": {
+          "paired_delta": -0.008,
+          "paired_margin95": 0.04712388771710476
+        },
+        "reader": {
+          "paired_delta": -0.009,
+          "paired_margin95": 0.03472751246617519
+        }
+      }
+    },
+    {
+      "spec": "mix_switch=1",
+      "source_tag": "mixing-extensions-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 500,
+          "score": 0.414,
+          "margin95": 0.026337699246578212
+        },
+        "crowd": {
+          "cases": 500,
+          "score": 0.56,
+          "margin95": 0.04346533965705325,
+          "paired_delta": -0.106,
+          "paired_margin95": 0.05046205309343655
+        },
+        "pvpoke": {
+          "cases": 250,
+          "score": 0.698,
+          "margin95": 0.05662066808700223,
+          "paired_delta": -0.062,
+          "paired_margin95": 0.06371813211197702
+        },
+        "reader": {
+          "cases": 250,
+          "score": 0.413,
+          "margin95": 0.03740369854787412,
+          "paired_delta": -0.095,
+          "paired_margin95": 0.048062190301173174
+        }
+      },
+      "eligible": false,
+      "clear_losses": [
+        "h2h",
+        "crowd"
+      ]
+    },
+    {
+      "spec": "random_hold=1",
+      "source_tag": "mixing-extensions-isolated",
+      "metrics": {
+        "h2h": {
+          "cases": 500,
+          "score": 0.506,
+          "margin95": 0.025119869037096548
+        },
+        "crowd": {
+          "cases": 500,
+          "score": 0.681,
+          "margin95": 0.04075398949943724,
+          "paired_delta": 0.015,
+          "paired_margin95": 0.020814383419026094
+        },
+        "pvpoke": {
+          "cases": 250,
+          "score": 0.748,
+          "margin95": 0.05392714978874138,
+          "paired_delta": -0.012,
+          "paired_margin95": 0.02352
+        },
+        "reader": {
+          "cases": 250,
+          "score": 0.479,
+          "margin95": 0.03508991630805101,
+          "paired_delta": -0.029,
+          "paired_margin95": 0.023372933785362496
+        }
+      },
+      "eligible": true,
+      "clear_losses": []
+    }
+  ],
+  "confirmation": {
+    "tag": "mixing-confirm-2902027",
+    "seed": 2902027,
+    "workers": 3,
+    "pairings": 2000,
+    "crowd": 2000,
+    "pvpoke": 1000,
+    "reader": 1000,
+    "candidates": [
+      "mix=1"
+    ]
+  },
+  "adoption_rule": "On this one fresh seed, reader paired_delta - paired_margin95 must exceed zero; H2H score + margin95 must reach 0.5; crowd and PvPoke paired_delta + paired_margin95 must reach zero. If shield mixing is selected, require positive reader gain beyond the margin against its shield-search control too. Do not change candidate after confirmation.",
+  "timing": {
+    "seed": 2903027,
+    "battles_per_setting": 300,
+    "workers": 3,
+    "settings": [
+      "mix=1",
+      ""
+    ]
+  }
+}
