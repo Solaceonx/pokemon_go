@@ -2330,3 +2330,18 @@ Corviknight / Mandibuzz / Carbink / Thievul, the Pokémon most common in `data/t
 So with open sheets the six decides much: one of the owner's six is never worth bringing here, and the six has no good
 answer to a Dark core. Choosing which six to register needs these tables for many sixes against many sixes; one
 table costs 144,000 battles, so that search is for a bigger machine or a cache of three-against-three results.
+
+## Self-play improvement loop (task 31, 2026-10-18): round 1 not adopted
+
+`python3 scripts/selfplay_eval.py --run selfplay-1 --workers 3 --rounds 5 --games 20000 --compare 1500` (`runs/selfplay-1.out`,
+`runs/selfplay/selfplay-1/rounds.json`). Before running it, the script was changed to give each player and the position
+recorder a fresh evaluation cache in every game. The shared `Evaluator` cache is keyed by team slot and opposing species,
+not by our team, so a cache carried across games or players can change a position's features (the bug found in task 27).
+`scripts/engine_versus.py` has the same fix.
+
+Round 1: 20,000 engine-against-engine games (192 minutes on three cores) gave 196,256 positions. The evaluation
+refitted on them predicts better on the held-out tenth of games (log loss 0.6308 against 0.6443 for the current one), but
+plays no better, on 1,500 pairings both ways and 1,500 crowd battles (comparison seed 4018): head to head **49.2% ± 1.5**; against the
+crowd **−1.7 ± 2.4** points (current engine 70.7% ± 2.3). The loop's rule (head to head above 50% beyond the margin and not
+worse against the crowd) stopped it after round 1. As with the extra inputs (status: "Does the bot need to see their
+other Pokémon?"), a better-predicting evaluation does not by itself make better decisions.
