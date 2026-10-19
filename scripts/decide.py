@@ -44,7 +44,7 @@ from pogo.agents import Planner, varied, varied_settings  # noqa: E402
 from pogo.arena import decisive, field_results, low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
-from pogo.learner import N_FEATURES, N_KNOWN, Q_HEADS, Learner, QNet  # noqa: E402
+from pogo.learner import N_FEATURES, N_FORMS, N_KNOWN, Q_HEADS, Learner, QNet  # noqa: E402
 from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -63,15 +63,22 @@ class PvpokeOpponent(PvpokeAI):
 _EVALUATOR = {}
 
 
-def play_out(snapshot, head: str, option: int, score: str = "result", horizon: int = 0, side: int = 0) -> float:
+def play_out(snapshot, head: str, option: int, score: str = "result", horizon: int = 0, side: int = 0,
+             reseed: int | None = None) -> float:
     """Continue the frozen battle with one choice forced. 1 if we go on to win, 0 if we lose; with score
     "margin", how decisively (pogo.arena.decisive: any win above any loss, and by how much). With a horizon,
     stop after that many turns and let the engine's evaluation (runs/eval/eval.npz) judge the position reached.
-    With side 1 the choice is the opponent's, and the result is scored for them."""
+    With side 1 the choice is the opponent's, and the result is scored for them. With reseed, the battle's and both
+    players' dice are set afresh from it (the same for every option of a decision), for another play-out."""
     battle, me, them = snapshot
     pilot = (me if side == 0 else them).clone()
     pilot.force(head, option)
     played = battle.clone(pilot, them.clone()) if side == 0 else battle.clone(me.clone(), pilot)
+    if reseed is not None:
+        played.rng.seed(reseed)
+        for j, agent in enumerate(played.agents):
+            if hasattr(agent, "rng"):
+                agent.rng.seed(reseed * 3 + j + 1)
     if horizon:
         for _ in range(horizon):
             if played.winner is not None:
@@ -98,7 +105,7 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
             pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0,
-            wide: bool = False, both_sides: float = 0.0):
+            wide: bool = False, both_sides: float = 0.0, forms: bool = False, playouts: int = 1):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
@@ -107,6 +114,9 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
 
     With both_sides, that share of battles is the learner against itself, and both players' decisions are
     played out and kept, each scored from its own side.
+
+    With playouts above 1, each option is played out that many times (the first as always, the others with fresh
+    dice shared by all options of the decision) and the results averaged: steadier targets, fewer examples.
     """
     rng = random.Random(seed)
     data = {head: ([], []) for head in Q_HEADS}
@@ -115,16 +125,16 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
         log: list = []
         their_log = None
         if pvpoke_share and rng.random() < pvpoke_share:
-            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), PvpokeOpponent()
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32)), PvpokeOpponent()
             battle = Battle(rng.sample(pool, 1), rng.sample(pool, 1), me, them, seed=rng.getrandbits(32))
             pvpoke_battles += 1
         elif both_sides and rng.random() < both_sides:
             their_log = []
-            me = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32))
-            them = Learner(q=q, margin=margin, log=their_log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32))
+            me = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32))
+            them = Learner(q=q, margin=margin, log=their_log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32))
             battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         else:
-            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, seed=rng.getrandbits(32)), crowd(rng)
+            me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32)), crowd(rng)
             battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         logs = [log] if their_log is None else [log, their_log]  # whose decisions this battle teaches
         while battle.winner is None:
@@ -136,12 +146,13 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
                     if head == "throw" and rng.random() >= throw_share:
                         continue
                     y = [NAN] * Q_HEADS[head]
+                    dice = [None] + [rng.getrandbits(31) for _ in range(playouts - 1)]
                     for k in options_for(head, mask):
-                        y[k] = play_out(snapshot, head, k, score, horizon, side)
+                        y[k] = sum(play_out(snapshot, head, k, score, horizon, side, d) for d in dice) / len(dice)
                     data[head][0].append(x)
                     data[head][1].append(y)
         battles += 1
-    inputs = N_FEATURES + (N_KNOWN if wide else 0)
+    inputs = N_FEATURES + (N_KNOWN if wide else 0) + (N_FORMS if forms else 0)
     return {head: (np.array(x).reshape(-1, inputs), np.array(y).reshape(-1, Q_HEADS[head]))
             for head, (x, y) in data.items()}, battles, pvpoke_battles
 
@@ -172,7 +183,10 @@ def world(config: dict):
     gd = GameData()
     pool = gd.meta(50)
     team = [gd.default(sid) for sid in config["team"]] if config["team"] else None
-    if config["teams"]:
+    if config.get("field") == "mixed":  # teams as people bring them (pogo.teamshape.mixed_field), form-changers included
+        from pogo.teamshape import mixed_field
+        pool, draw = mixed_field(gd)
+    elif config["teams"]:
         from pogo.teamlist import drawer
         draw = drawer(gd, pool, config["teams"])
     else:
@@ -200,7 +214,8 @@ def collect_job(job):
     return collect(team, pool, QNet(q_params) if q_params else None, margin, crowd, seconds, seed, draw,
                    pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"],
                    score=config.get("score", "result"), horizon=config.get("horizon", 0), wide=config.get("wide", False),
-                   both_sides=config.get("both_sides", 0.0))
+                   both_sides=config.get("both_sides", 0.0), forms=config.get("forms", False),
+                   playouts=config.get("playouts", 1))
 
 
 def main() -> None:
@@ -235,6 +250,14 @@ def main() -> None:
     parser.add_argument("--hidden", type=int, default=48, help="hidden units in each network")
     parser.add_argument("--both-sides", type=float, default=0.0, metavar="SHARE",
                         help="share of example battles played by the learner against itself, keeping both players' decisions")
+    parser.add_argument("--forms", action="store_true",
+                        help="the networks also see the form-changing state of both Pokémon in play (pogo.learner.form_state)")
+    parser.add_argument("--playouts", type=int, default=1, help="play-outs per option, averaged")
+    parser.add_argument("--field", choices=("usual", "mixed"), default="usual",
+                        help="teams: the usual draw (--teams or random threes), or the mixed field (overrides --teams)")
+    parser.add_argument("--start", metavar="FILE",
+                        help="a model to pilot the first round (widened with zero weights to the new inputs if needed); "
+                             "every round still fits a new network on all examples")
     args = parser.parse_args()
     if args.examples_per_round is not None and args.examples_per_round <= 0:
         parser.error("--examples-per-round must be positive")
@@ -244,7 +267,8 @@ def main() -> None:
     low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
               "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap, "score": args.score,
-              "horizon": args.horizon, "wide": args.wide, "both_sides": args.both_sides}
+              "horizon": args.horizon, "wide": args.wide, "both_sides": args.both_sides, "forms": args.forms,
+              "playouts": args.playouts, "field": args.field}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
@@ -257,6 +281,7 @@ def main() -> None:
         print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
     else:
         print("opponents: variations of the Planner" + (f", half of them using learned decisions from {len(rivals)} model(s)" if rivals else ""))
+    print(f"field: {args.field}; form inputs: {args.forms}; play-outs per option: {args.playouts}", flush=True)
     print(f"workers: {args.workers}; play-outs scored by: {args.score}"
           + (f", judged by the evaluation after {args.horizon} turns" if args.horizon else ""), flush=True)
     print(f"mid-matchup swap: {config['mid_swap']}; examples per round: {args.examples_per_round or 'all'}", flush=True)
@@ -286,8 +311,16 @@ def main() -> None:
               + ", ".join(f"{h} {n:.2f}" for h, n in sorted(overruled.items())), flush=True)
 
     q, margin = None, 0.03
-    inputs = N_FEATURES + (N_KNOWN if args.wide else 0)
+    inputs = N_FEATURES + (N_KNOWN if args.wide else 0) + (N_FORMS if args.forms else 0)
     stored = {head: (np.zeros((0, inputs)), np.zeros((0, n))) for head, n in Q_HEADS.items()}
+    if args.start and not args.resume:
+        q = QNet.load(args.start)
+        if q.wide != args.wide:
+            parser.error("--start model and --wide disagree")
+        if max(ps[0].shape[0] for ps in q.params.values()) < inputs:
+            q = q.widened(inputs)
+        margin = 0.02
+        print(f"first round piloted by {args.start} (margin {margin})", flush=True)
     if args.resume and (folder / "q.npz").exists():
         q = QNet.load(folder / "q.npz")
         margin = float((folder / "margin.txt").read_text()) if (folder / "margin.txt").exists() else margin
@@ -295,8 +328,8 @@ def main() -> None:
             saved = np.load(folder / "examples.npz")
             stored.update({head: (saved[f"{head}_x"], saved[f"{head}_y"])
                            for head in Q_HEADS if f"{head}_x" in saved})
-        if any(x.shape[1] != inputs for x, _ in stored.values()) or (q.wide and not args.wide):
-            parser.error("the saved model or examples were made with a different --wide setting")
+        if any(x.shape[1] != inputs for x, _ in stored.values()) or (q.wide and not args.wide) or (q.forms and not args.forms):
+            parser.error("the saved model or examples were made with a different --wide or --forms setting")
         # A narrower saved model may pilot the first round of a --wide run: it reads the inputs it knows.
         if args.no_mid_swap:
             q.params.pop("mid_swap", None)

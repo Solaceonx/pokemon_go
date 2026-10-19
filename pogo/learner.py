@@ -37,6 +37,7 @@ HEADS = {"shield": 2, "throw": 3, "swap": 3, "replace": 2}
 N_SITUATION = 42
 N_FEATURES = N_SITUATION + 3  # plus which option the Planner would pick
 N_KNOWN = 12  # optional extra inputs ("wide" models): their Pokémon seen off the field; see known_foes()
+N_FORMS = 6  # optional extra inputs ("forms" models): the form-changing state of both Pokémon in play; see form_state()
 
 
 def describe(agent: Learner, view: View, foe_energy: int | None = None) -> list[float]:
@@ -74,6 +75,21 @@ def describe(agent: Learner, view: View, foe_energy: int | None = None) -> list[
             x += [1.0, m.hp / m.build.hp, m.energy / ENERGY_CAP, agent.outlook(view, j)]
         else:
             x += [0.0, 0.0, 0.0, 0.0]
+    return x
+
+
+def form_state(view: View) -> list[float]:
+    """For our Pokémon in play, then theirs: in a form other than its starting one (Aegislash Blade, Busted Mimikyu,
+    Hangry Morpeko, a Gulping or Gorging Cramorant); a disguise still up (Mimikyu: the next charged move does 1
+    damage); a catch in its mouth (Cramorant: a charged move hitting it spits Gulp Missile back). Zeros for every
+    Pokémon that does not change form, so examples from before these inputs existed are exact with zeros added."""
+    x = []
+    for mon in (view.me.mon, view.foe):
+        build = mon.build
+        rule = build.rule or {}
+        x += [float(build.forms is not None and build.species_id != build.home),
+              float(rule.get("effect") == "protect"),
+              float(build.gulp is not None)]
     return x
 
 
@@ -183,9 +199,26 @@ class QNet:
         }
 
     @property
+    def _extra(self) -> int:
+        return max(ps[0].shape[0] for ps in self.params.values()) - N_FEATURES
+
+    @property
     def wide(self) -> bool:
-        """Whether the networks also take known_foes() as input."""
-        return any(ps[0].shape[0] > N_FEATURES for ps in self.params.values())
+        """Whether the networks also take known_foes() as input (after the usual inputs)."""
+        return self._extra in (N_KNOWN, N_KNOWN + N_FORMS)
+
+    @property
+    def forms(self) -> bool:
+        """Whether the networks also take form_state() as input (last)."""
+        return self._extra in (N_FORMS, N_KNOWN + N_FORMS)
+
+    def widened(self, inputs: int) -> QNet:
+        """A copy reading `inputs` inputs, the new ones (added at the end) with zero weight: it plays exactly as this
+        one, as a starting pilot for a run with more inputs."""
+        out = {}
+        for head, (w1, b1, w2, b2) in self.params.items():
+            out[head] = [np.vstack([w1, np.zeros((inputs - w1.shape[0], w1.shape[1]))]), b1, w2, b2]
+        return QNet(out)
 
     def values(self, head: str, x) -> np.ndarray:
         w1, b1, w2, b2 = self.params[head]
@@ -236,8 +269,9 @@ class Learner(Planner):
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
-                 **settings):
+                 forms: bool | None = None, **settings):
         super().__init__(**settings)
+        self.forms = (q is not None and q.forms) if forms is None else forms  # form_state() inputs (decide.py --forms)
         # Also describe their Pokémon seen off the field (known_foes): on for models trained that way, or when
         # logging examples for one (decide.py --wide).
         self.wide = (q is not None and q.wide) if wide is None else wide
@@ -284,6 +318,8 @@ class Learner(Planner):
         x = describe(self, view, foe_energy) + [float(advice == k) for k in range(3)]
         if self.wide:
             x += known_foes(view)
+        if self.forms:
+            x += form_state(view)
         if self.q is not None and head in self.q.params:
             v = self.q.values(head, x[:self.q.params[head][0].shape[0]])  # an older, narrower model reads the first part
             if head == "throw":  # holding is worth whatever the best length of hold is worth

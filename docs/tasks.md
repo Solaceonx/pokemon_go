@@ -38,6 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
+| **33** | **Retrain the bot's networks: form inputs, two play-outs per option, mixed opponents (one job)** — Marco | Marco's machine, 4 workers, ~7 h |
 | 32 | Opponents as people bring them: **done 2026-10-18.** The engine's edge holds on the PvPoke field (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu. Owner's rule: realistic but not overfit, so new measurements, team choice and books use `--field mixed` and must not lose on `--field standard`. Opening book on the mixed field: +5.2 ± 1.1 there, +1.2 ± 0.7 on the usual (the PvPoke-only book is overfit). Team choice on the mixed field, cross-checked: the owner's three are best with Jellicent leading (59.4% mixed, 71.2% usual); Vigoroth-lead winners are overfit. Answers to every arrival (`scripts/answers.py`) add nothing beyond the opening book. Open: an opening book for a Jellicent lead. | Python |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
@@ -60,6 +61,43 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 33. Retrain the bot's networks — Marco (the owner, 2026-10-19: all three changes as one job, lighter than the last batch)
+
+**Why.** The bot's networks (`runs/general-decide/q.npz`; 45 inputs, `pogo/learner.py`) were trained on the usual
+pool, which never held Cramorant or Mimikyu (8.5% and 8% of team slots in PvPoke's data, status: "Team shapes, and
+PvPoke's public team data"), cannot see a form-changer's state, and learn from one play-out per option, whose noise
+is what limits them (status: "Is the network too small? No"). One run changes all three:
+
+- `--forms`: six more inputs (`form_state()`): for both Pokémon in play, a form other than its starting one, a
+  disguise still up, a catch in Cramorant's mouth. Zeros for everything else.
+- `--playouts 2`: each option played out twice (the second with fresh dice shared by all options) and averaged:
+  steadier targets, half as many examples for the time.
+- `--field mixed`: teams as PvPoke's usage data has them three times in four, the usual draw otherwise.
+- `--start runs/general-decide/q.npz`: the current model (widened with zero weights) pilots the first round, so the
+  first positions come from a good player. Every round still fits a new network on all examples.
+
+**Before.** Merge `engine-batch` into `main` first. If the owner has made `EVOLVED_RULES` the default by then, this
+run trains on those rules without any change here (the bot's networks sit on top of the rules); if not, leave the
+rules alone, and retrain on them later only after that decision.
+
+**Run** (4 workers, `nice`; about 4 h collecting, 1 h fitting and validating; saves after every round):
+
+```bash
+nice python3 scripts/decide.py --run qnet-1 --forms --playouts 2 --field mixed --both-sides 0.5 --start runs/general-decide/q.npz --minutes 240 --rounds 4 --workers 4 > runs/qnet-1.out
+nice python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/qnet-1/q.npz:$(cat runs/qnet-1/margin.txt) --field mixed --battles 4000 --workers 3 --seed 3301 > runs/qnet-1-compare-mixed.out
+nice python3 scripts/compare_models.py runs/general-decide/q.npz:0.02 runs/qnet-1/q.npz:$(cat runs/qnet-1/margin.txt) --field usual --battles 4000 --workers 3 --seed 3302 > runs/qnet-1-compare-usual.out
+```
+
+If the first command stops part-way, `--resume --rounds R --minutes 60*R` (R = rounds not yet done) carries on
+from the saved examples.
+
+**Adopt only if** (status: "Rules for proposing a change") on the mixed field it beats the current model against the
+crowd beyond the margin and scores above 50% beyond the margin head to head, and on the usual field it loses
+neither beyond its margin; then confirm the mixed comparison once more on `--seed 3303`. If adopted, keep the old
+model as `runs/general-decide/q_v3.npz`, copy the new one and its margin in, and note that the engine and website
+pick it up (the Learner reads the form inputs from the model's size). One job measures the three changes together;
+if it fails, say so and do not split it up without the owner.
 
 ## For Marco: the engine-strength batch (assigned by the owner, 2026-10-17)
 

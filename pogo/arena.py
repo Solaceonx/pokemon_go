@@ -55,8 +55,9 @@ class Result:
                 f"({self.wins} won, {self.losses} lost, {self.draws} drawn of {self.games})")
 
 
-def compare(make_x, make_y, pool: list[Build], pairings: int = 500, seed: int = 0, team_size: int = 3) -> Result:
-    """Score player X against player Y over random teams drawn from the pool.
+def compare(make_x, make_y, pool: list[Build], pairings: int = 500, seed: int = 0, team_size: int = 3,
+            draw=None) -> Result:
+    """Score player X against player Y over random teams drawn from the pool (or by draw(rng), e.g. a field).
 
     Each pairing of teams is played twice with the teams swapped, so neither
     player gains from being dealt the stronger team.
@@ -65,7 +66,7 @@ def compare(make_x, make_y, pool: list[Build], pairings: int = 500, seed: int = 
     wins = draws = losses = turns = 0
     pair_scores = []
     for _ in range(pairings):
-        team_a, team_b = rng.sample(pool, team_size), rng.sample(pool, team_size)
+        team_a, team_b = (draw(rng), draw(rng)) if draw else (rng.sample(pool, team_size), rng.sample(pool, team_size))
         pair = 0.0
         for mine, theirs in ((team_a, team_b), (team_b, team_a)):
             battle = Battle(mine, theirs, make_x(), make_y(), seed=rng.getrandbits(32))
