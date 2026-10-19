@@ -112,3 +112,20 @@ def pvpoke_field(gd):
     known = {e["speciesId"] for e in gd.rankings(1500)}
     pool += [gd.default(sp) for sp in sorted(usage, key=lambda x: -usage[x]) if sp in known and sp not in have]
     return pool, shaped_drawer(gd, pool, PVPOKE_WEIGHTS, shapes=Shapes(path=WIDE), usage=usage)
+
+
+def mixed_field(gd, usual: float = 0.25):
+    """(pool, draw): pvpoke_field most of the time, the usual broad draw (pogo.teamlist.drawer over the top 50) with
+    chance `usual`, so the field is realistic without fitting one snapshot of PvPoke's training data: rarer
+    Pokémon and odd teams still come up. The default field for team choice, opening books and new measurements."""
+    from .teamlist import drawer
+    pool, pvpoke = pvpoke_field(gd)
+    plain = gd.meta(50)
+    broad = drawer(gd, plain)
+    have = {b.species_id for b in pool}
+    pool = pool + [b for b in plain if b.species_id not in have]
+
+    def draw(rng):
+        return broad(rng) if rng.random() < usual else pvpoke(rng)
+
+    return pool, draw

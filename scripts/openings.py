@@ -11,7 +11,9 @@ with shifted habits (as pogo.lineup). A plan goes into the book only if it beats
 leads drawn from the good-team list, the same battles for both. Writes data/openings/<team>.json.
 Our Pokémon use the owner's builds where they have them. With --field pvpoke the leads are the --leads most used in
 PvPoke's data (Cramorant and Mimikyu included), their back two and the check's teams drawn as that data has them
-(pogo.teamshape.pvpoke_field), and the book goes to data/openings/<team>-pvpoke.json.
+(pogo.teamshape.pvpoke_field), and the book goes to data/openings/<team>-pvpoke.json. --field mixed (the default)
+is that three times in four and the usual draw otherwise (pogo.teamshape.mixed_field; book <team>-mixed.json).
+--book PATH skips building and only checks that book on the chosen field (to see whether a book fits one field only).
 """
 from __future__ import annotations
 
@@ -42,9 +44,9 @@ def setup(team, field="standard") -> None:
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
-    if field == "pvpoke":
-        from pogo.teamshape import pvpoke_field
-        pool, draw = pvpoke_field(gd)
+    if field in ("pvpoke", "mixed"):
+        from pogo.teamshape import mixed_field, pvpoke_field
+        pool, draw = pvpoke_field(gd) if field == "pvpoke" else mixed_field(gd)
         _s.update(field_draw=draw)
     owned = builds(gd)
     listed = json.loads((ROOT / "data" / "teams.json").read_text())["teams"]
@@ -127,17 +129,22 @@ def main() -> None:
     parser.add_argument("--check", type=int, default=3000)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=41)
-    parser.add_argument("--field", choices=("standard", "pvpoke"), default="standard")
+    parser.add_argument("--field", choices=("standard", "pvpoke", "mixed"), default="mixed")
+    parser.add_argument("--book", help="check this book (data/openings/*.json) instead of building one")
     args = parser.parse_args()
     gd = GameData()
     names = [gd.species[sp]["speciesName"] for sp in args.team]
     plans = [{"swap": None}]
     for slot in (1, 2):
         plans += [{"swap": slot, "after_fast": n} for n in (0, 2, 4, 8)] + [{"swap": slot, "after_charged": True}]
-    if args.field == "pvpoke":
+    if args.book:
+        leads = []
+    elif args.field in ("pvpoke", "mixed"):
         from pogo.teamshape import pvpoke_field, pvpoke_usage
         usage, field = pvpoke_usage(), {b.species_id for b in pvpoke_field(gd)[0]}
         leads = [sp for sp in sorted(usage, key=lambda x: -usage[x]) if sp in field][:args.leads]
+        if args.field == "mixed":  # the usual draw's leads too
+            leads += [b.species_id for b in gd.meta(50) if b.species_id not in leads]
     else:
         leads = [b.species_id for b in gd.meta(args.leads)]
     tasks = [(lead, k, p, args.battles, args.seed + i) for i, lead in enumerate(leads) for k, p in enumerate(plans)]
@@ -146,6 +153,8 @@ def main() -> None:
         for lead, k, out in pool.imap_unordered(job, tasks, chunksize=2):
             results[(lead, k)] = out
         book, rows = {}, []
+        if args.book:
+            book = {k: {x: y for x, y in v.items() if x != "plan"} for k, v in json.loads(Path(args.book).read_text())["book"].items()}
         for lead in leads:
             stay = results[(lead, 0)]
             best_k, best_gain, best_margin = 0, 0.0, 0.0
@@ -168,10 +177,14 @@ def main() -> None:
     m1, h1 = mean_and_margin(with_book)
     m0, h0 = mean_and_margin(without)
     d, dh = mean_and_margin([a - b for a, b in zip(with_book, without)])
-    where = "teams as PvPoke's data has them" if args.field == "pvpoke" else "leads from the good-team list"
+    where = {"pvpoke": "teams as PvPoke's data has them", "mixed": "the mixed field",
+             "standard": "leads from the good-team list"}[args.field]
     print(f"\ncheck on {len(with_book)} fresh battles ({where}): with the book {100 * m1:.1f}% ± {100 * h1:.1f}, "
           f"without {100 * m0:.1f}% ± {100 * h0:.1f}, difference {100 * d:+.1f} ± {100 * dh:.1f} points")
-    out = ROOT / "data" / "openings" / f"{'-'.join(args.team)}{'-pvpoke' if args.field == 'pvpoke' else ''}.json"
+    if args.book:
+        print(f"(book {args.book}, checked only)")
+        return
+    out = ROOT / "data" / "openings" / f"{'-'.join(args.team)}{'' if args.field == 'standard' else '-' + args.field}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"team": args.team, "battles_per_plan": args.battles,
                                "book": {lead: {**plan, "plan": describe(plan, names)} for lead, plan in book.items()},
