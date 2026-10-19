@@ -7,6 +7,9 @@ The owner's Pokémon come from data/owner_team.json and data/owner_roster.json, 
 Every legal line-up (a lead and two others) is a candidate. Ours is piloted by the best bot.
 
 Who the opponents are decides what the scores mean:
+  --field mixed    (the default) teams as PvPoke's usage data has them three times in four, the usual draw otherwise
+                   (pogo.teamshape.mixed_field: Cramorant and Mimikyu included, balanced teams); --listed and --pool
+                   then do not apply. --field standard is the old draw below
   --listed SHARE   this share of opposing teams comes from the good-team list (--teams, data/teams.json), better
                    teams more often; the rest are random legal threes from the top --pool Pokémon
   --rival bot      the opponent is piloted by the same bot as ours (equal skill); "crowd" is the usual, weaker,
@@ -54,13 +57,17 @@ MODEL = ROOT / "runs" / "general-decide" / "q.npz"
 _state: dict = {}
 
 
-def setup(pool_size: int, listed: float, teams: str, rival: str) -> None:
+def setup(pool_size: int, listed: float, teams: str, rival: str, field: str = "standard") -> None:
     try:
         os.nice(10)
     except OSError:  # restricted environments may deny even lowering priority
         pass
     gd = GameData()
     pool = gd.meta(pool_size)
+    draw = drawer(gd, pool, Path(teams), share=listed)
+    if field == "mixed":
+        from pogo.teamshape import mixed_field
+        pool, draw = mixed_field(gd)
     pilot, opponent = Planner, lambda rng: varied(rng, pool)  # noqa: E731
     if MODEL.exists():
         from pogo.learner import Learner, QNet
@@ -68,7 +75,7 @@ def setup(pool_size: int, listed: float, teams: str, rival: str) -> None:
         pilot = lambda: Learner(q=net, margin=0.02)  # noqa: E731
         if rival == "bot":
             opponent = lambda rng: Learner(q=net, margin=0.02, seed=rng.getrandbits(30))  # noqa: E731
-    _state.update(pool=pool, mine=builds(gd), pilot=pilot, opponent=opponent, draw=drawer(gd, pool, Path(teams), share=listed))
+    _state.update(pool=pool, mine=builds(gd), pilot=pilot, opponent=opponent, draw=draw)
 
 
 def play(job):
@@ -177,6 +184,9 @@ def main() -> None:
     parser.add_argument("--compare-teams", help="search and compare this list with --teams on paired fresh battles")
     parser.add_argument("--out", help="output JSON (comparison defaults to data/roster_teams_v2.json)")
     parser.add_argument("--rival", choices=("crowd", "bot"), default="crowd", help="who pilots the opponent")
+    parser.add_argument("--field", choices=("mixed", "standard"), default="mixed",
+                        help="opposing teams: the mixed field (realistic, docs/status.md rules) or --listed/--pool; "
+                             "--compare-teams always uses the latter")
     parser.add_argument("--recheck", action="store_true", help="only the line-ups in data/roster_teams.json, fresh battles only")
     parser.add_argument("--stages", default="150:500,600:50,3000:12", help="battles:keep for each stage")
     parser.add_argument("--finals", type=int, default=6000)
@@ -198,6 +208,8 @@ def main() -> None:
     if args.recheck:
         lineups, stages = [tuple(e["team"]) for e in json.loads(out.read_text())["teams"]], []
     field = (f"{100 * args.listed:.0f}% from {Path(args.teams).name}, the rest " if args.listed else "") + f"random legal threes from the top {args.pool}"
+    if args.field == "mixed":
+        field = "the mixed field (PvPoke usage three times in four, the usual draw otherwise)"
     rival = "the same bot" if args.rival == "bot" and MODEL.exists() else "the usual crowd"
     print(f"{len(mine)} Pokémon, {len(lineups)} line-ups; opposing teams: {field}; opposing pilot: {rival}; "
           f"our pilot: {'the trained bot' if MODEL.exists() else 'the Planner'}", flush=True)
@@ -205,7 +217,7 @@ def main() -> None:
     played, total = 0, {t: 0.0 for t in lineups}
     alive = list(lineups)
     with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup,
-                                                    initargs=(args.pool, args.listed, args.teams, args.rival)) as workers:
+                                                    initargs=(args.pool, args.listed, args.teams, args.rival, args.field)) as workers:
         for number, stage in enumerate(stages, start=1):
             battles, keep = (int(v) for v in stage.split(":"))
             t0 = time.time()
@@ -245,8 +257,8 @@ def main() -> None:
         return
     out.write_text(json.dumps({"about": "Best line-ups from the owner's own Pokémon (scripts/roster_teams.py). score: share of battles won on fresh battles "
                                f"against {field}, piloted by {rival}; margin: 95% range; behind_best: gap to the top line on the same battles.",
-                               "caution": caution, "pool": args.pool, "listed": args.listed, "rival": args.rival, "battles": args.finals, "teams": rows}, indent=1) + "\n")
-    print(f"written: {out.relative_to(ROOT)}")
+                               "caution": caution, "field": args.field, "pool": args.pool, "listed": args.listed, "rival": args.rival, "battles": args.finals, "teams": rows}, indent=1) + "\n")
+    print(f"written: {out}")
 
 
 if __name__ == "__main__":
