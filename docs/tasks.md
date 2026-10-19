@@ -39,7 +39,7 @@ and push that before starting.
 |---|---|---|
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco; shared evaluator-cache interference found and fixed; corrected measurements running | Big machine |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
-| **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
+| **28** | **Opponents in the look-ahead that are not our own bot** — Marco; measured, not adopted: outside gains but fresh head-to-head regression | Complete, 2026-10-18 |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain** — Marco | Big machine |
 | **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
 | **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
@@ -283,7 +283,17 @@ median. 40 turns ahead was only ever tried with the cheap stand-in players insid
 **Done when.** The table is in `status.md`; the best setting is confirmed on a fresh seed (2,000 or more pairings) and
 adopted if it beats the current engine head to head beyond the margin and is not worse against the crowd or PvPoke's AI.
 
-## 28. Opponents in the look-ahead that are not our own bot — Marco
+## 28. Opponents in the look-ahead that are not our own bot — Marco; measured 2026-10-18, not adopted: fresh head-to-head regression
+
+**Result.** Calibrated and measured all four run-sheet settings, the stronger human-style attempt and the
+v2 team prior. Fixed a shared evaluator cache that made the original harness depend on worker job order,
+then reran all six. The selected mixture + profiling gained +3.4 ± 2.1 crowd points and +5.6 ± 2.6 PvPoke
+points on fresh seed 280281, but scored 48.4% ± 1.3 against the current engine and failed the adoption rule.
+No playing defaults changed. Human-style and v2-prior extensions added no gain beyond their margins.
+Dedicated timing: median 24.41 ms (95% interval 22.69–26.02), 99th percentile 96.82 ms (91.05–101.69),
+observed maximum 172.66 ms; no cuts or fallbacks in 6,974 searches. All results, including invalid exploratory
+runs and the unchanged trained-bot edge, are in [status.md](status.md#task-28-mixed-look-ahead-opponents-and-listed-teams-2026-10-18)
+and [the exact command log](../runs/task28/commands.txt). Final suite: 228 tests, seven skips; PvPoke 108/108.
 
 **Why.** Inside the look-ahead every opponent is the trained bot (`Engine._look`, `rollout="bot"`). That is why the
 engine wins 65% against the bot but only +5.4 points more than the bot against the crowd. People do not play like

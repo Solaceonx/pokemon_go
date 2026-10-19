@@ -51,14 +51,17 @@ STYLES = {"bot": {"weight": 0.4, "shield": 0.7, "bait": 0.5},
           "pvpoke": {"weight": 0.1, "shield": 0.9, "bait": 0.3}}
 
 
-def styles() -> dict:
-    path = DATA / "opponent_styles.json"
-    if path.exists():
+def styles(path: str | Path | None = None) -> dict:
+    explicit = path is not None
+    path = Path(path) if path is not None else DATA / "opponent_styles.json"
+    if not path.is_absolute():
+        path = DATA.parent / path
+    if explicit or path.exists():
         return {**STYLES, **json.loads(path.read_text())["styles"]}
     return STYLES
 
 
-def style_player(name: str, rng: random.Random, q, margin: float, pool: list):
+def style_player(name: str, rng: random.Random, q, margin: float, pool: list, human: dict | None = None):
     """A player of one of the STYLES: the trained bot, the bot with shifted habits, the human-like guess, PvPoke's AI."""
     if name == "pvpoke":
         from .pvpoke_ai import PvpokeAI
@@ -66,16 +69,17 @@ def style_player(name: str, rng: random.Random, q, margin: float, pool: list):
     if name == "varied":
         return Learner(q=q, margin=rng.choice((0.02, 0.05, 0.1)), **varied_settings(rng, pool))
     if name == "human":
-        return Learner(q=q, margin=rng.choice((0.02, 0.05)), **human_settings(rng, pool))
+        return Learner(q=q, margin=rng.choice((0.02, 0.05)), **human_settings(rng, pool, human))
     return Learner(q=q, margin=margin, seed=rng.getrandbits(32))
 
 
-def human_settings(rng: random.Random, field: list | None = None) -> dict:
+def human_settings(rng: random.Random, field: list | None = None, overrides: dict | None = None) -> dict:
     """A first guess at how people differ from the bot (status.md, "The bot against real players' decisions"): they
     keep fast-moving where the bot would throw, and many use a fast move before swapping out of a new matchup."""
     settings = varied_settings(rng, field)
     settings.update(hold=True, hold_cost=min(1.5, 0.9 * 2.718281828 ** rng.gauss(0, 0.3)), timed_farm=True,
                     fast_first=rng.choice((0.5, 1.0)), last_gasp=rng.random() < 0.6)
+    settings.update(overrides or {})
     return settings
 
 
@@ -100,7 +104,8 @@ class _First:
         return self.inner.replace(view)
 
 
-def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, teams: list | None = None) -> Battle:
+def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, teams: list | None = None,
+            team_builds: dict | None = None) -> Battle:
     """A battle standing where this view stands, with the opponent's unseen Pokémon drawn from the pool, or with
     `teams` (weight, species) from a listed team that holds every one seen so far, when one does."""
     me = view.me
@@ -109,8 +114,10 @@ def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, tea
     theirs = [m.copy() for m in seen]
     unseen = max(0, view.foe_left - sum(m.hp > 0 for m in seen))
     taken = {m.build.species_id for m in seen}
-    fitting = [(w, t) for w, t in teams if taken <= set(t)] if teams and unseen else []
+    fitting = [(w, t) for w, t in teams if w > 0 and taken <= set(t)] if teams and unseen else []
     by_id = {b.species_id: b for b in pool}
+    if team_builds:
+        by_id.update(team_builds)
     if fitting:
         team = rng.choices([t for _, t in fitting], [w for w, _ in fitting])[0]
         extra = [by_id[sp] for sp in team if sp not in taken and sp in by_id][:unseen]
@@ -132,6 +139,8 @@ class Engine(Learner):
     def __init__(self, evaluator, pool: list, horizon: int = 20, samples: int = 6, edge: float = 0.0,
                  heads: tuple = ("throw", "swap", "mid_swap", "replace"), rollout: str = "quick",
                  opponents: str = "bot", profile: bool = False, unseen: str = "pool",
+                 team_file: str | Path | None = None,
+                 style_file: str | Path | None = None,
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
                  mix_switch: bool = False, random_hold: bool = False, **settings):
         super().__init__(**settings)
@@ -143,11 +152,29 @@ class Engine(Learner):
         self.mix_shield, self.mix_switch, self.random_hold = mix_shield, mix_switch, random_hold
         self._hold_window = False
         self._mix_fallback = False
-        self._styles = styles() if opponents == "mix" else None
+        self._styles = styles(style_file) if opponents == "mix" else None
+        self._human_settings = {}
+        if opponents == "mix":
+            path = Path(style_file) if style_file is not None else DATA / "opponent_styles.json"
+            if not path.is_absolute():
+                path = DATA.parent / path
+            if path.exists():
+                self._human_settings = json.loads(path.read_text()).get("human_settings", {})
         self._teams = None
+        self._team_builds = None
         if unseen == "teams":
-            listed = json.loads((DATA / "teams.json").read_text())["teams"]
-            self._teams = [(max(e.get("weight", e.get("score", 0.5) - 0.4), 0.02), e["team"]) for e in listed]
+            from .gamedata import GameData
+            from .teamlist import weights_for
+            path = Path(team_file or DATA / "teams.json")
+            if not path.is_absolute():
+                path = DATA.parent / path
+            listed = json.loads(path.read_text())["teams"]
+            self._teams = list(zip(weights_for(listed), [e["team"] for e in listed]))
+            self._team_builds = {b.species_id: b for b in pool}
+            missing = {sp for e in listed for sp in e["team"]} - self._team_builds.keys()
+            if missing:
+                gd = GameData()
+                self._team_builds.update({sp: gd.default(sp) for sp in missing})
         self._obs = {"shield": [0, 0], "bait": [0, 0]}  # what this opponent has done: [times, chances]
         self._mix_rng = random.Random(hash(self.rng.getstate()))  # for mixing only; does not touch self.rng
         self._their_first = None  # the opponent's first action in each look, when fixed (mixed tables, readers)
@@ -201,7 +228,7 @@ class Engine(Learner):
             return Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32))
         weights = self._style_weights()
         name = rng.choices(list(weights), list(weights.values()))[0]
-        return style_player(name, rng, self.q, self.margin, self.pool)
+        return style_player(name, rng, self.q, self.margin, self.pool, self._human_settings)
 
     # deciding
 
@@ -382,7 +409,8 @@ class Engine(Learner):
             us, them = _rollout(), _rollout()
         if self._their_first is not None and head != "shield":
             them = _First(them, self._their_first)
-        battle = imagine(view, rng, self.pool, _First(us, first), them, teams=self._teams)
+        battle = imagine(view, rng, self.pool, _First(us, first), them, teams=self._teams,
+                         team_builds=self._team_builds)
         if head == "replace":
             battle.sides[0].active = others[option]
             if others[option] not in battle.sides[0].shown:

@@ -7,7 +7,8 @@
 Both default to the engine's confirmed settings (the trained bot inside the look-ahead, 4 imagined battles per
 option, 20 turns, edge 0.03). --samples, --horizon and --edge measure other settings, and --settings takes any setting
 in engine_versus.py's form (for example --settings "mix=1"). Pause lengths are options (milliseconds); the defaults
-are cautious guesses.
+are cautious guesses. --save writes a compact timing summary with 95% intervals obtained by resampling
+whole battles.
 
 --timing: the real-time engine plays the usual crowd. For every searched decision: what came before it, the time
 it had, the time it took, how often the deadline cut the search short or left no complete round (then it plays
@@ -22,6 +23,7 @@ uses elapsed time for both deadlines and measurements, as in live play.
 from __future__ import annotations
 
 import argparse
+import json
 import multiprocessing
 import os
 import random
@@ -31,7 +33,7 @@ from collections import defaultdict
 from pathlib import Path
 
 for _var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "MKL_NUM_THREADS"):
-    os.environ.setdefault(_var, "1")
+    os.environ[_var] = "1"
 
 import numpy as np  # noqa: E402
 
@@ -75,13 +77,14 @@ def job(task) -> dict:
     def engine(s):
         return Engine(Evaluator(ev.model), pool, seed=s, **confirmed)
 
-    out = {"rows": [], "head": [], "rt": [], "engine": [], "bot": []}
+    out = {"rows": [], "head": [], "rt": [], "engine": [], "bot": [], "timing_games": []}
     for n in range(start, start + count):
         rng = random.Random(seed * 1_000_003 + n)
         if mode == "timing":
             rt = realtime(rng.getrandbits(32))
             Battle(draw(rng), draw(rng), rt, varied(rng, pool), seed=rng.getrandbits(32)).run()
             out["rows"] += rt.rows
+            out["timing_games"].append(rt.rows)
         elif mode == "pairings":
             a, b = draw(rng), draw(rng)
             dice = rng.getrandbits(32)
@@ -130,6 +133,36 @@ def timing_table(rows) -> None:
               f"{np.percentile(s, 99):4.0f} | {s.max():5.0f} | {100 * np.mean([r[5] for r in rs]):8.1f}% | {100 * np.mean([r[6] for r in rs]):9.1f}%")
 
 
+def timing_intervals(games, seed):
+    """95% bootstrap intervals, resampling whole battles rather than correlated decisions."""
+    def measures(rows):
+        a = np.asarray([[r[3], r[4], r[5], r[6]] for r in rows])
+        return np.array([np.median(a[:, 0]), np.percentile(a[:, 0], 99),
+                         100 * np.mean(a[:, 2]), 100 * np.mean(a[:, 3]),
+                         100 * np.mean(a[:, 1] > 0)])
+
+    estimate = measures([r for game in games for r in game])
+    rng = np.random.default_rng(seed)
+    samples = np.array([measures([r for i in rng.integers(len(games), size=len(games)) for r in games[i]])
+                        for _ in range(1000)])
+    low, high = np.percentile(samples, [2.5, 97.5], axis=0)
+    names = ("median_ms", "p99_ms", "cut_percent", "fallback_percent", "wait_percent")
+    result = {name: {"estimate": float(v), "low95": float(lo), "high95": float(hi)}
+              for name, v, lo, hi in zip(names, estimate, low, high)}
+    # A bootstrap of zero events is always zero; it cannot bound the unseen risk.
+    # Use independent battles for the exact one-sided zero-event bound instead.
+    for name, column in (("cut_percent", 5), ("fallback_percent", 6), ("wait_percent", 4)):
+        if not any(r[column] > 0 for game in games for r in game):
+            result[name]["battle_risk_upper95_percent"] = 100 * (1 - 0.05 ** (1 / len(games)))
+    print("\n95% intervals (whole-battle bootstrap; observed worst is a sample maximum):")
+    for name, v in result.items():
+        print(f"  {name}: {v['estimate']:.2f} [{v['low95']:.2f}, {v['high95']:.2f}]")
+        if "battle_risk_upper95_percent" in v:
+            print(f"    no events observed; one-sided 95% upper bound on battles affected: "
+                  f"{v['battle_risk_upper95_percent']:.2f}%")
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--timing", type=int, default=0, help="battles against the crowd, for the timing table")
@@ -142,6 +175,7 @@ def main() -> None:
     parser.add_argument("--edge", type=float, default=None, help="default 0.03")
     parser.add_argument("--settings", default="", help="engine settings, as in engine_versus.py (e.g. mix=1)")
     parser.add_argument("--clock", choices=("cpu", "wall"), default="cpu")
+    parser.add_argument("--save", type=Path, help="write the timing summary as small JSON")
     for name in PAUSES:
         parser.add_argument("--" + name.replace("_", "-"), type=float, default=None)
     args = parser.parse_args()
@@ -158,7 +192,14 @@ def main() -> None:
           f"pauses: {pauses or 'defaults (pogo/realtime.py)'}")
     if args.timing:
         print(f"\n--- timing: {args.timing} battles against the crowd")
-        timing_table(run("timing", args.timing, args.workers, args.seed, pauses, settings, args.clock)["rows"])
+        got = run("timing", args.timing, args.workers, args.seed, pauses, settings, args.clock)
+        timing_table(got["rows"])
+        intervals = timing_intervals(got["timing_games"], args.seed)
+        if args.save:
+            args.save.parent.mkdir(parents=True, exist_ok=True)
+            args.save.write_text(json.dumps(dict(settings=settings, seed=args.seed, battles=args.timing,
+                searched_decisions=len(got["rows"]), intervals=intervals,
+                worst_ms=max(r[3] for r in got["rows"]), worst_wait_ms=max(r[4] for r in got["rows"])), indent=2) + "\n")
     if args.pairings:
         got = run("pairings", args.pairings, args.workers, args.seed + 1, pauses, settings, args.clock)
         m, h = mean_and_margin(got["head"])

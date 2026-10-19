@@ -1,0 +1,88 @@
+{
+  "rule": "No head-to-head loss beyond its 95% margin; maximize the smaller lower 95% bound for paired crowd/PvPoke improvement.",
+  "original": {
+    "opponents=mix": {
+      "h2h": [
+        0.495875,
+        0.012800682408471873
+      ],
+      "changes": {
+        "crowd": [
+          0.03675,
+          0.021688659214420324
+        ],
+        "pvpoke": [
+          0.0395,
+          0.02690117872913782
+        ]
+      },
+      "eligible": true,
+      "score": 0.01259882127086218
+    },
+    "opponents=mix,profile=1": {
+      "h2h": [
+        0.49025,
+        0.01275015439783316
+      ],
+      "changes": {
+        "crowd": [
+          0.03475,
+          0.021405170043760482
+        ],
+        "pvpoke": [
+          0.0595,
+          0.026759286893245773
+        ]
+      },
+      "eligible": true,
+      "score": 0.01334482995623952
+    },
+    "unseen=teams": {
+      "h2h": [
+        0.49425,
+        0.012674530184890634
+      ],
+      "changes": {
+        "crowd": [
+          -0.003,
+          0.0206662541315526
+        ],
+        "pvpoke": [
+          -0.0225,
+          0.027956443850260228
+        ]
+      },
+      "eligible": true,
+      "score": -0.05045644385026023
+    },
+    "opponents=mix,profile=1,unseen=teams": {
+      "h2h": [
+        0.500625,
+        0.012665158025125495
+      ],
+      "changes": {
+        "crowd": [
+          0.036,
+          0.021585611237726232
+        ],
+        "pvpoke": [
+          0.051,
+          0.027341374309810196
+        ]
+      },
+      "eligible": true,
+      "score": 0.014414388762273765
+    }
+  },
+  "best_original": "opponents=mix,profile=1,unseen=teams",
+  "human_structure": "opponents=mix,profile=1,unseen=teams",
+  "v2_structure": "opponents=mix,profile=1,unseen=teams",
+  "human_setting": "hold_cost=1.5,farm_cost=0.7",
+  "human_overrides": {
+    "hold_cost": 1.5,
+    "farm": true,
+    "farm_cost": 0.7
+  },
+  "human_spec": "opponents=mix,profile=1,unseen=teams,style_file=runs/task28/opponent_styles-human.json",
+  "v2_spec": "opponents=mix,profile=1,unseen=teams,team_file=data/teams_v2.json"
+}

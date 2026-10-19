@@ -1,0 +1,11 @@
+nice: setpriority: Operation not permitted
+Starting isolated.out: nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-isolated --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --seed 2701 --candidates opponents=mix opponents=mix,profile=1 unseen=teams opponents=mix,profile=1,unseen=teams opponents=mix,profile=1,unseen=teams,style_file=runs/task28/opponent_styles-human.json opponents=mix,profile=1,unseen=teams,team_file=data/teams_v2.json
+Completed isolated.out
+Frozen candidate: opponents=mix,profile=1
+Starting confirmation.out: nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-confirm --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000 --seed 280281 --candidates opponents=mix,profile=1
+Completed confirmation.out
+Starting timing.out: nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/realtime_trial.py --timing 300 --workers 3 --seed 280282 --settings opponents=mix,profile=1 --save runs/task28/timing.json
+Completed timing.out
+Starting bot-confirmation.out: nice -n 10 /Users/marco/Developer/pokemon_go/.venv/bin/python scripts/engine_versus.py --tag opponents-bot-confirm --baseline bot --workers 3 --pairings 1000 --crowd 0 --pvpoke 0 --seed 280283 --candidates '' opponents=mix,profile=1
+Completed bot-confirmation.out
+All measurements complete; strength criteria: False
