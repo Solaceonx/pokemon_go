@@ -30,7 +30,16 @@ def decisive(battle: Battle, side: int = 0, bare: float = 0.5) -> float:
 
 
 def low_priority() -> None:
-    """Lower batch-job priority, or retain an already-low inherited sandbox priority."""
+    """Lower batch-job priority, or retain an already-low inherited sandbox priority. On Windows (no os.nice), the
+    below-normal priority class, so a PC running a job stays usable."""
+    if not hasattr(os, "nice"):
+        try:
+            import ctypes
+            kernel = ctypes.windll.kernel32
+            kernel.SetPriorityClass(kernel.GetCurrentProcess(), 0x00004000)  # BELOW_NORMAL_PRIORITY_CLASS
+        except (AttributeError, OSError):
+            pass
+        return
     try:
         os.nice(10)
     except PermissionError:
