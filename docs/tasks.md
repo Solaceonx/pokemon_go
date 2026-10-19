@@ -38,25 +38,25 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
+| 32 | Opponents as people bring them: **measured 2026-10-18** (status: "against teams as PvPoke's data has them"): the engine's edge holds (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu, the opening book built on this field gains +5.8 ± 1.2. Open: owner to decide whether team choice, books and measurements switch to `--field pvpoke`; books for other teams. | Owner's call |
 | **25** | **Let the engine search shield decisions** — Marco; measured 2026-10-18: no gain, keep off | Done; results in `status.md` |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco; measured, not adopted: outside gains but fresh head-to-head regression | Complete, 2026-10-18 |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco; done 2026-10-18: no confirmed gain | Done |
 | **30** | **Evolve the rulebook and the engine's settings** — Marco; rulebook done 2026-10-18: **evolved rules confirmed** (54.0% ± 0.9 alone, bot on top 51.6% ± 0.8), kept as `EVOLVED_RULES` for the owner to make the default; the engine-settings run (`engine-1`) is still running | Engine part running |
 | **31** | **Self-play improvement loop** — Marco; done 2026-10-18: round 1 predicts better but plays no better (49.2% ± 1.5); stopped | Done |
-| 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
+| 23 | The engine in real time: built; pauses measured from recordings and set as defaults; nothing cut on the owner's Mac. Open: search the shield and move outcomes during the 9 s a charged move plays (needed if task 27 adopts a slower setting) | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
 | 5 | Learn from the tracked games (teams, movesets, habits seen) | Python |
 | 8 | Predict hidden teams from real team combinations | Python, real teams (task 5) |
 | 7 | Opponent stats from CP, move priority and damage | Python |
-| 10 | Form-changing Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) | Python, a browser |
 | 16, 17, 22 | Footage: acceptance work on public VODs, the reserved official sample, whole-VOD splitting | Codex; video access |
 | 15 | Train the bot on the tracker's uncertain picture | **On hold** until real-game testing |
 | 13 | Live loop on the phone | Owner only |
 
 **Done or stopped** (details in `status.md`): 2–4 and 12 (footage to game states, by `scripts/recording/`),
 6 (PvPoke's AI, `pogo/pvpoke_ai.py`), 9 (exact endgames, `pogo/endgame.py`, no significant gain),
-11 (simulator 1.2–1.4× faster), 14 (exploiters gain nothing beyond the margin), 18 (owner's rules),
+10 (form-changing Pokémon, 132 of 132 PvPoke battles; not yet in the training pools), 11 (simulator 1.2–1.4× faster), 14 (exploiters gain nothing beyond the margin), 18 (owner's rules),
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.

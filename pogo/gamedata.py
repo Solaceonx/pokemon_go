@@ -74,6 +74,8 @@ class Move:
     buff_chance: float = 0.0
     self_buffs: tuple[int, int] = (0, 0)  # (attack, defence) stage changes on the user
     foe_buffs: tuple[int, int] = (0, 0)
+    percent_hp: bool = False  # damage is a share of the target's maximum health (Gulp Missile)
+    instant: bool = False  # does not trigger the target's form effects (Gulp Missile)
 
 
 def _move(m: dict) -> Move:
@@ -90,6 +92,7 @@ def _move(m: dict) -> Move:
         energy=m["energy"], energy_gain=m["energyGain"], turns=m.get("turns") or m["cooldown"] // 500,
         buff_chance=float(m["buffApplyChance"]) if target else 0.0,
         self_buffs=self_buffs, foe_buffs=foe_buffs,
+        percent_hp=m.get("damageMethod") == "percentMaxHP", instant="instant" in (m.get("tags") or []),
     )
 
 
@@ -114,6 +117,15 @@ class Build:
     charged: tuple[Move, ...]
     uid: int = field(default_factory=lambda: next(_uid))
     _cache: dict = field(default_factory=dict, repr=False)
+    # Form-changing Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko; pogo.battle applies the changes): every form of
+    # one Pokémon is a Build, all sharing `forms` ({form id: Build}) and the starting form's id `home`. `rule` is the
+    # form's formChange entry from the game master, `native` its own stat stages (Busted Mimikyu: Defence -1), and
+    # `gulp` the Gulp Missile a Gulping or Gorging Cramorant fires when a charged move hits it.
+    forms: dict | None = field(default=None, repr=False)
+    home: str | None = None
+    rule: dict | None = field(default=None, repr=False)
+    native: tuple[int, int] = (0, 0)
+    gulp: Move | None = None
 
     def base_damage(self, move: Move, target: Build) -> float:
         """Damage before stat stages and rounding."""
@@ -146,6 +158,7 @@ class GameData:
         gm = json.loads((folder / "gamemaster.json").read_text())
         self.species = {p["speciesId"]: p for p in gm["pokemon"]}
         self.moves = {m["moveId"]: _move(m) for m in gm["moves"] if "damageMethod" not in m}
+        self.special_moves = {m["moveId"]: _move(m) for m in gm["moves"] if "damageMethod" in m}  # Gulp Missile
         self._cpm = json.loads((folder / "cpm.json").read_text())["cpm"]
         self._folder = folder
         self._rankings: dict[int, list] = {}
@@ -185,21 +198,84 @@ class GameData:
         return self._rankings[league]
 
     def supported(self, species_id: str) -> bool:
-        """Form-changing Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) are not modelled."""
+        """Form-changing Pokémon (Aegislash, Mimikyu, Cramorant, Morpeko) are played by the engine when built with
+        allow_forms (reproduced against PvPoke: tests/data/pvpoke_forms.txt), but are kept out of the pools that
+        simulations draw from (meta()), which every trained model and measurement so far has used."""
         return "formChange" not in self.species[species_id]
 
     def build(self, species_id: str, moveset: list[str], league: int = 1500,
-              level: float | None = None, ivs: tuple[int, int, int] | None = None, allow_forms: bool = False) -> Build:
+              level: float | None = None, ivs: tuple[int, int, int] | None = None, allow_forms: bool = True) -> Build:
         """A Pokémon with the given [fast, charged, charged] moves, at PvPoke's default level and IVs for the league.
 
-        allow_forms builds a form-changing Pokémon in its starting form, for following a real
-        game; the simulator still cannot play its form change.
+        allow_forms builds a form-changing Pokémon with all its forms, which the battle changes between as PvPoke's
+        simulator does.
         """
         p = self.species[species_id]
         if not allow_forms and not self.supported(species_id):
-            raise ValueError(f"{species_id} changes form in battle, which is not modelled")
+            raise ValueError(f"{species_id} changes form in battle; build it with allow_forms=True")
         if level is None or ivs is None:
             level, *ivs = p["defaultIVs"][f"cp{league}"]
+        home = self._plain(species_id, moveset, level, ivs)
+        family = self._family(species_id)
+        if len(family) > 1:
+            self._attach_forms(home, family, moveset, league)
+        return home
+
+    # form-changing Pokémon
+
+    def _family(self, species_id: str) -> list[str]:
+        """Every form a Pokémon can take in battle, starting from this one."""
+        out, todo = [], [species_id]
+        while todo:
+            sid = todo.pop(0)
+            if sid in out or sid not in self.species:
+                continue
+            out.append(sid)
+            rule = self.species[sid].get("formChange") or {}
+            for key in ("alternativeFormId", "defaultFormId"):
+                alt = rule.get(key)
+                if alt == "variable":  # Cramorant: Gulping or Gorging, by health
+                    todo += [f"{species_id}_gulping", f"{species_id}_gorging"]
+                elif alt:
+                    todo.append(alt)
+        return out
+
+    def _attach_forms(self, home: Build, family: list[str], moveset: list[str], league: int) -> None:
+        """Builds for the other forms, as PvPoke's Pokemon.changeForm and getFormStats make them."""
+        swap = {"AEGISLASH_CHARGE_PSYCHO_CUT": "PSYCHO_CUT", "AEGISLASH_CHARGE_AIR_SLASH": "AIR_SLASH",
+                "AURA_WHEEL_ELECTRIC": "AURA_WHEEL_DARK"}
+        swap.update({v: k for k, v in list(swap.items())})
+        forms = {home.species_id: home}
+        home_rule = self.species[home.species_id].get("formChange")
+        for sid in family:
+            if sid == home.species_id:
+                continue
+            p = self.species[sid]
+            allowed = set(p.get("fastMoves", [])) | set(p.get("chargedMoves", []))
+            moves = [m if m in allowed else swap.get(m, m) for m in moveset]
+            level = home.level
+            if {home.species_id, sid} == {"aegislash_shield", "aegislash_blade"} and league in (1500, 2500):
+                if sid == "aegislash_blade":
+                    level = math.ceil(home.level * 0.5) + 1 if league == 1500 else math.ceil(home.level * 0.75)
+                else:
+                    level = home.level / 0.5 + 2 if league == 1500 else round(home.level / 0.75)
+                while level > 1 and self.cp_at(sid, level, home.ivs) > league:
+                    level -= 1
+            form = self._plain(sid, moves, level, home.ivs)
+            form.hp = home.hp  # PvPoke keeps the health of the starting form
+            forms[sid] = form
+        for sid, form in forms.items():
+            p = self.species[sid]
+            form.forms, form.home = forms, home.species_id
+            form.rule = p.get("formChange") or home_rule  # a form without its own rule keeps the one it came from
+            form.native = tuple(p.get("nativeStatBuffs") or (0, 0))
+            if sid.endswith("_gulping"):
+                form.gulp = self.special_moves.get("GULP_MISSILE_ARROKUDA")
+            elif sid.endswith("_gorging"):
+                form.gulp = self.special_moves.get("GULP_MISSILE_PIKACHU")
+
+    def _plain(self, species_id: str, moveset: list[str], level: float, ivs) -> Build:
+        p = self.species[species_id]
         a, d, s = ivs
         base = p["baseStats"]
         c = self.cpm(level)
@@ -219,7 +295,7 @@ class GameData:
             charged=tuple(self.moves[m] for m in moveset[1:]),
         )
 
-    def default(self, species_id: str, league: int = 1500, allow_forms: bool = False) -> Build:
+    def default(self, species_id: str, league: int = 1500, allow_forms: bool = True) -> Build:
         """A Pokémon with PvPoke's recommended moveset and default level and IVs."""
         key = (species_id, league, allow_forms)
         if key not in self._defaults:
@@ -273,11 +349,12 @@ class GameData:
         level = self.level_for(build.species_id, ivs, league)
         return self.build(build.species_id, [build.fast.id, *(m.id for m in build.charged)], league, level=level, ivs=ivs)
 
-    def meta(self, n: int = 50, league: int = 1500) -> list[Build]:
-        """The n highest-ranked supported Pokémon in the league, each with its recommended moveset."""
+    def meta(self, n: int = 50, league: int = 1500, forms: bool = False) -> list[Build]:
+        """The n highest-ranked Pokémon in the league, each with its recommended moveset. Form-changing Pokémon are
+        left out unless forms=True: every model and measurement so far used pools without them."""
         out = []
         for entry in self.rankings(league):
-            if self.supported(entry["speciesId"]):
+            if forms or self.supported(entry["speciesId"]):
                 out.append(self.build(entry["speciesId"], entry["moveset"], league))
                 if len(out) == n:
                     break

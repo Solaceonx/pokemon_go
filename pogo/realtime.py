@@ -20,7 +20,12 @@ bot's own pick (pogo.engine). In simulation the search runs at the decision itse
 the position is the one that would have been searched in advance, so the choice is the same and the wait at
 the decision is nil. Live, that search has to run in another process during the fast move.
 
-The pause lengths are settings, not measurements yet; the defaults are cautious guesses.
+The pause lengths are measured from 49 tracked battles (scripts/recording/pause_lengths.py, status.md "Real pause
+lengths"): a charged move shows its damage 9.4 s after it starts and play resumes 0.9 s later (0.4 s at the 10th
+percentile); after a faint, play resumes 1.2 s after the replacement is in (0.4 s at the 10th percentile); the
+replacement itself is chosen over seconds. The defaults are those 10th percentiles. A charged move leaves about
+9 s before its outcome shows, with only the shield and the move unknown: searching those few outcomes while the
+move plays would give the search far more time than the 0.4 s left once the outcome is on screen (task 23).
 """
 from __future__ import annotations
 
@@ -68,8 +73,8 @@ def predict(view, pool: list):
 
 class RealTime(Engine):
     def __init__(self, *args, turn_ms: float = 500, see_and_tap_ms: float = 200, unforeseen_ms: float = 300,
-                 after_charged_ms: float = 2000, after_faint_ms: float = 1000, replace_ms: float = 1000,
-                 start_ms: float = 2000, cap_ms: float | None = None, clock=time.process_time, **kwargs):
+                 after_charged_ms: float = 400, after_faint_ms: float = 350, replace_ms: float = 2000,
+                 start_ms: float = 1000, cap_ms: float | None = None, clock=time.process_time, **kwargs):
         super().__init__(*args, **kwargs)
         self.turn_ms, self.see_and_tap_ms, self.unforeseen_ms = turn_ms, see_and_tap_ms, unforeseen_ms
         self.after_charged_ms, self.after_faint_ms, self.replace_ms, self.start_ms = (

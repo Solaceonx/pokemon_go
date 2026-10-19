@@ -114,5 +114,16 @@ class Phone:
     def drag(self, x1: float, y1: float, x2: float, y2: float, ms: int = 300, hold_ms: int = 60) -> dict:
         return self._act("drag", f"{x1:.4f}", f"{y1:.4f}", f"{x2:.4f}", f"{y2:.4f}", ms, hold_ms)
 
+    def path(self, points: list, ms: int = 300) -> dict:
+        """One unbroken touch through every (x, y) point in `ms` milliseconds: a minigame swipe."""
+        return self._act("path", ms, *(f"{v:.4f}" for x, y in points for v in (x, y)))
+
+    def record(self, seconds: float, path) -> list[dict]:
+        """The owner's own presses and swipes in the iPhone Mirroring window for `seconds`, as {t, kind, x, y}
+        (listening only; needs Input Monitoring). For learning minigame swipes to replay."""
+        import json
+        self._call("record", f"{seconds:.1f}", str(path))
+        return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+
     def scroll(self, x: float, y: float, dx: int, dy: int) -> dict:
         return self._act("scroll", f"{x:.4f}", f"{y:.4f}", dx, dy)

@@ -27,7 +27,7 @@ def weights_for(listed: list[dict]) -> list[float]:
     return weights
 
 
-def drawer(gd: GameData, pool: list, path: Path = TEAMS, share: float = 0.5):
+def drawer(gd: GameData, pool: list, path: Path = TEAMS, share: float = 0.5, style: str = "random"):
     """A function draw(rng) -> three Builds, lead first.
 
     With probability `share` it is a team from the list, weighted towards the better ones and
@@ -39,9 +39,16 @@ def drawer(gd: GameData, pool: list, path: Path = TEAMS, share: float = 0.5):
     weights = weights_for(listed)
     dex = {b.species_id: gd.species[b.species_id]["dex"] for b in pool}
 
+    shaped = None
+    if style == "shaped":  # the rest drawn as players build teams (pogo.teamshape), not as any three
+        from .teamshape import shaped_drawer
+        shaped = shaped_drawer(gd, pool)
+
     def draw(rng: random.Random) -> list:
         if rng.random() < share:
             return rng.choices(teams, weights)[0]
+        if shaped is not None:
+            return shaped(rng)
         while True:
             team = rng.sample(pool, 3)
             if len({dex[b.species_id] for b in team}) == 3:  # the game does not allow a species twice

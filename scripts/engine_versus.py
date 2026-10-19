@@ -15,7 +15,9 @@ overrides). Data-file paths are relative to the repository root unless absolute.
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
 round), against the crowd, against PvPoke's AI, and against a reader (pogo.reader: an engine that predicts its
 opponent's next throw decision and plays the best reply), with margins; also the search time per decision. Teams are
-drawn half from the good-team list and half at random from the top 50. Results go to runs/engine_versus/<tag>.json
+drawn half from the good-team list and half at random from the top 50; with --field pvpoke, as PvPoke's usage data
+has them (pogo.teamshape.pvpoke_field: Cramorant and Mimikyu included, balanced teams), and the pool the engine and
+the crowd imagine from is that field too. Results go to runs/engine_versus/<tag>.json
 as they come in; a run started again with the same tag skips what is done. Each player has a private evaluator
 cache, so another battle or a different worker schedule cannot change its cached matchup outlooks.
 """
@@ -76,11 +78,16 @@ def parse(spec: str) -> dict | None:
     return out
 
 
-def setup() -> None:
+def setup(field: str = "standard") -> None:
     low_priority()
     gd = GameData()
-    pool = gd.meta(50)
-    _state.update(gd=gd, pool=pool, draw=drawer(gd, pool), net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
+    if field == "pvpoke":
+        from pogo.teamshape import pvpoke_field
+        pool, draw = pvpoke_field(gd)
+    else:
+        pool = gd.meta(50)
+        draw = drawer(gd, pool)
+    _state.update(gd=gd, pool=pool, draw=draw, net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
                   evals={})
 
 
@@ -158,6 +165,8 @@ def main() -> None:
     parser.add_argument("--chunk", type=int, default=5, help="battles (or pairs) per job")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4)
     parser.add_argument("--seed", type=int, default=2701)
+    parser.add_argument("--field", choices=("standard", "pvpoke"), default="standard",
+                        help="opposing teams: the usual draw, or as PvPoke's usage data has them")
     args = parser.parse_args()
     for spec in [args.baseline, *args.candidates]:
         parse(spec)  # fail early on a mistyped setting
@@ -170,7 +179,10 @@ def main() -> None:
         raise SystemExit(f"{path} was made with seed {saved.get('seed')}; use that seed or another tag")
     if saved and saved.get("baseline") != args.baseline:
         raise SystemExit(f"{path} used a different baseline; use that baseline or another tag")
-    saved.update(seed=args.seed, baseline=args.baseline, evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY))
+    if saved and saved.get("field", "standard") != args.field:
+        raise SystemExit(f"{path} was made with --field {saved.get('field', 'standard')}; use that or another tag")
+    saved.update(seed=args.seed, baseline=args.baseline, field=args.field,
+                 evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY))
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
     times = saved.setdefault("search_ms", {})
     # Exact frequencies of the rounded timings keep checkpoints small without dropping tail observations.
@@ -190,7 +202,7 @@ def main() -> None:
     print(f"{len(plan)} jobs to run on {args.workers} workers", flush=True)
     t0, last = time.time(), time.time()
     if plan:
-        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup) as pool:
+        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field,)) as pool:
             for kind, spec, out, searches in pool.imap_unordered(job, plan):
                 results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
                 hist = times.setdefault(spec, {})

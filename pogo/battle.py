@@ -70,6 +70,37 @@ def damage(user: Mon, move: Move, target: Mon) -> int:
     return int(base) + 1
 
 
+# In the game Morpeko starts each entry in Full Belly Mode and changes mode with every charged attack (Bulbapedia,
+# "Morpeko (GO)", read 2026-10-17). PvPoke's simulator only ever changes it to Hangry, so scripts/check_pvpoke.py sets
+# this to False while it compares with PvPoke's battles (tests/data/pvpoke_forms.txt depends on it).
+MORPEKO_TOGGLES = True
+
+
+def change_form(mon: Mon, form_id: str) -> None:
+    """Turn a form-changing Pokémon into another of its forms (pogo.gamedata: Build.forms), keeping its health,
+    energy and stat stages, and adding the new form's own stages (Busted Mimikyu), as PvPoke's changeForm does."""
+    new = mon.build.forms[form_id]
+    if new is mon.build:
+        return
+    mon.build = new
+    a, d = new.native
+    if a or d:
+        mon.atk_stage = max(-MAX_STAGE, min(MAX_STAGE, mon.atk_stage + a))
+        mon.def_stage = max(-MAX_STAGE, min(MAX_STAGE, mon.def_stage + d))
+
+
+def _triggers(rule: dict, move: Move) -> bool:
+    return rule.get("moveId") == "ANY" or rule.get("moveId") == move.id or move.id in (rule.get("moveIDs") or ())
+
+
+def leave_field(mon: Mon) -> None:
+    """A Pokémon switching out: stat stages back to its form's own, and back to its starting form where the rule says."""
+    build = mon.build
+    if build.forms is not None and build.rule and build.rule.get("resetOnSwitch") and build.species_id != build.home:
+        mon.build = build = build.forms[build.home]
+    mon.atk_stage, mon.def_stage = build.native
+
+
 def apply_buffs(user: Mon, target: Mon, move: Move) -> None:
     """Apply a charged move's stat changes to both Pokémon."""
     user.atk_stage = max(-MAX_STAGE, min(MAX_STAGE, user.atk_stage + move.self_buffs[0]))
@@ -225,6 +256,9 @@ class Battle:
     def _throw(self, i: int, k: int) -> None:
         me, foe = self.sides[i], self.sides[1 - i]
         user, target = me.mon, foe.mon
+        rule = user.build.rule
+        if rule and rule.get("trigger") == "activate_charged" and _triggers(rule, user.build.charged[k]):
+            change_form(user, rule["alternativeFormId"])  # Aegislash takes Blade form to strike
         move = user.build.charged[k]
         # The defender chooses before the cost comes off, so the energy it sees does not give the move away.
         energy, could_shield = user.energy, foe.shields > 0
@@ -239,17 +273,55 @@ class Battle:
             self._saw_throw[1 - i](self.views[1 - i], move, energy, could_shield)  # the move shows once thrown
         if could_shield and self._saw_shield[i]:
             self._saw_shield[i](self.views[i], shielded)
+        guard = target.build.rule
+        disguised = False
         if shielded:
             foe.shields -= 1
             dealt = 1
+            if guard and guard.get("trigger") == "activate_shield":
+                change_form(target, guard["alternativeFormId"])  # Aegislash back to Shield form
+        elif guard and guard.get("trigger") == "charged_move_damage" and guard.get("effect") == "protect" and not move.instant:
+            dealt, disguised = 1, True  # Mimikyu's disguise takes the hit
         else:
             dealt = damage(user, move, target)
         target.hp -= dealt
-        self._note(i, f"{user.build.name} throws {move.name}: " + ("shielded" if shielded else f"{dealt} damage"))
+        self._note(i, f"{user.build.name} throws {move.name}: " + ("shielded" if shielded else
+                                                                     "disguise busted" if disguised else f"{dealt} damage"))
         if self.hits is not None:
             self.hits.append((i, move.id, dealt))
         if move.buff_chance and (move.buff_chance >= 1 or self.rng.random() < move.buff_chance):
             apply_buffs(user, target, move)
+        if rule:
+            self._after_charged(user, move)
+        if guard and not shielded and not move.instant:
+            if target.build.gulp is not None:
+                self._gulp(1 - i, target, user)
+            elif guard.get("trigger") == "charged_move_damage":
+                change_form(target, guard["alternativeFormId"])
+
+    def _after_charged(self, user: Mon, move: Move) -> None:
+        """Form changes after a charged move: Cramorant after Surf or Dive, Morpeko after any, back after Gulp Missile."""
+        rule = user.build.rule
+        if not rule or rule.get("trigger") != "charged_move" or not _triggers(rule, move):
+            return
+        new = rule["alternativeFormId"]
+        if new == "variable":  # Cramorant: Gulping above half health, Gorging at half or below
+            new = user.build.home + ("_gulping" if user.hp / user.build.hp > 0.5 else "_gorging")
+        elif rule.get("type") == "toggle" and MORPEKO_TOGGLES:
+            new = rule["defaultFormId"] if user.build.species_id == rule["alternativeFormId"] else rule["alternativeFormId"]
+        change_form(user, new)
+
+    def _gulp(self, i: int, cramorant: Mon, target: Mon) -> None:
+        """A Gulping or Gorging Cramorant hit by a charged move spits its catch: a share of the attacker's health,
+        a stat drop, and back to its usual form. It cannot be shielded and comes even if Cramorant fainted."""
+        move = cramorant.build.gulp
+        dealt = int(move.power / 100 * target.build.hp) + 1
+        target.hp -= dealt
+        self._note(i, f"{cramorant.build.name} fires {move.name}: {dealt} damage")
+        if self.hits is not None:
+            self.hits.append((i, move.id, dealt))
+        apply_buffs(cramorant, target, move)
+        self._after_charged(cramorant, move)
 
     def step(self) -> None:
         # Written for speed: this runs millions of times inside play-outs. The rules are in the module header.
@@ -269,13 +341,11 @@ class Battle:
 
         first_switch = SWITCH[0]
         if a0 is not None and a0 >= first_switch:
-            m = s0.team[s0.active]
-            m.atk_stage = m.def_stage = 0
+            leave_field(s0.team[s0.active])
             s0.switch_wait = SWITCH_TURNS
             self._enter(0, a0 - first_switch)
         if a1 is not None and a1 >= first_switch:
-            m = s1.team[s1.active]
-            m.atk_stage = m.def_stage = 0
+            leave_field(s1.team[s1.active])
             s1.switch_wait = SWITCH_TURNS
             self._enter(1, a1 - first_switch)
 

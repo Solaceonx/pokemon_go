@@ -2972,3 +2972,220 @@ the standard ones, but not `energy_worth`, `switch_worth`, `sac_margin`, `known_
 from the defaults. That changes the yardstick every result is measured against, so it is left to the owner, with the
 crowd re-centred and a retrain of the learned layer on the new rules as the follow-ups. Still running when this was written:
 `engine-1` (the engine's settings).
+
+## Real pause lengths (2026-10-17)
+
+`scripts/recording/pause_lengths.py` over the 49 tracked battles with timelines (the owner's recordings and the public
+clips; `runs/pause_lengths.out`):
+
+| Pause | Count | Median | 10th to 90th percentile |
+|---|---|---|---|
+| Charged move: start to its damage on the bar | 280 | 9.4 s | 8.9 to 11.9 |
+| Charged move: damage shown to play resuming | 239 | 0.9 s | 0.4 to 2.2 |
+| Charged move, start to play resuming: unblocked / blocked | 239 / 155 | 10.4 / 9.4 s | 9.6 to 13.3 / 7.6 to 10.8 |
+| Faint: knockout to the replacement in | 137 | 10.6 s | 2.5 to 15.7 |
+| Faint: replacement in to play resuming | 143 | 1.2 s | 0.4 to 2.5 |
+| Start: the lead's "Go" to the first hit | 49 | 3.0 s | 0 to 4.8 |
+
+The guesses in `pogo/realtime.py` (2 s after a charged move, 1 s after a faint) assumed the search starts once the
+outcome is on screen; measured, that leaves only 0.4 s at the 10th percentile. The defaults are now those 10th
+percentiles (400 ms after a charged move, 350 ms after a faint, 2 s for choosing a replacement, 1 s at the start).
+With them nothing is cut either (`runs/realtime_timing_measured.out`: 6,748 searched decisions, worst 132 ms, none
+cut). The bigger opening is the 9 s while a charged move plays: only the shield and which move are unknown, so the
+engine could search those few outcomes during it. That matters once a slower, stronger setting is adopted (task 27).
+
+## Form-changing Pokémon in the engine (task 10, 2026-10-17)
+
+Aegislash, Mimikyu, Cramorant and Morpeko now change form in battle as PvPoke's simulator does (its `Battle.js`
+and `Pokemon.js`, read on 17 October):
+
+- **Aegislash** fights in Shield form (fast moves do 1 damage and give 6 energy), takes Blade form just before a
+  charged move (at a level recomputed to fit the league: for the default build, level 22, attack 172.9, defence
+  69.5, health kept at 139) and goes back to Shield form when it shields or switches out.
+- **Mimikyu**: the first unshielded charged move against it does 1 damage (its disguise), then it is Busted for the
+  rest of the battle, with Defence one stage lower, switches included.
+- **Cramorant**: after Surf or Dive it is Gulping (above half health) or Gorging. The next unshielded charged move
+  against it is answered at once by Gulp Missile: 15% of the attacker's maximum health plus 1, unshieldable, even if
+  Cramorant fainted, with Defence -1 (Arrokuda) or Attack -2 (Pikachu) on the attacker; then it is back to normal.
+  Switching out resets it.
+- **Morpeko**: changes mode with every charged attack (Aura Wheel Electric in Full Belly Mode, Dark in Hangry Mode)
+  and starts each entry in Full Belly Mode, as the game does (Bulbapedia, "Morpeko (GO)"). PvPoke's simulator only
+  ever turns it Hangry; `scripts/check_pvpoke.py` uses that rule (`pogo.battle.MORPEKO_TOGGLES = False`) while it
+  compares with PvPoke's battles.
+
+`tests/data/pvpoke_forms.txt`: 132 one-on-one battles (each of the four against ten common opponents and each other,
+0 to 2 shields) played by PvPoke's own simulator on pvpoke.com. `python3 scripts/check_pvpoke.py --forms`:
+**132 of 132 reproduced exactly** (130 before matching PvPoke's Morpeko); the original 108 still all match, and the
+speed check's results are identical. Every Pokémon is now built with its forms by default (`allow_forms=True`);
+the pools simulations draw from (`GameData.meta`) still leave the four out unless `forms=True`, so every model and
+result so far stays comparable. The line-up tools (`lineup.py`, `lineup_site.py`, `sixes.py`, the website build)
+list them. The trained bot and the rules have never played them; their predictions (one-on-one outlooks, damage
+counts) ignore form changes.
+
+**Which six to register** (`runs/sixes_swaps.out`, same opposing six, 40 battles for each of 3,600 pairs each): the
+owner's six with Shadow Quagsire (never brought) replaced.
+
+| Sixth Pokémon | Win chance, both choosing well | Scored on separate battles | Against their best single reply | How often it is brought |
+|---|---|---|---|---|
+| Shadow Quagsire (as registered) | 40% | 38% | 26% | 0% |
+| **Azumarill** | **53%** | **52%** | **48%** | 75% |
+| Mantine | 45% | 45% | 39% | 59% |
+| Fearow | 44% | 43% | 33% | 84% |
+| Vigoroth | 40% | 38% | 26% | 0% |
+
+Azumarill (Fairy, resists Dark and Fighting) turns the matchup: with it the opponent's best answer is no longer the
+Dark core alone (their mix spreads over Tinkaton, Shadow Annihilape, Corviknight and Thievul), and the owner's mix
+leans on Stunfisk leading with Melmetal and Azumarill behind (22%). Vigoroth is never brought, like Shadow Quagsire.
+One opposing six only; the next question is how each six does against several opposing sixes.
+
+## From decisions to touches on the phone, and the minigame (task 13, 2026-10-17)
+
+**Where to touch** (`pogo/controls.py`). Measured on frames of the owner's recordings
+(`scripts/recording/contact_sheet.py`) and checked by drawing every planned touch onto real frames
+(`scripts/recording/overlay_controls.py`): fast move, a tap on the open field (0.50, 0.45); charged moves, the two
+buttons (0.31 and 0.69 across, 0.89 down); switch, the bench portrait at the right edge (0.915 across; 0.585 the
+earlier team slot, 0.67 the later; with one left it moves to the top); the shield prompt's shield (0.50, 0.815) and
+"Not now" (0.50, 0.95); after a faint, the two choices side by side in team order (0.33 and 0.67, 0.865) or one in
+the middle. Every touch is checked against keep-out zones (the flee button at the top left forfeits the battle), and
+`Controller` sends through `pogo.phone.Phone` only when `live=True`, with a cap on touches per battle and a log.
+`tests/test_controls.py`. Not yet tested on the phone (step 1: does iPhone Mirroring pass synthetic taps and drags).
+
+**The minigame.** It scales a charged move's damage from a quarter to all of it (Excellent: 95% of the icons swiped),
+so every number the engine learned assumes the bot does it well. Icons are discs in the type's colour with a white
+symbol; they vary in size a lot, fade once swiped, and Flying icons are pale against clouds. A first detector
+(`pogo/minigame.py`: circles with a flat colour and a white middle; `scripts/recording/minigame_eval.py` over the 24
+recorded minigames, `runs/minigame_eval_1.out`) finds Water icons well (Surf: 1 to 2 a frame, an estimated 60% swiped
+with 100 ms between seeing and swiping) and others poorly (23% on average at 100 ms, 7% at 300 ms): not usable as is.
+
+What the recordings show instead: **the pattern is fixed for each move, with a few variants.** The first icon appears
+1.5 to 1.65 s after the move starts in every run; two of the three Surfs have icons at the same places at the same
+moments (median 0.07 radii apart), and the six Double Iron Bashes fall into two groups of three that match the same
+way (0.04 to 0.07 radii). Sky Attack and the others cannot be compared yet because the detector misses too many of
+their icons. So the bot does not need to chase icons live: it can replay a swipe path per pattern variant, chosen by
+where the first icons appear. The owner's own swipes in these recordings reached Excellent and the game draws the
+touch trail, so the paths can be learned from them. Next: read the owner's touch trails per run, group runs by
+variant, and test replayed paths against the recorded icons; and a continuous multi-point drag in the phone helper
+(`helper/phonectl.swift` lifts the finger between segments today).
+
+The owner confirms the minigame is one pattern per type (not per move), which agrees with the runs above. Reading the
+owner's own swipes off the video is harder than expected: the touch ring is about a quarter of the screen across and
+faint, and vanishes against white Pokémon (Jellicent), so the per-type paths will come from the icon patterns
+combined over several runs of a type. The phone helper now has an unbroken multi-point swipe (`phonectl path`,
+`Phone.path`, used by `Controller` for drags); `python3 scripts/probe.py --path` tests it on the phone.
+
+**Per-type minigame library, first attempt** (`scripts/recording/minigame_library.py`, 2026-10-17; the owner: "a little
+minigame for each type"). The owner's 24 recorded minigames cover five types: Flying (9 Sky Attacks), Steel (6 Double
+Iron Bash), Water, Fire and Fighting (3 each). Steps: the type's icon colour from confident detections, icons found by
+colour (`pogo.minigame.detect_colour`), followed, timed from the first icon, runs grouped into variants, a swipe
+schedule per variant, and each run scored on the schedule built without it. Not usable yet:
+
+| Type | Colour found | Icons followed per run | Variants | Held-out run hit by the schedule |
+|---|---|---|---|---|
+| Fighting | red (209, 58, 84) | 35 to 38 | 3 of 1 run | none to test on |
+| Fire | orange (246, 156, 73) | 38 to 57 | 1 of 3 | 35% |
+| Flying | pale blue (150, 175, 225) | 104 to 145 | 7 + 2 | 10 to 15% |
+| Steel | teal (73, 139, 152) | 79 to 107 | 1 of 6 | 20% |
+| Water | blue (85, 161, 216) | 127 to 143 | 1 of 3 | 27% |
+
+A minigame shows perhaps 15 to 30 icons, so the counts say colour alone also catches other things, and the frames
+show which: collected icons swell into large faded discs as they burst, the move's own animation shares the colour
+(Dynamic Punch's orange fists, Flamethrower's flames), and Flying and Steel are close to the sky. What only a live icon
+has is its crisp white type symbol (fist, flame, drop, wing, steel emblem). Next: match each type's symbol (templates
+cut from clean frames) to find live icons, then rebuild the schedules; and more recordings per type (the owner offered
+to record each type).
+
+**Zones and circling swipes for 14 types** (`scripts/recording/minigame_zones.py`, `data/minigame/<type>.json`,
+2026-10-17). The owner added two recordings for more types ("they're always at the same place"; "most of them you
+can just swipe circles in the same place"), so the library is now a zone per type plus a swipe that circles in it,
+started 1.45 s after the move (the first icon comes 1.30 to 1.54 s after it, by type). Live icons are found by their
+white symbol inside a ring of the type's colour (`pogo.minigame.detect_symbol`): precise, but it misses many, so the
+zone pools every sighting over a type's runs. A plain loop at the zone's edge misses icons in its middle; a spiral
+that breathes in and out does better. Share of detected icons the chosen swipe crosses while they are on screen:
+
+| Type | Runs | Zone (centre) | Loop | Best spiral |
+|---|---|---|---|---|
+| Fire | 3 | 0.51, 0.73 | 65% | 76% |
+| Ice | 2 | 0.52, 0.71 | 65% | 76% |
+| Bug | 1 | 0.21, 0.57 | 67% | 72% |
+| Electric | 1 | 0.60, 0.54 | 32% | 61% |
+| Water | 3 | 0.74, 0.48 | 56% | 57% |
+| Rock | 1 | 0.27, 0.48 | 33% | 53% |
+| Flying | 9 | 0.85, 0.56 | 45% | 51% |
+| Grass | 1 | 0.25, 0.54 | 36% | 48% |
+| Poison | 4 | 0.53, 0.74 | 29% | 43% |
+| Fighting | 3 | 0.51, 0.61 | 35% | 42% |
+| Normal | 1 | 0.42, 0.71 | 20% | 40% |
+| Steel | 6 | 0.55, 0.63 | 28% | 39% |
+| Dark, Fairy | 1 each | 0.48, 0.63 / 0.38, 0.70 | 24% / 19% | 32% / 32% |
+
+These are estimates from the recordings (the detector's icons only, the best of seven shapes chosen on the same runs,
+one run for several types), not the game's count. Missing: Dragon, Ghost, Ground, Psychic. The owner's other idea is
+better still: record their own swipes and replay them. `phonectl record <seconds> <out.jsonl>` (`Phone.record`) now
+listens (never acts) to the mouse in the iPhone Mirroring window and writes each press, drag and release with its time
+and position; the owner plays minigames through iPhone Mirroring with the trackpad, and those swipes become the
+library. It needs the Input Monitoring permission and has not been run yet.
+
+
+## An opening book: a plan for every opposing lead (2026-10-17, the owner's idea)
+
+`pogo/openings.py` (`Booked` wraps any player with a book {their lead: plan}) and `scripts/openings.py`. Plans: stay
+in; swap to either team-mate at once or after 2, 4 or 8 fast moves; throw our first charged move, then swap. Each of
+the top 50 leads (their back two from listed teams holding it, 70%, else random), 200 battles per plan, trained bot
+with shifted habits on both sides; a plan is kept if it beats staying in by more than its margin. For Melmetal /
+Altaria / Jellicent (`runs/openings_1.out`, `data/openings/melmetal-altaria-jellicent.json`) 20 of 50 leads got a
+plan, e.g. Stunfisk: swap to Jellicent at once; Hippowdon: swap to Altaria at once; Melmetal, Ninetales: two fast
+moves then Jellicent; Clodsire, Deoxys-D: four fast moves then Altaria; Araquanid, Feraligatr: throw first then
+Jellicent. **Check on 3,000 fresh battles: 56.0% ± 1.8 with the book, 53.8% ± 1.8 without, +2.2 ± 0.9 points.**
+The per-lead gains (+8 to +32) are the best of nine plans each and so flattered; the fresh check is the number. Not
+yet in the book: Cramorant and Mimikyu leads (see below), and books for other teams.
+
+## Team shapes, and PvPoke's public team data (2026-10-17, the owner's rule)
+
+The owner: balanced teams (ABC, ABB) are common, BAB and AAA are not. `pogo/teamshape.py` gives each Pokémon a
+letter by its one-on-one record (two share a letter when their records against the pool correlate 0.3 or more) and
+draws opposing teams by shape (`shaped_drawer`, `pogo.teamlist.drawer(style="shaped")`).
+
+Public data: PvPoke publishes usage from its training battles (players and bots at Elite and Champion; 14,540
+Great League teams, updated 2026-10-17): each Pokémon's games, the best-scoring teams with 20+ games, and the 37
+hand-made teams its bots bring. Saved in `data/pvpoke_training_1500.json`; `scripts/pvpoke_teams.py` →
+`runs/pvpoke_teams.out`. No official GBL usage or tournament team lists were found (Silph and Pikalytics pages seen
+are predictions or not Pokémon GO data).
+
+- **Our opponent pool misses the two most-used Pokémon.** Cramorant (8.5% of team slots, the lead in 16% of listed
+  team games) and Mimikyu (8.0%) are left out of `gd.meta()` because they change form; Melmetal (8.5%) and Tinkaton
+  (6.2%) are in. Our pool holds 60% of team slots, 76% with the form-changers; Morpeko, Jumpluff and Lickilicky
+  (1.1, 1.0, 0.6%) are not in our top 50 at all. Every model and measurement so far has met neither Cramorant nor
+  Mimikyu.
+- **Shapes** (letters over 65 Pokémon: our pool with form-changers plus everything PvPoke lists, one-on-ones in
+  `data/matchups_wide.json`): listed teams ABC 94 / ABB 6 / AAB 0 / AAA 0 (98 / 2 / 0 / 0 by games), bot teams
+  92 / 3 / 5 / 0, random threes by usage 73 / 8 / 19 / 0. So the owner's rule holds for AAB and AAA, and ABB is
+  rarer than guessed (0.2 times its random share). `PVPOKE_WEIGHTS` (1, 0.2, 0.05, 0.01) with `usage=pvpoke_usage()`
+  draws 97 / 2 / 1 / 0. The listed teams are the best-scoring ones, so they lean balanced; bots' teams are
+  hand-picked; neither is GBL itself.
+
+## The engine, the bot and the opening book against teams as PvPoke's data has them (task 32, 2026-10-18)
+
+The field: `pogo.teamshape.pvpoke_field` (our top 50 with Cramorant and Mimikyu, plus Morpeko, Jumpluff and
+Lickilicky; teams by PvPoke usage and `PVPOKE_WEIGHTS`). `scripts/engine_versus.py --field pvpoke` and
+`scripts/openings.py --field pvpoke`; the same runs on the usual field, same seed, for comparison.
+Cramorant or Mimikyu is in 74% of these battles.
+
+| | usual field | PvPoke field |
+|---|---|---|
+| engine head to head against the bot, 3,000 pairings both ways | 64.4% ± 1.0 | 66.3% ± 1.1 |
+| bot against the crowd, 4,000 | 66.5% ± 1.5 | 67.1% ± 1.4 |
+| engine against the crowd, same battles | 69.0% ± 1.4 (+2.6 ± 1.6) | 71.2% ± 1.4 (+4.0 ± 1.6) |
+
+(`runs/field_standard.out`, `runs/field_pvpoke.out`.) **The engine's edge holds on the realistic field, and the bot
+does not fall off against form-changers.** Split by Cramorant or Mimikyu (`scripts/field_breakdown.py`,
+`runs/field_breakdown.out`): engine against bot 66.1% ± 1.2 with one of them in the battle, 66.8% ± 2.0 without;
+against the crowd the bot is 67.1 / 65.9 / 68.5 (± 2.9) with them on our side / theirs / neither, the engine
+70.1 / 69.2 / 74.9 (± 2.8): perhaps a smaller edge when they are present, within the margins.
+
+**Opening book on the PvPoke field** (Melmetal / Altaria / Jellicent; 30 most-used leads, 300 battles per plan;
+`runs/openings_pvpoke.out`, `data/openings/melmetal-altaria-jellicent-pvpoke.json`): on 4,000 fresh battles **51.9% ±
+1.5 with the book, 46.2% ± 1.5 without, +5.8 ± 1.2 points**, against +2.2 ± 0.9 for the book built on the usual
+field. Cramorant (71% staying in) and Mimikyu (63%) leads: stay in. Changes from the usual-field book: against
+Stunfisk and Araquanid four fast moves then Jellicent; against Melmetal and Clodsire four fast moves then Altaria;
+Deoxys-D two then Altaria; Shadow Ninetales, Ninetales and Shadow Quagsire: Jellicent at once. Note the team itself:
+46.2% without the book here against 53.8% on the usual field; the usual field flatters it.

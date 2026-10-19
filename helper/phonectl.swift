@@ -226,6 +226,64 @@ func drag(from a: CGPoint, to b: CGPoint, duration: Int, hold: Int) {
     mouse(.leftMouseUp, b)
 }
 
+/// One unbroken touch through every point, `duration` ms in all, spread by distance (the minigame's swipes).
+func path(_ points: [CGPoint], duration: Int) {
+    guard let first = points.first else { return }
+    mouse(.mouseMoved, first)
+    usleep(20_000)
+    mouse(.leftMouseDown, first)
+    var lengths: [CGFloat] = [0]
+    for (a, b) in zip(points, points.dropFirst()) { lengths.append(lengths.last! + hypot(b.x - a.x, b.y - a.y)) }
+    let total = max(lengths.last!, 1)
+    var prev = first
+    for (k, (a, b)) in zip(points, points.dropFirst()).enumerated() {
+        let ms = Double(duration) * Double((lengths[k + 1] - lengths[k]) / total)
+        let steps = max(1, Int(ms / 8))
+        for i in 1...steps {
+            let t = CGFloat(i) / CGFloat(steps)
+            let p = CGPoint(x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t)
+            mouse(.leftMouseDragged, p, dx: Int64(p.x.rounded() - prev.x.rounded()), dy: Int64(p.y.rounded() - prev.y.rounded()))
+            prev = p
+            usleep(useconds_t(max(ms, 1) * 1000 / Double(steps)))
+        }
+    }
+    mouse(.leftMouseUp, points.last!)
+}
+
+/// Listen (never act) to the mouse for `seconds`, writing one JSON line per press, move while pressed and release,
+/// with the time and the position as shares of the iPhone Mirroring window: the owner's own swipes, to replay.
+/// Needs the Input Monitoring permission for the app running this.
+func record(seconds: Double, to path: String, win: Win) throws {
+    FileManager.default.createFile(atPath: path, contents: nil)
+    guard let handle = FileHandle(forWritingAtPath: path) else { throw Fail("cannot write \(path)") }
+    let t0 = Date()
+    let mask = (1 << CGEventType.leftMouseDown.rawValue) | (1 << CGEventType.leftMouseUp.rawValue)
+        | (1 << CGEventType.leftMouseDragged.rawValue)
+    final class Box { let handle: FileHandle; let win: Win; let t0: Date; init(_ h: FileHandle, _ w: Win, _ t: Date) { handle = h; win = w; t0 = t } }
+    let box = Box(handle, win, t0)
+    let callback: CGEventTapCallBack = { _, type, event, refcon in
+        let box = Unmanaged<Box>.fromOpaque(refcon!).takeUnretainedValue()
+        let p = event.location
+        let x = (p.x - box.win.frame.minX) / box.win.frame.width, y = (p.y - box.win.frame.minY) / box.win.frame.height
+        let kind = type == .leftMouseDown ? "down" : type == .leftMouseUp ? "up" : "move"
+        let line = String(format: "{\"t\":%.4f,\"kind\":\"%@\",\"x\":%.4f,\"y\":%.4f}\n",
+                          Date().timeIntervalSince(box.t0), kind, Double(x), Double(y))
+        box.handle.write(line.data(using: .utf8)!)
+        return Unmanaged.passUnretained(event)
+    }
+    guard let tap = CGEvent.tapCreate(tap: .cgSessionEventTap, place: .headInsertEventTap, options: .listenOnly,
+                                      eventsOfInterest: CGEventMask(mask), callback: callback,
+                                      userInfo: Unmanaged.passUnretained(box).toOpaque()) else {
+        throw Fail("cannot listen to the mouse: switch on Input Monitoring for the app running this")
+    }
+    let source = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
+    CFRunLoopAddSource(CFRunLoopGetCurrent(), source, .commonModes)
+    CGEvent.tapEnable(tap: tap, enable: true)
+    CFRunLoopRunInMode(.defaultMode, seconds, false)
+    CGEvent.tapEnable(tap: tap, enable: false)
+    handle.closeFile()
+}
+
 func scroll(at p: CGPoint, dx: Int32, dy: Int32) {
     mouse(.mouseMoved, p)
     usleep(40_000)
@@ -237,7 +295,8 @@ func scroll(at p: CGPoint, dx: Int32, dy: Int32) {
 // MARK: commands
 
 let usage = "usage: phonectl doctor [--request] | shot <out.png> [--ocr] [--fast] | ocr-file <in.png> [--fast]"
-    + " | tap <x> <y> | drag <x1> <y1> <x2> <y2> [ms] [hold_ms] | scroll <x> <y> <dx> <dy>"
+    + " | tap <x> <y> | drag <x1> <y1> <x2> <y2> [ms] [hold_ms] | path <ms> <x1> <y1> <x2> <y2> [<x> <y> ...]"
+    + " | scroll <x> <y> <dx> <dy> | record <seconds> <out.jsonl>"
 
 func fraction(_ args: [String], _ i: Int) throws -> Double {
     guard i < args.count, let v = Double(args[i]), v >= 0, v <= 1 else {
@@ -315,6 +374,26 @@ func run(_ argv: [String]) async throws {
         try requireClear(win, at: [a, b])
         drag(from: a, to: b, duration: duration, hold: hold)
         emit(["ok": true, "ms": duration, "hold_ms": hold])
+
+    case "path":
+        let win = try findWindow()
+        let duration = try integer(args, 0)
+        guard args.count >= 5, (args.count - 1) % 2 == 0 else { throw Fail("path needs ms and at least two x y pairs") }
+        var points: [CGPoint] = []
+        var i = 1
+        while i + 1 < args.count {
+            points.append(win.point(try fraction(args, i), try fraction(args, i + 1)))
+            i += 2
+        }
+        try requireClear(win, at: points)
+        path(points, duration: duration)
+        emit(["ok": true, "ms": duration, "points": points.count])
+
+    case "record":
+        let win = try findWindow()
+        guard args.count >= 2, let seconds = Double(args[0]) else { throw Fail("record needs seconds and an output path") }
+        try record(seconds: seconds, to: args[1], win: win)
+        emit(["ok": true, "path": args[1]])
 
     case "scroll":
         let win = try findWindow()
