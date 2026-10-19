@@ -7,8 +7,8 @@ from pogo.battle import FAST, Battle
 from pogo.engine import Engine
 from pogo.evaluation import Evaluator
 from pogo.gamedata import GameData
-from pogo.learner import QNet
-from pogo.realtime import PREDICTED, RealTime
+from pogo.learner import Learner, QNet
+from pogo.realtime import PAUSE, PREDICTED, RealTime
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -77,6 +77,35 @@ class RealTimeTest(unittest.TestCase):
         self.assertTrue(rt.rows)
         self.assertTrue(all(row[6] for row in rt.rows))
         self.assertEqual(rt.changed, 0)
+
+    def test_shield_search_is_timed_and_matches_unhurried(self):
+        rt = self.player(RealTime, heads=("shield",), after_charged_ms=1e9)
+        engine = self.player(Engine, heads=("shield",))
+        mine, theirs = self.teams[0]
+        battle = Battle(mine, theirs, FastOnly(), FastOnly(), seed=6)
+        battle.sides[1].mon.energy = 100
+        view = battle.views[0]
+        before = (view.me.mon.hp, view.me.shields, view.foe.energy, battle.turn)
+        self.assertEqual(rt.shield(view, 100), engine.shield(view, 100))
+        self.assertEqual(before, (view.me.mon.hp, view.me.shields, view.foe.energy, battle.turn))
+        self.assertEqual(rt.looks, 1)
+        self.assertEqual(len(rt.rows), 1)
+        self.assertEqual(rt.rows[0][:3], ("incoming charged move", PAUSE, 1e9))
+        self.assertFalse(rt.rows[0][5] or rt.rows[0][6])
+        self.assertIsNone(rt._deadline)
+
+    def test_shield_search_with_no_time_uses_the_bot(self):
+        rt = self.player(RealTime, heads=("shield",), clock=Ticking(), cap_ms=1)
+        bot = Learner(q=self.net, margin=0.02, seed=11)
+        mine, theirs = self.teams[0]
+        battle = Battle(mine, theirs, FastOnly(), FastOnly(), seed=6)
+        battle.sides[1].mon.energy = 100
+        self.assertEqual(rt.shield(battle.views[0], 100), bot.shield(battle.views[0], 100))
+        self.assertEqual(rt.fell_back, 1)
+        self.assertEqual(rt.changed, 0)
+        self.assertEqual(rt.rows[0][2], 1)
+        self.assertTrue(rt.rows[0][6])
+        self.assertIsNone(rt._deadline)
 
 
 if __name__ == "__main__":

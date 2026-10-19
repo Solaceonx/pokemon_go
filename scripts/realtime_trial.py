@@ -2,6 +2,7 @@
 """The engine in real time (pogo.realtime): how its time is spent, and whether it plays as well as unhurried.
 
     python3 scripts/realtime_trial.py --timing 200                 where the time goes (minutes on three cores)
+    python3 scripts/realtime_trial.py --timing 200 --heads throw+swap+mid_swap+replace+shield
     python3 scripts/realtime_trial.py --pairings 600 --crowd 1000  is it as good (hours: hand to another machine)
 
 Both default to the engine's confirmed settings (the trained bot inside the look-ahead, 4 imagined battles per
@@ -176,12 +177,18 @@ def main() -> None:
     parser.add_argument("--settings", default="", help="engine settings, as in engine_versus.py (e.g. mix=1)")
     parser.add_argument("--clock", choices=("cpu", "wall"), default="cpu")
     parser.add_argument("--save", type=Path, help="write the timing summary as small JSON")
+    parser.add_argument("--heads", help="searched decisions joined by '+', e.g. throw+swap+mid_swap+replace+shield")
     for name in PAUSES:
         parser.add_argument("--" + name.replace("_", "-"), type=float, default=None)
     args = parser.parse_args()
     settings = parse(args.settings)
     if settings is None:
         parser.error("--settings must describe an engine, not 'bot'")
+    if args.heads is not None:
+        heads = tuple(args.heads.split("+"))
+        if not heads or set(heads) - {"throw", "swap", "mid_swap", "replace", "shield"}:
+            parser.error("--heads must contain search heads joined by '+'")
+        settings["heads"] = heads
     for key in ("samples", "horizon", "edge"):
         if getattr(args, key) is not None:
             settings[key] = getattr(args, key)

@@ -2824,3 +2824,75 @@ matched after the complete corrected batch. `git diff --check` passed. The learn
 team-list data and desktop/website defaults were not changed. All changes remain uncommitted. Large raw
 checkpoints are retained locally for resumption and excluded by exact `.gitignore` entries; the retained
 text/JSON summaries contain the scores needed to verify every reported margin.
+
+## Shield decisions in the engine (task 25, 2026-10-18): no gain
+
+**Corrected run (2026-10-18).** The first comparison below was made before a bug in `scripts/engine_versus.py` was
+fixed: one evaluation cache was shared between both players and across worker jobs, so paired games could be
+changed by earlier searches (found and fixed in task 27; see that section). Rerun with the fix, under a new tag and a
+fresh seed (`engine_versus.py --tag shields-isolated --seed 2502 --workers 3 --pairings 2000 --crowd 2000 --pvpoke 1000
+--candidates "heads=throw+swap+mid_swap+replace+shield"`, `runs/task25/shields-isolated.out`): head to head **50.8% ± 1.3**;
+against the crowd **−3.5 ± 2.2** points; against PvPoke's AI **−0.9 ± 2.8** points; search time median 28 ms, 99th
+percentile 116, worst 279. The conclusion stands: shield search stays off.
+
+**Keep shield search off by default.** The already-built shield head was measured with the run sheet's
+task-25 command, without changing its decision logic. Both engines use the confirmed settings: the trained
+bot inside the look-ahead, four samples per option, 20 turns, edge 0.03 and learned margin 0.02. The candidate
+adds `shield` to `throw+swap+mid_swap+replace`. No alternative settings were tried.
+
+The full comparison used seed 2701 and three workers: 2,000 team pairings played both ways head to head
+(4,000 battles), plus 2,000 crowd and 1,000 PvPoke battles per setting on matching seeds, teams and opponents.
+All score margins below are 95%; head-to-head uncertainty is across independent pairings, and differences
+against the outside opponents are paired battle differences, computed before rounding.
+
+| Measure | Current engine | With shield search | Candidate minus current |
+|---|---|---|---|
+| Candidate head to head against current | — | 49.2% ± 1.3 | −0.8 ± 1.3 points from 50% |
+| Against the crowd, 2,000 battles each | 68.1% ± 2.0 | 65.7% ± 2.1 | −2.4 ± 2.2 points |
+| Against PvPoke's AI, 1,000 battles each | 76.3% ± 2.6 | 73.2% ± 2.7 | −3.2 ± 3.0 points |
+
+The head-to-head gain check failed, and both outside-opponent differences are negative beyond their margins.
+**Nothing helped in this experiment.** No fresh-seed strength confirmation was run because the candidate did
+not look better; seed 25025 had been reserved for that confirmation but was not used. The reader was not run
+(`--reader 0`, as in the task-25 run sheet). Defaults in the engine, browser game and website are unchanged;
+there was no promotion or website build. This measures this shield implementation at the confirmed search
+settings, not every possible shield-search method.
+
+**Timing.** `RealTime` previously inherited the shield method without timing or bounding its searches, so
+those searches were absent from its timing rows. It now wraps shield decisions with the existing charged-pause
+budget (2,000 ms, subject to `cap_ms`). `scripts/realtime_trial.py` accepts `--heads`, applied to both the
+real-time and unhurried engines. Tests check that an unlimited shield search matches the unhurried engine,
+leaves the live position unchanged, and falls back to the learned bot when the deadline leaves no search time.
+
+Both timing commands used `--timing 300 --workers 3 --seed 2501`, sequentially, on this shared arm64 Mac
+(macOS 26.6.2, Python 3.13.13), with one numerical-library thread per worker and default live budgets.
+The second adds `--heads throw+swap+mid_swap+replace+shield`.
+
+| Searched decisions | Median CPU ms | 99th percentile CPU ms | Worst CPU ms |
+|---|---:|---:|---:|
+| Current engine, all 6,748 searches | 30 | 109 | 170 |
+| Shield candidate, all 8,759 searches | 27 | 116 | 202 |
+| Shield decisions within the candidate | 26 | 70 | 94 |
+
+Both printed 0.0% cut short and 0.0% with no complete round. Wait at the decision, median / 99th / worst:
+current 0 / 35 / 100 ms (2.9% with any wait), candidate 0 / 29 / 107 ms (2.4%). The strength run also printed
+candidate search time 28 / 119 / 286 ms. These are observed timing and deadline statistics, not confidence
+intervals; the clock measures process CPU time and does not include time descheduled by other jobs.
+Adding shields changes the mixture of searched decisions; the shield-only row isolates their measured cost.
+The timing seed is fresh, but this is not a fresh-seed strength confirmation. Speed fits the configured
+budgets here; it does not rescue the negative strength result.
+
+**Reproduction and validation.** [Exact commands and output summary](../runs/task25/commands.txt),
+[full comparison output](../runs/task25/shields.out), [resumable scores](../runs/engine_versus/shields.json),
+[baseline timing](../runs/task25/timing-baseline.out), [shield timing](../runs/task25/timing-shields.out),
+and [input hashes and environment](../runs/task25/provenance.json). All long jobs requested `nice -n 10`
+and used at most three workers. The sandbox denied further priority reductions, so the batch scripts
+retained inherited nice level 15. No code imported by a running job was edited.
+
+Before edits, the literal unittest command failed in two existing `scripts/losses.py` priority calls;
+with a temporary `/tmp/e25-runtime/sitecustomize.py` retaining already-low priority when that call is
+denied, all 222 tests passed (7 existing skips). It changes no battle or test logic; its source is in the
+command receipt. The final [224-test run](../runs/task25/tests-final.out) passes (7 skips), and the final
+[PvPoke check](../runs/task25/pvpoke-final.out) reproduces all 108 of 108 reference battles exactly.
+The [saved-result audit](../runs/task25/audit.json) verifies every requested battle/pair index and unchanged
+input hashes. No game rules, model weights or task claims changed. All work remains uncommitted.
