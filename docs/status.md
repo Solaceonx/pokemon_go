@@ -2570,3 +2570,42 @@ The PvPoke-only book is overfit: nothing on the usual field. The mixed book meet
 on fresh battles, no loss on the usual) and is the one to use: `data/openings/melmetal-altaria-jellicent-mixed.json`
 (18 of 55 leads get a plan; Cramorant and Mimikyu: stay in). The usual book is the most even across fields, a
 sign that much of what a book learns is about our own team, not the field.
+
+## Team choice on the mixed field, cross-checked on the usual one (2026-10-18)
+
+`scripts/roster_teams.py --field mixed --rival bot` (the default field is now mixed): all 3,366 line-ups from the
+owner's 20 Pokémon, opponents piloted by the same bot; `runs/roster_teams_mixed.out`, `data/roster_teams_mixed.json`.
+Then the 15 finalists rechecked on the usual field (80% listed good teams, `--recheck --field standard --listed 0.8`,
+`runs/roster_teams_mixed_on_standard.out`). 6,000 fresh battles each:
+
+| line-up (lead first) | mixed field | usual field |
+|---|---|---|
+| Vigoroth / Altaria / Stunfisk | 64.4% ± 1.2 | 45.3% ± 1.3 |
+| Vigoroth / Stunfisk / Umbreon | 64.1 | 47.4 |
+| Jellicent / Stunfisk / Vigoroth | 63.6 | 67.1 |
+| Jellicent / Stunfisk / Umbreon | 60.2 | 69.9 |
+| Jellicent / Melmetal / Altaria | 59.4 | 71.2 |
+| Altaria / Melmetal / Jellicent | 50.6 | 55.5 |
+| Melmetal / Altaria / Jellicent | 48.0 | 53.8 |
+
+The mixed field's winners with a Vigoroth lead are overfit to it: below 50% on the usual field. Robust on both:
+Jellicent leads. **The owner's own three with Jellicent leading** (59.4 / 71.2) are as good as any line-up on both
+fields together; with Melmetal leading they are 11 to 17 points worse. The opening book (built for a Melmetal lead)
+brings that lead to about 53% on the mixed field, still below a Jellicent lead.
+
+## Answers whenever a new opposing Pokémon comes in, not only the lead (2026-10-18, idea from the owner's friend)
+
+`pogo.openings.Answers` (book {ours: {theirs: plan}}, starting when theirs arrives: lead, switch or replacement) and
+`scripts/answers.py`; Melmetal / Altaria / Jellicent, 55 opposing Pokémon, up to 500 battles per pair, each plan
+replayed from the arrival on the same battles; `runs/answers_1.out`, `data/openings/melmetal-altaria-jellicent-answers.json`.
+21 pairs got a plan (14 with Melmetal in, mostly the opening ones; 4 with Altaria in; 3 with Jellicent in, +2 to +8).
+Check on 4,000 fresh battles, points over the bot with no book:
+
+| | answers book | opening book alone | answers on top of the opening book |
+|---|---|---|---|
+| mixed field | +4.8 ± 1.2 | +5.7 ± 1.1 | −0.9 ± 1.1 |
+| usual field | +1.9 ± 1.2 | +0.9 ± 0.7 | +1.0 ± 1.2 |
+
+**Not adopted: fixed plans help in the opening only;** after that the bot's own play is as good as any fixed plan.
+The friend's examples: Ninetales arriving on Melmetal, best plan one fast move then Jellicent (+6 ± 5); Shadow
+Ninetales, Sableye, Shadow Sableye: nothing beats the bot's own play, including Double Iron Bash then Altaria.

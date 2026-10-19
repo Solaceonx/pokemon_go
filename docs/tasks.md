@@ -38,7 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco | Big machine |
-| 32 | Opponents as people bring them: **done 2026-10-18.** The engine's edge holds on the PvPoke field (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu. Owner's rule: realistic but not overfit, so new measurements, team choice and books use `--field mixed` and must not lose on `--field standard`. Opening book on the mixed field: +5.2 ± 1.1 there, +1.2 ± 0.7 on the usual (the PvPoke-only book is overfit). Open: `--field mixed` in `roster_teams.py` (team choice); books for other teams. | Python |
+| 32 | Opponents as people bring them: **done 2026-10-18.** The engine's edge holds on the PvPoke field (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu. Owner's rule: realistic but not overfit, so new measurements, team choice and books use `--field mixed` and must not lose on `--field standard`. Opening book on the mixed field: +5.2 ± 1.1 there, +1.2 ± 0.7 on the usual (the PvPoke-only book is overfit). Team choice on the mixed field, cross-checked: the owner's three are best with Jellicent leading (59.4% mixed, 71.2% usual); Vigoroth-lead winners are overfit. Answers to every arrival (`scripts/answers.py`) add nothing beyond the opening book. Open: an opening book for a Jellicent lead. | Python |
 | **25** | **Let the engine search shield decisions** — Marco | Big machine |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco | Big machine |
 | **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco | Big machine |
