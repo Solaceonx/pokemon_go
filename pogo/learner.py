@@ -338,8 +338,8 @@ class Learner(Planner):
         return choice
 
     def shield(self, view: View, foe_energy: int) -> bool:
-        if view.me.left() == 1:
-            return True
+        if view.me.left() == 1:  # never part of the networks' training: the rulebook decides (Planner.last_always)
+            return True if self.last_always else bool(Planner.shield(self, view, foe_energy))
         return bool(self._decide("shield", view, (True, True),
                                  lambda: int(Planner.shield(self, view, foe_energy)), foe_energy))
 

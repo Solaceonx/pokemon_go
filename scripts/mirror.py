@@ -5,11 +5,13 @@
     python3 scripts/mirror.py [--mine melmetal] [--theirs melmetal] [--shields 2-2 2-1 1-2 1-1] [--swap] [--seed 0]
 
 A plan is what to throw with each of the first three charged moves while the other side still has a shield: the
-cheaper move as soon as it is affordable ("C", the bait), or wait for the dearer one ("D"); and how to answer each
+cheaper move as soon as it is affordable ("C"), the cheaper move once the dearer one is affordable too ("B", the bait
+the defender cannot tell from the energy; the owner: "if I bait once and they shield, I outpace them"), or the dearer
+one ("D"); and how to answer each
 of the first two charged moves thrown at it while it has a shield: shield ("S"), take it ("N"), or shield only if the
 dearer move was affordable ("?", since the move is not known until it lands, only the thrower's energy). Beyond that
 every plan throws the dearer move when it can, takes a knockout with the cheapest move that does it, and shields
-only a hit that would knock it out. Fast moves otherwise. 8 throw plans x 9 shield plans = 72 plans a side, every
+only a hit that would knock it out. Fast moves otherwise. 27 throw plans x 9 shield plans = 243 plans a side, every
 pair played once (the battle is deterministic but for who throws first in a tie of attack, which a stronger attack
 wins). The table of our win chances is solved for both sides' best mixes (pogo.sixes.solve, regret matching).
 
@@ -36,7 +38,7 @@ from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.roster import builds  # noqa: E402
 from pogo.sixes import gap, solve  # noqa: E402
 
-THROWS = ["".join(p) for p in itertools.product("CD", repeat=3)]
+THROWS = ["".join(p) for p in itertools.product("CBD", repeat=3)]
 SHIELDS = ["".join(p) for p in itertools.product("SN?", repeat=2)]
 PLANS = [(t, s) for t in THROWS for s in SHIELDS]
 
@@ -57,6 +59,8 @@ class Plan:
                 return self._throw(min(lethal, key=lambda k: moves[k].energy))
             return self._throw(dear) if dear in ready else FAST
         want = self.throws[self.thrown] if self.thrown < len(self.throws) else "D"
+        if want == "B":  # the bait: only once the dearer move is affordable too, so the energy gives nothing away
+            return self._throw(cheap) if dear in ready else FAST
         k = cheap if want == "C" else dear
         return self._throw(k) if k in ready else FAST
 
@@ -127,7 +131,7 @@ def main() -> None:
             print(f"  {label}: " + "; ".join(f"{100 * w:.0f}% throw {t} / shield {sh}" for w, (t, sh) in parts))
         # in words: how often the first throw is the bait, and how the first throw faced is answered
         for label, mix in (("ours", p), ("theirs", q)):
-            first_bait = sum(w for k, w in enumerate(mix) if PLANS[k][0][0] == "C")
+            first_bait = sum(w for k, w in enumerate(mix) if PLANS[k][0][0] in "CB")
             answer = {c: sum(w for k, w in enumerate(mix) if PLANS[k][1][0] == c) for c in "SN?"}
             print(f"  {label}: first throw is the bait {100 * first_bait:.0f}%; first throw faced: shield {100 * answer['S']:.0f}%, "
                   f"take it {100 * answer['N']:.0f}%, shield only if the dearer move was affordable {100 * answer['?']:.0f}%")

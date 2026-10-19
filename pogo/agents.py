@@ -205,7 +205,7 @@ class Planner:
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
                  catch: bool = False, catch_gain: float = 0.2,
                  rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.4,
-                 punish_gain: float | None = None, fast_first: float = 0.0):
+                 punish_gain: float | None = None, fast_first: float = 0.0, last_always: bool = True):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even", "calibrated"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -221,6 +221,9 @@ class Planner:
         self.bait = bait
         self.shields = shields
         self.guess = guess
+        # The owner: on the last Pokémon a shield still matters within the matchup: shield a bait and the thrower
+        # outpaces you (the Melmetal mirror, scripts/mirror.py). False: decide the last Pokémon's shields as any other.
+        self.last_always = last_always
         self.switches = switches
         self.good_matchup = good_matchup
         self.matchup_weight = matchup_weight
@@ -525,8 +528,8 @@ class Planner:
     # shields
 
     def shield(self, view: View, foe_energy: int) -> bool:
-        if self.shields == "always" or view.me.left() == 1:
-            return True  # with one Pokémon left there is nothing to save shields for
+        if self.shields == "always" or (view.me.left() == 1 and self.last_always):
+            return True  # with one Pokémon left there is nothing to save shields for (but see last_always)
         if self.shields == "never":
             return False
         mon, foe = view.me.mon, view.foe

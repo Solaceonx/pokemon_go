@@ -3381,3 +3381,14 @@ Both reach 45 energy on the same turn, so both throw Dynamic Punch together and 
 with two shields each the third punch decides, and the faster one lands it. No choice of bait or shield changes any
 of these: the mirror is decided by shields in hand and by attack, not by play. The owner's Melmetal loses the tie to
 a default-IV one; the opening book's answer to a Melmetal lead (four fast moves, then Altaria) fits.
+
+**The owner: "if I bait once and they shield, I outpace them."** The plans above baited only as soon as the cheaper
+move was affordable (35 energy), when a defender counting energy knows it cannot be Dynamic Punch. With the real
+bait added (Double Iron Bash once Dynamic Punch is affordable too, 243 plans a side, `runs/mirror_melmetal_2.out`):
+shield it and the baiter keeps 10 energy, throws its next Dynamic Punch at turn 59 against 80, and wins. At 2-2 the
+side that loses ties now wins **44.4%** with best play (from 0%); 1-1 stays a draw, uneven shields stay decided.
+The trained bot against itself still gives 0%: it always shields on its last Pokémon, so it can be baited this way.
+Deciding the last Pokémon's shields by the rulebook's look-ahead instead (`last_always=False`, bot on top against
+the current bot, mixed field, seed 3201, `runs/last_shield_1.out`): 48.9% ± 0.5 head to head, −1.0 ± 0.5 against the
+crowd. Worse on average against these opponents, who rarely bait at full energy; `last_always` stays True. A real fix
+needs the endgame solved as this game is (the guessing between baits and shield timing), not a look-ahead.
