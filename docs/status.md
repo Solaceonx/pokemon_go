@@ -3224,3 +3224,20 @@ The PvPoke-only book is overfit: nothing on the usual field. The mixed book meet
 on fresh battles, no loss on the usual) and is the one to use: `data/openings/melmetal-altaria-jellicent-mixed.json`
 (18 of 55 leads get a plan; Cramorant and Mimikyu: stay in). The usual book is the most even across fields, a
 sign that much of what a book learns is about our own team, not the field.
+
+### Task 30, the engine's own settings: interim (2026-10-19, still running)
+
+`evolve_rules.py --run engine-1 --engine --generations 30 --population 16 --pairings 300` (`runs/engine-1.out`; three
+workers for generation 1, then twelve; `engine_versus.py` with the cache fix). Fitness is head to head against the current
+engine on 300 pairings per candidate, so each score is noisy (about ± 3) and the best of 16 is flattered. After 8 generations:
+
+| Generation | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| Best | 52.8% | 56.8% | 54.3% | 56.5% | 56.2% | 56.0% | 59.8% | 56.5% |
+| Median | 48.6% | 50.8% | 52.0% | 51.8% | 52.4% | 52.8% | 54.6% | 54.2% |
+
+The search is moving towards about 30 imagined battles and a 60-turn look-ahead (the best seen: samples 31, horizon 60,
+edge 0.067, margin 0.028), which is why generations have slowed from under an hour to about two. Caution: task 27 found that
+a longer look-ahead can win head to head without helping against the crowd or PvPoke's AI, and this fitness is head to head
+only, so the final re-score must report all three, and the search time against the live budgets. The plan: stop after
+generation 15, run `--final`, and confirm the best on a fresh seed with `engine_versus.py` (head to head, crowd, PvPoke).
