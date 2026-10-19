@@ -2928,7 +2928,7 @@ against the standard. The best (generation 93) was confirmed with the printed co
 (`rule_trial.py ... --battles 8000 --seed 3008`, `runs/rules-1-confirm.out`): **head to head 54.0% ± 0.9; against the crowd
 59.1% ± 1.1 against 55.8% ± 1.1, +3.4 ± 1.0 points.**
 
-**The trained bot on top** (`jobs/bot_on_evolved.py`, outside the repo; `runs/rules-1-bot-on-top.out`, seed 3030): the bot on
+**The trained bot on top** (`scripts/bot_on_rules.py`; `runs/rules-1-bot-on-top.out`, seed 3030): the bot on
 the evolved rules against the bot on the standard rules, 4,000 pairings both ways, **51.6% ± 0.8** head to head (margin over
 chunks of 50 pairings); against the crowd on the same 4,000 battles 67.9% ± 1.4 against 67.3% ± 1.5, **+0.6 ± 1.1**. So the bot
 on top is not worse, and is better head to head. Both conditions for adoption hold.
@@ -2956,6 +2956,19 @@ The settings that changed (the on/off rules and the bait and shield styles kept 
 
 The largest change is a much lower `switch_margin`: swap for a bench Pokémon only slightly better, where the standard needed
 0.35. Lowering it on its own gained nothing (task 26: 0.25 and 0.15, 50.1–50.3% head to head), so the gain comes from the
-combination, which is what the evolution was for. Still running when this was written: `rules-bot-1` (the bot on top
-during evolution) and `engine-1` (the engine's settings). Not yet done: making these the defaults, the crowd's
-`varied_settings` around them, and a retrain of the learned layer on the new rules.
+combination, which is what the evolution was for. **The second run, with the trained bot on top during evolution** (`evolve_rules.py --run rules-bot-1 --pilot bot --workers 3
+--generations 60 --population 24 --pairings 1500`, `runs/rules-bot-1.out`): `--final` re-scored its five best at 51.9–52.5%
+(bot on top against the bot on the standard rules, 5,000 fresh pairings; `runs/rules-bot-1-final.out`). On fresh seeds the
+bot on its best rules beat the bot on the standard rules 51.9% ± 0.8 head to head (crowd ±0.0 ± 1.3,
+`runs/rules-bot-1-bot-on-top.out`) and the bot on the rules-1 rules 51.0% ± 0.9 (crowd +0.2 ± 1.2,
+`runs/rules-bot-1-vs-rules-1.out`). But **those rules on their own do not beat the standard**: 49.9% ± 0.9 head to head, crowd
+−1.3 ± 1.1 (`rule_trial.py ... --battles 8000 --seed 3009`, `runs/rules-bot-1-confirm.out`). Only the rules-1 rulebook meets
+both conditions, so that is the one kept.
+
+**Kept as a preset, not yet the default:** `pogo.agents.EVOLVED_RULES` holds the rules-1 settings above
+(`Planner(**EVOLVED_RULES)`, likewise `Learner(q=..., **EVOLVED_RULES)`). Making them the default changes the trained bot
+and the engine on the website, and part of the crowd too: `varied_settings` sets most of these values explicitly around
+the standard ones, but not `energy_worth`, `switch_worth`, `sac_margin`, `known_edge` or `belief`, which crowd players take
+from the defaults. That changes the yardstick every result is measured against, so it is left to the owner, with the
+crowd re-centred and a retrain of the learned layer on the new rules as the follow-ups. Still running when this was written:
+`engine-1` (the engine's settings).

@@ -331,7 +331,7 @@ class Server:
             # The trained bot with a look-ahead at its judgement calls (pogo.engine), as tested in scripts/engine_trial.py,
             # with a deadline on every search on the wall clock (pogo.realtime). Here the search runs inside the game's
             # own turn, so none may take longer than a turn; in simulation none comes near that.
-            bot = RealTime(Evaluator(self.evaluator.model), self.pool, rollout="bot", samples=4, edge=0.03, q=self.net, margin=0.02,
+            bot = RealTime(Evaluator(self.evaluator.model), self.pool, rollout="bot", samples=32, edge=0.03, q=self.net, margin=0.02,
                            turn_ms=1000 * TURN * self.args.slow, after_charged_ms=1000 * self.args.charged_pause,
                            cap_ms=1000 * TURN * self.args.slow - 50, clock=time.perf_counter, seed=bot_seed)
         elif self.args.bot == "crowd":

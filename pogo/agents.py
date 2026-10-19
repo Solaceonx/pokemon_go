@@ -946,6 +946,17 @@ def varied(rng: random.Random, field: list | None = None) -> Planner:
     return Planner(**varied_settings(rng, field))
 
 
+# The rulebook evolved by CMA-ES (task 30, docs/status.md "Evolving the rulebook"): Planner(**EVOLVED_RULES) beat the
+# standard rules 54.0% ± 0.9 head to head and +3.4 ± 1.0 against the crowd on a fresh seed, and the trained bot on top of it
+# beat the bot on the standard rules 51.6% ± 0.8. Not yet the default: the crowd and the learned layer are built around
+# the standard values, so making it the default is the owner's call.
+EVOLVED_RULES = dict(
+    shield_share=0.9724, shield_worth=0.3918, energy_worth=0.5, switch_margin=0.0577, expect_shield=0.4458,
+    expect_bait=0.5011, belief=1.8395, safe_weight=0.2118, bad_matchup=-0.1786, farm_cost=0.3869, sac_margin=0.0286,
+    hold_cost=0.9031, win_switch=0.0, matchup_weight=0.741, switch_worth=0.2886, known_edge=0.4,
+)
+
+
 def varied_settings(rng: random.Random, field: list | None = None) -> dict:
     """The shifted habits themselves, for building any Planner-based player."""
     def near(value: float, spread: float) -> float:

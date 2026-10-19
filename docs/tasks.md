@@ -37,12 +37,12 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **27** | **Give the engine the time it has: more imagined battles, longer look-ahead** — Marco; shared evaluator-cache interference found and fixed; corrected measurements running | Big machine |
+| **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **25** | **Let the engine search shield decisions** — Marco; measured 2026-10-18: no gain, keep off | Done; results in `status.md` |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco; measured, not adopted: outside gains but fresh head-to-head regression | Complete, 2026-10-18 |
-| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain** — Marco | Big machine |
-| **30** | **Evolve the rulebook and the engine's settings (CMA-ES; big job)** — Marco | Big machine, days |
-| **31** | **Self-play improvement loop: learn the evaluation from whole engine games (big job)** — Marco | Big machine, days |
+| **29** | **Mixed choices at simultaneous moments, and plenty of randomisation** — Marco; done 2026-10-18: no confirmed gain | Done |
+| **30** | **Evolve the rulebook and the engine's settings** — Marco; rulebook done 2026-10-18: **evolved rules confirmed** (54.0% ± 0.9 alone, bot on top 51.6% ± 0.8), kept as `EVOLVED_RULES` for the owner to make the default; the engine-settings run (`engine-1`) is still running | Engine part running |
+| **31** | **Self-play improvement loop** — Marco; done 2026-10-18: round 1 predicts better but plays no better (49.2% ± 1.5); stopped | Done |
 | 23 | The engine in real time: built; nothing cut on the owner's Mac. Open: the pause lengths, measured from recordings, and the head-to-head check on a slower machine | Python, numpy |
 | 21 | Opposing teams as good as ours, for choosing a team | Python, numpy, hours of computing |
 | 24 | Live assembly without rebuilding every half-second | Python |
