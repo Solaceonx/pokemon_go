@@ -3411,3 +3411,16 @@ move (about 0.4 s a solve, about one a battle). `scripts/finale_trial.py`, mixed
 The baiter hardly punishes the bot's always-shield (50.2%): few endgames turn on that one bait. Solving them gains
 a point against it and nothing against the bot or the crowd, so it stays an option (`Finale`), off by default; worth
 switching on if real opponents turn out to bait at full energy on their last Pokémon often.
+
+## Farming right up until they have a move, again (2026-10-20, the owner): no gain
+
+In the 14 website games (replayed from their logs), 46 of the bot's 100 charged moves came while the person still
+needed two or more fast moves for a move, 44 of them with room to keep farming and not for a knock-out; those games
+were played on the standard rules (`hold_cost` 0.5, the hold rule gives up when the wait costs half the health left).
+On today's evolved rules (`hold_cost` 0.9), in 400 simulated battles on the mixed field, 250 of 2,631 throws were
+early in that sense (above 30% health): in 94 the rulebook was still farming and the networks threw anyway, in 156
+the rulebook itself threw because waiting cost too much health. Both closed off, the trained bot against the current
+one, mixed field, seed 3301 (`runs/respect_hold_1.out`): the networks may not cut farming short (`respect_hold=True`)
+50.1% ± 0.5 head to head, +0.1 ± 0.5 against the crowd; and with any health cost allowed (`hold_cost=2.0`) as well
+49.6% ± 0.6, −1.0 ± 0.7. The farming window already throws at the best-timed fast move within it (`_latest_good_turn`:
+the moment that gives their fast move in progress the fewest free turns, the latest of equally good). Nothing kept.

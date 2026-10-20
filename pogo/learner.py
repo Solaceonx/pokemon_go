@@ -269,8 +269,11 @@ class Learner(Planner):
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
-                 forms: bool | None = None, **settings):
+                 forms: bool | None = None, respect_hold: bool = False, **settings):
         super().__init__(**settings)
+        # The owner: farm right up until they have a move. True: when the rulebook is still farming towards that
+        # moment (Planner._hold_plan), the networks may not throw early.
+        self.respect_hold = respect_hold
         self.forms = (q is not None and q.forms) if forms is None else forms  # form_state() inputs (decide.py --forms)
         # Also describe their Pokémon seen off the field (known_foes): on for models trained that way, or when
         # logging examples for one (decide.py --wide).
@@ -358,6 +361,10 @@ class Learner(Planner):
             return 0 if action == FAST else action - CHARGED[0] + 1
 
         choice = self._decide("throw", view, (True, ready[0], len(moves) > 1 and ready[1]), planner_choice)
+        if choice and self.respect_hold and self.hold and mon.energy + mon.build.fast.energy_gain <= 100 \
+                and damage(mon, moves[choice - 1], foe) < foe.hp and self._hold_plan(view):
+            self.overruled_hold = getattr(self, "overruled_hold", 0) + 1
+            return FAST  # the rulebook is still farming until they are about to have a move
         return FAST if choice == 0 else CHARGED[choice - 1]
 
     def _swap_choice(self, view: View) -> int | None:
