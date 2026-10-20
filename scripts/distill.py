@@ -83,7 +83,8 @@ def collect_job(task) -> list:
     rng = random.Random(seed)
     labels = []
     for _ in range(count):
-        engine = Labeller(ev, pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
+        # a fresh evaluation cache per engine, the weights shared (task 27's fix)
+        engine = Labeller(Evaluator(ev.model), pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
         engine.labels = labels
         settings = varied_settings(rng, pool)
         if rng.random() < 0.5:

@@ -85,10 +85,11 @@ def play_out(snapshot, head: str, option: int, score: str = "result", horizon: i
                 break
             played.step()
         if played.winner is None:
+            from pogo.evaluation import Evaluator
             if "eval" not in _EVALUATOR:
-                from pogo.evaluation import Evaluator
                 _EVALUATOR["eval"] = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
-            return _EVALUATOR["eval"](played.views[side])
+            # a fresh evaluation cache for each judgement, the weights shared: its cache keys omit our team (task 27)
+            return Evaluator(_EVALUATOR["eval"].model)(played.views[side])
         winner = played.winner
     else:
         winner = played.run()

@@ -135,7 +135,8 @@ def job(task) -> list:
     rng = random.Random(seed)
     rows = []
     for _ in range(count):
-        engine = Timed(ev, pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
+        # a fresh evaluation cache per engine, the weights shared (task 27's fix)
+        engine = Timed(Evaluator(ev.model), pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
         Battle(draw(rng), draw(rng), engine, varied(rng, pool), seed=rng.getrandbits(32)).run()
         rows += engine.rows
     return rows

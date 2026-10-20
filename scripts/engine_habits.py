@@ -104,7 +104,8 @@ def play(task) -> list:
     rng = random.Random(seed)
     notes = []
     for _ in range(count):
-        engine = Recorder(ev, pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
+        # a fresh evaluation cache per engine, the weights shared (task 27's fix)
+        engine = Recorder(Evaluator(ev.model), pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02, seed=rng.getrandbits(32))
         engine.notes = notes
         Battle(draw(rng), draw(rng), engine, varied(rng, pool), seed=rng.getrandbits(32)).run()
     return notes

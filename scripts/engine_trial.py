@@ -49,7 +49,8 @@ def job(task) -> dict:
     evaluator = Evaluator.load(settings["eval"]) if settings["eval"] else Evaluator()
 
     def engine(s):
-        return Engine(evaluator, pool, horizon=settings["horizon"], samples=settings["samples"], edge=settings["edge"],
+        # a fresh evaluation cache for every engine, the weights shared (its cache keys omit our team: Marco, task 27)
+        return Engine(Evaluator(evaluator.model), pool, horizon=settings["horizon"], samples=settings["samples"], edge=settings["edge"],
                       heads=settings["heads"], rollout=settings["rollout"], q=net, margin=0.02, seed=s)
 
     def bot(s):
