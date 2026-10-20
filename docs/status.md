@@ -3434,7 +3434,7 @@ games; the same count in 400 simulated battles), leaving out knock-outs and thro
 
 | | best timing | 1 turn more | 2+ more | fainted to a fast move with a move ready |
 |---|---|---|---|---|
-| the owner, website games | 62 of 79 | 12 | 7 | 4 of 35 faints |
+| the owner, website games | 62 of 79 | 12 | 5 | 4 of 35 faints |
 | the bot (engine, older rules), website games | 62 of 78 | 9 | 7 | 4 of 27 |
 | the trained bot now, simulated | 1,943 of 2,037 | 73 | 21 | 74 of 779 |
 | the same, networks not allowed to break either rule | 1,997 of 2,039 | 32 | 10 | 80 of 771 |
