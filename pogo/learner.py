@@ -269,11 +269,14 @@ class Learner(Planner):
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
-                 forms: bool | None = None, respect_hold: bool = False, **settings):
+                 forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False, **settings):
         super().__init__(**settings)
         # The owner: farm right up until they have a move. True: when the rulebook is still farming towards that
         # moment (Planner._hold_plan), the networks may not throw early.
         self.respect_hold = respect_hold
+        # The owner: time throws to the end of their fast move, and throw before their last hit lands. True: the
+        # networks may not throw on a turn that gives free turns when waiting is safe, nor hold when about to faint.
+        self.respect_timing = respect_timing
         self.forms = (q is not None and q.forms) if forms is None else forms  # form_state() inputs (decide.py --forms)
         # Also describe their Pokémon seen off the field (known_foes): on for models trained that way, or when
         # logging examples for one (decide.py --wide).
@@ -361,6 +364,17 @@ class Learner(Planner):
             return 0 if action == FAST else action - CHARGED[0] + 1
 
         choice = self._decide("throw", view, (True, ready[0], len(moves) > 1 and ready[1]), planner_choice)
+        if self.respect_timing:
+            fast = mon.build.fast
+            if choice == 0 and self.last_gasp and self._doomed(view, fast.turns):
+                hit = [damage(mon, m, foe) if r else -1 for m, r in zip(moves, ready)]
+                self.timing_fixes = getattr(self, "timing_fixes", 0) + 1
+                return CHARGED[max(range(len(moves)), key=lambda k: hit[k])]  # throw before their last hit lands
+            if choice and self.timing and damage(mon, moves[choice - 1], foe) < foe.hp:
+                wait = fasts_to_wait(fast.turns, foe.build.fast.turns, view.foe_busy)
+                if wait and mon.energy + wait * fast.energy_gain <= ENERGY_CAP and not self._may_faint(view, wait * fast.turns):
+                    self.timing_fixes = getattr(self, "timing_fixes", 0) + 1
+                    return FAST  # a turn later gives their fast move in progress no free turns
         if choice and self.respect_hold and self.hold and mon.energy + mon.build.fast.energy_gain <= 100 \
                 and damage(mon, moves[choice - 1], foe) < foe.hp and self._hold_plan(view):
             self.overruled_hold = getattr(self, "overruled_hold", 0) + 1

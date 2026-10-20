@@ -3424,3 +3424,23 @@ one, mixed field, seed 3301 (`runs/respect_hold_1.out`): the networks may not cu
 50.1% ± 0.5 head to head, +0.1 ± 0.5 against the crowd; and with any health cost allowed (`hold_cost=2.0`) as well
 49.6% ± 0.6, −1.0 ± 0.7. The farming window already throws at the best-timed fast move within it (`_latest_good_turn`:
 the moment that gives their fast move in progress the fewest free turns, the latest of equally good). Nothing kept.
+
+## Throw timing and the last hit (2026-10-20, the owner): the bot mostly does both; enforcing them, no clear gain
+
+Two rules already in the rulebook: throw on the fast move that leaves the opponent's fast move in progress the fewest
+free turns (it lands in full when a charged move is thrown), and throw before a fast move would knock us out
+(`last_gasp`). Measured as free turns beyond the best timing within reach (`scripts/timing_check.py` on the website
+games; the same count in 400 simulated battles), leaving out knock-outs and throws when about to faint:
+
+| | best timing | 1 turn more | 2+ more | fainted to a fast move with a move ready |
+|---|---|---|---|---|
+| the owner, website games | 62 of 79 | 12 | 7 | 4 of 35 faints |
+| the bot (engine, older rules), website games | 62 of 78 | 9 | 7 | 4 of 27 |
+| the trained bot now, simulated | 1,943 of 2,037 | 73 | 21 | 74 of 779 |
+| the same, networks not allowed to break either rule | 1,997 of 2,039 | 32 | 10 | 80 of 771 |
+
+(Two Pokémon with two-turn fast moves in step cannot avoid one free turn, so it is counted against the best timing in
+reach, not against zero.) `Learner(respect_timing=True)` against the current bot, mixed field, seed 3401
+(`runs/respect_timing_1.out`): 50.3% ± 0.5 head to head, +0.4 ± 0.6 against the crowd: no clear gain; left off.
+On the phone the other half matters: a charged-move tap before our own fast move has registered can lose that fast
+move, so the live controller should tap only once the fast move has landed (task 13).
