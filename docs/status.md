@@ -3477,3 +3477,24 @@ varied bot and the human-like style are nearly the same (data/opponent_styles.js
 could not tell a copy of our engine from the crowd. A real person is predicted badly by every style (the owner:
 about 27% per decision, against 87% for the bot predicting itself); their own running habits do best. Next: the
 engine with `match` instead of `profile`, and a human style fitted to real decisions as games come in.
+
+## The engine weighing opponent styles by every decision (2026-10-20): better against the crowd and PvPoke, level head to head
+
+`Engine(opponents="mix", matching=True)`: at every turn the opponent could throw, and at every shield call of theirs,
+each style is asked what it would have done in their place (in a battle imagined from what we can see: their unseen
+Pokémon are drawn, not read), and its weight moves with how likely that made what they did (`scripts/predict_bench.py`
+showed this recognises simulated opponents within a battle where task 28's shield-and-bait profile cannot). Against
+the confirmed engine (4 imagined battles), mixed field, seed 3501 (`runs/matching_1.out`):
+
+| | head to head, 2,000 pairings both ways | crowd, 2,000 (paired) | PvPoke's AI, 1,000 (paired) |
+|---|---|---|---|
+| the style mix, profiled (task 28) | 49.6% ± 1.3 | +2.9 ± 2.1 | +7.0 ± 2.5 |
+| the style mix, matched | 49.0% ± 1.3 | +4.3 ± 2.1 | +9.2 ± 2.4 |
+
+(Confirmed engine: crowd 70.8% ± 2.0, PvPoke 81.0% ± 2.4.) Matching gains more than profiling against both outside
+opponents; head to head both stay level within the margin (the engine it plays is not one of the styles, so it is
+never recognised exactly). The adoption rule asks for a head-to-head gain, so not adopted on this run; on a fresh seed
+and the usual field it would be the owner's call whether level head to head with these outside gains is enough.
+
+Also found on the way: PvPoke's AI failed after a form change (Morpeko's Aura Wheel changes id), and in a worker
+the error (StopIteration) ended `engine_versus.py`'s result loop quietly, as if all jobs were done; both fixed.
