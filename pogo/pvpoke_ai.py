@@ -237,7 +237,11 @@ class PvpokeAI:
 
     def shield(self, view, foe_energy, move):
         defender, attacker = self._pokemon(view)
-        move = next(m for m in attacker.chargedMoves if m.moveId == move.id)
+        found = next((m for m in attacker.chargedMoves if m.moveId == move.id), None)
+        if found is None:  # a form change gave the move another id (Morpeko's Aura Wheel): take the same slot
+            k = next((i for i, m in enumerate(view.foe.build.charged) if m is move or m.id == move.id), 0)
+            found = attacker.chargedMoves[min(k, len(attacker.chargedMoves) - 1)]
+        move = found
         # Battle.js subtracts the cost BEFORE wouldShield; the engine calls us before.
         attacker.energy = foe_energy - move.energy
         shieldDecision = self.wouldShield(attacker, defender, move)

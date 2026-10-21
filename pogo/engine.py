@@ -142,7 +142,7 @@ class Engine(Learner):
                  team_file: str | Path | None = None,
                  style_file: str | Path | None = None,
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
-                 mix_switch: bool = False, random_hold: bool = False, **settings):
+                 mix_switch: bool = False, random_hold: bool = False, matching: bool = False, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
@@ -176,6 +176,11 @@ class Engine(Learner):
                 gd = GameData()
                 self._team_builds.update({sp: gd.default(sp) for sp in missing})
         self._obs = {"shield": [0, 0], "bait": [0, 0]}  # what this opponent has done: [times, chances]
+        # matching=True (with opponents="mix"): weigh each style by how likely it was to make every decision of
+        # theirs seen so far (scripts/predict_bench.py), not only by their shield and bait rates.
+        self.matching = matching
+        self._loglik = {name: 0.0 for name in (self._styles or {})}
+        self._pending = self._pending_shield = self._their_throw = None
         self._mix_rng = random.Random(hash(self.rng.getstate()))  # for mixing only; does not touch self.rng
         self._their_first = None  # the opponent's first action in each look, when fixed (mixed tables, readers)
         self._foe_energy = None  # the attacker's energy, for shield looks
@@ -194,24 +199,84 @@ class Engine(Learner):
         twin._mix_rng = random.Random()
         twin._mix_rng.setstate(self._mix_rng.getstate())
         twin._obs = {k: list(v) for k, v in self._obs.items()}
+        twin._loglik = dict(self._loglik)
+        twin._pending = twin._pending_shield = twin._their_throw = None
         return twin
 
     # what this opponent does, for profile=True
 
     def saw_shield(self, view: View, shielded: bool) -> None:
         super().saw_shield(view, shielded)
+        if self._pending_shield is not None:
+            self._learn(self._pending_shield, "shield" if shielded else "take")
+            self._pending_shield = None
         self._obs["shield"][0] += shielded
         self._obs["shield"][1] += 1
 
     def saw_throw(self, view: View, move, foe_energy: int, could_shield: bool) -> None:
         super().saw_throw(view, move, foe_energy, could_shield)
+        charged = view.foe.build.charged
+        self._their_throw = next((k for k, m in enumerate(charged) if m is move or m.id == move.id), None)
         ready = [m for m in view.foe.build.charged if m.energy <= foe_energy]
         if len(ready) > 1 and min(m.energy for m in ready) < max(m.energy for m in ready):
             self._obs["bait"][0] += move.energy == min(m.energy for m in ready)
             self._obs["bait"][1] += 1
 
+    # matching=True: what each style would have done in their place, and how likely that made what they did
+
+    def _style_shares(self, view: View, shield_energy: int | None = None) -> dict:
+        """{style: {option: share of its players choosing it}} for their decision now (a fast move, either charged
+        move or a switch; or, with shield_energy, shielding our throw), in a battle imagined from what we can see."""
+        rng = random.Random(view.turn * 7919 + 17)
+        battle = imagine(view, rng, self.pool, None, None, self._teams, self._team_builds)
+        out = {}
+        for k, name in enumerate(self._styles):
+            players = [style_player(name, random.Random(1000 * k + j), self.q, self.margin, self.pool, self._human_settings)
+                       for j in range(1 if name in ("bot", "pvpoke") else 6)]
+            votes = {}
+            for player in players:
+                twin = battle.clone(None, None)
+                try:
+                    if shield_energy is None:
+                        a = player.act(twin.views[1])
+                        option = "fast" if a == FAST else f"charged{CHARGED.index(a)}" if a in CHARGED else "switch"
+                    else:
+                        option = "shield" if player.shield(twin.views[1], shield_energy) else "take"
+                except Exception:  # a style that cannot judge this position (PvPoke's AI outside one-on-one) abstains
+                    continue
+                votes[option] = votes.get(option, 0) + 1
+            n = sum(votes.values())
+            if n:
+                out[name] = {o: v / n for o, v in votes.items()}
+        return out
+
+    def _learn(self, shares: dict, did: str) -> None:
+        options = 2 if did in ("shield", "take") else 4
+        for name in self._loglik:
+            p = shares.get(name, {}).get(did, 0.0) * 0.9 + 0.1 / options if name in shares else 1.0 / options
+            self._loglik[name] += math.log(p)
+
+    def _watch(self, view: View) -> None:
+        """Settle their last decision we predicted, then predict the one they face now."""
+        if self._pending is not None:
+            shares, mon = self._pending
+            if self._their_throw is not None:
+                self._learn(shares, f"charged{self._their_throw}")
+            elif view.foe is not mon and mon.hp > 0:
+                self._learn(shares, "switch")
+            elif view.foe is mon:
+                self._learn(shares, "fast")
+            self._pending = None
+        self._their_throw = None
+        foe = view.foe
+        if view.foe_busy == 0 and foe.build.charged and foe.energy >= min(m.energy for m in foe.build.charged):
+            self._pending = (self._style_shares(view), foe)
+
     def _style_weights(self) -> dict:
         weights = {name: s["weight"] for name, s in self._styles.items()}
+        if self.matching:
+            top = max(self._loglik.values(), default=0.0)
+            weights = {name: w * math.exp(self._loglik.get(name, 0.0) - top) for name, w in weights.items()}
         if self.profile:
             for name, s in self._styles.items():
                 for kind in ("shield", "bait"):
@@ -233,6 +298,15 @@ class Engine(Learner):
     # deciding
 
     def act(self, view: View) -> int:
+        if self.matching and self._styles:
+            self._watch(view)
+            action = self._act(view)
+            if action in CHARGED and view.foe_shields > 0:
+                self._pending_shield = self._style_shares(view, shield_energy=view.me.mon.energy)
+            return action
+        return self._act(view)
+
+    def _act(self, view: View) -> int:
         theirs = self._mixed_actions("simultaneous", view) if self.switches and "mid_swap" in self.heads else []
         if not theirs:
             return super().act(view)

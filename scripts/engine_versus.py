@@ -69,7 +69,7 @@ def parse(spec: str) -> dict | None:
             out[key] = int(value)
         elif key in ("edge", "margin", "temperature"):
             out[key] = float(value)
-        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold"):
+        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval", "team_file", "style_file"):
             out[key] = value
@@ -84,6 +84,9 @@ def setup(field: str = "standard") -> None:
     if field == "pvpoke":
         from pogo.teamshape import pvpoke_field
         pool, draw = pvpoke_field(gd)
+    elif field == "mixed":
+        from pogo.teamshape import mixed_field
+        pool, draw = mixed_field(gd)
     else:
         pool = gd.meta(50)
         draw = drawer(gd, pool)
@@ -118,6 +121,13 @@ def points(winner: int, side: int) -> float:
 
 def job(task):
     """kind is h2h (candidate against baseline, both ways), crowd, pvpoke or reader; returns points by battle number."""
+    try:
+        return _job(task)
+    except StopIteration as e:  # raised in a worker it would end the result loop quietly, as if every job were done
+        raise RuntimeError(f"StopIteration in job {task[:2]} from {task[4]}") from e
+
+
+def _job(task):
     kind, name, spec, base, start, count, seed = task
     s = _state
     out, searches = {}, []
@@ -165,7 +175,7 @@ def main() -> None:
     parser.add_argument("--chunk", type=int, default=5, help="battles (or pairs) per job")
     parser.add_argument("--workers", type=int, default=os.cpu_count() or 4)
     parser.add_argument("--seed", type=int, default=2701)
-    parser.add_argument("--field", choices=("standard", "pvpoke"), default="standard",
+    parser.add_argument("--field", choices=("standard", "pvpoke", "mixed"), default="standard",
                         help="opposing teams: the usual draw, or as PvPoke's usage data has them")
     args = parser.parse_args()
     for spec in [args.baseline, *args.candidates]:
