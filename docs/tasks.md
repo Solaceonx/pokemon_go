@@ -38,7 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
-| **33** | **Retrain the bot's networks: form inputs, two play-outs per option, mixed opponents (one job)** — to run on the owner's PC (`docs/run_elsewhere.md`); Marco: do not run | Owner's PC, ~4 h |
+| **33** | **Retrain the bot's networks: form inputs, two play-outs per option, mixed opponents (one job)** — Claude, running on the cloud machine from 2026-10-21 (owner's call); Marco: do not run | Running, ~8 h |
 | 32 | Opponents as people bring them: **done 2026-10-18.** The engine's edge holds on the PvPoke field (+4.0 ± 1.6 on the crowd), no weakness against Cramorant or Mimikyu. Owner's rule: realistic but not overfit, so new measurements, team choice and books use `--field mixed` and must not lose on `--field standard`. Opening book on the mixed field: +5.2 ± 1.1 there, +1.2 ± 0.7 on the usual (the PvPoke-only book is overfit). Team choice on the mixed field, cross-checked: the owner's three are best with Jellicent leading (59.4% mixed, 71.2% usual); Vigoroth-lead winners are overfit. Answers to every arrival (`scripts/answers.py`) add nothing beyond the opening book. Open: an opening book for a Jellicent lead. | Python |
 | **25** | **Let the engine search shield decisions** — Marco; measured 2026-10-18: no gain, keep off | Done; results in `status.md` |
 | **28** | **Opponents in the look-ahead that are not our own bot** — Marco; measured, not adopted: outside gains but fresh head-to-head regression | Complete, 2026-10-18 |
@@ -62,7 +62,7 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 33. Retrain the bot's networks — on the owner's PC (the owner, 2026-10-19: all three changes as one job; how to run it elsewhere: `docs/run_elsewhere.md`)
+## 33. Retrain the bot's networks — running on the cloud machine instead (Claude, started 2026-10-21 03:31 UTC: 5 rounds of 80 minutes, 4 workers; the owner's call) — on the owner's PC (the owner, 2026-10-19: all three changes as one job; how to run it elsewhere: `docs/run_elsewhere.md`)
 
 **Why.** The bot's networks (`runs/general-decide/q.npz`; 45 inputs, `pogo/learner.py`) were trained on the usual
 pool, which never held Cramorant or Mimikyu (8.5% and 8% of team slots in PvPoke's data, status: "Team shapes, and
