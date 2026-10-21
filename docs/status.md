@@ -3444,3 +3444,36 @@ reach, not against zero.) `Learner(respect_timing=True)` against the current bot
 (`runs/respect_timing_1.out`): 50.3% ± 0.5 head to head, +0.4 ± 0.6 against the crowd: no clear gain; left off.
 On the phone the other half matters: a charged-move tap before our own fast move has registered can lose that fast
 move, so the live controller should tap only once the fast move has landed (task 13).
+
+## How well we can predict the opponent (2026-10-20, the owner: "try very hard to predict the opponent")
+
+`scripts/predict_bench.py` (`runs/predict_bench_1.out`): the opponent's decisions at every turn they could throw (fast
+move, either charged move, switch) and every shield call, from 150 battles on the mixed field against each kind of
+opponent and from the owner's 14 website games. Each style (the trained bot; the bot with shifted habits, 6 of them;
+the human-like style, 6; PvPoke's AI) is asked what it would do in the copied position. Predictors: `bot` (they play
+like us: what the engine assumes), `mix` (task 28's fixed style mix), `profile` (that mix reweighted by their shield
+and bait rates: task 28's profile=1), `match` (reweighted by how likely each style made every decision so far in
+the battle), `habit` (their own shares so far). Geometric-mean chance given to what they did / top guess right:
+
+| throw, fast or switch | bot | mix | profile | match | habit |
+|---|---|---|---|---|---|
+| the bot (3,078) | 87% / 98% | 79 / 98 | 81 / 97 | 86 / 98 | 36 / 66 |
+| the crowd (2,847) | 39 / 76 | 60 / 78 | 58 / 78 | 64 / 84 | 36 / 63 |
+| human-like style (3,259) | 58 / 87 | 69 / 88 | 68 / 87 | 73 / 91 | 38 / 67 |
+| PvPoke's AI (1,885) | 16 / 51 | 42 / 54 | 56 / 66 | 78 / 92 | 31 / 51 |
+| the owner (249) | 18 / 55 | 29 / 56 | 27 / 57 | 27 / 57 | 34 / 59 |
+
+| shield calls | bot | mix | profile | match | habit |
+|---|---|---|---|---|---|
+| the bot (723) | 91 / 98 | 82 / 97 | 84 / 98 | 87 / 98 | 43 / 43 |
+| the crowd (567) | 38 / 69 | 54 / 69 | 54 / 69 | 56 / 75 | 45 / 51 |
+| human-like style (644) | 60 / 84 | 71 / 85 | 72 / 85 | 72 / 87 | 43 / 43 |
+| PvPoke's AI (310) | 9 / 22 | 22 / 22 | 25 / 22 | 38 / 25 | 58 / 93 |
+| the owner (72) | 39 / 69 | 53 / 69 | 52 / 69 | 53 / 71 | 44 / 50 |
+
+Matching every decision recognises a simulated opponent within the battle (close to the right model for each),
+where profiling by shield and bait rates barely moves from the fixed mix: the calibrated rates of the bot, the
+varied bot and the human-like style are nearly the same (data/opponent_styles.json), which is why task 28's profile
+could not tell a copy of our engine from the crowd. A real person is predicted badly by every style (the owner:
+about 27% per decision, against 87% for the bot predicting itself); their own running habits do best. Next: the
+engine with `match` instead of `profile`, and a human style fitted to real decisions as games come in.
