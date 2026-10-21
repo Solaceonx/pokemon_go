@@ -1,0 +1,75 @@
+team: any (random threes from the top 50)
+teams: random threes
+opponents: variations of the Planner
+field: mixed; form inputs: True; play-outs per option: 2
+workers: 4; play-outs scored by: result
+mid-matchup swap: True; examples per round: all
+first round piloted by runs/general-decide/q.npz (margin 0.02)
+collected this round: 61662 shield, 20574 throw, 42410 swap, 9477 replace, 142618 mid_swap
+
+round 1: 6588 battles (0 of them 1v1 against PvPoke) in 80.1 min; examples so far: 61662 shield, 20574 throw, 42410 swap, 9477 replace, 142618 mid_swap
+  shield: average result by option 56.0% 54.2%
+  throw: average result by option 56.0% 54.0% 53.3% 49.1% 33.3%
+  swap: average result by option 57.2% 52.9% 54.9%
+  replace: average result by option 49.7% 51.4%
+  mid_swap: average result by option 58.7% 49.1% 50.6%
+  overrule when ahead by 0.02: +2.2 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +1.8 ± 2.7 points against the Planner
+  overrule when ahead by 0.1: +1.0 ± 1.8 points against the Planner
+team: any (random threes from the top 50)
+teams: random threes
+opponents: variations of the Planner
+field: mixed; form inputs: True; play-outs per option: 2
+workers: 4; play-outs scored by: result
+mid-matchup swap: True; examples per round: all
+resuming with 276741 examples already collected
+collected this round: 45947 shield, 15930 throw, 32082 swap, 7124 replace, 103177 mid_swap
+
+round 1: 4973 battles (0 of them 1v1 against PvPoke) in 80.2 min; examples so far: 107609 shield, 36504 throw, 74492 swap, 16601 replace, 245795 mid_swap
+  shield: average result by option 55.7% 53.9%
+  throw: average result by option 56.6% 54.6% 53.7% 49.9% 34.3%
+  swap: average result by option 57.4% 52.3% 54.3%
+  replace: average result by option 49.3% 50.7%
+  mid_swap: average result by option 58.5% 48.5% 49.9%
+  overrule when ahead by 0.02: +5.7 ± 3.3 points against the Planner
+  overrule when ahead by 0.05: +5.9 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +1.6 ± 1.8 points against the Planner
+collected this round: 40396 shield, 14622 throw, 28873 swap, 6403 replace, 101904 mid_swap
+
+round 2: 4391 battles (0 of them 1v1 against PvPoke) in 80.3 min; examples so far: 148005 shield, 51126 throw, 103365 swap, 23004 replace, 347699 mid_swap
+  shield: average result by option 55.8% 53.9%
+  throw: average result by option 56.8% 54.8% 53.8% 50.0% 34.1%
+  swap: average result by option 57.5% 52.2% 54.2%
+  replace: average result by option 49.7% 50.9%
+  mid_swap: average result by option 58.5% 48.2% 49.8%
+  overrule when ahead by 0.02: +9.4 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +8.9 ± 2.9 points against the Planner
+  overrule when ahead by 0.1: +3.1 ± 1.8 points against the Planner
+collected this round: 35641 shield, 12341 throw, 23551 swap, 5320 replace, 98466 mid_swap
+
+round 3: 3724 battles (0 of them 1v1 against PvPoke) in 80.2 min; examples so far: 183646 shield, 63467 throw, 126916 swap, 28324 replace, 446165 mid_swap
+  shield: average result by option 55.7% 54.0%
+  throw: average result by option 56.8% 54.9% 53.8% 49.9% 34.0%
+  swap: average result by option 57.6% 52.0% 53.9%
+  replace: average result by option 49.7% 50.8%
+  mid_swap: average result by option 58.1% 48.0% 49.3%
+  overrule when ahead by 0.02: +6.6 ± 3.4 points against the Planner
+  overrule when ahead by 0.05: +6.2 ± 2.8 points against the Planner
+  overrule when ahead by 0.1: +2.2 ± 1.8 points against the Planner
+collected this round: 43445 shield, 15259 throw, 30157 swap, 6671 replace, 102127 mid_swap
+
+round 4: 4659 battles (0 of them 1v1 against PvPoke) in 80.3 min; examples so far: 227091 shield, 78726 throw, 157073 swap, 34995 replace, 548292 mid_swap
+  shield: average result by option 55.7% 53.9%
+  throw: average result by option 56.5% 54.9% 53.6% 49.8% 33.9%
+  swap: average result by option 57.8% 51.9% 53.9%
+  replace: average result by option 49.7% 50.7%
+  mid_swap: average result by option 58.1% 48.0% 49.3%
+  overrule when ahead by 0.02: +7.9 ± 3.3 points against the Planner
+  overrule when ahead by 0.05: +6.2 ± 2.9 points against the Planner
+  overrule when ahead by 0.1: +2.9 ± 1.8 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.02
+  with learned decisions   66.4% ± 1.7
+  Planner, same teams      60.4% ± 1.7
+  difference               +6.0 ± 2.0 points (same battles for both); overruled the Planner per battle: mid_swap 0.25, replace 0.05, shield 0.84, swap 0.56, throw 1.93
+files: runs/qnet-1/q.npz, margin.txt, examples.npz

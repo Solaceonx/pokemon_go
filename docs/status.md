@@ -3477,3 +3477,24 @@ varied bot and the human-like style are nearly the same (data/opponent_styles.js
 could not tell a copy of our engine from the crowd. A real person is predicted badly by every style (the owner:
 about 27% per decision, against 87% for the bot predicting itself); their own running habits do best. Next: the
 engine with `match` instead of `profile`, and a human style fitted to real decisions as games come in.
+
+## Task 33: the networks retrained with form inputs, two play-outs per option and mixed opponents (2026-10-21, on the cloud machine)
+
+The owner's one job, run on the cloud machine instead of the PC (the owner's call): `decide.py --run qnet-1 --forms
+--playouts 2 --field mixed --both-sides 0.5 --start runs/general-decide/q.npz --workers 4`, five rounds of 80 minutes
+(`runs/qnet-1.out`; the container restarted 25 minutes into round 2, which was redone from the saved round 1 with
+`--resume`, so the log shows two runs, of one and four rounds). 26,335 battles, 1,046,177 decisions with every option
+played out twice (227k shield, 79k throw, 157k swap, 35k replacement, 548k mid-matchup swap); margin 0.02 chosen on
+validation, and +6.0 ± 2.0 over the (evolved) rulebook on decide.py's own 3,000-battle final test.
+
+Against the current model, 4,000 battles against the crowd and then every pair of teams both ways:
+
+| Field | Against the crowd, new minus current | Head to head | Task 33's condition |
+|---|---|---|---|
+| Mixed (`runs/qnet-1-compare-mixed.out`, seed 3301) | **+2.5 ± 1.6** (68.7% against 66.2%) | 51.2% ± 1.3 | crowd: beyond the margin, met; head to head: above 50% beyond the margin, **missed by 0.1 point** |
+| Usual (`runs/qnet-1-compare-usual.out`, seed 3302) | -0.5 ± 1.5 | 49.8% ± 1.3 | loses neither beyond its margin: met |
+
+Better against realistic teams and the crowd, level head to head, and no loss on the usual field; but the
+head-to-head condition is not met, so by the rule it is **not adopted** and the confirming run on seed 3303 was not
+started. The model is kept at `runs/qnet-1/q.npz` (margin 0.02). Whether +2.5 on the mixed field with head to head
+level is enough is the owner's call; if so, the confirmation on seed 3303 comes first, read with the same rule.
