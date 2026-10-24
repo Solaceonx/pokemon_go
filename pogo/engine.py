@@ -36,7 +36,7 @@ from pathlib import Path
 
 from .agents import _rollout, varied_settings
 from .arena import decisive
-from .battle import CHARGED, CHARGED_TURNS, FAST, SWITCH, Battle, Mon, View, apply_buffs, damage
+from .battle import ENERGY_CAP, CHARGED, CHARGED_TURNS, FAST, SWITCH, Battle, Mon, View, apply_buffs, damage
 from .learner import Learner
 
 DATA = Path(__file__).resolve().parent.parent / "data"
@@ -142,7 +142,8 @@ class Engine(Learner):
                  team_file: str | Path | None = None,
                  style_file: str | Path | None = None,
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
-                 mix_switch: bool = False, random_hold: bool = False, matching: bool = False, **settings):
+                 mix_switch: bool = False, random_hold: bool = False, matching: bool = False,
+                 no_tell_bait: bool = False, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
@@ -179,6 +180,10 @@ class Engine(Learner):
         # matching=True (with opponents="mix"): weigh each style by how likely it was to make every decision of
         # theirs seen so far (scripts/predict_bench.py), not only by their shield and bait rates.
         self.matching = matching
+        # no_tell_bait=True (the owner, puzzled by some throws): the search may not throw the cheaper move into a
+        # shield while the dearer one is not yet affordable, which their energy count gives away, unless waiting
+        # for the dearer one is unsafe; the trained bot's own pick, or another fast move, instead.
+        self.no_tell_bait = no_tell_bait
         self._loglik = {name: 0.0 for name in (self._styles or {})}
         self._pending = self._pending_shield = self._their_throw = None
         self._mix_rng = random.Random(hash(self.rng.getstate()))  # for mixing only; does not touch self.rng
@@ -371,9 +376,30 @@ class Engine(Learner):
             return choice
         best = max(options, key=lambda k: (worth[k], k == pick))
         if worth[best] - worth[pick] > self.edge:
+            if head == "throw" and self.no_tell_bait and self._tell_bait(view, best):
+                return 0 if self._tell_bait(view, pick) else pick
             self.changed += best != pick
             return best
+        if head == "throw" and self.no_tell_bait and self._tell_bait(view, pick):
+            return 0
         return pick
+
+    def _tell_bait(self, view: View, option: int) -> bool:
+        """Throw option `option` (1 or 2: a charged move) is the cheaper move into a shield while the dearer one is not
+        yet affordable and could be reached safely: a bait the opponent's energy count sees through."""
+        if option not in (1, 2) or view.foe_shields == 0:
+            return False
+        mon = view.me.mon
+        moves = mon.build.charged
+        if len(moves) < 2:
+            return False
+        k = option - 1
+        dear = max(range(len(moves)), key=lambda j: moves[j].energy)
+        if k == dear or moves[k].energy == moves[dear].energy or mon.energy >= moves[dear].energy:
+            return False
+        fast = mon.build.fast
+        turns = -(-(moves[dear].energy - mon.energy) // fast.energy_gain) * fast.turns
+        return mon.energy + fast.energy_gain <= ENERGY_CAP and not self._may_faint(view, turns)
 
     def _their_throws(self, view: View) -> list:
         """Their first actions worth considering when they have a charged move ready: farm, or each move ready."""

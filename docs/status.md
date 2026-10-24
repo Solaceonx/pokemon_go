@@ -3504,3 +3504,16 @@ and the usual field it would be the owner's call whether level head to head with
 
 Also found on the way: PvPoke's AI failed after a form change (Morpeko's Aura Wheel changes id), and in a worker
 the error (StopIteration) ended `engine_versus.py`'s result loop quietly, as if all jobs were done; both fixed.
+
+## The bot's charged-move choices in the website games, and "readable baits" (2026-10-23, the owner): kept
+
+`scripts/throw_choices.py`: of the bot's 84 throws in the website games with both moves affordable, none with no
+shield left was the weaker move (except to knock out); into a shield it threw the cheaper move 18 times and the harder
+47 (the mix of baits, sometimes a resisted move as the bait). 15 throws were the cheaper move into a shield before the
+dearer one was affordable, which the defender's energy count gives away (Corviknight's Air Cutter into Melmetal at
+44 energy, Iron Head at 50); today's rulebook and networks keep fast-moving in 8 of the 10 above 30% health, so
+these come from the engine's search. Forbidding them in the search (`no_tell_bait=1`: the bot's own pick or another
+fast move instead, unless waiting is unsafe), against the confirmed engine, mixed field, seed 3601
+(`runs/tell_bait_1.out`): **47.7% ± 1.5 head to head**, −1.6 ± 1.8 against the crowd, −1.1 ± 2.0 against PvPoke's
+AI. Worse: the early cheaper move pays in these battles as tempo (damage now, the next move sooner), not as a bait.
+Left off.

@@ -69,7 +69,7 @@ def parse(spec: str) -> dict | None:
             out[key] = int(value)
         elif key in ("edge", "margin", "temperature"):
             out[key] = float(value)
-        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching"):
+        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval", "team_file", "style_file"):
             out[key] = value
