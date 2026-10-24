@@ -73,7 +73,7 @@ body { display: flex; justify-content: center; }
 .pick kbd { margin-left: auto; color: var(--dim); font: 12px ui-monospace, monospace; border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; }
 .pick:disabled { opacity: .4; cursor: default; }
 .pick.out { display: none; }
-.countdown { position: fixed; inset: 0; display: none; place-items: center; background: rgba(5, 9, 14, .55); font-size: 120px; font-weight: 800; }
+.countdown { position: fixed; inset: 0; display: none; place-items: center; background: rgba(5, 9, 14, .55); font-size: 120px; font-weight: 800; pointer-events: none; }  /* taps go through: a switch can be queued before the start */
 .countdown.open { display: grid; }
 .big .icon { width: 56px; height: 56px; margin: 0 auto 4px; display: grid; place-items: center; }
 .big .icon img { width: 56px; height: 56px; image-rendering: pixelated; object-fit: contain; }
