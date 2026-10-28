@@ -3539,3 +3539,51 @@ Left off.
 different choice gave the best chance (at least 30%, and 15 points over what was done) is shown with one play-out in
 which that choice goes on to win (`pogo.review.winning_line`; the bot on both sides after it), as its key events. On
 the owner's 10-18 game: Jellicent at the start instead of staying in with Melmetal against Annihilape, 75% against 17%.
+
+## Why the engine loses to the owner on the website (2026-10-28, the owner: "I've been beating the engine a lot")
+
+- **Results against what the line-ups predicted.** 27 website games: the owner won 13; the line-up chances (bot
+  against bot with the same teams) predicted 15.2. By chance band: below 0.4, 1 won of 0.8 predicted; 0.4-0.6, 6 of
+  6.6; above 0.6, 6 of 7.9. The wins mostly follow the match-ups (on 10-28: 4 won of 4.3 predicted; two of those
+  bot teams gave the owner 99% and 94%).
+- **The bot's costly decisions in its 13 losses** (`scripts/losses.py --played`, `runs/bot_losses_web.out`; a
+  decision is listed when another choice wins at least 30 points more in play-outs): 31 in 9 games. Staying in
+  (fast move) where switching wins: 13, in about 8 episodes across 6 games (Shadow Altaria at 25% down to 8% against
+  Altaria for five turns; Carbink at 40% against Jellicent). Shields: 5, three of them a shield on a Pokémon
+  at about a third of its health where not shielding wins 83-90%. Annihilape (Shadow) threw Rage Fist at Altaria
+  twice (once with no shield left; Ice Punch did 120 to a 121-HP Altaria): 96-100% against 12-21%. Hindsight
+  flatters losses, so only repeated patterns count.
+- **The Rage Fist throws come from the engine's search,** not the trained bot (both the rulebook and the trained
+  bot pick Ice Punch there). Once all three of the person's Pokémon have been seen, the 32 imagined battles are
+  identical (one distinct value per option at every late decision checked): the imagined opponent is the
+  trained bot, nothing unseen is left to draw, so the search is one look-ahead. Each option is judged after
+  `horizon` steps, at different moments: Rage Fist's line stopped as full-health Tinkaton came in against a 51-HP
+  Altaria with Flamethrower ready (0.478); Ice Punch's ran on past Altaria's Flamethrower and faint (0.240).
+  Varied imagined opponents were measured in task 28 (`opponents=mix`: +3.4 crowd, +5.6 PvPoke, 48.4% head to
+  head on a fresh seed) and as `matching` (+4.3, +9.2, 49.0%): both gain against outside opponents and stay at
+  or just under level against the engine itself, the one opponent a single bot-like look-ahead models exactly.
+
+## Two charged moves of the same cost into a shield (2026-10-28, the owner): adopted
+
+The owner's game of 10-28 14:14: Empoleon threw resisted Hydro Cannon (40 damage) at Jellicent over Drill Peck (46),
+both 40 energy. The rulebook, with a shield up, throws the cheaper move as the bait, and with both the same cost took
+the first listed, whatever it did; the trained bot copied it. 12 of the mixed field's 55 Pokémon have such a pair,
+several with a sure stat change (Rage Fist, Drain Punch, Superpower, Wild Charge). New Planner option `even_cost`:
+"first" (the old rule) or "best", the move that leaves us better off after the throw, shielded or not as the
+opponent's shield record says (`_after_throw`, which counts a sure stat change even when shielded). Measured with
+`scripts/even_cost_trial.py`, the trained bot with each against the other (`runs/even_cost_*.out`):
+
+| Field, seed | Head to head | Teams with a same-cost Pokémon | Crowd | PvPoke's AI |
+|---|---|---|---|---|
+| mixed, 4501 | 50.2% ± 0.3 | 50.9% ± 0.3 | +0.3 ± 0.1 | +0.0 ± 0.1 |
+| mixed, 4502 (fresh) | 50.6% ± 0.3 | 51.5% ± 0.3 | +0.2 ± 0.1 | −0.1 ± 0.1 |
+| usual, 4503 | 50.6% ± 0.3 | 50.7% ± 0.4 | +0.2 ± 0.2 | +0.1 ± 0.1 |
+
+The confirmed engine with `even_cost=best` (its own pick and its look-ahead's player for itself), against the
+engine as it was, mixed field, seed 4511 (`runs/even_cost_engine.out`): 51.6% ± 1.7 head to head, +0.2 ± 0.9 crowd,
++0.4 ± 1.0 PvPoke. **Adopted: "best" is the default.** A small gain, as expected from a rule that only matters for
+one Pokémon in five. (The Annihilape Rage Fist throws in the owner's games are a different cause: the engine's
+search, above.)
+
+Also fixed: games where the bot sends a Pokémon in after a faint and switches straight out of it on the same turn
+did not replay for the website review (both were read as the replacement); 4 of 27 website games. All 27 replay now.

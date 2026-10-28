@@ -503,7 +503,7 @@ class Engine(Learner):
         elif head in ("swap", "mid_swap"):
             first = None if option == 0 else SWITCH[others[option - 1]]
         if self.rollout == "bot":
-            us = Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32))
+            us = Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32), even_cost=self.even_cost)
             them = self._imagined_opponent(rng)
         else:
             us, them = _rollout(), _rollout()

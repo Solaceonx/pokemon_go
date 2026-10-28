@@ -205,11 +205,14 @@ class Planner:
                  shield_matchups: bool = False, shield_matchup_hp: float = 0.3,
                  catch: bool = False, catch_gain: float = 0.2,
                  rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.4,
-                 punish_gain: float | None = None, fast_first: float = 0.0, last_always: bool = True):
+                 punish_gain: float | None = None, fast_first: float = 0.0, last_always: bool = True,
+                 even_cost: str = "best"):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even", "calibrated"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
             raise ValueError(f"unknown shield rule {shields!r}")
+        if even_cost not in ("first", "best"):
+            raise ValueError(f"unknown even_cost rule {even_cost!r}")
         if guess not in ("worst", "mix", "read", "calibrated"):
             raise ValueError(f"unknown guess rule {guess!r}")
         if not 0.0 <= matchup_weight <= 1.0:
@@ -224,6 +227,10 @@ class Planner:
         # The owner: on the last Pokémon a shield still matters within the matchup: shield a bait and the thrower
         # outpaces you (the Melmetal mirror, scripts/mirror.py). False: decide the last Pokémon's shields as any other.
         self.last_always = last_always
+        # Two charged moves of the same cost into a shield: no bait between them. "first" throws the one listed first
+        # (the old rule: Empoleon's resisted Hydro Cannon at Jellicent over Drill Peck); "best" the one that leaves
+        # us better off, shielded or not as they are likely to (a sure stat change counts even when shielded).
+        self.even_cost = even_cost
         self.switches = switches
         self.good_matchup = good_matchup
         self.matchup_weight = matchup_weight
@@ -352,7 +359,10 @@ class Planner:
         if view.foe_shields > 0:
             cheap = min(range(len(moves)), key=lambda k: moves[k].energy)
             dear = max(range(len(moves)), key=lambda k: moves[k].energy)
-            if self.bait == "cheap" or moves[cheap].energy == moves[dear].energy:
+            if moves[cheap].energy == moves[dear].energy and self.even_cost == "best" and len(ready) > 1:
+                p = self._shield_seen[0] / self._shield_seen[1]  # how likely they are to shield
+                choice = max(ready, key=lambda k: p * self._after_throw(view, k, True) + (1 - p) * self._after_throw(view, k, False))
+            elif self.bait == "cheap" or moves[cheap].energy == moves[dear].energy:
                 choice = min(ready, key=lambda k: moves[k].energy)
             elif self.bait == "never":
                 choice = max(range(len(moves)), key=lambda k: hit[k])
