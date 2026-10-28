@@ -3534,3 +3534,8 @@ Left off.
   choice); the costliest are marked like chess.com: ?? blunder (25 points of win chance or more), ? mistake (15),
   ?! inaccuracy (8). On the owner's 10-18 game against Annihilape / Melmetal / Altaria it marks staying in with
   Melmetal against Annihilape at the start a blunder (17% against 75% for Jellicent), as the opening book says.
+
+**How you could have won** (2026-10-28, the owner): after the decision review of a lost game, the decision whose best
+different choice gave the best chance (at least 30%, and 15 points over what was done) is shown with one play-out in
+which that choice goes on to win (`pogo.review.winning_line`; the bot on both sides after it), as its key events. On
+the owner's 10-18 game: Jellicent at the start instead of staying in with Melmetal against Annihilape, 75% against 17%.

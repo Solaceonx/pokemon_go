@@ -202,6 +202,7 @@ def review_prepare(arg: str) -> str:
     s = _s
     rec = s.get("finished")
     s["review_game"] = game_review.decisions(rec, s["gd"]) if rec else {"items": []}
+    s["review_judged"] = {}
     return json.dumps({"count": len(s["review_game"]["items"])})
 
 
@@ -212,7 +213,28 @@ def review_next(arg: str) -> str:
     item = s["review_game"]["items"][i]
     out = game_review.judge(s["review_game"], item, s["net"], s["pool"], seed=item[1])
     out["t"] = round(item[1] * TURN, 1)
+    s.setdefault("review_judged", {})[i] = out
     return json.dumps(out)
+
+
+def review_how_to_win(arg: str) -> str:
+    """For a lost game: the decision whose best different choice gave the person the best chance, and one play-out
+    in which that choice goes on to win, as the key events from there ([game seconds, side, text])."""
+    s = _s
+    rec, judged = s.get("finished") or {}, s.get("review_judged", {})
+    if rec.get("result") != "loss" or not judged:
+        return json.dumps({})
+    candidates = [(i, out) for i, out in judged.items() if out["best"] - out["mine"] >= 0.15 and out["best"] >= 0.3]
+    if not candidates:
+        return json.dumps({"none": True})
+    i, out = max(candidates, key=lambda c: (c[1]["best"], -c[1]["turn"]))
+    item = s["review_game"]["items"][i]
+    line = game_review.winning_line(s["review_game"], item, out["option"], s["net"], s["pool"], seed=item[1])
+    events = []
+    for turn, side, text in line or []:
+        if any(w in text for w in (" throws ", "sends in", "faints")):
+            events.append([round(turn * TURN, 1), side, re.sub(r" -?\d+/\d+hp \d+e", "", text)])
+    return json.dumps({**out, "line": events[:20], "found": line is not None})
 
 
 def state() -> dict:

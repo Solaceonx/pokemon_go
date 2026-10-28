@@ -11,7 +11,8 @@ play-outs, a closer one for those that look costly. The drop from the best choic
 
     blunder 25 points or more, mistake 15, inaccuracy 8 (the play-outs are noisy, so smaller ones are not called)
 
-It is "against players like the bot from there on", so a judgement, not a proof.
+It is "against players like the bot from there on", so a judgement, not a proof. For a lost game, `winning_line`
+finds a play-out that wins from the most promising different choice: one way the game could have been won.
 """
 from __future__ import annotations
 
@@ -188,27 +189,45 @@ def decisions(record: dict, gd, limit: int = 30) -> dict:
     return {"person": person, "bot": bot, "items": items if same else []}
 
 
+def _play_out(game: dict, snap, kind, choice, r: random.Random, net, pool, log: bool = False):
+    """One play-out from the snapshot with this decision forced, then the bot on both sides; the battle after it."""
+    holder = {}
+
+    def on_decide():
+        twin = holder["battle"]
+        foe = Learner(q=net, margin=r.choice((0.02, 0.05, 0.1)), **varied_settings(r, pool))
+        twin.agents[1] = foe
+        twin._saw_throw[1], twin._saw_shield[1], twin._sees_move[1] = foe.saw_throw, foe.saw_shield, False
+        twin.rng.seed(r.getrandbits(32))
+        return Learner(q=net, margin=0.02, seed=r.getrandbits(30))
+
+    twin = snap.clone(_Forced(game["person"], kind, choice, on_decide), game["bot"])
+    if log:
+        twin.log = []
+    holder["battle"] = twin
+    twin.run()
+    return twin
+
+
 def chance(game: dict, snap, kind, choice, plays: int, seed: int, net, pool) -> float:
     """The person's chance of winning if this decision comes out as `choice`, the bot playing on for both sides
     (theirs with shifted habits, a different one in each play-out; the same ones for every choice)."""
     points = 0.0
     for k in range(plays):
-        r = random.Random(seed * 7919 + k)
-        holder = {}
-
-        def on_decide(r=r, holder=holder):
-            twin = holder["battle"]
-            foe = Learner(q=net, margin=r.choice((0.02, 0.05, 0.1)), **varied_settings(r, pool))
-            twin.agents[1] = foe
-            twin._saw_throw[1], twin._saw_shield[1], twin._sees_move[1] = foe.saw_throw, foe.saw_shield, False
-            twin.rng.seed(r.getrandbits(32))
-            return Learner(q=net, margin=0.02, seed=r.getrandbits(30))
-
-        twin = snap.clone(_Forced(game["person"], kind, choice, on_decide), game["bot"])
-        holder["battle"] = twin
-        winner = twin.run()
+        winner = _play_out(game, snap, kind, choice, random.Random(seed * 7919 + k), net, pool).winner
         points += 1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0
     return points / plays
+
+
+def winning_line(game: dict, decision, option, net, pool, seed: int, tries: int = 16):
+    """A play-out in which the person, choosing `option` at this decision, goes on to win: its log from the decision
+    on ([turn, side, text]), or None if none of `tries` play-outs is won."""
+    snap = decision[0]
+    for k in range(tries):
+        twin = _play_out(game, snap, decision[2], option, random.Random(seed * 104729 + k), net, pool, log=True)
+        if twin.winner == 0:
+            return [[t, side, text] for t, side, text in twin.log]
+    return None
 
 
 def describe(snap, kind, choice) -> str:
@@ -239,6 +258,7 @@ def judge(game: dict, decision, net, pool, seed: int, screen: int = 4, confirm: 
     label = next((name for limit, name in LABELS if cost >= limit), None)
     view = snap.views[0]
     return {"turn": turn, "kind": kind, "did": _past(describe(snap, kind, choice)), "better": describe(snap, kind, best),
+            "option": best,
             "mine": round(mine, 3), "best": round(top, 3), "cost": round(cost, 3), "label": label,
             "mon": view.me.mon.build.name, "foe": view.foe.build.name}
 

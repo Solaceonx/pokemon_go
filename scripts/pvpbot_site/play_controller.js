@@ -236,5 +236,18 @@ async function reviewDecisions(game) {
   found.sort((a, b) => b.cost - a.cost);
   found.splice(6);
   found.sort((a, b) => a.t - b.t);
-  if (G === game) show(true);
+  if (G !== game) return;
+  show(true);
+  if (!game.record || game.record.result !== "loss") return;
+  const extra = document.createElement("div");
+  extra.innerHTML = `<div class="caption">Looking for a way you could have won…</div>`;
+  box.append(extra);
+  let w;
+  try { w = await call("review_how_to_win", ""); } catch (e) { extra.remove(); return; }
+  if (G !== game) return;
+  if (!w || w.none || !w.better) { extra.innerHTML = `<div class="caption">No single different decision clearly turned this game around.</div>`; return; }
+  const line = (w.line || []).map((e) => `<div class="${e[1] ? "bot" : ""}">${clock(240 - e[0])} ${e[1] ? "Bot" : "You"}: ${e[2].replace(/</g, "&lt;")}</div>`).join("");
+  extra.innerHTML = `<div class="caption"><b>How you could have won:</b> at ${clock(240 - w.t)} (${w.mon} v ${w.foe}), ${w.better}
+    instead (you ${w.did}): wins ${Math.round(100 * w.best)}% of play-outs, against ${Math.round(100 * w.mine)}%.</div>` +
+    (w.found && line ? `<details open><summary>One way it goes from there (a play-out that wins, the bot playing both sides after)</summary><div class="tl">${line}</div></details>` : "");
 }
