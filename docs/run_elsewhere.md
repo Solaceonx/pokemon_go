@@ -84,3 +84,25 @@ git push -u origin qnet-1-results
 
 Never add `runs/qnet-1/examples.npz` (hundreds of MB). Write the result into `docs/status.md` (adopted or not, with the
 numbers and margins) in the same commit. If the push is refused for lack of access, leave the commit and tell the owner.
+
+## 6. Task 34 on the same machine: throwing and shielding the readable bait, evolved against each other
+
+Set up as in section 1 (and `git pull`). A two-minute trial first; it ends with a few lines of results that mean
+nothing at this size:
+
+```
+python scripts/coevolve_baits.py --run trial-34 --rounds 1 --generations 2 --population 4 --pairings 4 --final-pairings 100 --final-crowd 100 --final-pvpoke 100 --workers 2
+```
+
+Delete `runs/evolve/trial-34` afterwards. Then the real run (W workers as in section 2; about 4 CPU-hours, so about
+an hour with 6 workers). It saves after every generation; if it stops, run the same command again and it carries on.
+
+```
+python scripts/coevolve_baits.py --run coevo-1 --workers 6 > runs/coevo-1.out
+```
+
+It prints a line per generation (`round 1 throw generation 1: best ..., median ... against the current pair; mean
+genes [...]`) and at the end the evolved pair against the trained bot as it is: head to head, against the crowd and
+against PvPoke's AI. Bring back on a branch named `coevo-1-results`: `runs/coevo-1.out`, `runs/evolve/coevo-1/state.json`
+and `runs/evolve/coevo-1/final.json`, with the result written into `docs/status.md` (adopted only if, as in task 33,
+it gains against the crowd beyond the margin and is not worse head to head; otherwise say so).
