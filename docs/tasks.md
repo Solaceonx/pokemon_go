@@ -63,7 +63,7 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 33. Retrain the bot's networks — running on the cloud machine instead (Claude, started 2026-10-21 03:31 UTC: 5 rounds of 80 minutes, 4 workers; the owner's call) — on the owner's PC (the owner, 2026-10-19: all three changes as one job; how to run it elsewhere: `docs/run_elsewhere.md`)
+## 33. Retrain the bot's networks — run on the cloud machine instead (Claude, 2026-10-21: 5 rounds of 80 minutes, 4 workers; the owner's call; not adopted, see `status.md`) — on the owner's PC (the owner, 2026-10-19: all three changes as one job; how to run it elsewhere: `docs/run_elsewhere.md`)
 
 **Why.** The bot's networks (`runs/general-decide/q.npz`; 45 inputs, `pogo/learner.py`) were trained on the usual
 pool, which never held Cramorant or Mimikyu (8.5% and 8% of team slots in PvPoke's data, status: "Team shapes, and
