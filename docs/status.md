@@ -3537,3 +3537,31 @@ fast move instead, unless waiting is unsafe), against the confirmed engine, mixe
 (`runs/tell_bait_1.out`): **47.7% ± 1.5 head to head**, −1.6 ± 1.8 against the crowd, −1.1 ± 2.0 against PvPoke's
 AI. Worse: the early cheaper move pays in these battles as tempo (damage now, the next move sooner), not as a bait.
 Left off.
+
+## Task 34: throwing and shielding the readable bait, evolved against each other (2026-10-28, on the cloud machine): not adopted
+
+The run sheet's job (`docs/run_elsewhere.md` section 6) on the cloud machine, which the owner asked to act as the PC:
+`python3 scripts/coevolve_baits.py --run coevo-1 --workers 4` with the defaults (3 rounds; 15 generations of 12
+candidates per side per round, each on 300 pairs of mixed-field teams both ways), 115 minutes, then the final tests
+(`runs/coevo-1.out`, `runs/evolve/coevo-1/state.json`, `final.json`). It ran through without a restart.
+
+**Where the genes went.** The thrower's genes ran strongly negative within the first round and stayed there
+(final mean [−7.2, −6.6, −3.9, −9.0, −4.1]): in every position the gene features cover, throw the readable bait
+almost never and keep fast-moving to the dearer move. The shielder's went negative too (final mean
+[−4.5, −1.4, −4.1, −0.3, −1.0]): mostly do not shield a throw the energy count says can only be the cheaper move.
+No generation's best candidate beat the current pair by much (47.6% to 51.9% against it throughout), so the search
+found no clear improvement on either side; the drift is where the fitness landscape is flat.
+
+**The evolved pair against the trained bot as it is** (mixed field, fresh battles, the same for both):
+
+| Test | Result |
+|---|---|
+| Head to head, 3,000 pairings both ways | 49.7% ± 0.7 |
+| Against the crowd, 3,000 battles | 68.5% against 68.2%, +0.4 ± 0.9 |
+| Against PvPoke's AI, 1,500 battles | 78.1% against 82.1%, **−4.1 ± 1.3** |
+
+Not adopted: no gain against the crowd beyond the margin (the rule), level head to head, and worse against PvPoke's
+AI, which punishes the evolved pair's habit of letting cheaper moves through unshielded. With the search test above
+(forbidding readable baits in the engine: 47.7% ± 1.5), the bot's mixed habit of sometimes throwing the cheaper move
+early and sometimes shielding it is at least as good as either side's simple rule. The genes are kept in
+`runs/evolve/coevo-1/final.json`; `CoevoBot` stays an experiment.
