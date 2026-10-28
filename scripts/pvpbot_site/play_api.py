@@ -6,6 +6,7 @@ answer, and since the battle and the bot are copied with their dice, the step co
 Games are recorded in the format of scripts/play.py, so scripts/losses.py --played can replay them.
 """
 import json
+import math
 import random
 import re
 import time
@@ -19,9 +20,18 @@ from pogo.learner import Learner, QNet
 from pogo.lineup import win_chance
 from pogo.realtime import RealTime
 from pogo.roster import builds
+from pogo import review as game_review
 
 HERE = Path(__file__).resolve().parent
 TURN = 0.5
+# The learned evaluation is too timid: where it says 70-80% that side wins 88% (scripts/eval_calibration.py). Its
+# log-odds stretched by this much match how battles end on held-out simulated battles (log loss 0.524 -> 0.479).
+STRETCH = 1.75
+
+
+def stretched(p: float) -> float:
+    p = min(max(p, 1e-4), 1 - 1e-4)
+    return 1 / (1 + math.exp(-STRETCH * math.log(p / (1 - p))))
 _s = {}
 
 
@@ -93,6 +103,7 @@ def new(job: str) -> str:
     s.pop("lineup_win_chance", None)
     s["evals"] = []  # (game seconds, the engine's evaluation from our side) after each turn, for the graph at the end
     s["view_ev"] = Evaluator(s["ev"].model)  # a separate cache for this game's human-side evaluation graph
+    s["hits"], s["hits_seen"] = [], 0  # (turn, side, move id, damage) of every move that lands, for the full log
     s.update(battle=Battle(mine, theirs, person, bot, seed=seed, record=True), person=person, bot=bot,
              record={"bot": j["bot"], "seed": seed, "bot_seed": bot_seed, "mine": j["mine"], "theirs": j["theirs"],
                      "teams": [[_describe(b) for b in mine], [_describe(b) for b in theirs]], "owned": j["owned"]})
@@ -117,8 +128,10 @@ def step(job: str) -> str:
         s["battle"], s["bot"] = restored, bot
         return json.dumps({"need": need.kind, "options": need.options, "state": state()})
     throwers = sorted({side for _, side, text in battle.log[seen:] if " throws " in text})
+    s["hits"] += [(battle.turn, side, mid, dealt) for side, mid, dealt in battle.hits[s["hits_seen"]:]]
+    s["hits_seen"] = len(battle.hits)
     if battle.winner is None and battle.sides[0].mon.hp > 0 and battle.sides[1].mon.hp > 0:
-        s["evals"].append((round(battle.turn * TURN, 1), round(float(s["view_ev"](battle.views[0])), 3)))
+        s["evals"].append((round(battle.turn * TURN, 1), round(stretched(float(s["view_ev"](battle.views[0]))), 3)))
     return json.dumps({"throwers": throwers, "took": person.took, "state": state()})
 
 
@@ -134,6 +147,7 @@ def finish(notes: str) -> str:
     rec.update(result={DRAW: "draw", 0: "win", 1: "loss"}[battle.winner], turns=battle.turn,
                log=[list(e) for e in battle.log], my_choices=s["person"].choices,
                lineup_win_chance=s["lineup_win_chance"], notes=json.loads(notes), evaluation=s["evals"], review=review())
+    s["finished"] = rec
     rows = getattr(s["bot"], "rows", None)
     if rows:  # the engine's searches: what came before, kind, ms allowed, ms taken, wait, cut short, fell back
         rec["bot_searches"] = [[c, k, round(b), round(t, 1), round(w, 1), cut, fell] for c, k, b, t, w, cut, fell in rows]
@@ -153,7 +167,74 @@ def review() -> dict:
             swings.append({"t": t0, "change": round(e1 - e0, 3),
                            "what": "; ".join(("You: " if side == 0 else "Bot: ") + text for side, text in happened[:3])})
     swings.sort(key=lambda w: -abs(w["change"]))
-    return {"points": points, "swings": sorted(swings[:5], key=lambda w: w["t"]), "learned": True}
+    return {"points": points, "swings": sorted(swings[:5], key=lambda w: w["t"]), "learned": True, "timeline": timeline()}
+
+
+def timeline() -> list:
+    """Everything that happened, fast moves included, in order: [game seconds, side, text]; a run of the same fast
+    move by the same side, with no charged move, switch or faint in between, is one line ("Thunder Shock x4, 12
+    damage")."""
+    battle, gd = _s["battle"], _s["gd"]
+    fast_ids = {mid for mid, m in gd.moves.items() if getattr(m, "energy_gain", 0) > 0}
+    events = [(turn, 1, side, ("fast", gd.moves[mid].name, dealt)) for turn, side, mid, dealt in _s.get("hits", []) if mid in fast_ids]
+    events += [(turn, 0, side, re.sub(r" -?\d+/\d+hp \d+e", "", text)) for turn, side, text in battle.log]
+    events.sort(key=lambda e: (e[0], e[1]))
+    out, run = [], {}
+    for turn, _, side, what in events:
+        if isinstance(what, tuple):
+            last = run.get(side)
+            if last is not None and last["move"] == what[1]:
+                last["n"] += 1
+                last["dmg"] += what[2]
+                last["row"][2] = f"{what[1]} x{last['n']}, {last['dmg']} damage"
+            else:
+                row = [round(turn * TURN, 1), side, f"{what[1]}, {what[2]} damage"]
+                out.append(row)
+                run[side] = {"move": what[1], "n": 1, "dmg": what[2], "row": row}
+        else:
+            out.append([round(turn * TURN, 1), side, what])
+            run = {}
+    return out
+
+
+def review_prepare(arg: str) -> str:
+    """The person's decisions in the finished game, for review_next (pogo.review): how many there are."""
+    s = _s
+    rec = s.get("finished")
+    s["review_game"] = game_review.decisions(rec, s["gd"]) if rec else {"items": []}
+    s["review_judged"] = {}
+    return json.dumps({"count": len(s["review_game"]["items"])})
+
+
+def review_next(arg: str) -> str:
+    """One of them judged: what the person did, the best choice, both chances, and a label when it cost enough."""
+    i = json.loads(arg)["i"]
+    s = _s
+    item = s["review_game"]["items"][i]
+    out = game_review.judge(s["review_game"], item, s["net"], s["pool"], seed=item[1])
+    out["t"] = round(item[1] * TURN, 1)
+    s.setdefault("review_judged", {})[i] = out
+    return json.dumps(out)
+
+
+def review_how_to_win(arg: str) -> str:
+    """For a lost game: the decision whose best different choice gave the person the best chance, and one play-out
+    in which that choice goes on to win, as the key events from there ([game seconds, side, text])."""
+    s = _s
+    rec, judged = s.get("finished") or {}, s.get("review_judged", {})
+    if rec.get("result") != "loss" or not judged:
+        return json.dumps({})
+    candidates = [(i, out) for i, out in judged.items() if out["best"] - out["mine"] >= 0.15 and out["best"] >= 0.3]
+    if not candidates:
+        return json.dumps({"none": True})
+    i, out = max(candidates, key=lambda c: (c[1]["best"], -c[1]["turn"]))
+    item = s["review_game"]["items"][i]
+    line = game_review.winning_line(s["review_game"], item, out["option"], s["net"], s["pool"], seed=item[1])
+    events = []
+    for turn, side, text in line or []:
+        if any(w in text for w in (" throws ", "sends in", "faints")):
+            events.append([round(turn * TURN, 1), side, re.sub(r" -?\d+/\d+hp \d+e", "", text)])
+    return json.dumps({**out, "line": events[:20], "found": line is not None})
 
 
 def state() -> dict:

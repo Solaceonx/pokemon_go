@@ -189,6 +189,7 @@ async function play(config) {
   flush();
   G.record = rec;
   G.review = rec.review;  // the advantage over the battle, drawn by the battle screen's own review
+  reviewDecisions(game);
   const [chance, margin] = rec.lineup_win_chance;
   G.endText = `Before anyone decided anything, your line-up wins ${Math.round(100 * chance)}% (± ${Math.round(100 * margin)}) against this one when two equally good bots play it. ${STORE_URL ? "Sent to the owner and saved in this browser" : "Saved in this browser"}; add notes below.`;
 }
@@ -205,3 +206,48 @@ async function play(config) {
   listGames();
   flush();
 })();
+
+// After the battle, a chess.com-style look at the person's decisions (pogo/review.py): each played out with the
+// bot on both sides; the costly ones are marked ?? (blunder), ? (mistake), ?! (inaccuracy).
+const MARK = { blunder: "??", mistake: "?", inaccuracy: "?!" };
+async function reviewDecisions(game) {
+  const box = $("mistakes");
+  if (!box) return;
+  box.innerHTML = `<div class="caption">Looking at your decisions…</div>`;
+  let count = 0;
+  try { count = (await call("review_prepare", "")).count; } catch (e) { box.innerHTML = ""; return; }
+  if (!count) { box.innerHTML = `<div class="caption">This game could not be replayed for a review of your decisions.</div>`; return; }
+  const found = [];
+  const show = (done) => {
+    const rows = found.map((r) => `<div class="move ${r.label}"><span class="tag">${MARK[r.label]}</span>${clock(240 - r.t)} ·
+      ${r.mon} v ${r.foe}: you ${r.did} (wins ${Math.round(100 * r.mine)}%); to ${r.better} wins ${Math.round(100 * r.best)}%</div>`).join("");
+    const head = done ? (found.length ? `Your costliest decisions, of ${count} looked at (each played out with the bot on both sides; a judgement, not a proof):`
+                                      : `No clear mistakes in the ${count} decisions looked at.`)
+                      : `Looking at your decisions… ${found.length ? "" : ""}${Math.min(count, done === false ? found.length : count)}`;
+    box.innerHTML = `<div class="caption">${head}</div>` + rows;
+  };
+  for (let i = 0; i < count; i++) {
+    if (G !== game) return;
+    let r;
+    try { r = await call("review_next", { i }); } catch (e) { continue; }
+    if (r.label) found.push(r);
+    box.innerHTML = `<div class="caption">Looking at your decisions… ${i + 1} of ${count}</div>`;
+  }
+  found.sort((a, b) => b.cost - a.cost);
+  found.splice(6);
+  found.sort((a, b) => a.t - b.t);
+  if (G !== game) return;
+  show(true);
+  if (!game.record || game.record.result !== "loss") return;
+  const extra = document.createElement("div");
+  extra.innerHTML = `<div class="caption">Looking for a way you could have won…</div>`;
+  box.append(extra);
+  let w;
+  try { w = await call("review_how_to_win", ""); } catch (e) { extra.remove(); return; }
+  if (G !== game) return;
+  if (!w || w.none || !w.better) { extra.innerHTML = `<div class="caption">No single different decision clearly turned this game around.</div>`; return; }
+  const line = (w.line || []).map((e) => `<div class="${e[1] ? "bot" : ""}">${clock(240 - e[0])} ${e[1] ? "Bot" : "You"}: ${e[2].replace(/</g, "&lt;")}</div>`).join("");
+  extra.innerHTML = `<div class="caption"><b>How you could have won:</b> at ${clock(240 - w.t)} (${w.mon} v ${w.foe}), ${w.better}
+    instead (you ${w.did}): wins ${Math.round(100 * w.best)}% of play-outs, against ${Math.round(100 * w.mine)}%.</div>` +
+    (w.found && line ? `<details open><summary>One way it goes from there (a play-out that wins, the bot playing both sides after)</summary><div class="tl">${line}</div></details>` : "");
+}

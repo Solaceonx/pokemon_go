@@ -60,6 +60,10 @@ body { display: flex; justify-content: center; }
 .swap { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--line); background: var(--panel); color: var(--ink);
   font-weight: 700; display: grid; place-items: center; font-size: 13px; text-align: center; }
 .swap.wait { color: var(--dim); }
+.swap { cursor: pointer; user-select: none; }
+.swapmenu { display: none; gap: 8px; margin-top: 8px; }
+.swapmenu.open { display: flex; }
+.swapmenu button { flex: 1; padding: 10px; border-radius: 10px; border: 2px solid #fff; background: var(--panel); color: var(--ink); font-weight: 700; cursor: pointer; }
 .bench { display: flex; gap: 8px; }
 .pick { flex: 1; display: flex; align-items: center; gap: 8px; background: var(--panel); border: 2px solid var(--line); color: var(--ink);
   border-radius: 14px; padding: 6px 10px 6px 6px; cursor: pointer; text-align: left; min-height: 72px; }
@@ -97,6 +101,13 @@ body { display: flex; justify-content: center; }
 .review .swing b { font-variant-numeric: tabular-nums; }
 .review .up { color: var(--hp); } .review .down { color: var(--hp-low); }
 .review .caption { font-size: 12px; color: var(--dim); margin: 4px 0 2px; }
+.review details { font-size: 12px; color: var(--dim); margin-top: 8px; }
+.review details summary { cursor: pointer; }
+.review .tl { max-height: 220px; overflow-y: auto; margin-top: 4px; }
+.review .tl div { padding: 1px 0; } .review .tl .bot { color: #f0a0a0; }
+.review .move { font-size: 12px; margin-top: 5px; }
+.review .move .tag { display: inline-block; min-width: 22px; font-weight: 800; }
+.review .blunder .tag { color: #f0544f; } .review .mistake .tag { color: #f5a623; } .review .inaccuracy .tag { color: #e6d34a; }
 .dialog.wide { max-width: 420px; }
 </style>
 </head>
@@ -136,7 +147,8 @@ body { display: flex; justify-content: center; }
     <div class="swap" id="swap">Swap</div>
     <button class="charge" id="c1" onclick="act('c1')"><div class="fill"></div><div class="fill2"></div><span></span><em></em></button>
   </div>
-  <div class="hint">You fast-move all the time. Keys: 1 and 2 throw, 3 and 4 swap to the Pokémon above, Y / N to shield.</div>
+  <div class="swapmenu" id="swapmenu"></div>
+  <div class="hint">You fast-move all the time. Tap Swap (or a Pokémon above) to switch, even during the countdown. Keys: 1 and 2 throw, 3 and 4 swap, Y / N to shield.</div>
   <div class="log" id="log"></div>
 </div>
 
@@ -151,6 +163,7 @@ body { display: flex; justify-content: center; }
 <div class="overlay" id="end-box"><div class="dialog wide">
   <h2 id="end-title"></h2><p id="end-text"></p>
   <div class="review" id="review"></div>
+  <div class="review" id="mistakes"></div>
   <div class="row"><button class="big go" onclick="newBattle()">New battle</button></div>
 </div></div>
 
@@ -373,7 +386,10 @@ function showReview(r) {
       <line x1="0" x2="${W}" y1="${H / 2}" y2="${H / 2}" stroke="#93a3b3" stroke-opacity=".4"/>
       ${marks}<polyline points="${line}" fill="none" stroke="#5ab0ff" stroke-width="2"/></svg>` +
     r.swings.map((sw) => `<div class="swing"><b class="${sw.change > 0 ? "up" : "down"}">${sw.change > 0 ? "+" : ""}${(2 * sw.change).toFixed(2)}</b>
-      at ${clock(240 - sw.t)} — ${sw.what}</div>`).join("");
+      at ${clock(240 - sw.t)} — ${sw.what}</div>`).join("") +
+    (r.timeline && r.timeline.length ? `<details><summary>Full log, with fast moves (${r.timeline.length} lines)</summary><div class="tl">` +
+      r.timeline.map((e) => `<div class="${e[1] ? "bot" : ""}">${clock(240 - e[0])} ${e[1] ? "Bot" : "You"}: ${e[2].replace(/</g, "&lt;")}</div>`).join("") +
+      `</div></details>` : "");
 }
 
 async function poll() {
@@ -403,6 +419,21 @@ document.addEventListener("keydown", (e) => {
   document.addEventListener("keydown", (e) => { if ((e.key === "e" || e.key === "E") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) flip(); });
   show();
 })();
+// The Swap button works as in the game: tap it, then pick (straight away when only one can come in).
+$("swap").addEventListener("click", () => {
+  const menu = $("swapmenu");
+  const picks = [...$("bench").querySelectorAll(".pick")].filter((p) => !p.disabled);
+  if (!picks.length) { menu.classList.remove("open"); return; }
+  if (picks.length === 1) { picks[0].click(); menu.classList.remove("open"); return; }
+  if (menu.classList.toggle("open")) {
+    menu.replaceChildren(...picks.map((p) => {
+      const b = document.createElement("button");
+      b.textContent = "Swap to " + p.querySelector("b").textContent;
+      b.onclick = () => { p.click(); menu.classList.remove("open"); };
+      return b;
+    }));
+  }
+});
 poll();
 </script>
 </body>

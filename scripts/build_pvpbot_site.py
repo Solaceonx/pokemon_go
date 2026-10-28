@@ -22,7 +22,7 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.roster import builds  # noqa: E402
 
 SOURCE = ROOT / "scripts" / "pvpbot_site"
-MODULES = ["__init__", "agents", "arena", "battle", "gamedata", "learner", "lineup", "roster", "teamlist",
+MODULES = ["__init__", "agents", "arena", "battle", "gamedata", "learner", "lineup", "review", "roster", "teamlist",
            "engine", "evaluation", "realtime", "value"]
 DATA = ["gamemaster.json", "rankings-1500.json", "cpm.json", "matchups.json", "teams.json", "owner_team.json",
         "owner_roster.json", "PVPOKE_LICENSE"]
