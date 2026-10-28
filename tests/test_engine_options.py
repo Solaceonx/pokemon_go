@@ -55,6 +55,23 @@ class EngineOptions(unittest.TestCase):
         self.assertAlmostEqual(sum(weights.values()), 1.0, places=6)
         self.assertTrue(all(w > 0 for w in weights.values()))
 
+    def test_judge_and_switch_settings(self):
+        for judge in ("turn", "end"):
+            e = self.engine(judge=judge)
+            self.play(e, Learner(q=self.net, margin=0.02, seed=9), games=1)
+            self.assertGreater(e.looks, 0)
+        with self.assertRaises(ValueError):
+            self.engine(judge="never")
+        e = self.engine(stay_after_replace=True, switch_edge=0.1)
+        for g in range(3):
+            rng = random.Random(g)
+            b = Battle(rng.sample(self.pool, 3), rng.sample(self.pool, 3), e, Learner(q=self.net, margin=0.02, seed=9),
+                       seed=g, record=True)
+            b.run()
+            fainted = {t for t, side, text in b.log if side == 0 and text.endswith("faints")}
+            sent = [t for t, side, text in b.log if side == 0 and text.startswith("sends in") and t in fainted]
+            self.assertEqual(len(sent), len(set(sent)))  # no swap on the turn of a replacement
+
     def test_reader_reads(self):
         target = self.engine()
         reader = self.engine(cls=Reader)

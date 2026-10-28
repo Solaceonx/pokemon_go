@@ -25,6 +25,12 @@ plays as before (docs/tasks.md, 25, 28 and 29):
   mix_switch=True: all legal first actions against their fast move, ready throws and living bench when both
   switches are free. Unseen bench slots are imagined, never read from the real battle.
   random_hold=True: vary the hold rule's equally well-timed throw moments inside its safe window.
+- judge: where each look stops to be judged. "steps" (as before): after `horizon` steps, which can be different
+  moments of the game for different options, as throws and faints take turns of their own; "turn": at the same game
+  turn for every option, `horizon` turns on; "end": played to the end and scored by decisive() (task 35).
+- The owner: in linear games, win the matchups and keep the switch. switch_edge: a swap the search finds must beat
+  staying by this much more (staying keeps the switch); stay_after_replace=True: never swap out on the turn a
+  Pokémon came in after a faint (send in the one wanted instead) (task 35).
 """
 from __future__ import annotations
 
@@ -143,10 +149,16 @@ class Engine(Learner):
                  style_file: str | Path | None = None,
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
                  mix_switch: bool = False, random_hold: bool = False, matching: bool = False,
-                 no_tell_bait: bool = False, **settings):
+                 no_tell_bait: bool = False, judge: str = "steps", switch_edge: float = 0.0,
+                 stay_after_replace: bool = False, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
+        if judge not in ("steps", "turn", "end"):
+            raise ValueError(f"unknown judge {judge!r}")
+        self.judge = judge
+        self.switch_edge, self.stay_after_replace = switch_edge, stay_after_replace
+        self._replaced_at = None  # the turn of our last replacement after a faint
         # Who plays inside the look-ahead: "quick", the cheap rollout player, or "bot", the trained bot itself.
         self.rollout = rollout
         self.opponents, self.profile, self.unseen, self.mix, self.temperature = opponents, profile, unseen, mix, temperature
@@ -335,7 +347,13 @@ class Engine(Learner):
             self._hold = 0
         return choice
 
+    def replace(self, view: View) -> int:
+        self._replaced_at = view.turn
+        return super().replace(view)
+
     def _decide(self, head: str, view: View, mask: tuple, planner_choice, foe_energy: int | None = None) -> int:
+        if self.stay_after_replace and head in ("swap", "mid_swap") and view.turn == self._replaced_at:
+            return 0
         if self._mix_fallback or head in self.forced or head not in self.heads:
             return super()._decide(head, view, mask, planner_choice, foe_energy)
         options = [k for k in range(len(mask)) if mask[k]]
@@ -367,6 +385,8 @@ class Engine(Learner):
             return pick
         self.cut += rounds < len(seeds)
         worth = {k: totals[k] / rounds for k in options}
+        if self.switch_edge and head in ("swap", "mid_swap"):
+            worth = {k: v - (self.switch_edge if k else 0.0) for k, v in worth.items()}  # option 0 stays
         if self.temperature > 0:
             # Close calls at random, weighted by worth; the trained bot's pick keeps its edge as a head start.
             scores = {k: worth[k] + (self.edge if k == pick else 0.0) for k in options}
@@ -525,10 +545,18 @@ class Engine(Learner):
                 return decisive(battle, 0) if battle.winner is not None else 0.5
             foes.active = foes.bench()[0]
             foes.shown.append(foes.active)
-        for _ in range(self.horizon):
-            if battle.winner is not None:
-                return decisive(battle, 0)
-            battle.step()
+        if self.judge == "end":
+            battle.run()
+            return decisive(battle, 0)
+        if self.judge == "turn":
+            stop = view.turn + self.horizon
+            while battle.turn < stop and battle.winner is None:
+                battle.step()
+        else:
+            for _ in range(self.horizon):
+                if battle.winner is not None:
+                    return decisive(battle, 0)
+                battle.step()
         if battle.winner is not None:
             return decisive(battle, 0)
         return self.evaluator(battle.views[0])

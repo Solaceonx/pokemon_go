@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
 | **33** | **Retrain the bot's networks: form inputs, two play-outs per option, mixed opponents (one job)** — to run on the owner's PC (`docs/run_elsewhere.md`); Marco: do not run | Owner's PC, ~4 h |
@@ -62,6 +63,50 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
+
+**Why.** The engine loses website games to the owner on decisions its search makes against the trained bot's own
+better pick (`status.md`, "Why the engine loses to the owner"). Two causes found: once the person's three Pokémon are
+seen, its imagined battles are all the same battle (the imagined opponent is the trained bot, nothing unseen is
+left to draw), so 32 "samples" are one look-ahead; and each option is judged after `horizon` *steps*, which can be
+different moments of the game (throws and faints take turns), so the learned evaluation compares unlike positions.
+The owner adds: in linear games, win the matchups and keep the switch (the bot sometimes sends a Pokémon in after a
+faint and swaps straight out of it, spending its switch).
+
+**Built (2026-10-28, all off by default; `tests/test_engine_options.py`).** `pogo/engine.py` settings, all usable in
+`scripts/engine_versus.py` specs: `judge=steps|turn|end` (stop every look at the same game turn, `horizon` turns on,
+or play it to the end, scored by `decisive`); `switch_edge=X` (a swap the search finds must beat staying by X more);
+`stay_after_replace=1` (never swap out on the turn of a replacement). Existing: `opponents=mix,matching=1`
+(task 28 / 2026-10-20: varied imagined opponents weighted by every decision seen).
+
+**Run sheet.** Set `W` to the cores to spare. Each command saves as it goes; run it again to resume. Smoke test on the
+owner's Mac: playing 32 looks to the end costs about 20 core-seconds a battle with single decisions up to 20 s, so the
+grid uses 8 imagined battles (both sides) and only the winner is confirmed at the live 32.
+
+```bash
+# 1. Grid, mixed field (about 20-40 core-hours)
+nice python3 scripts/engine_versus.py --tag look-grid --field mixed --seed 3551 --workers $W \
+  --pairings 1000 --crowd 1000 --pvpoke 500 --baseline "samples=8" --candidates \
+  "samples=8,judge=turn,horizon=40" "samples=8,judge=turn,horizon=80" "samples=8,judge=end" \
+  "samples=8,opponents=mix,matching=1" "samples=8,opponents=mix,matching=1,judge=end" \
+  "samples=8,switch_edge=0.05,stay_after_replace=1" "samples=8,switch_edge=0.1,stay_after_replace=1" \
+  "samples=8,opponents=mix,matching=1,judge=end,switch_edge=0.05,stay_after_replace=1" > runs/look_grid.out 2>&1
+# 2. Confirm the best one at the live 32 imagined battles on a fresh seed (about 30 core-hours); put its settings
+#    after "samples=32," (for example "samples=32,opponents=mix,matching=1,judge=end")
+nice python3 scripts/engine_versus.py --tag look-confirm --field mixed --seed 3552 --workers $W \
+  --pairings 2000 --crowd 2000 --pvpoke 1000 --baseline "samples=32" --candidates "samples=32,BEST" > runs/look_confirm.out 2>&1
+```
+
+"Best" means the largest gain against the crowd and PvPoke's AI together whose head to head is not below 50% by
+more than its margin (the opponents that matter are people, not this engine; a bot-like imagined opponent is exactly
+right only against itself). If two are close, confirm both (two candidates in step 2).
+
+**Done when.** `status.md` has both tables (head to head, crowd and PvPoke changes with margins, and the search-time
+lines: median, 99th percentile, worst), and the commands as run; push `runs/look_grid.out` and
+`runs/look_confirm.out` (not the json). Do not change defaults or the website: the owner decides on adoption, and
+the search times must be checked in the browser first (the live budget per decision is 300-2,300 ms on the owner's
+Mac, and the browser is slower than native Python).
 
 ## 33. Retrain the bot's networks — on the owner's PC (the owner, 2026-10-19: all three changes as one job; how to run it elsewhere: `docs/run_elsewhere.md`)
 

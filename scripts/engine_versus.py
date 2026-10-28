@@ -8,7 +8,7 @@
 A setting is "key=value,key=value" on top of the confirmed engine (samples 4, horizon 20, edge 0.03, the trained bot
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
-temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), eval (path to an evaluation
+temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), eval (path to an evaluation
 .npz), team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
 overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
 
@@ -67,11 +67,12 @@ def parse(spec: str) -> dict | None:
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "temperature"):
+        elif key in ("edge", "margin", "temperature", "switch_edge"):
             out[key] = float(value)
-        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait"):
+        elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
+                     "stay_after_replace"):
             out[key] = value not in ("0", "false", "False", "")
-        elif key in ("opponents", "unseen", "eval", "team_file", "style_file", "even_cost"):
+        elif key in ("opponents", "unseen", "eval", "team_file", "style_file", "even_cost", "judge"):
             out[key] = value
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")

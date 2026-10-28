@@ -187,6 +187,8 @@ nothing yet says how it does against an outside opponent.
 7. Farm energy with a Pokémon that takes little damage. Watch the switch timer.
 8. Save a nearly fainted Pokémon as a third shield; bring it in on a read.
 9. Opponents are good players with similar strategy, so optimise against that.
+10. In linear games without much switching, focus on winning the matchups and keeping the switch (2026-10-28;
+    measured as task 35's `switch_edge` and `stay_after_replace`).
 
 ### Farm until they are about to get a move (2026-10-10): helps
 
