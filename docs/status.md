@@ -3517,3 +3517,20 @@ fast move instead, unless waiting is unsafe), against the confirmed engine, mixe
 (`runs/tell_bait_1.out`): **47.7% ± 1.5 head to head**, −1.6 ± 1.8 against the crowd, −1.1 ± 2.0 against PvPoke's
 AI. Worse: the early cheaper move pays in these battles as tempo (damage now, the next move sooner), not as a bait.
 Left off.
+
+## Reviewing website games: a truer graph, the full log, and marked mistakes (2026-10-28, the owner)
+
+- **The graph** plots the learned evaluation (`runs/eval/eval.npz`) from the person's side. `scripts/eval_calibration.py`
+  (`runs/eval_calibration.out`): the side it favours wins 74% of 3,611 simulated positions (65% in the first third,
+  85% in the last) and 77% of 1,689 website positions, but it is too timid (where it says 70-80% that side wins 88%,
+  20-30% wins 6-8%). Its log-odds stretched by 1.75 (fitted on 500 simulated battles) bring held-out log loss from
+  0.524 to 0.479 and the buckets in line (80-100% → 91%); the website graph now uses the stretch.
+- **The full log**: every move that lands is noted with its turn; the finish screen has a "Full log, with fast moves"
+  list (runs of the same fast move as one line, "Thunder Shock x6, 6 damage").
+- **Marked mistakes** (`pogo/review.py`, run in the browser after the game): the game is replayed exactly from its
+  record (the person's choices, the bot's logged moves); every charged move thrown, switch, replacement, shield call,
+  new matchup with the switch ready, and missed knock-out is played out for each choice (4 play-outs, 12 for those
+  that look costly; the choice forced, then the bot on both sides, theirs with shifted habits, the same dice for every
+  choice); the costliest are marked like chess.com: ?? blunder (25 points of win chance or more), ? mistake (15),
+  ?! inaccuracy (8). On the owner's 10-18 game against Annihilape / Melmetal / Altaria it marks staying in with
+  Melmetal against Annihilape at the start a blunder (17% against 75% for Jellicent), as the opening book says.
