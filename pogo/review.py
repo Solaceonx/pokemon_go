@@ -69,7 +69,8 @@ class Logged:
                 fainted.add(turn)
             elif side == 1 and text.startswith("sends in "):
                 name = text[len("sends in "):].rsplit(" ", 2)[0]
-                (self.replaces if turn in fainted else self.acts)[turn] = ("switch", name)
+                # The first one sent in after a faint replaces it; another on the same turn is a switch straight after.
+                (self.replaces if turn in fainted and turn not in self.replaces else self.acts)[turn] = ("switch", name)
             elif side == 1 and " throws " in text:
                 self.acts[turn] = ("throw", text.split(" throws ", 1)[1].split(":")[0])
             elif side == 0 and " throws " in text:
