@@ -3589,3 +3589,41 @@ search, above.)
 
 Also fixed: games where the bot sends a Pokémon in after a faint and switches straight out of it on the same turn
 did not replay for the website review (both were read as the replacement); 4 of 27 website games. All 27 replay now.
+
+## Fixing the engine's look-ahead (task 35, 2026-10-29/30): varied imagined opponents help; keeping the switch does not
+
+Defaults and the website are unchanged; the owner decides on adoption after checking the search times in the browser.
+
+**Grid, mixed field** (`engine_versus.py --tag look-grid --field mixed --seed 3551 --pairings 1000 --crowd 1000 --pvpoke 500
+--baseline "samples=8"` with the eight candidates from the task 35 run sheet, `runs/look_grid.out`; started on 6 workers,
+interrupted by hand and resumed by tag on 2). Baseline: 8 imagined battles, 72.0% ± 2.8 against
+the crowd and 80.9% ± 3.4 against PvPoke's AI. Differences are paired, in points:
+
+| Setting (all with samples=8) | Head to head | Crowd | PvPoke | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| judge=turn, horizon=40 | 50.2% ± 1.8 | +0.9 ± 2.9 | +4.2 ± 3.5 | 36 / 630 / 18,041 |
+| judge=turn, horizon=80 | 49.4% ± 1.8 | +0.3 ± 2.8 | +1.3 ± 3.4 | 56 / 1,012 / 18,362 |
+| judge=end | 52.2% ± 1.9 | −2.0 ± 3.5 | −5.1 ± 4.7 | 79 / 1,631 / 18,614 |
+| **opponents=mix, matching=1** | **51.0% ± 1.8** | **+4.8 ± 2.9** | **+11.2 ± 3.6** | 42 / 708 / 23,227 |
+| opponents=mix, matching=1, judge=end | 51.7% ± 1.9 | +1.7 ± 3.3 | +7.8 ± 4.0 | 65 / 1,374 / 23,366 |
+| switch_edge=0.05, stay_after_replace=1 | 37.9% ± 2.0 | −10.8 ± 3.3 | −3.5 ± 3.6 | 47 / 679 / 18,342 |
+| switch_edge=0.1, stay_after_replace=1 | 36.9% ± 2.0 | −11.7 ± 3.4 | −4.9 ± 3.8 | 61 / 1,018 / 35,553 |
+| all of mix, judge=end, switch_edge=0.05, stay_after_replace=1 | 41.1% ± 2.0 | −6.5 ± 3.6 | +4.6 ± 4.2 | 81 / 1,793 / 35,558 |
+
+Varied imagined opponents are the clear best by the run sheet's rule (largest crowd and PvPoke gain, head to head not
+below 50%); no other candidate is close, so only it was confirmed. Judging every look at the same turn changes little;
+playing it to the end costs time and does not help. Keeping the switch (`switch_edge`, `stay_after_replace`) loses
+heavily head to head and against the crowd: in simulation, the swaps the search finds are worth making.
+
+**Confirmed at the live 32 imagined battles on the fresh seed 3552** (`engine_versus.py --tag look-confirm --field mixed
+--seed 3552 --workers 18 --pairings 2000 --crowd 2000 --pvpoke 1000 --baseline "samples=32" --candidates
+"samples=32,opponents=mix,matching=1"`, `runs/look_confirm.out`): **head to head 51.7% ± 1.2; against the crowd 76.3%
+against 73.1%, +3.2 ± 1.9; against PvPoke's AI 92.8% against 83.9%, +8.9 ± 2.1.** Better against both fields beyond the
+margin and better head to head.
+
+**Search time is not settled.** Confirm run, per searched decision: median 271 ms, 99th percentile 4,157, worst 269,149
+(18 workers on 6 performance and 12 efficiency cores). Task 27's plain 32 on 7 workers was 240 / 885 / 2,132. The medians
+are close, but the tails are not comparable: every grid candidate, including ones that only change the judging, has a worst
+of 18–36 s, so these worst figures include stalls of the machine, not just the search. The live budget is 300–2,300 ms a
+decision, so `samples=32,opponents=mix,matching=1` needs a clean timing (one worker, `realtime_trial.py --timing`) and the
+browser check before it can be adopted.
