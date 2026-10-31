@@ -1,0 +1,29 @@
+real-time engine, settings: {'samples': 32, 'horizon': 20, 'edge': 0.03, 'margin': 0.02}, clock: cpu, pauses: defaults (pogo/realtime.py)
+
+--- timing: 30 battles against the crowd
+815 searched decisions; search time median 180 ms, 99th percentile 475, worst 670
+cut short by the deadline 11.4%, no complete round (trained bot's pick) 0.0%
+wait at the moment of decision: median 0 ms, 99th percentile 160, worst 300; decisions with any wait 3.9%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   35% |    300ms |    193 |  301 |   302 |     28.2% |       0.0%
+predicted, fast move of 2      | predicted  |   24% |    800ms |    183 |  459 |   491 |      0.0% |       0.0%
+a charged move came            | pause      |   12% |    400ms |    163 |  398 |   399 |      3.1% |       0.0%
+predicted, fast move of 3      | predicted  |    7% |   1300ms |    246 |  638 |   670 |      0.0% |       0.0%
+after our charged move         | pause      |    5% |    400ms |    135 |  397 |   398 |      4.9% |       0.0%
+start                          | pause      |    4% |   1000ms |    281 |  368 |   372 |      0.0% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   2000ms |    131 |  281 |   293 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |    350ms |    141 |  312 |   348 |      3.8% |       0.0%
+a faint came                   | pause      |    3% |    350ms |    152 |  349 |   349 |     17.4% |       0.0%
+they switched                  | unforeseen |    2% |    300ms |    152 |  300 |   300 |     15.8% |       0.0%
+predicted, fast move of 4      | predicted  |    2% |   1800ms |    133 |  524 |   532 |      0.0% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     20 |   32 |    32 |      0.0% |       0.0%
+mispredicted                   | unforeseen |    0% |    300ms |     23 |   23 |    23 |      0.0% |       0.0%
+
+95% intervals (whole-battle bootstrap; observed worst is a sample maximum):
+  median_ms: 180.38 [151.18, 202.97]
+  p99_ms: 474.55 [398.30, 542.53]
+  cut_percent: 11.41 [6.69, 16.77]
+  fallback_percent: 0.00 [0.00, 0.00]
+    no events observed; one-sided 95% upper bound on battles affected: 9.50%
+  wait_percent: 3.93 [2.71, 5.49]

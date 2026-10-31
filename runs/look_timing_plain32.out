@@ -1,0 +1,28 @@
+real-time engine, settings: {'samples': 32, 'horizon': 20, 'edge': 0.03, 'margin': 0.02}, clock: cpu, pauses: defaults (pogo/realtime.py)
+
+--- timing: 30 battles against the crowd
+822 searched decisions; search time median 220 ms, 99th percentile 1292, worst 2024
+cut short by the deadline 30.4%, no complete round (trained bot's pick) 0.5%
+wait at the moment of decision: median 0 ms, 99th percentile 284, worst 688; decisions with any wait 8.2%
+
+what came before the decision  | kind       | share | time had | median | 99th | worst | cut short | bot's pick
+predicted, fast move of 1      | predicted  |   38% |    300ms |    170 |  310 |   335 |     38.3% |       0.3%
+predicted, fast move of 2      | predicted  |   22% |    800ms |    205 |  813 |   825 |     25.8% |       0.0%
+a charged move came            | pause      |   12% |    400ms |    236 |  410 |   434 |     30.2% |       0.0%
+predicted, fast move of 3      | predicted  |    7% |   1300ms |    366 | 1328 |  1355 |     11.1% |       0.0%
+after our charged move         | pause      |    5% |    400ms |    151 |  401 |   403 |     25.6% |       2.6%
+start                          | pause      |    4% |   1000ms |    985 | 1650 |  1688 |     63.3% |       0.0%
+replacing a fainted Pokémon    | pause      |    4% |   2000ms |    153 | 1643 |  2024 |      0.0% |       0.0%
+after a faint                  | pause      |    3% |    350ms |    124 |  349 |   349 |     17.9% |       0.0%
+a faint came                   | pause      |    2% |    350ms |    101 |  354 |   355 |     30.0% |      10.0%
+they switched                  | unforeseen |    2% |    300ms |    218 |  297 |   297 |     42.1% |       0.0%
+predicted, fast move of 4      | predicted  |    2% |   1800ms |    651 | 1708 |  1790 |      7.7% |       0.0%
+after our switch               | unforeseen |    0% |    300ms |     21 |   34 |    34 |      0.0% |       0.0%
+
+95% intervals (whole-battle bootstrap; observed worst is a sample maximum):
+  median_ms: 220.50 [145.82, 288.78]
+  p99_ms: 1292.20 [998.12, 1500.87]
+  cut_percent: 30.41 [22.77, 38.98]
+  fallback_percent: 0.49 [0.12, 0.94]
+  wait_percent: 8.15 [5.65, 10.74]
+exit 0

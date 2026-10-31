@@ -3602,3 +3602,43 @@ imagined battles, `opponents=mix,matching=1`, the same 69 battles: 99th percenti
 12.5 s to 2.4. Everything from 16488d3's flip until this fix ran on the nested build: the website (published 10-28, not
 yet republished) and all of task 35 (its comparisons are between settings on one build; `look-switch` replicates its
 winner on the fixed one).
+
+## After the fix: speed, `matching` again, and keeping the switch (2026-10-31, overnight on the Mac)
+
+**Speed under the website's time limits** (`scripts/realtime_trial.py --timing 30 --workers 1 --seed 3553`, CPU clock, 32
+imagined battles; `runs/look_timing_*.out`). The nesting cost the website real thinking: three times as many decisions
+were cut short by the deadline. `matching` is no slower than the plain engine.
+
+| build, settings | median ms | 99th | worst | cut short | no complete round |
+|---|---|---|---|---|---|
+| nested, plain | 220 | 1,292 | 2,024 | 30.4% | 0.5% |
+| nested, mix + matching | 170 | 1,043 | 1,844 | 23.5% | 0.9% |
+| fixed, plain | 180 | 475 | 670 | 11.4% | 0.0% |
+| fixed, mix + matching | 152 | 447 | 584 | 7.8% | 0.0% |
+
+Still unmeasured: the same in the browser (Pyodide), which is what the website runs.
+
+**Keeping the switch** (the owner's item 10; `scripts/engine_versus.py --tag look-switch --field mixed --seed 3561`, 8
+imagined battles, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke; baseline crowd 72.9, PvPoke 82.7; `runs/look_switch.out`).
+No version helps. With task 35's `switch_edge` 0.05 and 0.1 (37-38% head to head on the nested build) the costs run from
+nothing to very large; none gains.
+
+| candidate | head to head | crowd | PvPoke |
+|---|---|---|---|
+| `stay_after_replace` | 48.4 ± 1.6 | +0.7 ± 1.4 | +0.7 ± 2.2 |
+| `switch_edge=0.01` | 48.9 ± 1.6 | -0.1 ± 0.7 | +0.6 ± 0.9 |
+| `switch_edge=0.02` | 49.3 ± 1.6 | +0.1 ± 1.1 | +1.0 ± 1.0 |
+| mix + matching | 48.8 ± 1.8 | +2.5 ± 2.9 | +8.2 ± 3.3 |
+| mix + matching + `stay_after_replace` | 48.9 ± 1.8 | +2.9 ± 2.9 | +8.5 ± 3.3 |
+
+These are blanket versions: the same cost on a switch in every game. The owner's guidance is about linear games, and
+what makes a game linear has not been defined or tested. It also fits the losses to the owner, where the bot's most
+common error was staying in when a switch wins (13 of 31 flagged), not switching too much.
+
+**`matching`, three measurements.** PvPoke's AI: +11.2 ± 3.6 (task 35 grid, 8 imagined, nested), +8.9 ± 2.1 (task 35 confirm,
+32, nested), +8.2 ± 3.3 (above, 8, fixed): a real gain on all three. The crowd: +4.8 ± 2.9, +3.2 ± 1.9, +2.5 ± 2.9: probably
+real and smaller. Head to head against the plain engine: 51.0 ± 1.8, 51.7 ± 1.2, 48.8 ± 1.8: about even. So it plays
+better against opponents unlike itself, not better against itself. Not measured: the usual field and real people.
+
+When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
+time and the cause was the nesting.
