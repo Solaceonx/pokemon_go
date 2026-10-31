@@ -3620,8 +3620,8 @@ Still unmeasured: the same in the browser (Pyodide), which is what the website r
 
 **Keeping the switch** (the owner's item 10; `scripts/engine_versus.py --tag look-switch --field mixed --seed 3561`, 8
 imagined battles, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke; baseline crowd 72.9, PvPoke 82.7; `runs/look_switch.out`).
-No version helps. With task 35's `switch_edge` 0.05 and 0.1 (37-38% head to head on the nested build) the costs run from
-nothing to very large; none gains.
+No version helps. With task 35's `switch_edge` 0.05 and 0.1, each combined with `stay_after_replace` (37-38% head to head on the nested
+build), the costs run from nothing to very large; none gains.
 
 | candidate | head to head | crowd | PvPoke |
 |---|---|---|---|
@@ -3638,7 +3638,10 @@ common error was staying in when a switch wins (13 of 31 flagged), not switching
 **`matching`, three measurements.** PvPoke's AI: +11.2 ± 3.6 (task 35 grid, 8 imagined, nested), +8.9 ± 2.1 (task 35 confirm,
 32, nested), +8.2 ± 3.3 (above, 8, fixed): a real gain on all three. The crowd: +4.8 ± 2.9, +3.2 ± 1.9, +2.5 ± 2.9: probably
 real and smaller. Head to head against the plain engine: 51.0 ± 1.8, 51.7 ± 1.2, 48.8 ± 1.8: about even. So it plays
-better against opponents unlike itself, not better against itself. Not measured: the usual field and real people.
+better against opponents unlike itself, not better against itself. The usual field (`--tag look-matching-usual --field
+standard --seed 3571`, 8 imagined, fixed; baseline crowd 69.3, PvPoke 80.5; `runs/look_matching_usual.out`): head to head
+50.5 ± 1.8, crowd +4.7 ± 2.8, PvPoke +5.8 ± 3.2, so no loss there and a gain. That meets the adoption rule in simulation;
+not measured: 32 imagined battles on the fixed build, the browser's speed, and real people.
 
 When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
 time and the cause was the nesting.
