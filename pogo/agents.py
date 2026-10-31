@@ -967,13 +967,13 @@ class Planner:
 def _rollout(matchups: bool = False) -> Planner:
     """The quick player used inside lookahead, optionally choosing remaining matchups.
 
-    Threshold shielding and outlook replacements keep this from nesting lookaheads.
+    Threshold shielding, outlook replacements and even_cost="first" keep this from nesting lookaheads.
     Only revealed opponents enter the rollout; hidden teammates are never inspected.
     """
     # The shield_matchups experiment was measured with rollouts that switch by the live duel alone. The rollout keeps
     # the standard values: the evolved rules were found and confirmed with this rollout inside them.
     return Planner(**STANDARD_RULES, timing=False, bait="cheap", shields="threshold", switches=matchups,
-                   farm=False, sac=False, shield_matchups=False, good_matchup=not matchups, seed=0)
+                   farm=False, sac=False, shield_matchups=False, good_matchup=not matchups, even_cost="first", seed=0)
 
 
 def expert(field: list | None = None) -> Planner:

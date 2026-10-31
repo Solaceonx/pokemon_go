@@ -9,6 +9,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import evolve_rules  # noqa: E402
+from pogo.agents import Planner  # noqa: E402
 from pogo.battle import Battle  # noqa: E402
 from pogo.engine import Engine  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
@@ -71,6 +72,26 @@ class EngineOptions(unittest.TestCase):
             fainted = {t for t, side, text in b.log if side == 0 and text.endswith("faints")}
             sent = [t for t, side, text in b.log if side == 0 and text.startswith("sends in") and t in fainted]
             self.assertEqual(len(sent), len(set(sent)))  # no swap on the turn of a replacement
+
+    def test_rollouts_do_not_nest_lookaheads(self):
+        depth, deepest = [0], [0]
+        original = Planner._after_throw
+
+        def counting(this, *args):
+            depth[0] += 1
+            deepest[0] = max(deepest[0], depth[0])
+            try:
+                return original(this, *args)
+            finally:
+                depth[0] -= 1
+
+        Planner._after_throw = counting
+        try:
+            same_cost = [self.gd.default(s) for s in ("empoleon", "malamar", "charjabug")]
+            Battle(same_cost, same_cost, Planner(seed=1), Planner(seed=2), seed=5).run()
+        finally:
+            Planner._after_throw = original
+        self.assertEqual(deepest[0], 1)
 
     def test_reader_reads(self):
         target = self.engine()

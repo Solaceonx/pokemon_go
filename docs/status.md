@@ -3589,3 +3589,16 @@ search, above.)
 
 Also fixed: games where the bot sends a Pokémon in after a faint and switches straight out of it on the same turn
 did not replay for the website review (both were read as the replacement); 4 of 27 website games. All 27 replay now.
+
+## The same-cost rule nested look-aheads (found 2026-10-31, fixed): a mistake in adopting it
+
+Making `even_cost="best"` the default on 10-28 also changed `_rollout`, the quick player inside `_play_out`, which had
+kept the default. So each same-cost throw inside a play-out started more play-outs (`_after_throw`), up to 8 levels deep
+(Empoleon, Malamar, Charjabug). What was measured and adopted was the rule at the top level only, with "first" inside
+rollouts; what shipped was not. Found by profiling the slowest decisions of task 35, whose 18-269 s worst times are CPU
+time (`realtime.py` defaults to `process_time`), so not machine stalls. Fixed: `_rollout` sets `even_cost="first"`, which
+is the configuration measured (`tests/test_engine_options.py` checks the depth is 1; it was 8). Unlimited search, 32
+imagined battles, `opponents=mix,matching=1`, the same 69 battles: 99th percentile 1,211 ms to 477, slowest decision
+12.5 s to 2.4. Everything from 16488d3's flip until this fix ran on the nested build: the website (published 10-28, not
+yet republished) and all of task 35 (its comparisons are between settings on one build; `look-switch` replicates its
+winner on the fixed one).
