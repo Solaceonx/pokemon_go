@@ -3657,3 +3657,8 @@ score: a bot that never switches beats the unbroken one on it. The reader's gain
 trained bot falls with how far the opponent is from what it imagines: +17 against the trained bot, +4 against the crowd, -2
 against PvPoke's AI (margins about ±6).** So head-to-head gains overstate what it gains against people. The owner's exam
 (`scripts/exam_positions.py`, `scripts/exam_page/`, 40 positions) is published and not yet taken.
+
+Release check built and passed on commit 4105bda (`scripts/release_check.py`; the site build now needs it). A small model of the
+owner's decisions gets the top choice right 66% of the time on unseen games, against 62% for the trained bot and 54% for the
+engine, and flattens after about 10 training games (`scripts/people_model.py`), so more of the owner's games do not help a model this
+small; other players are untested.

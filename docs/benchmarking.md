@@ -72,9 +72,38 @@ PvPoke's AI (unlike it). Margins are about ±6 on each. That follows how well "t
 18%, about as far as PvPoke's AI, so head-to-head gains overstate what it gains against a person. This is an inference: the
 gain against people is not measured.
 
+## Release check (`python3 scripts/release_check.py`, `runs/bench/release.json`)
+
+The website's settings live in `pogo.realtime.WEBSITE`. The check runs the tests, the PvPoke reference battles, 30 battles of
+timing under the website's time limits, and 200 battles against the crowd, and ties the result to the commit;
+`scripts/build_pvpbot_site.py` refuses code without a passing record (`--unchecked` overrides it). Limits: 99th percentile 800 ms,
+20% of decisions cut short, 0.5% with no complete round. On the recorded numbers they fail the nesting bug (1,292 ms, 30%) and pass
+the fix (`tests/test_bench.py`). First run, commit 4105bda: passed, 477 ms, 11.3% cut, no fallbacks, crowd 68.0 ± 6.5 against the
+trained bot's 66.5 ± 6.5. 200 battles only catch gross damage. Browser speed is not covered.
+
+## Predicting the owner, and whether more games help (`python3 scripts/people_model.py`, `runs/bench/people_model.out`)
+
+A small conditional logit over the options of 954 of the owner's decisions in 30 website games, tested on 5 games it has not seen.
+How often the top choice was what the owner played:
+
+| Predictor | Top choice right |
+|---|---|
+| The engine / with `matching` | 54% / 56% |
+| The rulebook / the trained bot | 60% / 62% |
+| The model, trained on 2 games | 61.7% ± 1.4 |
+| 5 games | 63.6% ± 1.1 |
+| 10 games | 65.5% ± 0.8 |
+| 15 games | 64.6% ± 1.2 |
+| 20 games | 65.3% ± 1.1 |
+| 25 games | 65.9% ± 0.9 |
+
+It flattens at about 10 games. So more of the owner's games add little to a model this small. This says nothing about other
+players, or about a larger model that more data could support. The same model's chance per decision, 42% rising to 45% with
+all options equal at 36%, is on these decisions only and is not comparable with `predict_bench.py`'s 18%.
+
 ## Not built yet
 
 - Frozen old versions as opponents, so scores compare across versions.
-- A release check: the website's settings in one place, tested with time limits, and a site build that needs a result.
-- A human model fitted to real decisions, with a learning curve showing whether more VOD games would help.
-- Whether a judge's verdicts predict who won real games.
+- Whether a judge's verdicts predict who won real games: needs more games, or the exam.
+- The fitted model as an imagined opponent inside the engine, and as a test opponent.
+- Predicting other players from tracked footage.
