@@ -71,6 +71,10 @@ def predict(view, pool: list):
     return key(twin.views[0])
 
 
+# The website's bot, in one place: scripts/pvpbot_site/play_api.py plays it and scripts/release_check.py tests it.
+WEBSITE = {"rollout": "bot", "samples": 32, "edge": 0.03, "margin": 0.02}
+
+
 class RealTime(Engine):
     def __init__(self, *args, turn_ms: float = 500, see_and_tap_ms: float = 200, unforeseen_ms: float = 300,
                  after_charged_ms: float = 400, after_faint_ms: float = 350, replace_ms: float = 2000,

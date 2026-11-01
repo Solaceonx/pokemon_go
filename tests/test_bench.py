@@ -42,5 +42,13 @@ class FrozenEndgames(unittest.TestCase):
         self.assertFalse(bench.BUILDS["no_shields"](1).shield(view, row["foe_energy"]))
 
 
+class ReleaseLimits(unittest.TestCase):
+    def test_limits_catch_the_nesting_bug_and_pass_the_fix(self):
+        import release_check
+        for name, passes in (("look_timing_plain32", False), ("look_timing_mix32", False), ("look_timing_plain32_fixed", True), ("look_timing_mix32_fixed", True)):
+            problems = release_check.timing_problems(json.loads((ROOT / "runs" / f"{name}.json").read_text()))
+            self.assertEqual(not problems, passes, f"{name}: {problems}")
+
+
 if __name__ == "__main__":
     unittest.main()
