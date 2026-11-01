@@ -3643,5 +3643,7 @@ standard --seed 3571`, 8 imagined, fixed; baseline crowd 69.3, PvPoke 80.5; `run
 50.5 ± 1.8, crowd +4.7 ± 2.8, PvPoke +5.8 ± 3.2, so no loss there and a gain. That meets the adoption rule in simulation;
 not measured: 32 imagined battles on the fixed build, the browser's speed, and real people.
 
+The website got the rollout fix on 2026-11-01 (site commit b6fddc5; `matching` not switched on).
+
 When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
 time and the cause was the nesting.
