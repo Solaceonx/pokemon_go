@@ -33,7 +33,7 @@ A judge earns trust by passing these, in this order. `python3 scripts/bench.py c
 | Judge | What it scores | Depends on our bot? | Weakness |
 |---|---|---|---|
 | The owner's exam | Real positions, the owner's call (`scripts/exam_positions.py`, `scripts/exam_page/`) | No | One person, few positions, costs the owner's time |
-| Exact endgames | Points given away against exact play (`pogo.endgame.action_values`, `bench.py endgame`) | No | Only late positions with at most two Pokémon a side; shield calls not yet covered |
+| Exact endgames | Points given away against exact play (`pogo.endgame.action_values`, `bench.py endgame`) | No | Only late positions with at most two Pokémon a side; replacements are forced there |
 | Agreement with the owner | How often a build plays what the owner played (`bench.py people`) | No | The owner is not always right; rewards imitation |
 | Reader | What a player gains by reading the build (`bench.py exploit`) | Partly | Reads throws only |
 | The field | Score against the trained bot, the crowd and PvPoke's AI (`bench.py field`) | Yes | Kept for comparison with past results |
@@ -67,8 +67,10 @@ battles a line against each opponent, 100 battles against the reader.
 
 **The engine's edge depends on how well it models the opponent.** Gain over the trained bot, averaging the two engine runs:
 +17 points against the trained bot (which is exactly what it imagines), +4 against the crowd (variations of it), -2 against
-PvPoke's AI (unlike it). Margins are about ±6 on each. The owner is further from its model than any of these (it gives what
-they did about 27% per decision, against 87% for itself), so head-to-head gains overstate what it gains against a person.
+PvPoke's AI (unlike it). Margins are about ±6 on each. That follows how well "they play like us" predicts each of them
+(`scripts/predict_bench.py`, chance given to what they did): the trained bot 87%, the crowd 39%, PvPoke's AI 16%. The owner is
+18%, about as far as PvPoke's AI, so head-to-head gains overstate what it gains against a person. This is an inference: the
+gain against people is not measured.
 
 ## Not built yet
 
