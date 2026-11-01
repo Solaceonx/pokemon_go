@@ -1,0 +1,48 @@
+| build | endgame points lost | moves | shields | real games | blunders | agrees with owner | throw | switch | shield | v trained | v crowd | v PvPoke | reader's gain |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| random | 42.35 ± 5.31 | 42.58 | 41.08 | 43.18 | 50.6% | 30.6 ± 2.9 | 38 | 14 | 51 | 6.0 ± 2.3 | 8.2 ± 2.7 | 13.2 ± 3.3 | -3.0 ± 5.2 |
+| masher | 26.73 ± 4.70 | 30.74 | 4.17 | 16.67 | 32.7% | 36.2 ± 2.9 | 28 | 57 | 37 | 9.4 ± 2.8 | 16.8 ± 3.6 | 33.1 ± 4.6 | +2.0 ± 6.2 |
+| rulebook | 6.95 ± 2.90 | 7.25 | 5.21 | 3.79 | 10.4% | 59.6 ± 3.4 | 63 | 44 | 64 | 36.9 ± 4.7 | 59.2 ± 4.8 | 80.0 ± 3.9 | -3.0 ± 9.1 |
+| trained | 6.69 ± 2.61 | 7.32 | 3.12 | 3.79 | 10.4% | 61.5 ± 3.3 | 65 | 42 | 73 | 48.6 ± 4.9 | 65.2 ± 4.6 | 82.0 ± 3.8 | -8.5 ± 10.1 |
+| engine8 | 5.24 ± 2.26 | 5.62 | 3.12 | 3.79 | 8.5% | 55.2 ± 2.6 | 57 | 32 | 73 | 66.1 ± 4.6 | 68.4 ± 4.6 | 77.9 ± 4.1 | +4.5 ± 9.8 |
+| no_shields | 17.08 ± 4.06 | 7.32 | 71.98 | 24.24 | 23.6% | 59.8 ± 3.0 | 65 | 42 | 63 | 6.8 ± 2.4 | 18.2 ± 3.8 | 35.9 ± 4.7 | +4.0 ± 5.5 |
+| all_shields | 6.85 ± 2.64 | 7.32 | 4.17 | 1.51 | 10.4% | 55.3 ± 3.3 | 65 | 42 | 37 | 34.5 ± 4.6 | 50.0 ± 4.9 | 73.1 ± 4.3 | -8.5 ± 10.3 |
+| no_switches | 6.76 ± 2.62 | 7.40 | 3.12 | 2.27 | 10.1% | 64.9 ± 3.2 | 65 | 59 | 73 | 29.8 ± 4.5 | 52.9 ± 4.9 | 71.2 ± 4.4 | -2.0 ± 9.5 |
+| no_throws | 22.97 ± 4.04 | 26.50 | 3.12 | 17.42 | 28.0% | 60.9 ± 3.0 | 64 | 41 | 73 | 0.2 ± 0.5 | 0.0 ± 0.0 | 0.0 ± 0.0 | +0.0 ± 0.0 |
+| first_bench | 6.69 ± 2.61 | 7.32 | 3.12 | 3.79 | 10.4% | 61.9 ± 3.2 | 65 | 42 | 73 | 45.6 ± 4.9 | 61.2 ± 4.8 | 77.5 ± 4.1 | -6.0 ± 10.0 |
+| first_listed | 6.69 ± 2.61 | 7.32 | 3.12 | 3.79 | 10.4% | 61.5 ± 3.3 | 65 | 42 | 73 | 48.9 ± 4.9 | 65.0 ± 4.7 | 82.0 ± 3.8 | -7.5 ± 9.6 |
+| engine8_again | 5.24 ± 2.26 | 5.62 | 3.12 | 3.79 | 8.5% | 54.1 ± 3.0 | 56 | 32 | 73 | 65.1 ± 4.7 | 70.4 ± 4.5 | 82.2 ± 3.7 | +0.0 ± 10.0 |
+
+Ladder, weakest to strongest; does the judge rank it in that order? (pairs in the right order, of 10)
+  endgame  10/10   random -42.35  masher -26.73  rulebook -6.95  trained -6.69  engine8 -5.24
+  people   8/10   random 30.56  masher 36.17  rulebook 59.62  trained 61.46  engine8 55.24
+  trained  10/10   random 0.06  masher 0.09  rulebook 0.37  trained 0.49  engine8 0.66
+  crowd    10/10   random 0.08  masher 0.17  rulebook 0.59  trained 0.65  engine8 0.68
+  pvpoke   8/10   random 0.13  masher 0.33  rulebook 0.80  trained 0.82  engine8 0.78
+  exploit  4/10   random 0.03  masher -0.02  rulebook 0.03  trained 0.09  engine8 -0.04
+
+Broken bots against the trained bot: difference on the judge's own scale (negative is worse), with its margin, paired
+                           endgame            people           trained             crowd            pvpoke           exploit
+  no_shields        -10.39 ± 3.77*     -1.69 ± 4.45     -41.88 ± 4.98*    -47.00 ± 5.01*    -46.12 ± 5.10*    -12.50 ±11.43*
+  all_shields        -0.16 ± 0.69      -6.12 ± 4.67*    -14.12 ± 5.67*    -15.25 ± 5.73*     -8.88 ± 4.47*     +0.00 ±13.43 
+  no_switches        -0.07 ± 0.83      +3.45 ± 4.55     -18.88 ± 5.49*    -12.38 ± 5.60*    -10.75 ± 4.34*     -6.50 ±11.71 
+  no_throws         -16.28 ± 5.32*     -0.53 ± 4.44     -48.38 ± 4.89*    -65.25 ± 4.65*    -82.00 ± 3.75*     -8.50 ±10.15 
+  first_bench        +0.00 ± 0.00      +0.42 ± 4.61      -3.00 ± 3.18      -4.00 ± 3.45*     -4.50 ± 3.21*     -2.50 ± 6.88 
+  first_listed       +0.00 ± 0.00      +0.00 ± 4.63      +0.25 ± 0.49      -0.25 ± 0.49      +0.00 ± 0.00      -1.00 ± 4.40 
+  (* caught: worse than the trained bot beyond the margin)
+
+Repeats: the same build (engine, 8 imagined) with different dice; a judge should see no difference
+  endgame  +0.00 ± 0.00
+  people   -1.10 ± 3.95
+  trained  -1.00 ± 4.78
+  crowd    +2.00 ± 4.55
+  pvpoke   +4.38 ± 3.85
+  exploit  +4.50 ± 12.07
+
+Cost: paired battles or positions to see a given gain at 95%, from the noise in trained against engine8
+  endgame  ±5: 22  ±2: 140  ±1: 561
+  trained  ±5: 513  ±2: 3,207  ±1: 12,829
+  crowd    ±5: 407  ±2: 2,548  ±1: 10,192
+  pvpoke   ±5: 308  ±2: 1,927  ±1: 7,709
+  exploit  ±5: 625  ±2: 3,910  ±1: 15,641
+exit 0

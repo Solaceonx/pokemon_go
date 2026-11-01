@@ -1,0 +1,212 @@
+<title>Great League Exam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one position per screen, opponent above you as in a battle, options at the bottom within thumb reach. */
+:root {
+  --bg: #e9eef3; --panel: #ffffff; --ink: #14202c; --muted: #566676; --line: #cfd9e2; --track: #dde5ec;
+  --accent: #1456ad; --on-accent: #ffffff; --soft: #dbe8f8; --hp: #1f9d68; --hp-low: #d98a00; --hp-crit: #cf3a2e;
+  --display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif; --body: "Barlow", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e151d; --panel: #18222e; --ink: #e8eef4; --muted: #96a6b6; --line: #2b3a49; --track: #26333f;
+  --accent: #6aaef8; --on-accent: #07121e; --soft: #1d3147; --hp: #39bd86; --hp-low: #e8a530; --hp-crit: #ee6256; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e151d; --panel: #18222e; --ink: #e8eef4; --muted: #96a6b6; --line: #2b3a49; --track: #26333f;
+  --accent: #6aaef8; --on-accent: #07121e; --soft: #1d3147; --hp: #39bd86; --hp-low: #e8a530; --hp-crit: #ee6256; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 400 15px/1.4 var(--body); }
+#app { max-width: 760px; margin: 0 auto; padding-block: 14px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 12px; }
+header { display: grid; gap: 6px; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.count { font: 700 20px/1 var(--display); letter-spacing: .02em; }
+.status { color: var(--muted); font-size: 13px; }
+.progress { height: 5px; background: var(--track); border-radius: 3px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); }
+.intro { color: var(--muted); font-size: 14px; max-width: 65ch; }
+.board { display: grid; gap: 10px; }
+.side { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 8px; min-width: 0; }
+.who { font: 600 12px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.name { font: 700 24px/1.05 var(--display); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.chips { display: inline-flex; gap: 4px; }
+.t { font: 600 11px/1 var(--body); padding: 3px 6px; border-radius: 3px; text-transform: capitalize; }
+.bar { height: 9px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; }
+.row { display: flex; justify-content: space-between; gap: 10px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.meter { position: relative; height: 9px; background: var(--track); border-radius: 2px; }
+.meter i { position: absolute; inset: 0 auto 0 0; background: var(--accent); border-radius: 2px; }
+.meter b { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+.moves { display: grid; gap: 2px; font-variant-numeric: tabular-nums; }
+.move { display: flex; justify-content: space-between; gap: 10px; }
+.move span:last-child { color: var(--muted); white-space: nowrap; }
+.move.ready span:last-child { color: var(--ink); font-weight: 600; }
+.pips { display: inline-flex; gap: 3px; vertical-align: -1px; }
+.pips i { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--accent); }
+.pips i.on { background: var(--accent); }
+.bench { border-top: 1px solid var(--line); padding-top: 7px; display: grid; gap: 7px; font-size: 14px; }
+.bench .line { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.bench strong { font-weight: 600; }
+.recent { color: var(--muted); font-size: 13px; }
+.recent summary { cursor: pointer; }
+.recent ol { margin: 6px 0 0; padding-left: 18px; }
+.ask { display: grid; gap: 8px; }
+.prompt { font: 700 22px/1.1 var(--display); text-wrap: balance; margin: 2px 0 0; }
+.options { display: grid; gap: 6px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt { text-align: left; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; display: flex; justify-content: space-between; gap: 10px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.opt span:last-child { color: var(--muted); font-weight: 400; white-space: nowrap; }
+.opt.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.opt.on span:last-child { color: var(--on-accent); }
+.sure { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.sure button { padding: 11px 6px; background: var(--soft); border: 1px solid var(--accent); border-radius: 8px; font-weight: 600; }
+.sure button.on { background: var(--accent); color: var(--on-accent); }
+label { color: var(--muted); font-size: 13px; display: grid; gap: 4px; }
+input[type=text] { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; width: 100%; box-sizing: border-box; }
+nav { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.link { background: none; border: 0; padding: 6px 0; color: var(--accent); font-weight: 500; }
+.done { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 10px; }
+.done h1 { font: 700 28px/1.05 var(--display); margin: 0; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump button { padding: 6px 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; font-variant-numeric: tabular-nums; }
+textarea { font: 12px/1.3 ui-monospace, Menlo, monospace; width: 100%; box-sizing: border-box; height: 120px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+@media (min-width: 620px) { .board { grid-template-columns: 1fr 1fr; } .options.few { grid-template-columns: 1fr 1fr; } }
+</style>
+<div id="app" aria-live="polite"></div>
+<script id="positions" type="application/json">/*POSITIONS*/</script>
+<script>
+const POS = JSON.parse(document.getElementById("positions").textContent);
+const TYPES = {normal:["#a8a77a","#14202c"],fire:["#ee8130","#14202c"],water:["#6390f0","#14202c"],electric:["#f7d02c","#14202c"],grass:["#7ac74c","#14202c"],ice:["#96d9d6","#14202c"],fighting:["#c22e28","#ffffff"],poison:["#a33ea1","#ffffff"],ground:["#e2bf65","#14202c"],flying:["#a98ff3","#14202c"],psychic:["#f95587","#14202c"],bug:["#a6b91a","#14202c"],rock:["#b6a136","#14202c"],ghost:["#735797","#ffffff"],dragon:["#6f35fc","#ffffff"],dark:["#705746","#ffffff"],steel:["#b7b7ce","#14202c"],fairy:["#d685ad","#14202c"]};
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const answers = {};
+let db = null, at = 0, chosen = null, began = Date.now(), status = "", loaded = false, intro = true;
+
+function store() { try { return window.localStorage; } catch (e) { return null; } }
+function keepLocal() { try { store()?.setItem("answers", JSON.stringify(answers)); } catch (e) {} }
+try { Object.assign(answers, JSON.parse(store()?.getItem("answers") || "{}")); } catch (e) {}
+
+const chip = t => { const c = TYPES[t] || ["#888888","#ffffff"]; return `<span class="t" style="background:${c[0]};color:${c[1]}">${esc(t)}</span>`; };
+const pips = n => `<span class="pips" role="img" aria-label="${n} shields"><i class="${n > 0 ? "on" : ""}"></i><i class="${n > 1 ? "on" : ""}"></i></span>`;
+const hpColor = f => f > .5 ? "var(--hp)" : f > .25 ? "var(--hp-low)" : "var(--hp-crit)";
+function hpBar(m) { const f = m.hp / m.hp_max; return `<div class="row"><span>Health ${m.hp} / ${m.hp_max}</span><span>${Math.round(100 * f)}%</span></div><div class="bar"><i style="width:${100 * f}%;background:${hpColor(f)}"></i></div>`; }
+function energy(m, who) {
+  const ticks = m.charged.map(c => `<b style="left:${Math.min(c.cost, 100)}%"></b>`).join("");
+  const stages = [m.atk ? `attack ${m.atk > 0 ? "+" : ""}${m.atk}` : "", m.def ? `defence ${m.def > 0 ? "+" : ""}${m.def}` : ""].filter(Boolean).join(", ");
+  return `<div class="row"><span>Energy ${m.energy}${who === "foe" ? " (counted)" : ""}</span><span>${esc(stages)}</span></div><div class="meter"><i style="width:${Math.min(m.energy, 100)}%"></i>${ticks}</div>`;
+}
+function moves(m, target) {
+  const fast = `<div class="move"><span>${esc(m.fast.name)} <small>(${esc(m.fast.type)}, +${m.fast.gain} energy, ${m.fast.turns / 2}s)</small></span><span>${m.fast.dmg} dmg</span></div>`;
+  const big = m.charged.map(c => {
+    const short = c.cost - m.energy, need = Math.ceil(short / m.fast.gain);
+    return `<div class="move ${short <= 0 ? "ready" : ""}"><span>${esc(c.name)} <small>(${esc(c.type)}, ${c.cost})</small></span><span>${c.dmg} dmg${short <= 0 ? ", ready" : `, ${need} fast`}</span></div>`;
+  }).join("");
+  return `<div class="moves">${fast}${big}</div>`;
+}
+function benchMon(m, foeActive) {
+  const deals = [m.fast, ...m.charged].map(x => `${esc(x.name)} ${x.dmg}`).join(", ");
+  const taken = m.taken ? `<div class="line">Takes: ${[foeActive.fast, ...foeActive.charged].map((x, i) => `${esc(x.name)} ${m.taken[i]}`).join(", ")}</div>` : "";
+  return `<div><strong>${esc(m.name)}</strong> ${m.types.map(chip).join(" ")} <span class="line">${m.hp}/${m.hp_max}, ${m.energy} energy</span><div class="line">Deals: ${deals}</div>${taken}</div>`;
+}
+function sideInfo(s) {
+  const sw = s.switch_wait > 0 ? `Switch in ${s.switch_wait / 2}s` : "Switch ready";
+  const mid = s.busy > 0 ? `, fast move lands in ${s.busy / 2}s` : "";
+  return `<span>Shields ${pips(s.shields)}</span><span>${sw}${mid}</span>`;
+}
+function foeCard(p) {
+  const f = p.foe, m = f.active, notes = [];
+  if (f.unseen) notes.push(`${f.unseen} not seen yet`);
+  if (f.fainted) notes.push(`${f.fainted} fainted`);
+  const target = p.kind === "replace" ? "" : moves(m);
+  return `<section class="side"><div class="who"><span>Opponent</span></div><div class="who">${sideInfo(f)}</div><div class="name">${esc(m.name)} <span class="chips">${m.types.map(chip).join("")}</span></div>${hpBar(m)}${energy(m, "foe")}${target}<div class="bench">${f.bench.map(b => benchMon(b, p.you.active)).join("")}${notes.length ? `<div class="line">${notes.join(", ")}</div>` : ""}</div></section>`;
+}
+function youCard(p) {
+  const y = p.you, m = y.active, foeA = p.foe.active;
+  const head = p.kind === "replace" ? `<div class="name">${esc(m.name)} fainted</div>` : `<div class="name">${esc(m.name)} <span class="chips">${m.types.map(chip).join("")}</span></div>${hpBar(m)}${energy(m, "you")}${moves(m)}`;
+  return `<section class="side"><div class="who"><span>You</span></div><div class="who">${sideInfo(y)}</div>${head}<div class="bench">${y.bench.map(b => benchMon(b, foeA)).join("")}${y.fainted && p.kind !== "replace" ? `<div class="line">${y.fainted} fainted</div>` : ""}</div></section>`;
+}
+function optionDetail(p, key) {
+  if (key[0] === "c") { const c = p.you.active.charged[+key.slice(1)]; return `${c.dmg} dmg`; }
+  if (key[0] === "s" || key[0] === "r") { return ""; }
+  return "";
+}
+function prompt(p) {
+  if (p.kind === "shield") return `They're throwing a charged move with ${p.incoming_energy} energy. Shield?`;
+  if (p.kind === "replace") return "Your Pokémon fainted. Who comes in?";
+  return "Your move. What do you do this turn?";
+}
+function clock(s) { return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`; }
+function answeredCount() { return POS.filter(p => answers[p.id]).length; }
+
+function render() {
+  if (at >= POS.length) return renderDone();
+  const p = POS[at], a = answers[p.id];
+  const pct = 100 * answeredCount() / POS.length;
+  const show = chosen ?? a?.choice ?? null;
+  const recent = p.recent.length ? `<details class="recent"><summary>What just happened</summary><ol>${p.recent.map(r => `<li>${esc(r)}</li>`).join("")}</ol></details>` : `<div class="recent">The battle is just starting.</div>`;
+  app.innerHTML = `<header>
+      <div class="top"><span class="count">Position ${at + 1} of ${POS.length}</span><span class="status">${clock(p.seconds)} into the battle${status ? ` · ${esc(status)}` : ""}</span></div>
+      <div class="progress"><i style="width:${pct}%"></i></div>
+      ${intro && at === 0 ? `<p class="intro">Real positions from real games, shown as a player sees them. Pick what you'd play and how sure you are. There's no time limit and your answers save as you go, so you can stop and come back.</p>` : ""}
+    </header>
+    <div class="board">${foeCard(p)}${youCard(p)}</div>
+    ${recent}
+    <div class="ask">
+      <h2 class="prompt">${esc(prompt(p))}</h2>
+      <div class="options ${p.options.length <= 2 ? "few" : ""}">${p.options.map(o => `<button class="opt ${show === o.key ? "on" : ""}" data-key="${esc(o.key)}"><span>${esc(o.label)}</span><span>${esc(optionDetail(p, o.key))}</span></button>`).join("")}</div>
+      <label for="note-${p.id}">Why, or what's missing (optional)<input type="text" id="note-${p.id}" value="${esc(a?.note || "")}"></label>
+      <div id="sure" ${show ? "" : "hidden"}>
+        <div class="sure">${[["sure","Sure"],["leaning","Leaning"],["coin","Coin flip"]].map(([k, t]) => `<button data-sure="${k}" class="${a?.confidence === k && a?.choice === show ? "on" : ""}">${t}</button>`).join("")}</div>
+      </div>
+    </div>
+    <nav><button class="link" data-go="back" ${at ? "" : "hidden"}>Back</button><button class="link" data-cant="1">Can't judge this one</button><button class="link" data-go="next">Skip for now</button></nav>`;
+  window.scrollTo(0, 0);
+}
+function renderDone() {
+  const missing = POS.filter(p => !answers[p.id]);
+  const full = db ? "" : `<label for="dump">Your answers could not be saved online. Copy this and paste it in the chat.<textarea id="dump" readonly>${esc(JSON.stringify(answers))}</textarea></label>`;
+  app.innerHTML = `<section class="done"><h1>${missing.length ? `${POS.length - missing.length} of ${POS.length} answered` : "All done"}</h1>
+    <p>${missing.length ? "Tap a number to go back to a position you skipped." : "Thanks. Tell Claude in the chat that you've finished, and your answers can be scored."}</p>
+    ${missing.length ? `<div class="jump">${missing.map(p => `<button data-jump="${POS.indexOf(p)}">${POS.indexOf(p) + 1}</button>`).join("")}</div>` : ""}
+    <button class="link" data-jump="0" style="justify-self:start">Review from the start</button>${full}</section>`;
+  window.scrollTo(0, 0);
+}
+async function save(id, value) {
+  answers[id] = value; keepLocal();
+  if (!db) { status = "saved on this device"; return; }
+  try { await db.doc("answers/" + id).set(value); status = "saved"; }
+  catch (e) { status = "could not save online, kept on this device"; }
+  if (at < POS.length) { const s = app.querySelector(".status"); if (s) s.textContent = `${clock(POS[at].seconds)} into the battle · ${status}`; }
+}
+function next() {
+  chosen = null; began = Date.now(); intro = false;
+  let k = at + 1;
+  while (k < POS.length && answers[POS[k].id]) k++;
+  at = k; render();
+}
+app.addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  const p = POS[at];
+  if (b.dataset.key) { chosen = b.dataset.key; app.querySelectorAll(".opt").forEach(x => x.classList.toggle("on", x === b)); app.querySelector("#sure").hidden = false; app.querySelector("#sure").scrollIntoView({block: "nearest"}); return; }
+  if (b.dataset.sure) {
+    const choice = chosen ?? answers[p.id]?.choice;
+    save(p.id, {choice, confidence: b.dataset.sure, note: app.querySelector("input[type=text]").value.trim(), ms: Date.now() - began, at: Date.now()});
+    return next();
+  }
+  if (b.dataset.cant) { save(p.id, {choice: null, confidence: "cant", note: app.querySelector("input[type=text]").value.trim(), ms: Date.now() - began, at: Date.now()}); return next(); }
+  if (b.dataset.go === "back") { chosen = null; began = Date.now(); at = Math.max(0, at - 1); return render(); }
+  if (b.dataset.go === "next") { chosen = null; began = Date.now(); at += 1; return render(); }
+  if (b.dataset.jump !== undefined) { chosen = null; began = Date.now(); at = +b.dataset.jump; return render(); }
+});
+render();
+(async () => {
+  try { db = window.claude ? await window.claude.use("db") : null; } catch (e) { db = null; }
+  if (!db) { status = "saving on this device only"; return render(); }
+  try {
+    const snap = await db.collection("answers").get();
+    snap.docs.forEach(d => { answers[d.id] = d.data(); });
+    keepLocal();
+    if (!chosen) { const first = POS.findIndex(p => !answers[p.id]); at = first < 0 ? POS.length : first; intro = first === 0; render(); }
+  } catch (e) { status = "could not load saved answers"; render(); }
+})();
+</script>

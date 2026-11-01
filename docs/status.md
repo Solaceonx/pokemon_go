@@ -3647,3 +3647,13 @@ The website got the rollout fix on 2026-11-01 (site commit b6fddc5; `matching` n
 
 When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
 time and the cause was the nesting.
+
+## Benchmarks evaluated (2026-11-01, the owner: "much better benchmarking", and how to evaluate a benchmark)
+
+Plan, judges and results are in `docs/benchmarking.md`; `python3 scripts/bench.py check` reruns them (`runs/bench/check.out`).
+Battles catch gross damage best (crowd: 5 of 6 broken bots; ladder 10 of 10). Exact endgames (`pogo.endgame.action_values`, 318
+frozen positions) need about twenty times fewer samples but catch only 2 of 6. Agreement with the owner fails as a strength
+score: a bot that never switches beats the unbroken one on it. The reader's gain fails as built. **The engine's gain over the
+trained bot falls with how far the opponent is from what it imagines: +17 against the trained bot, +4 against the crowd, -2
+against PvPoke's AI (margins about ±6).** So head-to-head gains overstate what it gains against people. The owner's exam
+(`scripts/exam_positions.py`, `scripts/exam_page/`, 40 positions) is published and not yet taken.

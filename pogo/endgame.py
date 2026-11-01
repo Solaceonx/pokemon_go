@@ -118,6 +118,7 @@ class Solution:
     value: float
     plans: tuple
     mixtures: tuple
+    payoffs: tuple = ()  # plans against plans, for side 0; only on the position solved with action_values
 
 
 class Solver:
@@ -126,6 +127,7 @@ class Solver:
         self.cache = {}
         self.nodes = self.work = 0
         self.deadline = 0.
+        self._keep = None
 
     @staticmethod
     def qualifies(b):
@@ -217,10 +219,30 @@ class Solver:
 
         a = [[payoff(root, p, q) for q in strategies[1]] for p in strategies[0]]
         value, p, q = matrix_game(a, self.tick)
-        result = Solution(value, strategies, (p, q))
+        result = Solution(value, strategies, (p, q), tuple(map(tuple, a)) if key == self._keep else ())
         if self.memo:
             self.cache[key] = result
         return result
+
+
+def action_values(solver: Solver, battle, side: int) -> tuple[float, dict]:
+    """The exact value of a position for `side`, and what each of its actions this turn is worth: the best plan starting
+    with that action against the opponent's optimal mix. The value minus an action's worth is what it gives away."""
+    solver.cache.clear()
+    solver._keep = state_key(battle)
+    try:
+        solved = solver.solve(battle)
+    finally:
+        solver._keep = None
+    payoffs = solved.payoffs if side == 0 else tuple(zip(*solved.payoffs))
+    sign = (lambda x: x) if side == 0 else (lambda x: 1 - x)
+    worth: dict = {}
+    for plan, row in zip(solved.plans[side], payoffs):
+        action = plan.get((side, "act"))
+        if action is not None:
+            against = sum(w * sign(x) for w, x in zip(solved.mixtures[1 - side], row))
+            worth[action] = max(worth.get(action, 0.0), against)
+    return sign(solved.value), worth
 
 
 class EndgamePlayer(Learner):
