@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN (claimed 2026-11-01; separate from task 37 / PPO) | NumPy; up to two days shared local computing |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -63,6 +64,23 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 38. Standalone Double DQN against a frozen engine — Codex DQN (in progress, 2026-11-01)
+
+**Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and
+try to beat the current engine reliably. Use a different algorithm from the parallel chat's PPO experiment.
+Review draft PR #10 for prior tracker work; do not retrain through uncertain tracking (task 15 remains on hold).
+
+**Do.** Implement Double DQN with replay, target networks and public-state inputs using only NumPy and the
+standard library. Freeze main's engine source, model weights and search settings before collecting games.
+Separate training, validation and final-test team compositions, independent of lead order. Select checkpoints
+on validation only, then freeze the selection and run fresh-seed mirrored games against the full 32-sample engine.
+Use mixed teams primarily and standard teams as a cross-check. Keep resumable local artifacts and small logs in git.
+
+**Done when.** All required checks pass, code and commands are in a PR, and held-out win share with 95% intervals
+is recorded in status.md. Strength target: the selected standalone policy has a lower 95% bound above 50% on
+two predeclared fresh-seed final tests against the full frozen engine; report plainly if it fails. Training and
+evaluation must fit within the owner's two-day budget and the shared limit of three workers.
 
 ## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
 
