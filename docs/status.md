@@ -38,6 +38,12 @@ imitation games then PPO, at most three low-priority workers with one NumPy thre
 plan is 1,200 pairings per fresh seed and field (9,600 battles total), with weights locked beforehand.
 Training results and the honest final success/failure verdict will be appended here.
 
+**First development measurement (`ppo-v1`, imitation initialization only):** after 16,384 teacher games,
+the independent policy scored **19.34%, bootstrap 95% CI [14.84%, 24.02%]** against the full frozen engine
+on 128 validation pairings / 256 battles. The search used 1,564.6 core-seconds across three workers.
+This is validation data, not the reserved final test, and it is a poor result. PPO training now follows;
+neither agreement with the teacher nor this initialized checkpoint meets the strength target.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
