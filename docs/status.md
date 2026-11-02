@@ -364,6 +364,20 @@ check, not a strength result; its two-pair scores are not used for promotion. Th
 `student_correction_pipeline_audit.json`. The preregistered 512-game `mc-student-v1` pilot started at
 **2026-11-02 19:45 UTC**, alongside the main PPO's two workers. The larger-model trials remain rejected.
 
+**PPO through round forty:** 10,240 training games; round 32 greedy **35.74%, CI [30.66%, 41.02%]**;
+round 40 greedy **33.01%, CI [27.73%, 38.28%]**, stochastic **28.12%, CI [23.24%, 33.01%]**.
+The selected checkpoint remains round 24 at 37.11%. Round forty minus the selected checkpoint is
+**-4.10 points, paired CI [-10.55, 2.34]**. This does not establish further improvement.
+`mc3_progress_round40.json` records every scheduled validation through this point and checkpoint hashes.
+
+The student-state pilot completed its initial validation at **2026-11-02 20:37 UTC**. All **512 battle
+outcomes** (both modes, 128 pairings each) exactly reproduce its parent, PPO round 24: stochastic
+26.95%, greedy 37.11%, with matching weights, schedules, per-battle scores and winners. The eight
+registered sources match, and the initial optimizer moments/counters are zero as specified for the
+method change. `student_correction_baseline_audit.json` records these checks. This is a controlled
+baseline rather than a new strength result. The pilot has now begun collecting its training batches;
+both training runs remain unlocked and their final-test seeds have not been generated.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
