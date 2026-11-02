@@ -118,6 +118,13 @@ def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, tea
     mine = [m.copy() for m in me.team]
     seen = view.foe_shown
     theirs = [m.copy() for m in seen]
+    # Exact simulator views keep their energies and consume no additional random numbers.
+    # Tracked views sample the uncertainty for every seen Pokémon, including the bench.
+    energy_odds = getattr(view, "foe_shown_energy_odds", None)
+    if energy_odds is not None:
+        from .belief import sample_energy
+        for mon, odds in zip(theirs, energy_odds):
+            mon.energy = sample_energy(odds, rng)
     unseen = max(0, view.foe_left - sum(m.hp > 0 for m in seen))
     taken = {m.build.species_id for m in seen}
     fitting = [(w, t) for w, t in teams if w > 0 and taken <= set(t)] if teams and unseen else []

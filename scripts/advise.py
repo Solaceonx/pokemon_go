@@ -6,7 +6,8 @@
 
 The state is the one the tracker writes. The advice comes from playing the position on
 many times: our side by the Planner, their side by varied versions of it, their unseen
-Pokémon drawn from the top 50, and their energy drawn from the range the tracker gives.
+Pokémon drawn from the top 50, and their energy drawn from the probabilities the tracker gives
+(the energy range is used for older state files without probabilities).
 """
 from __future__ import annotations
 
@@ -20,6 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from pogo.agents import Planner, varied  # noqa: E402
 from pogo.battle import CHARGED, DRAW, FAST, SWITCH, Battle, Mon  # noqa: E402
+from pogo.belief import sample_energy  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 
 
@@ -64,7 +66,8 @@ def rebuild(gd: GameData, state: dict, pool, rng: random.Random, me_agent, foe_a
     """A battle standing at this state, with what we cannot know filled in at random."""
     me, foe = state["me"], state["opponent"]
     mine = [mon_from(gd, p) for p in me["pokemon"]]
-    theirs = [mon_from(gd, p, rng.randint(*p["energy_range"])) for p in foe["pokemon"]]
+    theirs = [mon_from(gd, p, sample_energy(p["energy_odds"], rng) if p.get("energy_odds")
+                       else rng.randint(*p["energy_range"])) for p in foe["pokemon"]]
     taken = {m.build.species_id for m in theirs}
     unseen = max(0, min(foe["unseen"], 3 - len(theirs)))  # a tracker that saw a form change can count four
     theirs += [Mon(b) for b in rng.sample([b for b in pool if b.species_id not in taken], unseen)]

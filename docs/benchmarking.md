@@ -101,6 +101,13 @@ It flattens at about 10 games. So more of the owner's games add little to a mode
 players, or about a larger model that more data could support. The same model's chance per decision, 42% rising to 45% with
 all options equal at 36%, is on these decisions only and is not comparable with `predict_bench.py`'s 18%.
 
+## Observation cost
+
+The observation-cost diagnostic is now `scripts/check_tracker.py --pilot both --field mixed --seed 3602`:
+exact-state, perfect-camera and rough-camera play on fixed pairings and RNG streams, with paired margins.
+It compares each pilot against the same seeded Planner to isolate the cost of tracking; it is not a human
+strength judge. Task 36's commands and results are in `docs/status.md` and `runs/energy_reconstruction_*.out`.
+
 ## Not built yet
 
 - Frozen old versions as opponents, so scores compare across versions.
