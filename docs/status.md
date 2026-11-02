@@ -355,6 +355,16 @@ under the unchanged settings; neither final teams nor the fresh selected-setting
 opened. The v4 state can still say `fitting` during a validation block; use actual log events and evaluation
 row timestamps for liveness rather than that stale phase label alone.
 
+**Compute allocation update, registered before round two's result.** `counterfactual-v4/allocation_plan.json`
+records an adaptive stopping condition after the first non-improving round. Once at least three complete
+candidates have all failed to exceed the starting control, with `initial.npz` still selected, the agent
+will verify the live process identity and cooperatively stop this line, retain its checkpoints, and run
+the already reserved 128-pair fresh validation confirmation before moving the worker to the shared encoder.
+Any selected improvement keeps the original up-to-six-round schedule. This changes compute allocation,
+not battle policy or the completed-round data counts, validation/final sample sizes, frozen baseline,
+runtime source, eight-hour cap or original overall deadline. No stop or extra numerical worker has
+started at this update; round two remains in progress.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

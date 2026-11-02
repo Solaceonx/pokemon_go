@@ -1,0 +1,25 @@
+{
+  "registered_unix": 1793659294.7808099,
+  "registered_after_completed_round": 1,
+  "registered_before_round_2_result": true,
+  "original_plan_sha256": "a93ca87a308ef3a08cb4e984770618686166a81b42c3afca1a31e777ad6c6050",
+  "control_score": 0.296875,
+  "control_sha256": "d2884905f82e515e8b83efe48b6bafce96f1ff3a6803f8f8c89c646fae2f0c49",
+  "condition": "At least three complete candidates, none exceeds starting control, and initial.npz remains selected when the agent can act",
+  "if_true": "Verify current process identity, cooperatively STOP and retain all checkpoints/logs; confirm the retained policy on the reserved fresh validation seed before reallocating the worker",
+  "if_any_candidate_improves": "Keep the original up-to-six-round schedule",
+  "validation_sample_sizes_unchanged": true,
+  "training_positions_per_completed_round_unchanged": true,
+  "fresh_confirmation": {
+    "pairs": 128,
+    "seed": 38212,
+    "samples": 32,
+    "split": "validation"
+  },
+  "trial_deadline_unix": 1793681913.1958022,
+  "absolute_deadline_unix": 1793745649.6650429,
+  "runtime_source_unchanged": true,
+  "final_sample_sizes_unchanged": true,
+  "next_trial": "relational-v1 if budget remains and confirmation is below target",
+  "note": "Adaptive compute allocation after the first non-improving round; no battle-policy rule, baseline or final-test change. No stop or new numerical worker launched now."
+}
