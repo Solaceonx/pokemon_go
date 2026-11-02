@@ -152,6 +152,11 @@ three workers are verified at BelowNormal priority. The `train` command saves ch
 the final strength test unopened. Source hashes and the original shared deadline match the saved
 protocol (`launch_check.json`, `commands.txt`). No playing-strength result from this method yet.
 
+The pilot's initial validation reproduces **all 512 battle outcomes exactly** across stochastic and
+greedy modes from PPO round 16, including individual winners/draws and scores. Policy fingerprints
+and schedules match; the controls are saved as `initial_repeatability_*.json`. Greedy remains
+32.81% [27.73%, 37.89%]. This verifies transfer and evaluation repeatability; it is not a new gain.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
