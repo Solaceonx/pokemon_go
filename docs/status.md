@@ -6,6 +6,50 @@ says how to run things.
 
 Last updated 2026-10-18.
 
+## Standalone Double DQN experiment — 2026-11-01 (Codex DQN, task 38; in progress)
+
+Owner-requested independent reinforcement learning against a frozen current engine, with up to two days of
+computing. The other chat's task 37 / PR #11 uses PPO. This alternative uses Double DQN with n-step prioritized
+replay, a separate target network, a Monte Carlo auxiliary target and demonstration margin loss. `pogo/dqn.py`
+chooses actions, shields and replacements directly from public-state features, with no Planner or Engine calls
+at inference. An optional teacher exists only for generating bootstrap demonstrations. No new tactical rules.
+
+Frozen main: `59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9`, including the simulator, engine, data and both saved
+models. A separately imported namespace and SHA-256 manifest prevent live changes or evaluator caches from
+moving the baseline. Primary opponent: the website engine's full 32 samples, 20-step horizon, trained-bot
+rollouts, edge 0.03, learned margin 0.02, with no time cuts and a new evaluator cache every game. Training may
+use fewer search samples, explicitly labelled; reduced-search scores cannot meet the strength target.
+
+Team compositions are assigned by SHA-256 to 80% training / 10% validation / 10% final test. The sorted home
+species define composition, so changing the lead or bench order cannot move a trio between splits. Both our
+team and the opponent's team must belong to the intended split. Training uses mixed-field draws. Checkpoints
+are selected on validation; the model hash and sample size are locked before final tests on seeds 38091 and
+38092. Each team pairing plays both orientations, with balanced player sides. Normal 95% margins cluster
+both games of a pairing; a bounded concentration guard handles degenerate zero-variance samples. Mixed field
+is primary and standard field is a cross-check. No held-out outcome has been used for tuning.
+
+Draft PR #10 reviewed: it fixes capped-energy rollback after late switches, form identity and Disguise,
+carries energy probabilities into imagined battles, and measures observation cost with paired camera
+controls. Its reported rough-camera losses are remaining observation costs, not strength gains. This task
+does not merge tracker changes or train on uncertain observations; task 15 stays on hold and official footage
+is untouched. The present exact public-state experiment will not establish live or human performance.
+
+Initial checks: **263 tests pass, seven optional video skips; 108/108 PvPoke battles exact**. After implementation:
+**271 tests pass, seven skips; 108/108 exact**. Eight added tests cover hidden-state isolation, action/slot
+legality, online-selection/target-evaluation semantics, telescoping reward shaping, lead-invariant split
+assignment, optimizer/target/replay checkpoint restoration, actual learning and a whole standalone game.
+
+Smoke only (not a strength result): 100 demonstration games, a 32-unit network, two bootstrap epochs,
+then 390 training games in a 36-second budget, 25% one-sample-engine opponents. Training imitation agreement
+was 75.25% then 77%; validation checks used only two mirrored pairings and scores ranged 0–25%. This verifies
+the executable path and atomic training snapshots, not improvement. Logs/checkpoints stay in the ignored
+`runs/double-dqn/smoke/`. The first full run is `dqn-v1`: 10,000 demonstration games, a 128-unit network,
+120,000 retained replay transitions, 40 bootstrap epochs; output `runs/dqn-v1-bootstrap.out`. Results pending.
+
+Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
+large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
+curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
+
 ## Goal
 
 A bot that plays Pokémon GO trainer battles (Great League, three against three). Given
