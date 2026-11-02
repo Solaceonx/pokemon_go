@@ -100,6 +100,25 @@ policy without importing Planner, Learner, engine or simulator modules. Full sui
 (7 video-dependent skips); **108/108 PvPoke exact**. This loader is separate from the unchanged running
 training source; it does not affect the experiment.
 
+**Round sixteen:** after 4,096 PPO games, stochastic inference scored **26.37%, CI [21.68%, 31.25%]**,
+and greedy inference **32.81%, CI [27.73%, 37.89%]**. Greedy was retained as the current best. The small
+increase over round eight does not establish another gain; paired differences are in
+`learning_comparison_00016_greedy.json`. The complete six-point development curve is saved in
+`validation_history.json`. Training now leaves the 8-sample curriculum and uses the full 32-sample
+frozen engine. Every validation so far has already used 32 samples. The final-test data remains reserved.
+
+The first full-strength training batch is also confirmed in the live log: round 17 used **32 engine
+samples**, 256 games, and 1,238.8 summed worker-seconds. Source hashes still match the registered run,
+the parent and all three workers remain live at BelowNormal priority, and stderr is empty.
+
+Prepared an unused, training-only per-decision RL fallback (`pogo/counterfactual_rl.py`) while PPO
+continues. It labels every legal action with complete-battle returns using common dice, then optimizes
+the standalone policy from those utilities. Captured policy weights and controller/evaluator caches are
+private to each fork. It replays the actual choice exactly on both seats and passes repeatability,
+cache-isolation and gradient-direction tests. Those functional tests use one-sample engines; a full-32
+counterfactual training trial and playing-strength evaluation have not been run. No active PPO source
+was changed. **297 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

@@ -147,7 +147,18 @@ The original implementation is available at commit `ace8536c29f91445506ed1930b92
 
 `ppo-v2` changes network/optimizer isolation and adds public engine action demonstrations, with
 greedy/stochastic inference mode selected on validation. It has passed the end-to-end pipeline checks;
-strength results are pending. The v1 and tiny pipeline outcomes are not final-test evidence for v2.
+Final strength results remain pending; development scores are in `docs/status.md` and
+`validation_history.json`. The v1 and tiny pipeline outcomes are not final-test evidence for v2.
+
+A separate training-only fallback is being prepared in `pogo/counterfactual_rl.py`: capture a complete
+pre-step position, play every legal physical action to the end with common dice, and improve the policy
+from those terminal-return labels. Inputs remain the public feature vector; the resulting checkpoint
+uses the ordinary standalone network format. Continuations use the deployed greedy policy. Counterfactual
+targets leave the on-policy critic unchanged by default, so its stochastic-policy targets are not mixed
+with greedy-continuation targets. Six functional tests cover exact replay of the real choice on both
+seats, independent controller/evaluator caches, repeatable returns, frozen captured policy weights and
+the full-option gradient. Replay tests use one-sample engines for speed. No counterfactual training
+trial or playing-strength result has been claimed; the active PPO experiment is unchanged.
 
 ## Draft PR #10 review
 
