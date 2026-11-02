@@ -3662,3 +3662,9 @@ Release check built and passed on commit 4105bda (`scripts/release_check.py`; th
 owner's decisions gets the top choice right 66% of the time on unseen games, against 62% for the trained bot and 54% for the
 engine, and flattens after about 10 training games (`scripts/people_model.py`), so more of the owner's games do not help a model this
 small; other players are untested.
+
+The owner's exam, scored 2026-11-02 (`docs/benchmarking.md`): how often each plays the owner's answer on 36 positions chosen where versions
+disagree: rulebook 67%, trained bot 58%, `matching` 47%, engine 36%. Where the engine overrides the trained bot the owner sides with the trained bot
+11 to 3. The owner switches far less than the engine (2 against 7 of 26) and shields far more than the networks (6 against 1 of 7). The play-out judge's top
+choice matches the owner no better than chance (42% against 38%), so the earlier "staying in when a switch wins" finding, which came from it, is not
+supported. Website exam for friends: `exam.html`; `import_played.py --store` files their answers in `runs/exam/answers/` (not in git).

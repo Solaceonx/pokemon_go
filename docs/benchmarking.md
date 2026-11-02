@@ -101,6 +101,32 @@ It flattens at about 10 games. So more of the owner's games add little to a mode
 players, or about a larger model that more data could support. The same model's chance per decision, 42% rising to 45% with
 all options equal at 36%, is on these decisions only and is not comparable with `predict_bench.py`'s 18%.
 
+## The owner's exam, first results (2026-11-02, `scripts/exam_score.py`, `scripts/exam_rejudge.py`)
+
+36 positions plus 4 hidden repeats, 22 answered "sure". They were chosen where versions disagree (24 where the engine and
+`matching` differ), so these rates compare versions and do not say how often a version is right in play. One person, wide
+margins. Position-level answers stay out of this repo while friends are taking the exam (the website's `exam.html`).
+
+| How often each plays the owner's answer | Rulebook | Trained bot | Engine | Engine with `matching` |
+|---|---|---|---|---|
+| All 36 | 67% ± 15 | 58% ± 16 | 36% ± 16 | 47% ± 16 |
+| Sure only, 22 | 68% ± 19 | 68% ± 19 | 36% ± 20 | 55% ± 21 |
+| Shield calls, 7 | 71% ± 33 | 29% ± 33 | 29% ± 33 | 29% ± 33 |
+
+- **Repeats:** 3 of 3 sure answers came back the same, the one leaning answer did not. Sure answers look reliable; four is few.
+- **Where the engine overrides the trained bot,** the owner sides with the trained bot 11 to 3 (8 to 1 on sure answers). That fits
+  the engine's lead shrinking when its imagined opponent is wrong, and conflicts with its +17 head to head in simulation.
+- **Switching:** in 26 throw and switch positions the owner switches 2 times, the engine 7, `matching` 6, the rulebook 3, the trained bot
+  2. This is the owner's "keep the switch". The earlier finding that the bot's commonest error is staying in when a switch wins
+  (13 of 31 flagged) came from the play-out judge, which this exam does not support, so it should not be read as evidence against it.
+- **Shields:** in 7 shield calls the owner and the rulebook shield 6, the networks and engine 1 (the engine takes the trained bot's call).
+- **The play-out judge is not supported as an independent judge.** With 400 play-outs (top choice stable on 28 of 36) its top choice is
+  the owner's on 15 of 36, where choosing at random would match 38%. On the 6 positions it flagged as costly bot mistakes the owner
+  never takes its top choice (0 of 6 at 48 play-outs). By the judge, the owner gives away more points per position (15.0) than any
+  version (11.7 to 14.5). So one of them is wrong, and the website's review of mistakes uses this judge.
+- **Shared blind spots:** on 6 control positions where all four versions agree, the owner disagrees on 2.
+- The owner's answers match what they played at speed in their own games on 11 of 18, so agreement with game moves is a noisy label.
+
 ## Not built yet
 
 - Frozen old versions as opponents, so scores compare across versions.
