@@ -181,6 +181,22 @@ On Windows, pass `-EntryScript scripts/counterfactual_rl.py -Command train` to t
 The deadline above is the original task deadline, 2026-11-03 17:42:10 Los Angeles; it does not reset
 when starting a new method. Do not run a second pool alongside an existing three-worker experiment.
 
+## Supervised initialization
+
+An additional initialization trainer can use full-engine demonstrations already collected on the
+training partition. It updates actors only and does not select a checkpoint or open evaluation:
+
+```sh
+python scripts/pretrain_engine_policy.py train --run engine-bc-v1 --start runs/standalone-rl/ppo-v2/best.npz --demo-folder runs/standalone-rl/ppo-v2 --first-round 17 --last-round 24 --epochs 16 --budget-deadline 1793756530
+```
+
+Each epoch saves `round_*.npz`; the next invocation resumes from the committed epoch and verifies
+the source/data/initialization hashes and optimizer settings. Critic weights remain unchanged. The
+saved training agreement is a fit diagnostic, not a strength estimate. Evaluate candidate epochs with
+the standalone validation protocol, then continue RL from a selected candidate. No real-data
+pretraining or strength gain is claimed yet. Do not launch it alongside three existing battle workers;
+on Windows the background launcher accepts `-EntryScript scripts/pretrain_engine_policy.py -Command train`.
+
 ## Draft PR #10 review
 
 Reviewed head `5cce9110dfb4d17c9c6e6db6151ddc2dba8bf3c7`, including the tracker cap rollback,

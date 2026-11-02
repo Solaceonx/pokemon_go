@@ -173,6 +173,17 @@ Reports: `partition_audit_through_round_00004.json`, `training_health_00001.json
 found only a small label-score change (25.78% to 26.95%); it is not validation evidence, and no ensemble
 or inference change was made.
 
+Prepared an unused actor-only initialization trainer, `scripts/pretrain_engine_policy.py`, from the
+full-engine public actions already collected in PPO rounds 17–24. The audit finds **57,405 action,
+8,127 shield and 1,511 replacement examples** from 2,048 episodes / 1,997 distinct training trios.
+Every trio has the training partition; engine episodes use 32 samples, and example counts match their
+episode logs. File hashes are registered for resumption. Updates leave the critic unchanged and
+save an optimizer checkpoint each epoch. This is supervised refinement before further RL, not an RL
+strength result. It has not run on the real dataset yet; the counterfactual pilot continues unchanged.
+Full suite: **303 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**. The new tests check
+actor-only learning, exact split/continuous optimizer resumption, demonstration mutation rejection,
+and rejection of non-training teams, weak teachers and inconsistent example counts.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
