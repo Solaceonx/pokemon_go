@@ -6,8 +6,9 @@ engine, tracker, website and their defaults are unchanged.
 
 ## What is being trained
 
-`pogo/standalone_rl.py` contains a NumPy actor-critic with two tanh layers, a six-action policy, a shield
-policy, a replacement policy, and a critic. It chooses from all legal actions on every available turn,
+`pogo/standalone_rl.py` contains the public feature encoder, runtime player and first shared-network prototype.
+`pogo/standalone_rl_v2.py` contains the current NumPy actor-critic: separate two-layer tanh networks for the
+six-action policy, shield policy, replacement policy, and critic. It chooses from all legal actions on every available turn,
 without Planner advice, engine search, a hidden charged-move identity, or private simulator state.
 The 366 public features include health, energy, shields, timers, all our Pokemon, their revealed Pokemon,
 types, move stats, form state and pairwise damage. Unrevealed opponents are zero slots. There is no
@@ -18,7 +19,13 @@ to generate training examples. PPO then trains the separate policy against a mix
 engine (80%), frozen Learner (10%) and current standalone policy (10%). Rewards are +1 for a win, 0
 for a draw, -1 for a loss, with no hand-written strategy rewards. GAE uses gamma=1 and lambda=.98;
 the update clips probability ratios at .2, clips gradient norm at .5, uses a learned critic, and retains
-a small KL anchor to the imitation policy. Early training can use fewer engine samples as an explicit
+a small KL anchor to the imitation policy. The second experiment also records the frozen engine's
+actual public choices during the training games already being played and adds a .1-weight auxiliary
+cross-entropy loss to PPO. These are action labels, not the short-horizon search values whose earlier
+distillation failed. The critic is trained only from the RL player's trajectory, not the opponent's
+rewards under a different policy. Separate networks and per-parameter Adam clocks prevent critic
+updates and another head's unused momentum from directly moving a policy.
+Early training can use fewer engine samples as an explicit
 curriculum; validation and primary testing always use 32. No engine settings are learned or replaced.
 
 Earlier whole-battle policy gradients, wider old Q-nets and distillation did not improve the project
@@ -45,8 +52,8 @@ The mixed and standard fields each retain their own conditional distribution wit
 Teams are drawn with replacement, so each pairing is an independent draw, even if a trio repeats.
 The standard field is a registered cross-check, not an unseen data source.
 
-Validation schedules and seeds are fixed before training. Checkpoints are selected only on mixed-field
-validation score. `lock` records the selected weights and source hashes, forbids further training of that
+Validation schedules and seeds are fixed before training. Checkpoints and greedy/stochastic inference
+mode are selected only on mixed-field validation score. `lock` records the selected mode, weights and source hashes, forbids further training of that
 run, and only then generates two final seed blocks. Changing sample size, weights, implementation,
 or baseline after locking invalidates that test. A new attempted method requires a new run and new
 final-test seeds. Test schedules, individual outcomes and summaries are all saved.
@@ -75,17 +82,20 @@ Use the same Python interpreter that has NumPy. On Windows in the Codex workspac
 `C:/Users/lionl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`.
 
 ```sh
-python scripts/standalone_rl.py prepare --run ppo-v1 --seed 37001 --validation-pairings 128
-python scripts/standalone_rl.py train --run ppo-v1 --hours 32 --workers 3 --bootstrap-games 16384
-python scripts/standalone_rl.py lock --run ppo-v1
-python scripts/standalone_rl.py test --run ppo-v1 --pairings 1200 --workers 3
+python scripts/standalone_rl.py run --run ppo-v2 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v1/best.npz --bootstrap-games 0 --hours 36 --workers 3 --validation-every 8 --curriculum-rounds 16 --anchor 0.01 --demo-weight 0.1 --pairings 1200
 ```
+
+`run` prepares, trains, locks and performs final testing without another command. The component
+commands `prepare`, `train`, `lock`, and `test` are also available. The actual owner's run adds an
+absolute `--budget-deadline` shared across experiments; it is saved in its command log. Training reserves
+ten hours before that deadline for final testing. Workers stop accepting new battles at the deadline.
+Every game's outcome is bounded by the simulator's time limit, so an in-flight battle may finish after it.
 
 The training command resumes the committed round, including Adam moments. All batch RNG streams are
 derived from the experiment seed, episode index and stream purpose; worker scheduling does not reorder
 examples. A stopped command can be repeated. At most three below-normal-priority processes perform
 battles, with one NumPy thread each. Do not edit the experiment source while workers use it. Large
-replay/bootstrap batches and individual game logs stay local and ignored by Git. Small checkpoint files,
+replay/bootstrap/demonstration batches and individual game logs stay local and ignored by Git. Small checkpoint files,
 provenance, summary JSON, and `experiments.jsonl` can be retained with the PR. Keep the best/locked model
 and representative checkpoints; do not commit every training batch or all intermediate models.
 
@@ -96,6 +106,7 @@ and representative checkpoints; do not commit every training batch or all interm
 - `bootstrap.npz`, `best.npz`, `locked.npz`: initialized, selected and final frozen policies.
 - `experiments.jsonl`: every batch, update, validation and final decision.
 - `replay_*.npz`, `bootstrap_*.npz`, `training_games_*.json`: local training examples and episode logs.
+- `demo_*.npz`: the opponent's public action examples, with no hidden-move identity or hidden team.
 - `validation_schedule_*.json`, `validation_summary_*.json`: selection schedules and scores.
 - `lock.json`, `test_plan.json`, `test_schedule_*.json`, `test_results.json`: final protocol and result.
 - `validation_*.jsonl`, `test_*.jsonl`: append-only pairing outcomes with resume provenance.
@@ -104,9 +115,27 @@ Use a saved policy directly:
 
 ```python
 from pogo.standalone_rl import ActorCritic, StandaloneAgent
-model, metadata = ActorCritic.load("runs/standalone-rl/ppo-v1/locked.npz")
+model, metadata = ActorCritic.load("runs/standalone-rl/ppo-v2/locked.npz")
 agent = StandaloneAgent(model, seed=123)  # act(view), shield(view, energy), replace(view)
 ```
+
+The generic loader accepts both network versions. Migrating the first prototype to independent networks
+copies its policy and value outputs exactly, starts fresh Adam state, and records that reset in provenance.
+Future independent-network checkpoints resume their per-parameter moments and clocks exactly.
+Missing frozen caches are rebuilt from the recorded commit; all hashes are checked again.
+
+## Development results so far
+
+`ppo-v1`: 16,384 imitation games, then four PPO rounds / 1,024 RL games. At initialization it scored
+19.34% (95% pairing-bootstrap CI 14.84–24.02%) against the full engine; after four rounds it scored
+18.75% (14.26–23.44%). Each used the same 128 validation pairings / 256 battles. This pilot did not
+improve. It was stopped at a saved round-4 checkpoint before changing its driver. Its best initialization
+is retained as the second experiment's warm start; the network migration preserves its outputs exactly.
+The original implementation is available at commit `ace8536c29f91445506ed1930b926f6d8215133e`.
+
+`ppo-v2` changes network/optimizer isolation and adds public engine action demonstrations, with
+greedy/stochastic inference mode selected on validation. It has passed the end-to-end pipeline checks;
+strength results are pending. The v1 and tiny pipeline outcomes are not final-test evidence for v2.
 
 ## Draft PR #10 review
 

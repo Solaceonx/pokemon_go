@@ -29,11 +29,15 @@ def digest(path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def canonical_json_digest(value) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
 def atomic_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".tmp")
-    tmp.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    tmp.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     tmp.replace(path)
 
 
@@ -75,7 +79,8 @@ class FrozenRuntime:
     def __init__(self, path):
         self.path = Path(path).resolve()
         self.manifest = verify_snapshot(self.path)
-        namespace = "_rl_frozen_" + self.manifest["commit"]
+        path_id = hashlib.sha256(str(self.path).encode()).hexdigest()[:12]
+        namespace = "_rl_frozen_" + self.manifest["commit"] + "_" + path_id
         if namespace not in sys.modules:
             spec = importlib.util.spec_from_file_location(namespace, self.path / "pogo/__init__.py",
                                                         submodule_search_locations=[str(self.path / "pogo")])

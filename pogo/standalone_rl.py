@@ -202,6 +202,9 @@ class ActorCritic:
     def load(cls, path):
         with np.load(path, allow_pickle=False) as data:
             meta = json.loads(str(data["meta"]))
+            if meta["schema"] == 2:
+                from .standalone_rl_v2 import ActorCritic as IndependentActorCritic
+                return IndependentActorCritic.load(path)
             if meta["schema"] != SCHEMA or meta["features"] != N_FEATURES:
                 raise ValueError("incompatible standalone RL feature schema")
             model = cls(hidden=data["p:w1"].shape[1])

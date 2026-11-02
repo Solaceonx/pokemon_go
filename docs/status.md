@@ -44,6 +44,21 @@ on 128 validation pairings / 256 battles. The search used 1,564.6 core-seconds a
 This is validation data, not the reserved final test, and it is a poor result. PPO training now follows;
 neither agreement with the teacher nor this initialized checkpoint meets the strength target.
 
+**First PPO pilot, stopped at a checkpoint:** after four rounds / 1,024 training games, the same
+128 validation pairings gave **18.75%, CI [14.26%, 23.44%]**, against the full 32-sample engine. No
+improvement established. The pilot was stopped before editing its driver; its source is preserved at
+`ace8536c29f91445506ed1930b926f6d8215133e`, and its best and round-4 checkpoints and logs are saved.
+
+**Second experiment (`ppo-v2`):** independent policy heads and critic, per-parameter Adam clocks,
+and a .1-weight auxiliary loss from the frozen engine's public actions in games already being played.
+These are the actual actions, not short-horizon search-value targets. Only the RL side's terminal
+rewards train its critic. Warm start copies the first experiment's best policy/value outputs exactly
+and explicitly resets optimizer moments. Greedy/stochastic mode is selected only on validation.
+The driver now supports unattended prepare/train/lock/test and restores missing frozen caches by commit.
+The tiny independent-network pipeline passed all phases, including recording 185 public opponent
+decisions in its 8-game PPO batch; its weak scores are pipeline checks only. Full suite: 288 tests OK
+(7 video-dependent skips), 108/108 reference battles exact. Final strength evaluation is pending.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
