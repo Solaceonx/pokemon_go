@@ -303,6 +303,12 @@ passes an integration check against the completed original BC candidates and ret
 policy. The controller's PowerShell syntax is parsed before launch; live process identity, start time,
 command line, child count and committed progress are checked before its bounded handoff.
 
+The first controller startup stopped safely at its identity guard. PowerShell had already converted
+the JSON UTC timestamp to a `DateTime`; parsing that value as text again lost its timezone and
+shifted the expected instant by eight hours. No Python process was stopped. The guard now preserves
+the existing timestamp type; the live process differs by only 0.009 seconds from its recorded start.
+A PowerShell regression covers string, JSON-converted DateTime and DateTimeOffset inputs before restart.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

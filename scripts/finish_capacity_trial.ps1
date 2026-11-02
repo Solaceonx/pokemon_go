@@ -8,6 +8,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $rlRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $rlRoot
+. "$PSScriptRoot/rl_process_identity.ps1"
 foreach ($rlVariable in @('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','VECLIB_MAXIMUM_THREADS')) {
     [Environment]::SetEnvironmentVariable($rlVariable, '1', 'Process')
 }
@@ -27,7 +28,7 @@ function Test-JobLive([string]$Run) {
     $rlRecord = Get-Content -LiteralPath "runs/standalone-rl/$Run/process.json" -Raw | ConvertFrom-Json
     $rlProcess = Get-Process -Id $rlRecord.pid -ErrorAction SilentlyContinue
     if (-not $rlProcess) { return $false }
-    $rlExpected = [DateTimeOffset]::Parse($rlRecord.started_utc).UtcDateTime
+    $rlExpected = Convert-RlRecordedStartToUtc $rlRecord.started_utc
     if ([Math]::Abs(($rlProcess.StartTime.ToUniversalTime() - $rlExpected).TotalSeconds) -gt 30) {
         throw "Recorded PID for $Run was reused; no process will be stopped."
     }
