@@ -190,6 +190,13 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+`scripts/student_correction_rl.py` is an unused training-only variant. It queries the frozen expert
+at student-visited states, collects terminal-return PPO trajectories without expert intervention,
+and aggregates eight rounds of public expert labels. The expert's unexecuted decision plans are
+rolled back when the student chooses another action. Evaluation and deployment use the original
+StandaloneAgent. Its source/protocol is separate, bootstrap games must be zero, and full 32-sample
+training is the default. Functional tests pass; real pipeline and strength checks remain pending.
+
 `scripts/widen_standalone_policy.py` provides a separate capacity initialization. It duplicates tanh
 units, splits outgoing weights and adds balanced perturbations that preserve initial outputs while
 allowing independent gradients. A parent checkpoint snapshot, source/hash provenance, numerical

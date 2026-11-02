@@ -309,6 +309,25 @@ shifted the expected instant by eight hours. No Python process was stopped. The 
 the existing timestamp type; the live process differs by only 0.009 seconds from its recorded start.
 A PowerShell regression covers string, JSON-converted DateTime and DateTimeOffset inputs before restart.
 
+**Capacity epoch four:** greedy validation is **30.47%, CI [25.98%, 34.96%]**; stochastic is
+**23.44%, CI [18.75%, 28.13%]**. The larger model has not improved strength. The checked controller
+completed this job and started epoch-sixteen validation with the same one-worker allocation.
+The nominal PPO round-24 gain over its initialization is **+4.30 points, paired CI [-2.15, 10.55]**;
+that interval does not establish another learning gain. Absolute strength remains below the engine.
+
+Prepared an unused student-state correction variant (`pogo/student_correction.py`,
+`scripts/student_correction_rl.py`). A separate frozen expert labels the actual states the student
+visits, while the student still makes all training actions and receives on-policy terminal rewards.
+The expert receives actual public callbacks; rejected action plans are rolled back and actual
+physical actions update its decision context. No teacher state is a neural input. Expert-control
+replay reproduces complete frozen-engine games on both seats; real collection tests verify actual
+student returns, legal public labels and labels from both student/opponent states. The bounded
+eight-round expert replay window is tested. Deployment/evaluation still use the ordinary standalone
+network, with no expert calls. This addresses distribution mismatch in the earlier opponent-only
+demonstrations; it has not run a real pipeline or strength trial yet. No extra long-job worker is started.
+Full suite: **324 tests OK** (7 video skips), **108/108 PvPoke exact**. The existing training and capacity
+controller sources are unchanged; this variant is prepared separately and remains unused.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
