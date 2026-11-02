@@ -439,6 +439,16 @@ the actual evaluation path uses the adapter, not playing strength. The audit is 
 `slot_ensemble_pipeline_audit.json`. The registered 128-pair `slot-ensemble-v1` validation started at
 **2026-11-02 23:20 UTC**, using the freed worker while the main PPO keeps two workers.
 
+**Slot-ensemble result (2026-11-02 23:46 UTC): rejected.** Full 128-pair validation is **32.62%,
+CI [27.34%, 37.70%]**, versus the unchanged single-view parent's 37.11%. The paired change is
+**-4.49 points, CI [-11.33, 2.54]**. All 256 battles used the actual ensemble (12,219 decisions), all
+six source hashes match and the neural parameters are unchanged. The input/output relabeling passed
+its mathematical tests, but improved expert-label agreement did not improve playing strength.
+`slot_ensemble_validation_decision.json` records the failed promotion gate; this adapter is not
+selected for deployment/final evaluation. No more variants are selected from this diagnostic.
+The controller is waiting for the next committed main PPO round before returning its worker to that
+run, preserving all three-worker, original-deadline and final-reserve safeguards.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

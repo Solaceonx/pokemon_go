@@ -1,0 +1,37 @@
+{
+  "actual_ensemble_decisions": 12219,
+  "all_six_sources_match": true,
+  "baseline": {
+    "checkpoint_sha256": "8261cccb8c849af3a22e3d53e87a7111298c8337d0077bf6842630d5261df7c5",
+    "frozen_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+    "mode": "greedy",
+    "round": 24,
+    "run": "mc-ppo-v3",
+    "schedule_sha256": "9e66e10caa5aacdb4c31dd5642e16decbb4c505f2e147ff0820f2308a36f735e",
+    "score": 0.37109375
+  },
+  "battles_with_ensemble_inference": 256,
+  "candidate": {
+    "checkpoint_sha256": "aa435260bf9b2d471a6a73ec49789191d24468870c152edfb460ac7cff7db37d",
+    "ci95": [
+      0.2734375,
+      0.376953125
+    ],
+    "run": "slot-ensemble-v1",
+    "score": 0.326171875,
+    "weights_sha256": "69aed55bfcf2b64cf9858828223bab9ca0c4dad5ece206aed6f11983a092235f"
+  },
+  "decision": "Reject inference adapter; training-label agreement did not improve measured playing strength.",
+  "eligible_for_promotion": false,
+  "paired_comparison": {
+    "bootstrap_seed": 41003,
+    "ci95": [
+      -0.11328125,
+      0.025390625
+    ],
+    "paired_change": -0.044921875,
+    "pairings": 128
+  },
+  "parameters_unchanged": true,
+  "scope": "Exploratory validation decision; final test data unopened"
+}

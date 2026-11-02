@@ -195,8 +195,10 @@ It averages masked probabilities over all six equivalent own-slot representation
 back to physical actions. It uses public features and neural inference only. Use its explicit
 `load_agent` loader for deployment; the ordinary loader returns the ordinary single-view policy.
 The saved training-label diagnostic improves agreement and cross-entropy on all heads. The real
-four-battle evaluation pipeline passed and the registered 128-pair validation is running under
-`runs/standalone-rl/slot_ensemble_plan.json`. It cannot produce PPO logs or
+four-battle evaluation pipeline passed, but the registered 128-pair validation failed promotion:
+32.62% (95% CI 27.34–37.70%) versus the parent's 37.11%; paired change -4.49 points
+([-11.33, 2.54]). This adapter is rejected. See `runs/standalone-rl/slot_ensemble_plan.json` and
+`slot_ensemble_validation_decision.json`. It cannot produce PPO logs or
 perform training, because ordinary single-view PPO would have the wrong mixture probability.
 
 Prepare a separate run with `scripts/slot_ensemble_rl.py prepare --run NAME --start CHECKPOINT`, then
