@@ -62,7 +62,7 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px 
 .sure button { padding: 11px 6px; background: var(--soft); border: 1px solid var(--accent); border-radius: 8px; font-weight: 600; }
 .sure button.on { background: var(--accent); color: var(--on-accent); }
 label { color: var(--muted); font-size: 13px; display: grid; gap: 4px; }
-input[type=text] { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; width: 100%; box-sizing: border-box; }
+input[type=text], select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; width: 100%; box-sizing: border-box; }
 nav { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .link { background: none; border: 0; padding: 6px 0; color: var(--accent); font-weight: 500; }
 .done { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: grid; gap: 10px; }
@@ -80,11 +80,40 @@ const TYPES = {normal:["#a8a77a","#14202c"],fire:["#ee8130","#14202c"],water:["#
 const app = document.getElementById("app");
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const answers = {};
+// On the website answers go to the game store (scripts/pvpbot_store), one record a person; on an Artifact, to its db.
+const STORE_URL = "/*STORE_URL*/".startsWith("/*") ? "" : "/*STORE_URL*/";
 let db = null, at = 0, chosen = null, began = Date.now(), status = "", loaded = false, intro = true;
+let who = null, sending = false, again = false, sendState = "idle";
 
 function store() { try { return window.localStorage; } catch (e) { return null; } }
-function keepLocal() { try { store()?.setItem("answers", JSON.stringify(answers)); } catch (e) {} }
-try { Object.assign(answers, JSON.parse(store()?.getItem("answers") || "{}")); } catch (e) {}
+function keepLocal() { try { store()?.setItem("exam-1-answers", JSON.stringify(answers)); } catch (e) {} }
+try { Object.assign(answers, JSON.parse(store()?.getItem("exam-1-answers") || "{}")); } catch (e) {}
+try { who = JSON.parse(store()?.getItem("exam-1-who") || "null"); } catch (e) {}
+const LEVELS = [["legend", "Legend"], ["expert", "Expert or Veteran"], ["lower", "Below that"], ["none", "I don't play ranked"]];
+
+// result, mine and theirs are what the store asks of a record; scripts/import_played.py sorts exam records from games by `exam`.
+function record() {
+  return {exam: "exam-1", started: who.started, player: who.name, level: who.level, result: "draw", mine: [], theirs: [],
+          answers, answered: answeredCount(), total: POS.length};
+}
+async function send() {
+  if (sending) { again = true; return; }
+  sending = true; sendState = "sending";
+  try {
+    const res = await fetch(STORE_URL, {method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(record())});
+    sendState = (await res.json()).ok === true ? "sent" : "failed";
+  } catch (e) { sendState = "failed"; }
+  sending = false;
+  if (again) { again = false; return send(); }
+  status = sendState === "sent" ? "saved" : "could not send, will try again";
+  if (at >= POS.length) return render();
+  const s = app.querySelector(".status");
+  if (s) s.textContent = `${clock(POS[at].seconds)} into the battle · ${status}`;
+}
+window.addEventListener("pagehide", () => {
+  if (STORE_URL && who && sendState !== "sent" && answeredCount() && navigator.sendBeacon)
+    navigator.sendBeacon(STORE_URL, new Blob([JSON.stringify(record())], {type: "text/plain;charset=utf-8"}));
+});
 
 const chip = t => { const c = TYPES[t] || ["#888888","#ffffff"]; return `<span class="t" style="background:${c[0]};color:${c[1]}">${esc(t)}</span>`; };
 const pips = n => `<span class="pips" role="img" aria-label="${n} shields"><i class="${n > 0 ? "on" : ""}"></i><i class="${n > 1 ? "on" : ""}"></i></span>`;
@@ -138,7 +167,17 @@ function prompt(p) {
 function clock(s) { return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`; }
 function answeredCount() { return POS.filter(p => answers[p.id]).length; }
 
+function renderWelcome() {
+  app.innerHTML = `<section class="done"><h1>Great League Exam</h1>
+    <p>${POS.length} real positions from real games. Pick what you'd play and how sure you are. It takes about 15 minutes with no time limit, and you can stop and come back on this device.</p>
+    <p>Your answers and the name you give are sent to the owner of this site.</p>
+    <label for="who-name">Your name or nickname<input type="text" id="who-name" maxlength="30" autocomplete="nickname"></label>
+    <label for="who-level">Highest rank you usually reach<select id="who-level">${LEVELS.map(([k, t]) => `<option value="${k}">${t}</option>`).join("")}</select></label>
+    <p class="status" id="who-error" hidden>Enter a name first.</p>
+    <button class="opt on" data-start="1" style="justify-self:start"><span>Start</span></button></section>`;
+}
 function render() {
+  if (STORE_URL && !who) return renderWelcome();
   if (at >= POS.length) return renderDone();
   const p = POS[at], a = answers[p.id];
   const pct = 100 * answeredCount() / POS.length;
@@ -147,7 +186,7 @@ function render() {
   app.innerHTML = `<header>
       <div class="top"><span class="count">Position ${at + 1} of ${POS.length}</span><span class="status">${clock(p.seconds)} into the battle${status ? ` · ${esc(status)}` : ""}</span></div>
       <div class="progress"><i style="width:${pct}%"></i></div>
-      ${intro && at === 0 ? `<p class="intro">Real positions from real games, shown as a player sees them. Pick what you'd play and how sure you are. There's no time limit and your answers save as you go, so you can stop and come back.</p>` : ""}
+      ${intro && at === 0 ? `<p class="intro">Real positions from real games, shown as a player sees them. Pick what you'd play and how sure you are. There's no time limit and your answers save as you go, so you can stop and come back.${STORE_URL ? " Nobody is checking your answers against a right answer: positions can be close, and saying so is useful." : ""}</p>` : ""}
     </header>
     <div class="board">${foeCard(p)}${youCard(p)}</div>
     ${recent}
@@ -164,15 +203,19 @@ function render() {
 }
 function renderDone() {
   const missing = POS.filter(p => !answers[p.id]);
-  const full = db ? "" : `<label for="dump">Your answers could not be saved online. Copy this and paste it in the chat.<textarea id="dump" readonly>${esc(JSON.stringify(answers))}</textarea></label>`;
+  const failed = STORE_URL ? sendState === "failed" : !db;
+  const full = failed ? `<label for="dump">Your answers could not be sent. Copy this and send it to whoever shared this page with you.<textarea id="dump" readonly>${esc(JSON.stringify(answers))}</textarea></label>${STORE_URL ? `<button class="link" data-resend="1" style="justify-self:start">Try sending again</button>` : ""}` : "";
+  const thanks = !STORE_URL ? "Thanks. Tell Claude in the chat that you've finished, and your answers can be scored."
+    : sendState === "sent" ? "Thanks. Your answers have been sent." : sendState === "failed" ? "Thanks. Your answers have not reached the owner yet." : "Thanks. Sending your answers...";
   app.innerHTML = `<section class="done"><h1>${missing.length ? `${POS.length - missing.length} of ${POS.length} answered` : "All done"}</h1>
-    <p>${missing.length ? "Tap a number to go back to a position you skipped." : "Thanks. Tell Claude in the chat that you've finished, and your answers can be scored."}</p>
+    <p>${missing.length ? "Tap a number to go back to a position you skipped." : thanks}</p>
     ${missing.length ? `<div class="jump">${missing.map(p => `<button data-jump="${POS.indexOf(p)}">${POS.indexOf(p) + 1}</button>`).join("")}</div>` : ""}
     <button class="link" data-jump="0" style="justify-self:start">Review from the start</button>${full}</section>`;
   window.scrollTo(0, 0);
 }
 async function save(id, value) {
   answers[id] = value; keepLocal();
+  if (STORE_URL) return send();
   if (!db) { status = "saved on this device"; return; }
   try { await db.doc("answers/" + id).set(value); status = "saved"; }
   catch (e) { status = "could not save online, kept on this device"; }
@@ -186,6 +229,15 @@ function next() {
 }
 app.addEventListener("click", ev => {
   const b = ev.target.closest("button"); if (!b) return;
+  if (b.dataset.start) {
+    const name = app.querySelector("#who-name").value.trim();
+    if (!name) { app.querySelector("#who-error").hidden = false; return; }
+    who = {name, level: app.querySelector("#who-level").value, started: new Date().toISOString().slice(0, 19).replace("T", "_").replace(/:/g, "-")};
+    try { store()?.setItem("exam-1-who", JSON.stringify(who)); } catch (e) {}
+    began = Date.now();
+    return render();
+  }
+  if (b.dataset.resend) { send(); return render(); }
   const p = POS[at];
   if (b.dataset.key) { chosen = b.dataset.key; app.querySelectorAll(".opt").forEach(x => x.classList.toggle("on", x === b)); app.querySelector("#sure").hidden = false; app.querySelector("#sure").scrollIntoView({block: "nearest"}); return; }
   if (b.dataset.sure) {
@@ -200,6 +252,12 @@ app.addEventListener("click", ev => {
 });
 render();
 (async () => {
+  if (STORE_URL) {
+    const first = POS.findIndex(p => !answers[p.id]);
+    at = first < 0 ? POS.length : first; intro = first === 0;
+    if (answeredCount()) send();
+    return render();
+  }
   try { db = window.claude ? await window.claude.use("db") : null; } catch (e) { db = null; }
   if (!db) { status = "saving on this device only"; return render(); }
   try {

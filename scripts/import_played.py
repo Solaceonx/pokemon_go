@@ -19,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SAVED = ROOT / "games" / "played"
+EXAMS = ROOT / "runs" / "exam" / "answers"
 
 
 def from_store() -> list:
@@ -36,12 +37,17 @@ def main() -> None:
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     SAVED.mkdir(parents=True, exist_ok=True)
-    added = skipped = noted = 0
+    added = skipped = noted = exams = 0
     batches = [from_store() if a == "--store" else json.loads(Path(a).read_text()) for a in sys.argv[1:]]
     for data in batches:
         for game in data if isinstance(data, list) else [data]:
             game.pop("stored", None)
             who = re.sub(r"[^A-Za-z0-9_-]", "", game.get("player") or "web") or "web"
+            if game.get("exam"):  # answers to the website's exam (scripts/exam_page), kept in the store beside the games; not a game
+                EXAMS.mkdir(parents=True, exist_ok=True)
+                (EXAMS / f"{game['started']}-{who}.json").write_text(json.dumps(game, indent=1) + "\n")
+                exams += 1
+                continue
             out = SAVED / f"{game['started']}-{who}.json"
             if out.exists():
                 old = json.loads(out.read_text())
@@ -57,7 +63,7 @@ def main() -> None:
             with (SAVED / "results.jsonl").open("a") as tally:
                 tally.write(json.dumps({k: game.get(k) for k in ("started", "bot", "result", "mine", "theirs", "turns", "player")}) + "\n")
             added += 1
-    print(f"added {added} games to {SAVED.relative_to(ROOT)}, new notes on {noted}, skipped {skipped} already there")
+    print(f"added {added} games to {SAVED.relative_to(ROOT)}, new notes on {noted}, skipped {skipped} already there; {exams} sets of exam answers in {EXAMS.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":
