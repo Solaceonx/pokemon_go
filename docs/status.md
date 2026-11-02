@@ -378,6 +378,51 @@ method change. `student_correction_baseline_audit.json` records these checks. Th
 baseline rather than a new strength result. The pilot has now begun collecting its training batches;
 both training runs remain unlocked and their final-test seeds have not been generated.
 
+**Student-state pilot round one (2026-11-02 21:04 UTC):** saved 128 full-strength training games,
+4,952 actual student decisions and 9,936 legal expert labels (4,952 student-state, 4,984 opponent-state).
+All 222 distinct trios are in the training partition. Saved return counts match the terminal rewards
+and decision counts exactly: 3,831 loss decisions, 1,100 win decisions, 21 draw decisions. Parameters,
+Adam arrays and inputs are finite; all eight source hashes match. The action-head update stopped after
+two epochs at its configured KL guard (0.02198); shield/replacement completed four epochs. The batch
+training score is 19.92%, not a validation-strength result. No post-training validation is scheduled
+until round four. The checkpoint, raw data and `student_correction_round1_audit.json` are saved;
+the pilot continues, and the main PPO has committed round 43 (11,008 games) without a new selected best.
+
+**PPO round forty-eight:** 12,288 training games. Greedy validation is **32.81%, CI [27.93%, 37.70%]**;
+stochastic is **28.12%, CI [23.05%, 33.20%]**. The selected checkpoint remains round 24 at 37.11%.
+The paired greedy change from that selection is **-4.30 points, CI [-10.74, 2.15]**.
+`mc3_progress_round48.json` records the complete scheduled progression; further improvement is unproven.
+
+**Student-state training complete:** all four batches, 512 games, 705 distinct training trios,
+17,884 student decisions and 37,298 expert labels (17,884 student-state, 19,414 opponent-state).
+There is zero trio overlap with the 194 validation trios and zero seed overlap. Return counts exactly
+match terminal episode rewards: 13,844 loss decisions, 4,019 win decisions and 21 draw decisions.
+All inputs, parameters and optimizer arrays are finite; labels are legal and all eight source hashes
+match. All four checkpoints and raw batches are saved. `student_correction_training_audit_round4.json`
+binds their hashes. Post-training validation is running; these training checks do not establish strength.
+
+**Measured slot-symmetry diagnostic:** on the first saved correction batch's 9,936 training labels,
+the fixed parent policy's six-slot-permutation probability average improves expert agreement:
+actions **72.77% to 74.35%**, shields **77.52% to 79.65%**, replacements **56.73% to 62.86%**.
+Cross-entropy also falls on every head (action 0.851 to 0.737, shield 0.478 to 0.424, replacement
+0.736 to 0.651). This is a training-label diagnostic only, not playing strength; see
+`slot_symmetry_training_diagnostic.json`. Own mon blocks, active flags, pair-interaction rows and
+physical switch/replacement actions are relabeled together. The resulting inference-only module
+(`pogo/slot_ensemble.py`) averages the frozen neural policy without a teacher or search call.
+Six tests cover actual public-view equivalence, probability equivariance, legal masks/forced actions,
+clone RNG independence, a deployment import check excluding Engine/Learner/Planner/simulator, and
+an actual paired worker run that verifies ensemble inference in both seats. The driver supplies its
+own pairing worker because the shared evaluator constructs an ordinary single-view agent internally.
+
+`slot_ensemble_plan.json` preregisters one greedy 128-pair comparison of this fixed rule using the
+immutable selected round-24 checkpoint, after a two-pair real pipeline. A positive paired lower bound
+over the concurrent selected neural baseline is required to retain it for final evaluation. The checked
+controller queues this on the worker freed by the student pilot, then resumes the original neural run
+on three workers pending comparison. Restart checks skip completed/running jobs, verified against the
+actual completed capacity/pipeline runs and live student job, so no duplicate worker is created.
+All existing Python workers and their source files were left unchanged. The original deadline and
+twelve-hour final reserve remain. Full suite: **330 tests OK**, 7 video skips, **108/108 PvPoke exact**.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

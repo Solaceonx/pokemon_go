@@ -1,0 +1,30 @@
+{
+  "registered_utc": "2026-11-02 22:34:13 UTC",
+  "scope": "Exploratory validation of one fixed inference rule; no final-test data used.",
+  "method": {
+    "permutations": 6,
+    "aggregation": "Arithmetic mean of masked neural action probabilities, mapped back to physical action indices",
+    "training": false
+  },
+  "input_checkpoint": "runs/standalone-rl/mc-ppo-v3/selected_round_00024.npz",
+  "input_checkpoint_sha256": "9bfde8643a7ac3735b56be4ea460c415b5dd55e97a652315f47c1018d4d05e03",
+  "neural_baseline": {
+    "run": "mc-ppo-v3",
+    "round": 24,
+    "mode": "greedy",
+    "score": 0.37109375
+  },
+  "training_diagnostic": "slot_symmetry_training_diagnostic.json",
+  "run": "slot-ensemble-v1",
+  "seed": 37001,
+  "validation_pairings": 128,
+  "engine_samples": 32,
+  "validation_modes": [
+    "greedy"
+  ],
+  "precondition": "Two-pair real evaluation pipeline completes with zero training games",
+  "decision": "Keep as a final-evaluation candidate only if its mean exceeds the concurrent selected neural baseline and the paired 95% bootstrap lower bound is positive. Otherwise reject. Validation never establishes final strength.",
+  "allocation": "One worker after student pilot completes; main PPO stays on two workers. The controller subsequently resumes the original neural run on three workers pending manual candidate comparison.",
+  "budget_deadline_unix": 1793756530,
+  "final_reserve_hours": 12
+}

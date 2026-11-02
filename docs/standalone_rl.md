@@ -190,6 +190,21 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+`pogo/slot_ensemble.py` is a separate inference-only adapter for a saved independent-head checkpoint.
+It averages masked probabilities over all six equivalent own-slot representations and maps outputs
+back to physical actions. It uses public features and neural inference only. Use its explicit
+`load_agent` loader for deployment; the ordinary loader returns the ordinary single-view policy.
+The saved training-label diagnostic improves agreement and cross-entropy on all heads, but validation
+strength is pending under `runs/standalone-rl/slot_ensemble_plan.json`. It cannot produce PPO logs or
+perform training, because ordinary single-view PPO would have the wrong mixture probability.
+
+Prepare a separate run with `scripts/slot_ensemble_rl.py prepare --run NAME --start CHECKPOINT`, then
+`scripts/slot_ensemble_rl.py validate --run NAME --workers 1` when a worker is free. The driver pins six
+source hashes and reuses the frozen opponent, pairing schedule, confidence intervals and lock/test
+protocol. It evaluates greedy mode only. The internal `train` alias is restricted to zero bootstrap
+games and zero PPO rounds. Lock/test are available after validation; no substantive final data has
+been opened for this adapter.
+
 `scripts/student_correction_rl.py` is a separately registered training-only variant. It queries the frozen expert
 at student-visited states, collects terminal-return PPO trajectories without expert intervention,
 and aggregates eight rounds of public expert labels. The expert's unexecuted decision plans are

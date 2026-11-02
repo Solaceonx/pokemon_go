@@ -76,11 +76,20 @@ function Wait-Training([string]$Run, [int]$Round) {
     }
     Write-ControlEvent 'bounded_training_complete' @{run=$Run;state=$rlState}
 }
+function Test-NeedsTraining([string]$Run, [int]$Round) {
+    if ((Test-Path "runs/standalone-rl/$Run/process.json") -and (Test-JobLive $Run)) { return $false }
+    if (Test-Path "runs/standalone-rl/$Run/state.json") {
+        $rlSaved = Get-Content "runs/standalone-rl/$Run/state.json" -Raw | ConvertFrom-Json
+        $rlLast = Get-Content "runs/standalone-rl/$Run/experiments.jsonl" -Tail 1 | ConvertFrom-Json
+        if ($rlSaved.phase -eq 'ppo' -and $rlSaved.round -eq $Round -and $rlLast.event -eq 'training_stopped') { return $false }
+    }
+    return $true
+}
 try {
     Write-ControlEvent 'controller_start' @{pid=$PID;deadline=$BudgetDeadline}
     Wait-Validation 'mc-wide4'
     Assert-Time
-    if (-not ((Test-Path 'runs/standalone-rl/mc-wide16/process.json') -and (Test-JobLive 'mc-wide16'))) {
+    if (Test-NeedsTraining 'mc-wide16' 0) {
         & $Python scripts/monte_carlo_rl.py prepare --run mc-wide16 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 `
             --start runs/standalone-rl/engine-bc-wide-v1/candidate_epoch_00016.npz --seed 37001 --hidden 512 `
             --bootstrap-games 0 --validation-pairings 128 --budget-deadline $BudgetDeadline
@@ -99,13 +108,17 @@ try {
             '--start','runs/standalone-rl/mc-ppo-v3/best.npz','--seed','37001',
             '--bootstrap-games','0','--workers','1','--train-samples','32','--curriculum-rounds','0',
             '--anchor','0.01','--demo-weight','1.0','--rate','0.0002','--budget-deadline',"$BudgetDeadline")
-        Launch-Job 'pipeline-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
-            '--hours','0.5','--max-rounds','1','--batch-games','4','--validation-every','1',
-            '--validation-pairings','2','--pairings','2'))
+        if (Test-NeedsTraining 'pipeline-student-v1' 1) {
+            Launch-Job 'pipeline-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
+                '--hours','0.5','--max-rounds','1','--batch-games','4','--validation-every','1',
+                '--validation-pairings','2','--pairings','2'))
+        }
         Wait-Training 'pipeline-student-v1' 1
-        Launch-Job 'mc-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
-            '--hours','6','--max-rounds','4','--batch-games','128','--validation-every','4',
-            '--validation-pairings','128','--pairings','1200','--test-reserve-hours','12'))
+        if (Test-NeedsTraining 'mc-student-v1' 4) {
+            Launch-Job 'mc-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
+                '--hours','6','--max-rounds','4','--batch-games','128','--validation-every','4',
+                '--validation-pairings','128','--pairings','1200','--test-reserve-hours','12'))
+        }
         Wait-Training 'mc-student-v1' 4
         foreach ($rlMode in @('stochastic','greedy')) {
             $rlSummary = Get-Content -LiteralPath "runs/standalone-rl/mc-student-v1/validation_summary_00004_$rlMode.json" -Raw | ConvertFrom-Json
@@ -117,6 +130,33 @@ try {
         # A live failed pilot would occupy a worker. Leave the two-worker PPO
         # job untouched and require inspection before any three-worker launch.
         foreach ($rlRun in @('pipeline-student-v1','mc-student-v1')) {
+            if ((Test-Path "runs/standalone-rl/$rlRun/process.json") -and (Test-JobLive $rlRun)) { throw }
+        }
+    }
+
+    # A fixed six-view ensemble improved the saved training-label diagnostic.
+    # Validate that one preregistered inference rule on the newly free worker.
+    try {
+        $rlSlotCommon = @('--ref','59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9',
+            '--start','runs/standalone-rl/mc-ppo-v3/selected_round_00024.npz','--seed','37001',
+            '--bootstrap-games','0','--max-rounds','0','--workers','1','--hours','2',
+            '--budget-deadline',"$BudgetDeadline")
+        if (Test-NeedsTraining 'pipeline-slot-v2' 0) {
+            Launch-Job 'pipeline-slot-v2' 'scripts/slot_ensemble_rl.py' 'train' ($rlSlotCommon + @(
+                '--validation-pairings','2','--pairings','2'))
+        }
+        Wait-Training 'pipeline-slot-v2' 0
+        if (Test-NeedsTraining 'slot-ensemble-v1' 0) {
+            Launch-Job 'slot-ensemble-v1' 'scripts/slot_ensemble_rl.py' 'train' ($rlSlotCommon + @(
+                '--validation-pairings','128','--pairings','1200'))
+        }
+        Wait-Training 'slot-ensemble-v1' 0
+        $rlSlotSummary = Get-Content runs/standalone-rl/slot-ensemble-v1/validation_summary_00000_greedy.json -Raw | ConvertFrom-Json
+        if ($rlSlotSummary.pairings -ne 128 -or $rlSlotSummary.header.samples -ne 32) { throw 'Incomplete slot-ensemble validation.' }
+        Write-ControlEvent 'slot_ensemble_ready_for_comparison' 'slot-ensemble-v1'
+    } catch {
+        Write-ControlEvent 'slot_ensemble_not_completed' $_.Exception.Message
+        foreach ($rlRun in @('pipeline-slot-v2','slot-ensemble-v1')) {
             if ((Test-Path "runs/standalone-rl/$rlRun/process.json") -and (Test-JobLive $rlRun)) { throw }
         }
     }
