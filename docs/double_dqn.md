@@ -134,6 +134,19 @@ runtime is hash-checked before use. Inspect both `.dqn-cache/active_experiment.j
 `.dqn-cache/next_experiment.json` before any process action; a waiting successor must not be duplicated.
 The successor enforces the unchanged absolute deadline, saving partial artifacts if time runs out.
 
+That CF-only waiting controller was superseded by `scripts/queue_followups_v5.ps1` after a training-only
+audit found 73/256 changed decisions when equivalent own-bench slots were relabelled. Its active identity
+is recorded in `next_experiment.json`; do not restart the old queue. The replacement leaves the ongoing
+search unchanged, then prioritizes `scripts/dqn_symmetry_trial.py` from immutable harness/v5. It fits a
+balanced CE model with independent own/foe bench permutations and tied frequencies for equivalent bench
+actions, and compares both prior/augmented models with direct/four-permutation-average inference.
+All four use 64 full-engine32 validation pairings on seed 38411; only the winner confirms on 128 pairings,
+seed 38412. The training data and model/source hashes are recorded before fitting. The run has a persistent
+four-hour cap and retains the original absolute deadline. If its confirmation is still below the required
+threshold, the unchanged v4 replay canary and paired-return trial follow serially. No final tests are opened
+by these runners. `scripts/dqn_symmetry_audit.py` reproduces the bench-order diagnostic without an engine
+opponent; it uses training compositions and makes no playing-strength claim.
+
 ## Artifact retention
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw

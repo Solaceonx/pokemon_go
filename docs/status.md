@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-11-01.
+Last updated 2026-11-02.
 
 ## Standalone Double DQN experiment — 2026-11-01 (Codex DQN, task 38; in progress)
 
@@ -195,6 +195,38 @@ replay canary against engine32 on training compositions, requiring matching cont
 then runs the predeclared six-round `counterfactual-v4` trial from immutable harness/v4. This successor
 has no numerical worker while waiting. Its overall deadline remains **2026-11-03T22:40:49Z**; the training
 runner additionally has a persistent eight-hour cap. `.dqn-cache/next_experiment.json` records this chain.
+
+**Bench-order diagnostic and next trial (2026-11-02).** In eight self-play games using only training-fold
+teams, seed 38401, 256 sampled multi-option public states from the balanced-refinement policy showed large
+sensitivity to equivalent bench labels. After mapping actions back, swapping our bench changed **73/256**
+decisions (61/210 act, 8/39 shield, 4/7 replace); swapping the opponent's revealed bench changed **59/256**
+(54/210 act, 5/39 shield, 0/7 replace); both changed **81/256**. Four-permutation averaging changed 47/256
+relative to the original policy. These are training-only consistency diagnostics, not strength gains.
+`scripts/dqn_symmetry_audit.py` reproduces them; `symmetry-v5/training_audit.json` stores counts and hashes.
+
+`pogo/dqn_symmetry.py` consistently permutes all mon/pair features, masks, swap and replacement labels.
+Tests compare its transformed observations and chosen species with actual simulator bench reorderings
+for act/shield/replace, verify invariant averaging, and check augmentation RNG replay. The next controlled
+trial restarts from the v2 warm-up, fits 60 epochs of balanced CE with independent random own/foe bench
+permutations, and ties frequencies of equivalent bench actions. It compares the prior and augmented models,
+each direct and averaged, on **64 full-engine32 mirrored validation pairings**, fresh seed **38411**.
+Only the screen winner confirms on **128 pairings**, fresh seed **38412**. This tests combined augmentation
+and frequency tying; it does not isolate their separate effects. No new tactical rule or final test.
+
+This measured representation problem takes priority over the unstarted paired-return trial. The idle
+CF-only successor was identity-checked and replaced; no numerical worker was interrupted. The new serial
+controller `scripts/queue_followups_v5.ps1` waits for search-v3, then runs symmetry-v5 from immutable
+harness/v5 unless planning first clears its fresh validation threshold. A promising symmetry confirmation
+likewise stops for final-lock review; otherwise the original v4 replay canary and paired-return training
+follow. One numerical worker, the original overall deadline, and the v4 eight-hour cap remain unchanged.
+Current checks: **288 tests pass, seven optional skips; 108/108 PvPoke exact**.
+
+**Eight-sample planning screen completed.** On the same 64 full-engine32 mirrored validation pairings,
+seed 38311, MC8 scored **30.468750% ± 7.111899 points**, interval **23.356851–37.580649%**. Its paired change
+from the direct-policy control was **−1.562500 ± 9.753405 points**, so no improvement is established.
+Mean measured battle time was **7.569953 seconds**. Exact pair scores, model/ensemble hashes and paired
+differences are in `search-v3/mc8_summary.json` and `mc8_paired_change.json`. The predeclared MC16 screen
+and selected-setting fresh confirmation are still running; no final outcome has been opened.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
