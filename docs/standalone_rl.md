@@ -81,6 +81,14 @@ reserved official footage are not used to tune this policy.
 Use the same Python interpreter that has NumPy. On Windows in the Codex workspace, it is
 `C:/Users/lionl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`.
 
+Windows background launcher: `scripts/run_standalone_rl.ps1 -Run NAME -Python PATH -TrainingArguments @(...)`.
+It starts Python in a hidden window with BelowNormal priority, saves its PID/arguments and stdout/stderr,
+and rejects a second launch while that run's recorded PID is live. This avoids the existing Windows
+priority helper's observed failure to lower a newly launched job. A help-only launch, duplicate-run
+rejection and actual BelowNormal priority inheritance to an idle Python child were verified without
+starting additional battle workers. The active run's parent and all three workers were explicitly
+lowered and their priority classes read back; no training source was edited during the run.
+
 ```sh
 python scripts/standalone_rl.py run --run ppo-v2 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v1/best.npz --bootstrap-games 0 --hours 36 --workers 3 --validation-every 8 --curriculum-rounds 16 --anchor 0.01 --demo-weight 0.1 --pairings 1200
 ```

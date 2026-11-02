@@ -59,6 +59,20 @@ The tiny independent-network pipeline passed all phases, including recording 185
 decisions in its 8-game PPO batch; its weak scores are pipeline checks only. Full suite: 288 tests OK
 (7 video-dependent skips), 108/108 reference battles exact. Final strength evaluation is pending.
 
+**Second experiment's initial controls:** the migrated stochastic policy reproduced all 128 pairing
+outcomes / 256 battles of v1's initial validation exactly, including winners and draws, on the same
+schedule and seeds (`repeatability_check.json`). Greedy inference scored **25.00%, CI [20.31%, 29.88%]**,
+against stochastic **19.34%, CI [14.84%, 24.02%]**. Both remain far below the target. This is an inference-mode
+comparison before PPO updates, not a learning gain or a final test. Paired differences are saved in
+`initial_mode_comparison.json`; the driver selects the mode on validation only.
+
+The long run is live (initial PID 22220). A Windows launcher now sets BelowNormal priority before
+starting Python and rejects a duplicate live run. Its help-only execution, duplicate rejection and
+priority inheritance were checked without starting extra battle workers. The existing Windows
+`low_priority()` helper had silently left the active job at Normal priority; its parent and all three
+verified workers were explicitly lowered and read back at BelowNormal. No active experiment source
+was edited. The saved absolute deadline is the original work budget, 2026-11-03 17:42:10 Los Angeles.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
