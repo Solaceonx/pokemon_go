@@ -147,7 +147,41 @@ threshold, the unchanged v4 replay canary and paired-return trial follow seriall
 by these runners. `scripts/dqn_symmetry_audit.py` reproduces the bench-order diagnostic without an engine
 opponent; it uses training compositions and makes no playing-strength claim.
 
-## Artifact retention
+## Final evaluation of the selected method
+
+`scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the
+direct policy, four-permutation averaging, and independent planning with its complete opponent ensemble.
+Production refuses to start unless the matching 128-pair fresh validation confirmation against engine32
+has lower95 above 50%. It checks model, ensemble, selected recipe and validated source hashes and recomputes
+the validation interval. Compact exports must retain identical parameter arrays.
+
+The single `runs/double-dqn/final_test_lock.json` binds the candidate, method/settings, ensemble, source/data
+hashes and all three predeclared **1,000-pairing** blocks before any final game. A changed candidate or sample
+count is rejected across runs. Complete paired rows retain exact game seeds, team identities, player sides
+and scores; resumption verifies these against the locked draw rather than silently accepting another journal.
+Final verdicts require all three blocks; deadline/STOP exits retain partial rows without claiming completion.
+
+An immutable `final-v2` runtime has been prepared locally. It supersedes the unrun v1 prototype and also
+enforces a matching completed canary before production. Once the serialized research queue stops for
+review of a promising confirmation, verify its source manifest and run a validation-only canary first:
+
+```powershell
+python .dqn-cache/harness/final-v2/scripts/dqn_final.py --source-run symmetry-v5 --canary
+python .dqn-cache/harness/final-v2/scripts/dqn_final.py --source-run symmetry-v5
+```
+
+Use the actual selected source run (`search-v3`, `symmetry-v5`, or `counterfactual-v4`). The canary uses two
+pairings per block on validation teams, seeds 38995/38996, writes no production lock, and reports no strength
+claim. It must pass before production; do not overlap another numerical worker. The production counts,
+fields and seeds cannot be set through CLI arguments. Both modes retain the original overall deadline.
+Production checks the canary verdict, source/method/weight identity and raw artifact hashes before locking.
+For a selected planning method the reproducible compact policy package includes `policy.npz` and both
+compact `opponent_*.npz` files, with the protocol binding every hash; publishing the actor alone would omit
+part of the measured inference method. Final-package ensemble files are allowed by the run-specific Git rule.
+The new harness has passed its unit checks; the full frozen-engine canary has not yet run because research
+still owns this experiment's numerical worker. Final holdouts remain unopened.
+
+## Retained files
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw
 evaluation rows and summaries. Large demonstrations, replay, intermediate models and raw rows remain local

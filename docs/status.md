@@ -228,6 +228,26 @@ Mean measured battle time was **7.569953 seconds**. Exact pair scores, model/ens
 differences are in `search-v3/mc8_summary.json` and `mc8_paired_change.json`. The predeclared MC16 screen
 and selected-setting fresh confirmation are still running; no final outcome has been opened.
 
+**Method-preserving final harness prepared, not executed.** `scripts/dqn_final.py` exports exact parameters
+and retains direct / permutation-average / planning inference, including planning ensemble weights. It
+requires matching fresh full-engine validation with lower95 above 50%, rechecks its interval and source/
+model hashes, and creates a single cross-candidate lock before any final game. Production counts remain
+1,000 mirrored pairings per block, mixed seeds 38091/38092 and standard seed 38091. Resume rejects foreign
+teams, seeds, player sides, incomplete pairings and changed exports/settings. A validation-only canary mode
+uses separate seeds 38995/38996, two pairings per block and no strength verdict or production lock. Its
+frozen-engine execution remains pending until a worker is free; no final outcome or lock has been opened.
+The unrun v1 prototype was superseded by immutable `harness/final-v2`, which additionally rejects production
+without a matching completed canary and verified artifact hashes. Current full checks: **293 tests pass, seven optional skips;
+108/108 PvPoke exact**. This is evaluation infrastructure, not a playing-strength result.
+
+**Sixteen-sample planning screen completed.** On the same 64 full-engine32 mirrored validation pairings,
+seed 38311, MC16 scored **36.718750% ± 8.237002 points**, interval **28.481748–44.955752%**. Its paired change
+from the direct-policy control was **+4.687500 ± 9.443201 points**, so improvement is not established.
+Mean measured battle time was **9.084352 seconds**. Exact scores/hashes and paired changes are in
+`search-v3/mc16_summary.json` and `mc16_paired_change.json`. The saved maximum-score rule selected MC16;
+its predeclared **128-pairing fresh confirmation, seed 38312**, is now running. These screen results remain
+selection evidence only, below the win target; no final outcomes have been opened.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

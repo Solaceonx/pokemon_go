@@ -1,0 +1,241 @@
+"""Locked final evaluation of the exact selected direct, invariant or planning policy.
+
+Production always uses three predeclared 1,000-pairing blocks against frozen engine32. A canary uses
+only validation compositions and separate seeds; it never writes the production lock or claims strength.
+Run from an immutable source snapshot, with no other numerical worker for this experiment.
+"""
+import argparse
+import json
+import math
+import os
+from pathlib import Path
+import random
+import statistics
+import sys
+import time
+
+for name in ('OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'MKL_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS'):
+    os.environ[name] = '1'
+import numpy as np
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from pogo.arena import low_priority
+from pogo.dqn import Agent, Network
+from pogo.dqn_symmetry import SymmetricPolicy
+from pogo.rl_search import RolloutAgent
+from scripts.double_dqn import BASE, ci, frozen, draw_split, sha, write_json, append, read_rows
+
+DEADLINE = 1793745649.6650429
+BLOCKS = (('mixed', 38091), ('mixed', 38092), ('standard', 38091))
+
+
+def lock(path, value):
+    if path.exists():
+        if json.loads(path.read_text()) != value:
+            raise ValueError('Final selection is locked; changed policy, recipe, source or sample count rejected')
+    else:
+        write_json(path, value)
+
+
+def validate_confirmation(report, digest, seed, baseline=BASE):
+    """Require fresh full-engine validation and recompute its interval before spending final evidence."""
+    values = report.get('pair_scores', [])
+    if (report.get('split') != 'validation' or report.get('field', 'mixed') != 'mixed'
+            or report.get('seed') != seed or len(values) != 128 or report.get('clusters') != 128
+            or report.get('opponent_samples', report.get('samples')) != 32
+            or report.get('actor_sha256', report.get('model_sha256')) != digest or baseline != BASE
+            or report.get('baseline_commit', BASE) != BASE):
+        raise ValueError('Missing matching fresh full-engine validation evidence')
+    computed = ci(values)
+    for key in ('score', 'margin95', 'lower95', 'upper95'):
+        if not math.isclose(computed[key], report[key], rel_tol=0, abs_tol=1e-12):
+            raise ValueError('Validation confidence interval does not match its paired outcomes')
+    if computed['lower95'] <= .5:
+        raise ValueError('Validation target not met; preserve final teams and continue research')
+
+
+def selection(source_name, canary):
+    source = ROOT / 'runs/double-dqn' / source_name
+    result = json.loads((source / 'result.json').read_text())
+    plan = json.loads((source / 'plan.json').read_text())
+    if source_name == 'search-v3':
+        samples = result['selected_samples']
+        winner = max(plan['sample_grid'], key=lambda n: result['screens'][str(n)]['score'])
+        if samples != winner or result['confirmation']['samples'] != samples:
+            raise ValueError('Planning selection or confirmation recipe changed')
+        model, mode, seed = source / 'actor.npz', 'planning' if samples else 'direct', 38312
+        opponents = [source / f'opponent_{i}.npz' for i in range(2)] if samples else []
+        if samples and [sha(p) for p in opponents] != result['confirmation']['predictors']:
+            raise ValueError('Planning opponent ensemble changed after validation')
+        if plan['edge'] != .03 or plan['stride'] != 8:
+            raise ValueError('Planning compute recipe differs from validated settings')
+    elif source_name == 'symmetry-v5':
+        chosen = result['selected']
+        if chosen not in ('prior_direct', 'prior_average', 'augmented_direct', 'augmented_average'):
+            raise ValueError('Unknown selected symmetry recipe')
+        if chosen != max(plan['variants'], key=lambda name: result['screens'][name]['score']):
+            raise ValueError('Symmetry selection changed after screening')
+        model = source / ('prior.npz' if chosen.startswith('prior_') else 'augmented.npz')
+        mode, seed, samples, opponents = ('average' if chosen.endswith('_average') else 'direct'), 38412, 0, []
+    elif source_name == 'counterfactual-v4':
+        chosen = result['best_checkpoint']
+        if Path(chosen).name != chosen:
+            raise ValueError('Checkpoint must be inside its run')
+        model, mode, seed, samples, opponents = source / chosen, 'direct', 38212, 0, []
+    elif canary and source_name == 'refine-v3':
+        model, mode, seed, samples, opponents = source / 'policy.npz', 'average', 38112, 0, []
+    else:
+        raise ValueError('Unsupported selected experiment')
+    if not canary:
+        for relative, digest in plan['source_sha256'].items():
+            if sha(ROOT / relative) != digest:
+                raise ValueError('Validated runtime source changed: ' + relative)
+        validate_confirmation(result['confirmation'], sha(model), seed, plan.get('baseline_commit', BASE))
+    return model, opponents, {'mode': mode, 'samples': samples, 'edge': .03, 'stride': 8}, result['confirmation']
+
+
+def compact(source, target):
+    net, _, _ = Network.load(source)
+    for moment in (*net.m, *net.v):
+        moment.fill(0)
+    net.steps = 0
+    metadata = {'source_sha256': sha(source), 'weights_only': True}
+    if not target.exists():
+        net.save(target, metadata)
+    restored, receipt, _ = Network.load(target)
+    if receipt != metadata or not all(np.array_equal(a, b) for a, b in zip(net.p, restored.p)):
+        raise ValueError('Exported policy differs from selected source')
+    return restored
+
+
+def validate_canary(directory, protocol):
+    receipt_path, verdict_path = directory / 'protocol.json', directory / 'verdict.json'
+    if not receipt_path.exists() or not verdict_path.exists():
+        raise ValueError('Run the matching validation-only frozen-engine canary before final tests')
+    receipt, verdict = json.loads(receipt_path.read_text()), json.loads(verdict_path.read_text())
+    keys = ('source_run', 'source_model_sha256', 'recipe', 'artifacts', 'source_sha256', 'baseline', 'confirmation')
+    blocks = [('mixed', 38995), ('mixed', 38996), ('standard', 38995)]
+    if (any(receipt[key] != protocol[key] for key in keys) or not receipt.get('canary')
+            or receipt.get('split') != 'validation' or receipt.get('pairs_per_block') != 2
+            or receipt.get('blocks') != [list(b) for b in blocks]
+            or not verdict.get('canary') or verdict.get('strength_target_met') is not None
+            or verdict.get('protocol_sha256') != sha(receipt_path) or len(verdict.get('final_tests', [])) != 3):
+        raise ValueError('Canary does not match the selected policy, method, sources and artifacts')
+    for report, (field, seed) in zip(verdict['final_tests'], blocks):
+        if (report['field'] != field or report['seed'] != seed or report['split'] != 'validation'
+                or report['pairs'] != 2 or report['opponent_samples'] != 32
+                or len(report['pair_scores']) != 2
+                or report['raw_sha256'] != sha(directory / f'rows_{field}_{seed}.jsonl')):
+            raise ValueError('Incomplete or changed frozen-engine canary evidence')
+
+
+def player(net, opponents, recipe, pool, seed):
+    if recipe['mode'] == 'planning':
+        return RolloutAgent(net, pool, opponents, samples=recipe['samples'], edge=recipe['edge'],
+                            stride=recipe['stride'], seed=seed)
+    return Agent(SymmetricPolicy(net) if recipe['mode'] == 'average' else net, seed=seed)
+
+
+def validate_pairing(row, index, teams, seeds):
+    scores = row.get('scores', [])
+    if (row.get('pair') != index or row.get('teams') != teams or row.get('game_seeds') != seeds
+            or row.get('player_sides') != [(index + o) % 2 for o in range(2)]
+            or len(scores) != 2 or any(score not in (0., .5, 1.) for score in scores)
+            or not math.isclose(row.get('mean', -1), statistics.mean(scores), abs_tol=1e-12)):
+        raise ValueError('Pairing journal differs from its locked teams, seeds, sides or complete outcomes')
+
+
+def measure(run, f, net, opponents, recipe, field, seed, pairs, split, stop):
+    tag = f'{field}_{seed}'
+    path = run / f'rows_{tag}.jsonl'
+    rows = read_rows(path)
+    done = {row['pair']: row for row in rows}
+    if len(rows) != len(done) or any(i not in range(pairs) for i in done):
+        raise ValueError('Duplicate or out-of-range final pairing')
+    rng = random.Random(seed)
+    for i in range(pairs):
+        draw = f.mixed_draw if field == 'mixed' else f.standard_draw
+        a, b = draw_split(draw, rng, split), draw_split(draw, rng, split)
+        seeds = [rng.getrandbits(32) for _ in range(6)]
+        teams = [[m.home or m.species_id for m in team] for team in (a, b)]
+        if i in done:
+            validate_pairing(done[i], i, teams, seeds)
+            continue
+        points, times = [], []
+        for orientation, (mine, theirs) in enumerate(((a, b), (b, a))):
+            if stop():
+                raise TimeoutError('Stopped at original deadline; complete pairing rows and checkpoints retained')
+            pilot = player(net, opponents, recipe, f.pool, seeds[3 * orientation])
+            enemy = f.engine(seeds[3 * orientation + 1], 32)
+            started = time.monotonic()
+            score, _ = f.game(mine, theirs, pilot, enemy, seeds[3 * orientation + 2], side=(i + orientation) % 2)
+            points.append((score + 1) / 2)
+            times.append(time.monotonic() - started)
+        row = {'pair': i, 'scores': points, 'mean': statistics.mean(points), 'seconds': times,
+               'teams': teams, 'game_seeds': seeds, 'player_sides': [(i + o) % 2 for o in range(2)]}
+        validate_pairing(row, i, teams, seeds)
+        append(path, row)
+        done[i] = row
+        if (i + 1) % 10 == 0 or i + 1 == pairs:
+            print(json.dumps({'event': 'locked_evaluation', 'block': tag, 'pairs': len(done)}), flush=True)
+    summary = dict(ci([done[i]['mean'] for i in range(pairs)]), field=field, seed=seed, split=split,
+        pairs=pairs, battles=2 * pairs, opponent_samples=32, recipe=recipe, raw_sha256=sha(path),
+        pair_scores=[done[i]['mean'] for i in range(pairs)])
+    write_json(run / (tag + '_summary.json'), summary)
+    return summary
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--source-run', required=True,
+        choices=['search-v3', 'symmetry-v5', 'counterfactual-v4', 'refine-v3'])
+    parser.add_argument('--canary', action='store_true')
+    args = parser.parse_args()
+    low_priority()
+    model, predictors, recipe, confirmation = selection(args.source_run, args.canary)
+    f = frozen()
+    if sha(ROOT / 'pogo/battle.py') != f.manifest['files']['pogo/battle.py']:
+        raise ValueError('Planning simulator mechanics differ from the frozen engine simulator')
+    if sha(ROOT / 'data/matchups_wide.json') != f.manifest['files']['data/matchups_wide.json']:
+        raise ValueError('Inference feature data differs from frozen baseline data')
+    run = ROOT / 'runs/double-dqn' / (('canary-final-' if args.canary else 'final-') + args.source_run)
+    run.mkdir(parents=True, exist_ok=True)
+    net = compact(model, run / 'policy.npz')
+    opponents = [compact(path, run / f'opponent_{i}.npz') for i, path in enumerate(predictors)]
+    artifacts = {path.name: sha(path) for path in [run / 'policy.npz',
+        *(run / f'opponent_{i}.npz' for i in range(len(opponents)))]}
+    sources = [*(ROOT / 'pogo').glob('*.py'), Path(__file__), ROOT / 'scripts/double_dqn.py']
+    blocks = (('mixed', 38995), ('mixed', 38996), ('standard', 38995)) if args.canary else BLOCKS
+    pairs, split = (2, 'validation') if args.canary else (1000, 'test')
+    protocol = {'source_run': args.source_run, 'source_model_sha256': sha(model), 'recipe': recipe,
+        'artifacts': artifacts, 'source_sha256': {str(p.relative_to(ROOT)): sha(p) for p in sources},
+        'baseline': f.manifest, 'pairs_per_block': pairs, 'blocks': [list(b) for b in blocks], 'split': split,
+        'confirmation': confirmation, 'canary': args.canary, 'deadline_unix': DEADLINE}
+    if not args.canary:
+        validate_canary(ROOT / 'runs/double-dqn' / ('canary-final-' + args.source_run), protocol)
+    # A single production lock across this chat's candidate runs prevents a second choice after final outcomes.
+    lock(run / 'protocol.json' if args.canary else ROOT / 'runs/double-dqn/final_test_lock.json', protocol)
+    lock(run / 'protocol.json', protocol)
+    state = {'pid': os.getpid(), 'status': 'evaluating', 'canary': args.canary}
+    write_json(run / 'state.json', state)
+    try:
+        reports = []
+        for field, seed in blocks:
+            reports.append(measure(run, f, net, opponents, recipe, field, seed, pairs, split,
+                lambda: time.time() >= DEADLINE or (run / 'STOP').exists()))
+        passed = (all(r['lower95'] > .5 for r in reports if r['field'] == 'mixed')
+                  and all(r['upper95'] >= .5 for r in reports if r['field'] == 'standard'))
+        write_json(run / 'verdict.json', {'strength_target_met': None if args.canary else passed,
+            'canary': args.canary, 'protocol_sha256': sha(run / 'protocol.json'), 'final_tests': reports,
+            'artifacts': artifacts, 'completed_unix': time.time()})
+        state['status'] = 'complete'
+    except BaseException as error:
+        state.update(status='stopped_with_artifacts', error=str(error))
+        raise
+    finally:
+        write_json(run / 'state.json', state)
+
+
+if __name__ == '__main__':
+    main()
