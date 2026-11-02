@@ -172,6 +172,27 @@ warm-up/last complete endpoint on 64 validation pairings (seed 38511), and confi
 only after the current worker is free and a run plan is recorded. The backend entrypoint and preparation
 receipt are available; that proposal has not been executed or queued.
 
+The serial follow-up is now implemented in `scripts/queue_relational.ps1`, snapshotted with its Python
+drivers in immutable `harness/followup-v7`. Its `relational-v1/queue_plan.json` binds the predecessor process
+identities and source hashes. It applies the already registered three-round allocation rule, waits for
+both the CF worker and its original controller to exit, and completes the reserved seed-38212 confirmation
+using `scripts/dqn_cf_confirm.py`. The stopped original result remains unchanged; its supplemental evidence
+is `counterfactual-v4/allocation_confirmation.json`. A promising confirmation pauses the queue for final
+evidence review. Otherwise the shared encoder follows, with no overlapping numerical worker.
+
+`scripts/dqn_relational_trial.py` executes the unchanged proposal: byte-identical demonstrations, 80 warm-up
+epochs, at most one persistent wall-clock hour in the original trainer (including its internal bootstrap
+validation), then bootstrap/last-complete-endpoint selection and the fresh selected-only confirmation.
+The controller enforces the original overall deadline during long phases. Recovery preserves the saved
+RL deadline, optimizer/replay state and complete evaluation rows. The endpoint is copied out of the
+rotating checkpoint slots before selection. `policy.npz` is exported with identical parameters and cleared
+optimizer moments; its hash and all validation results are saved. This still opens no final-test teams.
+
+`pogo/dqn_residual.py` is an unmeasured training-objective prototype. It fits centered *changes* from a
+reference network to sampled return advantages, preserving old score differences between equally valued
+actions, and can anchor no-signal/demo positions to the reference. Gradient and invariance checks pass.
+It has no strength trial or queue entry; the active CF objective and its runtime remain unchanged.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the

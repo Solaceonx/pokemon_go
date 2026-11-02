@@ -365,6 +365,33 @@ not battle policy or the completed-round data counts, validation/final sample si
 runtime source, eight-hour cap or original overall deadline. No stop or extra numerical worker has
 started at this update; round two remains in progress.
 
+**Second paired-return RL validation completed.** Round two collected **300 training positions**,
+all **300 original-choice controls matching**, with **93 differing-outcome positions**, then completed
+30 epochs/60 updates. On the unchanged 64 full-engine32 validation pairings, seed 38211, it scored
+**19.531250% ± 6.768694 points**, interval **12.762556–26.299944%**. The paired change from the starting
+control was **−10.156250 ± 8.503784 points**, interval **−18.660034 to −1.652466 points**: a regression on
+this validation cohort. Intervals/differences were recomputed from saved pair scores. `initial.npz`
+remains selected; round three has started. Exact scores and data/model hashes are in `screen_002_summary.json`,
+`screen_002_paired_change.json`, `collection_002.json` and `round_002_artifacts.json`. The allocation rule
+was saved and pushed before this result; no earlier stopping or changed samples have been applied.
+
+**Serial fallback implemented while round three runs.** Immutable `harness/followup-v7` contains a successor
+controller, a supplemental fresh-confirmation driver, and the shared-encoder trial driver. The queue binds
+the actual predecessor process identities and waits for both to exit before starting any numerical work.
+It applies the previously registered adaptive allocation rule, preserves the stopped CF result and completes
+its reserved 128-pair seed-38212 confirmation, then runs the already proposed shared-encoder trial only if
+that confirmation remains below target. The shared trial reuses the unchanged demonstration file, retains
+the fixed 80-epoch/one-hour allocation and validation seeds/counts, and preserves its RL deadline across
+recovery. All phases retain the original overall deadline. No second numerical worker or final test starts
+when this controller is queued. Exact identities/source hashes are in `relational-v1/queue_plan.json` and
+`followup_source_manifest.json`; there is no shared-encoder strength result yet.
+
+A reference-anchored residual-return loss prototype also passes finite-gradient and score-shift checks.
+The motivation is a hypothesis: fitting absolute centered returns may erase useful preferences between
+actions with equal sampled outcomes. This prototype preserves those reference differences and constrains
+no-signal positions; it has not been trained or evaluated, supplies no strength evidence and does not alter
+the live trial. Full checks now pass **304 tests (7 optional video skips)** and **108/108 PvPoke battles**.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

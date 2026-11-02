@@ -84,7 +84,10 @@ validation results; final tests remain unopened. A training-only bench-order aud
 decisions under equivalent own-bench labels. The controlled augmentation/invariant-inference trial did
 not establish a strength gain. Paired-return training uses fresh validation confirmation. A method-preserving final evaluator
 is prepared; its full frozen-engine canary is pending. A smaller shared-matchup Double DQN backend is
-prepared as an unmeasured fallback; no second training worker has started. Current checks: 299 tests (7 optional video skips),
+prepared as an unmeasured fallback with a serial successor that finishes CF's reserved confirmation before
+switching; no second training worker has started. The first two paired-return candidates scored
+23.44% ± 6.06 and 19.53% ± 6.77 on the 64-pair validation screen, retaining the initial policy.
+Current checks: 304 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and
