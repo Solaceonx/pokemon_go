@@ -14,6 +14,13 @@ The 366 public features include health, energy, shields, timers, all our Pokemon
 types, move stats, form state and pairwise damage. Unrevealed opponents are zero slots. There is no
 species ID embedding. Runtime needs standard-library Python and NumPy.
 
+A separate candidate, `pogo/planning_rl.py`, improves the learned policy's physical actions with
+its own complete-battle rollouts. It reconstructs worlds from public state, samples unrevealed
+opponents from the public pool, and uses frozen neural policies on both sides of each imagined game.
+Shields and replacements still use the learned heads. It imports the rules simulator and neither
+Planner, Learner nor the search-player module. This is an RL policy with independent model-based
+planning; its search contribution must be measured separately from a policy-training gain.
+
 Initialization imitates the frozen trained Learner on training teams only. That teacher is used only
 to generate training examples. PPO then trains the separate policy against a mixture of the frozen
 engine (80%), frozen Learner (10%) and current standalone policy (10%). Rewards are +1 for a win, 0
@@ -182,6 +189,13 @@ The deadline above is the original task deadline, 2026-11-03 17:42:10 Los Angele
 when starting a new method. Do not run a second pool alongside an existing three-worker experiment.
 
 ## Supervised initialization
+
+`scripts/evaluate_planning_rl.py` provides prepare/bench/validate/lock/test for that planning candidate.
+It pins both neural checkpoints, search settings and rules-model sources. It checks that its local
+rules match the frozen battle rules. `bench` uses two training pairings for timing only; `validate`
+uses the registered validation partition. Locking and final testing reuse the original fresh-seed,
+paired confidence-interval protocol. The new controller has functional tests and a full-size-network
+physics replay check; its real multiprocessing pipeline and playing strength remain unmeasured.
 
 `scripts/monte_carlo_rl.py` exposes the same prepare/train/run/lock/test CLI as the original driver,
 with complete terminal-return PPO advantages (gamma=1, lambda=1). It registers its extra source hash

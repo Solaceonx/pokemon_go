@@ -8,7 +8,7 @@ param(
     [string]$Run,
     [string]$Python = '',
     [string]$EntryScript = 'scripts/standalone_rl.py',
-    [ValidateSet('prepare', 'train', 'run', 'lock', 'test')]
+    [ValidateSet('prepare', 'train', 'run', 'lock', 'test', 'bench', 'validate')]
     [string]$Command = 'run',
     [string[]]$TrainingArguments = @()
 )

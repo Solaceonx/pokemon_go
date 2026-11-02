@@ -214,6 +214,23 @@ validation is now running as `mc-bc4`; `mc-bc16` is prepared and queued to start
 closes normally. Both use the full frozen engine, the same 128 development pairings and both inference
 modes. Their commands stop after validation, leaving the substantial final strength test unopened.
 
+**First pretrained candidate:** epoch-four greedy validation is **32.42%, CI [27.15%, 37.50%]**;
+stochastic is **22.46%, CI [17.97%, 26.96%]**. Neither improves the retained 32.81% PPO policy.
+The job completed normally, and epoch-sixteen validation started afterward with a new three-worker
+pool. The same fixed development cases are used; neither candidate opens a final test.
+
+Prepared a separate independent rollout controller (`pogo/planning_rl.py`) around the learned policies.
+It uses public observations and the rules simulator, a supplied public pool for unseen teammates,
+common dice across legal actions, and complete terminal returns. A fixed neural-confidence gate
+controls simulation cost; ties keep the neural preference. No inference weight updates occur. This
+adds model-based planning to an RL policy, so any measured gain must not be attributed solely to
+policy training. Its runtime imports no Planner, Learner or search-player module. Tests cover hidden
+team privacy, legal/tied actions, RNG consumption, source/model guards and both seat allocations.
+With the actual 128-unit checkpoints, fully revealed public-world simulations reproduce complete
+frozen-rule games on both seats, including HP/energy/stages/timers and RNG state
+(`planning_physics_check.json`). **313 tests OK** (7 video skips), **108/108 PvPoke exact**. No playing
+strength result or real multiprocessing pipeline result from this controller is claimed yet.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
