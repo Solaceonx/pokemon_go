@@ -265,6 +265,52 @@ The complete curve and immutable source/model/demonstration hashes are in `symme
 and `plan.json`. The prior-direct control screen is now running before the other three predeclared
 variants; no setting has been changed in response to these results.
 
+**First two symmetry screens completed (2026-11-02).** On the predeclared 64 full-engine32 mirrored
+validation pairings, seed 38411, the prior direct policy scored **28.125000% ± 7.197728 points**, interval
+**20.927272–35.322728%**. The same weights with four-permutation averaging scored
+**35.156250% ± 6.790652 points**, interval **28.365598–41.946902%**. Its paired change from direct inference
+was **+7.031250 ± 8.415796 points**, so improvement remains unconfirmed. Both clustered intervals were
+recomputed from saved pair scores. Exact scores/hashes and paired differences are in
+`symmetry-v5/prior_direct_summary.json`, `prior_average_summary.json` and `prior_average_paired_change.json`.
+Both trained augmented-model screens and the selected-setting fresh confirmation remain pending.
+
+**Augmented direct screen completed.** On the same 64 full-engine32 mirrored validation pairings,
+seed 38411, direct inference from the newly augmented model scored **29.296875% ± 6.032395 points**,
+interval **23.264480–35.329270%**. Its paired change from the prior direct control was
+**+1.171875 ± 8.622762 points**, so no improvement is established. Its interval was recomputed from all
+pair scores; exact values, model hash and differences are in `symmetry-v5/augmented_direct_summary.json`
+and `augmented_direct_paired_change.json`. Augmented averaging and selected-setting fresh confirmation
+remain pending; the protocol is unchanged.
+
+**All four symmetry screens completed.** The augmented model with averaging scored
+**25.390625% ± 6.858141 points**, interval **18.532484–32.248766%**, on the same 64 full-engine32 mirrored
+validation pairings, seed 38411. Its paired change from prior direct inference was
+**−2.734375 ± 9.138251 points**. The interval was recomputed from saved scores; exact values and differences
+are in `symmetry-v5/augmented_average_summary.json` and `augmented_average_paired_change.json`.
+The saved maximum-score rule selected **prior_average** (35.156250% on the screen), retaining the prior
+weights with averaged inference. Augmentation did not establish a playing-strength gain. The selected
+method alone is now confirming on the predeclared 128 fresh full-engine32 pairings, seed 38412; no final
+outcomes have been opened and no trial setting changed.
+
+**Symmetry trial fresh confirmation completed (2026-11-02, 20:59 UTC check).** The selected prior model
+with averaged inference scored **32.031250% ± 4.413371 points**, interval **27.617879–36.444621%**, against
+the full frozen engine32 on **128 mirrored pairings / 256 games**, fresh validation seed **38412**.
+Recomputing the interval from all pair scores matches the summary exactly. This is a clear loss, and
+neither augmentation nor averaged inference has met the target. Exact outcomes and model/source hashes
+are in `symmetry-v5/result.json`, `confirmation_summary.json`, `selection.json` and `plan.json`.
+
+**Frozen-engine replay canary passed; paired-return RL started.** After the symmetry worker exited,
+cf-canary-v4 completed **two training-team games, both player sides**, and **four original-choice replay
+controls**, all matching the original terminal outcome. The sampled groups were one charged-ready act,
+two other acts and one replacement. There were **zero differing-outcome groups** in this tiny canary;
+this is an infrastructure check, not a learning or strength result. `cf-canary-v4/result.json` retains
+the exact counts and engine32/model settings. The unchanged counterfactual-v4 trial then started from
+immutable harness/v4, one numerical worker, with its persistent **eight-hour cap** and original absolute
+deadline intact. It first measures its direct-policy control on 64 full-engine32 validation pairings,
+seed 38211, then collects paired terminal-return labels on training compositions. Its saved six-round
+plan, 30 fitting epochs per round, demonstration anchor 0.01 and fresh 128-pair confirmation seed 38212
+remain unchanged. Final holdouts and the production lock are still untouched.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

@@ -125,7 +125,9 @@ positions per round (up to 1,200 decisions), 30 fitting epochs and an eight-hour
 engine32 validation pairings, seed 38211, then confirms its selected checkpoint on 128 fresh pairings,
 seed 38212. Its original invocation deadline survives restart; it also respects the original overall
 deadline. Optimizer moments reset for the new loss in each round, then resume exactly across interruptions.
-No final-test mode is provided by this research runner. This algorithm has not yet been measured.
+No final-test mode is provided by this research runner. The frozen-engine canary passed all four sampled
+original-choice controls across two training games/both player sides; no alternative changed the terminal
+outcome in that tiny canary. The full paired-return trial has started; it has no strength result yet.
 
 The local `scripts/queue_counterfactual.ps1` successor serializes this canary and trial behind search-v3.
 It waits for both existing search processes to exit, and leaves a promising fresh planning confirmation
