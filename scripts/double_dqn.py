@@ -182,6 +182,11 @@ def load_training(run, seed):
         net, meta, _ = Network.load(run / 'bootstrap.npz')
         target, replay, rng = copy.deepcopy(net), Replay(), np.random.default_rng(seed)
         meta = {'games': 0, 'seed': seed, 'batches': 0, 'best_validation': -1., 'train_seconds': 0.}
+        # The warm-up is a candidate too: RL must not silently discard a stronger starting policy.
+        if (run / 'selection.json').exists():
+            selection = json.loads((run / 'selection.json').read_text())
+            meta['best_validation'] = selection['validation']['score']
+            meta['best_checkpoint'] = selection['checkpoint']
     return net, meta, target, replay, rng
 
 
@@ -250,6 +255,8 @@ def bootstrap(args, run):
     state_path = run / 'demonstrations.json'
     demos = Replay.load(demo_path) if demo_path.exists() else Replay(args.demo_capacity)
     done = json.loads(state_path.read_text())['games'] if state_path.exists() else 0
+    if state_path.exists() and json.loads(state_path.read_text())['seed'] != args.seed:
+        raise ValueError('Demonstration seed changed on resume')
     net = Network(args.seed, hidden=args.hidden)
     rng = random.Random(args.seed)
     begin = time.monotonic()
@@ -311,6 +318,15 @@ def train(args, run):
         if {k: v for k, v in old.items() if k != 'hours'} != {k: v for k, v in settings.items() if k != 'hours'}:
             raise ValueError('Training settings changed on resume')
     write_json(settings_path, settings)
+    if not (run / 'selection.json').exists():
+        report = evaluate(run, net, run / 'bootstrap.npz', 'validation', 38031, args.validation_pairs,
+                          samples=args.validation_samples, tag='validation_bootstrap')
+        meta['best_validation'], meta['best_checkpoint'] = report['score'], 'bootstrap.npz'
+        shutil.copyfile(run / 'bootstrap.npz', run / 'best.npz')
+        write_json(run / 'selection.json', {'checkpoint': 'bootstrap.npz', 'sha256': sha(run / 'bootstrap.npz'),
+                                          'criterion': 'maximum validation win share; earliest checkpoint wins ties',
+                                          'validation': report})
+        block = time.monotonic()
     while time.monotonic() - start < args.hours * 3600:
         game_id = meta['games']
         episode_rng = random.Random(meta['seed'] + 1000003 * game_id)

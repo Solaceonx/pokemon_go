@@ -178,6 +178,8 @@ class Network:
     @classmethod
     def load(cls, path):
         with np.load(path, allow_pickle=False) as data:
+            if data['p0'].shape[0] != N_FEATURES or data['p5'].shape != (N_ACTIONS,):
+                raise ValueError('Checkpoint observation/action schema differs from this policy')
             net = cls(hidden=data['p0'].shape[1])
             for name in ('p', 'm', 'v'):
                 setattr(net, name, [data[f'{name}{i}'].copy() for i in range(6)])
