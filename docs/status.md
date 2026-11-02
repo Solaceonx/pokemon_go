@@ -1,5 +1,43 @@
 # Project status, for anyone picking this up
 
+## Standalone RL against a frozen engine — 2026-11-01 (Codex, task 37, in progress)
+
+Owner-requested standalone reinforcement learning, with up to two days of computing or available usage.
+Work is on `codex/standalone-rl`, draft PR #11. Protocol, commands, artifact descriptions and the review
+of tracker PR #10 are in `docs/standalone_rl.md`. No strength gain has been established yet.
+
+Baseline: main `59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9`, archived source/data/Q/evaluation
+weights with per-file SHA-256 hashes. A separately imported snapshot supplies the simulator and engine;
+32 imagined battles, 20-step horizon, bot rollouts, edge .03, margin .02, no time cuts, fresh evaluator
+cache for every player/game. Mixed-field pool, standard-field cross-check. Existing defaults unchanged.
+
+Implemented a separate 366-input NumPy actor-critic choosing legal actions, shields and replacements
+without any Planner/search call or private state at runtime. Initialization imitates the frozen Learner
+on training teams. PPO uses terminal win/loss rewards against the frozen engine, Learner and self-play.
+Unordered team trios are hashed into disjoint training, validation and final-test partitions, keeping all
+leads together. Validation chooses the checkpoint; locking generates fresh final seeds and forbids further
+training in that run. Evaluation reverses teams and seats and reports pairing-cluster bootstrap intervals
+plus a conservative Hoeffding lower bound. Checkpoints include Adam moments; raw batches, episode logs,
+protocol/source hashes and append-only pairing records are retained locally.
+
+**Checks before implementation:** 263 tests OK (7 video-dependent skips); 108/108 PvPoke battles exact.
+**Implementation checks:** full suite 277 OK (7 skipped), followed by two more passing fairness/resume
+regressions (16 standalone tests total). Tiny pipeline runs used a 32-unit model, 16 imitation games,
+8 PPO games and 2 validation pairings. They exercised save/resume, lock, final evaluation and replay of
+cached results; the nearly random policy scored zero on all four two-pairing test blocks. These tiny runs
+are pipeline checks only, not a playing-strength estimate or an architecture selection test.
+
+**PR #10 review:** head `5cce9110dfb4d17c9c6e6db6151ddc2dba8bf3c7`, isolated archive:
+275 tests OK (7 skipped), 108/108 PvPoke exact. Reviewed cap rollback, forms/protection, sampling,
+pairing statistics and callback leakage; no blocking finding reproduced. Its Learner scores near 59%
+are against a Planner and do not demonstrate wins over the current search engine. The tracker changes
+are not merged into this experiment's frozen opponent.
+
+**Running:** first substantial experiment `ppo-v1`, seed 37001, 128 validation pairings; 16,384
+imitation games then PPO, at most three low-priority workers with one NumPy thread each. Final-test
+plan is 1,200 pairings per fresh seed and field (9,600 battles total), with weights locked beforehand.
+Training results and the honest final success/failure verdict will be appended here.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
