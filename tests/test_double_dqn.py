@@ -2,6 +2,8 @@ import itertools
 from pathlib import Path
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 
@@ -9,7 +11,8 @@ from pogo.battle import Battle
 from pogo.agents import Planner
 from pogo.gamedata import GameData
 from pogo.dqn import Agent, Network, Replay, N_FEATURES, observation, transitions, double_targets
-from scripts.double_dqn import bucket, ci
+from scripts.double_dqn import bucket, ci, read_rows
+import scripts.double_dqn as experiment
 
 
 class DoubleDQNTests(unittest.TestCase):
@@ -107,10 +110,12 @@ class DoubleDQNTests(unittest.TestCase):
             other.update(x, actions, y)
             for a, b in zip(net.p, other.p): np.testing.assert_array_equal(a, b)
             replay = Replay(10)
+            replay.info = {'games': 9, 'seed': 3}
             replay.add(transitions([(x[0], np.ones(9, bool), 0, .1)], 1.))
             replay.save(Path(d) / 'replay.npz')
             loaded = Replay.load(Path(d) / 'replay.npz')
             self.assertEqual((loaded.size, loaded.cursor), (1, 1))
+            self.assertEqual(loaded.info, {'games': 9, 'seed': 3})
             np.testing.assert_array_equal(replay.x, loaded.x)
 
     def test_learning_loss_falls_and_standalone_battle_finishes(self):
@@ -131,6 +136,40 @@ class DoubleDQNTests(unittest.TestCase):
         result = ci([0., 1.])
         self.assertEqual(result['clusters'], 2)
         self.assertAlmostEqual(result['margin95'], .98)
+
+    def test_interrupted_evaluation_preserves_complete_rows(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'results.jsonl'
+            path.write_bytes(b'{"pair": 0}\n{"pair":')
+            self.assertEqual(read_rows(path), [{'pair': 0}])
+            self.assertEqual(path.read_bytes(), b'{"pair": 0}\n')
+            path.write_bytes(b'{"pair": 0}')
+            self.assertEqual(read_rows(path), [{'pair': 0}])
+            self.assertTrue(path.read_bytes().endswith(b'\n'))
+            path.write_bytes(b'broken\n{"pair": 1}\n')
+            with self.assertRaises(ValueError): read_rows(path)
+
+    def test_final_test_locks_model_before_outcomes_and_blocks_retraining(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            run = root / 'runs/double-dqn/lock'
+            run.mkdir(parents=True)
+            policy = run / 'policy.npz'
+            policy.write_bytes(b'fixed model')
+            argv = ['double_dqn.py', 'evaluate', '--run', 'lock', '--checkpoint', 'policy.npz',
+                    '--split', 'test', '--seed', '38091', '--pairs', '2']
+            def outcomes(*args, **kwargs):
+                self.assertTrue((run / 'test_lock.json').exists())
+            with patch.object(experiment, 'ROOT', root), patch.object(experiment, 'receipt'), \
+                 patch.object(experiment, 'low_priority'), patch.object(experiment.Network, 'load', return_value=(None, {}, None)), \
+                 patch.object(experiment, 'evaluate', side_effect=outcomes) as judge, patch('sys.argv', argv):
+                experiment.main()
+                policy.write_bytes(b'changed model')
+                with self.assertRaisesRegex(ValueError, 'already locked'):
+                    experiment.main()
+                self.assertEqual(judge.call_count, 1)
+            with self.assertRaisesRegex(ValueError, 'selection locked'):
+                experiment.train(SimpleNamespace(), run)
 
 
 if __name__ == '__main__':

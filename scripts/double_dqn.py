@@ -61,6 +61,29 @@ def append(path, value):
         f.write(json.dumps(value) + '\n')
 
 
+def read_rows(path):
+    """Recover a killed final JSONL write, preserving every complete committed row."""
+    path = Path(path)
+    data = path.read_bytes() if path.exists() else b''
+    lines, rows, committed = data.splitlines(keepends=True), [], 0
+    for i, line in enumerate(lines):
+        try:
+            rows.append(json.loads(line))
+        except (ValueError, UnicodeDecodeError):
+            if i != len(lines) - 1 or line.endswith(b'\n'):
+                raise
+            with path.open('r+b') as f:
+                f.truncate(committed)
+            print(json.dumps({'event': 'recover_partial_jsonl', 'path': str(path)}), flush=True)
+            break
+        committed += len(line)
+    # A valid row killed before its newline needs a separator before appending.
+    if rows and data and not data.endswith(b'\n') and committed == len(data):
+        with path.open('ab') as f:
+            f.write(b'\n')
+    return rows
+
+
 def bucket(team):
     """All lead/bench permutations of a species composition always share one split."""
     names = sorted(b if isinstance(b, str) else (b.home or b.species_id) for b in team)
@@ -157,8 +180,8 @@ def receipt(run):
     path = run / 'protocol.json'
     if path.exists():
         old = json.loads(path.read_text(encoding='utf-8'))
-        if old['baseline_files'] != body['baseline_files']:
-            raise ValueError('Baseline changed')
+        if old['baseline_files'] != body['baseline_files'] or old['features'] != body['features']:
+            raise ValueError('Baseline or observation schema changed; use a new run')
     else:
         write_json(path, body)
 
@@ -183,8 +206,9 @@ def load_training(run, seed):
         target, replay, rng = copy.deepcopy(net), Replay(), np.random.default_rng(seed)
         meta = {'games': 0, 'seed': seed, 'batches': 0, 'best_validation': -1., 'train_seconds': 0.}
         # The warm-up is a candidate too: RL must not silently discard a stronger starting policy.
-        if (run / 'selection.json').exists():
-            selection = json.loads((run / 'selection.json').read_text())
+    if (run / 'selection.json').exists():
+        selection = json.loads((run / 'selection.json').read_text())
+        if selection['validation']['score'] > meta['best_validation']:
             meta['best_validation'] = selection['validation']['score']
             meta['best_checkpoint'] = selection['checkpoint']
     return net, meta, target, replay, rng
@@ -216,8 +240,7 @@ def evaluate(run, net, checkpoint_path, split, seed, pairs, field='mixed', sampl
     write_json(config, key)
     completed = {}
     if resume and path.exists():
-        for line in path.read_text().splitlines():
-            row = json.loads(line)
+        for row in read_rows(path):
             completed[row['pair']] = row
     rng = random.Random(seed)
     begin = time.monotonic()
@@ -254,8 +277,10 @@ def bootstrap(args, run):
     demo_path = run / 'demonstrations.npz'
     state_path = run / 'demonstrations.json'
     demos = Replay.load(demo_path) if demo_path.exists() else Replay(args.demo_capacity)
-    done = json.loads(state_path.read_text())['games'] if state_path.exists() else 0
-    if state_path.exists() and json.loads(state_path.read_text())['seed'] != args.seed:
+    prior = demos.info or (json.loads(state_path.read_text()) if state_path.exists() else {})
+    done = prior.get('games', 0)
+    if prior and (prior['seed'] != args.seed or prior.get('teacher', args.teacher) != args.teacher
+                  or prior.get('teacher_samples', args.teacher_samples) != args.teacher_samples):
         raise ValueError('Demonstration seed changed on resume')
     net = Network(args.seed, hidden=args.hidden)
     rng = random.Random(args.seed)
@@ -265,14 +290,17 @@ def bootstrap(args, run):
         seeds = [rng.getrandbits(32) for _ in range(3)]
         if i < done:
             continue
-        p = Agent(net, seed=seeds[0], teacher=f.learner(seeds[0]), record=True)
-        q = Agent(net, seed=seeds[1], teacher=f.learner(seeds[1]), record=True)
+        make_teacher = f.learner if args.teacher == 'learner' else lambda seed: f.engine(seed, args.teacher_samples)
+        p = Agent(net, seed=seeds[0], teacher=make_teacher(seeds[0]), record=True)
+        q = Agent(net, seed=seeds[1], teacher=make_teacher(seeds[1]), record=True)
         result, _ = f.game(a, b, p, q, seeds[2])
         demos.add(transitions(p.log, result))
         demos.add(transitions(q.log, -result))
-        if (i + 1) % 250 == 0 or i + 1 == args.games:
+        if (i + 1) % args.demo_save_every == 0 or i + 1 == args.games:
+            demos.info = {'games': i + 1, 'seed': args.seed, 'transitions': demos.size,
+                          'teacher': args.teacher, 'teacher_samples': args.teacher_samples}
             demos.save(demo_path)
-            write_json(state_path, {'games': i + 1, 'seed': args.seed, 'transitions': demos.size})
+            write_json(state_path, demos.info)
             print(json.dumps({'event': 'demo', 'games': i + 1, 'rows': demos.size,
                               'seconds': time.monotonic() - begin}), flush=True)
     order = np.random.default_rng(args.seed)
@@ -398,6 +426,9 @@ def main():
     parser.add_argument('--epochs', type=int, default=25)
     parser.add_argument('--hidden', type=int, default=128)
     parser.add_argument('--demo-capacity', type=int, default=100000)
+    parser.add_argument('--teacher', choices=('learner', 'engine'), default='learner')
+    parser.add_argument('--teacher-samples', type=int, default=4)
+    parser.add_argument('--demo-save-every', type=int, default=100)
     parser.add_argument('--batch', type=int, default=256)
     parser.add_argument('--rate', type=float, default=3e-4)
     parser.add_argument('--hours', type=float, default=12)

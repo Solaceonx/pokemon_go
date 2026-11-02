@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN (claimed 2026-11-01; separate from task 37 / PPO) | NumPy; up to two days shared local computing |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, implemented, first trial no gain, second trial running (2026-11-01; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -66,6 +66,14 @@ hindsight, but no change helps once wins are counted). Task 1 (catalogue of vide
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
 ## 38. Standalone Double DQN against a frozen engine — Codex DQN (in progress, 2026-11-01)
+
+**Current state.** Draft PR #12 contains the standalone policy, frozen baseline, held-out composition splits,
+locked final tests, atomic checkpoints and a bounded unattended pipeline. The first 749-game RL trial did
+not improve on its warm-up (24.0% ± 5.5 against engine8 on 100 validation pairings; this is selection data,
+not final evidence). The second variant has 400 inputs, a larger network and an engine4 warm-up; its pipeline
+then trains against the full engine32 for up to two 12-hour stages before validation-selected, fresh-seed final
+testing. Every result is in `status.md`; exact commands and artifact paths are in `docs/double_dqn.md`.
+Current checks: 273 tests pass (7 optional video skips), 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and
 try to beat the current engine reliably. Use a different algorithm from the parallel chat's PPO experiment.

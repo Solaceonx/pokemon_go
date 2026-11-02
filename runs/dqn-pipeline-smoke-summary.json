@@ -1,0 +1,75 @@
+{
+  "status": "complete",
+  "strength_target_met": null,
+  "completed_commands": [
+    "train_stage_1",
+    "full_validation_stage_1",
+    "train_stage_2",
+    "full_validation_stage_2",
+    "test_mixed_38991",
+    "test_mixed_38992",
+    "test_standard_38991"
+  ],
+  "model_sha256": "150de661591ee2a4ea5af4e2959aeba1e41c1c1593deac3e03314c8f26c1e217",
+  "plan": {
+    "smoke_validation_only": true,
+    "source_sha256": {
+      "scripts\\double_dqn.py": "cac12aacf90a95c4b3fd83d9ae8f8e1d06cb1130d706a0ff049aa5e28b928d30",
+      "pogo\\dqn.py": "64bbc88ab5d77aa7cb3e66f243dc08cbffdae99792bc968a94e9b24dc046a640",
+      "data\\matchups_wide.json": "ec10e43664a22b74948019b17789050576b20772b82f7ac24b202c57ed1355a6"
+    },
+    "controller_sha256": "74ea66cc9157c917adc1ad3e594b2fa3103683d3f0b94f9a1726cedd30235136",
+    "bootstrap": {
+      "games": 10,
+      "epochs": 1,
+      "teacher": "learner",
+      "hidden": 16,
+      "seed": 38002
+    },
+    "stage_hours": 0.0001,
+    "maximum_stages": 2,
+    "screening": {
+      "samples": 8,
+      "pairs": 2,
+      "seed": 38031
+    },
+    "full_engine_validation": {
+      "samples": 32,
+      "pairs": 2,
+      "seed": 38032
+    },
+    "selection": "Best full-engine validation score among completed stages; earliest wins ties",
+    "extra_stage_rule": "Run second stage unless first full-engine validation lower95 > .5",
+    "final_pairs_per_block": 2,
+    "final_blocks": [
+      [
+        "mixed",
+        38991
+      ],
+      [
+        "mixed",
+        38992
+      ],
+      [
+        "standard",
+        38991
+      ]
+    ],
+    "success": "Both mixed lower95 > .5 and standard upper95 >= .5",
+    "deadline_hours_from_start": 0.1,
+    "workers": 1,
+    "training": {
+      "samples": 32,
+      "engine_share": 1.0,
+      "epsilon": 0.03,
+      "epsilon_min": 0.005,
+      "epsilon_decay": 20000,
+      "nstep": 3,
+      "mc_share": 0.25,
+      "demo_margin": 1.0,
+      "rate": 0.0001,
+      "updates_per_game": 4
+    }
+  },
+  "note": "All smoke games use validation compositions and canary seeds; production final teams/seeds untouched."
+}

@@ -6,6 +6,7 @@ Team slots are ordered active first, then bench in team order. Unknown opponents
 from __future__ import annotations
 
 import copy
+from functools import lru_cache
 import json
 import random
 from pathlib import Path
@@ -17,8 +18,15 @@ from .battle import damage
 N_ACTIONS = 9
 TYPES = ('normal', 'fire', 'water', 'electric', 'grass', 'ice', 'fighting', 'poison', 'ground',
          'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy')
-N_MON = 46
-N_FEATURES = 13 + 6 * N_MON + 9 * 9
+N_MON = 48
+N_FEATURES = 13 + 6 * N_MON + 9 * 11
+
+
+@lru_cache(maxsize=1)
+def matchup_table():
+    """Existing frozen species matchup estimates, used as inputs rather than action rules."""
+    path = Path(__file__).resolve().parent.parent / 'data/matchups_wide.json'
+    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def ordered(view):
@@ -47,12 +55,13 @@ def mon_features(mon):
             x += [m.buff_chance] + [s / 4 for s in (*m.self_buffs, *m.foe_buffs)]
         else:
             x += [0.] * 5
+    x += [float(k < len(b.charged) and mon.energy >= b.charged[k].energy) for k in range(2)]
     return x
 
 
 def pair_features(a, b):
     if a is None or b is None:
-        return [0.] * 9
+        return [0.] * 11
     x = [min(damage(a, a.build.fast, b) / max(b.hp, 1), 2),
          min(damage(b, b.build.fast, a) / max(a.hp, 1), 2),
          float(a.build.cmp_atk > b.build.cmp_atk)]
@@ -63,6 +72,10 @@ def pair_features(a, b):
         moves = user.build.charged
         x.append(min((max(0, m.energy - user.energy) / max(user.build.fast.energy_gain, 1)
                       for m in moves), default=10) / 10)
+    table = matchup_table()
+    first = table.get(a.build.home or a.build.species_id, {})
+    other = b.build.home or b.build.species_id
+    x += [first.get(other, 0.), float(other in first)]
     return x
 
 
@@ -280,6 +293,7 @@ def transitions(log, result, nstep=8):
 class Replay:
     def __init__(self, capacity=50000):
         self.capacity, self.size, self.cursor = capacity, 0, 0
+        self.info = {}
         self.x = np.zeros((capacity, N_FEATURES), np.float32)
         self.mask = np.zeros((capacity, N_ACTIONS), bool)
         self.action = np.zeros(capacity, np.int64)
@@ -309,6 +323,7 @@ class Replay:
     def save(self, path):
         data = {k: v[:self.size] for k, v in vars(self).items() if isinstance(v, np.ndarray)}
         data.update(capacity=self.capacity, size=self.size, cursor=self.cursor)
+        data['info'] = np.array(json.dumps(self.info))
         temp = Path(str(path) + '.tmp')
         with temp.open('wb') as f:
             np.savez_compressed(f, **data)
@@ -319,6 +334,7 @@ class Replay:
         with np.load(path, allow_pickle=False) as data:
             replay = cls(int(data['capacity']))
             replay.size, replay.cursor = int(data['size']), int(data['cursor'])
+            replay.info = json.loads(str(data['info'])) if 'info' in data else {}
             for k, v in vars(replay).items():
                 if isinstance(v, np.ndarray):
                     v[:replay.size] = data[k]

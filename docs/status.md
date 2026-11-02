@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-10-18.
+Last updated 2026-11-01.
 
 ## Standalone Double DQN experiment — 2026-11-01 (Codex DQN, task 38; in progress)
 
@@ -44,7 +44,52 @@ then 390 training games in a 36-second budget, 25% one-sample-engine opponents. 
 was 75.25% then 77%; validation checks used only two mirrored pairings and scores ranged 0–25%. This verifies
 the executable path and atomic training snapshots, not improvement. Logs/checkpoints stay in the ignored
 `runs/double-dqn/smoke/`. The first full run is `dqn-v1`: 10,000 demonstration games, a 128-unit network,
-120,000 retained replay transitions, 40 bootstrap epochs; output `runs/dqn-v1-bootstrap.out`. Results pending.
+120,000 retained demonstration transitions, 40 bootstrap epochs; output `runs/dqn-v1-bootstrap.out`.
+The warm-up completed; its final sampled training agreement was **91.29%**. The first real validation,
+seed 38031, **100 independent mirrored pairings / 200 games** against the **eight-sample** frozen engine,
+scored **25.25% ± 5.64 points (95%)**, interval 19.61–30.89%. This is below target and is selection data only,
+not a final-test claim. Full pair scores and hashes are in
+`runs/double-dqn/dqn-v1/validation_bootstrap_summary.json`; raw rows remain local. Reinforcement training
+then started with **100% four-sample-engine opponents**, epsilon 0.15 decaying toward 0.02, eight-step returns,
+four minibatches per game, 50/50 TD and Monte Carlo targets, demonstration margin 0.1, 50,000 online replay
+capacity, and a 15-minute initial invocation. The warm-up remains eligible for checkpoint selection if RL
+does worse. `training_settings.json`, `training_source_sha256.json` and `invocations.jsonl` record exact inputs.
+
+**First RL trial did not improve.** It completed **749 RL games / 2,972 minibatches** in the 15-minute
+invocation (614.5 s of training, plus initial validation and snapshot overhead). The 200-game checkpoint
+scored **23.75% ± 5.04** on the same 100 validation pairings against engine8, a paired change from warm-up
+of **−1.50 ± 6.92 points**. The last checkpoint scored **24.00% ± 5.48**, paired change **−1.25 ± 7.77**.
+Both intervals include no change. The warm-up stays the selected model for this version; no final-test
+evidence was opened and no strength gain is claimed. Exact outcomes and paired differences are in
+`validation_probe_000200_summary.json`, `probe_000200_paired_gain.json`, `validation_last_summary.json`
+and `last_paired_gain.json` under `runs/double-dqn/dqn-v1/`. Its source/checkpoints remain local in the v1
+snapshot; Git commit `06c3996` preserves its 370-input implementation.
+
+**Second variant, `dqn-v2`, running.** It adds the existing wide matchup table and explicit move readiness
+as inputs (400 total), raises the two hidden layers from 128 to 256, and uses a four-sample engine teacher
+for 3,000 bootstrap games, 200,000 retained transitions and 80 fitting epochs (seed 38002). These are input,
+capacity and training changes, not new tactical rules; their combined trial does not isolate each one's
+effect. Subsequent RL plays **100% full engine32**: epsilon 0.03 down to 0.005, three-step returns, 25% MC
+auxiliary target, demo margin 1.0, learning rate 0.0001, four updates per game. Runtime remains standalone.
+
+`scripts/dqn_pipeline.py` runs at most two 12-hour stages with a fixed overall 44-hour deadline from its
+start, within the owner's original two-day budget. After each stage, the engine8-screened winner is scored
+on **300 full-engine validation pairings, seed 38032**. A second stage runs unless the first stage's lower
+95% bound exceeds 50%. The better full-engine stage result selects the compact `policy.npz`, before any
+final outcomes. Final blocks are **1,000 pairings / 2,000 games each**, engine32: mixed seeds 38091/38092,
+then standard seed 38091. The final model and sample count are locked; no further training in that run.
+`pipeline_plan.json`, `pipeline_state.json`, `final_selection.json` and `verdict.json` retain the decision.
+At this update, bootstrap is still collecting; final tests have not started.
+
+The pipeline controller passed two end-to-end miniature executions through both training stages,
+full-engine validation, compact policy export and all three evaluation blocks. All smoke games used
+validation teams and separate canary seeds 38991/38992; their verdicts intentionally make no strength
+claim. A separate unit check proves the model hash is locked before evaluation and rejects both a changed
+model and retraining. Replay counters now travel atomically with demonstration arrays, and an interrupted
+last JSONL row can be recovered without dropping completed pairings. Existing interior corruption fails.
+The v2 runtime source is frozen separately under `.dqn-cache/harness/v2/`, so the v1 evaluation and later
+edits cannot alter it. See `docs/double_dqn.md` for reproduction, limits and artifact locations.
+Current checks: **273 tests pass (seven optional video skips); 108/108 PvPoke reference battles exact**.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
