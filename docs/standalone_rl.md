@@ -122,10 +122,14 @@ and representative checkpoints; do not commit every training batch or all interm
 Use a saved policy directly:
 
 ```python
-from pogo.standalone_rl import ActorCritic, StandaloneAgent
-model, metadata = ActorCritic.load("runs/standalone-rl/ppo-v2/locked.npz")
-agent = StandaloneAgent(model, seed=123)  # act(view), shield(view, energy), replace(view)
+from pogo.standalone_policy import load_agent
+agent, metadata = load_agent("runs/standalone-rl/ppo-v2/locked.npz", seed=123)
+# agent.act(view), agent.shield(view, energy), agent.replace(view)
 ```
+
+This loader reads the greedy/stochastic mode recorded in the selected checkpoint, so inference
+uses the same mode as evaluation. Raw round checkpoints require an explicit `greedy=True` or
+`greedy=False`; a previous champion's mode in their training state is not silently reused.
 
 The generic loader accepts both network versions. Migrating the first prototype to independent networks
 copies its policy and value outputs exactly, starts fresh Adam state, and records that reset in provenance.

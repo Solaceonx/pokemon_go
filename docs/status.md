@@ -84,6 +84,22 @@ The actual 2,048 saved training episodes contain 1,984 distinct trios, with zero
 seeds are disjoint from the 768 validation RNG seeds, episode indices are contiguous, registered source
 hashes match, and the final test is still unopened (`partition_audit_through_round_00008.json`).
 
+**Complete round-eight selection:** greedy inference scored **31.64%, CI [26.56%, 36.72%]**, and was
+selected over stochastic inference's 27.54%. The initial greedy score was 25.00%; its paired gain is
+**6.64 points, CI [0.00, 13.28]**, touching zero. The paired comparison is saved in
+`learning_comparison_00008_greedy.json`. Training resumed from the latest weights, with
+the selected round-8 checkpoint retained separately. This remains below the engine and is not final-test
+evidence of a reliable win.
+
+Added `pogo.standalone_policy.load_agent` to load the selected inference mode from checkpoint metadata;
+the earlier raw-constructor example would have defaulted to stochastic mode even when greedy had won
+validation. On the actual round-8 best checkpoint, both policy-weight fingerprint and mode match the
+evaluated policy (`deployment_check_round_00008.json`). Raw round checkpoints need an explicit mode
+instead of silently inheriting a previous champion's setting. A fresh-process test loads the independent
+policy without importing Planner, Learner, engine or simulator modules. Full suite: **291 tests OK**
+(7 video-dependent skips); **108/108 PvPoke exact**. This loader is separate from the unchanged running
+training source; it does not affect the experiment.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
