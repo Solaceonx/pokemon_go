@@ -7,6 +7,9 @@ param(
     [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]*$')]
     [string]$Run,
     [string]$Python = '',
+    [string]$EntryScript = 'scripts/standalone_rl.py',
+    [ValidateSet('prepare', 'train', 'run', 'lock', 'test')]
+    [string]$Command = 'run',
     [string[]]$TrainingArguments = @()
 )
 
@@ -21,6 +24,11 @@ if (-not $Python) {
     }
 }
 $rlExecutable = (Get-Command $Python -ErrorAction Stop).Source
+$rlEntry = (Resolve-Path -LiteralPath (Join-Path $rlWorkspace $EntryScript)).Path
+if (-not $rlEntry.StartsWith($rlWorkspace + [System.IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase) `
+        -or [System.IO.Path]::GetExtension($rlEntry) -ne '.py') {
+    throw 'EntryScript must be a Python file inside this repository.'
+}
 $rlFolder = Join-Path $rlWorkspace "runs\standalone-rl\$Run"
 $rlProcessFile = Join-Path $rlFolder 'process.json'
 if (Test-Path -LiteralPath $rlProcessFile) {
@@ -33,7 +41,7 @@ if ($TrainingArguments -contains '--run') {
     throw 'Pass the run name through -Run only.'
 }
 $null = New-Item -ItemType Directory -Path $rlFolder -Force
-$rlArguments = @('-u', 'scripts/standalone_rl.py', 'run', '--run', $Run) + $TrainingArguments
+$rlArguments = @('-u', $rlEntry, $Command, '--run', $Run) + $TrainingArguments
 # Start-Process joins the argument array. Quote literal arguments containing spaces;
 # none of these strings is passed to a command shell.
 $rlQuotedArguments = foreach ($rlArgument in $rlArguments) {

@@ -4,7 +4,7 @@
 
 Owner-requested standalone reinforcement learning, with up to two days of computing or available usage.
 Work is on `codex/standalone-rl`, draft PR #11. Protocol, commands, artifact descriptions and the review
-of tracker PR #10 are in `docs/standalone_rl.md`. No strength gain has been established yet.
+of tracker PR #10 are in `docs/standalone_rl.md`. A reliable win has not been established.
 
 Baseline: main `59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9`, archived source/data/Q/evaluation
 weights with per-file SHA-256 hashes. A separately imported snapshot supplies the simulator and engine;
@@ -118,6 +118,31 @@ private to each fork. It replays the actual choice exactly on both seats and pas
 cache-isolation and gradient-direction tests. Those functional tests use one-sample engines; a full-32
 counterfactual training trial and playing-strength evaluation have not been run. No active PPO source
 was changed. **297 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
+Added a separate resumable counterfactual trial driver, still unused by the active PPO run. It
+collects greedy actions and sampled auxiliary heads, applies full-option terminal-return updates to
+actions, and restricts PPO to the sampled shield/replacement decisions. Recent labels have a bounded
+replay window; method-source fingerprints supplement the unchanged evaluation fingerprints. Tests
+confirm no invalid policy-gradient rows from greedy actions, all-greedy counterfactual continuation,
+bit-identical split/continuous optimization, and no final-test opening by `train`. Controller tests
+use one-sample engines and mocked validation. A real full-32 replay/pipeline control remains a gate
+before any strength trial; no counterfactual playing-strength result is claimed.
+
+**Round twenty-four and method decision:** after 6,144 PPO games, stochastic validation scored
+**25.98%, CI [21.09%, 31.05%]**, and greedy **31.45%, CI [26.17%, 36.52%]**. Relative to round sixteen,
+the paired greedy change was **-1.37 points, CI [-7.62, 5.08]**. The full-strength phase supplied no
+clear gain. The verified parent and three workers were stopped after saving round 24; PPO can resume
+from that checkpoint, and the selected round-16 policy remains available. Final tests are unopened.
+
+The counterfactual replay gate now passes with the selected 128-unit policy and full 32-sample
+engines on both seats: forcing the real action reproduces the complete winner, turn, team HP/energy,
+shields/switch timers and environment RNG state. Details are in `counterfactual_full32_replay_check.json`.
+The real multiprocessing pipeline also passed one training round / two collection games, both
+validation modes, checkpoint selection, locking and all four fresh-seed/field final blocks. Collection
+used one-sample engines; validation and final blocks used 32. Two-pairing final scores were 25%, 0%,
+25%, 25%, with the strength verdict false. These tiny controls provide no strength evidence;
+`counterfactual_pipeline_check.json` records their settings and provenance.
+Full suite: **300 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
 
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README

@@ -160,6 +160,27 @@ seats, independent controller/evaluator caches, repeatable returns, frozen captu
 the full-option gradient. Replay tests use one-sample engines for speed. No counterfactual training
 trial or playing-strength result has been claimed; the active PPO experiment is unchanged.
 
+The resumable trial driver is `scripts/counterfactual_rl.py`. Its `train` command opens no final
+test; `run` performs training, locking and final testing. Collection uses greedy physical actions and
+sampled shield/replacement choices. Only the sampled choices receive PPO updates; physical actions
+use complete-option returns with fully greedy continuations. Recent terminal-return labels are kept
+in a bounded replay window. Both training code and evaluation code are hashed and checked before
+training, locking and final testing. Split and continuous training reproduce the same weights and
+optimizer clocks in the unit control. Those controller tests use one-sample engines and mocked
+validation. Separate real controls now pass full-32 exact replay on both seats and the multiprocessing
+train/validate/lock/test pipeline; their reports are saved alongside the PPO development artifacts.
+The two-pairing pipeline scores are functional checks only, and its strength verdict is false.
+
+Example after selecting a warm start, with the shared work-budget deadline supplied explicitly:
+
+```sh
+python scripts/counterfactual_rl.py train --run cf-pilot --start runs/standalone-rl/ppo-v2/best.npz --hours 4 --workers 3 --train-samples 32 --playouts 2 --batch-games 64 --max-rounds 12 --budget-deadline 1793756530
+```
+
+On Windows, pass `-EntryScript scripts/counterfactual_rl.py -Command train` to the background launcher.
+The deadline above is the original task deadline, 2026-11-03 17:42:10 Los Angeles; it does not reset
+when starting a new method. Do not run a second pool alongside an existing three-worker experiment.
+
 ## Draft PR #10 review
 
 Reviewed head `5cce9110dfb4d17c9c6e6db6151ddc2dba8bf3c7`, including the tracker cap rollback,

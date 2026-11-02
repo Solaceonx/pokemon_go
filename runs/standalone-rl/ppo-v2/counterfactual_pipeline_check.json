@@ -1,0 +1,124 @@
+{
+  "final_blocks": 4,
+  "final_pairings_per_block": 2,
+  "final_scores": {
+    "mixed_0": 0.25,
+    "mixed_1": 0.0,
+    "standard_0": 0.25,
+    "standard_1": 0.25
+  },
+  "greedy": true,
+  "passed": true,
+  "purpose": "Real multiprocessing pipeline control only; not strength evidence.",
+  "reliably_beats_frozen_engine": false,
+  "rounds": 1,
+  "source_config": {
+    "acceptance": "each mixed seed block: pairing bootstrap 95% lower > .5 AND Hoeffding one-sided 97.5% lower > .5; each standard seed block: bootstrap lower > .5",
+    "algorithm": "all-action terminal-return improvement with on-policy auxiliary heads",
+    "baseline": {
+      "edge": 0.03,
+      "horizon": 20,
+      "margin": 0.02,
+      "rollout": "bot",
+      "samples": 32
+    },
+    "behavior": "greedy act; sampled shield/replace; counterfactual continuations fully greedy",
+    "budget_deadline_unix": 1793756530.0,
+    "commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+    "created_unix": 1793597746.0299745,
+    "frozen_manifest_canonical_sha256": "8edd2bc1c1cd3a08afaebe74754ddbd30ae303122853d342aa286e82b3c5b7eb",
+    "frozen_manifest_sha256": "666702e0db79714380bed6af0750d3f4053bca3da5b1cd7c99be41b4600980dc",
+    "implementation_git_head": "c252d1b9f559e91c85b2228e43110d42ad8a9708",
+    "initialization": {
+      "checkpoint": "runs\\standalone-rl\\ppo-v2\\best.npz",
+      "metadata": {
+        "adam_steps": {
+          "act.b1": 1076,
+          "act.b2": 1076,
+          "act.out_b": 1076,
+          "act.out_w": 1076,
+          "act.w1": 1076,
+          "act.w2": 1076,
+          "critic.b1": 1332,
+          "critic.b2": 1332,
+          "critic.out_b": 1332,
+          "critic.out_w": 1332,
+          "critic.w1": 1332,
+          "critic.w2": 1332,
+          "replace.b1": 64,
+          "replace.b2": 64,
+          "replace.out_b": 64,
+          "replace.out_w": 64,
+          "replace.w1": 64,
+          "replace.w2": 64,
+          "shield.b1": 192,
+          "shield.b2": 192,
+          "shield.out_b": 192,
+          "shield.out_w": 192,
+          "shield.w1": 192,
+          "shield.w2": 192
+        },
+        "features": 366,
+        "schema": 2,
+        "selection": "validation_only",
+        "state": {
+          "best_greedy": true,
+          "best_round": 16,
+          "best_validation": 0.328125,
+          "bootstrap_games": 0,
+          "phase": "ppo",
+          "round": 16,
+          "training_games": 4096,
+          "training_seconds": 3722.3589999999967
+        },
+        "updates": 1332
+      },
+      "sha256": "9af26bd7cbce2a7c17e0ca2697006968f8760c385a6c95d58d785f1d37aa7258"
+    },
+    "label_scope": "true training simulator state for terminal labels; public View only for policy features",
+    "network": "independent",
+    "numpy": "2.3.5",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "primary_endpoint": "mixed field vs full frozen engine; greedy/stochastic mode selected on validation only; two fresh seed blocks",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "review_pr": "https://github.com/Solaceonx/pokemon_go/pull/10",
+    "run": "pipeline-cf-real-v1",
+    "schema": 1,
+    "seed": 37001,
+    "snapshot": ".rl-cache/frozen/59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+    "sources": {
+      "pogo/rl_experiment.py": "74a90306e1aca5160629b0b5f0262ef1d888b09618480c7e8ecbda31a6d59872",
+      "pogo/standalone_rl.py": "6bc1e78d7642df7c6db066c33cd8a78fff1b0782f9cf2377ff69163770b7d416",
+      "pogo/standalone_rl_v2.py": "37bf604e12ae3fefe3e67e6787f23c9e25079b01e0d10c4c74a082d624e0bacb",
+      "scripts/standalone_rl.py": "396e0b319324e514d693e522f3667577ec99a1a9f8b94c3b0eca71482757526a"
+    },
+    "split": "70% train / 15% validation / 15% test; unordered trios; same species allowed",
+    "split_salt": "standalone-rl-v1-team-split-2026-11-01",
+    "test_seeds": "generated only after checkpoint lock; never used for selection",
+    "training_sources": {
+      "pogo/counterfactual_rl.py": "0b90c9231c4d0519cf509dc68f4bd57af4d18e1881754913feec87d898c0fc0c",
+      "pogo/rl_experiment.py": "74a90306e1aca5160629b0b5f0262ef1d888b09618480c7e8ecbda31a6d59872",
+      "pogo/standalone_rl.py": "6bc1e78d7642df7c6db066c33cd8a78fff1b0782f9cf2377ff69163770b7d416",
+      "pogo/standalone_rl_v2.py": "37bf604e12ae3fefe3e67e6787f23c9e25079b01e0d10c4c74a082d624e0bacb",
+      "scripts/counterfactual_rl.py": "dcf84d43f8ff1bf020c58fda56b6caa1a24c04dea65cbe3b9e8e42a09517d04c",
+      "scripts/standalone_rl.py": "396e0b319324e514d693e522f3667577ec99a1a9f8b94c3b0eca71482757526a"
+    },
+    "validation_modes": [
+      false,
+      true
+    ]
+  },
+  "state": {
+    "best_greedy": true,
+    "best_round": 0,
+    "best_validation": 0.75,
+    "phase": "counterfactual",
+    "round": 1,
+    "training_games": 2,
+    "training_seconds": 63.98399999999674
+  },
+  "train_engine_samples": 1,
+  "train_games": 2,
+  "validation_and_final_engine_samples": 32,
+  "validation_pairings": 2
+}
