@@ -248,6 +248,23 @@ Mean measured battle time was **9.084352 seconds**. Exact scores/hashes and pair
 its predeclared **128-pairing fresh confirmation, seed 38312**, is now running. These screen results remain
 selection evidence only, below the win target; no final outcomes have been opened.
 
+**Independent planning confirmation completed (2026-11-02, 19:42 UTC check).** The selected MC16 method
+scored **34.9609375% ± 5.108372 points**, interval **29.852565–40.069310%**, on the predeclared fresh
+full-engine32 validation seed **38312**, **128 mirrored pairings / 256 games**. Recomputing the clustered
+interval from all 128 pair scores matches the saved summary exactly. Mean measured battle time was
+**8.941652 seconds**. This is a clear loss and does not meet the reliable-win target. Scores on different
+seeds do not establish a paired gain over older methods. Exact outcomes, actor/ensemble hashes and recipe
+are in `search-v3/result.json`, `confirmation_summary.json` and the saved plan/selection. Final tests remain
+unopened. The original search worker and controller exited, and the serial successor started symmetry-v5
+without overlapping numerical workers. Its immutable v5 source was hash-checked before launch; the
+four-variant screen and selected-setting fresh confirmation proceed under the unchanged protocol/deadline.
+
+**Symmetry fitting completed.** All 60 predeclared augmentation epochs finished; the last balanced
+cross-entropy training loss was **0.4035951338244956**. This is a training diagnostic, not playing strength.
+The complete curve and immutable source/model/demonstration hashes are in `symmetry-v5/training.jsonl`
+and `plan.json`. The prior-direct control screen is now running before the other three predeclared
+variants; no setting has been changed in response to these results.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

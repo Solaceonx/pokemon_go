@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, DQN/refinement below target, independent planning trial running (2026-11-02; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, DQN/planning below target, bench-augmentation trial running (2026-11-02; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -76,9 +76,10 @@ by RL against the full engine32. Every result is in `status.md`; exact commands 
 The v2 selected checkpoint scored 27.67% ± 3.27 points on 300 full-engine32 validation pairings. Its second
 stage was stopped at 5,400 saved games to redirect computing after the owner requested further experiments.
 Cross-entropy refinement subsequently scored 24.80% ± 4.97 on 128 fresh full-engine validation pairings.
-An independent learned-policy Monte Carlo planning trial is running from immutable runtime v3. All are
+Independent learned-policy Monte Carlo planning confirmed at 34.96% ± 5.11 on 128 fresh full-engine
+validation pairings. The bench-augmentation trial is running from immutable runtime v5. All are
 validation results; final tests remain unopened. A training-only bench-order audit found 73/256 changed
-decisions under equivalent own-bench labels. A controlled augmentation/invariant-inference trial is queued
+decisions under equivalent own-bench labels. A controlled augmentation/invariant-inference trial is running
 ahead of paired-return training, with fresh validation confirmation. A method-preserving final evaluator
 is prepared; its full frozen-engine canary is pending. Current checks: 293 tests pass (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
