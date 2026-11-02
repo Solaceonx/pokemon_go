@@ -423,6 +423,22 @@ actual completed capacity/pipeline runs and live student job, so no duplicate wo
 All existing Python workers and their source files were left unchanged. The original deadline and
 twelve-hour final reserve remain. Full suite: **330 tests OK**, 7 video skips, **108/108 PvPoke exact**.
 
+**Student-state correction result (2026-11-02 23:20 UTC): rejected.** After 512 games, greedy
+validation is **32.42%, CI [27.34%, 37.50%]**; stochastic is **19.92%, CI [15.62%, 24.41%]**.
+The paired changes from the controlled starting policy are greedy **-4.69 points, CI [-11.13, 1.76]**,
+stochastic **-7.03, CI [-13.09, -0.78]**. The best checkpoint remains the unchanged initialization at
+37.11%, with exactly the same weights/outcomes as the main selected checkpoint. This is not a learning
+gain. `student_correction_validation_decision.json` binds the selected and trained outcomes and records
+the failed promotion gate. All four training checkpoints, batches and logs remain saved; the method
+is not receiving further training under this pilot.
+
+The slot-ensemble real evaluation pipeline then passed: two pairings/four battles at 32 engine samples,
+with **237 actual ensemble decisions** (46, 59, 79, 53 by battle). Model parameters, optimizer arrays
+and counters are unchanged; zero bootstrap/training games; all six source hashes match. This proves
+the actual evaluation path uses the adapter, not playing strength. The audit is saved in
+`slot_ensemble_pipeline_audit.json`. The registered 128-pair `slot-ensemble-v1` validation started at
+**2026-11-02 23:20 UTC**, using the freed worker while the main PPO keeps two workers.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

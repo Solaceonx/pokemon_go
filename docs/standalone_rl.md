@@ -194,8 +194,9 @@ when starting a new method. Do not run a second pool alongside an existing three
 It averages masked probabilities over all six equivalent own-slot representations and maps outputs
 back to physical actions. It uses public features and neural inference only. Use its explicit
 `load_agent` loader for deployment; the ordinary loader returns the ordinary single-view policy.
-The saved training-label diagnostic improves agreement and cross-entropy on all heads, but validation
-strength is pending under `runs/standalone-rl/slot_ensemble_plan.json`. It cannot produce PPO logs or
+The saved training-label diagnostic improves agreement and cross-entropy on all heads. The real
+four-battle evaluation pipeline passed and the registered 128-pair validation is running under
+`runs/standalone-rl/slot_ensemble_plan.json`. It cannot produce PPO logs or
 perform training, because ordinary single-view PPO would have the wrong mixture probability.
 
 Prepare a separate run with `scripts/slot_ensemble_rl.py prepare --run NAME --start CHECKPOINT`, then
@@ -212,8 +213,10 @@ rolled back when the student chooses another action. Evaluation and deployment u
 StandaloneAgent. Its source/protocol is separate, bootstrap games must be zero, and full 32-sample
 training is the default. Full 32-sample expert-control replay matches terminal state and RNG in both
 seats. The real four-game pipeline completed with audited legal expert labels and exact terminal
-returns. The bounded 512-game pilot is running under `runs/standalone-rl/student_pilot_plan.json`;
-these checks do not consume final evaluation data.
+returns. The bounded 512-game pilot completed under `runs/standalone-rl/student_pilot_plan.json` and
+failed promotion: greedy score fell from 37.11% to 32.42% (95% CI 27.34–37.50%), stochastic from
+26.95% to 19.92% (15.62–24.41%). Its selected checkpoint is the unchanged initialization. These
+checks did not consume final evaluation data; do not present the starting policy as a learned gain.
 
 `scripts/widen_standalone_policy.py` provides a separate capacity initialization. It duplicates tanh
 units, splits outgoing weights and adds balanced perturbations that preserve initial outputs while
