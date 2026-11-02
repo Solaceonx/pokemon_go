@@ -311,6 +311,50 @@ seed 38211, then collects paired terminal-return labels on training compositions
 plan, 30 fitting epochs per round, demonstration anchor 0.01 and fresh 128-pair confirmation seed 38212
 remain unchanged. Final holdouts and the production lock are still untouched.
 
+**Paired-return starting control completed.** Before any new gradient update, the direct starting policy
+scored **29.687500% ± 7.784004 points**, interval **21.903496–37.471504%**, on **64 full-engine32 mirrored
+validation pairings / 128 games**, seed **38211**. The interval was recomputed from the saved pair scores.
+This is a new-seed control for the forthcoming paired comparisons, not a regression/gain relative to other
+seeds. Exact values and starting model hash are in `counterfactual-v4/screen_initial_summary.json`.
+The first collection episodes produced differing-outcome alternatives with matching original-choice
+controls; fitting and validation of the first RL candidate remain pending.
+
+**Shared-encoder fallback prepared, unmeasured.** The flat model's augmentation trial did not improve
+strength, so a separate learned architecture is prepared while the unchanged paired-return job runs.
+`pogo/dqn_relational.py` applies one learned encoder to each own/revealed-foe matchup, pools the encoded
+context and shares swap/replacement heads between bench slots. Its Q values are equivariant to own/foe
+bench permutations by construction (up to floating-point rounding), with no tactical rule or hidden input.
+At width 64 it has **22,439 parameters**, versus **170,761** for the flat width-256 model. It exposes the
+same TD/margin update and checkpoint interfaces as the original Double DQN, including target/Adam state.
+`scripts/double_dqn_relational.py` selects this backend only inside its process, restores the original
+trainer on return/error, binds backend source hashes to a fresh run, and permits validation evaluation only.
+The original training loop and all running source snapshots remain unchanged.
+
+Six checks cover all encoder/head gradients against finite differences, Q-value permutation equivariance
+before/after fitting, classification/TD learning, exact optimizer/target continuation, schema rejection,
+an actual legal game and the existing trainer's atomic network/target/replay checkpoint path. Full checks:
+**299 tests, seven optional skips; 108/108 PvPoke exact**. Immutable `harness/relational-v1` and its backend
+receipt are prepared; **no training/evaluation worker or strength experiment has started for it**. It is a
+fallback for a separately recorded trial after the current numerical worker is free, not a claimed gain.
+
+**First paired-return candidate fitted.** Round one collected **300 training positions**, with
+**300 matching original-choice controls** and **67 positions with differing terminal outcomes** across
+legal choices. It completed **30 fitting epochs / 60 optimizer updates**. The last reported combined
+training loss was **0.06582342023418536**, a training diagnostic only. `collection_001.json` retains counts
+and settings, and `round_001_artifacts.json` binds the label data, trained checkpoint and source policy
+hashes. Its first full-engine32 validation on the unchanged 64 pairings/seed 38211 is running; no strength
+gain is claimed before that measurement and the selected-setting fresh confirmation.
+
+**First paired-return RL validation completed.** On the same 64 full-engine32 mirrored pairings, seed
+38211, round one's candidate scored **23.437500% ± 6.063932 points**, interval **17.373568–29.501432%**.
+Its paired change from the starting control was **−6.250000 ± 8.932812 points**: no confirmed gain, and
+the saved maximum-score rule retained **initial.npz** at 29.687500%. The interval and paired difference
+were recomputed from saved scores. Exact values, model hashes and differences are in
+`screen_001_summary.json` and `screen_001_paired_change.json`. Round two is collecting new training cases
+under the unchanged settings; neither final teams nor the fresh selected-setting confirmation have been
+opened. The v4 state can still say `fitting` during a validation block; use actual log events and evaluation
+row timestamps for liveness rather than that stale phase label alone.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

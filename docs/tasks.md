@@ -83,7 +83,8 @@ runtime v4 after all four original-choice frozen-engine replay canary controls m
 validation results; final tests remain unopened. A training-only bench-order audit found 73/256 changed
 decisions under equivalent own-bench labels. The controlled augmentation/invariant-inference trial did
 not establish a strength gain. Paired-return training uses fresh validation confirmation. A method-preserving final evaluator
-is prepared; its full frozen-engine canary is pending. Current checks: 293 tests pass (7 optional video skips),
+is prepared; its full frozen-engine canary is pending. A smaller shared-matchup Double DQN backend is
+prepared as an unmeasured fallback; no second training worker has started. Current checks: 299 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

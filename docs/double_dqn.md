@@ -149,7 +149,30 @@ threshold, the unchanged v4 replay canary and paired-return trial follow seriall
 by these runners. `scripts/dqn_symmetry_audit.py` reproduces the bench-order diagnostic without an engine
 opponent; it uses training compositions and makes no playing-strength claim.
 
-## Final evaluation of the selected method
+## Shared matchup encoder fallback
+
+`pogo/dqn_relational.Network` consumes the same 400 public features. A shared pair encoder, pooled team
+context and shared bench heads provide equivariant Q values under bench relabeling, rather than learning
+each ordering independently. Width 64 has 22,439 parameters. It retains the original Double DQN TD/margin
+objective and complete Adam/target checkpoint state, with an explicit architecture marker that rejects
+incompatible flat checkpoints. `scripts/double_dqn_relational.py` is a process-local backend selection for
+the unchanged trainer, requires a fresh named run/source receipt, and disallows final-test compositions.
+
+Immutable `harness/relational-v1` has been prepared, but it has not started a strength trial. Its unit checks
+and the full suite pass. Any future experiment must wait for the current numerical worker to finish,
+preserve the original overall deadline, record its full plan before fitting, and verify source/data hashes.
+The existing v2 engine4 demonstrations can be reused with their original seed 38002 and metadata; this
+preparation does not collect another dataset. Use `--hidden 64` explicitly for the documented model size.
+The existing final-v2 evaluator does not load this architecture; a measured winning candidate would need
+an equivalent method-preserving loader and actual canary before any final test.
+`relational-v1/proposal.json` records an unstarted fallback: reuse the unchanged engine4 demonstrations,
+80 original-objective warm-up epochs at width 64, at most one hour of full-engine32 Double DQN, compare
+warm-up/last complete endpoint on 64 validation pairings (seed 38511), and confirm only the winner on
+128 fresh validation pairings (seed 38512). It must fit inside the original overall deadline and may start
+only after the current worker is free and a run plan is recorded. The backend entrypoint and preparation
+receipt are available; that proposal has not been executed or queued.
+
+## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the
 direct policy, four-permutation averaging, and independent planning with its complete opponent ensemble.
