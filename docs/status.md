@@ -157,6 +157,22 @@ greedy modes from PPO round 16, including individual winners/draws and scores. P
 and schedules match; the controls are saved as `initial_repeatability_*.json`. Greedy remains
 32.81% [27.73%, 37.89%]. This verifies transfer and evaluation repeatability; it is not a new gain.
 
+**Counterfactual round four:** 256 training games / sampled positions, all against the full 32-sample
+engine. Stochastic validation scored **23.05%, CI [18.36%, 28.13%]**; greedy scored
+**25.59%, CI [20.31%, 30.86%]**. Relative to the initial greedy policy, the paired change is
+**-7.23 points, CI [-14.26, -0.20]**. This checkpoint is worse and was not selected. The pilot's
+best remains its unchanged PPO initialization. It continues within its four-hour exploratory budget
+to the next planned validation; no final strength test has been opened.
+
+The saved 256 episodes have 423 distinct training trios, no overlap with the 194 validation trios,
+disjoint seed domains and contiguous indices. Seventy-five sampled positions have different terminal
+utilities among legal actions. Registered sources still match. The first checkpoint and Adam state
+are finite; its local fixed-label improvement was small and did not predict this validation loss.
+Reports: `partition_audit_through_round_00004.json`, `training_health_00001.json`, and
+`learning_comparison_00004_*.json`. An offline six-permutation diagnostic on the first training batch
+found only a small label-score change (25.78% to 26.95%); it is not validation evidence, and no ensemble
+or inference change was made.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
