@@ -144,6 +144,14 @@ used one-sample engines; validation and final blocks used 32. Two-pairing final 
 `counterfactual_pipeline_check.json` records their settings and provenance.
 Full suite: **300 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
 
+**Counterfactual pilot launched:** `cf-pilot-v1`, implementation `e51fb8c`, warm-starting the selected
+PPO round-16 policy with optimizer moments explicitly reset for the method change. Four-hour cap,
+at most 12 rounds of 64 training games, full 32-sample opponents, two common-dice playouts per legal
+action, validation every four rounds on the same 128-pairing selection schedule. Parent PID 17436 and
+three workers are verified at BelowNormal priority. The `train` command saves checkpoints and leaves
+the final strength test unopened. Source hashes and the original shared deadline match the saved
+protocol (`launch_check.json`, `commands.txt`). No playing-strength result from this method yet.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
