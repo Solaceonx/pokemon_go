@@ -73,6 +73,17 @@ priority inheritance were checked without starting extra battle workers. The exi
 verified workers were explicitly lowered and read back at BelowNormal. No active experiment source
 was edited. The saved absolute deadline is the original work budget, 2026-11-03 17:42:10 Los Angeles.
 
+**Eight-round validation and runtime split audit:** after 2,048 v2 training games, stochastic inference
+scored **27.54%, CI [22.66%, 32.62%]** against the full frozen engine on 128 validation pairings / 256
+battles, up from 19.34% before training: **+8.20 percentage points, paired CI [1.95, 14.84]**.
+Paired differences are saved in
+`learning_comparison_00008_stochastic.json`; greedy validation is still running. This is a gain on
+validation for PPO plus public demonstrations, not evidence that the engine has been beaten.
+The actual 2,048 saved training episodes contain 1,984 distinct trios, with zero overlap against the
+194 distinct validation trios; every trio has its intended hash partition. All 6,144 training RNG
+seeds are disjoint from the 768 validation RNG seeds, episode indices are contiguous, registered source
+hashes match, and the final test is still unopened (`partition_audit_through_round_00008.json`).
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
