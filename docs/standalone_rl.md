@@ -190,6 +190,21 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+`scripts/widen_standalone_policy.py` provides a separate capacity initialization. It duplicates tanh
+units, splits outgoing weights and adds balanced perturbations that preserve initial outputs while
+allowing independent gradients. A parent checkpoint snapshot, source/hash provenance, numerical
+transfer check and new optimizer state are saved. The 128-to-512-unit test preserves the actual PPO
+policy/value outputs to floating-point precision; it has no playing-strength result yet. It uses
+the same deployment schema and the existing training-only demonstration/refinement protocol.
+
+`scripts/finish_capacity_trial.ps1` manages the registered capacity comparison: it waits for epoch-4
+validation, evaluates epoch 16, and uses `scripts/select_capacity_candidate.py` to require a positive
+paired interval before a promotion. It verifies the owned training process and waits for a committed
+round before handing off. The selected run then uses three workers and a twelve-hour final reserve.
+The original absolute deadline still applies. Its PID, events and decision are stored under
+`runs/standalone-rl/capacity-control`. To pause the controlled work, stop that controller before the
+owned Python jobs so it cannot initiate its queued handoff.
+
 `scripts/evaluate_planning_rl.py` provides prepare/bench/validate/lock/test for that planning candidate.
 It pins both neural checkpoints, search settings and rules-model sources. It checks that its local
 rules match the frozen battle rules. `bench` uses two training pairings for timing only; `validate`

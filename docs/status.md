@@ -257,6 +257,52 @@ The 128-pairing confirmation uses a preregistered separate seed domain, distinct
 this was registered before inspecting aggregate screening outcomes. Final test seeds remain sealed
 until the eventual selected checkpoint and complete controller are locked.
 
+**PPO through round twenty-four:** after 6,144 new full-engine training games, greedy validation is
+**37.11%, CI [32.23%, 41.99%]**, the nominal best so far. Round eight was 36.72% [32.03%, 41.21%]
+and round sixteen 30.66% [25.98%, 35.16%]. These remain below 50%; the selected checkpoint is saved as
+`mc-ppo-v3/selected_round_00024.npz`. Its parameters match the evaluated policy fingerprint. The audit
+finds 4,096 distinct training trios, zero overlap with 194 validation trios, disjoint seed domains,
+contiguous episode indices, unchanged source hashes and finite weights/optimizer state. All **39,169**
+checked return labels across rounds 1/8/16/24 equal the completed game's reward exactly. Complete
+development history and the audit are saved; the long job is still live.
+
+**Rollout screens:** confidence .98 scored **32.81%, CI [23.44%, 42.19%]**; confidence 1.0 scored
+**36.72%, CI [26.56%, 47.66%]** on 32 pairings each. The same-case pure-policy control is 28.13%.
+The latter variant advances under the preregistered rule, but this is not a reliable win. Its separate
+128-pairing confirmation is running with seed **8221690905823504610**, fixed before inspecting
+aggregate screen outcomes. It uses one worker alongside two PPO workers.
+
+Prepared a capacity test with `scripts/widen_standalone_policy.py`: expand each independent tanh
+network from 128 to 512 hidden units while preserving its initial function. Balanced perturbations
+allow the duplicated units to learn independently. This targets the standalone global 366-feature
+policy, distinct from the older decision-Q width experiments. A snapshot of the current PPO best is
+retained, optimizer moments are explicitly reset for the new parameterization, and the unchanged
+deployment format loads the result. On the actual checkpoint, probability errors are at most
+4.47e-7, value errors 1.79e-6, and no greedy probe action changes. This is an initialization control,
+not a strength result. The existing audited engine-action data will be used after the confirmation
+worker finishes; no fourth long-job worker is started. **316 tests OK** (7 video skips), **108/108 PvPoke exact**.
+
+**Independent rollout confirmation complete:** the fixed confidence-1/four-scenario controller scored
+**35.55%, CI [30.08%, 41.02%]** on 128 pairings with the separate preregistered seed. It does not beat
+the engine; no substantive final test was opened. The capacity fit then used the freed worker and
+completed all 16 epochs. Its action/shield/replacement training agreements are 85.86% / 86.55% / 77.90%.
+These fit numbers do not establish strength. Critic weights remain unchanged from the expanded
+initialization, all checkpoint values are finite, and exported epoch-4/16 candidates preserve weights
+while resetting optimizer state. `mc-wide4` validation is now running with one worker alongside PPO's two.
+
+A checked capacity handoff controller (`scripts/finish_capacity_trial.ps1`) finishes the two registered
+validations, then stops only the verified owned PPO process/children after a new committed checkpoint.
+`scripts/select_capacity_candidate.py` binds selected weights to complete 128-pairing records and
+requires a positive paired 95% interval before promoting a larger network. Otherwise the existing
+policy continues. After this comparison the selected RL job resumes with all three workers, with a
+twelve-hour final-test reserve inside the original absolute deadline. This avoids leaving a worker
+idle if the interactive session is absent. Controller events and the decision are retained under
+`runs/standalone-rl/capacity-control`; no final strength verdict is inferred from validation.
+Full suite: **319 tests OK** (7 video skips), **108/108 PvPoke exact**. The selection utility also
+passes an integration check against the completed original BC candidates and retains the current PPO
+policy. The controller's PowerShell syntax is parsed before launch; live process identity, start time,
+command line, child count and committed progress are checked before its bounded handoff.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
