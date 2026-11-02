@@ -90,6 +90,14 @@ last JSONL row can be recovered without dropping completed pairings. Existing in
 The v2 runtime source is frozen separately under `.dqn-cache/harness/v2/`, so the v1 evaluation and later
 edits cannot alter it. See `docs/double_dqn.md` for reproduction, limits and artifact locations.
 Current checks: **273 tests pass (seven optional video skips); 108/108 PvPoke reference battles exact**.
+The controller and bootstrap now run as detached hidden processes. Bootstrap resumed from the atomic
+**1,300-game / 96,655-transition** checkpoint, and its next 1,350-game save was confirmed. The first detach
+attempt found the original shell still holding the output file; after closing that completed exec session,
+restart succeeded. The initial stdout log is preserved as `runs/dqn-v2-bootstrap-initial.out`; resumed
+stdout/stderr are `runs/dqn-v2-bootstrap.out` and `.err`. This was process ownership/recovery, with unchanged
+runtime and RNG/demonstration checkpoints. Bootstrap identity is in `.dqn-cache/bootstrap_process.json`.
+A 30-minute follow-up in this chat monitors liveness and will collect final results, update this PR and stop
+itself on completion or the fixed budget deadline. It stays quiet while the job is healthy/unchanged.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
