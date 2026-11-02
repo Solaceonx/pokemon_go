@@ -375,7 +375,7 @@ remains selected; round three has started. Exact scores and data/model hashes ar
 `screen_002_paired_change.json`, `collection_002.json` and `round_002_artifacts.json`. The allocation rule
 was saved and pushed before this result; no earlier stopping or changed samples have been applied.
 
-**Serial fallback implemented while round three runs.** Immutable `harness/followup-v7` contains a successor
+**Serial fallback implemented while round three runs.** Immutable `harness/followup-v8` contains a successor
 controller, a supplemental fresh-confirmation driver, and the shared-encoder trial driver. The queue binds
 the actual predecessor process identities and waits for both to exit before starting any numerical work.
 It applies the previously registered adaptive allocation rule, preserves the stopped CF result and completes
@@ -385,6 +385,13 @@ the fixed 80-epoch/one-hour allocation and validation seeds/counts, and preserve
 recovery. All phases retain the original overall deadline. No second numerical worker or final test starts
 when this controller is queued. Exact identities/source hashes are in `relational-v1/queue_plan.json` and
 `followup_source_manifest.json`; there is no shared-encoder strength result yet.
+
+The first waiting successor (PID 17828, immutable v7) refused its predecessor identity check before
+stopping or launching any numerical work: PowerShell's JSON reader converted the saved ISO timestamp
+to `DateTime`, so its comparison to an ISO string failed. The actual process start instant and command
+both matched. Recovery compares UTC instants, preserves the failed stderr/plan/source receipt, and uses
+new immutable v8; no training worker, original runtime, data, model or deadline changed. The timestamp
+guard was checked against the actual predecessor and a deliberately different instant.
 
 A reference-anchored residual-return loss prototype also passes finite-gradient and score-shift checks.
 The motivation is a hypothesis: fitting absolute centered returns may erase useful preferences between

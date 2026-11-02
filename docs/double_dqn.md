@@ -173,7 +173,7 @@ only after the current worker is free and a run plan is recorded. The backend en
 receipt are available; that proposal has not been executed or queued.
 
 The serial follow-up is now implemented in `scripts/queue_relational.ps1`, snapshotted with its Python
-drivers in immutable `harness/followup-v7`. Its `relational-v1/queue_plan.json` binds the predecessor process
+drivers in immutable `harness/followup-v8`. Its `relational-v1/queue_plan.json` binds the predecessor process
 identities and source hashes. It applies the already registered three-round allocation rule, waits for
 both the CF worker and its original controller to exit, and completes the reserved seed-38212 confirmation
 using `scripts/dqn_cf_confirm.py`. The stopped original result remains unchanged; its supplemental evidence

@@ -25,7 +25,8 @@ function Save-QueueState($phase, $status) {
 function Get-VerifiedPredecessor($identity) {
     $dqnInfo = Get-CimInstance Win32_Process -Filter ('ProcessId = ' + $identity.pid)
     if (-not $dqnInfo) { return $null }
-    if ($dqnInfo.CreationDate.ToUniversalTime().ToString('o') -ne $identity.started_utc -or
+    # ConvertFrom-Json can parse ISO strings as DateTime; compare instants, not string display formats.
+    if ($dqnInfo.CreationDate.ToUniversalTime() -ne ([DateTime]$identity.started_utc).ToUniversalTime() -or
         $dqnInfo.CommandLine -notlike ('*' + $identity.command_contains + '*')) {
         throw ('Predecessor PID identity changed: ' + $identity.pid)
     }
