@@ -184,6 +184,14 @@ Full suite: **303 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**
 actor-only learning, exact split/continuous optimizer resumption, demonstration mutation rejection,
 and rejection of non-training teams, weak teachers and inconsistent example counts.
 
+Prepared an unused terminal-return PPO entry point, `scripts/monte_carlo_rl.py`, for the next RL
+trial. It uses gamma=1 and lambda=1, so every decision's advantage is the completed game's reward
+minus that state's value estimate. Its source is included in both parent and spawned-worker hashes;
+historical experiment files remain unchanged. Registration preserves every initial network weight
+and updates its experiment fingerprint. Two unit tests pass; a real multiprocessing pipeline check
+is still required before a strength trial. No strength result from this variant is claimed.
+Full suite: **305 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

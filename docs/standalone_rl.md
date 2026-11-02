@@ -183,6 +183,12 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+`scripts/monte_carlo_rl.py` exposes the same prepare/train/run/lock/test CLI as the original driver,
+with complete terminal-return PPO advantages (gamma=1, lambda=1). It registers its extra source hash
+and estimator in a separate experiment; spawned workers use the same estimator. Historical runs
+keep their original source fingerprints. This variant needs its real pipeline check before use in
+a strength trial. It uses the same standalone deployment checkpoint format.
+
 An additional initialization trainer can use full-engine demonstrations already collected on the
 training partition. It updates actors only and does not select a checkpoint or open evaluation:
 
