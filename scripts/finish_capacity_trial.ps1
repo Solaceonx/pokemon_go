@@ -54,6 +54,11 @@ function Wait-Validation([string]$Run) {
 }
 function Launch-Job([string]$Run, [string]$Entry, [string]$Command, [string[]]$Arguments) {
     Assert-Time
+    if ($Command -eq 'train' -and -not (Test-Path "runs/standalone-rl/$Run/experiment.json")) {
+        Write-ControlEvent 'prepare' @{run=$Run;entry=$Entry;arguments=$Arguments}
+        & $Python $Entry prepare --run $Run @Arguments
+        if ($LASTEXITCODE -ne 0) { throw "$Run preparation failed." }
+    }
     Write-ControlEvent 'launch' @{run=$Run;entry=$Entry;command=$Command;arguments=$Arguments}
     & "$PSScriptRoot/run_standalone_rl.ps1" -Run $Run -Python $Python -EntryScript $Entry -Command $Command -TrainingArguments $Arguments | Out-Null
 }

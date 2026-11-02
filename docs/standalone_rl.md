@@ -196,15 +196,17 @@ and aggregates eight rounds of public expert labels. The expert's unexecuted dec
 rolled back when the student chooses another action. Evaluation and deployment use the original
 StandaloneAgent. Its source/protocol is separate, bootstrap games must be zero, and full 32-sample
 training is the default. Full 32-sample expert-control replay matches terminal state and RNG in both
-seats. A real pipeline and bounded 512-game pilot are queued after capacity validation under
-`runs/standalone-rl/student_pilot_plan.json`; these do not consume final evaluation data.
+seats. The real four-game pipeline completed with audited legal expert labels and exact terminal
+returns. The bounded 512-game pilot is running under `runs/standalone-rl/student_pilot_plan.json`;
+these checks do not consume final evaluation data.
 
 `scripts/widen_standalone_policy.py` provides a separate capacity initialization. It duplicates tanh
 units, splits outgoing weights and adds balanced perturbations that preserve initial outputs while
 allowing independent gradients. A parent checkpoint snapshot, source/hash provenance, numerical
 transfer check and new optimizer state are saved. The 128-to-512-unit test preserves the actual PPO
 policy/value outputs to floating-point precision. Epoch-four greedy validation scored 30.47%
-(95% CI 25.98–34.96%), below its 37.11% parent; epoch-sixteen validation is pending. It uses
+(95% CI 25.98–34.96%); epoch sixteen scored 32.62% (27.93–37.30%). Both are below their
+37.11% parent and neither passed the paired promotion gate. It uses
 the same deployment schema and the existing training-only demonstration/refinement protocol.
 
 `scripts/finish_capacity_trial.ps1` manages the registered capacity comparison: it waits for epoch-4

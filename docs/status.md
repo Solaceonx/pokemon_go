@@ -342,6 +342,28 @@ PPO/capacity run on three workers, preserving the original deadline and twelve-h
 student promotion requires inspection of its completed validation. Pilot failure does not silently
 promote it. Full checks still pass: **324 tests OK**, 7 skips, **108/108 PvPoke exact**.
 
+**Capacity comparison complete:** epoch sixteen greedy validation is **32.62%, CI [27.93%, 37.30%]**;
+stochastic is **22.66%, CI [17.97%, 27.34%]**. Against the 37.11% parent, the paired changes are
+epoch four **-6.64 points, CI [-12.89, -0.39]**, epoch sixteen **-4.49, CI [-11.52, 2.73]**.
+Neither qualifies for promotion; `capacity_validation_snapshot.json` binds the exact checkpoints and
+paired schedule. Greater supervised fit and capacity did not improve measured strength in this trial.
+
+The queued four-game student pipeline initially exited before running any battle: the controller
+called `train` without `prepare`, so `experiment.json` did not exist. Only the verified controller was
+stopped; both main PPO workers were left running. `Launch-Job` now prepares a new training run before
+launching it, and the actual student preparation command passed. The corrected controller was restarted
+and the real pipeline is running. Training/evaluation module sources remain unchanged. Full checks
+after this orchestration fix: **324 tests OK**, 7 skips, **108/108 PvPoke exact**.
+
+The corrected real student pipeline completed one four-game PPO batch at 32 engine samples plus
+initial/post-update validation. Its saved data contains **118 actual student decisions/returns and
+262 legal expert labels (118 student-state, 144 opponent-state)**. All eight team trios are in the
+training partition; all four games lost, and every saved return is exactly -1. Checkpoint parameters
+and optimizer arrays are finite and all eight registered source hashes match. This is a functional
+check, not a strength result; its two-pair scores are not used for promotion. The audit is saved as
+`student_correction_pipeline_audit.json`. The preregistered 512-game `mc-student-v1` pilot started at
+**2026-11-02 19:45 UTC**, alongside the main PPO's two workers. The larger-model trials remain rejected.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
