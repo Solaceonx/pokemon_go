@@ -1,0 +1,64 @@
+{
+  "status": "prepared_unmeasured_not_started",
+  "architecture": "shared-matchup-v1",
+  "hidden": 64,
+  "parameters": 22439,
+  "numerical_workers": 1,
+  "must_wait_for_current_trial": true,
+  "absolute_deadline_unix": 1793745649.6650429,
+  "demonstrations": {
+    "source_run": "dqn-v2",
+    "sha256": "009623fbcbc1ca143689a3e22b30b5e5b04bdb8d5f472880a15c00dd4d80ff0e",
+    "reuse_only": true,
+    "teacher_samples": 4,
+    "games": 3000,
+    "seed": 38002
+  },
+  "warmup": {
+    "epochs": 80,
+    "batch": 128,
+    "rate": 0.0003,
+    "objective": "unchanged original bootstrap TD plus margin"
+  },
+  "rl": {
+    "maximum_hours": 1,
+    "seed": 38501,
+    "opponent_samples": 32,
+    "engine_share": 1,
+    "nstep": 3,
+    "epsilon": 0.03,
+    "epsilon_min": 0.005,
+    "epsilon_decay": 20000,
+    "mc_share": 0.25,
+    "demo_margin": 1,
+    "rate": 0.0001,
+    "updates": 4,
+    "target_every": 500,
+    "save_every": 25,
+    "eval_every": 1000000,
+    "internal_validation_seed": 38031,
+    "internal_validation_pairs": 64,
+    "internal_validation_samples": 32
+  },
+  "selection": {
+    "candidates": [
+      "bootstrap",
+      "last_complete_rl_endpoint"
+    ],
+    "pairs": 64,
+    "seed": 38511,
+    "opponent_samples": 32,
+    "split": "validation",
+    "rule": "maximum score, bootstrap wins ties"
+  },
+  "confirmation": {
+    "pairs": 128,
+    "seed": 38512,
+    "opponent_samples": 32,
+    "split": "validation",
+    "only_selected": true
+  },
+  "final_tests_enabled": false,
+  "strength_result": null,
+  "note": "Weight sharing and network size change together; not isolated causal effects. No additional worker started."
+}

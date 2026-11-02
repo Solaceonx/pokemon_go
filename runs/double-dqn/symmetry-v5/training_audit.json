@@ -1,0 +1,67 @@
+{
+  "diagnostic_only": true,
+  "strength_evidence": false,
+  "split": "train",
+  "seed": 38401,
+  "games": 8,
+  "states": 256,
+  "policy_sha256": "5e4a9d6cc0f71ce0ad40647e7859f9e9ce91dda7258aa09444121fa1fd94df4f",
+  "input_sha256": "0efb99d32850d2b6e7a118b371a7b71ce6882cbac6cd46a4fe4ab936e7a958b8",
+  "variants": {
+    "ours=True,foes=False": {
+      "different": 73,
+      "count": 256,
+      "by_kind": {
+        "act": {
+          "count": 210,
+          "different": 61
+        },
+        "shield": {
+          "count": 39,
+          "different": 8
+        },
+        "replace": {
+          "count": 7,
+          "different": 4
+        }
+      }
+    },
+    "ours=False,foes=True": {
+      "different": 59,
+      "count": 256,
+      "by_kind": {
+        "act": {
+          "count": 210,
+          "different": 54
+        },
+        "shield": {
+          "count": 39,
+          "different": 5
+        },
+        "replace": {
+          "count": 7,
+          "different": 0
+        }
+      }
+    },
+    "ours=True,foes=True": {
+      "different": 81,
+      "count": 256,
+      "by_kind": {
+        "act": {
+          "count": 210,
+          "different": 71
+        },
+        "shield": {
+          "count": 39,
+          "different": 6
+        },
+        "replace": {
+          "count": 7,
+          "different": 4
+        }
+      }
+    }
+  },
+  "averaged_policy_changed": 47
+}

@@ -1,0 +1,60 @@
+{
+  "smoke_validation_only": false,
+  "source_sha256": {
+    "scripts\\double_dqn.py": "cac12aacf90a95c4b3fd83d9ae8f8e1d06cb1130d706a0ff049aa5e28b928d30",
+    "pogo\\dqn.py": "64bbc88ab5d77aa7cb3e66f243dc08cbffdae99792bc968a94e9b24dc046a640",
+    "data\\matchups_wide.json": "ec10e43664a22b74948019b17789050576b20772b82f7ac24b202c57ed1355a6"
+  },
+  "controller_sha256": "74ea66cc9157c917adc1ad3e594b2fa3103683d3f0b94f9a1726cedd30235136",
+  "bootstrap": {
+    "games": 3000,
+    "epochs": 80,
+    "teacher": "engine4",
+    "hidden": 256,
+    "seed": 38002
+  },
+  "stage_hours": 12.0,
+  "maximum_stages": 2,
+  "screening": {
+    "samples": 8,
+    "pairs": 100,
+    "seed": 38031
+  },
+  "full_engine_validation": {
+    "samples": 32,
+    "pairs": 300,
+    "seed": 38032
+  },
+  "selection": "Best full-engine validation score among completed stages; earliest wins ties",
+  "extra_stage_rule": "Run second stage unless first full-engine validation lower95 > .5",
+  "final_pairs_per_block": 1000,
+  "final_blocks": [
+    [
+      "mixed",
+      38091
+    ],
+    [
+      "mixed",
+      38092
+    ],
+    [
+      "standard",
+      38091
+    ]
+  ],
+  "success": "Both mixed lower95 > .5 and standard upper95 >= .5",
+  "deadline_hours_from_start": 44.0,
+  "workers": 1,
+  "training": {
+    "samples": 32,
+    "engine_share": 1.0,
+    "epsilon": 0.03,
+    "epsilon_min": 0.005,
+    "epsilon_decay": 20000,
+    "nstep": 3,
+    "mc_share": 0.25,
+    "demo_margin": 1.0,
+    "rate": 0.0001,
+    "updates_per_game": 4
+  }
+}
