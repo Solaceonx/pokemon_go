@@ -35,6 +35,18 @@ and push that before starting.
 
 ## Open tasks
 
+### 37. Standalone reinforcement-learning agent against a frozen engine — Codex (in progress, 2026-11-01)
+
+Owner-requested work, with up to two days of computing or available usage. Build a separate NumPy agent;
+freeze main's search engine, settings, data and model files; train on an explicit team split; select on
+validation only; evaluate the locked checkpoint on held-out teams and fresh seeds with pairing-clustered
+confidence intervals. Save resumable checkpoints and experiment logs. Review draft PR #10 for tracker context.
+Do not replace the website or engine defaults. Record unsuccessful runs as well as gains in `docs/status.md`.
+
+**Done when.** The standalone agent and reproducible train/evaluate commands exist, checks pass, and an
+honest held-out result with confidence intervals establishes whether it reliably beats the frozen current
+engine. A failed strength target must be reported plainly. Tasks 33, 34, 35 and tracker PR #10 remain separate.
+
 | # | Task | Needs |
 |---|---|---|
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
