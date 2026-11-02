@@ -231,6 +231,32 @@ frozen-rule games on both seats, including HP/energy/stages/timers and RNG state
 (`planning_physics_check.json`). **313 tests OK** (7 video skips), **108/108 PvPoke exact**. No playing
 strength result or real multiprocessing pipeline result from this controller is claimed yet.
 
+**Pretrained candidate selection complete:** epoch-sixteen greedy validation is
+**31.64%, CI [26.76%, 36.52%]**, and stochastic **21.29%, CI [16.99%, 25.59%]**. Its paired greedy
+change from retained PPO is **-1.17 points, CI [-7.62, 5.27]**. Neither registered epoch exceeds the
+existing PPO checkpoint, so that policy is retained (`engine-bc-v1/validation_selection.json`).
+
+**Next RL run launched:** `mc-ppo-v3`, from PPO v2's best round-16 weights/optimizer, full 32-sample
+training from the first round, gamma=1/lambda=1, .01 anchor and .1 public-opponent demonstration loss.
+Two BelowNormal workers, one NumPy thread each. The absolute original work deadline is unchanged,
+with a ten-hour final-test reserve; the run command trains, locks and tests automatically unless
+superseded by a better validated method. Checkpoints and episode logs save every round. Initial
+controls are running; no new learning-strength result from this run yet.
+
+The independent planning controller's real multiprocessing validate/lock/test pipeline now passes:
+**513 searches / 1,399 actual rollout games** were executed across its small controls; source and
+both model fingerprints match. Its four two-pairing fresh-seed block scores were all 25%, with the
+strength verdict false. This is a functional control only (`planning_pipeline_check.json`). A separate
+two-training-pair timing run with four scenarios and confidence .98 took 31.7 summed seconds over
+four battles; its scores are not strength evidence. Preregistered 32-pairing validation screens now
+compare confidence .98 and 1.0, each with four scenarios, alongside the same-case pure policy's
+**28.13%, CI [17.19%, 39.06%]**. One planning worker runs alongside the two PPO workers. The highest
+screening variant must beat that same-case control to advance to full 128-pairing confirmation;
+all substantial final tests remain unopened (`planning_screen_plan.json`).
+The 128-pairing confirmation uses a preregistered separate seed domain, distinct from screening;
+this was registered before inspecting aggregate screening outcomes. Final test seeds remain sealed
+until the eventual selected checkpoint and complete controller are locked.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

@@ -195,7 +195,11 @@ It pins both neural checkpoints, search settings and rules-model sources. It che
 rules match the frozen battle rules. `bench` uses two training pairings for timing only; `validate`
 uses the registered validation partition. Locking and final testing reuse the original fresh-seed,
 paired confidence-interval protocol. The new controller has functional tests and a full-size-network
-physics replay check; its real multiprocessing pipeline and playing strength remain unmeasured.
+physics replay check. Its real validate/lock/test pipeline passes, with actual rollout diagnostics
+and all model/source hashes verified; the tiny strength verdict is false. Playing strength remains
+under evaluation. The preregistered 32-pairing screens compare two confidence gates, then require
+full validation confirmation of a promising variant. These screens share one worker while continued
+terminal-return PPO uses two workers; the total remains three.
 
 `scripts/monte_carlo_rl.py` exposes the same prepare/train/run/lock/test CLI as the original driver,
 with complete terminal-return PPO advantages (gamma=1, lambda=1). It registers its extra source hash

@@ -1,0 +1,39 @@
+{
+  "advance_rule": "If a rollout variant exceeds the pure policy on the same 32 screening pairings, confirm the highest-scoring variant on 128 validation pairings using the preregistered independent confirmation seed. Ties prefer lower compute cost. No substantial final test is used for selection.",
+  "confirmation_seed": 8221690905823504610,
+  "deadline_unix": 1793756530,
+  "field": "mixed",
+  "final_test_unopened": true,
+  "frozen_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "opponent_model_sha256": "2df16e06f634dd09b6089524cf1a6bfc06eef483a1802e6e8c1f6012d715c872",
+  "policy_source_sha256": "9af26bd7cbce2a7c17e0ca2697006968f8760c385a6c95d58d785f1d37aa7258",
+  "pure_policy_same_case_control": {
+    "battles": 64,
+    "ci95": [
+      0.171875,
+      0.390625
+    ],
+    "hoeffding_lower97_5": 0.04116930217001982,
+    "normal_margin95": 0.10722277645315187,
+    "pairings": 32,
+    "score": 0.28125
+  },
+  "screen_pairings": 32,
+  "seed": 37001,
+  "variants": [
+    {
+      "confidence": 0.98,
+      "run": "planning-c98",
+      "samples": 4
+    },
+    {
+      "confidence": 1.0,
+      "run": "planning-c100",
+      "samples": 4
+    }
+  ],
+  "worker_allocation": {
+    "PPO": 2,
+    "planning": 1
+  }
+}
