@@ -127,6 +127,13 @@ seed 38212. Its original invocation deadline survives restart; it also respects 
 deadline. Optimizer moments reset for the new loss in each round, then resume exactly across interruptions.
 No final-test mode is provided by this research runner. This algorithm has not yet been measured.
 
+The local `scripts/queue_counterfactual.ps1` successor serializes this canary and trial behind search-v3.
+It waits for both existing search processes to exit, and leaves a promising fresh planning confirmation
+(lower95 above 50%) for review instead of starting another training trial. Otherwise its immutable v4
+runtime is hash-checked before use. Inspect both `.dqn-cache/active_experiment.json` and
+`.dqn-cache/next_experiment.json` before any process action; a waiting successor must not be duplicated.
+The successor enforces the unchanged absolute deadline, saving partial artifacts if time runs out.
+
 ## Artifact retention
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw

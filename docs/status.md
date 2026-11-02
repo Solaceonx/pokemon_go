@@ -182,6 +182,20 @@ uninterrupted fit. Current full checks: **285 tests pass, seven optional skips; 
 The refined research policy is retained as a compact **640,719-byte** `refine-v3/policy.npz`, with identical
 parameter arrays and a source/compact SHA-256 receipt. It is a losing research checkpoint, not a promotion.
 
+**Search control block completed (2026-11-02, 18:28 UTC).** The pure balanced-refinement policy scored
+**32.031250% ± 7.027669 points**, interval **25.003581–39.058919%**, on 64 mirrored full-engine32 validation
+pairings, seed 38311. This is the control for the pending 8/16-sample planning comparisons, not a gain
+relative to measurements on other seeds. Exact pair scores and model hashes are in
+`runs/double-dqn/search-v3/policy_summary.json`. Planning screens and fresh confirmation remain pending.
+
+**Serial successor queued before planning outcomes.** `scripts/queue_counterfactual.ps1` waits for both
+search-v3 worker/controller processes to exit. If planning's fresh confirmation lower95 exceeds 50%, it
+leaves the result for review and final-test locking. Otherwise it runs the four-position original-choice
+replay canary against engine32 on training compositions, requiring matching controls on both player sides,
+then runs the predeclared six-round `counterfactual-v4` trial from immutable harness/v4. This successor
+has no numerical worker while waiting. Its overall deadline remains **2026-11-03T22:40:49Z**; the training
+runner additionally has a persistent eight-hour cap. `.dqn-cache/next_experiment.json` records this chain.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
