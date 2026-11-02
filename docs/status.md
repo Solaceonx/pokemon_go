@@ -328,6 +328,20 @@ demonstrations; it has not run a real pipeline or strength trial yet. No extra l
 Full suite: **324 tests OK** (7 video skips), **108/108 PvPoke exact**. The existing training and capacity
 controller sources are unchanged; this variant is prepared separately and remains unused.
 
+**Student-state pilot queued (2026-11-02 19:21 UTC):** full 32-sample expert-control replay also
+matches terminal states and battle RNG exactly in both seats (47 and 33 expert labels), recorded in
+`runs/standalone-rl/student_correction_full_strength_replay.json`. This is functional fidelity,
+not strength. After verifying and stopping only the old orchestration process, the controller was
+updated and restarted; the active Python training/validation jobs and their sources were untouched.
+After epoch-sixteen capacity validation frees its worker, it will run a four-game real pipeline,
+then a bounded 512-game correction pilot (four batches of 128, one worker, at most six hours).
+Both policy modes get the same 128-pair validation schedule as the main run, with 32 engine samples.
+The preregistered settings and positive-paired-interval promotion gate are in `student_pilot_plan.json`.
+The main PPO run keeps two workers throughout. The controller then resumes the original selected
+PPO/capacity run on three workers, preserving the original deadline and twelve-hour final reserve;
+student promotion requires inspection of its completed validation. Pilot failure does not silently
+promote it. Full checks still pass: **324 tests OK**, 7 skips, **108/108 PvPoke exact**.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

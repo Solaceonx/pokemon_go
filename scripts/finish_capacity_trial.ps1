@@ -57,18 +57,64 @@ function Launch-Job([string]$Run, [string]$Entry, [string]$Command, [string[]]$A
     Write-ControlEvent 'launch' @{run=$Run;entry=$Entry;command=$Command;arguments=$Arguments}
     & "$PSScriptRoot/run_standalone_rl.ps1" -Run $Run -Python $Python -EntryScript $Entry -Command $Command -TrainingArguments $Arguments | Out-Null
 }
+function Wait-Training([string]$Run, [int]$Round) {
+    while (Test-JobLive $Run) {
+        Assert-Time
+        if (Get-Content -LiteralPath "runs/standalone-rl/$Run/run.err" -Raw) { throw "$Run reported an error." }
+        Start-Sleep -Seconds 30
+    }
+    if (Get-Content -LiteralPath "runs/standalone-rl/$Run/run.err" -Raw) { throw "$Run reported an error." }
+    $rlState = Get-Content -LiteralPath "runs/standalone-rl/$Run/state.json" -Raw | ConvertFrom-Json
+    $rlLast = Get-Content -LiteralPath "runs/standalone-rl/$Run/experiments.jsonl" -Tail 1 | ConvertFrom-Json
+    if ($rlState.phase -ne 'ppo' -or $rlState.round -ne $Round -or $rlLast.event -ne 'training_stopped') {
+        throw "$Run did not complete its bounded training plan."
+    }
+    Write-ControlEvent 'bounded_training_complete' @{run=$Run;state=$rlState}
+}
 try {
     Write-ControlEvent 'controller_start' @{pid=$PID;deadline=$BudgetDeadline}
     Wait-Validation 'mc-wide4'
     Assert-Time
-    & $Python scripts/monte_carlo_rl.py prepare --run mc-wide16 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 `
-        --start runs/standalone-rl/engine-bc-wide-v1/candidate_epoch_00016.npz --seed 37001 --hidden 512 `
-        --bootstrap-games 0 --validation-pairings 128 --budget-deadline $BudgetDeadline
-    if ($LASTEXITCODE -ne 0) { throw 'Second capacity candidate preparation failed.' }
-    Launch-Job 'mc-wide16' 'scripts/monte_carlo_rl.py' 'train' @('--bootstrap-games','0','--max-rounds','0',
-        '--hidden','512','--workers','1','--hours','2','--validation-pairings','128','--pairings','1200',
-        '--budget-deadline',"$BudgetDeadline")
+    if (-not ((Test-Path 'runs/standalone-rl/mc-wide16/process.json') -and (Test-JobLive 'mc-wide16'))) {
+        & $Python scripts/monte_carlo_rl.py prepare --run mc-wide16 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 `
+            --start runs/standalone-rl/engine-bc-wide-v1/candidate_epoch_00016.npz --seed 37001 --hidden 512 `
+            --bootstrap-games 0 --validation-pairings 128 --budget-deadline $BudgetDeadline
+        if ($LASTEXITCODE -ne 0) { throw 'Second capacity candidate preparation failed.' }
+        Launch-Job 'mc-wide16' 'scripts/monte_carlo_rl.py' 'train' @('--bootstrap-games','0','--max-rounds','0',
+            '--hidden','512','--workers','1','--hours','2','--validation-pairings','128','--pairings','1200',
+            '--budget-deadline',"$BudgetDeadline")
+    }
     Wait-Validation 'mc-wide16'
+
+    # Keep the existing two-worker PPO job running. Use only the newly free
+    # third slot for a functional pipeline check and a bounded own-state pilot.
+    # Failure here must not prevent the established PPO run from resuming.
+    try {
+        $rlCommon = @('--ref','59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9',
+            '--start','runs/standalone-rl/mc-ppo-v3/best.npz','--seed','37001',
+            '--bootstrap-games','0','--workers','1','--train-samples','32','--curriculum-rounds','0',
+            '--anchor','0.01','--demo-weight','1.0','--rate','0.0002','--budget-deadline',"$BudgetDeadline")
+        Launch-Job 'pipeline-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
+            '--hours','0.5','--max-rounds','1','--batch-games','4','--validation-every','1',
+            '--validation-pairings','2','--pairings','2'))
+        Wait-Training 'pipeline-student-v1' 1
+        Launch-Job 'mc-student-v1' 'scripts/student_correction_rl.py' 'train' ($rlCommon + @(
+            '--hours','6','--max-rounds','4','--batch-games','128','--validation-every','4',
+            '--validation-pairings','128','--pairings','1200','--test-reserve-hours','12'))
+        Wait-Training 'mc-student-v1' 4
+        foreach ($rlMode in @('stochastic','greedy')) {
+            $rlSummary = Get-Content -LiteralPath "runs/standalone-rl/mc-student-v1/validation_summary_00004_$rlMode.json" -Raw | ConvertFrom-Json
+            if ($rlSummary.pairings -ne 128 -or $rlSummary.header.samples -ne 32) { throw 'Incomplete student validation.' }
+        }
+        Write-ControlEvent 'student_pilot_ready_for_comparison' 'mc-student-v1'
+    } catch {
+        Write-ControlEvent 'student_pilot_not_completed' $_.Exception.Message
+        # A live failed pilot would occupy a worker. Leave the two-worker PPO
+        # job untouched and require inspection before any three-worker launch.
+        foreach ($rlRun in @('pipeline-student-v1','mc-student-v1')) {
+            if ((Test-Path "runs/standalone-rl/$rlRun/process.json") -and (Test-JobLive $rlRun)) { throw }
+        }
+    }
 
     # Resume from a completed journal entry, with at most one in-flight batch
     # discarded. Verify the exact owned process and its children before stopping.

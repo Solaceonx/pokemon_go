@@ -190,22 +190,26 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
-`scripts/student_correction_rl.py` is an unused training-only variant. It queries the frozen expert
+`scripts/student_correction_rl.py` is a separately registered training-only variant. It queries the frozen expert
 at student-visited states, collects terminal-return PPO trajectories without expert intervention,
 and aggregates eight rounds of public expert labels. The expert's unexecuted decision plans are
 rolled back when the student chooses another action. Evaluation and deployment use the original
 StandaloneAgent. Its source/protocol is separate, bootstrap games must be zero, and full 32-sample
-training is the default. Functional tests pass; real pipeline and strength checks remain pending.
+training is the default. Full 32-sample expert-control replay matches terminal state and RNG in both
+seats. A real pipeline and bounded 512-game pilot are queued after capacity validation under
+`runs/standalone-rl/student_pilot_plan.json`; these do not consume final evaluation data.
 
 `scripts/widen_standalone_policy.py` provides a separate capacity initialization. It duplicates tanh
 units, splits outgoing weights and adds balanced perturbations that preserve initial outputs while
 allowing independent gradients. A parent checkpoint snapshot, source/hash provenance, numerical
 transfer check and new optimizer state are saved. The 128-to-512-unit test preserves the actual PPO
-policy/value outputs to floating-point precision; it has no playing-strength result yet. It uses
+policy/value outputs to floating-point precision. Epoch-four greedy validation scored 30.47%
+(95% CI 25.98–34.96%), below its 37.11% parent; epoch-sixteen validation is pending. It uses
 the same deployment schema and the existing training-only demonstration/refinement protocol.
 
 `scripts/finish_capacity_trial.ps1` manages the registered capacity comparison: it waits for epoch-4
-validation, evaluates epoch 16, and uses `scripts/select_capacity_candidate.py` to require a positive
+validation, evaluates epoch 16, runs the registered one-worker student-state pilot alongside the
+two-worker main PPO run, and uses `scripts/select_capacity_candidate.py` to require a positive
 paired interval before a promotion. It verifies the owned training process and waits for a committed
 round before handing off. The selected run then uses three workers and a twelve-hour final reserve.
 The original absolute deadline still applies. Its PID, events and decision are stored under

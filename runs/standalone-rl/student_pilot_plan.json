@@ -1,0 +1,40 @@
+{
+  "registered_utc": "2026-11-02 19:21:11 UTC",
+  "purpose": "Bounded exploratory student-state correction pilot; no final test data used.",
+  "frozen_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "warm_start": "Atomic preparation snapshot of mc-ppo-v3/best.npz; actual hash recorded by preparation",
+  "run": "mc-student-v1",
+  "seed": 37001,
+  "training": {
+    "workers": 1,
+    "batch_games": 128,
+    "max_rounds": 4,
+    "max_hours": 6,
+    "samples": 32,
+    "curriculum_rounds": 0,
+    "ppo_epochs": 4,
+    "rate": 0.0002,
+    "demo_weight": 1,
+    "anchor": 0.01,
+    "expert_replay_rounds": 8
+  },
+  "validation": {
+    "pairings": 128,
+    "samples": 32,
+    "every_rounds": 4,
+    "modes": [
+      "stochastic",
+      "greedy"
+    ],
+    "same_schedule_as": "mc-ppo-v3"
+  },
+  "preconditions": [
+    "Exact full-strength engine-control replay in both seats",
+    "Four-game training pipeline with two-pair validation completes"
+  ],
+  "allocation": "Main PPO keeps two workers; this pilot replaces the completed capacity validation worker; total long-job workers <= 3.",
+  "promotion": "Consider further training only if selected pilot score exceeds concurrent selected main PPO and paired 95% bootstrap lower bound of difference is positive; otherwise retain main PPO.",
+  "fallback": "Controller resumes original main/capacity choice on 3 workers after pilot, pending manual comparison. No automatic student promotion.",
+  "budget_deadline_unix": 1793756530,
+  "final_reserve_hours": 12
+}
