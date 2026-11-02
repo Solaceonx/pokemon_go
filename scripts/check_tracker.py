@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
-"""Test the Tracker against simulated battles, before any image recognition exists.
+"""Measure reconstruction error and the cost of playing through the Tracker in simulation.
 
     python3 scripts/check_tracker.py            accuracy and playing strength under three camera qualities
     python3 scripts/check_tracker.py --game     also write one game's event file to games/example.jsonl
+    python3 scripts/check_tracker.py --pilot both --field mixed --seed 3602 --pairings 400
 
 A simulated camera turns the true state of each battle into what a look at the
 screen would give, optionally blurred: looks missed, health bars read in steps,
 energy read with error, the opponent's charged move not named. The Tracker sees
 only that. We then measure how close its picture is to the truth, and whether
-the Planner plays as well from the Tracker's picture as from the truth.
+the Planner or trained Learner plays as well from the Tracker's picture as from the truth.
+Each condition uses the same team pairings and seeds against a seeded Planner with exact information.
+The 95% margins treat both orientations of a team pairing as one independent sample.
+This measures the cost of reconstruction, not playing strength against humans.
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import random
+import statistics
 import sys
 from pathlib import Path
 
@@ -84,6 +91,7 @@ class ViaTracker:
     def __init__(self, inner):
         self.inner = inner
         self.tracker: Tracker | None = None
+        self.names = True
 
     def act(self, view):
         action = self.inner.act(self.tracker.view())
@@ -97,7 +105,9 @@ class ViaTracker:
         return slot if slot in view.me.bench() else view.me.bench()[0]
 
     def saw_throw(self, view, move, energy, could_shield):
-        self.inner.saw_throw(self.tracker.view(), move, self.tracker.foe.hi, could_shield)
+        # The simulator knows the move even when this camera cannot read it.
+        if self.names:
+            self.inner.saw_throw(self.tracker.view(), move, self.tracker.foe.hi, could_shield)
 
     def saw_shield(self, view, shielded):
         self.inner.saw_shield(self.tracker.view(), shielded)
@@ -137,6 +147,7 @@ def play(gd, teams, agents, seed, camera: dict, tally: Tally | None, rng, path=N
     watched = []
     for i, agent in enumerate(agents):
         if isinstance(agent, ViaTracker):
+            agent.names = camera["names"]
             agent.tracker = Tracker(gd, teams[i], path=path, energy=ENERGY)
             cam = Camera(battle, i, rng, **camera)
             first = cam.look(certain=True)
@@ -161,39 +172,116 @@ def play(gd, teams, agents, seed, camera: dict, tally: Tally | None, rng, path=N
     return battle.winner
 
 
+def interval(values: list[float]) -> dict:
+    """Mean and normal 95% margin; each value is one independent team pairing."""
+    return {"mean": statistics.mean(values),
+            "margin95": 1.96 * statistics.stdev(values) / len(values) ** 0.5 if len(values) > 1 else None}
+
+
+def cases(draw, pairings: int, seed: int) -> list:
+    """Fix teams and all random streams before running any camera or player."""
+    rng, out = random.Random(seed), []
+    for _ in range(pairings):
+        a, b = draw(rng), draw(rng)
+        out.append([((a, b), tuple(rng.getrandbits(32) for _ in range(4))),
+                    ((b, a), tuple(rng.getrandbits(32) for _ in range(4)))])
+    return out
+
+
+def evaluate(gd, schedule, make_pilot, cameras: dict) -> dict:
+    """Paired exact-information control and cameras, against the same seeded Planner.
+
+    Team, battle, policy and camera seeds never depend on the length of a battle.
+    Both orientations of a team pairing are one cluster for score/error margins.
+    These are tracking-cost measurements, not a benchmark against human players.
+    """
+    results, exact = {}, None
+    for name, camera in [("exact state", None), *cameras.items()]:
+        scores, errors, aggregate = [], [], Tally()
+        for pair in schedule:
+            points, pair_errors = [], []
+            for teams, (battle_seed, pilot_seed, foe_seed, camera_seed) in pair:
+                pilot = make_pilot(pilot_seed)
+                tally = Tally()
+                if camera is not None:
+                    pilot = ViaTracker(pilot)
+                winner = play(gd, teams, (pilot, Planner(seed=foe_seed)), battle_seed,
+                              camera or CAMERAS["perfect"], tally, random.Random(camera_seed))
+                points.append(1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0)
+                if tally.n:
+                    pair_errors.append(tally.energy / tally.n)
+                for key, value in vars(tally).items():
+                    setattr(aggregate, key, getattr(aggregate, key) + value)
+            scores.append(statistics.mean(points))
+            if pair_errors:
+                errors.append(statistics.mean(pair_errors))
+        if exact is None:
+            exact = scores
+        results[name] = {"score": interval(scores),
+                         "change_from_exact": interval([s - e for s, e in zip(scores, exact)]),
+                         "energy_mae": interval(errors) if errors else None,
+                         "tally": vars(aggregate)}
+    return results
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--pairings", type=int, default=400)
     parser.add_argument("--hits", action="store_true", help="count energy from the steps in the health bars, not from the rhythm of fast moves")
     parser.add_argument("--game", action="store_true", help="write one game's event file to games/example.jsonl")
     parser.add_argument("--parts", action="store_true", help="test one camera flaw at a time")
+    parser.add_argument("--pilot", choices=("planner", "learner", "both"), default="planner")
+    parser.add_argument("--q", type=Path, default=ROOT / "runs/general-decide/q.npz")
+    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--field", choices=("mixed", "standard"), default="mixed")
+    parser.add_argument("--output", type=Path, help="write a small JSON summary")
     args = parser.parse_args()
+    if args.pairings < 2:
+        parser.error("--pairings must be at least 2 for uncertainty margins")
 
     gd = GameData()
-    pool = [gd.default(b.species_id) for b in gd.meta(50)]
-    for name, camera in (PARTS if args.parts else CAMERAS).items():
-        rng = random.Random(0)
-        tally, points = Tally(), 0.0
-        for _ in range(args.pairings):
-            a, b = rng.sample(pool, 3), rng.sample(pool, 3)
-            for mine, theirs in ((a, b), (b, a)):
-                winner = play(gd, (mine, theirs), (ViaTracker(Planner()), Planner()), rng.getrandbits(32), camera, tally, rng)
-                points += 1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0
-        games = 2 * args.pairings
-        share = points / games
-        print(f"camera: {name}")
-        print(f"  {tally.report()}")
-        print(f"  Planner playing from the Tracker's picture, against the Planner playing from the truth: "
-              f"{100 * share:.1f}% ± {100 * 1.96 * (share * (1 - share) / games) ** 0.5:.1f} over {games} battles\n")
+    if args.field == "mixed":
+        from pogo.teamshape import mixed_field
+        pool, draw = mixed_field(gd)
+    else:
+        from pogo.teamlist import drawer
+        pool = gd.meta(50)
+        draw = drawer(gd, pool)
+    schedule = cases(draw, args.pairings, args.seed)
+    pilots = {"planner": lambda seed: Planner(seed=seed)}
+    report = {"seed": args.seed, "field": args.field, "pairings": args.pairings, "energy": ENERGY,
+              "opponent": "Planner (exact state)", "margin_unit": "team pairing, both orientations", "pilots": {}}
+    if args.pilot in ("learner", "both"):
+        from pogo.learner import Learner, QNet
+        net = QNet.load(str(args.q))
+        pilots["learner"] = lambda seed: Learner(q=net, margin=0.02, seed=seed)
+        report["model_sha256"] = hashlib.sha256(args.q.read_bytes()).hexdigest()
+    print(f"field={args.field}, seed={args.seed}, {2 * args.pairings} battles per condition; paired 95% margins", flush=True)
+    for pilot, factory in pilots.items():
+        if args.pilot not in (pilot, "both"):
+            continue
+        result = evaluate(gd, schedule, factory, PARTS if args.parts else CAMERAS)
+        report["pilots"][pilot] = result
+        for name, row in result.items():
+            score, change = row["score"], row["change_from_exact"]
+            print(f"{pilot}, {name}: {100 * score['mean']:.1f}% ± {100 * score['margin95']:.1f}; "
+                  f"change from exact {100 * change['mean']:+.1f} ± {100 * change['margin95']:.1f} points", flush=True)
+            if row["energy_mae"]:
+                error = row["energy_mae"]
+                tally = Tally()
+                vars(tally).update(row["tally"])
+                print(f"  battle-averaged energy error {error['mean']:.2f} ± {error['margin95']:.2f}; {tally.report()}", flush=True)
+        if args.output:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(json.dumps(report, indent=2) + "\n")
 
     if args.game:
-        import json
         rng = random.Random(4)
         folder = ROOT / "games" / "example"
         folder.mkdir(parents=True, exist_ok=True)
         teams = rng.sample(pool, 3), rng.sample(pool, 3)
         looks: list = []
-        play(gd, teams, (ViaTracker(Planner()), Planner()), 4, CAMERAS["move not named"], None, rng, looks=looks)
+        play(gd, teams, (ViaTracker(Planner(seed=4)), Planner(seed=5)), 4, CAMERAS["move not named"], None, rng, looks=looks)
         sheet = {"pokemon": [{"species": b.species_id, "fast": b.fast.id, "charged": [m.id for m in b.charged]} for b in teams[0]]}
         (folder / "team.json").write_text(json.dumps(sheet, indent=2) + "\n")
         (folder / "observations.jsonl").write_text("".join(json.dumps(look) + "\n" for look in looks))

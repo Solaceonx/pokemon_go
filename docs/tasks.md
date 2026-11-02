@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **36** | **Opponent energy reconstruction and decisions from tracked state** — Codex (2026-11-01) | Python, numpy |
+| **36** | **Opponent energy reconstruction and decisions from tracked state** — Codex; implemented and measured 2026-11-02, awaiting review | Results in `status.md` |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -65,13 +65,20 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 36. Opponent energy reconstruction and decisions from tracked state — Codex (2026-11-01)
+## 36. Opponent energy reconstruction and decisions from tracked state — Codex (measured 2026-11-02, awaiting review)
 
-**In progress, requested by the owner.** Correct energy accounting when delayed opponent switches undo
+**Implemented and measured, requested by the owner.** Correct energy accounting when delayed opponent switches undo
 fast moves at the energy cap; carry the tracker's energy probabilities into imagined battles and saved-state
 advice; establish a reproducible paired benchmark for Planner and the trained Learner with exact, perfect-camera
 and rough-camera information. Measure on the mixed field and cross-check the standard field, with 95% margins.
 This is reconstruction and measurement work; task 15's network retraining and Marco's task 35 remain separate.
+
+Also fixed form identity and Disguise health accounting exposed by the mixed-field run. Fresh seed 3602:
+rough observations cost the trained Learner 10.5 ± 3.6 points on the mixed field and 12.2 ± 3.5 on the standard
+field (800 battles per condition, paired 95% margins). These are remaining costs, not a claimed strength gain.
+275 tests pass (7 video-dependent skips), 108/108 PvPoke battles reproduce, and an exposed causal replay
+accepts all 164 looks with unchanged energy output. Full commands/results are in `docs/status.md` and
+`runs/energy_reconstruction_*.out`. Late charged-cue rollback and independent footage accuracy remain open.
 
 **Done when.** Regression tests cover cap-safe corrections and uncertainty sampling, the required simulator
 checks pass, and `docs/status.md` records the benchmark commands/results and remaining limitations.

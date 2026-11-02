@@ -18,7 +18,7 @@ from pogo.evaluation import Evaluator
 from pogo.gamedata import GameData
 from pogo.learner import Learner, QNet
 from pogo.lineup import win_chance
-from pogo.realtime import RealTime
+from pogo.realtime import WEBSITE, RealTime
 from pogo.roster import builds
 from pogo import review as game_review
 
@@ -95,7 +95,7 @@ def new(job: str) -> str:
     theirs = [gd.default(sid) for sid in j["theirs"]]
     seed, bot_seed = random.getrandbits(32), random.getrandbits(30)
     if j["bot"] == "engine":
-        bot = RealTime(Evaluator(s["ev"].model), s["pool"], rollout="bot", samples=32, edge=0.03, q=s["net"], margin=0.02, seed=bot_seed,
+        bot = RealTime(Evaluator(s["ev"].model), s["pool"], q=s["net"], seed=bot_seed, **WEBSITE,
                        turn_ms=j["tick_ms"], cap_ms=max(50, j["tick_ms"] - 100), clock=time.perf_counter)
     else:
         bot = Learner(q=s["net"], margin=0.02, seed=bot_seed)

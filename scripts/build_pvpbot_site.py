@@ -48,10 +48,23 @@ def play_page() -> str:
             f"<script>{script}</script>\n<script>\n{(SOURCE / 'play_controller.js').read_text()}</script>\n</body>\n</html>\n")
 
 
+def check_release() -> None:
+    """Build only what scripts/release_check.py passed; --unchecked (say why in the commit) skips this."""
+    from release_check import RECORD, code_id
+    record = json.loads(RECORD.read_text()) if RECORD.exists() else {}
+    if not record.get("passed") or record.get("code") != code_id():
+        raise SystemExit("this code has no passing release check: run scripts/release_check.py, or pass --unchecked")
+
+
 def main() -> None:
-    if len(sys.argv) != 2:
+    arguments = sys.argv[1:]
+    unchecked = "--unchecked" in arguments
+    arguments = [a for a in arguments if a != "--unchecked"]
+    if len(arguments) != 1:
         raise SystemExit(__doc__)
-    out = Path(sys.argv[1])
+    if not unchecked:
+        check_release()
+    out = Path(arguments[0])
     out.mkdir(parents=True, exist_ok=True)
     from play import sprite
     gd = GameData()

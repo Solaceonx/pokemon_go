@@ -3647,3 +3647,121 @@ The website got the rollout fix on 2026-11-01 (site commit b6fddc5; `matching` n
 
 When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
 time and the cause was the nesting.
+
+## Benchmarks evaluated (2026-11-01, the owner: "much better benchmarking", and how to evaluate a benchmark)
+
+Plan, judges and results are in `docs/benchmarking.md`; `python3 scripts/bench.py check` reruns them (`runs/bench/check.out`).
+Battles catch gross damage best (crowd: 5 of 6 broken bots; ladder 10 of 10). Exact endgames (`pogo.endgame.action_values`, 318
+frozen positions) need about twenty times fewer samples but catch only 2 of 6. Agreement with the owner fails as a strength
+score: a bot that never switches beats the unbroken one on it. The reader's gain fails as built. **The engine's gain over the
+trained bot falls with how far the opponent is from what it imagines: +17 against the trained bot, +4 against the crowd, -2
+against PvPoke's AI (margins about ±6).** So head-to-head gains overstate what it gains against people. The owner's exam
+(`scripts/exam_positions.py`, `scripts/exam_page/`, 40 positions) is published and not yet taken.
+
+Release check built and passed on commit 4105bda (`scripts/release_check.py`; the site build now needs it). A small model of the
+owner's decisions gets the top choice right 66% of the time on unseen games, against 62% for the trained bot and 54% for the
+engine, and flattens after about 10 training games (`scripts/people_model.py`), so more of the owner's games do not help a model this
+small; other players are untested.
+
+
+## Opponent energy reconstruction and decisions from tracked state — 2026-11-02 (Codex, task 36)
+
+The owner requested opponent energy reconstruction and work on how the bot plays. This pass fixes two
+state-reconstruction failures, connects the existing energy probabilities to planning, and measures the cost
+of imperfect observations for the trained bot. It does not establish a playing-strength gain against humans.
+Started at `b868d31`; integrated upstream through `e4f8bbc` before the final checks. The benchmarked
+runtime is unchanged from `e80986e`; the intervening commit updates exam publishing/import only.
+
+**Changes.** A late opponent switch can revoke fast moves credited to the outgoing Pokémon. The old tracker
+subtracted those gains from an already capped balance: 99 + 36 capped to 100, then removing 36, gave 64 instead
+of 99. `Foe` now retains the uncapped count until a spend/recount and reverses the mistaken credit before
+capping. A charged move discards overflow, so it cannot be spent later. The fighting clocks also transfer the
+misattributed time to the incoming Pokémon. Regression cases at switch times 8/11/12/13 s reconstruct
+72/99/100/100 energy instead of 37/64/73/82, including corrections that cross the cap and ambiguous move costs.
+
+Forms now retain the same team slot, health, energy and switch clock. Previously the mixed-field benchmark
+crashed on `cramorant_gorging`, which is absent from the rankings; fixing identity exposed a second failure:
+the named-move damage correction treated Mimikyu's Disguise as a lagging health bar, turned 27 observed HP into
+0, and eventually left the pilot with no tracked replacement. The tracker now uses pre-hit protection when
+checking the observed damage, and applies native form stages and form resets on actual switches. Tests cover
+both sides, first sightings in an alternate form, returning Pokémon, and Disguise's one-damage hit.
+
+`TrackedView.foe_shown_energy_odds` publishes beliefs for active and benched opponents. `engine.imagine()`
+samples these when present; exact simulator views retain their original energies and RNG sequence.
+`scripts/advise.py` uses saved `energy_odds` rather than uniformly sampling `energy_range`, with range sampling
+retained for older state files. The shared sampler accepts JSON string keys and rounded relative weights.
+This uses the existing count-error prior, not a newly calibrated posterior. Optional shield search still uses
+its separate incoming-throw energy assumption; its default remains off.
+
+**Measurement.** `scripts/check_tracker.py` now supports `--pilot planner|learner|both`, `--seed`,
+`--field mixed|standard`, and `--output`. Every pilot/camera gets the same fixed team pairings and separate
+battle/policy/camera RNG streams, including an exact-state control. Both orientations of each independent
+team pairing form one cluster for the normal 95% margin; draws count half. Energy MAE is averaged per battle,
+then per pairing. The old per-turn tally remains separately labelled. An unread charged move is no longer
+leaked to the pilot through the simulator's `saw_throw` callback. Opponents here are seeded exact-state
+Planners. This benchmark diagnoses the cost of observation, not strength against people or an independent
+strategic judge; see `docs/benchmarking.md` for those distinctions.
+
+**Development run, seed 3601, 100 pairings / 200 battles per condition.** The standard-field summaries are
+identical before and after the tracker changes with the new harness. The original tracker cannot complete
+the mixed-field run because of the form crash above. After the fixes:
+
+| Field | Pilot | Exact-state score % | Perfect-camera score % | Unnamed-move score % | Rough-camera score % | Rough minus exact, points |
+|---|---|---|---|---|---|---|
+| mixed | planner | 50.5 ± 2.7 | 48.8 ± 3.6 | 44.8 ± 5.4 | 37.5 ± 5.9 | -13.0 ± 6.8 |
+| mixed | learner | 57.5 ± 5.5 | 58.8 ± 5.8 | 58.5 ± 5.8 | 46.8 ± 5.2 | -10.8 ± 6.2 |
+| standard | planner | 50.0 ± 3.3 | 48.0 ± 4.4 | 45.2 ± 4.7 | 38.5 ± 5.9 | -11.5 ± 5.8 |
+| standard | learner | 59.0 ± 5.8 | 59.8 ± 5.3 | 56.2 ± 4.8 | 45.5 ± 5.6 | -13.5 ± 7.2 |
+
+**Fresh validation, seed 3602, 400 pairings / 800 battles per condition.** No settings were selected on this seed.
+
+| Field | Pilot | Exact-state score % | Perfect-camera score % | Unnamed-move score % | Rough-camera score % | Rough minus exact, points |
+|---|---|---|---|---|---|---|
+| mixed | planner | 49.1 ± 1.4 | 48.4 ± 2.0 | 45.9 ± 2.6 | 37.9 ± 2.8 | -11.2 ± 3.1 |
+| mixed | learner | 59.7 ± 3.0 | 58.9 ± 3.1 | 55.7 ± 3.1 | 49.2 ± 3.1 | -10.5 ± 3.6 |
+| standard | planner | 51.7 ± 1.6 | 50.6 ± 2.1 | 46.6 ± 2.6 | 38.7 ± 2.7 | -13.1 ± 3.0 |
+| standard | learner | 59.2 ± 2.8 | 58.2 ± 2.8 | 54.4 ± 3.0 | 46.9 ± 2.9 | -12.2 ± 3.5 |
+
+For the Learner on the fresh mixed field, opponent-energy MAE is **0.37 ± 0.17** with a perfect camera,
+**1.46 ± 0.16** without move names, and **3.18 ± 0.19** with the rough camera. The rough camera's nominal
+energy range contains the truth on 84% of matched turns; 1.0% of turns show the wrong opponent identity.
+On the standard field those MAEs are 0.11 ± 0.04, 1.02 ± 0.10, and 2.98 ± 0.17. Thus rough observations still
+cost the trained pilot **10.5 ± 3.6 points** on the mixed field and **12.2 ± 3.5** on the standard field.
+Those are remaining costs, not improvements attributable to this patch. No model was retrained.
+
+Commands as run (each used `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1`):
+
+```bash
+nice python3 scripts/check_tracker.py --pilot both --pairings 100 --seed 3601 --field mixed --output ../after_mixed.json > runs/energy_reconstruction_mixed_dev.out
+nice python3 scripts/check_tracker.py --pilot both --pairings 100 --seed 3601 --field standard --output ../after_standard.json > runs/energy_reconstruction_standard_dev.out
+nice python3 scripts/check_tracker.py --pilot both --pairings 400 --seed 3602 --field mixed --output ../confirm_mixed.json > runs/energy_reconstruction_mixed_confirm.out
+nice python3 scripts/check_tracker.py --pilot both --pairings 400 --seed 3602 --field standard --output ../confirm_standard.json > runs/energy_reconstruction_standard_confirm.out
+```
+
+`--output` files were temporary summaries; the small `.out` files are committed. The fixed model was
+`runs/general-decide/q.npz`, margin 0.02, SHA-256
+`bd7f56ef72742b4d4543e759e233e3c779b54c2b11067c573109cb2f1ac9dfb2`.
+
+**Recorded regression.** The exposed owner recording
+`games/screenrecording-10-10-2026-10-50-13-1/raw`, battle 1, was assembled causally with lag 0 and text delay 1 s
+(`live_replay.replay(..., ["--battle", "1"], 0.0, 1.0, 1, gd)`). Feeding its same 164 looks through the original
+and changed trackers rejected zero in either, included two delayed switches, and changed no opponent-energy
+states. Agreement with the offline reconstruction was identical. Full counts are in
+`runs/energy_reconstruction_recorded.out`; the new replay itself is reproducible with:
+
+```bash
+nice python3 scripts/recording/live_replay.py games/screenrecording-10-10-2026-10-50-13-1/raw --battle 1 --lag 0 --text-delay 1 --jobs 1
+```
+
+This is an exposed regression, not independent energy truth or evidence of better footage accuracy. The
+reserved official sample was not used to tune these changes. The known overcount from late charged-move
+cues remains open; this patch corrects delayed switches, not retrospective charged-animation timing.
+
+**Checks.** `python3 -m unittest discover tests`: 275 tests, OK (7 skipped because the video reader's PyAV
+environment is unavailable). `python3 scripts/check_pvpoke.py`: 108/108 exact. Twelve added regressions cover
+cap accounting, form continuity/protection, probability sampling in advice and engine reconstruction,
+unchanged RNG for exact views, camera-order independence, and hidden-move callbacks. Two end-to-end Engine
+smoke battles through the tracker (perfect/rough cameras, 2 samples, 8-step horizon, trained rollout,
+Mimikyu and Cramorant present) completed with 15/20 searched decisions and 89/104 matched turns. These tiny
+smoke runs establish compatibility only, not strength or live-budget performance. Website release checks,
+browser deployment and phone taps were not part of this task.
