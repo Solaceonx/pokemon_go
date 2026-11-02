@@ -1,0 +1,33 @@
+Owner's work budget starts 2026-11-01 17:42:10 America/Los_Angeles.
+Absolute deadline: 2026-11-03 17:42:10 America/Los_Angeles (Unix 1793756530).
+
+Python: C:/Users/lionl/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe
+Working directory: C:/Users/lionl/OneDrive/Documents/ChatGPT/pokemon_go
+Implementation: b0d1b98 (full source SHA-256 fingerprints are in experiment.json).
+
+Checks before starting:
+python -m unittest discover tests
+  Ran 288 tests; OK (skipped=7 video-dependent checks).
+python scripts/check_pvpoke.py
+  108 of 108 PvPoke battles reproduced exactly.
+git diff --check
+  No whitespace errors.
+
+Preparation:
+python scripts/standalone_rl.py prepare --run ppo-v2 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v1/best.npz --validation-pairings 128 --budget-deadline 1793756530
+
+Unattended command (launched with Start-Process -WindowStyle Hidden, stdout to run.out, stderr to run.err):
+python -u scripts/standalone_rl.py run --run ppo-v2 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v1/best.npz --bootstrap-games 0 --hours 36 --workers 3 --validation-every 8 --curriculum-rounds 16 --anchor 0.01 --demo-weight 0.1 --pairings 1200 --budget-deadline 1793756530
+
+run prepares/resumes, trains, locks the validation-selected checkpoint and inference mode,
+then evaluates two fresh seed blocks each on mixed and standard held-out team partitions.
+At most three low-priority battle workers; OMP/OPENBLAS/MKL/VECLIB thread counts are 1.
+Ten hours before the absolute deadline are reserved for final testing.
+The command can be repeated to resume; do not edit source while it is running.
+process.json records the initial PID and exact argument vector. No final strength result yet.
+
+Priority verification found that the existing Windows low_priority helper had left the new
+processes at Normal priority. Explicitly set parent PID 22220 and its three verified workers
+(10856, 20284, 20876) to BelowNormal, then read back all four priority classes successfully.
+New workers inherit the parent's lowered priority. No experiment source was changed while
+workers were running. Full-search scoring has no clock cuts and is unaffected by this change.
