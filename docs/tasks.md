@@ -49,6 +49,7 @@ engine. A failed strength target must be reported plainly. Tasks 33, 34, 35 and 
 
 | # | Task | Needs |
 |---|---|---|
+| **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size) | Marco's machine, ~300-350 core-hours |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -75,6 +76,53 @@ engine. A failed strength target must be reported plainly. Tasks 33, 34, 35 and 
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 39. Train the engine on its own games — for Marco (big job, the owner chose it 2026-11-02)
+
+**Why.** The owner now finds the website engine hard to beat and wants it trained further. The engine is two
+learned parts inside a look-ahead: the trained bot (`runs/general-decide/q.npz`, `pogo/learner.py`) plays both
+sides of every imagined battle, and the evaluation (`runs/eval/eval.npz`) judges each one where it stops. This is the
+AlphaZero loop: the engine plays itself, the trained bot learns to choose what the engine chose, the evaluation learns
+who won, and the improved engine plays the next round. Task 31 tried only the evaluation half, with a 4-sample engine,
+for one round (predicted better, played no better, 49.2% ± 1.5) and stopped. Untried: the trained bot learning the
+engine's choices, self-play at the website's strength, and more than one round (plateaus are common in this kind
+of training, so this job does not stop early). Task 31's other lesson stands: October's distillation fitted the bot
+to the look-ahead's 20-turn worths, which are short-sighted, and it got worse; here the value comes from who won.
+
+**Before.** `git pull`; start from `main` as it is (the website's networks and settings; task 35's branch is not
+merged and its settings are not used). Tests and `scripts/check_pvpoke.py` pass. Use `W` = the cores you can spare.
+
+**Each round r** (engine E_r = `pogo.realtime.WEBSITE` settings, horizon 20, no clock cuts, with networks q_r, eval_r;
+E_0 is the website's engine):
+
+1. **Self-play.** 10,000 games of E_r against E_r on the mixed field (`--field mixed`), a fresh seed each round,
+   a fresh evaluation cache for each player in every game (task 27's bug). At every decision of either side save the
+   trained bot's inputs and options as `scripts/decide.py` does, the engine's pick, whether it overrode the bot, and
+   who won the game. Save as it goes and resume. Extending `scripts/selfplay_eval.py` (`--samples 32`) into a new
+   script is the natural route; keep task 31's script reproducible.
+2. **Evaluation.** Refit eval on positions from this round's games against who won, as task 31 does.
+3. **Trained bot.** Refit each head of q (throw, swap, replace, shield) starting from q_r: the chosen option's output
+   regresses to who won (as a win share), plus 0.3 × cross-entropy toward the engine's pick over the softmax of the
+   head's outputs divided by 0.02 (the margin). These two numbers are fixed in advance, not tuned. Keep the network
+   sizes, so the website speed is unchanged. Hold back a tenth of games and print fit and agreement on them.
+4. **Measure** E_{r+1} (q_{r+1}, eval_{r+1}) against **E_0**, not the previous round, so the rounds read as one
+   curve: `scripts/engine_versus.py` (add a `q=` path key beside the existing `eval=`), 1,500 pairings both ways,
+   1,500 crowd and 750 PvPoke battles, at 32 samples, with the search-time lines.
+5. Go on to the next round from the newest networks whatever the result. Three rounds.
+
+Start with a timing run of 50 self-play games and print core-seconds a game. The estimate is about 25; if it is over
+40, use 6,000 games a round and say so.
+
+**Confirm** the round with the best head to head against E_0 (if none is above 50%, the best one anyway, labelled as
+such): fresh seed, 2,000 pairings both ways, 2,000 crowd, 1,000 PvPoke, against E_0. Then `scripts/release_check.py`
+on it with the candidate networks swapped in locally (do not commit the swap).
+
+**Done when.** `status.md` has, per round: games played, fit and agreement on held-back games, and the three changes
+against E_0 with margins and search times; then the confirmation, the commands as run and the core-hours used. Push
+the `.out` files and each round's `q.npz` and `eval.npz` under `runs/engine-loop/round_N/` (small files). Do not change
+defaults or the website: the owner decides, after the owner's side scores the candidate on the owner's exam (the exam's
+key is private, so that step is not Marco's). Adoption needs head to head above 50% beyond its margin and no loss
+beyond its margin against the crowd or PvPoke ("Rules for proposing a change"). Report a failure plainly.
 
 ## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
 
