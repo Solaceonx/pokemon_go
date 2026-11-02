@@ -82,7 +82,52 @@ detectable loss on the standard cross-check. `verdict.json` states whether it pa
 candidate from final outcomes; another experiment needs untouched test evidence. Simulator wins against this
 frozen opponent do not establish strength against humans or under tracked observations.
 
-## Saved work
+## Further experiments after v2
+
+V2's selected model lost the full-engine validation, **27.67% ± 3.27 points** over 300 mirrored pairings.
+The owner requested further experiments. The second unchanged training stage was stopped with its last
+complete 5,400-game checkpoint retained; do not restart that controller or change its original deadline.
+The later trials retain the same frozen baseline and train/validation/test partitions. Final tests remain
+unopened. All measurements below are validation, not evidence of meeting the final target.
+
+`scripts/dqn_audit.py` measures training action agreement by type. It found that overall agreement hid
+charged-move recall of only 69% / 61%. `scripts/dqn_refine.py` compares the warm-up with masked cross-entropy
+and action-frequency-balanced cross-entropy, using the same retained demonstrations and 60 epochs.
+All three screen on 64 mirrored engine8 pairings, seed 38111; only the selected model confirms on 128
+full-engine32 pairings, seed 38112. Selected balanced refinement scored **24.80% ± 4.97 points**. The
+improved training fit did not establish competitive playing strength. Plans, training curves, model hashes
+and exact results are under `runs/double-dqn/refine-v3/`.
+
+`pogo.rl_search.RolloutAgent` is a separate optional inference experiment. It compares legal actions by
+playing imagined games to completion with neural policies for both sides. It reconstructs public state,
+samples unrevealed opponents from the frozen public pool, and calls no existing Engine, Planner or service.
+Charged-ready decisions, matchup changes and an eight-turn cadence determine when it spends computation;
+the network chooses between searches. Shields and replacements still use the network. This adds planning
+to the learned policy; the original `pogo.dqn.Agent` remains a direct neural policy.
+`scripts/rl_search_trial.py` compares zero, eight and sixteen samples on 64 mirrored full-engine32
+validation pairings, seed 38311, then confirms only the screen winner on 128 pairings, seed 38312.
+Its source is frozen under `.dqn-cache/harness/v3/` while running. Source/model hashes and the protocol
+are saved before the first game. Runtime and raw per-pair timing logs remain local.
+
+`scripts/counterfactual_rl.py` implements a subsequent training alternative: sample decisions from both
+wins and losses before consulting outcomes, replay every legal choice to the end against the frozen engine,
+and fit centered paired returns with a small demonstration anchor. Actual-choice replay must reproduce
+the original winner before any label is accepted. Immutable source should be copied to a fresh harness
+before a long run. The canary mode verifies this control in training games on both player sides:
+
+```powershell
+python scripts/counterfactual_rl.py --run cf-canary --collection-canary --groups 4 --max-groups 4 --samples 32
+```
+
+Run it only when this experiment's numerical worker is free. This is a replay check, not a strength test.
+The full research runner defaults to six rounds, at least 300 labelled decisions and 32 differing-outcome
+positions per round (up to 1,200 decisions), 30 fitting epochs and an eight-hour cap. It screens on 64 full
+engine32 validation pairings, seed 38211, then confirms its selected checkpoint on 128 fresh pairings,
+seed 38212. Its original invocation deadline survives restart; it also respects the original overall
+deadline. Optimizer moments reset for the new loss in each round, then resume exactly across interruptions.
+No final-test mode is provided by this research runner. This algorithm has not yet been measured.
+
+## Artifact retention
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw
 evaluation rows and summaries. Large demonstrations, replay, intermediate models and raw rows remain local

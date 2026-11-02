@@ -99,6 +99,89 @@ runtime and RNG/demonstration checkpoints. Bootstrap identity is in `.dqn-cache/
 A 30-minute follow-up in this chat monitors liveness and will collect final results, update this PR and stop
 itself on completion or the fixed budget deadline. It stays quiet while the job is healthy/unchanged.
 
+**V2 warm-up completed (2026-11-01 local, follow-up at 03:57 UTC).** All 3,000 engine4-teacher games and
+80 epochs finished. Sampled training imitation agreement at epoch 80 was **93.22%** (training diagnostic
+only). Before RL, the fixed validation screen (seed 38031, 100 mirrored pairings / 200 games, engine8,
+mixed field) scored **29.50% ± 5.93 points**, 95% interval **23.57–35.43%**. This remains below target and
+is selection data only; no final outcomes were used. Exact pair scores and checkpoint hash are in
+`runs/double-dqn/dqn-v2/validation_bootstrap_summary.json`. The controller has entered the first 12-hour
+RL stage against the full engine32; its original deadline is unchanged.
+
+**V2 at 2,000 RL games (follow-up at 07:57 UTC).** The same engine8 validation screen scored
+**32.50% ± 6.29 points**, 95% interval **26.21–38.79%**, over 100 mirrored pairings / 200 games.
+Exact pair scores/checkpoint hash are in `validation_002000_summary.json`; the paired warm-up comparison
+is **+3.00 ± 7.48 points**, saved in `validation_002000_paired_gain.json`: no confirmed improvement.
+This is checkpoint-selection evidence, still below target;
+training continues under the unchanged plan and final tests remain untouched.
+
+**V2 at 4,000 games and first-stage end (2026-11-02, follow-up at 16:57 UTC).** At 4,000 RL games the
+same engine8 screen scored **30.00% ± 6.07 points**, interval **23.93–36.07%**, over 100 mirrored pairings.
+The paired warm-up change is **+0.50 ± 8.41 points**, not a confirmed gain. Exact results and differences
+are `validation_004000_summary.json` and `validation_004000_paired_gain.json`. The first 12-hour stage
+completed at **5,281 RL games**. The predeclared screening rule selected the **2,000-game checkpoint**
+(32.50% on engine8), which is now being evaluated on 300 full-engine32 validation pairings, seed 38032.
+That evaluation was still in progress at this update; no final-test outcomes have been opened.
+
+**V2 first-stage full-engine validation completed (2026-11-02, 17:15 UTC check).** The selected 2,000-game
+checkpoint scored **27.67% ± 3.27 points** against the frozen **32-sample engine**, mixed-field validation
+seed 38032, **300 mirrored pairings / 600 games**. The 95% interval is **24.39–30.94%**: a clear loss,
+not progress toward a reliable win. Exact pair scores and model hash are in
+`full_validation_stage_1_summary.json`. The predeclared second 12-hour RL stage has started because the
+first stage failed its validation threshold. Total RL games were 5,320 at this check. Runtime/baseline,
+selection rule, final seeds/sample counts and original budget deadline remain unchanged; final tests are
+still untouched.
+
+**Owner requested further experiments until a reliable win (2026-11-02).** The unchanged second v2 stage
+was intentionally stopped through its STOP file to redirect its worker and preserve unused final tests.
+The last complete atomic checkpoint contains **5,400 RL games** (the per-game log reached 5,437 before
+the stop). This is an abandoned continuation, not a completed second-stage result. All v2 source, models,
+replay and prior validation evidence are retained. The goal remains the original reliable held-out win.
+
+**Action audit.** On a fixed 20,000-row sample of retained *training* demonstrations, warm-up agreement was
+93.12% overall, but recall of first/second charged-move throws was only **68.89% / 60.68%**; fast-move recall
+was 98.94%. Shield and replacement agreement were 99.86% / 100%. The selected 2,000-game model had
+91.57% overall agreement and 71.50% / 62.98% charged recalls. The 5,400-game checkpoint had 90.87% overall
+agreement and 66.20% / 58.86% charged recalls. These are fit diagnostics, not held-out playing-strength
+scores. Exact counts/confusions are in `runs/double-dqn/dqn-v2/action_audit.json`, reproduced by
+`scripts/dqn_audit.py`. Overall agreement was hiding errors concentrated in throws.
+
+**Next controlled trial, `refine-v3`.** Compare the v2 warm-up with (a) masked cross-entropy refinement,
+and (b) the same refinement with inverse-square-root training action-frequency weights. Both use the same
+training data, initialization, seed 38101, 60 epochs and learning rate 0.0001. No tactical rule changes.
+Screen all three on 64 mirrored validation pairings, engine8, fresh seed 38111; select the highest win share
+(earlier wins ties), then confirm only the selected candidate on 128 full-engine32 validation pairings,
+seed 38112. `plan.json` was saved before fitting. Final tests remain untouched. Counterfactual training
+helpers additionally replay complete games after one indexed callback is changed, including shield and
+replacement callbacks inside a turn; matched-choice replay agrees with the original outcome for both player
+sides in unit tests. The intended next RL update fits paired complete-game action advantages, without
+giving the inference policy hidden information or runtime search.
+
+**Refinement completed (2026-11-02, 18:15 UTC).** On the predeclared engine8 validation screen, seed 38111,
+64 mirrored pairings each: warm-up **20.703125% ± 5.932859 points**, cross-entropy **25.000000% ± 6.815271**,
+balanced cross-entropy **26.171875% ± 6.495827** (95% margins). The selected balanced model then scored
+**24.8046875% ± 4.966350 points**, interval **19.838338–29.771037%**, on the fresh full-engine32
+confirmation, seed 38112, **128 mirrored pairings / 256 games**. Better training agreement did not produce
+a competitive policy. These are validation measurements, not final evidence; no reliable win is claimed.
+Exact pair scores and hashes are in `runs/double-dqn/refine-v3/result.json`. All 284 tests pass with seven
+optional skips, and all 108/108 PvPoke reference battles reproduce exactly.
+
+**Independent planning trial started.** `search-v3` compares the selected learned policy alone with 8 and
+16 complete-game Monte Carlo samples per option, using its own neural continuation policies and public-state
+reconstruction. Its inference does not call the existing Engine or Planner. Screen: 64 mirrored validation
+pairings per setting, full frozen engine32, seed 38311; selected setting alone confirms on 128 pairings,
+fresh seed 38312. The protocol and source hashes are saved before screening in `plan.json`. Its immutable
+runtime is `.dqn-cache/harness/v3`; one worker runs after refinement and required checks, without overlap.
+No final-test teams or seeds have been opened.
+
+**Paired-training runner prepared, not yet measured.** Its canary requires actual-choice replay controls
+against the full frozen engine before collecting a long run. A fresh immutable v4 snapshot retains the
+new runner; v3 remains unchanged while planning runs. The runner preserves its original time limit on
+restart, resets Adam moments for the new loss each round, and confirms its screen-selected checkpoint on
+fresh validation seed 38212. A restart test produces bit-identical weights and optimizer state to an
+uninterrupted fit. Current full checks: **285 tests pass, seven optional skips; 108/108 PvPoke exact**.
+The refined research policy is retained as a compact **640,719-byte** `refine-v3/policy.npz`, with identical
+parameter arrays and a source/compact SHA-256 receipt. It is a losing research checkpoint, not a promotion.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
