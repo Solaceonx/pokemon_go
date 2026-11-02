@@ -192,6 +192,28 @@ and updates its experiment fingerprint. Two unit tests pass; a real multiprocess
 is still required before a strength trial. No strength result from this variant is claimed.
 Full suite: **305 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
 
+**Counterfactual pilot stopped at round eight:** 512 games. Stochastic validation fell to
+**13.28%, CI [9.38%, 17.19%]**; greedy fell to **20.70%, CI [16.02%, 25.39%]**. The paired greedy
+change from initialization is **-12.11 points, CI [-19.14, -4.69]**. Both modes deteriorated; this
+method did not help, and the verified parent/three workers were stopped after saving round eight.
+Its unchanged initialization remains its best. All 512 episodes pass the split/seed audit: 749 distinct
+training trios, zero overlap with 194 validation trios, contiguous indices; final test unopened.
+
+**Full-engine actor pretraining completed:** `engine-bc-v1`, 16 epochs on the audited 67,043 examples.
+Weights and optimizer are finite; critic weights are bit-identical to initialization. Training agreement
+at epoch 16 is 84.43% for actions, 84.41% for shields and 71.81% for replacements. These are training
+fit diagnostics, not strength scores. Epochs **4 and 16** are registered as the two validation candidates,
+with the existing 32.81% PPO policy retained as another option. Exported candidates preserve all
+network weights and explicitly reset optimizer moments before the next RL method.
+
+The terminal-return PPO variant's real multiprocessing pipeline now passes train/validate/lock/test.
+All **295** saved worker return labels are exactly terminal game rewards; all five registered source
+hashes match. Its four two-pairing final scores were 25%, 50%, 50%, 25%, and its strength verdict is
+false. The tiny run is a functional check only (`monte_carlo_pipeline_check.json`). Epoch-four
+validation is now running as `mc-bc4`; `mc-bc16` is prepared and queued to start only after that pool
+closes normally. Both use the full frozen engine, the same 128 development pairings and both inference
+modes. Their commands stop after validation, leaving the substantial final strength test unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

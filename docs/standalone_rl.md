@@ -186,8 +186,9 @@ when starting a new method. Do not run a second pool alongside an existing three
 `scripts/monte_carlo_rl.py` exposes the same prepare/train/run/lock/test CLI as the original driver,
 with complete terminal-return PPO advantages (gamma=1, lambda=1). It registers its extra source hash
 and estimator in a separate experiment; spawned workers use the same estimator. Historical runs
-keep their original source fingerprints. This variant needs its real pipeline check before use in
-a strength trial. It uses the same standalone deployment checkpoint format.
+keep their original source fingerprints. The real pipeline check now passes, including 295 saved
+worker return labels equal to terminal rewards and all four tiny final blocks; the tiny strength
+verdict is false. It uses the same standalone deployment checkpoint format.
 
 An additional initialization trainer can use full-engine demonstrations already collected on the
 training partition. It updates actors only and does not select a checkpoint or open evaluation:
@@ -199,8 +200,10 @@ python scripts/pretrain_engine_policy.py train --run engine-bc-v1 --start runs/s
 Each epoch saves `round_*.npz`; the next invocation resumes from the committed epoch and verifies
 the source/data/initialization hashes and optimizer settings. Critic weights remain unchanged. The
 saved training agreement is a fit diagnostic, not a strength estimate. Evaluate candidate epochs with
-the standalone validation protocol, then continue RL from a selected candidate. No real-data
-pretraining or strength gain is claimed yet. Do not launch it alongside three existing battle workers;
+the standalone validation protocol, then continue RL from a selected candidate. The first real-data
+fit completed 16 epochs; epochs 4 and 16 are being validated, with no strength gain claimed yet.
+Candidate exports preserve weights and reset optimizer moments for the next method. Do not launch
+pretraining alongside three existing battle workers;
 on Windows the background launcher accepts `-EntryScript scripts/pretrain_engine_policy.py -Command train`.
 
 ## Draft PR #10 review
