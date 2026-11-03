@@ -583,6 +583,15 @@ contiguous indices and valid outcomes. The 7,750 distinct training trios have ze
 hashes match. `mc3_training_audit_round72.json` records the checks. This verifies the growing
 training dataset's partition/provenance, not a strength gain; final-test data is still unopened.
 
+**PPO round eighty (2026-11-03 05:35 UTC): new selected point estimate, not an established gain.**
+After 20,480 training games, greedy validation is **37.50%, CI [32.42%, 42.58%]**; stochastic is
+**29.10%, CI [24.22%, 34.18%]**. The mean-only checkpoint rule now selects greedy round 80.
+Its paired change from round 24 is **+0.39 points, CI [-6.05, 6.84]**, which does not establish a
+gain or reliable wins. The finite weights/optimizer and exact validation fingerprint are bound in
+`mc3_progress_round80.json`. An immutable `mc-ppo-v3/selected_round_00080.npz` is saved/published
+for deployment/reproduction; its metadata records greedy mode. The lower-weight trial keeps its
+prospectively fixed round-24 initialization; no starting weights or settings are changed in flight.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
