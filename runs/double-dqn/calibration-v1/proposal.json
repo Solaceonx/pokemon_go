@@ -1,0 +1,69 @@
+{
+  "status": "prepared_unmeasured_not_started_not_queued",
+  "absolute_deadline_unix": 1793745649.6650429,
+  "maximum_hours": 2,
+  "activation": "Only after relational-v1 and residual-v1 complete below target, with the numerical worker free and enough original budget",
+  "reference_sha256": "d2884905f82e515e8b83efe48b6bafce96f1ff3a6803f8f8c89c646fae2f0c49",
+  "training_inputs": {
+    "matched_controls": 900,
+    "positions_per_round": 300,
+    "new_rollout_collection": false,
+    "source": "counterfactual-v4",
+    "rounds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "fit": {
+    "fit_ties": "Fewer changed decisions, then smaller bias norm",
+    "coordinates": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8
+    ],
+    "seed": 38701,
+    "penalties": [
+      0,
+      0.25
+    ],
+    "standard_deviations": [
+      0.025,
+      0.05,
+      0.1,
+      0.2,
+      0.4
+    ],
+    "candidate_count": 5001,
+    "unchanged_parameters": "All arrays except output bias p5",
+    "draws_per_scale": 1000,
+    "objective": "Mean paired single-callback terminal-return advantage minus penalty times fraction of changed reference choices"
+  },
+  "selection": {
+    "rule": "Maximum score; reference, then unpenalized wins ties",
+    "opponent_samples": 32,
+    "duplicates": "Exact bias-offset duplicates reuse the earlier report; selection retains the earlier variant on ties",
+    "seed": 38711,
+    "pairs": 64,
+    "split": "validation",
+    "variants": [
+      "reference",
+      "unpenalized",
+      "penalized"
+    ]
+  },
+  "confirmation": {
+    "opponent_samples": 32,
+    "seed": 38712,
+    "split": "validation",
+    "only_selected": true,
+    "pairs": 128
+  },
+  "proxy_is_not_whole_policy_strength": true,
+  "inference": "Unchanged public-state neural Agent; learned output bias stored inside ordinary weights",
+  "final_tests_enabled": false,
+  "strength_result": null
+}

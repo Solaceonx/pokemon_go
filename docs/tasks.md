@@ -91,7 +91,9 @@ switching; no second training worker has started. The first two paired-return ca
 the initial policy. All 900 training controls matched; the source inputs are ready for the unstarted residual trial.
 An unstarted residual-return follow-up can reuse the first three complete training batches; its plan
 requires a free worker after the current serial chain and fresh selected-setting validation.
-Current checks: 305 tests (7 optional video skips),
+An output-bias calibration follow-up is also prepared but unstarted/unqueued, conditional on those trials
+remaining below target with budget left; it reuses the same training labels and reserves fresh validation.
+Current checks: 307 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

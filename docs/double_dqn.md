@@ -211,6 +211,18 @@ The serial successor then started the shared-encoder trial from immutable follow
 `relational-v1/trial_state.json` and `runs/relational-v1-followup.out`/`.err` for progress. It still has no
 strength result. The residual follow-up remains unstarted and unqueued.
 
+`calibration-v1` is another prepared, unstarted/unqueued follow-up, conditional on the shared and residual
+trials finishing below target with budget and a worker free. `pogo/dqn_calibration.py` searches six output-bias
+differences while keeping all other weights fixed. Its training proxy is the mean collected single-callback
+terminal-return gain minus a changed-choice penalty; this does not estimate the strength of changing the
+whole policy. `calibration-v1/proposal.json` fixes 5,001 candidates (zero plus 1,000 normal draws at each of
+five scales), seed 38701, penalties 0/0.25, and the same three complete training batches. Reference and both
+fits screen on 64 full-engine32 validation pairings, seed 38711; only the selected policy confirms on 128
+fresh pairings, seed 38712. Exact offset duplicates reuse the earlier report and lose selection ties.
+`scripts/dqn_calibration_trial.py` saves the learned biases directly inside ordinary network weights, so
+inference remains the same public-state Agent. The immutable runtime is `harness/calibration-v1`; an outer
+controller is required before launching it, to enforce its two-hour cap and the original overall deadline.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the

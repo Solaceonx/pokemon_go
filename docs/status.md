@@ -467,6 +467,20 @@ confirmation, and supplies no established gain relative to a different-seed earl
 under its original persistent one-hour clock, ending at 01:58:04 UTC; this clock includes the internal
 validation as preregistered. No settings, candidate count or validation sample size changed.
 
+**Output calibration prepared, no new strength result.** A smaller follow-up tests whether six learned
+output-bias differences can exploit the existing full-game counterfactual labels while avoiding changes
+to all hidden weights. Its single-callback return-gain proxy is explicitly not a whole-policy strength
+estimate. The fixed plan uses the same 900 training positions, seed 38701, 5,001 offset candidates across
+five scales, and changed-choice penalties 0/0.25. Reference and both fitted policies screen on 64 full-engine32
+validation pairings, seed 38711, followed by selected-only 128-pair confirmation on seed 38712. All other
+network parameters remain identical; inference uses the ordinary saved neural weights, without new rules.
+The proposal/source manifest and immutable runtime are prepared, but the trial is **not started or queued**.
+It must wait for both the current shared-encoder chain and residual trial to finish below target, with a
+free worker and enough original budget. Unit checks show that fitting can find a profitable labelled
+choice, a strong change penalty can retain the reference, no-signal ties retain zero offsets, and changes
+are confined to the output bias. Full checks pass **307 tests (7 optional video skips)** and **108/108
+PvPoke battles**; software checks establish no playing-strength gain. The active RL runtime is unchanged.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
