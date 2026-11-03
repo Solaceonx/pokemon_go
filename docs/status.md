@@ -704,6 +704,21 @@ exactly. The first started test schedule also passes team/seed separation; all f
 be checked after completion. `mc3_final_training_audit.json` records every checkpoint/batch hash
 and the initialization reference. No inference, training or scoring source was changed.
 
+**First complete final block (2026-11-03 15:05 UTC), mixed seed 0:** 1,200 independent pairings /
+2,400 battles give **35.06% battle score, bootstrap 95% CI [33.35%, 36.77%]**. Wins/draws/losses
+are 829/25/1,546; a draw counts one half. The one-sided 97.5% Hoeffding lower bound is **31.14%**.
+This block fails the preregistered primary gate. The other three blocks continue with the same
+locked policy, seeds, source and sample plan; the complete evaluation is not finished.
+
+`scripts/audit_standalone_final.py` now provides a read-only audit of completed blocks. It recomputes
+scores from winners in both seats, reproduces statistics using the evaluator's schedule-derived
+bootstrap seed, checks its original schedule-serialization convention, regenerates frozen schedules
+exactly, verifies the model/source pins and rejects training/validation trio or seed overlap. The
+first block passes these integrity checks (`final_block_mixed_0_audit.json`); its weak score is unchanged.
+The auditor changes no policy, training or evaluation source. Four new guard tests cover both seats
+and draws, incorrect seat scores, duplicate indices and inconsistent statistics. **340 tests OK
+(7 video skips), 108/108 PvPoke exact**. Raw logs and lineage caches remain saved locally.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

@@ -4,11 +4,12 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 13:47 UTC):** training stopped after 120 rounds / 30,720 games.
+**Current status (2026-11-03 15:05 UTC):** training stopped after 120 rounds / 30,720 games.
 The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
 scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
-locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`, and **9,600 final battles are running** on two
-fresh seeds and the held-out mixed/standard fields. Sources, mode, sample count and weights are fixed.
+locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mixed-field battles score
+**35.06% (95% CI 33.35–36.77%)**, failing that primary block's gate. The other three blocks of the
+**9,600-battle final plan are running**. Sources, mode, sample count and weights are fixed.
 `final_protocol_locked.json` records the lock and original deadline before the first complete test block.
 Three evaluation workers were verified at BelowNormal priority with one thread each. No training or
 selection follows test results. The handoff controller completed normally and no side jobs remain.
@@ -141,6 +142,17 @@ and representative checkpoints; do not commit every training batch or all interm
 - `demo_*.npz`: the opponent's public action examples, with no hidden-move identity or hidden team.
 - `validation_schedule_*.json`, `validation_summary_*.json`: selection schedules and scores.
 - `lock.json`, `test_plan.json`, `test_schedule_*.json`, `test_results.json`: final protocol and result.
+
+Recheck completed final blocks with the read-only auditor (raw pairing logs and the recorded lineage
+cache must remain available locally):
+
+```sh
+python scripts/audit_standalone_final.py --run mc-ppo-v3 --output runs/standalone-rl/final_evaluation_audit.json
+```
+
+Add `--require-complete` to reject a partial evaluation. The auditor checks winner/seat scores,
+registered bootstrap statistics, source/checkpoint pins, regenerated schedules, team/seed separation
+and the final reliability verdict. It plays no battles and modifies no policy or evaluation inputs.
 - `validation_*.jsonl`, `test_*.jsonl`: append-only pairing outcomes with resume provenance.
 
 Use a saved policy directly:
