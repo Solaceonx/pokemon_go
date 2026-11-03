@@ -225,8 +225,8 @@ fits screen on 64 full-engine32 validation pairings, seed 38711; only the select
 fresh pairings, seed 38712. Exact offset duplicates reuse the earlier report and lose selection ties.
 `scripts/dqn_calibration_trial.py` saves the learned biases directly inside ordinary network weights, so
 inference remains the same public-state Agent. The immutable runtime is `harness/calibration-v1`; the guarded
-launcher enforces its two-hour cap and the original overall deadline. Use this run's `launch.json` and
-`state.json` plus its recorded attempt stdout/stderr paths for current progress; no completed strength result yet.
+launcher enforced its two-hour cap and the original overall deadline. It retained the unchanged reference,
+which freshly confirmed at20.5078125% ±4.4961305 points on128pairings,seed38712. Its full evidence is saved.
 
 That launcher is now prepared as immutable `harness/launch-v1/scripts/run_dqn_research.ps1`, supporting
 only `-Run residual-v1` and `-Run calibration-v1`. `-CheckOnly` performs a read-only eligibility check;
@@ -236,10 +236,11 @@ The launcher preserves attempt logs and the original saved two-hour cap on recov
 and start instant, and enforces the overall deadline. Launch it hidden when using Start-Process. This
 preparation does not queue or start another worker.
 
-## Full-engine teacher study, prepared only
+## Full-engine teacher study
 
-`teacher32-v1/proposal.json` records a conditional stronger-teacher study. Its implementation and readiness
-receipt are now available, while the original proposal stays unchanged. `scripts/dqn_teacher32_trial.py`
+`teacher32-v1/proposal.json` records the stronger-teacher study now collecting data after all parent trials
+finished below target and their processes exited. Its original design record/readiness receipt stay
+unchanged. `scripts/dqn_teacher32_trial.py`
 records both full frozen engine32 players through the existing public-state Agent wrapper on training
 compositions. It collects at most 1,000 whole games or a persistent two-hour clock, saves every 25 games
 and at the ordinary cutoff, and seals the resulting dataset hash. Whole games finish before a normal
@@ -254,9 +255,11 @@ across recovery, and no final-test compositions are available from this entrypoi
 The numerical snapshot is immutable `harness/teacher32-v1`. The separate guard is
 `harness/launch-teacher32-v1/scripts/run_teacher32_research.ps1 -Run teacher32-v1`; `-CheckOnly` is read-only.
 It accepts only this run, requires complete below-target parent confirmations and exited prior processes,
-and enforces a saved six-hour cap inside the unchanged overall deadline. It has correctly refused the
-live calibration worker. No job is queued or started; use it hidden only after the activation conditions
-are met. Stand-in tests passed, but no real full-engine collection canary or strength measurement exists.
+and enforces a saved six-hour cap inside the unchanged overall deadline. It refused the live calibration
+worker during preparation, then passed eligibility after that worker/controller exited. The study started
+at05:12:08UTC. Use `teacher32-v1/launch.json`, `state.json`, `collection_progress.json` and their attempt log
+paths for current progress. First real full-engine games are completing; no learned-policy strength result
+exists yet. No further job is queued. The overall deadline remains22:40:49UTC.
 
 ## Final evaluator and locked evidence
 

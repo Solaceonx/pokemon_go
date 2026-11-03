@@ -602,6 +602,25 @@ retain the evidence. The reserved selected-only **128-pair fresh confirmation, s
 Positive training-only proxy gains did not improve this selection result; no calibration strength gain or
 reliable win is claimed. The stronger-teacher implementation remains prepared but unstarted and unqueued.
 
+**Output calibration fresh confirmation completed — 2026-11-03.** The unchanged selected reference scored
+**20.5078125% ± 4.4961305 points**, interval **16.0116820–25.0039430%**, on **128 mirrored pairings /
+256 battles**, seed **38712**, full engine32. Calibration selected neither learned offset model and produced
+no improvement. The raw pairing scores/folds, model hashes, compact parameter identity, all **43 runtime
+source files** and all **95 baseline files** were verified. The compact reference has the same 640,682-byte
+contents/SHA-256 as residual-v1's export (`348b0051148f27570bb8eeb4ace3792a6fb96ce2974962385aa6d1316728c313`).
+`calibration-v1/confirmation_artifacts.json` binds the evidence. This is a validation loss, with final tests
+still unopened and the reliable-win target unmet.
+
+Both calibration processes exited, then the new guarded **teacher32-v1** study began at **05:12:08 UTC**.
+Its one numerical worker imports immutable `harness/teacher32-v1`; the original proposal, source receipts
+and all parent confirmations were checked before launch. Full-engine selfplay collection is now active;
+the first six complete games produced 533 public-state teacher decisions in memory without interface
+errors. This is collection liveness, not a learned-policy strength result. Ordinary atomic checkpoints
+are every 25 games and at the normal collection cutoff. The saved two-hour collection cutoff is
+**07:12:08.517884 UTC** (checked between complete games), and the outer six-hour hard cap is
+**11:12:08.2957767 UTC**, both inside the unchanged **22:40:49 UTC** overall deadline. Exact live
+identities, log paths and deadlines are in `teacher32-v1/launch.json`/`state.json`. No further job is queued.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

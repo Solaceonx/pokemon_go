@@ -1,0 +1,89 @@
+{
+  "status": "registered_before_collection",
+  "activation": "Only after residual-v1 and calibration-v1 complete below target, a worker is free, and original budget permits",
+  "absolute_deadline_unix": 1793745649.6650429,
+  "maximum_total_hours": 6,
+  "baseline_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "reference_policy": "relational-v1/policy.npz",
+  "reference_sha256": "455420b0500ef581093811495477e5cab71eeb2c1a36ac0661efc8404eaa1fd3",
+  "collection": {
+    "old_data_unchanged": true,
+    "maximum_hours": 2,
+    "clock": "Persistent deadline checked between complete games; commit all completed games at cutoff",
+    "seed": 38801,
+    "maximum_games": 1000,
+    "teacher_samples": 32,
+    "both_players": "Frozen engine32, independent evaluator cache per player/game",
+    "teams": "Both training composition fold only",
+    "capacity": 200000,
+    "observations": "Existing public-state Agent recorder",
+    "checkpoint_every_games": 25,
+    "minimum_retained_decisions": 4096,
+    "new_data_path": "teacher32-v1/demonstrations.npz"
+  },
+  "fit": {
+    "rate": 0.0001,
+    "epochs": 20,
+    "weights": "Inverse square-root action frequency, normalized then clipped .25..4; tie corresponding bench-action frequencies",
+    "reset_optimizer": true,
+    "initialization": "Identical-parameter shared encoder from the reference compact policy",
+    "batch": 256,
+    "seed": 38802,
+    "objective": "Balanced masked cross entropy, temperature .1"
+  },
+  "rl": {
+    "train_samples": 32,
+    "epsilon_decay": 20000,
+    "epsilon": 0.03,
+    "internal_validation_seed": 38031,
+    "maximum_hours": 1,
+    "nstep": 3,
+    "internal_validation_samples": 32,
+    "save_every": 25,
+    "rate": 0.0001,
+    "demo_margin": 1,
+    "target_every": 500,
+    "epsilon_min": 0.005,
+    "reset_optimizer_before_rl": true,
+    "seed": 38803,
+    "eval_every": 1000000,
+    "clock": "Persistent wall clock including trainer internal bootstrap validation",
+    "updates": 4,
+    "engine_share": 1,
+    "internal_validation_pairs": 64,
+    "batch": 128,
+    "mc_share": 0.25
+  },
+  "selection": {
+    "pairs": 64,
+    "rule": "Maximum score, earliest listed candidate wins ties",
+    "split": "validation",
+    "opponent_samples": 32,
+    "variants": [
+      "reference",
+      "teacher32_fit",
+      "last_complete_rl_endpoint"
+    ],
+    "seed": 38811
+  },
+  "confirmation": {
+    "pairs": 128,
+    "seed": 38812,
+    "only_selected": true,
+    "opponent_samples": 32,
+    "split": "validation"
+  },
+  "final_tests_enabled": false,
+  "strength_result": null,
+  "note": "Conditional proposal only; implementation and source receipt required before any data collection. Data cutoff is independent of game outcomes; no held-out test tuning.",
+  "proposal_sha256": "2c1b232b6666962bfed7e7301cf46578b52b4e922baba9931cbb5f441f30a63a",
+  "source_sha256": {
+    "scripts\\dqn_teacher32_trial.py": "acf7189ad786c0d1918257b0f6c462af53aae982958bf4029509c390caa26027",
+    "scripts\\dqn_relational_trial.py": "58ae0410788f681dbbe5c2f7e3d94389f8c61a064178832f74aaa9b938e903cc",
+    "scripts\\double_dqn_relational.py": "e9d470ebcb2a45f1075dbb1e799cdd05593f6f5e36a52ce134e8b577c5dcf4c1",
+    "scripts\\double_dqn.py": "cac12aacf90a95c4b3fd83d9ae8f8e1d06cb1130d706a0ff049aa5e28b928d30",
+    "pogo\\dqn.py": "64bbc88ab5d77aa7cb3e66f243dc08cbffdae99792bc968a94e9b24dc046a640",
+    "pogo\\dqn_relational.py": "ba24048f291f5d576bbdad1b9e70b4321c098ac740064fa3a7fb674357707452",
+    "pogo\\counterfactual.py": "a5831f24508d93c28942ea328260fc0e06db7f48bc77231478f1dc1288795b37"
+  }
+}
