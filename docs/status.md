@@ -762,6 +762,15 @@ with the same data, objective, initialization and hyperparameters, and corrected
 outcome was used to change it. The current registration is `offline_returns_plan.json`, with the first
 registration preserved as `offline_returns_plan_v1.json`.
 
+**Corrected offline run is validating (2026-11-03 17:08 UTC):** v2 completed the same four epochs /
+4,652,688 row presentations in 29.6 seconds. Every parameter and optimizer moment is bit-identical
+to the unmeasured v1 candidate; both are finite, and data/hyperparameters are unchanged
+(`offline_returns_retry_audit.json`). Its actual 128-pair greedy validation is now running.
+The original locked benchmark remains unchanged. Two original workers plus one offline-validation
+worker were verified at BelowNormal priority, configured for one NumPy thread each, with one OS
+thread observed per worker (`offline_returns_resource_audit.json`). The corrected controller is live;
+the original three-worker allocation will be restored if validation fails its fixed gate.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

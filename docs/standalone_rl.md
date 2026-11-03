@@ -12,7 +12,7 @@ locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mi
 Both primary gates fail; the two standard-field blocks of the **9,600-battle final plan continue**.
 Sources, mode, sample count and weights are fixed.
 `final_protocol_locked.json` records the lock and original deadline before the first complete test block.
-Three evaluation workers were verified at BelowNormal priority with one thread each. No training or
+Three original evaluation workers were initially verified at BelowNormal priority with one thread each. No training or
 selection follows test results in this locked run. Its earlier handoff controller completed normally.
 Earlier capacity, correction, ensemble and rollout trials below are historical negative results.
 Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE description below applies
@@ -20,7 +20,9 @@ to earlier runs. The full final result is pending. One separate, bounded offline
 registered in `offline_returns_plan.json`, with validation-only qualification and fresh final seeds if
 qualified; it does not retrain or reselect the original locked policy.
 Its first launch fitted but failed at the validation-call interface before any strength measurement;
-the corrected, separately registered run is `offline-returns-v2`, with unchanged fitting settings.
+the corrected, separately registered run is `offline-returns-v2`, now validating with unchanged fitting
+settings and parameters identical to that unmeasured attempt. The current shared allocation is two
+original test workers plus one offline-validation worker, within the same three-worker cap.
 
 ## What is being trained
 
