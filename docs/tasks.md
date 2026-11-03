@@ -115,6 +115,10 @@ validation-only12-game canary completed and exact compact parameters/hashes veri
 worker27444 now runs three fixed1,000-pairing full-engine held-out blocks under guard26776 and the
 original deadline. Policy/source/data/samples are locked; no further training or selection is allowed.
 All hashes and the Windows BelowNormal priority correction are in budget-finalization-v1 receipts.
+First held-out block mixed38091 completed1,000pairs/2,000games at33.575000%±1.8167874points(95%),
+CI31.7582126–35.3917874: a clear loss, so the reliable-win target fails for this policy. All raw
+draws/folds/seeds/sides/scores, runtime/baseline and compact hashes verified independently. Remaining
+mixed38092 and standard38091 blocks continue unchanged under the original deadline; full verdict pending.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
 validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.

@@ -834,6 +834,23 @@ this freshly verified own process was lowered to **BelowNormal**, without source
 sample or deadline changes. `production_priority.json` records before/after. The original22:40:49UTC
 deadline remains fixed; the reliable-win target is unproven.
 
+**First held-out block completed — 12:19 UTC.** The locked policy scored **33.575000% ± 1.8167874
+points**,95% interval **31.7582126–35.3917874%**, on **1,000 independent mirrored pairings /2,000
+battles**, mixed-field **test seed38091**, against the unchanged full engine32. This is a clear
+held-out loss; the first mixed lower95 gate fails, so this policy cannot meet the predeclared
+reliable-win target. The remaining mixed38092 and standard38091 blocks nevertheless continue with
+the same policy, hashes and original1,000-pair counts. No selection or tuning follows this outcome.
+
+The complete raw journal, exact team draws, both test-composition folds, all game seeds/player sides,
+scores and confidence calculations were checked independently. All45 numerical runtime files,95
+baseline files, selected full-to-compact parameters and the global lock remain intact.
+`mixed_38091_artifacts.json` binds the verified evidence; journal SHA-256
+`f1c35303aa5751d3f453a3e40aebdfe382e9b36c8b15e06f4b46039e7fd64d80`, summary SHA-256
+`2df568c01de18b385b435a2fac30c5bc93ec8056424b741e6ffdacc7fbb2e7d5`.
+Production worker27444/guard26776 remain healthy, with unchanged22:40:49UTC overall deadline.
+The complete three-block verdict is pending; this completed block is a result, not permission
+to change the candidate or stop the declared samples early.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
