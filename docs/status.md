@@ -495,6 +495,16 @@ preregistered mean-only screen rule, so the independent 128-pair confirmation st
 The main PPO continues on two workers; all three are BelowNormal. No claim of a gain or reliable wins
 is made from the screen, and substantive final-test data remains unopened.
 
+**Greedy-rollout independent confirmation (2026-11-03 01:20 UTC): target not met.** On the
+preregistered fresh seed, 128 pairings/256 battles score **36.33%, CI [30.86%, 41.41%]**. All nine
+sources and the registered seed/settings match. Every battle used independent search: **7,470 searches,
+81,676 rollouts and 15,356,809 simulated turns**. `greedy_rollout_confirmation_audit.json` binds the
+pairing log, opponent model and decision. The inconclusive screen gain does not establish reliable
+wins, and this fixed rollout candidate does not trigger an early switch to final testing.
+The controlled trial is closed; its controller is waiting for the next committed PPO checkpoint to
+restore all three training workers. The main selected checkpoint is still round 24 at 37.11%; the
+original deadline and twelve-hour final-test reserve remain in force.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

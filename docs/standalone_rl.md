@@ -197,7 +197,9 @@ confidence 1.0, selected PPO round 24 and the frozen BC16 opponent. See
 `runs/standalone-rl/greedy_rollout_plan.json` for the matched 32-pair screen and conditional fresh-seed
 128-pair confirmation. The four-battle functional pipeline passed. The screen scored 35.94%
 (95% CI 25.00–46.88%) versus its matched neural-control 28.91%, a paired change of +7.03 points
-([-7.81, 22.66]). This is inconclusive; the preregistered fresh-seed confirmation is running.
+([-7.81, 22.66]). The preregistered fresh-seed 128-pair confirmation then scored **36.33%**
+(30.86–41.41%), failing the reliable-win threshold. This fixed candidate does not trigger an early
+switch to final testing; see `greedy_rollout_confirmation_audit.json`.
 The actual paired-worker test checks
 greedy continuations for both simulated sides. This is independent learned-policy simulation, with
 no Planner/Learner/Engine call inside the agent.
