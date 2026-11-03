@@ -4,6 +4,17 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
+**Current status (2026-11-03 07:52 UTC):** the reliable-win objective is not achieved. The main
+complete-return PPO run's latest validation is round 88 / 22,528 training games. Its selected greedy
+round-80 checkpoint scores 37.50% on validation (95% pairing-bootstrap CI 32.42–42.58%). Round 88
+scores 36.33% and does not replace it. The selected immutable export is
+`runs/standalone-rl/mc-ppo-v3/selected_round_00080.npz`. The lower-weight correction trial is at
+round eight, with greedy score 31.64% (26.95–36.33%) and no gain; the fixed round-12 endpoint
+continues. Two main workers and one side worker remain active.
+Only `run_low_ce_trial.ps1` is the active handoff controller. Earlier capacity, ensemble and rollout
+trials below are historical results. Final tests remain unopened. Main PPO currently uses gamma=1,
+lambda=1 complete terminal returns; the .98 GAE description below applies to the earlier runs.
+
 ## What is being trained
 
 `pogo/standalone_rl.py` contains the public feature encoder, runtime player and first shared-network prototype.

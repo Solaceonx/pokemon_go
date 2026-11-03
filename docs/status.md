@@ -592,6 +592,24 @@ gain or reliable wins. The finite weights/optimizer and exact validation fingerp
 for deployment/reproduction; its metadata records greedy mode. The lower-weight trial keeps its
 prospectively fixed round-24 initialization; no starting weights or settings are changed in flight.
 
+**PPO round eighty-eight (2026-11-03 07:27 UTC): no new selected checkpoint.** After 22,528
+training games, greedy validation is **36.33%, CI [31.25%, 41.41%]** and stochastic is **26.95%,
+CI [22.07%, 31.84%]**. Round 80 remains selected at 37.50%. The paired greedy change from that
+selected checkpoint is **-1.17 points, CI [-7.81, 5.47]**. Complete 128-pair records, checkpoint
+fingerprints, finite parameters/optimizer and all five registered source hashes were verified;
+`mc3_progress_round88.json` records the result. Final tests remain unopened. The bounded lower-weight
+correction trial has reached its round-eight validation. Regression checks were repeated:
+**333 tests OK (7 video skips), 108/108 PvPoke exact**. PR #10 still has the reviewed head.
+
+**Lower-weight correction round eight (2026-11-03 07:52 UTC): no gain.** After 1,024 training
+games, greedy validation is **31.64%, CI [26.95%, 36.33%]** and stochastic is **20.90%,
+CI [16.41%, 25.39%]**. Against the unchanged initialization, paired changes are **-5.47 points,
+CI [-11.33, 0.59]**, and **-6.05 points, CI [-11.72, -0.20]**, respectively. These are exploratory
+comparisons, not fresh-seed final results. The initial greedy checkpoint remains selected at 37.11%.
+`low_ce_validation_round8.json` binds the complete records to the checkpoint and matching eight
+source hashes; parameters and optimizer are finite. The fixed round-12 endpoint continues without
+changing settings. No final test has been opened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
