@@ -3696,3 +3696,9 @@ that the Morpeko rule and the size limit hold. 266 tests pass; PvPoke 108 of 108
 On the website the engine's searches get about twice as fast, so fewer are cut short by the time limits: live play changes
 (more imagined battles finish in time), so `scripts/release_check.py` has to pass again before a build. It was not run here
 (it calls `nice`, which Windows does not have). Not measured: speed and memory in the browser.
+
+**Merged and published 2026-11-03 (the owner's yes).** The caches are capped at 15,000 entries each (about 25 MB, for phones; the
+size changes only the speed). Release check on the owner's Mac, commit b8e7318 (`runs/bench/release.json`): passed; searches
+median **66 ms** (was 183), 99th percentile **245 ms** (was 477), **0% cut short** (was 11.3%), no fallbacks; crowd 69.0% ± 6.4
+against the trained bot's 66.5% ± 6.5. The website build ran a game against the engine in the browser without errors (site
+commit 31ec8c4). Browser speed and memory are still not measured.
