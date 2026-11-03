@@ -3669,6 +3669,47 @@ disagree: rulebook 67%, trained bot 58%, `matching` 47%, engine 36%. Where the e
 choice matches the owner no better than chance (42% against 38%), so the earlier "staying in when a switch wins" finding, which came from it, is not
 supported. Website exam for friends: `exam.html`; `import_played.py --store` files their answers in `runs/exam/answers/` (not in git).
 
+A second, stronger player (top 30 in the world several times) took the whole exam, 2026-11-02 (`docs/benchmarking.md`): rulebook 56%, trained
+bot 58%, engine 56%, `matching` 44% (±16). After 26 answers the engine led at 65%; the last ten removed it. The two players give the same answer on
+26 of 36. On those 26 the rulebook plays it 69%, the trained bot 65%, the engine 50%, `matching` 46%; where the engine overrides the trained bot
+there, both players side with the trained bot 7 to 3. The engine's misses on them: 4 switches where both stay in, 3 unshielded hits both shield,
+3 farms where both throw, 2 throws where both farm. The play-out judge matches the second player 31%. Sure answers repeat for both players
+(5 of 5 pairs); answers given as leaning do not.
+
+## Faster play-outs: exact caches for duels and the shield rule's play-outs (2026-11-02, Marco): about 2× faster, the same games
+
+Profiling self-play at the website's settings (task 39's games, cProfile) put about 55% of the time in the play-outs of the
+rest of the visible battle that `Planner.shield` runs for each option (`_play_out` with `_rollout` players; reached from the
+trained bot's shield prompts and from `_doomed`, which asks its own shield advice while planning a throw), and about 20% in
+one-on-one `duel`s for outlooks. Both use fixed dice (seed 0) and players that keep nothing between battles, so the result
+depends only on the starting position, and inside the engine's imagined battles the same positions come up again and again:
+86-90% of duels and 73-79% of play-outs were repeats. `pogo/agents.py` now caches both, keyed by every Pokémon's full state
+(build, health, energy, stat stages), shields, switch waits and the Morpeko rule (which `scripts/check_pvpoke.py` switches
+off), up to 50,000 entries each (about 85 MB when both are full); `PLAYOUT_CACHE = False` turns it off.
+
+The same 6 self-play games (task 39's first-round seed, games 10-15, the website's settings with no clock), on Marco's PC
+with task 39's job busy on 16 other threads: 14.0 CPU seconds a game before, 6.6 after (2.1×), and every logged move, winner
+and turn count identical. A prototype on 7 other games gave 2.1× and 3.0×. `tests/test_playout_cache.py` plays the same games
+with and without the cache for the trained bot, the rulebook and the engine, and checks that a hit equals a fresh play-out and
+that the Morpeko rule and the size limit hold. 266 tests pass; PvPoke 108 of 108.
+
+On the website the engine's searches get about twice as fast, so fewer are cut short by the time limits: live play changes
+(more imagined battles finish in time), so `scripts/release_check.py` has to pass again before a build. It was not run here
+(it calls `nice`, which Windows does not have). Not measured: speed and memory in the browser.
+
+**Merged and published 2026-11-03 (the owner's yes).** The caches are capped at 15,000 entries each (about 25 MB, for phones; the
+size changes only the speed). Release check on the owner's Mac, commit b8e7318 (`runs/bench/release.json`): passed; searches
+median **66 ms** (was 183), 99th percentile **245 ms** (was 477), **0% cut short** (was 11.3%), no fallbacks; crowd 69.0% ± 6.4
+against the trained bot's 66.5% ± 6.5. The website build ran a game against the engine in the browser without errors (site
+commit 31ec8c4). Browser speed and memory are still not measured.
+
+**2026-11-03, the owner's yes:** the website's decision review now says it is the simulator's opinion, which two strong players' exam
+answers do not support (site commit a5d78bb; built with `--unchecked`, a caption change only, after the release check above).
+**A higher bar for the engine's switches, screened on the exam** (`scripts/exam_variants.py`, `docs/benchmarking.md`): `switch_edge=0.1`
+changes 6 of 35 picks and lifts agreement where both players agree from 48% to 60% (12 to 15 of 25); 0.02 and 0.05 change almost
+nothing, `stay_after_replace` nothing. Against bots keep-the-switch settings have lost (task 35; 0.01–0.02 on the fixed code).
+Not adopted: it goes into exam 2 as a version, for fresh positions.
+
 ## Training the engine on its own games (task 39, 2026-11-02, Marco): built and timed
 
 `scripts/engine_loop.py` does the brief. Each round plays E_{r-1} against itself on the mixed field (the website's settings: 32
