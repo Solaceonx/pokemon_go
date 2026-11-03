@@ -395,6 +395,8 @@ the global policy lock, matching complete validation canary, raw journals, selec
 compact package, and immutable runtime/baseline files. It reconstructs exact draws/seeds/sides, checks
 both team folds, recomputes clustered confidence intervals and the fixed win criterion, and verifies
 hashes and parameter identity. It writes only a small `audit.json`, binding its own source hash too.
+Scoped `.gitattributes` rules preserve original experiment JSON/log bytes; do not normalize their line
+endings, because the protocol and receipts bind their exact saved SHA-256 hashes.
 `evidence_verified=true` means the completed saved experiment is consistent; the separate
 `strength_target_met` field decides whether it won reliably. A consistent loss still has that field false.
 The checker rejects partial evidence and has synthetic validation-journal corruption coverage. It also

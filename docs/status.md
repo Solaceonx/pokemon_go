@@ -910,6 +910,14 @@ Required final checks passed: **317tests,7optional video skips;108/108 PvPoke ba
 (`runs/final-verdict-tests.out`, `runs/final-verdict-pvpoke.out`). Task38 is stopped after completing
 its prescribed benchmark; the reliable-win goal remains unmet. No promotion, merge or deployment.
 
+**Publication integrity correction.** Windows `core.autocrlf` had normalized committed JSON/log bytes,
+although the original local receipts, runtime, data and measurements remained intact. Scoped
+`.gitattributes` rules now preserve this experiment's original artifact bytes. All235tracked experiment
+artifacts were compared byte-for-byte with the Git index;225existing artifact changes were independently
+confirmed to be line endings only. Original protocol, allocation, policy and verdict hashes are unchanged,
+and the complete verdict audit still passes. `budget-finalization-v1/git_byte_preservation.json` records
+the check. No ignored demonstration, replay, raw journal or large checkpoint was added to Git.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
