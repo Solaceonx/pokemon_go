@@ -103,6 +103,10 @@ games have completed, with no new learned-policy strength measurement yet.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
 validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.
+The registered budget-finalization plan reserves the final part of the original deadline for one locked
+held-out benchmark even if validation remains below target. Research ends when teacher32 completes or
+at09:45UTC; fixed sample counts, baseline and final win criteria remain unchanged. The override still
+needs implementation/testing in a new unused runtime; final-v3 remains strict.
 Current checks: 312 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 

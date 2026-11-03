@@ -647,6 +647,26 @@ readiness, not a new playing-strength result. The actual validation-only game ca
 the healthy teacher32 worker owns the numerical slot, and final-test teams remain unopened.
 Small source/preparation receipts are in `runs/double-dqn/final-preparation-v3/`.
 
+**Time reserved for the requested held-out benchmark, before teacher32 outcomes.** The original request
+includes held-out evaluation even if research fails to produce a competitive agent. The registered
+`budget-finalization-v1/plan.json` therefore ends research when teacher32 completes, or at **09:45 UTC**
+on November 3 after saving checkpoints and verifying the worker exited. No further trial is queued.
+Among completed teacher32/relational/search/symmetry source-run winners, select the highest fresh
+128-pair confirmation point score whose unchanged inference method fits the remaining original budget;
+the recorded order breaks exact ties. Forecasts use 6.5 s/battle for direct/averaged inference or 10 s
+for planning, a 1.1 safety multiplier and 30 minutes reserved to close out. These are budget assumptions,
+not final timing measurements or evidence of a significant difference between trials.
+
+For this **one budget-final benchmark**, the additional evaluator requirement of validation lower95
+above 50% will be waived, so an honest held-out loss can be measured. This amendment changes eligibility
+to run the benchmark; **both mixed final lower95 bounds must still exceed 50%, with the unchanged
+standard cross-check**, to establish the reliable-win target. All three 1,000-pairing blocks, seeds,
+composition splits, frozen baseline and original 22:40:49 deadline remain fixed. One policy/method and
+all hashes must be locked before final games, with no subsequent training or final-outcome selection.
+The actual validation-only game canary is still required. This allocation was recorded before the new
+teacher trial's result and before any final outcome. Its budget override is **not implemented or active
+yet**; final-v3 still refuses losing confirmations. A new tested immutable runtime is required first.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

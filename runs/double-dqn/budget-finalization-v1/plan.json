@@ -1,0 +1,53 @@
+{
+  "status": "registered_before_teacher32_outcomes_and_before_any_final_game; implementation pending",
+  "registered_unix": 1793684504.489854,
+  "absolute_deadline_unix": 1793745649.6650429,
+  "research_cutoff_utc": "2026-11-03T09:45:00Z",
+  "research_cutoff_unix": 1793699100.0,
+  "reason": "Reserve time to deliver the originally requested held-out evaluation, including an honest loss if no research candidate is competitive.",
+  "decision_time": "After teacher32-v1 completes and its numerical worker exits; otherwise at research cutoff after preserving checkpoints and confirming our worker exited. No additional trial is queued.",
+  "candidate_order": [
+    "teacher32-v1",
+    "relational-v1",
+    "search-v3",
+    "symmetry-v5"
+  ],
+  "eligibility": "Completed selected-only 128-pair fresh full-engine32 validation, verified selection/source/model hashes and original inference method. Incomplete teacher trial is ineligible at cutoff.",
+  "runtime_forecast": {
+    "direct_or_average_seconds_per_battle": 6.5,
+    "planning_seconds_per_battle": 10.0,
+    "safety_multiplier": 1.1,
+    "closing_reserve_seconds": 1800,
+    "final_battles": 6000,
+    "canary_battles": 12,
+    "rule": "Eligible only if (final_battles+canary_battles)*seconds_per_battle*safety_multiplier+closing_reserve_seconds fits the original time remaining at the recorded decision instant. Forecasts are budget assumptions, not measured final timings.",
+    "basis": "Completed relational confirmation averaged 1497.25/256=5.8486328125 seconds per battle; averaged-policy confirmation 1469.25/256=5.7392578125; planning confirmation measured8.941652343749865."
+  },
+  "selection_rule": "Highest fresh-confirmation point score among eligible completed source-run winners; earliest candidate_order entry wins exact ties. This is model selection, not a claim of a significant cross-study improvement.",
+  "validation_gate_amendment": "For this one budget-final benchmark, a validation lower95 above50% is not required. Full verified fresh validation and a matching actual validation-only game canary remain required. This changes evaluation eligibility only, not the final reliable-win criterion.",
+  "final_lock": "Lock one selected source/model/method, all artifact hashes, this plan hash and decision receipt before final games. No selection or tuning from final outcomes, no resumed research after selection.",
+  "final_blocks": [
+    {
+      "field": "mixed",
+      "seed": 38091,
+      "pairings": 1000
+    },
+    {
+      "field": "mixed",
+      "seed": 38092,
+      "pairings": 1000
+    },
+    {
+      "field": "standard",
+      "seed": 38091,
+      "pairings": 1000
+    }
+  ],
+  "final_team_split": "test; both teams, sorted home-species composition partition unchanged",
+  "baseline_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "reliable_win_criterion": "Both mixed-field lower95 bounds above0.5 and standard-field upper95 at least0.5. Completed all3 blocks required. Otherwise target not met; partials never establish completion.",
+  "deadline_action": "Never extend original deadline. Stop without restarting, retain partial rows/checkpoints, report unmet target honestly, disable heartbeat after delivering outcome.",
+  "canary": "2 mirrored pairings per block, validation teams only, mixed38995/38996 and standard38995; no strength claim or policy selection from canary outcomes.",
+  "current_final_runtime": "final-v3 remains stricter and will refuse losing policies. Budget-final override must be implemented, tested and frozen in a NEW unused runtime before activation; no source imported by teacher32 may be edited.",
+  "final_test_opened": false
+}
