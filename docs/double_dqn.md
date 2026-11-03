@@ -127,7 +127,8 @@ seed 38212. Its original invocation deadline survives restart; it also respects 
 deadline. Optimizer moments reset for the new loss in each round, then resume exactly across interruptions.
 No final-test mode is provided by this research runner. The frozen-engine canary passed all four sampled
 original-choice controls across two training games/both player sides; no alternative changed the terminal
-outcome in that tiny canary. The full paired-return trial has started; it has no strength result yet.
+outcome in that tiny canary. The full paired-return trial later stopped after three non-improving candidates;
+its retained reference confirmed at 24.0234375% ±4.7195072 points on fresh validation. Exact evidence is in status.md.
 
 The local `scripts/queue_counterfactual.ps1` successor serializes this canary and trial behind search-v3.
 It waits for both existing search processes to exit, and leaves a promising fresh planning confirmation
@@ -158,8 +159,9 @@ objective and complete Adam/target checkpoint state, with an explicit architectu
 incompatible flat checkpoints. `scripts/double_dqn_relational.py` is a process-local backend selection for
 the unchanged trainer, requires a fresh named run/source receipt, and disallows final-test compositions.
 
-Immutable `harness/relational-v1` has been prepared, but it has not started a strength trial. Its unit checks
-and the full suite pass. Any future experiment must wait for the current numerical worker to finish,
+Immutable `harness/relational-v1` was the initial preparation snapshot; the later serial trial executed
+from followup-v8 and confirmed at 32.8125% ±4.8231361 points, retaining warm-up after a selection tie.
+Its unit checks and the full suite pass. Any future experiment must wait for the current numerical worker to finish,
 preserve the original overall deadline, record its full plan before fitting, and verify source/data hashes.
 The existing v2 engine4 demonstrations can be reused with their original seed 38002 and metadata; this
 preparation does not collect another dataset. Use `--hidden 64` explicitly for the documented model size.
@@ -170,7 +172,7 @@ an equivalent method-preserving loader and actual canary before any final test.
 warm-up/last complete endpoint on 64 validation pairings (seed 38511), and confirm only the winner on
 128 fresh validation pairings (seed 38512). It must fit inside the original overall deadline and may start
 only after the current worker is free and a run plan is recorded. The backend entrypoint and preparation
-receipt are available; that proposal has not been executed or queued.
+receipt are available; the recorded proposal has now executed under the serial follow-up driver.
 
 The serial follow-up is now implemented in `scripts/queue_relational.ps1`, snapshotted with its Python
 drivers in immutable `harness/followup-v8`. Its `relational-v1/queue_plan.json` binds the predecessor process
@@ -191,10 +193,10 @@ optimizer moments; its hash and all validation results are saved. This still ope
 `pogo/dqn_residual.py` is an unmeasured training-objective prototype. It fits centered *changes* from a
 reference network to sampled return advantages, preserving old score differences between equally valued
 actions, and can anchor no-signal/demo positions to the reference. Gradient and invariance checks pass.
-It has no strength trial or queue entry; the active CF objective and its runtime remain unchanged.
+Its separate trial is now running under the guarded launcher; it did not change the prior CF objective or runtime.
 
-The prepared validation-only `scripts/dqn_residual_trial.py` now implements a conditional follow-up, still
-unstarted and unqueued. `residual-v1/proposal.json` fixes the first three complete 300-position CF training
+The validation-only `scripts/dqn_residual_trial.py` implements the follow-up now running after its parent
+chain exited below target. `residual-v1/proposal.json` fixes the first three complete 300-position CF training
 batches, requires the same reference-policy hash and 900 matching original-choice controls, and includes
 positions without outcome differences. It compares correction sizes 0.10/0.25 (30 epochs, seed 38601,
 rate 0.0001, batch 128, reference-score demo anchor 1) with the unchanged reference on 64 full-engine32
@@ -207,9 +209,10 @@ original budget; its persistent cap is two hours and it cannot enable final-test
 Current chain: the registered stop fired after three complete non-improving CF candidates. Its reserved
 fresh direct-policy confirmation completed at 24.0234375% ±4.7195072 points (128 mirrored pairings, seed
 38212), with exact hashes in `counterfactual-v4/confirmation_artifacts.json`. The stopped result is preserved.
-The serial successor then started the shared-encoder trial from immutable followup-v8; use its
-`relational-v1/trial_state.json` and `runs/relational-v1-followup.out`/`.err` for progress. It still has no
-strength result. The residual follow-up remains unstarted and unqueued.
+The serial successor then completed the shared-encoder trial from immutable followup-v8; its selected
+warm-up freshly confirmed at 32.8125% ±4.8231361 points (128 pairings, seed 38512). Both parent processes
+exited before the guarded residual trial began. Use `residual-v1/launch.json`, `state.json` and its recorded
+attempt stdout/stderr paths for current progress. That trial has no strength result yet.
 
 `calibration-v1` is another prepared, unstarted/unqueued follow-up, conditional on the shared and residual
 trials finishing below target with budget and a worker free. `pogo/dqn_calibration.py` searches six output-bias

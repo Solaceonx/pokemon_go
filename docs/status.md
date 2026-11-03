@@ -509,6 +509,26 @@ Both complete raw journals, validation folds, checkpoint hashes and intervals we
 now confirming on its reserved **128 fresh pairings, seed 38512**; that result is pending. Neither a
 reliable win nor an improvement over the different-seed earlier policy is claimed from this selection draw.
 
+**Shared encoder fresh confirmation completed — 2026-11-03.** The selected warm-up scored **32.812500%
+± 4.823136 points**, interval **27.989364–37.635636%**, on its reserved **128 mirrored pairings / 256
+battles**, seed **38512**, against full engine32. This is a clear loss; the reliable-win target remains
+unmet, and the RL endpoint did not improve the selected policy. The complete raw journal, validation folds,
+model hashes and interval were verified. All **40 immutable v8 source files** and **95 frozen baseline
+files** still match their manifests. The **91,409-byte** compact shared-encoder `policy.npz` has parameters
+identical to the selected checkpoint and cleared optimizer state, SHA-256
+`455420b0500ef581093811495477e5cab71eeb2c1a36ac0661efc8404eaa1fd3`.
+`relational-v1/confirmation_artifacts.json` binds the complete evidence; checkpoint, replay and raw rows
+remain local. These validation scores supply no final-test win claim.
+
+Both the shared-encoder worker and its original serial controller exited. The guarded launcher's read-only
+preflight then verified eligibility and source receipts before starting **residual-v1** at **02:53:30 UTC**.
+Its one numerical worker imports immutable `harness/residual-v1`, uses the already registered three complete
+training batches and unchanged demonstration data, and is screening the unchanged reference before fitting
+the two fixed corrections. The outer allocated deadline is **04:53:30.5851842 UTC**, preserving its two-hour
+cap and the original overall deadline. Exact live identities/log paths are in `residual-v1/launch.json`;
+no residual strength result exists yet. The calibration follow-up remains unstarted and unqueued, and
+final-test teams remain untouched.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
