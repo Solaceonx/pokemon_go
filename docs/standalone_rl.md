@@ -190,6 +190,16 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+The active lower-weight correction follow-up is `mc-student-lowce-v1`, registered in
+`runs/standalone-rl/low_ce_plan.json`: the unchanged correction implementation with demo weight 0.1,
+up to 1,536 games/ten hours, one worker beside the main run's two. The failed weight-1 pilot remains
+a separate negative result. This is an adaptive validation experiment; final-test data is unopened.
+`scripts/run_low_ce_trial.ps1` records under `runs/standalone-rl/low-ce-control`; stop this controller
+first when pausing. After a completed main checkpoint, `scripts/select_student_candidate.py` verifies
+complete 128-pair records/source hashes and requires a positive paired lower bound before promotion.
+The selected run resumes on three workers with the original deadline and twelve-hour final reserve.
+The side training uses a fourteen-hour reserve to leave selection time.
+
 `scripts/evaluate_greedy_rollouts_rl.py` is a separate follow-up to the independent rollout evaluator.
 It fixes the learned opponent's continuations to greedy mode, leaving the original stochastic
 experiment reproducible, and adds a ninth source hash. The registered screen uses four scenarios,

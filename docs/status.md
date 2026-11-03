@@ -505,6 +505,31 @@ The controlled trial is closed; its controller is waiting for the next committed
 restore all three training workers. The main selected checkpoint is still round 24 at 37.11%; the
 original deadline and twelve-hour final-test reserve remain in force.
 
+**Lower-weight correction follow-up (registered 2026-11-03 01:35 UTC):** the weight-1 pilot's
+first action update reached KL 0.02198 and stopped after two epochs, and its post-training strength
+fell. A separate adaptive validation experiment, `mc-student-lowce-v1`, tests **demo weight 0.1**,
+the main PPO's existing weight, on the same public student-state correction method. It starts from
+the same fixed round-24 policy with the method's optimizer reset. This changes the optimization
+weight and data budget, not runtime rules or representation. The failed weight-1 pilot stays closed.
+
+`low_ce_plan.json` fixes at most **12 batches of 128 games (1,536 games), ten hours**, validation
+every four batches on the same complete 128-pair schedule/both modes, and no early stop based on a
+partial score. The side run reserves fourteen hours before the original deadline to leave selection
+time; the eventual chosen three-worker run keeps the original twelve-hour final-test reserve.
+No final-test data has been used. This is explicitly an adaptive follow-up to validation results,
+not a preregistered claim made before the earlier experiments.
+
+After verifying the completed rollout controller's PID/start identity, it was stopped during its
+checkpoint wait; both main PPO workers were left running. `scripts/run_low_ce_trial.ps1` now owns
+the free worker and records under `runs/standalone-rl/low-ce-control`. When the bounded side run
+ends, it waits for a committed main checkpoint, freezes the comparison, and uses
+`scripts/select_student_candidate.py` to promote only a higher mean with a positive paired 95%
+lower bound. It then resumes the selected run on three workers with the full lock/fresh-seed final
+protocol. Its failure path stops only verified owned processes and restores the main allocation.
+The selection helper's actual initial-policy negative control passed; all **333 tests** and
+**108/108 PvPoke** checks pass. The new side run started at **2026-11-03 01:37 UTC**, on one worker
+alongside the continuing two-worker main run. Stop this new controller first when pausing work.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
