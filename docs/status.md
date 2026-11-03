@@ -827,6 +827,15 @@ pass: null start time, matching start time, a stale/reused PID and a process exi
 The scientific sources of both
 studies are unchanged. Only the original fourth block remains; no more candidates will start.
 
+**Portable audit inputs verified (2026-11-03 18:19 UTC):** the read-only final auditor now accepts
+`--input-bundle`, reading logs, schedules and lineage bytes in memory without extracting paths. It can
+restore the pinned frozen opponent from Git into an absent cache. A seven-member, 1.8 MB compressed
+bundle reproduces all three completed blocks / 7,200 battles bit-for-bit, including an integration
+check with a separate initially empty frozen cache. The active engine cache was untouched. The final
+nine-member bundle will include the last block once it completes. Two archive integrity guards cover
+duplicate members and parent-directory paths. **346 tests OK (7 video skips), 108/108 PvPoke exact**.
+See `audit_bundle_portability_check.json`. The scientific evaluator, sources and test plan are unchanged.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

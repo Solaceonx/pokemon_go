@@ -11,14 +11,15 @@ import hashlib
 import json
 import math
 import sys
+import tarfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from pogo.rl_experiment import (FrozenRuntime, atomic_json, canonical_json_digest,
+from pogo.rl_experiment import (atomic_json, canonical_json_digest,
                                 digest, intervals, schedule, stream_seed, team_key, team_split)
 from pogo.standalone_rl_v2 import ActorCritic
-from scripts.monte_carlo_rl import sources
+from scripts.monte_carlo_rl import sources, base
 import numpy as np
 
 
@@ -63,9 +64,29 @@ def check_statistics(values, result, schedule_sha256):
     return str(seed)
 
 
-def audit(run, lineage_report, require_complete=False):
+def audit(run, lineage_report, require_complete=False, input_bundle=None):
     require(Path(run).name == run and run not in (".", ".."), "run must be one directory name")
     folder = ROOT / "runs/standalone-rl" / run
+    # Read exact member names in memory; never extract archive paths to disk.
+    bundled = {}
+    if input_bundle is not None:
+        with tarfile.open(input_bundle, "r:gz") as archive:
+            members = archive.getmembers()
+            require(len({m.name for m in members}) == len(members), "duplicate bundle member")
+            for member in members:
+                require(member.isfile(), "bundle members must be regular files")
+                require(not Path(member.name).is_absolute() and ".." not in Path(member.name).parts,
+                        "unsafe bundle member")
+                bundled[member.name] = archive.extractfile(member).read()
+
+    def input_bytes(path):
+        path = Path(path)
+        if input_bundle is None:
+            return path.read_bytes()
+        key = path.relative_to(ROOT).as_posix()
+        require(key in bundled, f"missing bundle member: {key}")
+        return bundled[key]
+
     read = lambda name: json.loads((folder / name).read_text(encoding="utf-8-sig"))
     locked, plan, config, saved = (read(name) for name in
                                   ("lock.json", "test_plan.json", "experiment.json", "test_results.json"))
@@ -91,14 +112,15 @@ def audit(run, lineage_report, require_complete=False):
 
     lineage_meta = json.loads(Path(lineage_report).read_text(encoding="utf-8-sig"))
     cache = ROOT / lineage_meta["lineage_cache"]
-    require(digest(cache) == lineage_meta["lineage_cache_sha256"], "lineage cache changed")
-    lineage = json.loads(cache.read_text(encoding="utf-8"))
+    lineage_bytes = input_bytes(cache)
+    require(hashlib.sha256(lineage_bytes).hexdigest() == lineage_meta["lineage_cache_sha256"], "lineage cache changed")
+    lineage = json.loads(lineage_bytes)
     train_teams = {tuple(t) for t in lineage["training_trios"]}
     val_teams = {tuple(t) for t in lineage["validation_trios"]}
     train_seeds, val_seeds = set(lineage["training_seeds"]), set(lineage["validation_seeds"])
     model, _ = ActorCritic.load(folder / "locked.npz")
     fingerprint = hashlib.sha256(b"".join(model.params[k].tobytes() for k in sorted(model.params))).hexdigest()
-    runtime = FrozenRuntime(ROOT / config["snapshot"])
+    runtime = base.restore_snapshot(config)
     blocks = {}
     for key in expected:
         if key not in saved["results"]:
@@ -107,7 +129,8 @@ def audit(run, lineage_report, require_complete=False):
         field, block_string = key.rsplit("_", 1)
         seed = plan["seeds"][int(block_string)]
         log = folder / f"test_{key}.jsonl"
-        records = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines()]
+        log_bytes = input_bytes(log)
+        records = [json.loads(line) for line in log_bytes.decode("utf-8").splitlines()]
         header, rows = records[0], records[1:]
         require(header == result["header"], "pairing header differs from summary")
         require(header["opponent"] == "engine" and header["samples"] == 32, "opponent settings differ")
@@ -120,7 +143,7 @@ def audit(run, lineage_report, require_complete=False):
         require(result["pairings"] == 1200 and result["battles"] == 2400, "sample count differs")
         require(all(result[k] == v for k, v in counts.items()), "win/draw/loss counts differ")
         bootstrap_seed = check_statistics(values, result, header["schedule_sha256"])
-        cases = read(f"test_schedule_{key}.json")
+        cases = json.loads(input_bytes(folder / f"test_schedule_{key}.json"))
         # Evaluation cache headers retain the original JSON spacing convention.
         schedule_hash = hashlib.sha256(json.dumps(cases, sort_keys=True).encode()).hexdigest()
         require(schedule_hash == header["schedule_sha256"], "schedule fingerprint differs")
@@ -134,7 +157,7 @@ def audit(run, lineage_report, require_complete=False):
         blocks[key] = dict(result=result, test_seed_string=str(seed), bootstrap_seed_string=bootstrap_seed,
                            gate_pass=bool(gate), unique_test_trios=len(teams), trio_overlap=0, seed_overlap=0,
                            score_mapping_checked=True, statistics_recomputed=True, schedule_regenerated_exactly=True,
-                           pairing_log_sha256=digest(log))
+                           pairing_log_sha256=hashlib.sha256(log_bytes).hexdigest())
     verdict = all(block["gate_pass"] for block in blocks.values()) if complete else None
     if complete:
         require(saved["reliably_beats_frozen_engine"] == verdict, "final reliability verdict differs")
@@ -150,9 +173,10 @@ def main():
     parser.add_argument("--run", default="mc-ppo-v3")
     parser.add_argument("--lineage-report", type=Path, default=ROOT / "runs/standalone-rl/mc3_final_training_audit.json")
     parser.add_argument("--require-complete", action="store_true")
+    parser.add_argument("--input-bundle", type=Path, help="read logs, schedules and lineage from a saved audit tar.gz")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    report = audit(args.run, args.lineage_report, args.require_complete)
+    report = audit(args.run, args.lineage_report, args.require_complete, args.input_bundle)
     atomic_json(args.output, report)
     print(json.dumps(dict(complete=report["complete"], total_battles=report["total_battles"],
                          reliably_beats_frozen_engine=report["reliably_beats_frozen_engine"],

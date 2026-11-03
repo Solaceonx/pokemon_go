@@ -168,7 +168,7 @@ and representative checkpoints; do not commit every training batch or all interm
 - `lock.json`, `test_plan.json`, `test_schedule_*.json`, `test_results.json`: final protocol and result.
 
 Recheck completed final blocks with the read-only auditor (raw pairing logs and the recorded lineage
-cache must remain available locally):
+cache must remain available locally, or be supplied with `--input-bundle`):
 
 ```sh
 python scripts/audit_standalone_final.py --run mc-ppo-v3 --output runs/standalone-rl/final_evaluation_audit.json
@@ -177,6 +177,11 @@ python scripts/audit_standalone_final.py --run mc-ppo-v3 --output runs/standalon
 Add `--require-complete` to reject a partial evaluation. The auditor checks winner/seat scores,
 registered bootstrap statistics, source/checkpoint pins, regenerated schedules, team/seed separation
 and the final reliability verdict. It plays no battles and modifies no policy or evaluation inputs.
+The optional gzip tar bundle supplies exact raw logs, schedules and lineage bytes without extracting
+archive paths. The auditor restores the hash-verified frozen opponent from its pinned Git commit when
+the cache is absent; that commit must be available in the local Git history. A three-block integration
+check produced identical reports using the bundle and a separate initially empty opponent cache
+(`audit_bundle_portability_check.json`), without touching the active opponent cache.
 
 `scripts/offline_returns_rl.py` is a separate adaptive follow-up using only the saved main training
 returns. Its objective is half squared error on the observed action's terminal return plus .1 times
