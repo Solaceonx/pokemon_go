@@ -770,6 +770,39 @@ the registered reference/teacher-fit/last-endpoint comparison on64 full-engine32
 seed38811, before the selected-only128-pair fresh confirmation38812. No selected policy or final
 outcome is open yet; the separate budget-final guard remains waiting.
 
+**Teacher-study reference control screen completed — 08:24 UTC.** The unchanged starting reference
+scored **22.265625% ± 6.558549 points**,95% interval **15.707076–28.824174%**, on the registered
+**64 full-engine32 mirrored validation pairings /128 battles**, seed38811. This is the control for
+the pending teacher-fit and last-RL-endpoint screens on identical pairings. It is not their result
+or a fresh128-pair confirmation. All raw pair means, both team folds and reconstructed draws were
+checked; the interval was recomputed independently. `screen_reference_artifacts.json` binds the
+model/config/journal/summary hashes. No selected policy, strength gain or final outcome is open.
+
+**Teacher-fit candidate screen completed — 08:37 UTC.** On the same64 full-engine32 validation
+pairings, seed38811, the teacher-fit policy scored **30.859375% ± 6.432494 points**,95% interval
+**24.426881–37.291869%**. Its paired change from the starting reference is **+8.593750 ± 9.338174
+points**, interval **−0.744424 to +17.931924 points**. The point score is higher, but the paired interval
+includes zero and the policy still clearly loses to the engine. All raw pair means, matching teams,
+both validation folds and intervals were independently verified; `screen_teacher32_fit_artifacts.json`
+binds the evidence. This is selection data only. The RL-endpoint screen remains in progress; selected-only
+fresh confirmation and final outcomes are still unopened.
+
+**Teacher-study selection complete — 08:49 UTC.** The last RL endpoint scored **32.812500% ± 7.310600
+points**,95% interval **25.501900–40.123100%**, on the same64 full-engine32 validation pairings38811.
+Its paired change from the starting reference is **+10.546875 ± 8.579491 points**, interval
+**+1.967384 to +19.126366 points**. This is a gain on this selection cohort; the models are being
+chosen on these observations, so it is not fresh confirmation of a general improvement. Compared with
+the teacher-fit candidate, the endpoint changes score by **+1.953125 ± 8.544716 points**, interval
+**−6.591591 to +10.497841 points**: RL's advantage over the fit is uncertain.
+
+The registered maximum-point-score rule selected **last_complete_rl_endpoint**, full checkpoint
+`45a8c2036f9f84c4b1e6541554e9afa407f09bc4a1d60cc4a76ff05ca3637e91`, over teacher-fit30.859375%
+and reference22.265625%. All64 raw pairs/folds, identical candidate teams, model/config hashes and
+confidence calculations were verified independently. `trial_selection.json` and all three
+`screen_*_artifacts.json` bind the full comparison. The selected-only **128-pair fresh confirmation,
+seed38812**, is now running. Every selected screen still loses to the engine; the reliable-win target
+is unproven and no final-test outcome is open.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
