@@ -718,6 +718,28 @@ nonzero uncertainty. **317 tests pass (7 optional video skips), PvPoke108/108**.
 run on an actual completed final verdict because none exists yet; no final evidence or strength claim
 has been opened. The healthy teacher worker and queued handoff continue unchanged.
 
+**Full-engine teacher data sealed and fit completed — 07:12 UTC.** The registered collection ended
+after **599 complete engine32 selfplay games / 45,945 decisions**, SHA-256
+`52603178fbc8008da5d325a4b337273e4913c1a5295ef788245fb866f192ac2d`. The last complete game and atomic
+save ended about **10.9 seconds after** the persistent07:12:08.517884 cutoff, as declared: the cutoff is
+checked between whole games, with no restarted allocation. All actions are legal and arrays finite.
+Independent reconstruction of **all1,198 players' initial own-team feature headers** from game-index
+seed38801 reproduced them exactly; both teams belonged to the training fold for all599games. The old
+engine4 dataset, reference policy,44 runtime source files and95 baseline file hashes remain unchanged.
+
+The fixed **20 balanced-CE epochs / 3,600 updates** completed. Final training loss was
+**0.5147917342765098**, with **80.56%** agreement on the first10,000 training positions; these are fitting
+diagnostics, not playing-strength evidence. `teacher32_fit.npz` SHA-256
+`a5b422df8f2edf3f32759e0d7547239a9f3c903eb8d96952fb31020289e9651b` and the separate RL bootstrap
+`d14aeb2d01c720a8b73a6d12a23c6c392fee0a6da5110b87703b83ca535a85e0` have identical parameters;
+bootstrap moments/step count are zero. `teacher_data_fit_artifacts.json` binds the data, models, full
+seed/header verification, curves and protocol hashes. Large data/checkpoints remain local and ignored.
+
+The preregistered one-hour DDQN clock started at **07:12:29.3487487UTC**, ending **08:12:29.3487487UTC**;
+its initial64-pair full-engine validation is included in that hour, as declared. This first strength
+measurement is still pending. The same worker and queued final guard are healthy, with no second
+numerical worker or final outcomes opened.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

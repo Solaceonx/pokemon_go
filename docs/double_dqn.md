@@ -258,8 +258,12 @@ It accepts only this run, requires complete below-target parent confirmations an
 and enforces a saved six-hour cap inside the unchanged overall deadline. It refused the live calibration
 worker during preparation, then passed eligibility after that worker/controller exited. The study started
 at05:12:08UTC. Use `teacher32-v1/launch.json`, `state.json`, `collection_progress.json` and their attempt log
-paths for current progress. First real full-engine games are completing; no learned-policy strength result
-exists yet. No further job is queued. The overall deadline remains22:40:49UTC.
+paths for current progress. Collection completed599games/45,945decisions, with all1,198initial own-team
+feature headers independently reconstructed and both teams verified in the training fold. The20-epoch
+fit completed; its separate RL bootstrap retains exact parameters with reset optimizer state. The
+persistent one-hour DDQN clock ends08:12:29.3487487UTC, including initial full-engine validation.
+No learned-policy strength result exists yet. The later budget-final handoff is queued as described
+below; there is no additional research trial. The overall deadline remains22:40:49UTC.
 
 ## Final evaluator and locked evidence
 

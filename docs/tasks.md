@@ -97,9 +97,11 @@ The residual-return follow-up reuses the first three complete training batches a
 with fresh selected-setting validation. Its parent worker/controller exited before it started.
 The output-bias calibration follow-up reuses the same training labels and reserves fresh validation;
 both parent trials and processes completed below target before it began. A stronger-teacher data study is
-implemented and now collecting after the calibration parent completed below target and exited.
+implemented and collected599full-engine games/45,945decisions after the calibration parent completed
+below target and exited. All1,198initial own-team headers and both training folds were independently
+verified. Its20-epoch fit completed; the persistent one-hour DDQN allocation ends08:12:29.3487487UTC.
 Stand-in tests verify data signs/public masks and exact data/optimizer resumption; the first real teacher
-games have completed, with no new learned-policy strength measurement yet.
+games and fit have completed, with no new learned-policy strength measurement yet.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
 validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.
