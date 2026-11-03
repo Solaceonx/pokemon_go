@@ -449,6 +449,16 @@ selected for deployment/final evaluation. No more variants are selected from thi
 The controller is waiting for the next committed main PPO round before returning its worker to that
 run, preserving all three-worker, original-deadline and final-reserve safeguards.
 
+**Three-worker handoff verified (2026-11-03 00:10 UTC):** main PPO committed round 56,
+14,336 training games. Greedy validation is **35.35%, CI [30.47%, 40.43%]**; stochastic is
+**25.59%, CI [20.90%, 30.47%]**. The best remains greedy round 24 at 37.11%. The controller
+completed the registered comparisons and resumed `mc-ppo-v3` on exactly three workers; the parent
+and all three children are BelowNormal. All five source hashes match, the original absolute deadline
+is unchanged, and the running command reserves twelve hours for the full fresh-seed final protocol.
+The run is not locked and final-test seeds have not been generated. `mc3_progress_round56.json`
+records the complete validation progression and this handoff. Upstream main's new task-39 entry was
+merged after verifying its diff changes only `docs/tasks.md`; the frozen opponent remains unchanged.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
