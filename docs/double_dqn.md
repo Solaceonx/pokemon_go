@@ -236,6 +236,28 @@ The launcher preserves attempt logs and the original saved two-hour cap on recov
 and start instant, and enforces the overall deadline. Launch it hidden when using Start-Process. This
 preparation does not queue or start another worker.
 
+## Full-engine teacher study, prepared only
+
+`teacher32-v1/proposal.json` records a conditional stronger-teacher study. Its implementation and readiness
+receipt are now available, while the original proposal stays unchanged. `scripts/dqn_teacher32_trial.py`
+records both full frozen engine32 players through the existing public-state Agent wrapper on training
+compositions. It collects at most 1,000 whole games or a persistent two-hour clock, saves every 25 games
+and at the ordinary cutoff, and seals the resulting dataset hash. Whole games finish before a normal
+collection cutoff; the outer guard enforces the total/overall limit. Existing teacher4 data is unchanged.
+
+The recorded balanced CE fit starts from the compact shared encoder and preserves optimizer/RNG state
+at complete epochs. A distinct identical-parameter initialization clears moments before the one-hour
+Double DQN phase. Reference/teacher-fit/last complete endpoint screen on 64 full-engine32 validation
+pairings, seed 38811; selected-only confirmation uses 128 fresh pairings, seed 38812. All clocks persist
+across recovery, and no final-test compositions are available from this entrypoint.
+
+The numerical snapshot is immutable `harness/teacher32-v1`. The separate guard is
+`harness/launch-teacher32-v1/scripts/run_teacher32_research.ps1 -Run teacher32-v1`; `-CheckOnly` is read-only.
+It accepts only this run, requires complete below-target parent confirmations and exited prior processes,
+and enforces a saved six-hour cap inside the unchanged overall deadline. It has correctly refused the
+live calibration worker. No job is queued or started; use it hidden only after the activation conditions
+are met. Stand-in tests passed, but no real full-engine collection canary or strength measurement exists.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the

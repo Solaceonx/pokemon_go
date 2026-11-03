@@ -96,8 +96,10 @@ The residual-return follow-up reuses the first three complete training batches a
 with fresh selected-setting validation. Its parent worker/controller exited before it started.
 The output-bias calibration follow-up reuses the same training labels and reserves fresh validation;
 both parent trials and processes completed below target before it began. A stronger-teacher data study is
-proposed but not implemented or queued, conditional on remaining below target with original budget left.
-Current checks: 307 tests (7 optional video skips),
+implemented/prepared but unstarted and unqueued, conditional on calibration remaining below target with
+original budget left. Stand-in tests verify data signs/public masks and exact data/optimizer resumption;
+no full-engine teacher collection has run yet.
+Current checks: 310 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

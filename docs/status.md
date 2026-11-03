@@ -571,6 +571,25 @@ scores or whole-policy strength evidence**. Both offset vectors differ, so neith
 offsets/checkpoint hashes are retained in `calibration-v1/fit.json`; no completed calibration strength
 result exists yet. The stronger-teacher proposal remains unimplemented and unqueued.
 
+**Stronger-teacher implementation prepared — no collection started.** `scripts/dqn_teacher32_trial.py`
+now implements the recorded study without changing its proposal: two independent frozen engine32 teachers,
+public-state Agent logs on training compositions, a persistent two-hour collection clock/up to 1,000 games,
+then balanced CE and the fixed one-hour Double DQN allocation. Data and model checkpoints are atomic;
+collection resumes by committed game index, and the sealed data hash is checked before fitting/recovery.
+The actor/teacher-fit/RL endpoint use the recorded validation seeds/counts, with no final-test mode.
+The immutable numerical runtime is `harness/teacher32-v1` (44 source files); its separate six-hour guard is
+`harness/launch-teacher32-v1`. That guard checks all completed parent confirmations, source receipts and
+live-process pointers, and preserves existing allocated deadlines on recovery.
+
+Short stand-in simulator tests verify legal public teacher decisions, opposite signed returns for both
+players, bit-identical collected arrays after interruption/resumption, rejection of changed collection
+settings, identical optimizer/parameter recovery at a complete CE epoch, and unchanged reference weights.
+These tests use Planner stand-ins to avoid launching another full-engine search worker; **no real engine32
+collection canary or teacher data generation has run**. The actual guard's read-only preflight refused
+live calibration worker 4760. Full checks pass **310 tests (7 optional video skips)** and **108/108 PvPoke
+battles**. `teacher32-v1/implementation.json` binds readiness/source hashes. This study remains unstarted
+and unqueued, conditional on calibration's completed below-target result and sufficient original budget.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
