@@ -567,6 +567,15 @@ eight source hashes match. All four checkpoint hashes are saved in `low_ce_train
 raw checkpoints and batches remain local. Both post-training validation modes are now being evaluated
 on the registered 128-pair schedule; these integrity counts do not establish playing strength.
 
+**Lower-weight round-four validation (2026-11-03 05:08 UTC): no established gain.** Greedy
+score is **36.52%, CI [31.25%, 41.80%]**; stochastic **24.41%, CI [19.53%, 29.30%]**. The paired
+greedy change from its controlled starting policy is **-0.59 points, CI [-6.84, 5.86]**. Relative
+to the failed weight-1 round-four update, the lower-weight greedy point estimate is +4.10 points,
+but its paired CI **[-1.56, 9.77]** does not establish that gain either. The selected checkpoint
+remains the unchanged initialization at 37.11%. `low_ce_validation_round4.json` records both modes
+and comparisons. The prospective bounded trial continues to its remaining scheduled evaluations
+without changing settings. No final-test data has been opened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
