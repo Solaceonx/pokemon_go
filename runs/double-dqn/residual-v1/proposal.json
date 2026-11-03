@@ -1,0 +1,56 @@
+{
+  "status": "prepared_unmeasured_not_started_not_queued",
+  "absolute_deadline_unix": 1793745649.6650429,
+  "maximum_hours": 2,
+  "activation": "Only after the current serialized research chain completes below target, with one numerical worker and enough original budget",
+  "reference_sha256": "d2884905f82e515e8b83efe48b6bafce96f1ff3a6803f8f8c89c646fae2f0c49",
+  "demonstrations_sha256": "009623fbcbc1ca143689a3e22b30b5e5b04bdb8d5f472880a15c00dd4d80ff0e",
+  "training_inputs": {
+    "source": "counterfactual-v4",
+    "all_labels_from_same_reference_policy": true,
+    "all_original_choice_controls_must_match": true,
+    "include_no_signal_positions": true,
+    "positions_per_round": 300,
+    "new_rollout_collection": false,
+    "rounds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "fit": {
+    "seed": 38601,
+    "steps": [
+      0.1,
+      0.25
+    ],
+    "batch": 128,
+    "rate": 0.0001,
+    "epochs": 30,
+    "reset_optimizer_per_variant": true,
+    "demo_anchor": 1,
+    "objective": "C(q_new-q_reference) = step*C(terminal returns), masked Huber; reference anchor on sampled demonstration states"
+  },
+  "selection": {
+    "variants": [
+      "reference",
+      "residual_010",
+      "residual_025"
+    ],
+    "opponent_samples": 32,
+    "split": "validation",
+    "rule": "Maximum score; reference, then smaller correction wins ties",
+    "seed": 38611,
+    "pairs": 64
+  },
+  "confirmation": {
+    "only_selected": true,
+    "split": "validation",
+    "pairs": 128,
+    "opponent_samples": 32,
+    "seed": 38612
+  },
+  "inference": "Unchanged public-state neural Agent; no Engine or Planner calls",
+  "final_tests_enabled": false,
+  "strength_result": null
+}

@@ -87,7 +87,9 @@ is prepared; its full frozen-engine canary is pending. A smaller shared-matchup 
 prepared as an unmeasured fallback with a serial successor that finishes CF's reserved confirmation before
 switching; no second training worker has started. The first two paired-return candidates scored
 23.44% ± 6.06 and 19.53% ± 6.77 on the 64-pair validation screen, retaining the initial policy.
-Current checks: 304 tests (7 optional video skips),
+An unstarted residual-return follow-up can reuse the first three complete training batches; its plan
+requires a free worker after the current serial chain and fresh selected-setting validation.
+Current checks: 305 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

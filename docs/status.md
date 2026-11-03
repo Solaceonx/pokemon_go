@@ -399,6 +399,18 @@ actions with equal sampled outcomes. This prototype preserves those reference di
 no-signal positions; it has not been trained or evaluated, supplies no strength evidence and does not alter
 the live trial. Full checks now pass **304 tests (7 optional video skips)** and **108/108 PvPoke battles**.
 
+**Residual follow-up prepared, no strength measurement.** `residual-v1/proposal.json` now fixes two correction
+sizes (0.10/0.25), 30 epochs, seed 38601, rate 0.0001, batch 128, and a reference-score demo anchor of 1.
+The driver reuses exactly the first three complete 300-position CF batches, requires all original-choice
+controls and their common behavior-policy hash to match, and includes no-signal positions. It compares
+the reference and both updates on 64 full-engine32 validation pairings, seed 38611, then confirms only the
+selected variant on 128 fresh pairings, seed 38612. There is no new rollout collection or tactical rule.
+The immutable runtime is prepared; this trial is **not started or queued** and must wait for the current
+serial chain to finish below target, with enough budget remaining. A unit check verifies improved fit,
+unchanged reference weights, and bit-identical optimizer/parameters after interruption and epoch resumption.
+Full checks now pass **305 tests (7 optional video skips)** and **108/108 PvPoke battles**; none of these
+software checks establishes playing strength. The existing numerical worker continues unchanged.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

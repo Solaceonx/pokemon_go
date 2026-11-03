@@ -193,6 +193,17 @@ reference network to sampled return advantages, preserving old score differences
 actions, and can anchor no-signal/demo positions to the reference. Gradient and invariance checks pass.
 It has no strength trial or queue entry; the active CF objective and its runtime remain unchanged.
 
+The prepared validation-only `scripts/dqn_residual_trial.py` now implements a conditional follow-up, still
+unstarted and unqueued. `residual-v1/proposal.json` fixes the first three complete 300-position CF training
+batches, requires the same reference-policy hash and 900 matching original-choice controls, and includes
+positions without outcome differences. It compares correction sizes 0.10/0.25 (30 epochs, seed 38601,
+rate 0.0001, batch 128, reference-score demo anchor 1) with the unchanged reference on 64 full-engine32
+validation pairings, seed 38611. Only the selected variant confirms on 128 fresh pairings, seed 38612.
+There is no new rollout collection. Complete-epoch optimizer/RNG recovery reproduces an uninterrupted fit
+exactly in its unit check, and fitting leaves the reference arrays unchanged. Immutable `harness/residual-v1`
+is prepared. It may run only after the existing serial chain is finished, with the worker free and enough
+original budget; its persistent cap is two hours and it cannot enable final-test compositions.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the
