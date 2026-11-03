@@ -100,7 +100,10 @@ both parent trials and processes completed below target before it began. A stron
 implemented and now collecting after the calibration parent completed below target and exited.
 Stand-in tests verify data signs/public masks and exact data/optimizer resumption; the first real teacher
 games have completed, with no new learned-policy strength measurement yet.
-Current checks: 310 tests (7 optional video skips),
+The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
+and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
+validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.
+Current checks: 312 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

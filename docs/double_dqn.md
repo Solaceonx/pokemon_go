@@ -265,6 +265,10 @@ exists yet. No further job is queued. The overall deadline remains22:40:49UTC.
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the
 direct policy, four-permutation averaging, and independent planning with its complete opponent ensemble.
+The extended runner also dispatches the shared-matchup checkpoint format without modifying the training
+backend. For `relational-v1` and `teacher32-v1`, it verifies every candidate's 64-pair full-engine screen,
+the registered winning/tie rule, full-checkpoint/compact parameter identity and the fresh 128-pair result.
+The selection plan and result hashes are included in its locked inference recipe.
 Production refuses to start unless the matching 128-pair fresh validation confirmation against engine32
 has lower95 above 50%. It checks model, ensemble, selected recipe and validated source hashes and recomputes
 the validation interval. Compact exports must retain identical parameter arrays.
@@ -275,16 +279,17 @@ count is rejected across runs. Complete paired rows retain exact game seeds, tea
 and scores; resumption verifies these against the locked draw rather than silently accepting another journal.
 Final verdicts require all three blocks; deadline/STOP exits retain partial rows without claiming completion.
 
-An immutable `final-v2` runtime has been prepared locally. It supersedes the unrun v1 prototype and also
+An immutable `final-v3` runtime has been prepared locally. It supersedes the unrun v1/v2 prototypes and also
 enforces a matching completed canary before production. Once the serialized research queue stops for
 review of a promising confirmation, verify its source manifest and run a validation-only canary first:
 
 ```powershell
-python .dqn-cache/harness/final-v2/scripts/dqn_final.py --source-run symmetry-v5 --canary
-python .dqn-cache/harness/final-v2/scripts/dqn_final.py --source-run symmetry-v5
+python .dqn-cache/harness/final-v3/scripts/dqn_final.py --source-run teacher32-v1 --canary
+python .dqn-cache/harness/final-v3/scripts/dqn_final.py --source-run teacher32-v1
 ```
 
-Use the actual selected source run (`search-v3`, `symmetry-v5`, or `counterfactual-v4`). The canary uses two
+Use the actual selected source run (`search-v3`, `symmetry-v5`, `counterfactual-v4`, `relational-v1`, or
+`teacher32-v1`) after its result is complete. The canary uses two
 pairings per block on validation teams, seeds 38995/38996, writes no production lock, and reports no strength
 claim. It must pass before production; do not overlap another numerical worker. The production counts,
 fields and seeds cannot be set through CLI arguments. Both modes retain the original overall deadline.

@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from pogo.arena import low_priority
 from pogo.dqn import Agent, Network
+from pogo.dqn_relational import ARCHITECTURE, Network as RelationalNetwork
 from pogo.dqn_symmetry import SymmetricPolicy
 from pogo.rl_search import RolloutAgent
 from scripts.double_dqn import BASE, ci, frozen, draw_split, sha, write_json, append, read_rows
@@ -38,11 +39,13 @@ def lock(path, value):
         write_json(path, value)
 
 
-def validate_confirmation(report, digest, seed, baseline=BASE):
-    """Require fresh full-engine validation and recompute its interval before spending final evidence."""
+def validate_measurement(report, digest, seed, pairs, baseline=BASE):
+    """Verify identity and paired outcomes independently of the promotion decision."""
     values = report.get('pair_scores', [])
     if (report.get('split') != 'validation' or report.get('field', 'mixed') != 'mixed'
-            or report.get('seed') != seed or len(values) != 128 or report.get('clusters') != 128
+            or report.get('seed') != seed or len(values) != pairs or report.get('clusters') != pairs
+            or report.get('pairs', pairs) != pairs or report.get('battles', 2 * pairs) != 2 * pairs
+            or any(value not in (0., .25, .5, .75, 1.) for value in values)
             or report.get('opponent_samples', report.get('samples')) != 32
             or report.get('actor_sha256', report.get('model_sha256')) != digest or baseline != BASE
             or report.get('baseline_commit', BASE) != BASE):
@@ -51,6 +54,12 @@ def validate_confirmation(report, digest, seed, baseline=BASE):
     for key in ('score', 'margin95', 'lower95', 'upper95'):
         if not math.isclose(computed[key], report[key], rel_tol=0, abs_tol=1e-12):
             raise ValueError('Validation confidence interval does not match its paired outcomes')
+    return computed
+
+
+def validate_confirmation(report, digest, seed, baseline=BASE):
+    """Require fresh full-engine validation and recompute its interval before spending final evidence."""
+    computed = validate_measurement(report, digest, seed, 128, baseline)
     if computed['lower95'] <= .5:
         raise ValueError('Validation target not met; preserve final teams and continue research')
 
@@ -58,7 +67,8 @@ def validate_confirmation(report, digest, seed, baseline=BASE):
 def selection(source_name, canary):
     source = ROOT / 'runs/double-dqn' / source_name
     result = json.loads((source / 'result.json').read_text())
-    plan = json.loads((source / 'plan.json').read_text())
+    plan_path = source / ('trial_plan.json' if source_name == 'relational-v1' else 'plan.json')
+    plan = json.loads(plan_path.read_text())
     if source_name == 'search-v3':
         samples = result['selected_samples']
         winner = max(plan['sample_grid'], key=lambda n: result['screens'][str(n)]['score'])
@@ -83,6 +93,31 @@ def selection(source_name, canary):
         if Path(chosen).name != chosen:
             raise ValueError('Checkpoint must be inside its run')
         model, mode, seed, samples, opponents = source / chosen, 'direct', 38212, 0, []
+    elif source_name in ('relational-v1', 'teacher32-v1'):
+        candidates = ({'bootstrap': 'bootstrap.npz', 'endpoint': 'endpoint.npz'}
+            if source_name == 'relational-v1' else {'reference': 'reference.npz',
+            'teacher32_fit': 'teacher32_fit.npz', 'last_complete_rl_endpoint': 'endpoint.npz'})
+        screen_seed, seed = (38511, 38512) if source_name == 'relational-v1' else (38811, 38812)
+        if (set(result['screens']) != set(candidates) or plan['selection']['pairs'] != 64
+                or plan['selection']['seed'] != screen_seed or plan['confirmation']['pairs'] != 128
+                or plan['confirmation']['seed'] != seed or plan.get('baseline_commit', BASE) != BASE
+                or plan['selection'].get('opponent_samples') != 32
+                or plan['confirmation'].get('opponent_samples') != 32
+                or plan['selection'].get('split') != 'validation'
+                or plan['confirmation'].get('split') != 'validation'):
+            raise ValueError('Shared-network selection protocol changed')
+        for name, filename in candidates.items():
+            validate_measurement(result['screens'][name], sha(source / filename), screen_seed, 64)
+        chosen = max(candidates, key=lambda name: result['screens'][name]['score'])
+        model = source / candidates[chosen]
+        if (result['selected'] != chosen or result['selected_sha256'] != sha(model)
+                or result['policy_sha256'] != sha(source / 'policy.npz')):
+            raise ValueError('Shared-network selected checkpoint or compact policy changed')
+        selected_net, _, _ = load_network(model)
+        published_net, _, _ = load_network(source / 'policy.npz')
+        if not isinstance(selected_net, RelationalNetwork) or not same_parameters(selected_net, published_net):
+            raise ValueError('Shared-network compact policy changed predictions or architecture')
+        mode, samples, opponents = 'direct', 0, []
     elif canary and source_name == 'refine-v3':
         model, mode, seed, samples, opponents = source / 'policy.npz', 'average', 38112, 0, []
     else:
@@ -92,19 +127,39 @@ def selection(source_name, canary):
             if sha(ROOT / relative) != digest:
                 raise ValueError('Validated runtime source changed: ' + relative)
         validate_confirmation(result['confirmation'], sha(model), seed, plan.get('baseline_commit', BASE))
-    return model, opponents, {'mode': mode, 'samples': samples, 'edge': .03, 'stride': 8}, result['confirmation']
+    recipe = {'mode': mode, 'samples': samples, 'edge': .03, 'stride': 8}
+    if source_name in ('relational-v1', 'teacher32-v1'):
+        # Bind the whole selection record, not only the winning checkpoint's bytes.
+        recipe.update(network=ARCHITECTURE, selection_plan_sha256=sha(plan_path),
+                      selection_result_sha256=sha(source / 'result.json'))
+        validate_measurement(result['confirmation'], sha(model), seed, 128)
+    return model, opponents, recipe, result['confirmation']
+
+
+def load_network(path):
+    """Dispatch only declared checkpoint formats, without process-global backend mutation."""
+    with np.load(path, allow_pickle=False) as data:
+        architecture = str(data['architecture']) if 'architecture' in data else None
+    if architecture not in (None, ARCHITECTURE):
+        raise ValueError('Unsupported standalone policy architecture')
+    return (RelationalNetwork if architecture == ARCHITECTURE else Network).load(path)
+
+
+def same_parameters(before, after):
+    return (type(before) is type(after) and len(before.p) == len(after.p)
+            and all(np.array_equal(a, b) for a, b in zip(before.p, after.p)))
 
 
 def compact(source, target):
-    net, _, _ = Network.load(source)
+    net, _, _ = load_network(source)
     for moment in (*net.m, *net.v):
         moment.fill(0)
     net.steps = 0
     metadata = {'source_sha256': sha(source), 'weights_only': True}
     if not target.exists():
         net.save(target, metadata)
-    restored, receipt, _ = Network.load(target)
-    if receipt != metadata or not all(np.array_equal(a, b) for a, b in zip(net.p, restored.p)):
+    restored, receipt, _ = load_network(target)
+    if receipt != metadata or not same_parameters(net, restored):
         raise ValueError('Exported policy differs from selected source')
     return restored
 
@@ -189,7 +244,8 @@ def measure(run, f, net, opponents, recipe, field, seed, pairs, split, stop):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-run', required=True,
-        choices=['search-v3', 'symmetry-v5', 'counterfactual-v4', 'refine-v3'])
+        choices=['search-v3', 'symmetry-v5', 'counterfactual-v4', 'refine-v3',
+                 'relational-v1', 'teacher32-v1'])
     parser.add_argument('--canary', action='store_true')
     args = parser.parse_args()
     low_priority()

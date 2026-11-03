@@ -631,6 +631,22 @@ both teams belonged to the training fold in every game. `collection_initial_chec
 input verification. Collection has continued beyond that checkpoint without a reported error. This is
 a real recorder/data canary, not validation or evidence that a learned policy wins.
 
+**Final evaluator extended while teacher data collection continues.** The unused final runner now loads both
+the original flat policy and the shared-matchup network without changing the trainer's backend. It verifies
+every 64-pair candidate screen, the registered selection/tie rule, the selected full checkpoint, identical
+compact parameters, and the matching 128-pair fresh confirmation. The selection plan/result hashes bind
+the recorded inference recipe. Unknown architectures and changed source/model evidence are rejected.
+The production strength gate, baseline, original deadline and three final 1,000-pairing blocks are unchanged.
+
+Immutable **`harness/final-v3`** contains **44 verified source files**; all **95 frozen baseline file hashes**
+also match. A read-only check loaded the actual retained relational policy and confirmed its losing
+validation result is refused by production. Two additional unit tests exercise exact shared-network
+prediction export, unchanged flat loading, selection ties, altered evidence and a losing fresh confirmation.
+Full checks pass **312 tests (7 optional video skips)** and **108/108 PvPoke battles**. This is evaluator
+readiness, not a new playing-strength result. The actual validation-only game canary is still pending:
+the healthy teacher32 worker owns the numerical slot, and final-test teams remain unopened.
+Small source/preparation receipts are in `runs/double-dqn/final-preparation-v3/`.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
