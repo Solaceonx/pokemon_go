@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, shared encoder 32.81% ±4.82 and residual 24.02% ±4.59 on fresh confirmation, target unmet; output-calibration trial running (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, target unmet; calibration retained reference and is confirming, stronger-teacher study prepared (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |

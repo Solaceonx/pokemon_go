@@ -590,6 +590,18 @@ live calibration worker 4760. Full checks pass **310 tests (7 optional video ski
 battles**. `teacher32-v1/implementation.json` binds readiness/source hashes. This study remains unstarted
 and unqueued, conditional on calibration's completed below-target result and sufficient original budget.
 
+**Output-calibration selection completed — 2026-11-03.** On the fixed **64 mirrored pairings / 128 battles**,
+full engine32, seed **38711**, the unchanged reference scored **28.515625% ± 7.309964 points**, interval
+**21.205661–35.825589%**. Unpenalized offsets scored **20.312500% ± 6.444777 points**, interval
+**13.867723–26.757277%**, paired change **−8.203125 ± 9.199139 points**. Penalized offsets scored
+**28.125000% ± 7.521382 points**, interval **20.603618–35.646382%**, paired change **−0.390625 ± 2.780650
+points**. Neither established a gain; the maximum-score rule retained the unchanged reference. The complete
+raw journals, validation folds, model hashes and intervals were verified, and both challengers differ only
+in the output bias as intended. `calibration-v1/selection_artifacts.json` and `selection_paired_changes.json`
+retain the evidence. The reserved selected-only **128-pair fresh confirmation, seed 38712**, is now running.
+Positive training-only proxy gains did not improve this selection result; no calibration strength gain or
+reliable win is claimed. The stronger-teacher implementation remains prepared but unstarted and unqueued.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
