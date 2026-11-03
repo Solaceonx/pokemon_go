@@ -9,7 +9,8 @@ A setting is "key=value,key=value" on top of the confirmed engine (samples 4, ho
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
 temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), eval (path to an evaluation
-.npz), team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
+.npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
+team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
 overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
@@ -72,7 +73,7 @@ def parse(spec: str) -> dict | None:
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
                      "stay_after_replace"):
             out[key] = value not in ("0", "false", "False", "")
-        elif key in ("opponents", "unseen", "eval", "team_file", "style_file", "even_cost", "judge"):
+        elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge"):
             out[key] = value
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")
@@ -98,10 +99,20 @@ def setup(field: str = "standard") -> None:
 def evaluator(path: str | None) -> Evaluator:
     path = path or str(ROOT / "runs" / "eval" / "eval.npz")
     if path not in _state["evals"]:
-        _state["evals"][path] = Evaluator.load(path).model
+        _state["evals"][path] = Evaluator.load(ROOT / path).model
     # Share immutable weights only: the evaluator's outlook cache belongs to one player
     # in one battle, otherwise prior jobs and the opposing player's searches affect it.
     return Evaluator(_state["evals"][path])
+
+
+def network(path: str | None) -> QNet:
+    """The trained bot's networks: the website's, or those at a path (task 39's rounds)."""
+    if path is None:
+        return _state["net"]
+    nets = _state.setdefault("nets", {})
+    if path not in nets:
+        nets[path] = QNet.load(str(ROOT / path))
+    return nets[path]
 
 
 def pilot(settings: dict | None, seed: int, cls=RealTime):
@@ -111,9 +122,10 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
     kw = dict(settings)
     # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
     ev = Evaluator(evaluator(kw.pop("eval", None)).model)
+    q = network(kw.pop("q", None))
     margin = kw.pop("margin")
     extra = NO_LIMIT if cls is RealTime else {}
-    return cls(ev, s["pool"], rollout="bot", q=s["net"], margin=margin, seed=seed, **kw, **extra)
+    return cls(ev, s["pool"], rollout="bot", q=q, margin=margin, seed=seed, **kw, **extra)
 
 
 def points(winner: int, side: int) -> float:

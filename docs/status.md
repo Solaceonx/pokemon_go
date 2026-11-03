@@ -3668,3 +3668,30 @@ disagree: rulebook 67%, trained bot 58%, `matching` 47%, engine 36%. Where the e
 11 to 3. The owner switches far less than the engine (2 against 7 of 26) and shields far more than the networks (6 against 1 of 7). The play-out judge's top
 choice matches the owner no better than chance (42% against 38%), so the earlier "staying in when a switch wins" finding, which came from it, is not
 supported. Website exam for friends: `exam.html`; `import_played.py --store` files their answers in `runs/exam/answers/` (not in git).
+
+## Training the engine on its own games (task 39, 2026-11-02, Marco): built and timed
+
+`scripts/engine_loop.py` does the brief. Each round plays E_{r-1} against itself on the mixed field (the website's settings: 32
+imagined battles, horizon 20, no clock; a fresh evaluation cache for each player and for each side's position recorder in every
+game), keeping every decision of both sides as the trained bot sees it (its inputs and legal options, its pick, the engine's pick,
+who won) and both sides' positions at 5% of turns. It then fits a new eval on the round's positions as task 31 does (64 and 32
+hidden units, 30 epochs, from scratch) and refits each head of q from the previous round's: the chosen option's output to who won
+(log loss, as `QNet.fit`) plus 0.3 × cross-entropy toward the engine's pick over the head's outputs divided by 0.02. Throw options
+are read as the bot reads them: holding is worth the best of its three hold lengths. The fit settings are `QNet.fit`'s own (40
+epochs, batches of 256, rate 0.002, decay 0.0001), chosen before any data. A tenth of the games are held back; on them the script
+prints the fit (log loss of the chosen option) and the agreement (the bot, with its margin over the rulebook's advice, plays the
+engine's pick), new against old. Each round is then measured against E_0 by `scripts/engine_versus.py` (new key `q=`, a path to a
+q.npz) on the same battles every round (seed 3902, mixed field): 1,500 pairings both ways, 1,500 crowd, 750 PvPoke. `--confirm`
+plays the best round again on seed 3903 (2,000 / 2,000 / 1,000). Games are saved in parts as they finish, and every stage resumes.
+
+Two traps, both handled in the recorder: the trained bot's decision log (`Learner.log`) also switches on mid-matchup swap
+decisions when its q has no head for them, so the recorder sets it only during each decision; and `Planner._doomed` asks the
+player's own shield advice in the middle of a throw decision, which is not a decision of the game and is not recorded. A test
+checks that a recorded game is, move for move, the game an unrecorded engine plays.
+
+Timing (`python3 scripts/engine_loop.py --run engine-loop-timing --timing 50 --workers 3`, `runs/engine-loop-timing.out`, Marco's
+PC, Ryzen 9 9950X3D): **15.9 core-seconds a game** (median 16.1, 90th percentile 22.6, longest 31.4); 356 turns and 54 decisions a
+game; the engine overrode the trained bot at 12.6% of decisions. That is under 40, so 10,000 games a round. The script's rough
+total for three rounds, their measuring and the confirmation is about 224 core-hours (self-play 133, measuring 55, E_0's own
+battles 5, confirmation 31), below the brief's 300-350. The fits printed in that run (45 games to fit on) only show that the
+pipeline works.
