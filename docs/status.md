@@ -459,6 +459,29 @@ The run is not locked and final-test seeds have not been generated. `mc3_progres
 records the complete validation progression and this handoff. Upstream main's new task-39 entry was
 merged after verifying its diff changes only `docs/tasks.md`; the frozen opponent remains unchanged.
 
+**Bounded greedy-opponent rollout follow-up (registered 2026-11-03 00:23 UTC):** the earlier
+independent rollout agent used the BC16 neural opponent stochastically. That model's measured score
+is 21.29% stochastic versus 31.64% greedy. `scripts/evaluate_greedy_rollouts_rl.py` reuses the same
+independent public-world simulator with greedy opponent continuations, four scenarios and confidence
+1.0, plus the current fixed round-24 own policy. The previous stochastic implementation stays intact.
+Nine source hashes bind the variant and physics; three tests cover registration/reload, rejecting a
+stochastic configuration, and actual paired games that observe greedy neural continuations on both
+simulated sides. All **333 tests pass**, 7 video skips; **108/108 PvPoke exact**.
+
+`greedy_rollout_plan.json` fixes a two-pair functional pipeline, a 32-pair screen matched exactly to the
+first 32 round-24 neural-control cases, and one independent 128-pair confirmation only if the screen
+mean exceeds that control. The fresh confirmation seed is registered before any outcome. Confirmation
+must have bootstrap lower bound above 50% before retaining it for full final testing; final mixed and
+standard gates remain required. No setting is tuned on the confirmation. The screen schedule has
+already been checked identical to its neural-control prefix, and both policy files are pinned by hash.
+
+`scripts/run_greedy_rollout_trial.ps1` is live, waiting for a committed PPO round to allocate two main
+workers plus one trial worker. Its process record/events are in `runs/standalone-rl/greedy-rollout-control`.
+It restores three main workers after either the completed trial or a failure, stopping only verified
+owned trial processes when necessary. The original absolute deadline and twelve-hour final reserve
+remain. To pause work while this controller is live, stop this controller before the owned Python jobs.
+The older capacity controller is now a checkpoint-handoff helper with a guarded two/three-worker option.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

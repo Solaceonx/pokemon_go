@@ -190,6 +190,20 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
+`scripts/evaluate_greedy_rollouts_rl.py` is a separate follow-up to the independent rollout evaluator.
+It fixes the learned opponent's continuations to greedy mode, leaving the original stochastic
+experiment reproducible, and adds a ninth source hash. The registered screen uses four scenarios,
+confidence 1.0, selected PPO round 24 and the frozen BC16 opponent. See
+`runs/standalone-rl/greedy_rollout_plan.json` for the matched 32-pair screen and conditional fresh-seed
+128-pair confirmation. No strength result is available yet. The actual paired-worker test checks
+greedy continuations for both simulated sides. This is independent learned-policy simulation, with
+no Planner/Learner/Engine call inside the agent.
+
+`scripts/run_greedy_rollout_trial.ps1` temporarily allocates two main PPO workers and one evaluation
+worker at committed checkpoints, then restores three PPO workers in its cleanup path. It records
+under `runs/standalone-rl/greedy-rollout-control`; stop that live controller first when pausing work.
+It preserves the original deadline and twelve-hour final reserve.
+
 `pogo/slot_ensemble.py` is a separate inference-only adapter for a saved independent-head checkpoint.
 It averages masked probabilities over all six equivalent own-slot representations and maps outputs
 back to physical actions. It uses public features and neural inference only. Use its explicit

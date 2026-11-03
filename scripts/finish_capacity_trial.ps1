@@ -3,7 +3,8 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$Python,
-    [double]$BudgetDeadline = 1793756530
+    [double]$BudgetDeadline = 1793756530,
+    [ValidateSet(2,3)][int]$ResumeWorkers = 3
 )
 $ErrorActionPreference = 'Stop'
 $rlRoot = Split-Path -Parent $PSScriptRoot
@@ -200,11 +201,11 @@ try {
         Write-ControlEvent 'planning_final_started' $null
     } else {
         $rlRate = if ($rlSelected -eq 'mc-ppo-v3') { '0.0002' } else { '0.00005' }
-        Launch-Job $rlSelected 'scripts/monte_carlo_rl.py' 'run' @('--bootstrap-games','0','--workers','3',
+        Launch-Job $rlSelected 'scripts/monte_carlo_rl.py' 'run' @('--bootstrap-games','0','--workers',"$ResumeWorkers",
             '--hours','36','--train-samples','32','--curriculum-rounds','0','--anchor','0.01','--demo-weight','0.1',
             '--rate',$rlRate,'--validation-every','8','--validation-pairings','128','--pairings','1200',
             '--test-reserve-hours','12','--budget-deadline',"$BudgetDeadline")
-        Write-ControlEvent 'three_worker_training_resumed' $rlSelected
+        Write-ControlEvent 'training_resumed' @{run=$rlSelected;workers=$ResumeWorkers}
     }
 } catch {
     Write-ControlEvent 'controller_error' $_.Exception.Message

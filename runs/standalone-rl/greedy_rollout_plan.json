@@ -1,0 +1,27 @@
+{
+  "advance_rule": "Screen mean must exceed the matched first 32 single-view neural-control pairings; only then run the independently seeded 128-pair confirmation.",
+  "allocation": "Temporarily resume main PPO with two workers; one rollout worker; restore three main workers after completed trials or failure.",
+  "budget_deadline_unix": 1793756530,
+  "confirmation_pairings": 128,
+  "confirmation_rule": "Retain for full final evaluation only if the independent mixed-field pairing bootstrap 95% lower bound is above 50%; final primary/standard gates still required.",
+  "confirmation_run": "greedy-rollouts-confirm-v1",
+  "confirmation_seed": "3489333277217067033",
+  "control_log": "runs/standalone-rl/mc-ppo-v3/validation_00024_greedy.jsonl",
+  "final_reserve_hours": 12,
+  "frozen_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "opponent_policy": "runs/standalone-rl/engine-bc-v1/candidate_epoch_00016.npz",
+  "opponent_policy_sha256": "2df16e06f634dd09b6089524cf1a6bfc06eef483a1802e6e8c1f6012d715c872",
+  "own_policy": "runs/standalone-rl/mc-ppo-v3/selected_round_00024.npz",
+  "own_policy_sha256": "9bfde8643a7ac3735b56be4ea460c415b5dd55e97a652315f47c1018d4d05e03",
+  "pipeline_run": "pipeline-greedy-rollouts-v1",
+  "planning": {
+    "confidence": 1.0,
+    "samples": 4,
+    "stochastic_opponent": false
+  },
+  "registered_utc": "2026-11-03T00:23:39Z",
+  "scope": "One fixed independent-rollout follow-up; validation only; final test data unopened",
+  "screen_pairings": 32,
+  "screen_run": "greedy-rollouts-screen-v1",
+  "seed": 37001
+}
