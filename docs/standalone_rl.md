@@ -4,33 +4,37 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 18:06 UTC):** the main training stopped after 120 rounds / 30,720 games.
-The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
-scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
-locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mixed-field battles score
-**35.06% (95% CI 33.35–36.77%)**. The second mixed-field block scores **33.21% (31.48–34.94%)**.
-Both primary gates fail. The first standard-field block scores **33.96% (32.27–35.71%)** and also fails;
-the last block of the **9,600-battle final plan continues**.
-Sources, mode, sample count and weights are fixed.
-`final_protocol_locked.json` records the lock and original deadline before the first complete test block.
-Three original evaluation workers were initially verified at BelowNormal priority with one thread each. No training or
-selection follows test results in this locked run. Its earlier handoff controller completed normally.
-Earlier capacity, correction, ensemble and rollout trials below are historical negative results.
-Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE description below applies
-to earlier runs. The full final result is pending. The separate, bounded offline-return candidate
-registered in `offline_returns_plan.json` failed validation: **30.47%, 95% [25.59%, 35.35%]**.
-Its paired change against round 104 is **−8.79 percentage points, 95% [−14.26, −3.32]**.
-No new final test was opened; it does not retrain or reselect the original locked policy.
-Its first launch fitted but failed at the validation-call interface before any strength measurement;
-the corrected `offline-returns-v2` reproduced that unmeasured fit exactly. The candidate and optimizer,
-decision and independently checked validation summary are saved. Intermediate checkpoints and raw logs
-remain local. Three original test workers were restored, with the same absolute deadline.
-The final single-factor ablation in `offline_mse_plan.json` removed the conservative penalty (alpha 0),
-keeping all other fitting settings fixed. It also failed validation: **21.09%, 95% [16.41%, 25.78%]**.
-Neither candidate entered final testing. Three original benchmark workers are restored.
-`scripts/audit_offline_returns.py` reproduces the complete validation and decision audits from the
-locally saved logs, checking both inference checkpoints and optimizer states. No further candidates
-will be started in this budget.
+**Final result (2026-11-03 19:22 UTC): the agent does not reliably beat the frozen engine.**
+All **9,600 preregistered held-out battles** completed, with every gate failing:
+
+| Field | Fresh seed block | Battles | Score | 95% pairing-bootstrap CI |
+|---|---:|---:|---:|---:|
+| Mixed | 1 | 2,400 | 35.06% | 33.35–36.77% |
+| Mixed | 2 | 2,400 | 33.21% | 31.48–34.94% |
+| Standard | 1 | 2,400 | 33.96% | 32.27–35.71% |
+| Standard | 2 | 2,400 | 34.67% | 32.94–36.35% |
+
+Training stopped after 120 rounds / 30,720 main games. The selected greedy round-104 checkpoint
+scored 39.26% on validation (95% CI 33.98–44.34%); round 120 did not replace it. The locked model is
+`runs/standalone-rl/mc-ppo-v3/locked.npz`, SHA-256
+`91601fd8e8c799142bd5a6339199c4e5a408ade5d9e13ee7518ed90edb0c6649`.
+Weights, inference mode, scientific sources, opponent, seeds and sample plan stayed fixed throughout
+testing. The three earlier completed blocks are identical to their saved partial audits. No training
+or selection followed test outcomes in this locked run.
+
+`mc-ppo-v3/test_results.json` records the complete result; `final_evaluation_audit.json` independently
+checks score mapping, all registered statistics, provenance, regenerated schedules and separation.
+The nine-member, 1.93 MB `final_audit_inputs.tar.gz` contains the exact pairing logs, schedules and
+lineage bytes needed to reproduce that audit from a checkout. Its audit and the local-input audit
+are identical. Intermediate models and full training arrays remain saved locally.
+
+Earlier capacity, correction, ensemble, rollout and offline-return trials are negative results, recorded
+in `docs/status.md`. The two offline return-fit variants scored 30.47% [25.59–35.35%] and 21.09%
+[16.41–25.78%] on validation; neither qualified for a new final test. Their checkpoints, optimizer
+states, decisions and audits are saved. All owned long jobs and controllers have exited. Checks:
+**346 tests OK (7 video skips), 108/108 PvPoke exact**. The implementation and evaluation are complete;
+the requested playing-strength target was not met. Main PPO used gamma=1/lambda=1 terminal returns;
+the .98 GAE description below applies to earlier runs.
 
 ## What is being trained
 
@@ -42,8 +46,8 @@ The 366 public features include health, energy, shields, timers, all our Pokemon
 types, move stats, form state and pairwise damage. Unrevealed opponents are zero slots. There is no
 species ID embedding. Runtime needs standard-library Python and NumPy.
 
-A separate candidate, `pogo/planning_rl.py`, improves the learned policy's physical actions with
-its own complete-battle rollouts. It reconstructs worlds from public state, samples unrevealed
+A separate unsuccessful candidate, `pogo/planning_rl.py`, added complete-battle rollouts to the
+learned policy's physical actions. It reconstructs worlds from public state, samples unrevealed
 opponents from the public pool, and uses frozen neural policies on both sides of each imagined game.
 Shields and replacements still use the learned heads. It imports the rules simulator and neither
 Planner, Learner nor the search-player module. This is an RL policy with independent model-based
@@ -171,7 +175,7 @@ Recheck completed final blocks with the read-only auditor (raw pairing logs and 
 cache must remain available locally, or be supplied with `--input-bundle`):
 
 ```sh
-python scripts/audit_standalone_final.py --run mc-ppo-v3 --output runs/standalone-rl/final_evaluation_audit.json
+python scripts/audit_standalone_final.py --run mc-ppo-v3 --require-complete --input-bundle runs/standalone-rl/final_audit_inputs.tar.gz --output .rl-cache/final-audit-check.json
 ```
 
 Add `--require-complete` to reject a partial evaluation. The auditor checks winner/seat scores,
@@ -230,7 +234,7 @@ The original implementation is available at commit `ace8536c29f91445506ed1930b92
 
 `ppo-v2` changes network/optimizer isolation and adds public engine action demonstrations, with
 greedy/stochastic inference mode selected on validation. It has passed the end-to-end pipeline checks;
-Final strength results remain pending; development scores are in `docs/status.md` and
+Final strength results are the failed four-block study above; development scores are in `docs/status.md` and
 `validation_history.json`. The v1 and tiny pipeline outcomes are not final-test evidence for v2.
 
 A separate training-only fallback is being prepared in `pogo/counterfactual_rl.py`: capture a complete
@@ -353,10 +357,9 @@ rules match the frozen battle rules. `bench` uses two training pairings for timi
 uses the registered validation partition. Locking and final testing reuse the original fresh-seed,
 paired confidence-interval protocol. The new controller has functional tests and a full-size-network
 physics replay check. Its real validate/lock/test pipeline passes, with actual rollout diagnostics
-and all model/source hashes verified; the tiny strength verdict is false. Playing strength remains
-under evaluation. The preregistered 32-pairing screens compare two confidence gates, then require
-full validation confirmation of a promising variant. These screens share one worker while continued
-terminal-return PPO uses two workers; the total remains three.
+and all model/source hashes verified; the tiny strength verdict is false. The actual rollout variants
+failed confirmation, as recorded in `docs/status.md`. Their preregistered screens and confirmation
+shared one worker while terminal-return PPO used two; all have now exited.
 
 `scripts/monte_carlo_rl.py` exposes the same prepare/train/run/lock/test CLI as the original driver,
 with complete terminal-return PPO advantages (gamma=1, lambda=1). It registers its extra source hash
@@ -376,7 +379,7 @@ Each epoch saves `round_*.npz`; the next invocation resumes from the committed e
 the source/data/initialization hashes and optimizer settings. Critic weights remain unchanged. The
 saved training agreement is a fit diagnostic, not a strength estimate. Evaluate candidate epochs with
 the standalone validation protocol, then continue RL from a selected candidate. The first real-data
-fit completed 16 epochs; epochs 4 and 16 are being validated, with no strength gain claimed yet.
+fit completed 16 epochs; epochs 4 and 16 scored 32.42% and 31.64% on validation, with no strength gain.
 Candidate exports preserve weights and reset optimizer moments for the next method. Do not launch
 pretraining alongside three existing battle workers;
 on Windows the background launcher accepts `-EntryScript scripts/pretrain_engine_policy.py -Command train`.

@@ -1,10 +1,28 @@
 # Project status, for anyone picking this up
 
-## Standalone RL against a frozen engine — 2026-11-01 (Codex, task 37, in progress)
+## Standalone RL against a frozen engine — 2026-11-01–03 (Codex, task 37 complete; win target failed)
 
 Owner-requested standalone reinforcement learning, with up to two days of computing or available usage.
 Work is on `codex/standalone-rl`, draft PR #11. Protocol, commands, artifact descriptions and the review
-of tracker PR #10 are in `docs/standalone_rl.md`. A reliable win has not been established.
+of tracker PR #10 are in `docs/standalone_rl.md`. **The reliable-win target was not met.**
+
+**Final held-out result, 2026-11-03 19:22 UTC:** all 9,600 registered battles completed. Scores and
+pairing-bootstrap 95% intervals: mixed seed blocks **35.06% [33.35–36.77%]** and **33.21%
+[31.48–34.94%]**; standard blocks **33.96% [32.27–35.71%]** and **34.67% [32.94–36.35%]**.
+Every primary/cross-check gate failed. `mc-ppo-v3/test_results.json` records the complete false verdict;
+`final_evaluation_audit.json` verifies all scores, statistics, pinned sources/model, exact regenerated
+schedules and training/validation separation. Earlier completed blocks are unchanged from their
+partial audits. The selected greedy round-104 checkpoint remains locked after 30,720 main training games.
+
+The nine-member `final_audit_inputs.tar.gz` (1,934,458 bytes) packages exact final pairing logs,
+schedules and lineage bytes. Its complete audit is identical to the local-input audit;
+`final_audit_inputs_manifest.json` records every member's hash and the reproduction command.
+The main journal and selected/rejected checkpoints with optimizer state are committed. All intermediate
+checkpoints and raw training batches remain saved locally. `final_process_cleanup_audit.json` verifies
+zero remaining owned long jobs/controllers and empty benchmark stderr. **346 tests OK (7 video skips),
+108/108 PvPoke exact**. PR #10 still has the reviewed head at the last check. Implementation and evaluation
+are complete within the requested budget; the playing-strength target failed. The entries below record
+the experiment history, including unsuccessful alternatives and operational fixes.
 
 Baseline: main `59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9`, archived source/data/Q/evaluation
 weights with per-file SHA-256 hashes. A separately imported snapshot supplies the simulator and engine;

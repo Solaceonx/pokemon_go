@@ -1,0 +1,50 @@
+{
+  "audit_command": "python scripts/audit_standalone_final.py --run mc-ppo-v3 --require-complete --input-bundle runs/standalone-rl/final_audit_inputs.tar.gz --output .rl-cache/final-audit-check.json",
+  "bundle": "runs/standalone-rl/final_audit_inputs.tar.gz",
+  "bundle_and_local_audits_identical": true,
+  "bytes": 1934458,
+  "complete": true,
+  "members": {
+    ".rl-cache/training-lineage-audit/main_final.json": {
+      "bytes": 4526780,
+      "sha256": "5a1321688e89c5ee569d84e579a68283e0ece026e7710aafed540457a49274b4"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_mixed_0.jsonl": {
+      "bytes": 147392,
+      "sha256": "ac06d985d169b42aa3bbc1ea2816c7c124901058a78a38b3084ea1c5c86f4b42"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_mixed_1.jsonl": {
+      "bytes": 147365,
+      "sha256": "9218d5ef480b0216776c1fe411d4e70e952190038285f2a8820f494a237556cb"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_schedule_mixed_0.json": {
+      "bytes": 528690,
+      "sha256": "379d5b98070128462e48d5ceb84c053e3618fe9a17b09ad33cfe271727640d04"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_schedule_mixed_1.json": {
+      "bytes": 529126,
+      "sha256": "7fe445fbdc77620980a1fd79287c4e918267e452e2636773af70c5aa92723bc1"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_schedule_standard_0.json": {
+      "bytes": 535710,
+      "sha256": "bb8cfc800fb292f505d12b804beffc13bd320c6d6215cd9838da73b7ddb1f58c"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_schedule_standard_1.json": {
+      "bytes": 535891,
+      "sha256": "d5bf7e55a9c9fc56380d50dd4e19441acdd4e01b21bb9569eb32d76ab46e76ae"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_standard_0.jsonl": {
+      "bytes": 147538,
+      "sha256": "ce0b6ceb89a1be47e1ffdfa8d480d99f3669d1f4cbfb60982956887f55991263"
+    },
+    "runs/standalone-rl/mc-ppo-v3/test_standard_1.jsonl": {
+      "bytes": 147529,
+      "sha256": "4ade954b34f840e64c4778774ea0790dd7c68c22e0ff5457b5f20ffcdd65d713"
+    }
+  },
+  "previously_completed_blocks_unchanged": true,
+  "required_frozen_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "scope": "Exact audit inputs for the complete 9600-battle locked study; no training arrays",
+  "sha256": "ecdba1febf694fe0af9cb7c9ef583a61023ef47c201d25e7d4e3ac2bcffc8d18",
+  "total_battles": 9600
+}
