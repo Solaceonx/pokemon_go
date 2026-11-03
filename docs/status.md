@@ -558,6 +558,15 @@ selected round-24 mean; the deterministic selection rule keeps that existing che
 not establish another gain. `mc3_progress_round72.json` records the complete progression and paired
 comparison. The lower-weight trial continues its fixed training schedule alongside the main run.
 
+**Lower-weight first four batches saved (2026-11-03 04:14 UTC):** 512 games, 705 distinct
+training trios, 19,043 actual student decisions and 38,689 expert labels (19,043 student-state,
+19,646 opponent-state). There is zero overlap with the 194 validation trios and zero seed overlap.
+Saved return counts exactly match terminal rewards: 14,648 loss decisions, 4,277 win decisions and
+118 draw decisions. All labels are legal, inputs/parameters/optimizer arrays are finite, and all
+eight source hashes match. All four checkpoint hashes are saved in `low_ce_training_audit_round4.json`;
+raw checkpoints and batches remain local. Both post-training validation modes are now being evaluated
+on the registered 128-pair schedule; these integrity counts do not establish playing strength.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
