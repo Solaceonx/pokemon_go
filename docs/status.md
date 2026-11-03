@@ -786,6 +786,15 @@ The controller and offline run have exited. The diagnostic and events are retain
 mode, sources, seeds, sample count and completed results remain unchanged. Both mandatory mixed-field
 blocks have failed; the two registered standard-field blocks continue to completion.
 
+**One final offline ablation registered (2026-11-03 17:36 UTC):** `offline-returns-mse-v1` removes
+only the conservative action penalty (alpha 0 instead of 0.1), retaining the same parent, training data,
+seed, four epochs, rate, head scaling and validation schedule. This tests whether that penalty caused
+the return-fit regression. `offline_mse_plan.json` fixes this as the last additional candidate, with
+the same validation lower-bound gates, fresh 9,600-battle final test only if qualified, 5.5-hour reserve,
+original deadline and three-worker cap. The original locked study remains unchanged. The controller
+now takes alpha from the plan and waits for an owned stopped parent to exit before resuming it;
+each control run can retain its own diagnostics. No gameplay rule was added.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

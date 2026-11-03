@@ -46,7 +46,8 @@ Do not replace the website or engine defaults. Record unsuccessful runs as well 
 Current milestone: the main policy is locked and final testing is running; both completed mixed-field
 seed blocks fail the win target. The separate bounded offline-return trial failed its validation gate
 (30.47%, 95% [25.59%, 35.35%]) and was rejected. Three workers are finishing the two original standard-field
-blocks; no new final test was opened.
+blocks; no new final test was opened. One final single-factor ablation (alpha 0) is preregistered with
+the same validation gates, final-test reserve and deadline; it shares the three-worker allowance.
 
 **Done when.** The standalone agent and reproducible train/evaluate commands exist, checks pass, and an
 honest held-out result with confidence intervals establishes whether it reliably beats the frozen current

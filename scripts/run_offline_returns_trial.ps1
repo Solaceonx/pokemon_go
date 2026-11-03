@@ -7,7 +7,7 @@ Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 . "$PSScriptRoot/rl_process_identity.ps1"
 [System.Diagnostics.Process]::GetCurrentProcess().PriorityClass='BelowNormal'
 $rlPlan=Get-Content $PlanPath -Raw | ConvertFrom-Json
-$rlControl='runs/standalone-rl/offline-return-control'
+$rlControl=if($rlPlan.control_directory){$rlPlan.control_directory}else{'runs/standalone-rl/offline-return-control'}
 $null=New-Item -ItemType Directory -Path $rlControl -Force
 $rlChangedAllocation=$false
 function Event([string]$Name,$Detail){
@@ -38,6 +38,8 @@ function Stop-Owned([string]$Run,[string]$Entry,[int]$MaxWorkers){
     Event 'owned_stop' @{run=$Run;pid=$rlInfo.pid;workers=@($rlChildren | ForEach-Object{$_.ProcessId})}
     $rlChildren | ForEach-Object{Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue}
     Stop-Process -Id $rlInfo.pid -Force -ErrorAction SilentlyContinue
+    Wait-Process -Id $rlInfo.pid -Timeout 10 -ErrorAction SilentlyContinue
+    if(Live $Run){throw 'Owned parent did not exit before resume.'}
 }
 function Resume-Main([int]$Workers){
     if(Finished 'mc-ppo-v3'){return}
@@ -54,7 +56,7 @@ function Restore-Main{
 function Launch-Trial([string]$Command,[int]$Workers){
     & "$PSScriptRoot/run_standalone_rl.ps1" -Run $rlPlan.run -Python $Python -EntryScript scripts/offline_returns_rl.py -Command $Command -TrainingArguments @(
         '--workers',"$Workers",'--budget-deadline',"$($rlPlan.budget_deadline_unix)",
-        '--alpha','0.1','--epochs','4','--max-train-minutes','15','--batch-size','1024',
+        '--alpha',"$($rlPlan.alpha)",'--epochs','4','--max-train-minutes','15','--batch-size','1024',
         '--rate','0.0002','--head-scale','0.1','--test-reserve-hours','5.5',
         '--seed','37001','--validation-pairings','128','--pairings','1200') | Out-Null
     Event 'offline_started' @{command=$Command;workers=$Workers;record=(Get-Content "runs/standalone-rl/$($rlPlan.run)/process.json" -Raw | ConvertFrom-Json)}
@@ -63,7 +65,7 @@ try{
     Event 'controller_start' @{pid=$PID;plan=$rlPlan}
     if(-not(Test-Path runs/standalone-rl/mc-ppo-v3/lock.json)){throw 'Original benchmark must already be locked.'}
     if([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() -gt $rlPlan.latest_trial_start_unix){throw 'Too late for the registered bounded trial.'}
-    & $Python scripts/offline_returns_rl.py prepare --run $rlPlan.run --workers 1 --budget-deadline $rlPlan.budget_deadline_unix
+    & $Python scripts/offline_returns_rl.py prepare --run $rlPlan.run --workers 1 --alpha $rlPlan.alpha --budget-deadline $rlPlan.budget_deadline_unix
     if($LASTEXITCODE -ne 0){throw 'Offline preparation failed.'}
     if(-not(Finished 'mc-ppo-v3')){
         if(-not(Live 'mc-ppo-v3')){throw 'Original benchmark is not live.'}

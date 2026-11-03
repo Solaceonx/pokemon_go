@@ -4,7 +4,7 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 16:22 UTC):** the main training stopped after 120 rounds / 30,720 games.
+**Current status (2026-11-03 17:25 UTC):** the main training stopped after 120 rounds / 30,720 games.
 The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
 scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
 locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mixed-field battles score
@@ -16,13 +16,17 @@ Three original evaluation workers were initially verified at BelowNormal priorit
 selection follows test results in this locked run. Its earlier handoff controller completed normally.
 Earlier capacity, correction, ensemble and rollout trials below are historical negative results.
 Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE description below applies
-to earlier runs. The full final result is pending. One separate, bounded offline-return candidate is
-registered in `offline_returns_plan.json`, with validation-only qualification and fresh final seeds if
-qualified; it does not retrain or reselect the original locked policy.
+to earlier runs. The full final result is pending. The separate, bounded offline-return candidate
+registered in `offline_returns_plan.json` failed validation: **30.47%, 95% [25.59%, 35.35%]**.
+Its paired change against round 104 is **−8.79 percentage points, 95% [−14.26, −3.32]**.
+No new final test was opened; it does not retrain or reselect the original locked policy.
 Its first launch fitted but failed at the validation-call interface before any strength measurement;
-the corrected, separately registered run is `offline-returns-v2`, now validating with unchanged fitting
-settings and parameters identical to that unmeasured attempt. The current shared allocation is two
-original test workers plus one offline-validation worker, within the same three-worker cap.
+the corrected `offline-returns-v2` reproduced that unmeasured fit exactly. The candidate and optimizer,
+decision and independently checked validation summary are saved. Intermediate checkpoints and raw logs
+remain local. Three original test workers were restored, with the same absolute deadline.
+One final single-factor ablation is preregistered in `offline_mse_plan.json`: remove the conservative
+penalty (alpha 0), keeping all other fitting settings fixed. It must pass the same validation gates
+and time reserve before a separate final test. No further candidates will be started in this budget.
 
 ## What is being trained
 
