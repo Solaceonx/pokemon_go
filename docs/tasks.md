@@ -72,8 +72,9 @@ covered by `data/video_sources.csv`; task 3 (fast frame recognition for live pla
 on fresh validation only, then locks one policy for a new benchmark excluding every prior final composition
 and game seed. Both real test teams remain in fold9; fresh block seeds39091/39092, unchanged full engine32,
 and three1,000-pairing blocks. Prior PR #12 results and all original artifacts stay intact. This claim
-precedes implementation or any new numerical worker. Required initial checks pass:317tests,7skips;108/108
-PvPoke exact. See `docs/double_dqn_continue.md`. The reliable-win goal remains unmet.
+precedes implementation or any new numerical worker. Initial checks passed317tests; the implementation
+now passes322tests,7skips,108/108 PvPoke exact. Its immutable source/guard preflight passes without
+starting a worker. See `docs/double_dqn_continue.md`. The reliable-win goal remains unmet.
 
 **Prior completed experiment.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
 November3 22:40:49UTC deadline. Draft PR #12 retains a standalone NumPy Double DQN pilot, compact policy,

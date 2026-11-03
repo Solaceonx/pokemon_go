@@ -6,7 +6,7 @@ says how to run things.
 
 Last updated 2026-11-03.
 
-## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; authorized, implementation pending)
+## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; implemented, activation pending)
 
 The owner explicitly authorized **another 48 hours** after reviewing the completed losing benchmark.
 The new allocation begins at the observed approval time **2026-11-03 20:59:47 UTC** and ends at
@@ -33,6 +33,21 @@ Initial required checks: **317 tests pass, seven optional video skips;108/108 Pv
 No new numerical worker has started. Implementation, recovery/deadline tests and a new immutable runtime
 receipt are required before activation. One worker, one NumPy thread; no phone, merge or deployment.
 Full protocol: `runs/double-dqn/continue-v1/plan.json`; working instructions: `docs/double_dqn_continue.md`.
+
+**Implementation prepared before activation.** New `scripts/dqn_continue.py` reuses the unchanged
+Double DQN trainer with the shared encoder and exact full-state checkpoint. Its scoped evaluator rejects
+all prior test-composition fingerprints and old32-bit game seeds, while keeping the old global lock intact.
+New `run_dqn_continue.ps1` serializes workers, can reattach to the exact orphaned child, sets BelowNormal
+priority and preserves the new absolute deadline through retries. Training ends at most34hours after
+approval, reserving the last research hour for validation. No new numerical job has started at this record.
+
+**322 tests pass,7optional video skips;108/108 PvPoke exact**. Five new tests exercise actual learning
+from saved Adam/target/RNG/replay state, exclusion under permutations and old seeds, complete-pair resume
+and corruption rejection, persistent stage/overall limits and a real competing process denied the worker
+lease. The39-source immutable runtime `.dqn-cache/harness/continue-v1` and separate guard preflight
+passed without a numerical start. `activation.json`, `source_manifest.json` and `implementation.json`
+bind the source and test receipts. The original completed benchmark independently audits unchanged;
+no new strength result exists.
 
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
