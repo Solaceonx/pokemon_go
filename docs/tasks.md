@@ -110,6 +110,9 @@ E_0 is the website's engine):
    1,500 crowd and 750 PvPoke battles, at 32 samples, with the search-time lines.
 5. Go on to the next round from the newest networks whatever the result. Three rounds.
 
+**Since 2026-11-03** Marco's play-out caches are in `main` (same games, about 2× faster self-play; capped at 15,000 entries, which
+a long PC run may raise). Pull them in only between stages, never under running workers; the games do not change.
+
 Start with a timing run of 50 self-play games and print core-seconds a game. The estimate is about 25; if it is over
 40, use 6,000 games a round and say so.
 

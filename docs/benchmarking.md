@@ -146,6 +146,13 @@ out of this repo.
 - **`matching` is last or tied last on every row for this player.**
 - **The play-out judge** matches this player 31% of the time (11 of 36), below the owner's 42%: rejected by both.
 - **Repeats:** sure answers came back the same for both players (owner 3 of 3, this player 2 of 2); answers involving a leaning one changed (3 of 3).
+- **A higher bar for the engine's switches, screened on this exam** (2026-11-03, `scripts/exam_variants.py`, 35 positions replayed, the
+  website engine's picks reproduced): `switch_edge` 0.02 and 0.05 change 0 and 2 picks and nothing else; **0.1 changes 6 and moves the
+  engine from 48% to 60% where both players agree (12 to 15 of 25)**, owner 34% to 46%, second player 54% to 60%; `stay_after_replace`
+  adds nothing. Still below the trained bot (64%) and rulebook (68%) there. Against bots the same idea loses: task 35's grid had
+  `switch_edge=0.1, stay_after_replace=1` at 36.9% head to head and −11.7 against the crowd (on the nested-rollout code), and on the fixed
+  code 0.01 and 0.02 lost 1 to 2 points head to head. This is the split the exam was built to show. A screen on known answers, three
+  positions: it goes into exam 2 as a fifth version, so fresh positions are chosen where it differs.
 - **For task 39** (the engine trained on its own games): the trained bot learns the engine's choices there, and these are the choices both
   players dispute, so its candidate must be scored on this exam before anything is adopted.
 
