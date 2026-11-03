@@ -664,8 +664,30 @@ standard cross-check**, to establish the reliable-win target. All three 1,000-pa
 composition splits, frozen baseline and original 22:40:49 deadline remain fixed. One policy/method and
 all hashes must be locked before final games, with no subsequent training or final-outcome selection.
 The actual validation-only game canary is still required. This allocation was recorded before the new
-teacher trial's result and before any final outcome. Its budget override is **not implemented or active
-yet**; final-v3 still refuses losing confirmations. A new tested immutable runtime is required first.
+teacher trial's result and before any final outcome. Its original registered artifact retains the pending
+implementation status as history; implementation and activation are recorded separately below.
+
+**Budget-final driver implemented and serial handoff queued.** `scripts/dqn_budget_final.py` pins the
+registered plan hash, refuses a live research worker, verifies the complete candidate evidence with
+the original inference recipe, and locks its deterministic budget-constrained choice before the actual
+validation-only game canary. Resumption uses the original decision instant and rejects changed evidence;
+canary outcomes cannot select another policy. The ordinary final CLI still retains its stricter validation
+gate. Only this explicitly labelled budget-final path waives that additional gate, and the final win
+criterion is unchanged. Three new tests exercise the plan/process guard, time-constrained choice,
+immutable decisions and resumption. **315 tests pass (7 optional video skips); PvPoke remains 108/108**.
+
+Immutable **`harness/final-budget-v1`** has **45 verified source files**, with the live teacher's 44 files
+and all 95 baseline hashes unchanged. Read-only checks verified the actual relational/search/symmetry
+candidate evidence and confirmed early activation is refused while teacher32 is live. The hidden serial
+guard **PID 25004**, started **05:54:05.0094030 UTC**, runs immutable `harness/launch-final-budget-v1`.
+It is **waiting**, with zero numerical workers launched. It checks both current research process identities,
+waits for their exit, then runs the actual validation canary and the one production benchmark serially.
+If research remains live at the registered **09:45 UTC** cutoff, it preserves checkpoints and stops only
+the verified own numerical process; incomplete teacher results are ineligible. The original overall deadline
+is enforced throughout, with no restart or extension after it. Recoverable failure must resume the same
+decision/checkpoints. Source/proposal/check/queue receipts are in `budget-finalization-v1/`; operational
+state is `controller_state.json`, with stdout/stderr under `runs/budget-final-*`.
+No final policy is selected yet, no game canary has run, and no final team or outcome is open.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training

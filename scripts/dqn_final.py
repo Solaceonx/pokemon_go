@@ -57,14 +57,14 @@ def validate_measurement(report, digest, seed, pairs, baseline=BASE):
     return computed
 
 
-def validate_confirmation(report, digest, seed, baseline=BASE):
+def validate_confirmation(report, digest, seed, baseline=BASE, *, require_competitive=True):
     """Require fresh full-engine validation and recompute its interval before spending final evidence."""
     computed = validate_measurement(report, digest, seed, 128, baseline)
-    if computed['lower95'] <= .5:
+    if require_competitive and computed['lower95'] <= .5:
         raise ValueError('Validation target not met; preserve final teams and continue research')
 
 
-def selection(source_name, canary):
+def selection(source_name, canary, *, require_competitive=True):
     source = ROOT / 'runs/double-dqn' / source_name
     result = json.loads((source / 'result.json').read_text())
     plan_path = source / ('trial_plan.json' if source_name == 'relational-v1' else 'plan.json')
@@ -122,11 +122,12 @@ def selection(source_name, canary):
         model, mode, seed, samples, opponents = source / 'policy.npz', 'average', 38112, 0, []
     else:
         raise ValueError('Unsupported selected experiment')
-    if not canary:
+    if not canary or not require_competitive:
         for relative, digest in plan['source_sha256'].items():
             if sha(ROOT / relative) != digest:
                 raise ValueError('Validated runtime source changed: ' + relative)
-        validate_confirmation(result['confirmation'], sha(model), seed, plan.get('baseline_commit', BASE))
+        validate_confirmation(result['confirmation'], sha(model), seed, plan.get('baseline_commit', BASE),
+                              require_competitive=require_competitive)
     recipe = {'mode': mode, 'samples': samples, 'edge': .03, 'stride': 8}
     if source_name in ('relational-v1', 'teacher32-v1'):
         # Bind the whole selection record, not only the winning checkpoint's bytes.
@@ -169,9 +170,10 @@ def validate_canary(directory, protocol):
     if not receipt_path.exists() or not verdict_path.exists():
         raise ValueError('Run the matching validation-only frozen-engine canary before final tests')
     receipt, verdict = json.loads(receipt_path.read_text()), json.loads(verdict_path.read_text())
-    keys = ('source_run', 'source_model_sha256', 'recipe', 'artifacts', 'source_sha256', 'baseline', 'confirmation')
+    keys = ('source_run', 'source_model_sha256', 'recipe', 'artifacts', 'source_sha256', 'baseline',
+            'confirmation', 'budget_finalization')
     blocks = [('mixed', 38995), ('mixed', 38996), ('standard', 38995)]
-    if (any(receipt[key] != protocol[key] for key in keys) or not receipt.get('canary')
+    if (any(receipt.get(key) != protocol.get(key) for key in keys) or not receipt.get('canary')
             or receipt.get('split') != 'validation' or receipt.get('pairs_per_block') != 2
             or receipt.get('blocks') != [list(b) for b in blocks]
             or not verdict.get('canary') or verdict.get('strength_target_met') is not None
@@ -248,32 +250,42 @@ def main():
                  'relational-v1', 'teacher32-v1'])
     parser.add_argument('--canary', action='store_true')
     args = parser.parse_args()
+    execute(args.source_run, args.canary)
+
+
+def execute(source_name, canary, budget_receipt=None):
+    """The budget driver supplies a separately registered, verified allocation receipt."""
     low_priority()
-    model, predictors, recipe, confirmation = selection(args.source_run, args.canary)
+    model, predictors, recipe, confirmation = selection(source_name, canary,
+        require_competitive=budget_receipt is None)
     f = frozen()
     if sha(ROOT / 'pogo/battle.py') != f.manifest['files']['pogo/battle.py']:
         raise ValueError('Planning simulator mechanics differ from the frozen engine simulator')
     if sha(ROOT / 'data/matchups_wide.json') != f.manifest['files']['data/matchups_wide.json']:
         raise ValueError('Inference feature data differs from frozen baseline data')
-    run = ROOT / 'runs/double-dqn' / (('canary-final-' if args.canary else 'final-') + args.source_run)
+    run = ROOT / 'runs/double-dqn' / (('canary-final-' if canary else 'final-') + source_name)
     run.mkdir(parents=True, exist_ok=True)
     net = compact(model, run / 'policy.npz')
     opponents = [compact(path, run / f'opponent_{i}.npz') for i, path in enumerate(predictors)]
     artifacts = {path.name: sha(path) for path in [run / 'policy.npz',
         *(run / f'opponent_{i}.npz' for i in range(len(opponents)))]}
     sources = [*(ROOT / 'pogo').glob('*.py'), Path(__file__), ROOT / 'scripts/double_dqn.py']
-    blocks = (('mixed', 38995), ('mixed', 38996), ('standard', 38995)) if args.canary else BLOCKS
-    pairs, split = (2, 'validation') if args.canary else (1000, 'test')
-    protocol = {'source_run': args.source_run, 'source_model_sha256': sha(model), 'recipe': recipe,
+    if budget_receipt is not None:
+        sources.append(ROOT / 'scripts/dqn_budget_final.py')
+    blocks = (('mixed', 38995), ('mixed', 38996), ('standard', 38995)) if canary else BLOCKS
+    pairs, split = (2, 'validation') if canary else (1000, 'test')
+    protocol = {'source_run': source_name, 'source_model_sha256': sha(model), 'recipe': recipe,
         'artifacts': artifacts, 'source_sha256': {str(p.relative_to(ROOT)): sha(p) for p in sources},
         'baseline': f.manifest, 'pairs_per_block': pairs, 'blocks': [list(b) for b in blocks], 'split': split,
-        'confirmation': confirmation, 'canary': args.canary, 'deadline_unix': DEADLINE}
-    if not args.canary:
-        validate_canary(ROOT / 'runs/double-dqn' / ('canary-final-' + args.source_run), protocol)
+        'confirmation': confirmation, 'canary': canary, 'deadline_unix': DEADLINE}
+    if budget_receipt is not None:
+        protocol['budget_finalization'] = budget_receipt
+    if not canary:
+        validate_canary(ROOT / 'runs/double-dqn' / ('canary-final-' + source_name), protocol)
     # A single production lock across this chat's candidate runs prevents a second choice after final outcomes.
-    lock(run / 'protocol.json' if args.canary else ROOT / 'runs/double-dqn/final_test_lock.json', protocol)
+    lock(run / 'protocol.json' if canary else ROOT / 'runs/double-dqn/final_test_lock.json', protocol)
     lock(run / 'protocol.json', protocol)
-    state = {'pid': os.getpid(), 'status': 'evaluating', 'canary': args.canary}
+    state = {'pid': os.getpid(), 'status': 'evaluating', 'canary': canary}
     write_json(run / 'state.json', state)
     try:
         reports = []
@@ -282,8 +294,8 @@ def main():
                 lambda: time.time() >= DEADLINE or (run / 'STOP').exists()))
         passed = (all(r['lower95'] > .5 for r in reports if r['field'] == 'mixed')
                   and all(r['upper95'] >= .5 for r in reports if r['field'] == 'standard'))
-        write_json(run / 'verdict.json', {'strength_target_met': None if args.canary else passed,
-            'canary': args.canary, 'protocol_sha256': sha(run / 'protocol.json'), 'final_tests': reports,
+        write_json(run / 'verdict.json', {'strength_target_met': None if canary else passed,
+            'canary': canary, 'protocol_sha256': sha(run / 'protocol.json'), 'final_tests': reports,
             'artifacts': artifacts, 'completed_unix': time.time()})
         state['status'] = 'complete'
     except BaseException as error:

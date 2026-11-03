@@ -300,6 +300,37 @@ part of the measured inference method. Final-package ensemble files are allowed 
 The new harness has passed its unit checks; the full frozen-engine canary has not yet run because research
 still owns this experiment's numerical worker. Final holdouts remain unopened.
 
+The subsequent `budget-finalization-v1/plan.json` reserves the remaining time for the originally requested
+held-out benchmark even if validation still shows a loss. It was registered before teacher32 outcomes
+and final games. Research finishes with teacher32 or stops at09:45UTC November3, with the same overall
+22:40:49UTC deadline. The highest fresh-confirmation point score among the declared complete source-run
+winners that fits the fixed time forecast is selected; the declared order breaks ties. This selection
+does not establish a significant difference between candidates measured on different validation seeds.
+
+`scripts/dqn_budget_final.py` checks the exact registered plan and all normal source/model/measurement
+identities, but explicitly waives the additional competitive-validation gate for this one benchmark.
+It changes no final sample, seed, split, baseline or reliable-win criterion. `selection.json` locks the
+decision before the canary and binds the decision instant, all candidate evidence, forecast and method.
+No further research or policy selection is permitted from canary or final outcomes. Both canary and
+production protocols bind this allocation and selection receipt; an ordinary canary cannot authorize
+a budget-final production run. The original standalone final CLI continues to enforce its stricter gate.
+
+The immutable numerical runtime is `harness/final-budget-v1` (45 source files). Hidden serial guard
+PID25004 runs `harness/launch-final-budget-v1` and waits for the teacher worker **and** guard to exit.
+It enforces the registered research cutoff using only the freshly verified own process identity, then
+runs these commands serially, with one numerical worker and the unchanged overall deadline:
+
+```powershell
+python .dqn-cache/harness/final-budget-v1/scripts/dqn_budget_final.py --canary
+python .dqn-cache/harness/final-budget-v1/scripts/dqn_budget_final.py
+```
+
+These are reproducibility/resumption commands, **not additional jobs to launch while the queued controller
+is live**. Read `budget-finalization-v1/controller_state.json`, `.dqn-cache/final_controller.json` and
+`runs/budget-final-controller.err` first; confirm actual process identities before recovery. The queue
+refuses overlapping workers, saves exact attempt log paths and never extends the original deadline.
+The actual game canary and final tests remain pending while teacher32 collects its training data.
+
 ## Retained files
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw

@@ -28,6 +28,9 @@ class LockedFinalTests(unittest.TestCase):
         losing = dict(report, **ci([0., .5] * 64), pair_scores=[0., .5] * 64)
         with self.assertRaisesRegex(ValueError, 'preserve final teams'):
             validate_confirmation(losing, 'selected', 38412)
+        validate_confirmation(losing, 'selected', 38412, require_competitive=False)
+        with self.assertRaises(ValueError):
+            validate_confirmation(losing, 'changed', 38412, require_competitive=False)
 
     def test_lock_binds_policy_recipe_sources_and_predeclared_final_blocks(self):
         self.assertEqual(BLOCKS, (('mixed', 38091), ('mixed', 38092), ('standard', 38091)))
@@ -177,6 +180,8 @@ class LockedFinalTests(unittest.TestCase):
             validate_canary(root, protocol)
             with self.assertRaises(ValueError):
                 validate_canary(root, dict(protocol, recipe={'mode': 'direct'}))
+            with self.assertRaises(ValueError):
+                validate_canary(root, dict(protocol, budget_finalization={'selection_sha256': 'other'}))
             (root / 'rows_mixed_38995.jsonl').write_text('{}\n')
             with self.assertRaises(ValueError):
                 validate_canary(root, protocol)
