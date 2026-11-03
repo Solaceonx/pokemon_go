@@ -536,6 +536,13 @@ best is unchanged: greedy round 24, 37.11%. `mc3_progress_round64.json` records 
 progression and the current two-main/one-side-worker allocation. The lower-weight side trial is
 still checking its unchanged starting policy before training; no final-test data has been opened.
 
+**Lower-weight baseline verified (2026-11-03 02:30 UTC):** all 512 battle outcomes reproduce the
+fixed round-24 parent exactly, including per-battle scores/winners, weights and schedules, in both
+stochastic (26.95%) and greedy (37.11%) modes. All eight source hashes match, optimizer moments and
+counters are zero, and actual launch arguments match the prospective weight-0.1/12-round plan.
+`low_ce_baseline_audit.json` records these checks. This is the controlled starting point, not a new
+learned gain. The trial has begun on-policy training, with the main PPO continuing beside it.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
