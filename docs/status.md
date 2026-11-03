@@ -678,6 +678,32 @@ The selected weights/export remain unchanged at 39.26%. `mc3_progress_round112.j
 complete checks, finite parameters/optimizer and matching five source hashes. Three workers continue
 toward the original training cutoff; final tests remain unopened and the twelve-hour reserve is intact.
 
+**Training stopped and final model locked (2026-11-03 13:46:58 UTC):** round 120 / 30,720 games
+is the last training round. Its greedy validation is **38.87%, CI [33.98%, 43.75%]**, and stochastic
+is **28.91%, CI [24.22%, 33.79%]**. The paired greedy change from selected round 104 is **-0.39
+points, CI [-6.64, 5.86]**; round 104 remains selected at 39.26%. `mc3_progress_round120.json`
+records the final development measurement. Training is now forbidden in this locked run.
+
+The immutable final policy is `mc-ppo-v3/locked.npz`, SHA-256
+`91601fd8e8c799142bd5a6339199c4e5a408ade5d9e13ee7518ed90edb0c6649`, with the exact evaluated
+round-104 parameters and greedy mode. `lock.json`, `test_plan.json` and `final_protocol_locked.json`
+pin the sources, configuration and two fresh seeds. The planned **9,600 final battles are running**:
+1,200 paired cases per seed/field, two seeds, mixed and standard fields. No complete test block existed
+when the protocol audit was captured. The original absolute budget deadline remains unchanged.
+A fresh-process locked-policy deployment check passed without importing the old players or simulator.
+Three actual evaluation workers were read back at BelowNormal priority with one thread each
+(`final_launch_audit.json`, `deployment_check_locked.json`). This is not a final strength result.
+
+**Complete main-training audit:** all 120 committed rounds, 30,720 episodes, 1,163,172 student
+decisions and 985,018 public expert labels are saved. Inputs, every checkpoint and every optimizer
+are finite; labels are legal and terminal-return counts match episode results. Counts are 24,525
+engine, 3,139 Learner and 3,056 self-play games, with 32 samples recorded throughout. The main data
+has 9,963 distinct training trios; including initialization gives 11,970, with zero overlap against
+the 323 registered validation trios or their seeds. Both warm-start links preserve every parameter
+exactly. The first started test schedule also passes team/seed separation; all four schedules will
+be checked after completion. `mc3_final_training_audit.json` records every checkpoint/batch hash
+and the initialization reference. No inference, training or scoring source was changed.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

@@ -4,18 +4,17 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 12:27 UTC):** the reliable-win objective is not achieved. The main
-complete-return PPO run's latest validation is round 112 / 28,672 training games. Round 112 scores
-37.11% greedy (95% CI 32.03–42.19%) and does not replace the selected round-104 checkpoint,
-which scores 39.26% (33.98–44.34%). Its paired
-change from round 80 is +1.76 points ([-4.69, 8.20]), so no additional gain is established. The immutable
-export is `runs/standalone-rl/mc-ppo-v3/selected_round_00104.npz`. The lower-weight correction trial finished
-1,536 games, with endpoint greedy score 31.64% (26.56–36.72%) and no gain over its initialization.
-The allocation comparison retained the main run, now verified on three BelowNormal workers with the
-original deadline and twelve-hour final reserve. The handoff controller completed normally; no side jobs
-remain. Earlier capacity, ensemble and rollout
-trials below are historical results. Final tests remain unopened. Main PPO currently uses gamma=1,
-lambda=1 complete terminal returns; the .98 GAE description below applies to the earlier runs.
+**Current status (2026-11-03 13:47 UTC):** training stopped after 120 rounds / 30,720 games.
+The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
+scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
+locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`, and **9,600 final battles are running** on two
+fresh seeds and the held-out mixed/standard fields. Sources, mode, sample count and weights are fixed.
+`final_protocol_locked.json` records the lock and original deadline before the first complete test block.
+Three evaluation workers were verified at BelowNormal priority with one thread each. No training or
+selection follows test results. The handoff controller completed normally and no side jobs remain.
+Earlier capacity, correction, ensemble and rollout trials below are historical negative results.
+Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE description below applies
+to earlier runs. The final strength verdict is pending.
 
 ## What is being trained
 
@@ -148,7 +147,7 @@ Use a saved policy directly:
 
 ```python
 from pogo.standalone_policy import load_agent
-agent, metadata = load_agent("runs/standalone-rl/ppo-v2/locked.npz", seed=123)
+agent, metadata = load_agent("runs/standalone-rl/mc-ppo-v3/locked.npz", seed=123)
 # agent.act(view), agent.shield(view, energy), agent.replace(view)
 ```
 
@@ -213,7 +212,7 @@ The completed lower-weight correction follow-up is `mc-student-lowce-v1`, regist
 up to 1,536 games/ten hours, one worker beside the main run's two. All 1,536 games and the round-12
 validation completed; greedy score is 31.64% (95% CI 26.56–36.72%). The unchanged initialization
 remains selected at 37.11%; no gain is established. The failed weight-1 pilot remains a separate
-negative result. This is an adaptive validation experiment; final-test data is unopened.
+negative result. This was an adaptive validation experiment; it did not open its own final tests.
 `scripts/run_low_ce_trial.ps1` records under `runs/standalone-rl/low-ce-control`; stop this controller
 first when pausing while it is live. Its completed comparison retained main round 104 and resumed that
 run on three verified workers; see `low_ce_allocation_decision.json` and `low_ce_handoff_audit.json`.
