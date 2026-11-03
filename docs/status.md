@@ -795,6 +795,38 @@ original deadline and three-worker cap. The original locked study remains unchan
 now takes alpha from the plan and waits for an owned stopped parent to exit before resuming it;
 each control run can retain its own diagnostics. No gameplay rule was added.
 
+The zero-penalty fit completed all four epochs / 4,652,688 row presentations in 29.5 seconds and
+entered validation. The original two workers plus one candidate worker are verified BelowNormal
+(`offline_mse_resource_audit.json`). The handoff left a 588-byte, mostly NUL stderr fragment stamped
+at the exact resume instant. The new parent subsequently logged both unchanged cached blocks and
+continued fresh pairings through index 995. That fragment was preserved before clearing the active
+error flag (`offline_mse_handoff_audit.json` and its raw archive); fresh errors remain monitored.
+No pairing record or scientific source was changed.
+
+**Third locked block complete (2026-11-03 17:59 UTC):** standard-field seed block 0 scores
+**33.95833%, bootstrap 95% [32.27083%, 35.70833%]**, with Hoeffding lower bound 30.03783%.
+It fails the registered cross-check gate. `final_block_standard_0_audit.json` independently verifies
+all three completed blocks / 7,200 battles, including score mapping, intervals, regenerated schedules,
+source/model pins and training/validation separation. The fourth and last original block is running.
+
+**Final offline ablation rejected (2026-11-03 18:06 UTC):** alpha 0 completed all 128 validation
+pairings / 256 battles: **21.09375%, bootstrap 95% [16.40625%, 25.78125%]**, 54 wins / 0 draws /
+202 losses. Paired change from round 104 is **−18.16406 percentage points, 95% [−24.80957, −11.52344]**.
+No promotion gate passed and no new final test was opened. `scripts/audit_offline_returns.py` reproduces
+the audits of both trials, including source/model pins, legal score mapping, regenerated schedules,
+finite parameters and optimizer states, paired statistics and promotion decisions. Both pass integrity
+checks; neither passes the strength target. See `offline_mse_validation_audit.json` and the saved rejected
+`offline-returns-mse-v1/best.npz`. All raw data and intermediate optimizer checkpoints remain local.
+
+The controller waited for stopped processes but then queried a process whose `StartTime` had become
+null during exit. Error cleanup successfully restored the original three-worker test (parent 27632,
+workers 20088 / 10452 / 24692), all BelowNormal; the candidate and controller are now exited and the
+active benchmark stderr is empty. Its diagnostic is retained under `offline-mse-control`. After that
+controller exited, its liveness check was hardened against this race. Four isolated PowerShell probes
+pass: null start time, matching start time, a stale/reused PID and a process exiting during inspection.
+The scientific sources of both
+studies are unchanged. Only the original fourth block remains; no more candidates will start.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

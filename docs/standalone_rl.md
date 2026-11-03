@@ -4,12 +4,13 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 17:25 UTC):** the main training stopped after 120 rounds / 30,720 games.
+**Current status (2026-11-03 18:06 UTC):** the main training stopped after 120 rounds / 30,720 games.
 The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
 scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
 locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mixed-field battles score
 **35.06% (95% CI 33.35–36.77%)**. The second mixed-field block scores **33.21% (31.48–34.94%)**.
-Both primary gates fail; the two standard-field blocks of the **9,600-battle final plan continue**.
+Both primary gates fail. The first standard-field block scores **33.96% (32.27–35.71%)** and also fails;
+the last block of the **9,600-battle final plan continues**.
 Sources, mode, sample count and weights are fixed.
 `final_protocol_locked.json` records the lock and original deadline before the first complete test block.
 Three original evaluation workers were initially verified at BelowNormal priority with one thread each. No training or
@@ -24,9 +25,12 @@ Its first launch fitted but failed at the validation-call interface before any s
 the corrected `offline-returns-v2` reproduced that unmeasured fit exactly. The candidate and optimizer,
 decision and independently checked validation summary are saved. Intermediate checkpoints and raw logs
 remain local. Three original test workers were restored, with the same absolute deadline.
-One final single-factor ablation is preregistered in `offline_mse_plan.json`: remove the conservative
-penalty (alpha 0), keeping all other fitting settings fixed. It must pass the same validation gates
-and time reserve before a separate final test. No further candidates will be started in this budget.
+The final single-factor ablation in `offline_mse_plan.json` removed the conservative penalty (alpha 0),
+keeping all other fitting settings fixed. It also failed validation: **21.09%, 95% [16.41%, 25.78%]**.
+Neither candidate entered final testing. Three original benchmark workers are restored.
+`scripts/audit_offline_returns.py` reproduces the complete validation and decision audits from the
+locally saved logs, checking both inference checkpoints and optimizer states. No further candidates
+will be started in this budget.
 
 ## What is being trained
 
@@ -125,9 +129,18 @@ rejection and actual BelowNormal priority inheritance to an idle Python child we
 starting additional battle workers. The active run's parent and all three workers were explicitly
 lowered and their priority classes read back; no training source was edited during the run.
 
+For a new reproduction of the main complete-return PPO method, start from the committed round-16
+parent (`ppo-v2/best.npz`, SHA-256 `9af26bd7cbce2a7c17e0ca2697006968f8760c385a6c95d58d785f1d37aa7258`):
+
 ```sh
-python scripts/standalone_rl.py run --run ppo-v2 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v1/best.npz --bootstrap-games 0 --hours 36 --workers 3 --validation-every 8 --curriculum-rounds 16 --anchor 0.01 --demo-weight 0.1 --pairings 1200
+python scripts/monte_carlo_rl.py run --run mc-reproduction-v1 --ref 59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 --seed 37001 --network independent --start runs/standalone-rl/ppo-v2/best.npz --bootstrap-games 0 --max-rounds 120 --batch-games 256 --hours 48 --test-reserve-hours 6 --workers 3 --train-samples 32 --curriculum-rounds 0 --validation-every 8 --validation-pairings 128 --ppo-epochs 4 --rate 0.0002 --anchor 0.01 --demo-weight 0.1 --pairings 1200
 ```
+
+This creates a separate study with its own time allowance and fresh final seeds; its final outcomes
+need not equal the original study. The original journal records every actual launch and argument,
+including its shared absolute deadline and two/three-worker allocation changes. Do not change the
+locked original configuration to extend its budget. Its saved pairing logs can be audited after the
+deadline; playing additional battles requires a new study and budget.
 
 `run` prepares, trains, locks and performs final testing without another command. The component
 commands `prepare`, `train`, `lock`, and `test` are also available. The actual owner's run adds an
@@ -175,6 +188,13 @@ separate fresh-seed final plan and original deadline are in `offline_returns_pla
 `scripts/run_offline_returns_trial.ps1` manages at most two original evaluation workers plus one
 offline worker, with guarded process identities and cache-preserving resumption. Stop that controller
 first when pausing while it is live.
+
+Audit either closed offline trial from its locally retained pairing log:
+
+```sh
+python scripts/audit_offline_returns.py --run offline-returns-mse-v1 --output runs/standalone-rl/offline_mse_validation_audit.json
+```
+
 - `validation_*.jsonl`, `test_*.jsonl`: append-only pairing outcomes with resume provenance.
 
 Use a saved policy directly:

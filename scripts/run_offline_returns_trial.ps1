@@ -18,9 +18,13 @@ function Live([string]$Run){
     $rlPath="runs/standalone-rl/$Run/process.json"
     if(-not(Test-Path $rlPath)){return $false}
     $rlInfo=Get-Content $rlPath -Raw | ConvertFrom-Json
-    $rlP=Get-Process -Id $rlInfo.pid -ErrorAction SilentlyContinue
-    if(-not $rlP){return $false}
-    return [Math]::Abs(($rlP.StartTime.ToUniversalTime()-(Convert-RlRecordedStartToUtc $rlInfo.started_utc)).TotalSeconds) -lt 30
+    try {
+        $rlP=Get-Process -Id $rlInfo.pid -ErrorAction SilentlyContinue
+        if(-not $rlP){return $false}
+        $rlStarted=$rlP.StartTime
+        if(-not $rlStarted){return $false}
+        return [Math]::Abs(($rlStarted.ToUniversalTime()-(Convert-RlRecordedStartToUtc $rlInfo.started_utc)).TotalSeconds) -lt 30
+    } catch { return $false }
 }
 function Finished([string]$Run){
     $rlPath="runs/standalone-rl/$Run/test_results.json"

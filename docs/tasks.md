@@ -43,11 +43,10 @@ validation only; evaluate the locked checkpoint on held-out teams and fresh seed
 confidence intervals. Save resumable checkpoints and experiment logs. Review draft PR #10 for tracker context.
 Do not replace the website or engine defaults. Record unsuccessful runs as well as gains in `docs/status.md`.
 
-Current milestone: the main policy is locked and final testing is running; both completed mixed-field
-seed blocks fail the win target. The separate bounded offline-return trial failed its validation gate
-(30.47%, 95% [25.59%, 35.35%]) and was rejected. Three workers are finishing the two original standard-field
-blocks; no new final test was opened. One final single-factor ablation (alpha 0) is preregistered with
-the same validation gates, final-test reserve and deadline; it shares the three-worker allowance.
+Current milestone: the main policy is locked and final testing is running; all three completed blocks
+fail the win target. Both offline-return trials failed validation and were rejected (alpha 0.1: 30.47%,
+95% [25.59%, 35.35%]; alpha 0: 21.09%, [16.41%, 25.78%]). Three workers are finishing the last original
+standard-field block; no new final test was opened. No further candidates will be started in this budget.
 
 **Done when.** The standalone agent and reproducible train/evaluate commands exist, checks pass, and an
 honest held-out result with confidence intervals establishes whether it reliably beats the frozen current
