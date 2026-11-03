@@ -621,6 +621,16 @@ are every 25 games and at the normal collection cutoff. The saved two-hour colle
 **11:12:08.2957767 UTC**, both inside the unchanged **22:40:49 UTC** overall deadline. Exact live
 identities, log paths and deadlines are in `teacher32-v1/launch.json`/`state.json`. No further job is queued.
 
+**First real teacher checkpoint verified.** The first atomic checkpoint contains **25 complete full-engine32
+selfplay games / 1,919 public-state decisions**. An immutable local copy is retained as
+`collection_initial_checkpoint.npz`, SHA-256
+`f603f43f706c258e0d370e061d8f05b7c1a706e14770d748ecfaf5228eff3a04` (large training files remain ignored).
+All recorded actions are legal and feature/return arrays are finite. Reconstructing all 25 draws from
+the declared game-index seed reproduced **all 50 players' initial own-team feature headers exactly**, and
+both teams belonged to the training fold in every game. `collection_initial_checkpoint.json` records this
+input verification. Collection has continued beyond that checkpoint without a reported error. This is
+a real recorder/data canary, not validation or evidence that a learned policy wins.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
