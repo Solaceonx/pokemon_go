@@ -35,9 +35,9 @@ function Stop-Owned([string]$Run,[string]$Entry,[int]$MaxWorkers){
     if($rlP.CommandLine -notlike "*$Entry*--run $Run*"){throw 'Owned process command mismatch.'}
     $rlChildren=@(Get-CimInstance Win32_Process -Filter "ParentProcessId = $($rlInfo.pid)" | Where-Object Name -eq 'python.exe')
     if($rlChildren.Count -gt $MaxWorkers){throw 'Unexpected owned worker count.'}
-    Event 'owned_stop' @{run=$Run;pid=$rlInfo.pid;workers=@($rlChildren.ProcessId)}
-    $rlChildren | ForEach-Object{Stop-Process -Id $_.ProcessId -Force}
-    Stop-Process -Id $rlInfo.pid -Force
+    Event 'owned_stop' @{run=$Run;pid=$rlInfo.pid;workers=@($rlChildren | ForEach-Object{$_.ProcessId})}
+    $rlChildren | ForEach-Object{Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue}
+    Stop-Process -Id $rlInfo.pid -Force -ErrorAction SilentlyContinue
 }
 function Resume-Main([int]$Workers){
     if(Finished 'mc-ppo-v3'){return}
@@ -109,7 +109,8 @@ try{
     Event 'original_finished_offline_boosted' @{workers=3}
 }catch{
     Event 'controller_error' $_.Exception.Message
-    Stop-Owned $rlPlan.run 'offline_returns_rl.py' 1
+    try { Stop-Owned $rlPlan.run 'offline_returns_rl.py' 1 }
+    catch { Event 'trial_cleanup_error' $_.Exception.Message }
     if($rlChangedAllocation){Restore-Main}
     throw
 }

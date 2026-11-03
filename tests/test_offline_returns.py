@@ -1,4 +1,11 @@
 import unittest
+import contextlib
+import json
+import tempfile
+import time
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import create_autospec, patch
 import numpy as np
 
 from pogo.offline_returns import initialize_q, objective, update
@@ -7,6 +14,25 @@ from pogo.standalone_rl_v2 import ActorCritic
 
 
 class OfflineReturnTests(unittest.TestCase):
+    def test_closed_fit_dispatches_validation_with_the_actual_evaluator_signature(self):
+        from scripts import offline_returns_rl as driver
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp)
+            ActorCritic(3, hidden=4).save(folder / 'initial.npz')
+            (folder / 'offline_data.json').write_text(json.dumps(dict(shards=[])))
+            cursor = dict(epoch=1, position=0, shards=0, rows_seen=8, seconds=0., done=True,
+                          checkpoint='initial.npz')
+            (folder / 'offline_cursor.json').write_text(json.dumps(cursor))
+            config = dict(offline_returns=dict(max_train_minutes=15, final_reserve_hours=5.5, epochs=4),
+                          budget_deadline_unix=time.time()+36000, seed=37001, snapshot='unused')
+            evaluator = create_autospec(driver.base.validation, side_effect=RuntimeError('validation-dispatched'))
+            with patch.object(driver, 'check_config'), patch.object(driver.base, 'restore_snapshot', return_value=object()), \
+                    patch.object(driver.mp, 'get_context') as context, patch.object(driver.base, 'validation', evaluator):
+                context.return_value.Pool.return_value = contextlib.nullcontext(object())
+                with self.assertRaisesRegex(RuntimeError, 'validation-dispatched'):
+                    driver.train(folder, config, SimpleNamespace(workers=1))
+            evaluator.assert_called_once()
+
     def test_objective_gradient_and_illegal_actions(self):
         q = np.array([[.2, -.3, 5.], [-.4, .7, .1]], dtype=float)
         mask = np.array([[True, True, False], [True, True, True]])

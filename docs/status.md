@@ -747,6 +747,21 @@ three on a negative trial, or boosts a qualified candidate after the original fi
 resumption reuses its exact pairing cache, sources, weights, mode, seeds and sample plan. The absolute
 deadline remains 1793756530. Stop `run_offline_returns_trial.ps1` first if pausing while it is live.
 
+**Offline trial v1: functional failure before strength measurement (2026-11-03 16:43 UTC).** Four
+epochs / 4,652,688 row presentations finished in 29.5 seconds, with candidate and optimizer checkpoints
+saved. The validation call passed an extra positional argument and raised before any validation battle.
+This is not a playing-strength result. Cleanup also raced with the exiting parent; the original locked
+benchmark was manually restored to three workers from its unchanged pairing cache. No policy, source,
+seed, sample-count or completed-result change occurred in that benchmark.
+
+The helper call now matches the evaluator's actual signature, with a regression test exercising the
+closed-fit handoff against an autospecced evaluator. Controller cleanup tolerates already-exited owned
+processes and still reaches allocation restoration. **344 tests OK (7 video skips), 108/108 PvPoke exact**.
+The failed attempt and original plan are preserved. `offline-returns-v2` is registered before fitting,
+with the same data, objective, initialization and hyperparameters, and corrected plumbing; no strength
+outcome was used to change it. The current registration is `offline_returns_plan.json`, with the first
+registration preserved as `offline_returns_plan_v1.json`.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

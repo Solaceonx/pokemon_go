@@ -19,6 +19,8 @@ Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE descriptio
 to earlier runs. The full final result is pending. One separate, bounded offline-return candidate is
 registered in `offline_returns_plan.json`, with validation-only qualification and fresh final seeds if
 qualified; it does not retrain or reselect the original locked policy.
+Its first launch fitted but failed at the validation-call interface before any strength measurement;
+the corrected, separately registered run is `offline-returns-v2`, with unchanged fitting settings.
 
 ## What is being trained
 

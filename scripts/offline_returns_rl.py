@@ -159,7 +159,7 @@ def train(folder, config, args):
     runtime = base.restore_snapshot(config)
     with mp.get_context("spawn").Pool(args.workers, initializer=initialize,
                                       initargs=(str(ROOT / config["snapshot"]), config["budget_deadline_unix"])) as pool:
-        result = base.validation(folder, runtime, model, candidate, round_index, pool, config, True)
+        result = base.validation(folder, runtime, model, candidate, round_index, pool, True)
     parent = ROOT / "runs/standalone-rl/mc-ppo-v3"
     if read(folder / "validation_schedule_mixed.json") != read(parent / "validation_schedule_mixed.json"):
         raise ValueError("paired validation schedules differ")
