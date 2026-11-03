@@ -643,6 +643,23 @@ the training journal closed normally. No settings changed during this bounded fo
 strength gain is established. The controller now waits for the next committed main checkpoint before
 the registered allocation comparison; two main workers remain active. Final tests are unopened.
 
+**PPO round 104 and completed handoff (2026-11-03 11:11 UTC):** after 26,624 training games,
+greedy validation is **39.26%, CI [33.98%, 44.34%]** and stochastic is **29.10%, CI [24.22%,
+34.18%]**. Greedy round 104 becomes the selected checkpoint. Its paired change from round 80 is
+**+1.76 points, CI [-4.69, 8.20]**; no additional gain or reliable wins are established.
+`mc3_progress_round104.json` binds the complete records and finite checkpoint/optimizer to all five
+matching source hashes. Immutable `mc-ppo-v3/selected_round_00104.npz` has the same parameters as
+the evaluated model; a fresh-process deployment check loads its greedy mode and exact fingerprint
+without importing Engine, Planner, Learner or the simulator (`deployment_check_round_00104.json`).
+
+The registered comparison retained main round 104 against the correction trial's unchanged initial
+checkpoint: candidate-minus-main **-2.15 points, CI [-9.57, 5.27]**, so promotion was false.
+`low_ce_allocation_decision.json` preserves that complete decision. The controller exited normally
+after resuming `mc-ppo-v3` on **three actual BelowNormal workers**; parent identity/start time and
+all worker priorities were read back (`low_ce_handoff_audit.json`). The original deadline, twelve-hour
+final reserve, 1,200 final pairings per seed/field and all training settings were verified in the new
+launch record. No side jobs remain and final tests are still unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

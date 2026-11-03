@@ -4,15 +4,15 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 10:35 UTC):** the reliable-win objective is not achieved. The main
-complete-return PPO run's latest validation is round 96 / 24,576 training games. Its selected greedy
-round-80 checkpoint scores 37.50% on validation (95% pairing-bootstrap CI 32.42–42.58%). Round 96
-scores 37.50% (32.42–42.77%), tying the earlier checkpoint without replacing it. The immutable export is
-`runs/standalone-rl/mc-ppo-v3/selected_round_00080.npz`. The lower-weight correction trial finished
+**Current status (2026-11-03 11:11 UTC):** the reliable-win objective is not achieved. The main
+complete-return PPO run's latest validation is round 104 / 26,624 training games. Its selected greedy
+round-104 checkpoint scores 39.26% on validation (95% pairing-bootstrap CI 33.98–44.34%). Its paired
+change from round 80 is +1.76 points ([-4.69, 8.20]), so no additional gain is established. The immutable
+export is `runs/standalone-rl/mc-ppo-v3/selected_round_00104.npz`. The lower-weight correction trial finished
 1,536 games, with endpoint greedy score 31.64% (26.56–36.72%) and no gain over its initialization.
-Two main workers remain active; the controller awaits a committed main checkpoint before comparing
-the selections and resuming the chosen run on three workers.
-Only `run_low_ce_trial.ps1` is the active handoff controller. Earlier capacity, ensemble and rollout
+The allocation comparison retained the main run, now verified on three BelowNormal workers with the
+original deadline and twelve-hour final reserve. The handoff controller completed normally; no side jobs
+remain. Earlier capacity, ensemble and rollout
 trials below are historical results. Final tests remain unopened. Main PPO currently uses gamma=1,
 lambda=1 complete terminal returns; the .98 GAE description below applies to the earlier runs.
 
@@ -214,7 +214,9 @@ validation completed; greedy score is 31.64% (95% CI 26.56–36.72%). The unchan
 remains selected at 37.11%; no gain is established. The failed weight-1 pilot remains a separate
 negative result. This is an adaptive validation experiment; final-test data is unopened.
 `scripts/run_low_ce_trial.ps1` records under `runs/standalone-rl/low-ce-control`; stop this controller
-first when pausing. After a completed main checkpoint, `scripts/select_student_candidate.py` verifies
+first when pausing while it is live. Its completed comparison retained main round 104 and resumed that
+run on three verified workers; see `low_ce_allocation_decision.json` and `low_ce_handoff_audit.json`.
+After a completed main checkpoint, `scripts/select_student_candidate.py` verifies
 complete 128-pair records/source hashes and requires a positive paired lower bound before promotion.
 The selected run resumes on three workers with the original deadline and twelve-hour final reserve.
 The side training uses a fourteen-hour reserve to leave selection time.

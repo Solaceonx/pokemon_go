@@ -1,0 +1,65 @@
+{
+  "checkpoint_sha256": "95ca43bd71a04c3a5876dc445fc22ecfc921e014a4808a566580dde8f68510bc",
+  "finite_parameters_optimizer": true,
+  "handoff_arguments_match": true,
+  "handoff_audit": "low_ce_handoff_audit.json",
+  "round": 104,
+  "round104_minus_round24_greedy": {
+    "bootstrap_seed": 41003,
+    "ci95": [
+      -0.052734375,
+      0.095703125
+    ],
+    "paired_change": 0.021484375,
+    "pairings": 128
+  },
+  "round104_minus_round80_greedy": {
+    "bootstrap_seed": 41003,
+    "ci95": [
+      -0.046875,
+      0.08203125
+    ],
+    "paired_change": 0.017578125,
+    "pairings": 128
+  },
+  "scope": "Exploratory validation and automatic allocation; final tests unopened",
+  "selected_export": {
+    "finite_parameters_optimizer": true,
+    "path": "runs/standalone-rl/mc-ppo-v3/selected_round_00104.npz",
+    "sha256": "f078a830b97b5dc47238bb78bf4442a7af13f404035e337109e6939541f03904",
+    "weights_sha256": "71b44b837d0f5fb3f6eeaea308638564655a4b7f7dc210e3dad4af1ac396c301"
+  },
+  "selected_mode": "greedy",
+  "selected_round": 104,
+  "selected_score": 0.392578125,
+  "source_hashes_match": true,
+  "sources": {
+    "pogo/rl_experiment.py": "74a90306e1aca5160629b0b5f0262ef1d888b09618480c7e8ecbda31a6d59872",
+    "pogo/standalone_rl.py": "6bc1e78d7642df7c6db066c33cd8a78fff1b0782f9cf2377ff69163770b7d416",
+    "pogo/standalone_rl_v2.py": "37bf604e12ae3fefe3e67e6787f23c9e25079b01e0d10c4c74a082d624e0bacb",
+    "scripts/monte_carlo_rl.py": "eb6ad3d21e919d7bf5c4b9fdcfc4e4cf3414d2df98d5842d417b36e66da57028",
+    "scripts/standalone_rl.py": "396e0b319324e514d693e522f3667577ec99a1a9f8b94c3b0eca71482757526a"
+  },
+  "training_games": 26624,
+  "validations": [
+    {
+      "ci95": [
+        0.2421875,
+        0.341796875
+      ],
+      "mode": "stochastic",
+      "pairings": 128,
+      "score": 0.291015625
+    },
+    {
+      "ci95": [
+        0.33984375,
+        0.443359375
+      ],
+      "mode": "greedy",
+      "pairings": 128,
+      "score": 0.392578125
+    }
+  ],
+  "weights_sha256": "71b44b837d0f5fb3f6eeaea308638564655a4b7f7dc210e3dad4af1ac396c301"
+}
