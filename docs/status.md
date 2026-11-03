@@ -529,6 +529,28 @@ cap and the original overall deadline. Exact live identities/log paths are in `r
 no residual strength result exists yet. The calibration follow-up remains unstarted and unqueued, and
 final-test teams remain untouched.
 
+**Residual-update selection completed — 2026-11-03.** All three variants completed the fixed **64 mirrored
+pairings / 128 battles**, full engine32, seed **38611**. The unchanged reference scored **25.000000%
+± 6.173420 points**, interval **18.826580–31.173420%**. Correction 0.10 scored **21.093750% ± 6.097595
+points**, interval **14.996155–27.191345%**, paired change **−3.906250 ± 4.528471 points**. Correction 0.25
+scored **18.750000% ± 5.977388 points**, interval **12.772612–24.727388%**, paired change **−6.250000
+± 5.564645 points**; that change is a detectable regression on this selection cohort. Both fits completed
+30 epochs/240 updates. Neither established a gain, and the maximum-score rule retained the unchanged
+reference. Exact scores, model hashes, verified raw validation folds and paired intervals are retained in
+`residual-v1/selection_artifacts.json` and `selection_paired_changes.json`. Its reserved 128-pair fresh
+confirmation, seed 38612, is now running; no completed fresh score is claimed yet. Anchoring relative
+scores did not improve this experiment's selection result. The calibration follow-up is still unstarted.
+
+**Stronger-teacher study proposed, not implemented or queued.** `teacher32-v1/proposal.json` records a
+conditional next study using fresh training-only demonstrations from the full frozen engine32 on both
+sides, a two-hour data-collection clock with at most 1,000 complete games, balanced CE from the saved
+shared encoder, and a fixed one-hour Double DQN phase. Control/teacher-fit/RL endpoint would select on
+64 full-engine32 validation pairings, seed 38811, and confirm only the selected policy on 128 fresh
+pairings, seed 38812. The training proxy and richer teacher are hypotheses, with no strength evidence.
+It can start only if the residual and calibration trials finish below target, a worker is free, and the
+original budget permits it. No data has been collected, no implementation is claimed, and no runtime or
+held-out sample count has changed. The recorded preparation does not consume another numerical worker.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
