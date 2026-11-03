@@ -1,0 +1,64 @@
+{
+  "checkpoint_sha256": "8db704fde14a1f12c60ce427823a25c5ffecdb4a081a8397aae6d2b73435403b",
+  "finite_parameters_optimizer": true,
+  "round": 96,
+  "round96_minus_round24_greedy": {
+    "bootstrap_seed": 41003,
+    "ci95": [
+      -0.0625,
+      0.0703125
+    ],
+    "paired_change": 0.00390625,
+    "pairings": 128
+  },
+  "round96_minus_round80_greedy": {
+    "bootstrap_seed": 41003,
+    "ci95": [
+      -0.0625,
+      0.06640625
+    ],
+    "paired_change": 0.0,
+    "pairings": 128
+  },
+  "scope": "Exploratory validation; final held-out tests unopened",
+  "selected_export": {
+    "finite_parameters_optimizer": true,
+    "mode": "greedy",
+    "path": "runs/standalone-rl/mc-ppo-v3/selected_round_00080.npz",
+    "sha256": "c2e180d3e19f431af57cadfcb180e51597b92102fc3b0b979abb6b0b6fbb83f7",
+    "weights_sha256": "ea955007b9b74c1c8de46e5ec070db85f1f322d7aae26659225b915e71b20759"
+  },
+  "selected_mode": "greedy",
+  "selected_round": 80,
+  "selected_score": 0.375,
+  "source_hashes_match": true,
+  "sources": {
+    "pogo/rl_experiment.py": "74a90306e1aca5160629b0b5f0262ef1d888b09618480c7e8ecbda31a6d59872",
+    "pogo/standalone_rl.py": "6bc1e78d7642df7c6db066c33cd8a78fff1b0782f9cf2377ff69163770b7d416",
+    "pogo/standalone_rl_v2.py": "37bf604e12ae3fefe3e67e6787f23c9e25079b01e0d10c4c74a082d624e0bacb",
+    "scripts/monte_carlo_rl.py": "eb6ad3d21e919d7bf5c4b9fdcfc4e4cf3414d2df98d5842d417b36e66da57028",
+    "scripts/standalone_rl.py": "396e0b319324e514d693e522f3667577ec99a1a9f8b94c3b0eca71482757526a"
+  },
+  "training_games": 24576,
+  "validations": [
+    {
+      "ci95": [
+        0.19921875,
+        0.306640625
+      ],
+      "mode": "stochastic",
+      "pairings": 128,
+      "score": 0.251953125
+    },
+    {
+      "ci95": [
+        0.32421875,
+        0.427734375
+      ],
+      "mode": "greedy",
+      "pairings": 128,
+      "score": 0.375
+    }
+  ],
+  "weights_sha256": "c316b4b731490e6705cc21369bacd8059300eb2e0d6259a5c98104b76165df4f"
+}

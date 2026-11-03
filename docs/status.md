@@ -610,6 +610,14 @@ comparisons, not fresh-seed final results. The initial greedy checkpoint remains
 source hashes; parameters and optimizer are finite. The fixed round-12 endpoint continues without
 changing settings. No final test has been opened.
 
+**PPO round ninety-six (2026-11-03 09:17 UTC): tied point estimate, earlier checkpoint retained.**
+After 24,576 training games, greedy validation is **37.50%, CI [32.42%, 42.77%]**, and stochastic
+is **25.20%, CI [19.92%, 30.66%]**. The paired greedy change from selected round 80 is **0.00
+points, CI [-6.25, 6.64]**. Ties do not replace the earlier checkpoint, and neither result establishes
+reliable wins. `mc3_progress_round96.json` records the complete 128-pair checks, matching five
+source hashes, finite checkpoint/optimizer and comparisons against rounds 80 and 24. The correction
+trial has saved 1,408 games and continues to its fixed round-12 endpoint. Final tests remain unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
