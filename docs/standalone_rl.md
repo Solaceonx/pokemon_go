@@ -195,7 +195,10 @@ It fixes the learned opponent's continuations to greedy mode, leaving the origin
 experiment reproducible, and adds a ninth source hash. The registered screen uses four scenarios,
 confidence 1.0, selected PPO round 24 and the frozen BC16 opponent. See
 `runs/standalone-rl/greedy_rollout_plan.json` for the matched 32-pair screen and conditional fresh-seed
-128-pair confirmation. No strength result is available yet. The actual paired-worker test checks
+128-pair confirmation. The four-battle functional pipeline passed. The screen scored 35.94%
+(95% CI 25.00–46.88%) versus its matched neural-control 28.91%, a paired change of +7.03 points
+([-7.81, 22.66]). This is inconclusive; the preregistered fresh-seed confirmation is running.
+The actual paired-worker test checks
 greedy continuations for both simulated sides. This is independent learned-policy simulation, with
 no Planner/Learner/Engine call inside the agent.
 

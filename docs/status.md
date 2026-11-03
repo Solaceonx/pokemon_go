@@ -482,6 +482,19 @@ owned trial processes when necessary. The original absolute deadline and twelve-
 remain. To pause work while this controller is live, stop this controller before the owned Python jobs.
 The older capacity controller is now a checkpoint-handoff helper with a guarded two/three-worker option.
 
+**Greedy-rollout pipeline and screen:** the controller handed off at committed PPO round 59,
+15,104 games, to two main workers and one trial slot. The four-battle, 32-sample functional pipeline
+passed: **152 searches, 1,668 rollouts and 279,649 simulated turns**, all nine source hashes matching,
+greedy opponent mode registered, and parameters/optimizer unchanged. `greedy_rollout_pipeline_audit.json`
+records it. This is functional evidence, not a strength estimate.
+
+The fixed 32-pair screen scored **35.94%, CI [25.00%, 46.88%]**, against **28.91%** for its matched
+32-case neural control. Paired change **+7.03 points, CI [-7.81, 22.66]** is inconclusive. It meets the
+preregistered mean-only screen rule, so the independent 128-pair confirmation started at
+**2026-11-03 00:44 UTC** with the previously registered seed, unchanged models/settings and one worker.
+The main PPO continues on two workers; all three are BelowNormal. No claim of a gain or reliable wins
+is made from the screen, and substantive final-test data remains unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
