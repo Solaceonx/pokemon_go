@@ -576,6 +576,13 @@ remains the unchanged initialization at 37.11%. `low_ce_validation_round4.json` 
 and comparisons. The prospective bounded trial continues to its remaining scheduled evaluations
 without changing settings. No final-test data has been opened.
 
+**Expanded training audit:** all 18,432 committed main-PPO episodes through round 72 have
+contiguous indices and valid outcomes. The 7,750 distinct training trios have zero overlap with the
+194 validation trios, and no training/validation seed overlaps. Counts are 14,693 frozen-engine,
+1,900 Learner and 1,839 self-play games; every engine game records 32 samples. All five source
+hashes match. `mc3_training_audit_round72.json` records the checks. This verifies the growing
+training dataset's partition/provenance, not a strength gain; final-test data is still unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
