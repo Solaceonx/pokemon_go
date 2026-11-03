@@ -752,7 +752,8 @@ All64 raw pair scores and both validation team folds were checked against recons
 were recomputed independently. `bootstrap_validation_artifacts.json` binds model/config/journal/summary
 hashes and the matched prior comparison. The899.625-second evaluation is included in the original
 one-hour allocation. RL now continues under its unchanged **08:12:29.3487487UTC** cutoff, with the same
-worker/source/weights/data and queued final handoff. No final outcome or policy choice is open.
+worker, immutable source, frozen baseline, sealed demonstration data and queued final handoff.
+Online policy weights continue learning; no final outcome or policy choice is open.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
