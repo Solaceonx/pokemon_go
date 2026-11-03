@@ -755,6 +755,21 @@ one-hour allocation. RL now continues under its unchanged **08:12:29.3487487UTC*
 worker, immutable source, frozen baseline, sealed demonstration data and queued final handoff.
 Online policy weights continue learning; no final outcome or policy choice is open.
 
+**Full-engine teacher-study RL endpoint saved — 08:12 UTC.** The unchanged one-hour allocation finished
+**457 complete training games / 1,816 replay-update batches / 3,632 Adam steps**. Recorded game/update
+time was **2,700.2200000000885 seconds**, following the899.625-second internal validation included in
+that hour. The final whole-game checkpoint and selection-state write completed **5.2098 seconds after**
+the persistent cutoff, reflecting the existing between-game check and atomic save; no new allocation
+or deadline extension was started. The saved endpoint is SHA-256
+`45a8c2036f9f84c4b1e6541554e9afa407f09bc4a1d60cc4a76ff05ca3637e91`.
+
+`endpoint_artifacts.json` binds the endpoint, identical last atomic slot, optimizer/target state, RNG
+checkpoint, training journal and retained **19,994 online replay rows**. All checkpoint/target parameters
+are finite. This verifies saved training state, not a playing-strength gain. The same worker has begun
+the registered reference/teacher-fit/last-endpoint comparison on64 full-engine32 validation pairings,
+seed38811, before the selected-only128-pair fresh confirmation38812. No selected policy or final
+outcome is open yet; the separate budget-final guard remains waiting.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

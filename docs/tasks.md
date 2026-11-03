@@ -99,11 +99,12 @@ The output-bias calibration follow-up reuses the same training labels and reserv
 both parent trials and processes completed below target before it began. A stronger-teacher data study is
 implemented and collected599full-engine games/45,945decisions after the calibration parent completed
 below target and exited. All1,198initial own-team headers and both training folds were independently
-verified. Its20-epoch fit completed; the persistent one-hour DDQN allocation ends08:12:29.3487487UTC.
+verified. Its20-epoch fit and persistent one-hour DDQN allocation completed:457games/1,816update batches,
+with the finite endpoint, optimizer/target/RNG checkpoint and19,994online replay rows retained.
 Stand-in tests verify data signs/public masks and exact data/optimizer resumption; the first real teacher
 games and fit have completed. Its pre-RL internal64-pair full-engine validation scored35.156250%±7.132801
 points, with paired change+1.562500±8.514719 versus the prior relational warm-up on the same cohort:
-no established gain and still a clear loss. The registered RL/selection/fresh-confirmation plan continues;
+no established gain and still a clear loss. The registered selection/fresh-confirmation plan continues;
 no final outcome has opened.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
