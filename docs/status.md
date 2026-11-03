@@ -543,6 +543,15 @@ counters are zero, and actual launch arguments match the prospective weight-0.1/
 `low_ce_baseline_audit.json` records these checks. This is the controlled starting point, not a new
 learned gain. The trial has begun on-policy training, with the main PPO continuing beside it.
 
+**Controlled first lower-weight update (2026-11-03 02:57 UTC):** 128 games, 4,952 student
+decisions and 9,936 expert labels. Every replay/expert array and every game field except elapsed
+time exactly matches the failed weight-1 pilot's first batch, so this measures the intended loss-weight
+change on identical data. With weight 0.1, action KL is **0.00580 versus 0.02198**, and all four
+epochs finish instead of stopping after two at the KL guard. The checkpoint/optimizer are finite,
+all teams are training teams, and source hashes match. `low_ce_round1_controlled_audit.json`
+records the exact comparison. This is optimization/integrity evidence only; post-training strength
+will be evaluated on the registered schedule after round four.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
