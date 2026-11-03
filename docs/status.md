@@ -498,6 +498,17 @@ verified child identity. Its read-only preflight correctly refused to launch aga
 no new numerical worker or waiting controller was started. It is available for the two already declared
 conditional follow-ups after the current chain exits.
 
+**Shared-encoder endpoint selection completed — 2026-11-03.** On the fixed **64 mirrored pairings / 128
+battles**, full engine32, seed **38511**, the warm-up scored **33.593750% ± 7.578073 points**, interval
+**26.015677–41.171823%**. The 461-game RL endpoint scored **33.593750% ± 6.476461 points**, interval
+**27.117289–40.070211%**. Its paired change from warm-up was **0.000000 ± 7.481691 points**: no established
+gain. The preregistered earliest-checkpoint tie rule retained **bootstrap**, SHA-256
+`f13a01d2edac6645f9843209596718610aeefc21b6c1d547a29ad4891b6da828`.
+Both complete raw journals, validation folds, checkpoint hashes and intervals were verified;
+`selection_artifacts.json` and `selection_paired_change.json` retain the evidence. The selected warm-up is
+now confirming on its reserved **128 fresh pairings, seed 38512**; that result is pending. Neither a
+reliable win nor an improvement over the different-seed earlier policy is claimed from this selection draw.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
