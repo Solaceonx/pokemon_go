@@ -193,9 +193,10 @@ optimizer moments; its hash and all validation results are saved. This still ope
 `pogo/dqn_residual.py` is an unmeasured training-objective prototype. It fits centered *changes* from a
 reference network to sampled return advantages, preserving old score differences between equally valued
 actions, and can anchor no-signal/demo positions to the reference. Gradient and invariance checks pass.
-Its separate trial is now running under the guarded launcher; it did not change the prior CF objective or runtime.
+Its separate trial finished without selecting an improvement; the retained reference confirmed at
+24.0234375% ±4.5926195 points, seed38612. It did not change the prior CF objective or runtime.
 
-The validation-only `scripts/dqn_residual_trial.py` implements the follow-up now running after its parent
+The validation-only `scripts/dqn_residual_trial.py` implements the completed follow-up that ran after its parent
 chain exited below target. `residual-v1/proposal.json` fixes the first three complete 300-position CF training
 batches, requires the same reference-policy hash and 900 matching original-choice controls, and includes
 positions without outcome differences. It compares correction sizes 0.10/0.25 (30 epochs, seed 38601,
@@ -211,11 +212,11 @@ fresh direct-policy confirmation completed at 24.0234375% ±4.7195072 points (12
 38212), with exact hashes in `counterfactual-v4/confirmation_artifacts.json`. The stopped result is preserved.
 The serial successor then completed the shared-encoder trial from immutable followup-v8; its selected
 warm-up freshly confirmed at 32.8125% ±4.8231361 points (128 pairings, seed 38512). Both parent processes
-exited before the guarded residual trial began. Use `residual-v1/launch.json`, `state.json` and its recorded
-attempt stdout/stderr paths for current progress. That trial has no strength result yet.
+exited before the guarded residual trial began. That trial retained the unchanged reference and freshly
+confirmed at24.0234375% ±4.5926195 points, seed38612. Both residual processes then exited before output calibration.
 
-`calibration-v1` is another prepared, unstarted/unqueued follow-up, conditional on the shared and residual
-trials finishing below target with budget and a worker free. `pogo/dqn_calibration.py` searches six output-bias
+`calibration-v1` is now running after the shared and residual trials finished below target and their
+processes exited. `pogo/dqn_calibration.py` searches six output-bias
 differences while keeping all other weights fixed. Its training proxy is the mean collected single-callback
 terminal-return gain minus a changed-choice penalty; this does not estimate the strength of changing the
 whole policy. `calibration-v1/proposal.json` fixes 5,001 candidates (zero plus 1,000 normal draws at each of
@@ -223,12 +224,13 @@ five scales), seed 38701, penalties 0/0.25, and the same three complete training
 fits screen on 64 full-engine32 validation pairings, seed 38711; only the selected policy confirms on 128
 fresh pairings, seed 38712. Exact offset duplicates reuse the earlier report and lose selection ties.
 `scripts/dqn_calibration_trial.py` saves the learned biases directly inside ordinary network weights, so
-inference remains the same public-state Agent. The immutable runtime is `harness/calibration-v1`; an outer
-controller is required before launching it, to enforce its two-hour cap and the original overall deadline.
+inference remains the same public-state Agent. The immutable runtime is `harness/calibration-v1`; the guarded
+launcher enforces its two-hour cap and the original overall deadline. Use this run's `launch.json` and
+`state.json` plus its recorded attempt stdout/stderr paths for current progress; no completed strength result yet.
 
 That launcher is now prepared as immutable `harness/launch-v1/scripts/run_dqn_research.ps1`, supporting
 only `-Run residual-v1` and `-Run calibration-v1`. `-CheckOnly` performs a read-only eligibility check;
-it currently refuses the live shared-encoder worker. Actual starts require both prior handles to have
+its live-process guard refused the shared-encoder worker during preparation. Actual starts require both prior handles to have
 exited, completed below-target parent confirmations, matching runtime/source receipts and no final lock.
 The launcher preserves attempt logs and the original saved two-hour cap on recovery, binds the child PID
 and start instant, and enforces the overall deadline. Launch it hidden when using Start-Process. This

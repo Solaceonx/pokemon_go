@@ -551,6 +551,26 @@ It can start only if the residual and calibration trials finish below target, a 
 original budget permits it. No data has been collected, no implementation is claimed, and no runtime or
 held-out sample count has changed. The recorded preparation does not consume another numerical worker.
 
+**Residual-update fresh confirmation completed — 2026-11-03.** The retained unchanged reference scored
+**24.0234375% ± 4.5926195 points**, interval **19.4308180–28.6160570%**, on **128 mirrored pairings /
+256 battles**, seed **38612**, full engine32. This closes the residual trial with no selected improvement
+and a clear loss against the engine. Exact raw scores, validation team folds, the selected/reference hash,
+compact parameter identity, all **41 runtime source files** and all **95 baseline files** were verified.
+The **640,682-byte** `residual-v1/policy.npz` retains identical reference parameters and cleared optimizer
+state, SHA-256 `348b0051148f27570bb8eeb4ace3792a6fb96ce2974962385aa6d1316728c313`.
+`confirmation_artifacts.json` binds the full evidence. Final-test teams remain untouched.
+
+Both residual processes exited before the guarded **calibration-v1** trial began at **04:03:44 UTC**.
+It imports immutable `harness/calibration-v1`, retains the fixed 5,001-candidate search and fresh validation
+plan, and is screening the unchanged reference. The outer deadline is **06:03:44.7915147 UTC**, with the
+original overall deadline unchanged and one numerical worker. Its fitted training proxy gained **0.01
+terminal-return units per sampled position** with **66/900** changed reference choices at penalty 0, and
+**0.0044444446 units** with **8/900** changes at penalty 0.25 (penalized objective **0.0022222223**).
+Exported weights reproduce those proxy values. These are single-callback training statistics, **not game
+scores or whole-policy strength evidence**. Both offset vectors differ, so neither is a duplicate. Exact
+offsets/checkpoint hashes are retained in `calibration-v1/fit.json`; no completed calibration strength
+result exists yet. The stronger-teacher proposal remains unimplemented and unqueued.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

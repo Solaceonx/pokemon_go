@@ -1,0 +1,92 @@
+{
+  "status": "prepared_unmeasured_not_started_not_queued",
+  "absolute_deadline_unix": 1793745649.6650429,
+  "maximum_hours": 2,
+  "activation": "Only after relational-v1 and residual-v1 complete below target, with the numerical worker free and enough original budget",
+  "reference_sha256": "d2884905f82e515e8b83efe48b6bafce96f1ff3a6803f8f8c89c646fae2f0c49",
+  "training_inputs": [
+    {
+      "labels": "labels_001.npz",
+      "sha256": "a9cc4c0c44e86beb6003d339c9dc3b5e19fda360afae18c55362c27205d038b6",
+      "collection_sha256": "89dded31a57a80306e4cb8ea736dcd4a1e3cf34c9487764b344792fad008d7e5",
+      "positions": 300,
+      "signals": 67,
+      "matched_controls": 300
+    },
+    {
+      "labels": "labels_002.npz",
+      "sha256": "d60e5990f31e0006ebbb29f1cc3a8dfce4000363ec61292dea11526bce91281d",
+      "collection_sha256": "7ea1f5d7e4b03cf52dcdecd4ffb6284786de2562d20e359ce73eecc12a617f0c",
+      "positions": 300,
+      "signals": 93,
+      "matched_controls": 300
+    },
+    {
+      "labels": "labels_003.npz",
+      "sha256": "385a087c5cd543719c7037799db75b18f2ccccf5f5625dd255c5737bbae9ad19",
+      "collection_sha256": "e981b5d35520a8f168d1578da6a54b175143f52381ecfd962e602f7ef53e10da",
+      "positions": 300,
+      "signals": 79,
+      "matched_controls": 300
+    }
+  ],
+  "fit": {
+    "fit_ties": "Fewer changed decisions, then smaller bias norm",
+    "coordinates": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8
+    ],
+    "seed": 38701,
+    "penalties": [
+      0,
+      0.25
+    ],
+    "standard_deviations": [
+      0.025,
+      0.05,
+      0.1,
+      0.2,
+      0.4
+    ],
+    "candidate_count": 5001,
+    "unchanged_parameters": "All arrays except output bias p5",
+    "draws_per_scale": 1000,
+    "objective": "Mean paired single-callback terminal-return advantage minus penalty times fraction of changed reference choices"
+  },
+  "selection": {
+    "rule": "Maximum score; reference, then unpenalized wins ties",
+    "opponent_samples": 32,
+    "duplicates": "Exact bias-offset duplicates reuse the earlier report; selection retains the earlier variant on ties",
+    "seed": 38711,
+    "pairs": 64,
+    "split": "validation",
+    "variants": [
+      "reference",
+      "unpenalized",
+      "penalized"
+    ]
+  },
+  "confirmation": {
+    "opponent_samples": 32,
+    "seed": 38712,
+    "split": "validation",
+    "only_selected": true,
+    "pairs": 128
+  },
+  "proxy_is_not_whole_policy_strength": true,
+  "inference": "Unchanged public-state neural Agent; learned output bias stored inside ordinary weights",
+  "final_tests_enabled": false,
+  "strength_result": null,
+  "proposal_sha256": "06dfd462f1a1721aa3b540efb7a3ac595d3a442070d7c77b85d031778556c539",
+  "source_sha256": {
+    "scripts\\dqn_calibration_trial.py": "0d26fa5823cb1f807bf570b26f652009df4397eadb7a8958432dca370cf91d63",
+    "pogo\\dqn_calibration.py": "4ea4f28dd5e570bfece181053fbf5089b521c279bad65a0a66f71f65cf83be57",
+    "pogo\\dqn.py": "64bbc88ab5d77aa7cb3e66f243dc08cbffdae99792bc968a94e9b24dc046a640",
+    "scripts\\dqn_residual_trial.py": "ca14f28583baccd40f3b42a53cb00c294d08cad2840bbbafc5ff60843fa3955e",
+    "scripts\\double_dqn.py": "cac12aacf90a95c4b3fd83d9ae8f8e1d06cb1130d706a0ff049aa5e28b928d30"
+  }
+}

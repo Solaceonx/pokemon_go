@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, shared-encoder fresh confirmation 32.81% ±4.82, target unmet; residual-update trial running (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, shared encoder 32.81% ±4.82 and residual 24.02% ±4.59 on fresh confirmation, target unmet; output-calibration trial running (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -82,7 +82,8 @@ validation pairings. The bench-augmentation trial retained prior averaged infere
 rounds from immutable runtime v4, then stopped under its registered allocation rule. The retained policy's
 fresh 128-pair confirmation scored 24.02% ±4.72. The shared encoder completed 461 RL games; warm-up and
 endpoint tied at 33.59% on the 64-pair selection cohort, retaining warm-up, which freshly confirmed at
-32.81% ±4.82. The residual-update trial is now running under a guarded two-hour cap. All are
+32.81% ±4.82. The residual-update trial retained its unchanged reference, which confirmed at24.02% ±4.59;
+the guarded output-calibration trial is now running. All are
 validation results; final tests remain unopened. A training-only bench-order audit found 73/256 changed
 decisions under equivalent own-bench labels. The controlled augmentation/invariant-inference trial did
 not establish a strength gain. Paired-return training uses fresh validation confirmation. A method-preserving final evaluator
@@ -93,8 +94,9 @@ switching; no second training worker has started. The first two paired-return ca
 the initial policy. All 900 training controls matched; the source inputs are ready for the unstarted residual trial.
 The residual-return follow-up reuses the first three complete training batches and unchanged demonstrations,
 with fresh selected-setting validation. Its parent worker/controller exited before it started.
-An output-bias calibration follow-up is also prepared but unstarted/unqueued, conditional on those trials
-remaining below target with budget left; it reuses the same training labels and reserves fresh validation.
+The output-bias calibration follow-up reuses the same training labels and reserves fresh validation;
+both parent trials and processes completed below target before it began. A stronger-teacher data study is
+proposed but not implemented or queued, conditional on remaining below target with original budget left.
 Current checks: 307 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
