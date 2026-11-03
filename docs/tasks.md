@@ -44,8 +44,9 @@ confidence intervals. Save resumable checkpoints and experiment logs. Review dra
 Do not replace the website or engine defaults. Record unsuccessful runs as well as gains in `docs/status.md`.
 
 Current milestone: the main policy is locked and final testing is running; both completed mixed-field
-seed blocks fail the win target. A separate bounded offline-return trial is registered on training data,
-with validation-only qualification, new final seeds if qualified, the same deadline and three-worker cap.
+seed blocks fail the win target. The separate bounded offline-return trial failed its validation gate
+(30.47%, 95% [25.59%, 35.35%]) and was rejected. Three workers are finishing the two original standard-field
+blocks; no new final test was opened.
 
 **Done when.** The standalone agent and reproducible train/evaluate commands exist, checks pass, and an
 honest held-out result with confidence intervals establishes whether it reliably beats the frozen current

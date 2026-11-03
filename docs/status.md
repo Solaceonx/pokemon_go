@@ -771,6 +771,21 @@ worker were verified at BelowNormal priority, configured for one NumPy thread ea
 thread observed per worker (`offline_returns_resource_audit.json`). The corrected controller is live;
 the original three-worker allocation will be restored if validation fails its fixed gate.
 
+**Offline return trial rejected (2026-11-03 17:25 UTC):** all 128 validation pairings / 256 battles
+completed: **30.46875%, bootstrap 95% [25.58594%, 35.35156%]**, 77 wins / 2 draws / 177 losses.
+Against the matched round-104 baseline the change is **−8.78906 percentage points,
+95% [−14.25781, −3.32031]**. Neither validation gate passed; no new final test was opened.
+`offline_returns_validation_audit.json` independently checks score mapping, statistics, exact regenerated
+validation schedule, source pins, checkpoint hashes and the decision. The rejected `best.npz` retains
+parameters and optimizer state; all intermediate checkpoints and raw pairing logs remain local.
+
+The controller's immediate restart first hit the launcher's live-parent guard while the stopped parent
+was still exiting. Its error cleanup then successfully restored the original test with three workers
+(parent 26864, workers 1660 / 22060 / 20844), all BelowNormal and configured for one NumPy thread each.
+The controller and offline run have exited. The diagnostic and events are retained; the original model,
+mode, sources, seeds, sample count and completed results remain unchanged. Both mandatory mixed-field
+blocks have failed; the two registered standard-field blocks continue to completion.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
