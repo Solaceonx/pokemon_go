@@ -437,6 +437,25 @@ recorded reference decisions reproduced. `residual-v1/input_readiness.json` reta
 counts. This checks the prepared residual trial's inputs, without fitting or establishing strength; that
 follow-up remains unstarted and unqueued.
 
+**Fresh confirmation completed; shared encoder started — 2026-11-03.** The retained direct policy scored
+**24.0234375% ± 4.7195072 points**, interval **19.3039303–28.7429447%**, across **128 mirrored pairings /
+256 battles**, seed **38212**, against the unchanged full engine32. This is the reserved fresh validation
+confirmation after the three-round allocation stop, not final-test evidence. It confirms a clear loss;
+paired-return RL did not produce a better selected policy. There is no paired before/after claim across
+the different screening and confirmation seeds.
+
+The complete 128-row journal was verified against summary pair scores and recomputed intervals, with
+both teams in the validation fold for every pairing. The original stopped result and reference-policy
+hash remain unchanged; all 40 immutable v8 runtime source hashes match. `confirmation_artifacts.json`
+binds the raw journal, config, summaries, preserved result and model hashes. The separate supplemental
+`allocation_confirmation.json` retains the completed evidence without rewriting the original result.
+
+Only after the confirmation worker exited, the serial controller started **relational-v1** at **00:55:14 UTC**.
+Its preregistered shared-matchup Double DQN trial now reuses the byte-identical engine4 demonstrations,
+fits the fixed 80 warm-up epochs, then uses its persistent one-hour RL allocation and fixed validation
+selection/confirmation seeds. Its training agreement is a fitting diagnostic, with no strength result
+yet. The original overall deadline and one numerical worker remain enforced; final holds are unopened.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

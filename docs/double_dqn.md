@@ -204,6 +204,13 @@ exactly in its unit check, and fitting leaves the reference arrays unchanged. Im
 is prepared. It may run only after the existing serial chain is finished, with the worker free and enough
 original budget; its persistent cap is two hours and it cannot enable final-test compositions.
 
+Current chain: the registered stop fired after three complete non-improving CF candidates. Its reserved
+fresh direct-policy confirmation completed at 24.0234375% ±4.7195072 points (128 mirrored pairings, seed
+38212), with exact hashes in `counterfactual-v4/confirmation_artifacts.json`. The stopped result is preserved.
+The serial successor then started the shared-encoder trial from immutable followup-v8; use its
+`relational-v1/trial_state.json` and `runs/relational-v1-followup.out`/`.err` for progress. It still has no
+strength result. The residual follow-up remains unstarted and unqueued.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the
