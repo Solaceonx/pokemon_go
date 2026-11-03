@@ -625,6 +625,24 @@ source changed. The merged tree passes **336 tests (7 video skips)** and **108/1
 Both active source guards still match and stderr remains empty. The benchmark continues to use E0;
 it does not silently adopt the new cache implementation or its timing results.
 
+**Complete lower-weight training audit (2026-11-03 09:43 UTC):** all 1,536 games are saved, with
+55,387 student decisions and 114,769 legal expert labels (55,387 student-state and 59,382 opponent
+labels). All inputs and every saved checkpoint/optimizer are finite. The 1,611 distinct training
+trios have no overlap with the 194 validation trios; all teams have the intended partition and there
+are no seed overlaps. Episode indices are contiguous and every game uses 32 engine samples. Replay
+return counts match the actual terminal results exactly (40,955 loss, 281 draw, 14,151 win labels).
+`low_ce_training_audit_round12.json` records all twelve checkpoint hashes and eight matching source
+hashes. Round-12 validation is running; this is an integrity check, not a playing-strength gain.
+
+**Lower-weight correction endpoint (2026-11-03 10:35 UTC): trial closed without improvement.**
+Round 12 / 1,536 games scores **31.64% greedy, CI [26.56%, 36.72%]**, and **21.88% stochastic,
+CI [17.19%, 26.95%]**. Paired changes from initialization are **-5.47 points, CI [-12.50, 1.56]**,
+and **-5.08 points, CI [-11.72, 1.76]**, respectively. The selected checkpoint remains the unchanged
+initialization at 37.11%. `low_ce_validation_round12.json` records the complete checks and confirms
+the training journal closed normally. No settings changed during this bounded follow-up, and no
+strength gain is established. The controller now waits for the next committed main checkpoint before
+the registered allocation comparison; two main workers remain active. Final tests are unopened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

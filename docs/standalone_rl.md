@@ -4,13 +4,14 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 09:17 UTC):** the reliable-win objective is not achieved. The main
+**Current status (2026-11-03 10:35 UTC):** the reliable-win objective is not achieved. The main
 complete-return PPO run's latest validation is round 96 / 24,576 training games. Its selected greedy
 round-80 checkpoint scores 37.50% on validation (95% pairing-bootstrap CI 32.42–42.58%). Round 96
 scores 37.50% (32.42–42.77%), tying the earlier checkpoint without replacing it. The immutable export is
-`runs/standalone-rl/mc-ppo-v3/selected_round_00080.npz`. The lower-weight correction trial's latest
-validation is round eight, with greedy score 31.64% (26.95–36.33%) and no gain; the fixed round-12 endpoint
-continues. Two main workers and one side worker remain active.
+`runs/standalone-rl/mc-ppo-v3/selected_round_00080.npz`. The lower-weight correction trial finished
+1,536 games, with endpoint greedy score 31.64% (26.56–36.72%) and no gain over its initialization.
+Two main workers remain active; the controller awaits a committed main checkpoint before comparing
+the selections and resuming the chosen run on three workers.
 Only `run_low_ce_trial.ps1` is the active handoff controller. Earlier capacity, ensemble and rollout
 trials below are historical results. Final tests remain unopened. Main PPO currently uses gamma=1,
 lambda=1 complete terminal returns; the .98 GAE description below applies to the earlier runs.
@@ -206,10 +207,12 @@ when starting a new method. Do not run a second pool alongside an existing three
 
 ## Supervised initialization
 
-The active lower-weight correction follow-up is `mc-student-lowce-v1`, registered in
+The completed lower-weight correction follow-up is `mc-student-lowce-v1`, registered in
 `runs/standalone-rl/low_ce_plan.json`: the unchanged correction implementation with demo weight 0.1,
-up to 1,536 games/ten hours, one worker beside the main run's two. The failed weight-1 pilot remains
-a separate negative result. This is an adaptive validation experiment; final-test data is unopened.
+up to 1,536 games/ten hours, one worker beside the main run's two. All 1,536 games and the round-12
+validation completed; greedy score is 31.64% (95% CI 26.56–36.72%). The unchanged initialization
+remains selected at 37.11%; no gain is established. The failed weight-1 pilot remains a separate
+negative result. This is an adaptive validation experiment; final-test data is unopened.
 `scripts/run_low_ce_trial.ps1` records under `runs/standalone-rl/low-ce-control`; stop this controller
 first when pausing. After a completed main checkpoint, `scripts/select_student_candidate.py` verifies
 complete 128-pair records/source hashes and requires a positive paired lower bound before promotion.
