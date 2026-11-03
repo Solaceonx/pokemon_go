@@ -530,6 +530,12 @@ The selection helper's actual initial-policy negative control passed; all **333 
 **108/108 PvPoke** checks pass. The new side run started at **2026-11-03 01:37 UTC**, on one worker
 alongside the continuing two-worker main run. Stop this new controller first when pausing work.
 
+**PPO through round sixty-four (2026-11-03 01:50 UTC):** 16,384 training games. Greedy validation
+is **34.77%, CI [30.08%, 39.46%]**; stochastic is **25.00%, CI [19.92%, 30.27%]**. The selected
+best is unchanged: greedy round 24, 37.11%. `mc3_progress_round64.json` records the complete
+progression and the current two-main/one-side-worker allocation. The lower-weight side trial is
+still checking its unchanged starting policy before training; no final-test data has been opened.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
