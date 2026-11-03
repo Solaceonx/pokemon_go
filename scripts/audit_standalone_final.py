@@ -69,7 +69,11 @@ def audit(run, lineage_report, require_complete=False):
     read = lambda name: json.loads((folder / name).read_text(encoding="utf-8-sig"))
     locked, plan, config, saved = (read(name) for name in
                                   ("lock.json", "test_plan.json", "experiment.json", "test_results.json"))
-    require(locked["sources"] == sources() == config["sources"], "registered sources changed")
+    expected_sources = sources()
+    if config.get("offline_returns"):
+        from scripts.offline_returns_rl import sources as offline_sources
+        expected_sources = offline_sources()
+    require(locked["sources"] == expected_sources == config["sources"], "registered sources changed")
     require(digest(folder / "locked.npz") == locked["checkpoint_sha256"], "locked model changed")
     require(digest(folder / "experiment.json") == locked["experiment_sha256"], "configuration changed")
     require(saved["lock"] == locked and saved["plan"] == plan, "result provenance differs")

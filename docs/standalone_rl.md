@@ -4,18 +4,21 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 15:05 UTC):** training stopped after 120 rounds / 30,720 games.
+**Current status (2026-11-03 16:22 UTC):** the main training stopped after 120 rounds / 30,720 games.
 The selected greedy round-104 policy scores 39.26% on validation (95% CI 33.98–44.34%); round 120
 scores 38.87% and does not replace it. Reliable wins have not been established. The final policy is
 locked as `runs/standalone-rl/mc-ppo-v3/locked.npz`. The first 2,400 held-out mixed-field battles score
-**35.06% (95% CI 33.35–36.77%)**, failing that primary block's gate. The other three blocks of the
-**9,600-battle final plan are running**. Sources, mode, sample count and weights are fixed.
+**35.06% (95% CI 33.35–36.77%)**. The second mixed-field block scores **33.21% (31.48–34.94%)**.
+Both primary gates fail; the two standard-field blocks of the **9,600-battle final plan continue**.
+Sources, mode, sample count and weights are fixed.
 `final_protocol_locked.json` records the lock and original deadline before the first complete test block.
 Three evaluation workers were verified at BelowNormal priority with one thread each. No training or
-selection follows test results. The handoff controller completed normally and no side jobs remain.
+selection follows test results in this locked run. Its earlier handoff controller completed normally.
 Earlier capacity, correction, ensemble and rollout trials below are historical negative results.
 Main PPO used gamma=1/lambda=1 complete terminal returns; the .98 GAE description below applies
-to earlier runs. The final strength verdict is pending.
+to earlier runs. The full final result is pending. One separate, bounded offline-return candidate is
+registered in `offline_returns_plan.json`, with validation-only qualification and fresh final seeds if
+qualified; it does not retrain or reselect the original locked policy.
 
 ## What is being trained
 
@@ -153,6 +156,17 @@ python scripts/audit_standalone_final.py --run mc-ppo-v3 --output runs/standalon
 Add `--require-complete` to reject a partial evaluation. The auditor checks winner/seat scores,
 registered bootstrap statistics, source/checkpoint pins, regenerated schedules, team/seed separation
 and the final reliability verdict. It plays no battles and modifies no policy or evaluation inputs.
+
+`scripts/offline_returns_rl.py` is a separate adaptive follow-up using only the saved main training
+returns. Its objective is half squared error on the observed action's terminal return plus .1 times
+`logsumexp(legal Q) - Q(observed action)`. The regularizer is from
+[CQL equation 4](https://arxiv.org/html/2006.04779v3); the Monte-Carlo variant claims no theoretical
+lower-bound guarantee. It keeps the existing public encoder and standalone runtime, with greedy
+argmax of the learned action values. The fixed 15-minute/four-epoch bound, 128-pair promotion gate,
+separate fresh-seed final plan and original deadline are in `offline_returns_plan.json`.
+`scripts/run_offline_returns_trial.ps1` manages at most two original evaluation workers plus one
+offline worker, with guarded process identities and cache-preserving resumption. Stop that controller
+first when pausing while it is live.
 - `validation_*.jsonl`, `test_*.jsonl`: append-only pairing outcomes with resume provenance.
 
 Use a saved policy directly:

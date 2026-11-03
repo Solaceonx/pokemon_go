@@ -719,6 +719,34 @@ The auditor changes no policy, training or evaluation source. Four new guard tes
 and draws, incorrect seat scores, duplicate indices and inconsistent statistics. **340 tests OK
 (7 video skips), 108/108 PvPoke exact**. Raw logs and lineage caches remain saved locally.
 
+**Second complete final block (2026-11-03 16:22 UTC), mixed seed 1:** 1,200 pairings / 2,400
+battles score **33.21%, bootstrap 95% CI [31.48%, 34.94%]**. Both mandatory mixed-field blocks
+therefore fail their gates. The reusable audit passes both blocks (4,800 battles), including exact
+schedule regeneration, registered bootstrap seeds, score mappings and separation checks
+(`final_block_mixed_1_audit.json`). The two standard-field blocks continue unchanged.
+
+**Registered bounded offline follow-up (2026-11-03, before fitting):** the audited main dataset now
+contains 1,163,172 public decisions with complete terminal-return labels. A separate
+`offline-returns-v1` trial fits per-action return estimates, with the legal-action log-sum-exp penalty
+from [CQL, equation 4](https://arxiv.org/html/2006.04779v3). It uses Monte-Carlo returns instead of
+Bellman targets, so CQL's theoretical guarantees are not claimed. No test examples or outcomes are
+used for fitting or candidate selection. The original locked model and all its test inputs remain fixed.
+
+`offline_returns_plan.json` fixes one candidate: existing round-104 representation, actor output heads
+scaled by .1, optimizer reset, alpha .1, learning rate .0002, batches of 1,024, at most four epochs or
+15 fitting minutes, whichever comes first, and greedy inference only. The critic and all runtime code
+are unchanged. Three numerical/functional tests check the loss gradient against finite differences,
+legal masking, positive-scale greedy preservation, and updates leaving other heads untouched.
+Full suite: **343 tests OK (7 video skips), 108/108 PvPoke exact**.
+
+Its 128-pair validation must have bootstrap lower bound above 50% AND positive paired-improvement
+lower bound against main round 104; at least 5.5 hours must remain. Only then can it lock a separate
+model and generate two new final seeds for the same 9,600-battle protocol. The controller limits total
+long-job compute to three workers: original test two, offline fit/validation one; it restores the original
+three on a negative trial, or boosts a qualified candidate after the original finishes. Original test
+resumption reuses its exact pairing cache, sources, weights, mode, seeds and sample plan. The absolute
+deadline remains 1793756530. Stop `run_offline_returns_trial.ps1` first if pausing while it is live.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
