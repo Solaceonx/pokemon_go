@@ -19,6 +19,7 @@ from pogo.dqn_relational import Network
 from pogo.gamedata import GameData
 from pogo.teamlist import drawer
 from scripts import dqn_continue as trial, dqn_final as final, double_dqn as trainer
+from scripts import check_dqn_continue as checker
 
 
 class StandInFrozen:
@@ -168,6 +169,40 @@ class ContinuationTests(unittest.TestCase):
             allowed = subprocess.run([sys.executable,'-c',code,str(path)], capture_output=True)
             self.assertEqual(allowed.returncode,0,allowed.stderr)
             self.assertIn(b'acquired',allowed.stdout)
+
+    def test_independent_auditor_reconstructs_fresh_rows_and_rejects_rehashed_corruption(self):
+        with tempfile.TemporaryDirectory() as directory, redirect_stdout(io.StringIO()):
+            root=Path(directory)
+            net=Network(seed=18,hidden=8)
+            f=StandInFrozen()
+            cfg=dict(model_sha256='unit-policy',plan_sha256='unit-plan',exclusion_sha256='unit-exclusions',
+                     field='mixed',seed=902,pairs=2,split='validation',samples=32)
+            trainer.write_json(root/'config.json',cfg)
+            rng=random.Random(902)
+            trainer.draw_split(f.mixed_draw,rng,'validation')
+            trainer.draw_split(f.mixed_draw,rng,'validation')
+            forbidden=rng.getrandbits(32)
+            with trial.fresh_evaluation(set(),{forbidden}):
+                report=final.measure(root,f,net,[],trial.RECIPE,'mixed',902,2,'validation',lambda:False)
+            def audit(value):
+                return checker.audit_block(root,value,f,'mixed',902,2,'validation',set(),{forbidden},
+                                           'unit-policy','unit-exclusions','unit-plan')
+            self.assertEqual(audit(report)['score'],report['score'])
+            raw=root/'rows_mixed_902.jsonl'
+            original=raw.read_text()
+            for field in ('game_seeds','player_sides','teams'):
+                rows=[json.loads(line) for line in original.splitlines()]
+                if field=='game_seeds': rows[0][field][0]+=1
+                elif field=='player_sides': rows[0][field].reverse()
+                else: rows[0][field][0].reverse()
+                raw.write_text(''.join(json.dumps(r)+'\n' for r in rows))
+                changed=dict(report,raw_sha256=trainer.sha(raw))
+                trainer.write_json(root/'mixed_902_summary.json',changed)
+                with self.subTest(field=field), self.assertRaises(ValueError): audit(changed)
+            raw.write_text(original)
+            changed=dict(report,margin95=report['margin95']+.1)
+            trainer.write_json(root/'mixed_902_summary.json',changed)
+            with self.assertRaisesRegex(ValueError,'confidence'): audit(changed)
 
 
 if __name__ == '__main__':

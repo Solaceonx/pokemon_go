@@ -50,3 +50,20 @@ The authorized controller is launched hidden with its own stdout/stderr. Its ide
 `continue-v1/launch.json` and `controller_state.json`. Read these and confirm process start/path before
 any action. Do not launch another worker when one is live. Do not edit the copied runtime or guard.
 PR #12 retains the prior three clear held-out losses; no new strength result exists yet.
+
+Activation: guard21804 started2026-11-03T21:17:06.4918047Z; numerical worker22396 started
+21:17:06.9655231Z, verified BelowNormal. Exact full checkpoint/replay/data production copies match the
+registered hashes. The initial fresh validation is running; actual training-stage clocks begin afterward.
+The quiet30-minute heartbeat now follows this new allocation. Read current launch receipts before action.
+
+After all final blocks complete, run the independent checker without replaying games:
+
+```powershell
+python scripts/check_dqn_continue.py --run continue-v1
+```
+
+It verifies complete raw pairings, fresh composition/seed exclusions, independent confidence intervals,
+validation-only selection, actual canary, original/new locks, source/data/compact parameters and clocks.
+It writes only small `audit.json`; `evidence_verified=true` alone is not proof of winning.
+Auditor preparation checks pass323tests,7skips;108/108 PvPoke exact. Its corruption coverage uses only
+validation games, and the checker is not imported by the long-running numerical worker.

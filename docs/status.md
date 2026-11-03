@@ -6,7 +6,7 @@ says how to run things.
 
 Last updated 2026-11-03.
 
-## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; implemented, activation pending)
+## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; running)
 
 The owner explicitly authorized **another 48 hours** after reviewing the completed losing benchmark.
 The new allocation begins at the observed approval time **2026-11-03 20:59:47 UTC** and ends at
@@ -48,6 +48,24 @@ lease. The39-source immutable runtime `.dqn-cache/harness/continue-v1` and separ
 passed without a numerical start. `activation.json`, `source_manifest.json` and `implementation.json`
 bind the source and test receipts. The original completed benchmark independently audits unchanged;
 no new strength result exists.
+
+**Activated at21:17:06UTC.** Hidden guard21804 (start21:17:06.4918047UTC) launched the sole numerical
+worker22396 (start21:17:06.9655231UTC), verified BelowNormal with one NumPy thread. Its initial phase
+is the fresh64-pair validation before training. Production copies of the full online/target/Adam/RNG
+checkpoint, replay and sealed teacher data were checked byte-for-byte against the registered inputs;
+the old completed global lock and verdict remain unchanged. `launch_receipt.json` records the checks.
+Current process identities and log paths are in `launch.json`, `controller_state.json` and
+`.dqn-cache/continue_controller.json`; never start another worker without checking their actual liveness.
+The quiet30-minute heartbeat is active for this new allocation and its fixedNovember5deadline.
+
+**Independent continuation auditor prepared.** `scripts/check_dqn_continue.py --run continue-v1`
+will require the complete new verdict, reconstruct every draw/seed/side and confidence interval,
+rebuild the exclusions from prior identity journals, check original/new locks, all39runtime and95baseline
+hashes, exact compact parameters, candidate selection and stage/deadline bounds. It is separate from
+the running immutable numerical sources. One additional validation-only test verifies producer/auditor
+agreement when an actual old game seed must be resampled, and rejects rehashed team/seed/side corruption
+and altered confidence margins. **323tests pass,7optional video skips;108/108 PvPoke exact**. No new
+final game has been opened and no new strength gain is claimed.
 
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
