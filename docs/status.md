@@ -3709,3 +3709,28 @@ answers do not support (site commit a5d78bb; built with `--unchecked`, a caption
 changes 6 of 35 picks and lifts agreement where both players agree from 48% to 60% (12 to 15 of 25); 0.02 and 0.05 change almost
 nothing, `stay_after_replace` nothing. Against bots keep-the-switch settings have lost (task 35; 0.01–0.02 on the fixed code).
 Not adopted: it goes into exam 2 as a version, for fresh positions.
+
+## Robust choice across the opponent styles (2026-11-03, Marco): no gain at 8 imagined battles; playing for the worst style loses
+
+A best response to one imagined opponent is only right against that opponent (`docs/benchmarking.md`: the engine's gain falls
+from +17 against the trained bot to -2 against PvPoke's AI), and a probe of 200 `matching` searches found the styles disagreeing
+on the best option 36% of the time. `Engine(robust=p)` (branch `robust-choice`, needs `opponents="mix"`) sends the imagined
+opponents round the styles in turn so each style judges every option with looks of its own, then scores an option at
+(1 - p) x the styles' weighted mean + p x its worst style; `engine_versus.py` reads `robust=`. Screen on the PC, 16 workers,
+27 minutes: `--field mixed --seed 4601`, samples=8, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke, 250 reader pairs,
+baseline the plain engine at samples=8 (crowd 71.9% ± 2.8, PvPoke 84.6% ± 3.2, reader 51.3% ± 3.8).
+
+| candidate (all samples=8) | head to head | crowd | PvPoke's AI | reader |
+|---|---|---|---|---|
+| `opponents=mix,matching=1` (control) | 50.3% ± 1.7 | +3.7 ± 3.0 | +9.0 ± 3.2 | +2.1 ± 4.6 |
+| control + `robust=0.5` | 50.8% ± 1.8 | +3.9 ± 2.9 | +7.1 ± 3.2 | +3.1 ± 4.9 |
+| control + `robust=1` | 47.2% ± 1.8 | +1.8 ± 3.1 | +2.0 ± 3.4 | +0.7 ± 4.8 |
+
+Playing for the worst style loses: it is beaten by the plain engine head to head and gives up most of `matching`'s gain against
+PvPoke's AI and the crowd. `robust=0.5` is the control within the margins on every judge (0.2 to 1.9 points apart). With 8 looks
+over 4 styles each style's mean rests on 2 play-outs, so the worst of them is mostly noise, and the gain against PvPoke's AI comes
+from `matching` telling the styles apart, which the worst case throws away. Not taken to 32 imagined battles: the adoption rule
+wants a gain on the mixed field first and there is none. A `robust=0` candidate meant to separate the per-style looks from the
+worst-case weight came out identical to the control because the code took 0 as off; fixed afterwards (`None` is off), not rerun.
+The control repeats task 35 at 8 imagined battles (its confirm at 32: crowd +3.2 ± 1.9, PvPoke +8.9 ± 2.1). Search time with
+`robust` is the control's (median 31 ms, 99th percentile 141-156 on the PC). Printout `runs/robust_screen.out`; the per-battle file `runs/engine_versus/robust-screen.json` is on Marco's PC.

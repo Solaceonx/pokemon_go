@@ -67,7 +67,7 @@ def parse(spec: str) -> dict | None:
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "temperature", "switch_edge"):
+        elif key in ("edge", "margin", "temperature", "switch_edge", "robust"):
             out[key] = float(value)
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
                      "stay_after_replace"):
