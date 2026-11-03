@@ -119,6 +119,9 @@ First held-out block mixed38091 completed1,000pairs/2,000games at33.575000%±1.8
 CI31.7582126–35.3917874: a clear loss, so the reliable-win target fails for this policy. All raw
 draws/folds/seeds/sides/scores, runtime/baseline and compact hashes verified independently. Remaining
 mixed38092 and standard38091 blocks continue unchanged under the original deadline; full verdict pending.
+Second held-out mixed38092 completed1,000pairs/2,000games at35.525000%±1.8459270857points(95%),
+CI33.6790729143–37.3709270857: another independently verified clear loss. Both mixed gates fail.
+Only the original1,000-pair standard38091 block remains; it continues unchanged. Full verdict pending.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
 validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.

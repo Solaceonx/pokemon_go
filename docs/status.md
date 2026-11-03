@@ -851,6 +851,23 @@ Production worker27444/guard26776 remain healthy, with unchanged22:40:49UTC over
 The complete three-block verdict is pending; this completed block is a result, not permission
 to change the candidate or stop the declared samples early.
 
+**Second held-out block completed — 15:27 UTC.** On mixed-field **test seed38092**, the same locked
+policy scored **35.525000% ± 1.8459270857 points** (95%), interval **33.6790729143–37.3709270857%**,
+over **1,000 independent mirrored pairings /2,000 battles** against full engine32. This is another clear
+held-out loss. Both mixed lower95 gates fail; the reliable-win target remains unmet. The final
+standard38091 block continues with its original1,000pairings, unchanged policy and original deadline.
+No policy, method, selection, sample size or seed changed after inspecting either final result.
+
+Independent reconstruction verified all1,000raw pairings, exact draws, both test-composition folds,
+game seeds, player sides, legal outcomes and clustered confidence calculations. All45 immutable runtime
+files,95 baseline files, selected full-to-compact parameters and the global protocol lock remain intact.
+`mixed_38092_artifacts.json` records the checks; journal SHA-256
+`076324d59eeb9f13244ab6ab138f7008b4e04900de02fb12697410177b11863a`, summary SHA-256
+`b994cb1c42f4e95d2e870d4fa6f4151564aa5050cc1815df0677138e81770957`.
+The complete three-block verdict remains pending; no promotion, merge or deployment follows these losses.
+Required checks rerun before publishing this block: **317tests pass,7optional video skips;108/108
+PvPoke battles exact**, saved in `runs/heldout-second-tests.out` and `runs/heldout-second-pvpoke.out`.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

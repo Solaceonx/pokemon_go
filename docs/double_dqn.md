@@ -359,6 +359,13 @@ validation scored35.7421875%±5.4264534points, so the reliable-win target remain
 policy has not been promoted or deployed. The research export has a different metadata/hash; the final
 package above is the one bound to the held-out protocol.
 
+Both mixed-field held-out blocks are complete: seed38091 scored33.575000%±1.8167874029points
+(95% interval31.7582125971–35.3917874029%), and seed38092 scored35.525000%±1.8459270857points
+(33.6790729143–37.3709270857%). Each used1,000mirrored pairings/2,000games with both teams in
+the test-composition fold. Independent raw-journal and artifact checks are saved beside each summary.
+Both are clear losses, so this policy fails the reliable-win target. The prescribed standard38091
+block continues unchanged; the complete three-block verdict is pending. No tuning follows these results.
+
 After a completed production verdict, independently check the saved evidence without rerunning games:
 
 ```powershell
