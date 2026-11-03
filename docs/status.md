@@ -660,6 +660,24 @@ all worker priorities were read back (`low_ce_handoff_audit.json`). The original
 final reserve, 1,200 final pairings per seed/field and all training settings were verified in the new
 launch record. No side jobs remain and final tests are still unopened.
 
+**Initialization lineage audit (2026-11-03):** the original bootstrap driver and experiment module
+match registered source commit `ace8536`. Team/seed generation, split functions and salt match the
+current protocol; the runtime constructor differs only in its path-scoped module namespace. The
+16,384-game bootstrap schedule was deterministically reconstructed, then combined with the 4,096
+saved PPO-v2 episodes used by the warm start. Its 8,257 distinct training trios and RNG seeds have
+zero overlap with the 323 registered mixed/standard validation trios and their seeds. All 1,417,130
+stored imitation examples are finite and legal, their 64 shard hashes are recorded, and counts match
+the bootstrap journal. `initialization_lineage_audit.json` documents the proof and limitation:
+bootstrap team schedules are reconstructed from exact registered source because per-episode bootstrap
+team logs were not saved. This checks initialization provenance, without making a strength claim.
+
+**PPO round 112 (2026-11-03 12:27 UTC): no new selection.** After 28,672 training games,
+greedy validation is **37.11%, CI [32.03%, 42.19%]**, and stochastic is **27.54%, CI [22.66%,
+32.42%]**. The paired greedy change from selected round 104 is **-2.15 points, CI [-7.81, 3.32]**.
+The selected weights/export remain unchanged at 39.26%. `mc3_progress_round112.json` records the
+complete checks, finite parameters/optimizer and matching five source hashes. Three workers continue
+toward the original training cutoff; final tests remain unopened and the twelve-hour reserve is intact.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

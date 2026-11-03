@@ -4,9 +4,10 @@ The owner requested a separate RL player that reliably beats the current engine,
 of computing or available usage. This experiment has its own policy and measurement code. The existing
 engine, tracker, website and their defaults are unchanged.
 
-**Current status (2026-11-03 11:11 UTC):** the reliable-win objective is not achieved. The main
-complete-return PPO run's latest validation is round 104 / 26,624 training games. Its selected greedy
-round-104 checkpoint scores 39.26% on validation (95% pairing-bootstrap CI 33.98–44.34%). Its paired
+**Current status (2026-11-03 12:27 UTC):** the reliable-win objective is not achieved. The main
+complete-return PPO run's latest validation is round 112 / 28,672 training games. Round 112 scores
+37.11% greedy (95% CI 32.03–42.19%) and does not replace the selected round-104 checkpoint,
+which scores 39.26% (33.98–44.34%). Its paired
 change from round 80 is +1.76 points ([-4.69, 8.20]), so no additional gain is established. The immutable
 export is `runs/standalone-rl/mc-ppo-v3/selected_round_00104.npz`. The lower-weight correction trial finished
 1,536 games, with endpoint greedy score 31.64% (26.56–36.72%) and no gain over its initialization.
