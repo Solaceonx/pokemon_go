@@ -3668,3 +3668,10 @@ disagree: rulebook 67%, trained bot 58%, `matching` 47%, engine 36%. Where the e
 11 to 3. The owner switches far less than the engine (2 against 7 of 26) and shields far more than the networks (6 against 1 of 7). The play-out judge's top
 choice matches the owner no better than chance (42% against 38%), so the earlier "staying in when a switch wins" finding, which came from it, is not
 supported. Website exam for friends: `exam.html`; `import_played.py --store` files their answers in `runs/exam/answers/` (not in git).
+
+A second, stronger player (top 30 in the world several times) took the whole exam, 2026-11-02 (`docs/benchmarking.md`): rulebook 56%, trained
+bot 58%, engine 56%, `matching` 44% (±16). After 26 answers the engine led at 65%; the last ten removed it. The two players give the same answer on
+26 of 36. On those 26 the rulebook plays it 69%, the trained bot 65%, the engine 50%, `matching` 46%; where the engine overrides the trained bot
+there, both players side with the trained bot 7 to 3. The engine's misses on them: 4 switches where both stay in, 3 unshielded hits both shield,
+3 farms where both throw, 2 throws where both farm. The play-out judge matches the second player 31%. Sure answers repeat for both players
+(5 of 5 pairs); answers given as leaning do not.
