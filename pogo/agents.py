@@ -58,8 +58,9 @@ def _sweeper_field() -> tuple:
 # a process runs; anything that changes those must call clear_playout_cache().
 PLAYOUT_CACHE = True
 # Entries in each, then it starts again. A self-play game at the website's settings adds about 12,000 to each, at about
-# 850 bytes an entry, so both full take about 85 MB.
-_CACHE_SIZE = 50_000
+# 850 bytes an entry, so both full take about 25 MB: the website runs this in a phone's browser. Long runs on a PC can
+# raise it (50,000, about 85 MB, was Marco's first setting); the size changes only the speed, never a result.
+_CACHE_SIZE = 15_000
 _duels: dict = {}
 _rollouts: dict = {}
 
