@@ -6,6 +6,34 @@ says how to run things.
 
 Last updated 2026-11-03.
 
+## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; authorized, implementation pending)
+
+The owner explicitly authorized **another 48 hours** after reviewing the completed losing benchmark.
+The new allocation begins at the observed approval time **2026-11-03 20:59:47 UTC** and ends at
+**2026-11-05 20:59:47 UTC (12:59:47 p.m. Pacific)**. This is a new experiment, `continue-v1`;
+the original deadline, locks, checkpoint/data hashes and completed PR #12 results remain historical facts.
+
+The registered plan continues the exact teacher32-v1 endpoint, optimizer, target network, RNG and replay
+from 457 games / 1,816 batches / 3,632 Adam steps. All learning and opponent settings stay fixed. Four
+eight-hour stages use persistent clocks, clipped to an absolute research cutoff 35 hours after approval.
+Initial and complete-stage endpoints compete on the same fresh 64-pair validation seed39011; earliest
+ties win. Only the selected endpoint gets fresh 128-pair confirmation seed39012. A matching validation-only
+canary precedes one newly locked three-block benchmark, 1,000 mirrored pairings per block, fresh mixed
+seeds39091/39092 and standard39091. Validation losses cannot be promoted as wins.
+
+All **1,380 compositions** and **17,751 game seeds** used by the prior final benchmark are excluded
+from the new final draws, using only identity metadata. Both actual teams must still be in test fold9;
+there are **787 unused standard-field compositions** available. The new population is explicitly
+conditioned on unused compositions, sampled with replacement, so it is not a paired cross-study comparison.
+`continue-v1/holdout_exclusions.json` binds the old raw-journal hashes and compact exclusion sets.
+
+The plan was registered before any continuation game: SHA-256
+`157f94a88e075598524518a2f1a9bc3cb7f0c1e6e1f2c2f4d5b0a8bc49b5d1f3`.
+Initial required checks: **317 tests pass, seven optional video skips;108/108 PvPoke battles exact**.
+No new numerical worker has started. Implementation, recovery/deadline tests and a new immutable runtime
+receipt are required before activation. One worker, one NumPy thread; no phone, merge or deployment.
+Full protocol: `runs/double-dqn/continue-v1/plan.json`; working instructions: `docs/double_dqn_continue.md`.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

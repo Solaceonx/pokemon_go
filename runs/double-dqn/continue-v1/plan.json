@@ -1,0 +1,111 @@
+{
+  "status": "registered_before_any_continuation_game; implementation pending",
+  "authorization": {
+    "answer": "Authorize another 48 hours",
+    "observed_utc": "2026-11-03T20:59:47Z",
+    "scope": "Continue saved Double DQN, select on validation only, new locked policy, unused held-out teams and fresh seeds; preserve PR12 completed results"
+  },
+  "registered_unix": 1793739844.8890889,
+  "authorized_start_unix": 1793739587.0,
+  "absolute_deadline_unix": 1793912387.0,
+  "absolute_deadline_utc": "2026-11-05T20:59:47Z",
+  "research_cutoff_unix": 1793865587.0,
+  "baseline_commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "previous_global_lock_sha256": "fa0f09a0c71b12fecfabcd358994297fb28f47a5fc3847c5e87dda16193450ff",
+  "previous_verdict_sha256": "8ca9f83a595af7f439cf373eb5bb10076aabd37c4a8867e39837d9288b937dc2",
+  "source_run": "teacher32-v1",
+  "source_sha256": {
+    "endpoint.npz": "45a8c2036f9f84c4b1e6541554e9afa407f09bc4a1d60cc4a76ff05ca3637e91",
+    "replay_0.npz": "5ad7994a1b64f860480558754c8c31c792d80927f6d4820677b8911a7ceb2233",
+    "resume.json": "43e21ec24b6aa3a024f02bfea6698dad660b9f703afd687089edf37289328257",
+    "demonstrations.npz": "52603178fbc8008da5d325a4b337273e4913c1a5295ef788245fb866f192ac2d"
+  },
+  "resume": "Exact saved online/target/Adam/RNG/replay state; no optimizer reset; continue episode indices from457",
+  "source_games": 457,
+  "source_batches": 1816,
+  "source_adam_steps": 3632,
+  "training": {
+    "stage_hours": 8,
+    "maximum_stages": 4,
+    "engine_share": 1,
+    "train_samples": 32,
+    "seed": 38803,
+    "batch": 128,
+    "nstep": 3,
+    "epsilon": 0.03,
+    "epsilon_min": 0.005,
+    "epsilon_decay": 20000,
+    "mc_share": 0.25,
+    "demo_margin": 1.0,
+    "rate": 0.0001,
+    "updates": 4,
+    "target_every": 500,
+    "save_every": 25,
+    "clock": "Persistent deadline per stage; all stages clipped to research cutoff; recovery never resets allocation"
+  },
+  "selection": {
+    "seed": 39011,
+    "pairs": 64,
+    "opponent_samples": 32,
+    "split": "validation",
+    "candidates": "initial plus each complete stage endpoint; earliest listed wins point-score ties",
+    "minimum_completed_stage_games": 1
+  },
+  "confirmation": {
+    "seed": 39012,
+    "pairs": 128,
+    "opponent_samples": 32,
+    "split": "validation",
+    "only_selected": true
+  },
+  "canary": {
+    "blocks": [
+      [
+        "mixed",
+        39095
+      ],
+      [
+        "mixed",
+        39096
+      ],
+      [
+        "standard",
+        39095
+      ]
+    ],
+    "pairs_per_block": 2,
+    "split": "validation",
+    "no_selection": true
+  },
+  "final_blocks": [
+    [
+      "mixed",
+      39091
+    ],
+    [
+      "mixed",
+      39092
+    ],
+    [
+      "standard",
+      39091
+    ]
+  ],
+  "final_pairings_per_block": 1000,
+  "reliable_win_criterion": "Both mixed lower95>.5 and standard upper95>=.5; all three blocks complete",
+  "holdout_exclusions_sha256": "4c3fbd17ad675fd81b7148dca0ba60f7331cd0aa8168de90f75ad63036006387",
+  "excluded_compositions": 1380,
+  "excluded_game_seeds": 17751,
+  "unused_standard_test_compositions": 787,
+  "total_standard_test_compositions": 1970,
+  "test_distribution": "Original test fold9 conditioned on compositions absent from all prior final games, sampled with replacement; not a paired cross-study comparison",
+  "final_lock": "One new run-local policy/source/data/selection/holdout/count/deadline lock before any new final game; never alter old global lock or old results",
+  "admission": "Always complete one honest fixed benchmark if time permits, even when validation loses; no relaxed strength target",
+  "time_reserve": "Stop research at35h after approval, leaving13h for canary/final/closure; no extension beyond48h",
+  "workers": 1,
+  "numpy_threads": 1,
+  "priority": "BelowNormal on Windows",
+  "failure_recovery": "Same atomic checkpoints, replay, RNG, stage deadlines and immutable runtime; no duplicate worker; preserve logs",
+  "final_outcomes_used_for_training_or_selection": false,
+  "training_started": false
+}

@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, target unmet; calibration fresh confirmation 20.51% ±4.50, full-engine32 teacher collection running (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12 prior benchmark target unmet; owner authorized a new 48-hour continuation on2026-11-03, implementation pending | NumPy; one worker; new deadline2026-11-05 20:59:47UTC |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -65,9 +65,17 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 38. Standalone Double DQN against a frozen engine — Codex DQN (stopped; strength target unmet, 2026-11-03)
+## 38. Standalone Double DQN against a frozen engine — Codex DQN (new continuation claimed, 2026-11-03)
 
-**Current state.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
+**New continuation.** The owner authorized another48hours, ending2026-11-05 20:59:47UTC. Registered
+`continue-v1/plan.json` resumes the saved full Double DQN state for up to four eight-hour stages, selects
+on fresh validation only, then locks one policy for a new benchmark excluding every prior final composition
+and game seed. Both real test teams remain in fold9; fresh block seeds39091/39092, unchanged full engine32,
+and three1,000-pairing blocks. Prior PR #12 results and all original artifacts stay intact. This claim
+precedes implementation or any new numerical worker. Required initial checks pass:317tests,7skips;108/108
+PvPoke exact. See `docs/double_dqn_continue.md`. The reliable-win goal remains unmet.
+
+**Prior completed experiment.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
 November3 22:40:49UTC deadline. Draft PR #12 retains a standalone NumPy Double DQN pilot, compact policy,
 frozen full-engine baseline, composition splits, resumable checkpoints and experiment logs. The reliable-win
 target failed: all three held-out blocks are clear losses, each with1,000independent mirrored pairings/2,000games.
