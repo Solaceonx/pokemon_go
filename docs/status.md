@@ -6,7 +6,12 @@ says how to run things.
 
 Last updated 2026-11-03.
 
-## Standalone Double DQN experiment — 2026-11-01 (Codex DQN, task 38; in progress)
+## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
+
+**Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,
+within the original deadline. All three held-out blocks are clear losses. The independent evidence audit
+passes, but the reliable-win criterion fails. No policy was promoted and no experiment worker remains.
+All trial results and the final table are retained below; the owner's reliable-win goal is unmet.
 
 Owner-requested independent reinforcement learning against a frozen current engine, with up to two days of
 computing. The other chat's task 37 / PR #11 uses PPO. This alternative uses Double DQN with n-step prioritized
@@ -867,6 +872,43 @@ files,95 baseline files, selected full-to-compact parameters and the global prot
 The complete three-block verdict remains pending; no promotion, merge or deployment follows these losses.
 Required checks rerun before publishing this block: **317tests pass,7optional video skips;108/108
 PvPoke battles exact**, saved in `runs/heldout-second-tests.out` and `runs/heldout-second-pvpoke.out`.
+
+**Final held-out benchmark completed and independently audited — November3,18:31:34UTC.** The last
+standard-field block completed all1,000mirrored pairings/2,000games. All prescribed blocks now have
+complete outcomes against the same frozen full engine32; scores count wins plus half draws.
+
+| Test field / fresh seed | Pairings / battles | Score ±95% margin (points) | 95% interval |
+| --- | --- | --- | --- |
+| Mixed38091 | 1,000 /2,000 | 33.575000% ±1.8167874029 | 31.7582125971–35.3917874029% |
+| Mixed38092 | 1,000 /2,000 | 35.525000% ±1.8459270857 | 33.6790729143–37.3709270857% |
+| Standard38091 | 1,000 /2,000 | 32.175000% ±1.8646280779 | 30.3103719221–34.0396280779% |
+
+Confidence intervals cluster the two orientations of each independent team pairing; both actual teams
+belong to the test-composition fold. **All three are clear losses.** Both mixed lower95>50% gates fail,
+and standard upper95<50% also fails the cross-check. `verdict.json` records `strength_target_met=false`.
+No final result changed the selected model, method, baseline, samples, seeds, stopping rule or deadline.
+
+`python scripts/check_dqn_verdict.py --run final-teacher32-v1` passed on the complete real evidence:
+`evidence_verified=true`,3,000pairings/6,000games, `strength_target_met=false`. This independently
+reconstructed every raw draw, both team folds, game seed, side, legal score and clustered interval;
+verified the actual validation-only canary, global policy lock,45runtime files,95baseline files,
+exact full-to-compact parameters and original allocation/selection evidence. `audit.json` binds its own
+auditor source and the verdict SHA-256 `8ca9f83a595af7f439cf373eb5bb10076aabd37c4a8867e39837d9288b937dc2`.
+Standard raw journal SHA-256 `ccda64b881427fca9bfcef9f6d5a5a6f28fd0da308776cea6fa9e25e64dd0604`.
+
+The selected91,442-byte policy remains SHA-256
+`326bc2250899a2f69a6fe676845fd5a0bc3ad0d407e3bf186f1a726dd1fbfc71`.
+An additional closure check reverified31retained artifact hashes, including the sealed teacher data,
+original engine4 data, fit/bootstrap/checkpoint/optimizer/replay, eligible candidate models and final logs;
+all44teacher-runtime sources and the serial guard also match. Large raw journals, demonstration arrays,
+full training checkpoints and replay stay local/ignored. Small complete paired summaries, verdict/audit,
+compact policy and `budget-finalization-v1/completion.json` preserve the reviewable evidence.
+
+Production worker27444 and serial guard26776 exited normally; controller state is `complete`, with
+no worker PID. Completion preceded the unchangedNovember3 22:40:49UTC deadline; no extension or restart.
+Required final checks passed: **317tests,7optional video skips;108/108 PvPoke battles exact**
+(`runs/final-verdict-tests.out`, `runs/final-verdict-pvpoke.out`). Task38 is stopped after completing
+its prescribed benchmark; the reliable-win goal remains unmet. No promotion, merge or deployment.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training

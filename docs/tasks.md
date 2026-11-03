@@ -65,80 +65,39 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 38. Standalone Double DQN against a frozen engine — Codex DQN (in progress, 2026-11-01)
+## 38. Standalone Double DQN against a frozen engine — Codex DQN (stopped; strength target unmet, 2026-11-03)
 
-**Current state.** Draft PR #12 contains the standalone policy, frozen baseline, held-out composition splits,
-locked final tests, atomic checkpoints and a bounded unattended pipeline. The first 749-game RL trial did
-not improve on its warm-up (24.0% ± 5.5 against engine8 on 100 validation pairings; this is selection data,
-not final evidence). The second variant has 400 inputs, a larger network and an engine4 warm-up, followed
-by RL against the full engine32. Every result is in `status.md`; exact commands and artifact paths are in
-`docs/double_dqn.md`.
-The v2 selected checkpoint scored 27.67% ± 3.27 points on 300 full-engine32 validation pairings. Its second
-stage was stopped at 5,400 saved games to redirect computing after the owner requested further experiments.
-Cross-entropy refinement subsequently scored 24.80% ± 4.97 on 128 fresh full-engine validation pairings.
-Independent learned-policy Monte Carlo planning confirmed at 34.96% ± 5.11 on 128 fresh full-engine
-validation pairings. The bench-augmentation trial retained prior averaged inference, which confirmed at
-32.03% ± 4.41 on 128 fresh full-engine validation pairings. Paired-return RL completed three non-improving
-rounds from immutable runtime v4, then stopped under its registered allocation rule. The retained policy's
-fresh 128-pair confirmation scored 24.02% ±4.72. The shared encoder completed 461 RL games; warm-up and
-endpoint tied at 33.59% on the 64-pair selection cohort, retaining warm-up, which freshly confirmed at
-32.81% ±4.82. The residual-update trial retained its unchanged reference, which confirmed at24.02% ±4.59;
-output calibration also retained the reference and freshly confirmed at20.51% ±4.50. Full-engine32
-teacher selfplay collection is now running under its recorded two-hour clock. All measured scores are
-validation results; final tests remain unopened. A training-only bench-order audit found 73/256 changed
-decisions under equivalent own-bench labels. The controlled augmentation/invariant-inference trial did
-not establish a strength gain. Paired-return training uses fresh validation confirmation. A method-preserving final evaluator
-is prepared; its full frozen-engine canary is pending. A smaller shared-matchup Double DQN backend is
-prepared as an unmeasured fallback with a serial successor that finishes CF's reserved confirmation before
-switching; no second training worker has started. The first two paired-return candidates scored
-23.44% ± 6.06 and 19.53% ± 6.77 on the 64-pair validation screen; the third scored 24.61% ± 6.50, retaining
-the initial policy. All 900 training controls matched; the source inputs are ready for the unstarted residual trial.
-The residual-return follow-up reuses the first three complete training batches and unchanged demonstrations,
-with fresh selected-setting validation. Its parent worker/controller exited before it started.
-The output-bias calibration follow-up reuses the same training labels and reserves fresh validation;
-both parent trials and processes completed below target before it began. A stronger-teacher data study is
-implemented and collected599full-engine games/45,945decisions after the calibration parent completed
-below target and exited. All1,198initial own-team headers and both training folds were independently
-verified. Its20-epoch fit and persistent one-hour DDQN allocation completed:457games/1,816update batches,
-with the finite endpoint, optimizer/target/RNG checkpoint and19,994online replay rows retained.
-Stand-in tests verify data signs/public masks and exact data/optimizer resumption; the first real teacher
-games and fit have completed. Its pre-RL internal64-pair full-engine validation scored35.156250%±7.132801
-points, with paired change+1.562500±8.514719 versus the prior relational warm-up on the same cohort:
-no established gain and still a clear loss. The registered selection/fresh-confirmation plan continues;
-no final outcome has opened.
-The64-pair selection38811 is now complete: reference22.265625%±6.558549, teacher-fit30.859375%±6.432494,
-RL-endpoint32.812500%±7.310600points. Endpoint wins the registered point-score rule; paired change
-versus reference+10.546875±8.579491 is positive on this selection cohort, while change over teacher-fit
-+1.953125±8.544716 remains uncertain. Selected-only128fresh38812 confirmation completed35.7421875%
-±5.4264534points, still a clear loss. The registered budget rule locked this RL endpoint; actual
-validation-only12-game canary completed and exact compact parameters/hashes verified. Production
-worker27444 now runs three fixed1,000-pairing full-engine held-out blocks under guard26776 and the
-original deadline. Policy/source/data/samples are locked; no further training or selection is allowed.
-All hashes and the Windows BelowNormal priority correction are in budget-finalization-v1 receipts.
-First held-out block mixed38091 completed1,000pairs/2,000games at33.575000%±1.8167874points(95%),
-CI31.7582126–35.3917874: a clear loss, so the reliable-win target fails for this policy. All raw
-draws/folds/seeds/sides/scores, runtime/baseline and compact hashes verified independently. Remaining
-mixed38092 and standard38091 blocks continue unchanged under the original deadline; full verdict pending.
-Second held-out mixed38092 completed1,000pairs/2,000games at35.525000%±1.8459270857points(95%),
-CI33.6790729143–37.3709270857: another independently verified clear loss. Both mixed gates fail.
-Only the original1,000-pair standard38091 block remains; it continues unchanged. Full verdict pending.
-The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
-and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
-validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.
-The registered budget-finalization plan reserves the final part of the original deadline for one locked
-held-out benchmark even if validation remains below target. Research ends when teacher32 completes or
-at09:45UTC; fixed sample counts, baseline and final win criteria remain unchanged. The tested override
-is frozen in final-budget-v2; serial guard PID26776 waits for the teacher worker/guard to exit before
-locking the choice, running the validation canary and starting production. No extra numerical worker
-is live. The ordinary final-v3 path remains strict. Queue/source/activation receipts are retained.
-The normal teacher completion clears its mutable launch PID; the corrected driver uses the saved
-original queue identity. The initial waiting controller25004 launched no numerical worker and exited;
-its old source/logs remain intact and must not be restarted.
-An independent completed-verdict checker reconstructs raw draws/seeds/sides, recomputes intervals and
-verifies locks, method, compact parameters and source/baseline hashes without rerunning battles. It is
-ready for the actual completed final verdict; synthetic validation-only corruption tests are not strength.
-Current checks: 317 tests (7 optional video skips),
-108/108 PvPoke battles exact. Final target is unproven.
+**Current state.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
+November3 22:40:49UTC deadline. Draft PR #12 retains a standalone NumPy Double DQN pilot, compact policy,
+frozen full-engine baseline, composition splits, resumable checkpoints and experiment logs. The reliable-win
+target failed: all three held-out blocks are clear losses, each with1,000independent mirrored pairings/2,000games.
+
+| Test field / seed | Score ±95% margin, percentage points | 95% interval |
+| --- | --- | --- |
+| Mixed38091 | 33.575000% ±1.8167874029 | 31.7582125971–35.3917874029% |
+| Mixed38092 | 35.525000% ±1.8459270857 | 33.6790729143–37.3709270857% |
+| Standard38091 | 32.175000% ±1.8646280779 | 30.3103719221–34.0396280779% |
+
+Scores count wins plus half draws; intervals cluster both orientations of each pairing. Both actual teams
+belong to the test-composition fold. Baseline59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9 and full32-sample,
+20-step engine settings remained fixed. Both mixed lower95 gates fail, and the standard cross-check also fails.
+There was no policy selection, tuning, sample change or early stop based on final outcomes.
+
+The registered budget rule selected teacher32-v1's RL endpoint after599full-engine teacher games/45,945
+public-state decisions,20fitting epochs and457RL games/1,816update batches. Its selected-only128-pair
+fresh validation scored35.7421875%±5.4264533753points, also a clear loss. Earlier negative variants and
+all exact measurements remain in `status.md`; none is presented as final-test success.
+
+`python scripts/check_dqn_verdict.py --run final-teacher32-v1` independently verified all3,000raw
+pairings/6,000games, exact draws/seeds/sides/both team folds, clustered intervals, actual validation-only
+canary, global lock,45runtime files,95baseline files, selected compact parameters and selection evidence.
+It reports `evidence_verified=true`, `strength_target_met=false`. Additional retained teacher data,
+checkpoint/optimizer/replay and candidate artifact hashes were rechecked in budget-finalization-v1/completion.json.
+Both evaluator27444 and guard26776 exited normally; no worker remains and none should be restarted.
+Required final checks:317tests pass,7optional video skips;108/108 PvPoke battles exact.
+Large demonstrations/replay/raw journals stay local and ignored; small summaries, receipts and the91,442-byte
+locked policy are retained in Git. No promotion, merge, deployment, phone interaction or tracker change.
+The experiment is stopped after its complete prescribed benchmark; the user's reliable-win goal is unmet.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and
 try to beat the current engine reliably. Use a different algorithm from the parallel chat's PPO experiment.

@@ -1,5 +1,21 @@
 # Standalone Double DQN (task 38)
 
+**Final outcome,2026-11-03:** the prescribed benchmark completed at18:31:34UTC. The selected policy
+lost clearly in all three held-out blocks; the reliable-win goal was not achieved. Each block contains
+1,000independent mirrored team pairings/2,000games against frozen full engine32.
+
+| Test field / seed | Score ±95% margin (percentage points) | 95% interval |
+| --- | --- | --- |
+| Mixed38091 | 33.575000% ±1.8167874029 | 31.7582125971–35.3917874029% |
+| Mixed38092 | 35.525000% ±1.8459270857 | 33.6790729143–37.3709270857% |
+| Standard38091 | 32.175000% ±1.8646280779 | 30.3103719221–34.0396280779% |
+
+Scores count wins plus half draws; confidence intervals cluster both orientations of a pairing. Both
+actual teams belong to the held-out composition fold. The independent full-evidence audit passes,
+with `strength_target_met=false`. Checkpoints,logs and the compact policy remain saved. The evaluator
+and controller exited normally, before the original22:40:49UTC deadline. No jobs remain to resume.
+The experiment is stopped; its policy has not been promoted, merged or deployed.
+
 `pogo.dqn.Agent` directly chooses fast moves, charged moves, switches, shields and replacements with a NumPy
 network. It calls no Planner, Engine, search or service at inference. Inputs contain public health, energy,
 clocks, types, stats, forms, moves, and damage against revealed opponents. Unrevealed opponents are zero padded.
@@ -30,7 +46,8 @@ second terminal while bootstrap runs. The pipeline waits for epoch 80, trains
 for 12 hours, then tests the selected candidate on 300 full-engine validation pairings. If its lower 95% bound
 is not above 50%, it trains a second 12-hour stage. It selects between stage candidates using that full-engine
 validation score, exports a compact policy, and performs all final tests. The plan is saved before training.
-The current run's maximum 44-hour pipeline budget fits within the owner's original two-day request.
+That original v2 pipeline recipe had a maximum44-hour budget within the owner's two-day request.
+It is historical reproduction guidance, not an additional allocation after the completed benchmark above.
 
 The pipeline uses one numerical worker and one NumPy thread; training lowers priority (`nice` on Unix,
 below-normal on Windows). Directory links keep artifacts under the normal `runs/`, while copied runtime
@@ -333,10 +350,10 @@ These are reproducibility/resumption commands, **not additional jobs to launch w
 is live**. Read `budget-finalization-v1/controller_state.json`, `.dqn-cache/final_controller.json` and
 `runs/budget-final-controller-v2.err` first; confirm actual process identities before recovery. The queue
 refuses overlapping workers, saves exact attempt log paths and never extends the original deadline.
-The actual12-game validation canary completed and was independently checked. The policy choice is now
-locked to teacher32-v1's RL endpoint; production worker27444 began09:15:56UTC and is running the three
-held-out blocks. Read the controller's current child identity and logs before any recovery; do not
-restart the completed teacher worker or start another evaluator. The original deadline is unchanged.
+The actual12-game validation canary and all three production blocks completed and were independently
+checked. The policy choice stays locked to teacher32-v1's RL endpoint. Production worker27444 ran from
+09:15:56UTC to18:31:34UTC; guard26776 exited normally afterward. Controller state is `complete`, with
+no worker PID. Do not restart completed research or evaluation. The original deadline was unchanged.
 The corrected driver retains the original research identity from the queue after normal completion
 clears the mutable launch PID. The initial waiting controller25004 launched no numerical job; its
 v1 source, state and logs are retained and must not be restarted. The registered budget plan is unchanged.
@@ -363,8 +380,9 @@ Both mixed-field held-out blocks are complete: seed38091 scored33.575000%±1.816
 (95% interval31.7582125971–35.3917874029%), and seed38092 scored35.525000%±1.8459270857points
 (33.6790729143–37.3709270857%). Each used1,000mirrored pairings/2,000games with both teams in
 the test-composition fold. Independent raw-journal and artifact checks are saved beside each summary.
-Both are clear losses, so this policy fails the reliable-win target. The prescribed standard38091
-block continues unchanged; the complete three-block verdict is pending. No tuning follows these results.
+Both are clear losses. Standard38091 also completed32.175000%±1.8646280779points,95% interval
+30.3103719221–34.0396280779%, with its original1,000pairings/2,000games. The complete three-block
+verdict fails the reliable-win target. No tuning followed any final result.
 
 After a completed production verdict, independently check the saved evidence without rerunning games:
 
@@ -379,8 +397,11 @@ both team folds, recomputes clustered confidence intervals and the fixed win cri
 hashes and parameter identity. It writes only a small `audit.json`, binding its own source hash too.
 `evidence_verified=true` means the completed saved experiment is consistent; the separate
 `strength_target_met` field decides whether it won reliably. A consistent loss still has that field false.
-The checker rejects partial evidence and has only synthetic validation-journal unit coverage so far;
-the real final verdict is pending. It is separate from the immutable numerical runtime.
+The checker rejects partial evidence and has synthetic validation-journal corruption coverage. It also
+passed on the complete real benchmark: `evidence_verified=true`,3,000pairings/6,000games,
+`strength_target_met=false`. It is separate from the immutable numerical runtime. Final checks pass:
+317tests,7optional video skips;108/108 PvPoke exact. The final audit and budget-finalization-v1/completion.json
+bind retained artifact hashes, unchanged inputs, normal process exits and the original deadline.
 
 ## Retained files
 
