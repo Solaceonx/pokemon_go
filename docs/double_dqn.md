@@ -223,6 +223,14 @@ fresh pairings, seed 38712. Exact offset duplicates reuse the earlier report and
 inference remains the same public-state Agent. The immutable runtime is `harness/calibration-v1`; an outer
 controller is required before launching it, to enforce its two-hour cap and the original overall deadline.
 
+That launcher is now prepared as immutable `harness/launch-v1/scripts/run_dqn_research.ps1`, supporting
+only `-Run residual-v1` and `-Run calibration-v1`. `-CheckOnly` performs a read-only eligibility check;
+it currently refuses the live shared-encoder worker. Actual starts require both prior handles to have
+exited, completed below-target parent confirmations, matching runtime/source receipts and no final lock.
+The launcher preserves attempt logs and the original saved two-hour cap on recovery, binds the child PID
+and start instant, and enforces the overall deadline. Launch it hidden when using Start-Process. This
+preparation does not queue or start another worker.
+
 ## Final evaluator and locked evidence
 
 `scripts/dqn_final.py` preserves the selected inference method as well as its weights. It supports the

@@ -481,6 +481,23 @@ choice, a strong change penalty can retain the reference, no-signal ties retain 
 are confined to the output bias. Full checks pass **307 tests (7 optional video skips)** and **108/108
 PvPoke battles**; software checks establish no playing-strength gain. The active RL runtime is unchanged.
 
+**Shared-encoder RL endpoint saved.** The fixed allocation finished **461 complete training games** and
+**1,840 replay-update batches**, retaining **2,780.596000000136 seconds** of the trainer's recorded game/update
+time after its internal validation. The ordinary final atomic checkpoint was copied to immutable
+`endpoint.npz`, SHA-256 `7f4db48d7a7c2f30609625e600beaaf983db9e1062bf12d8ad43ae12dd4d553f`.
+`endpoint_artifacts.json` retains optimizer/count/timer metadata. The unchanged trainer tests its duration
+between complete games, then commits the checkpoint; first screening began about **2.0053 seconds** after
+the saved wall-clock RL cutoff. No second allocation or timer extension occurred. Bootstrap and endpoint
+selection is now running on the predeclared 64-pair seed 38511 draw, with selected-only fresh confirmation
+still pending. Training counts are not strength evidence.
+
+The reusable research launcher is prepared in immutable `harness/launch-v1`. It refuses a new trial while
+either process in this experiment's active pointer remains live, checks complete parent confirmations and
+source receipts, preserves prior trial deadlines on recovery, and enforces the two-hour/overall caps using
+verified child identity. Its read-only preflight correctly refused to launch against live worker 16644;
+no new numerical worker or waiting controller was started. It is available for the two already declared
+conditional follow-ups after the current chain exits.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
