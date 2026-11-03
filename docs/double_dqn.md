@@ -334,6 +334,22 @@ The corrected driver retains the original research identity from the queue after
 clears the mutable launch PID. The initial waiting controller25004 launched no numerical job; its
 v1 source, state and logs are retained and must not be restarted. The registered budget plan is unchanged.
 
+After a completed production verdict, independently check the saved evidence without rerunning games:
+
+```powershell
+python scripts/check_dqn_verdict.py --run final-teacher32-v1
+```
+
+Use the actually selected `final-<source>` directory. The checker requires all3blocks/3,000pairings,
+the global policy lock, matching complete validation canary, raw journals, selected full checkpoint and
+compact package, and immutable runtime/baseline files. It reconstructs exact draws/seeds/sides, checks
+both team folds, recomputes clustered confidence intervals and the fixed win criterion, and verifies
+hashes and parameter identity. It writes only a small `audit.json`, binding its own source hash too.
+`evidence_verified=true` means the completed saved experiment is consistent; the separate
+`strength_target_met` field decides whether it won reliably. A consistent loss still has that field false.
+The checker rejects partial evidence and has only synthetic validation-journal unit coverage so far;
+the real final verdict is pending. It is separate from the immutable numerical runtime.
+
 ## Retained files
 
 `runs/double-dqn/<run>/` contains protocols, exact invocations, training curves, checkpoints, replay, raw

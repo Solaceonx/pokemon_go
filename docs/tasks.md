@@ -112,7 +112,10 @@ is live. The ordinary final-v3 path remains strict. Queue/source/activation rece
 The normal teacher completion clears its mutable launch PID; the corrected driver uses the saved
 original queue identity. The initial waiting controller25004 launched no numerical worker and exited;
 its old source/logs remain intact and must not be restarted.
-Current checks: 315 tests (7 optional video skips),
+An independent completed-verdict checker reconstructs raw draws/seeds/sides, recomputes intervals and
+verifies locks, method, compact parameters and source/baseline hashes without rerunning battles. It is
+ready for the actual completed final verdict; synthetic validation-only corruption tests are not strength.
+Current checks: 317 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 
 **Owner request.** Build a standalone reinforcement-learning pilot, save checkpoints and experiment logs, and

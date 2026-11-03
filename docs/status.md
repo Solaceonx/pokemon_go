@@ -703,6 +703,21 @@ logs are `runs/budget-final-controller-v2.out/.err`. This supersedes the initial
 which must not be restarted. No final policy is selected yet, no game canary has run, and no final
 team or outcome is open.
 
+**Independent completed-verdict audit prepared.** `scripts/check_dqn_verdict.py --run final-<source>`
+checks saved evidence without replaying battles or modifying the numerical runtime. It requires all three
+1,000-pairing blocks and the matching global lock, reconstructs both team draws, game seeds and player
+sides, verifies both composition folds and every complete raw pairing against saved summaries, and
+recomputes clustered95 intervals independently of the evaluator's helper. It also checks the complete
+validation game canary, budget-constrained decision, runtime/baseline hashes, full-to-compact parameter
+identity and the complete inference ensemble. A successful evidence audit can still report
+`strength_target_met=false`; partials cannot produce an audit success.
+
+Two new tests use **synthetic validation-only journals**, not real game outcomes, and catch rehashed
+team/seed/side/half-pair/duplicate-row changes and altered confidence margins. Constant outcomes retain
+nonzero uncertainty. **317 tests pass (7 optional video skips), PvPoke108/108**. The checker has not been
+run on an actual completed final verdict because none exists yet; no final evidence or strength claim
+has been opened. The healthy teacher worker and queued handoff continue unchanged.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
