@@ -740,6 +740,20 @@ its initial64-pair full-engine validation is included in that hour, as declared.
 measurement is still pending. The same worker and queued final guard are healthy, with no second
 numerical worker or final outcomes opened.
 
+**New teacher-fit internal validation completed — 07:27 UTC.** Before RL updates, its reset bootstrap
+scored **35.156250% ± 7.132801 points**,95% interval **28.023449–42.289051%**, on **64 mirrored pairings /
+128 battles**, mixed-field validation seed38031, full frozen engine32. This remains a clear loss and
+is internal validation, not the later seed38811 selection or fresh seed38812 confirmation.
+Its paired change from the earlier relational warm-up on the **same64 teams/pairings** was
+**+1.562500 ± 8.514719 points**,95% interval **−6.952219 to +10.077219 points**: no established gain.
+The new teacher/objective/initialization change together; this does not isolate a causal contribution.
+
+All64 raw pair scores and both validation team folds were checked against reconstructed draws; intervals
+were recomputed independently. `bootstrap_validation_artifacts.json` binds model/config/journal/summary
+hashes and the matched prior comparison. The899.625-second evaluation is included in the original
+one-hour allocation. RL now continues under its unchanged **08:12:29.3487487UTC** cutoff, with the same
+worker/source/weights/data and queued final handoff. No final outcome or policy choice is open.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
