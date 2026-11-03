@@ -3683,6 +3683,8 @@ prints the fit (log loss of the chosen option) and the agreement (the bot, with 
 engine's pick), new against old. Each round is then measured against E_0 by `scripts/engine_versus.py` (new key `q=`, a path to a
 q.npz) on the same battles every round (seed 3902, mixed field): 1,500 pairings both ways, 1,500 crowd, 750 PvPoke. `--confirm`
 plays the best round again on seed 3903 (2,000 / 2,000 / 1,000). Games are saved in parts as they finish, and every stage resumes.
+It runs only while Marco says: while `runs/engine-loop/PAUSE` exists, workers finish what they are on and wait (also in
+`engine_versus.py`, `--pause-file`).
 
 Two traps, both handled in the recorder: the trained bot's decision log (`Learner.log`) also switches on mid-matchup swap
 decisions when its q has no head for them, so the recorder sets it only during each decision; and `Planner._doomed` asks the

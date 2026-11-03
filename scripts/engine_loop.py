@@ -32,6 +32,9 @@ and makes E_r from its games:
 Rounds go on from the newest networks whatever the result. --confirm then plays the round with the best head to
 head against E_0 again on a fresh seed. Files in runs/<run>/: round_N/q.npz, eval.npz and fit.json (small),
 round_N/games/ (large, not in git, made again by the same command), rounds.json, confirm.json.
+
+Pausing: while a file runs/<run>/PAUSE exists, workers finish the games or battles they are on (a few minutes) and wait,
+using no CPU; delete it to go on.
 """
 from __future__ import annotations
 
@@ -50,6 +53,7 @@ import numpy as np  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT), str(ROOT / "scripts")]
+import engine_versus  # noqa: E402
 from pogo.arena import decisive, low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.engine import Engine  # noqa: E402
@@ -133,7 +137,6 @@ def world(field: str, q_path: str, eval_path: str):
     """The pool and team draw of a field (as scripts/engine_versus.py has them), and the networks; once a process."""
     key = (field, q_path, eval_path)
     if key not in _world:
-        import engine_versus
         engine_versus.setup(field)
         s = engine_versus._state
         _world.clear()
@@ -147,8 +150,9 @@ def part_path(folder: Path, start: int) -> Path:
 
 def chunk(task) -> dict:
     """Games start .. start + count - 1 of a round, saved together in one file of the round's games folder."""
-    folder, q_path, eval_path, field, seed, start, count, sample, settings = task
+    folder, q_path, eval_path, field, seed, start, count, sample, settings, pause = task
     low_priority()
+    engine_versus.wait_while_paused(pause)
     pool, draw, q, model = world(field, q_path, eval_path)
     rows, positions, games = [], [], []
     for n in range(start, start + count):
@@ -186,7 +190,7 @@ def selfplay(here: Path, q_path: Path, eval_path: Path, seed: int, args) -> dict
     folder = here / "games"
     folder.mkdir(parents=True, exist_ok=True)
     tasks = [(str(folder), str(q_path), str(eval_path), args.field, seed, start, min(args.chunk, args.games - start),
-              args.sample, SETTINGS)
+              args.sample, SETTINGS, args.pause)
              for start in range(0, args.games, args.chunk) if not part_path(folder, start).exists()]
     done_before = args.games - sum(t[6] for t in tasks)
     print(f"{here.name}: self-play of {rel(q_path)} with {rel(eval_path)}, {args.games} games "
@@ -332,11 +336,10 @@ def rel(path) -> str:
 
 def versus(tag: str, candidate: str, pairings: int, seed: int, args) -> dict:
     """scripts/engine_versus.py, E_0 as the baseline; the candidate's three changes against E_0 and its search times."""
-    import engine_versus
     base = f"samples={WEBSITE['samples']}"
     sys.argv = ["engine_versus", "--tag", tag, "--baseline", base, "--candidates", candidate,
                 "--pairings", str(pairings), "--crowd", str(pairings), "--pvpoke", str(pairings // 2),
-                "--workers", str(args.workers), "--seed", str(seed), "--field", args.field]
+                "--workers", str(args.workers), "--seed", str(seed), "--field", args.field, "--pause-file", args.pause]
     print("  $ python3 scripts/engine_versus.py " + " ".join(f'"{a}"' if "=" in a else a for a in sys.argv[1:]), flush=True)
     engine_versus.main()
     saved = json.loads((ROOT / "runs" / "engine_versus" / f"{tag}.json").read_text())
@@ -408,6 +411,7 @@ def main() -> None:
     args = parser.parse_args()
     low_priority()
     folder = ROOT / "runs" / args.run
+    args.pause = str(folder / "PAUSE")
     log_path = folder / "rounds.json"
     rounds = json.loads(log_path.read_text()) if log_path.exists() else []
     if args.confirm:
@@ -433,6 +437,7 @@ def main() -> None:
         if (here / "fit.json").exists():
             report = json.loads((here / "fit.json").read_text())
         else:
+            engine_versus.wait_while_paused(args.pause)
             report = fit(here, data, q_path, eval_path, args.seed + r)
         if args.timing:
             timing(data, args)

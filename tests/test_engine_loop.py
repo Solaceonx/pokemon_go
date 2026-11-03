@@ -109,7 +109,7 @@ class SaveAndResume(unittest.TestCase):
             here = Path(tmp)
             games = here / "games"
             games.mkdir()
-            task = (str(games), str(engine_loop.START_Q), str(engine_loop.START_EVAL), "standard", 7, 0, 2, 0.2, QUICK)
+            task = (str(games), str(engine_loop.START_Q), str(engine_loop.START_EVAL), "standard", 7, 0, 2, 0.2, QUICK, None)
             info = engine_loop.chunk(task)
             self.assertEqual(info["games"], 2)
             data = engine_loop.load_games(games)
@@ -134,11 +134,41 @@ class SaveAndResume(unittest.TestCase):
                     self.assertGreater(entry["replayed"], 0.99, head)
 
             class Args:
-                field, chunk, sample, workers = "standard", 2, 0.2, 1
+                field, chunk, sample, workers, pause = "standard", 2, 0.2, 1, None
             Args.games = 2
             with patch.object(engine_loop, "SETTINGS", QUICK), patch("multiprocessing.get_context") as spawn:
                 engine_loop.selfplay(here, engine_loop.START_Q, engine_loop.START_EVAL, 7, Args)
             spawn.assert_not_called()  # every part saved: nothing to play
+
+
+class Pausing(unittest.TestCase):
+    def test_waits_while_the_pause_file_exists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pause = Path(tmp) / "PAUSE"
+            pause.touch()
+            naps = []
+
+            def nap(seconds):  # the owner deletes the file during the third wait
+                naps.append(seconds)
+                if len(naps) == 3:
+                    pause.unlink()
+
+            with patch.object(engine_versus.time, "sleep", nap):
+                engine_versus.wait_while_paused(str(pause))
+                self.assertEqual(len(naps), 3)
+                engine_versus.wait_while_paused(str(pause))  # gone: no wait
+                engine_versus.wait_while_paused(None)
+            self.assertEqual(len(naps), 3)
+
+    def test_workers_wait_before_playing(self):
+        with patch.object(engine_loop, "low_priority"), \
+                patch.object(engine_versus, "wait_while_paused", side_effect=RuntimeError("paused")) as wait:
+            task = ("folder", "q", "eval", "standard", 7, 0, 1, 0.2, QUICK, "the pause file")
+            with self.assertRaisesRegex(RuntimeError, "paused"):
+                engine_loop.chunk(task)
+            wait.assert_called_once_with("the pause file")
+            with patch.dict(engine_versus._state, pause="the pause file"), self.assertRaisesRegex(RuntimeError, "paused"):
+                engine_versus._job(("crowd", "s", "s", "", 0, 1, 1))
 
 
 class VersusNetworks(unittest.TestCase):

@@ -80,7 +80,13 @@ def parse(spec: str) -> dict | None:
     return out
 
 
-def setup(field: str = "standard") -> None:
+def wait_while_paused(path: str | None) -> None:
+    """Start no more work while the pause file exists (--pause-file; scripts/engine_loop.py runs while its owner says)."""
+    while path and Path(path).exists():
+        time.sleep(30)
+
+
+def setup(field: str = "standard", pause: str | None = None) -> None:
     low_priority()
     gd = GameData()
     if field == "pvpoke":
@@ -93,7 +99,7 @@ def setup(field: str = "standard") -> None:
         pool = gd.meta(50)
         draw = drawer(gd, pool)
     _state.update(gd=gd, pool=pool, draw=draw, net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
-                  evals={})
+                  evals={}, pause=pause)
 
 
 def evaluator(path: str | None) -> Evaluator:
@@ -142,6 +148,7 @@ def job(task):
 
 def _job(task):
     kind, name, spec, base, start, count, seed = task
+    wait_while_paused(_state.get("pause"))
     s = _state
     out, searches = {}, []
     for n in range(start, start + count):
@@ -190,6 +197,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=2701)
     parser.add_argument("--field", choices=("standard", "pvpoke", "mixed"), default="standard",
                         help="opposing teams: the usual draw, or as PvPoke's usage data has them")
+    parser.add_argument("--pause-file", help="while this file exists, workers finish the job they are on and wait")
     args = parser.parse_args()
     for spec in [args.baseline, *args.candidates]:
         parse(spec)  # fail early on a mistyped setting
@@ -225,7 +233,7 @@ def main() -> None:
     print(f"{len(plan)} jobs to run on {args.workers} workers", flush=True)
     t0, last = time.time(), time.time()
     if plan:
-        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field,)) as pool:
+        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field, args.pause_file)) as pool:
             for kind, spec, out, searches in pool.imap_unordered(job, plan):
                 results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
                 hist = times.setdefault(spec, {})
