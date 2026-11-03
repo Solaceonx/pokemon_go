@@ -687,7 +687,21 @@ the verified own numerical process; incomplete teacher results are ineligible. T
 is enforced throughout, with no restart or extension after it. Recoverable failure must resume the same
 decision/checkpoints. Source/proposal/check/queue receipts are in `budget-finalization-v1/`; operational
 state is `controller_state.json`, with stdout/stderr under `runs/budget-final-*`.
-No final policy is selected yet, no game canary has run, and no final team or outcome is open.
+**Handoff readiness correction before activation.** A final review found that successful teacher completion
+clears `launch.json`'s mutable worker PID. The budget driver now uses the original PID/start identity in
+the saved queue instead. Its regression fixture explicitly includes the normal null launch pointer and
+still checks live-worker refusal and exact decision resumption. All **315 tests / 108 PvPoke battles**
+pass again. The verified waiting controller25004 was stopped with **zero numerical workers launched**;
+its source, state, queue and logs were preserved, and teacher training was untouched.
+
+The **current** numerical snapshot is **`harness/final-budget-v2`**, still45files; its hidden waiting
+guard is **PID26776**, started **06:00:49.0559756UTC**, from `harness/launch-final-budget-v2`.
+Both old/new45-file snapshots, all44 live teacher files and all95 baseline hashes were verified.
+`implementation_v2.json`/`activation_v2.json` record the correction and new identity; the registered
+allocation, selection rules, samples/seeds and original deadline did not change. Current controller
+logs are `runs/budget-final-controller-v2.out/.err`. This supersedes the initial queued controller,
+which must not be restarted. No final policy is selected yet, no game canary has run, and no final
+team or outcome is open.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training

@@ -315,21 +315,24 @@ No further research or policy selection is permitted from canary or final outcom
 production protocols bind this allocation and selection receipt; an ordinary canary cannot authorize
 a budget-final production run. The original standalone final CLI continues to enforce its stricter gate.
 
-The immutable numerical runtime is `harness/final-budget-v1` (45 source files). Hidden serial guard
-PID25004 runs `harness/launch-final-budget-v1` and waits for the teacher worker **and** guard to exit.
+The immutable numerical runtime is `harness/final-budget-v2` (45 source files). Hidden serial guard
+PID26776 runs `harness/launch-final-budget-v2` and waits for the teacher worker **and** guard to exit.
 It enforces the registered research cutoff using only the freshly verified own process identity, then
 runs these commands serially, with one numerical worker and the unchanged overall deadline:
 
 ```powershell
-python .dqn-cache/harness/final-budget-v1/scripts/dqn_budget_final.py --canary
-python .dqn-cache/harness/final-budget-v1/scripts/dqn_budget_final.py
+python .dqn-cache/harness/final-budget-v2/scripts/dqn_budget_final.py --canary
+python .dqn-cache/harness/final-budget-v2/scripts/dqn_budget_final.py
 ```
 
 These are reproducibility/resumption commands, **not additional jobs to launch while the queued controller
 is live**. Read `budget-finalization-v1/controller_state.json`, `.dqn-cache/final_controller.json` and
-`runs/budget-final-controller.err` first; confirm actual process identities before recovery. The queue
+`runs/budget-final-controller-v2.err` first; confirm actual process identities before recovery. The queue
 refuses overlapping workers, saves exact attempt log paths and never extends the original deadline.
 The actual game canary and final tests remain pending while teacher32 collects its training data.
+The corrected driver retains the original research identity from the queue after normal completion
+clears the mutable launch PID. The initial waiting controller25004 launched no numerical job; its
+v1 source, state and logs are retained and must not be restarted. The registered budget plan is unchanged.
 
 ## Retained files
 

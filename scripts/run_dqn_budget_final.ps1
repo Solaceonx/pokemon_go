@@ -8,7 +8,7 @@ $dqnQueue=Get-Content $dqnQueuePath -Raw | ConvertFrom-Json
 $dqnDeadline=[DateTime]::Parse('2026-11-03T22:40:49Z').ToUniversalTime()
 $dqnCutoff=[DateTime]::Parse('2026-11-03T09:45:00Z').ToUniversalTime()
 $dqnStatePath='runs/double-dqn/budget-finalization-v1/controller_state.json'
-$dqnRuntime=Join-Path $dqnRoot '.dqn-cache/harness/final-budget-v1'
+$dqnRuntime=Join-Path $dqnRoot '.dqn-cache/harness/final-budget-v2'
 $dqnScript=Join-Path $dqnRuntime 'scripts/dqn_budget_final.py'
 $dqnPython='C:\Users\lionl\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 

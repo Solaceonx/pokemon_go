@@ -83,8 +83,10 @@ def choose(plan, records, decision_unix):
 
 def resolve_selection():
     path, plan = load_plan()
-    launch = json.loads((ROOT / 'runs/double-dqn/teacher32-v1/launch.json').read_text())
-    if worker_alive(launch['worker_pid']):
+    # The teacher controller clears launch.json's worker_pid on successful completion.
+    # The queue preserves the original PID/start identity through that normal transition.
+    research = json.loads((path.parent / 'queue.json').read_text())['research_worker']
+    if worker_alive(research['pid']):
         raise RuntimeError('Research worker is still live; refuse a duplicate numerical worker')
     directory = path.parent
     decision_path = directory / 'selection.json'
@@ -118,7 +120,7 @@ def resolve_selection():
     decision = {'plan_sha256': PLAN_SHA256, 'decided_unix': decision_unix,
         'selected_source': selected['source_run'], 'selected_model_sha256': selected['model_sha256'],
         'selected_recipe': selected['recipe'], 'candidates': records,
-        'research_worker_pid': launch['worker_pid'], 'research_worker_started_utc': launch['worker_started_utc'],
+        'research_worker_pid': research['pid'], 'research_worker_started_utc': research['started_utc'],
         'research_worker_confirmed_exited': True,
         'selection_rule': plan['selection_rule'], 'validation_gate_amendment': plan['validation_gate_amendment']}
     # This lock is written before the canary. Canary outcomes cannot change the chosen policy.

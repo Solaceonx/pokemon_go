@@ -106,9 +106,12 @@ validation-only game canary remains pending while teacher32 owns the worker. No 
 The registered budget-finalization plan reserves the final part of the original deadline for one locked
 held-out benchmark even if validation remains below target. Research ends when teacher32 completes or
 at09:45UTC; fixed sample counts, baseline and final win criteria remain unchanged. The tested override
-is frozen in final-budget-v1; serial guard PID25004 waits for the teacher worker/guard to exit before
+is frozen in final-budget-v2; serial guard PID26776 waits for the teacher worker/guard to exit before
 locking the choice, running the validation canary and starting production. No extra numerical worker
 is live. The ordinary final-v3 path remains strict. Queue/source/activation receipts are retained.
+The normal teacher completion clears its mutable launch PID; the corrected driver uses the saved
+original queue identity. The initial waiting controller25004 launched no numerical worker and exited;
+its old source/logs remain intact and must not be restarted.
 Current checks: 315 tests (7 optional video skips),
 108/108 PvPoke battles exact. Final target is unproven.
 

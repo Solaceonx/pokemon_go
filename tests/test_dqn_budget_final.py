@@ -43,8 +43,11 @@ class BudgetFinalTests(unittest.TestCase):
             teacher.mkdir(parents=True)
             plan_path = target / 'plan.json'
             plan_path.write_text(json.dumps(plan))
-            (teacher / 'launch.json').write_text(json.dumps({'worker_pid': 42,
-                'worker_started_utc': '2026-11-03T05:12:08.3065768Z'}))
+            # Normal successful completion clears the mutable launch pointer. The original
+            # queue identity must still guard against a live worker and identify the decision.
+            (teacher / 'launch.json').write_text(json.dumps({'worker_pid': None}))
+            (target / 'queue.json').write_text(json.dumps({'research_worker': {'pid': 42,
+                'started_utc': '2026-11-03T05:12:08.3065768Z'}}))
             scores = {'relational-v1': .6, 'search-v3': .9, 'symmetry-v5': .55}
             for name in scores:
                 source = root / 'runs/double-dqn' / name
