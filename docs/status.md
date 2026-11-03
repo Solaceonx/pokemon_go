@@ -618,6 +618,13 @@ reliable wins. `mc3_progress_round96.json` records the complete 128-pair checks,
 source hashes, finite checkpoint/optimizer and comparisons against rounds 80 and 24. The correction
 trial has saved 1,408 games and continues to its fixed round-12 endpoint. Final tests remain unopened.
 
+Upstream through `9bedfe1` adds exact rollout caches to the current player. Before merging it, a fresh
+training initialization confirmed that neither active method imports working-tree `pogo.agents`;
+the opponent uses the separately namespaced archived module from `59836c8`. No registered experiment
+source changed. The merged tree passes **336 tests (7 video skips)** and **108/108 PvPoke exact**.
+Both active source guards still match and stderr remains empty. The benchmark continues to use E0;
+it does not silently adopt the new cache implementation or its timing results.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

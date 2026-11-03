@@ -62,6 +62,11 @@ horizon=20, rollout=bot, edge=.03, margin=.02, with no clock cuts. Its search me
 current engine. It uses the frozen mixed-field pool, including forms. This is a reproducible full-search
 benchmark; browser hardware deadlines and camera errors are separate questions.
 
+Upstream through `9bedfe1` later added rollout caches to the working-tree player. This branch includes
+those changes, but neither active method imports that player module. A fresh initialization verified
+the archived module path and all registered source guards still match. The benchmark retains the
+original E0 implementation, without substituting upstream's new cache or timing measurements.
+
 An unordered trio's stable hash assigns it to train (70%), validation (15%), or final test (15%).
 All leads and bench permutations stay together. Both sides' teams obey the split in all phases.
 This holds out **team combinations**, not individual species. The old teacher's historical training
