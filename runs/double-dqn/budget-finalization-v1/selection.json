@@ -1,0 +1,108 @@
+{
+  "plan_sha256": "3ae02e8740f2b9e4d2ec111655b37d3ca8ea3877e10060738a4256b831571f74",
+  "decided_unix": 1793697286.4912431,
+  "selected_source": "teacher32-v1",
+  "selected_model_sha256": "45a8c2036f9f84c4b1e6541554e9afa407f09bc4a1d60cc4a76ff05ca3637e91",
+  "selected_recipe": {
+    "mode": "direct",
+    "samples": 0,
+    "edge": 0.03,
+    "stride": 8,
+    "network": "shared-matchup-v1",
+    "selection_plan_sha256": "b8b14f7d37d306d6c96405964fe293169ad01529f1dceb40a43ffa4c61775af9",
+    "selection_result_sha256": "7c5e2486f8c7794b0296f081a25c9d243f9afc2654f0c36116bd0d5412b0671c"
+  },
+  "candidates": [
+    {
+      "source_run": "teacher32-v1",
+      "status": "complete",
+      "model_sha256": "45a8c2036f9f84c4b1e6541554e9afa407f09bc4a1d60cc4a76ff05ca3637e91",
+      "model": "endpoint.npz",
+      "recipe": {
+        "mode": "direct",
+        "samples": 0,
+        "edge": 0.03,
+        "stride": 8,
+        "network": "shared-matchup-v1",
+        "selection_plan_sha256": "b8b14f7d37d306d6c96405964fe293169ad01529f1dceb40a43ffa4c61775af9",
+        "selection_result_sha256": "7c5e2486f8c7794b0296f081a25c9d243f9afc2654f0c36116bd0d5412b0671c"
+      },
+      "score": 0.357421875,
+      "margin95": 0.054264533753149734,
+      "lower95": 0.3031573412468503,
+      "upper95": 0.4116864087531497,
+      "confirmation_seed": 38812,
+      "result_sha256": "7c5e2486f8c7794b0296f081a25c9d243f9afc2654f0c36116bd0d5412b0671c",
+      "plan_sha256": "b8b14f7d37d306d6c96405964fe293169ad01529f1dceb40a43ffa4c61775af9",
+      "forecast_seconds": 44785.8
+    },
+    {
+      "source_run": "relational-v1",
+      "status": "complete",
+      "model_sha256": "f13a01d2edac6645f9843209596718610aeefc21b6c1d547a29ad4891b6da828",
+      "model": "bootstrap.npz",
+      "recipe": {
+        "mode": "direct",
+        "samples": 0,
+        "edge": 0.03,
+        "stride": 8,
+        "network": "shared-matchup-v1",
+        "selection_plan_sha256": "4e4d609bdc1a9eb3eea52266454d9b15c11270ab5f4cd107e1e8d45af29eb4cf",
+        "selection_result_sha256": "d64b48574271ca4d2cd3bc03cfb9a4f514c320d74435bcb317290cf19f25eb95"
+      },
+      "score": 0.328125,
+      "margin95": 0.048231360634156346,
+      "lower95": 0.27989363936584366,
+      "upper95": 0.37635636063415634,
+      "confirmation_seed": 38512,
+      "result_sha256": "d64b48574271ca4d2cd3bc03cfb9a4f514c320d74435bcb317290cf19f25eb95",
+      "plan_sha256": "4e4d609bdc1a9eb3eea52266454d9b15c11270ab5f4cd107e1e8d45af29eb4cf",
+      "forecast_seconds": 44785.8
+    },
+    {
+      "source_run": "search-v3",
+      "status": "complete",
+      "model_sha256": "d2884905f82e515e8b83efe48b6bafce96f1ff3a6803f8f8c89c646fae2f0c49",
+      "model": "actor.npz",
+      "recipe": {
+        "mode": "planning",
+        "samples": 16,
+        "edge": 0.03,
+        "stride": 8
+      },
+      "score": 0.349609375,
+      "margin95": 0.05108372354832687,
+      "lower95": 0.29852565145167315,
+      "upper95": 0.40069309854832685,
+      "confirmation_seed": 38312,
+      "result_sha256": "de89c57e233e45838011ee102b403081313b4b94d3bad21d026a7e719116df94",
+      "plan_sha256": "6698c6af5d3e1f5aec3f901dd2400cf09b432d0e623782be8f5f3f649f6e9495",
+      "forecast_seconds": 67932.0
+    },
+    {
+      "source_run": "symmetry-v5",
+      "status": "complete",
+      "model_sha256": "5e4a9d6cc0f71ce0ad40647e7859f9e9ce91dda7258aa09444121fa1fd94df4f",
+      "model": "prior.npz",
+      "recipe": {
+        "mode": "average",
+        "samples": 0,
+        "edge": 0.03,
+        "stride": 8
+      },
+      "score": 0.3203125,
+      "margin95": 0.044133713464017676,
+      "lower95": 0.2761787865359823,
+      "upper95": 0.3644462134640177,
+      "confirmation_seed": 38412,
+      "result_sha256": "139c745742fc61215a180bfc65808525642c6cd499734a1b196e208602ffde14",
+      "plan_sha256": "ff8b02b6f665eaba3e412dbd2ad9dfa51824773e2aee63ffc2ab6cd8452a4ef6",
+      "forecast_seconds": 44785.8
+    }
+  ],
+  "research_worker_pid": 24568,
+  "research_worker_started_utc": "2026-11-03T05:12:08.3065768Z",
+  "research_worker_confirmed_exited": true,
+  "selection_rule": "Highest fresh-confirmation point score among eligible completed source-run winners; earliest candidate_order entry wins exact ties. This is model selection, not a claim of a significant cross-study improvement.",
+  "validation_gate_amendment": "For this one budget-final benchmark, a validation lower95 above50% is not required. Full verified fresh validation and a matching actual validation-only game canary remain required. This changes evaluation eligibility only, not the final reliable-win criterion."
+}

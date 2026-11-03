@@ -803,6 +803,37 @@ confidence calculations were verified independently. `trial_selection.json` and 
 seed38812**, is now running. Every selected screen still loses to the engine; the reliable-win target
 is unproven and no final-test outcome is open.
 
+**Fresh teacher-study confirmation completed — 09:14 UTC.** The selected RL endpoint scored
+**35.7421875% ± 5.4264534 points**,95% interval **30.3157341–41.1686409%**, over **128 mirrored
+pairings /256 battles**, fresh mixed-field validation seed38812, full frozen engine32. This remains
+a clear loss. Its point score is the highest of the registered budget candidates' fresh confirmations,
+but different validation seeds do not establish a significant advantage between those candidates.
+No reliable win is claimed. All128 raw pair means, reconstructed teams/folds, model/source hashes and
+the interval were verified independently. The91,459-byte research compact policy, SHA-256
+`2c5d42df3921f7cedd009a10d95c926717bd0d1477a36db56102f4fe4067f547`, retains the full checkpoint's
+exact parameters, with reset optimizer/steps. `confirmation_artifacts.json` binds the complete evidence.
+
+**Locked held-out benchmark started after actual canary.** The original worker24568 and guard748 exited.
+The queued controller26776 locked **teacher32-v1 / last_complete_rl_endpoint** under the registered
+budget rule before its actual validation-only game canary. All three2-pair canary blocks completed:
+mixed38995 **50% ± 96.032279 points**, mixed38996 **50% ± 96.032279**, standard38995 **25% ± 49.000000**.
+These tiny diagnostics verify execution only; their strength verdict is explicitly **null**. All12games'
+team folds, draws, seeds, sides, raw scores and confidence calculations were independently checked.
+The complete canary and production package have identical91,442-byte compact weights, SHA-256
+`326bc2250899a2f69a6fe676845fd5a0bc3ad0d407e3bf186f1a726dd1fbfc71`; their parameter arrays are
+identical to the selected full checkpoint. The metadata differs from the research export, not predictions.
+
+Production worker **27444**, started **09:15:56.4865007UTC**, now runs the fixed **three1,000-pairing**
+held-out blocks against full engine32: mixed38091/38092 and standard38091. The global lock and production
+protocol share SHA-256 `fa0f09a0c71b12fecfabcd358994297fb28f47a5fc3847c5e87dda16193450ff`;
+the policy/method, source/data hashes, sample counts, split and deadline cannot change. No additional
+training or policy choice is allowed. `budget-finalization-v1/handoff_artifacts.json` binds the independently
+verified selection/canary/package proof. Final outcomes have not been inspected for tuning and none is
+complete yet. A Windows priority check found the worker still Normal despite the source call; only
+this freshly verified own process was lowered to **BelowNormal**, without source, weight, baseline,
+sample or deadline changes. `production_priority.json` records before/after. The original22:40:49UTC
+deadline remains fixed; the reliable-win target is unproven.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.

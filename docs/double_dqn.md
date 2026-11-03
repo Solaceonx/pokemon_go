@@ -333,10 +333,31 @@ These are reproducibility/resumption commands, **not additional jobs to launch w
 is live**. Read `budget-finalization-v1/controller_state.json`, `.dqn-cache/final_controller.json` and
 `runs/budget-final-controller-v2.err` first; confirm actual process identities before recovery. The queue
 refuses overlapping workers, saves exact attempt log paths and never extends the original deadline.
-The actual game canary and final tests remain pending while teacher32 collects its training data.
+The actual12-game validation canary completed and was independently checked. The policy choice is now
+locked to teacher32-v1's RL endpoint; production worker27444 began09:15:56UTC and is running the three
+held-out blocks. Read the controller's current child identity and logs before any recovery; do not
+restart the completed teacher worker or start another evaluator. The original deadline is unchanged.
 The corrected driver retains the original research identity from the queue after normal completion
 clears the mutable launch PID. The initial waiting controller25004 launched no numerical job; its
 v1 source, state and logs are retained and must not be restarted. The registered budget plan is unchanged.
+
+The selected package uses direct shared-network inference. Load it as an ordinary simulator player:
+
+```python
+from pogo.dqn import Agent
+from pogo.dqn_relational import Network
+
+net, _, _ = Network.load("runs/double-dqn/final-teacher32-v1/policy.npz")
+pilot = Agent(net, seed=1)
+```
+
+The player implements the usual public-View action/shield/replacement callbacks; inference calls no
+Planner, Engine or service. It requires the unchanged400-feature implementation and frozen matchup
+feature data. The91,442-byte package hash is326bc2250899a2f69a6fe676845fd5a0bc3ad0d407e3bf186f1a726dd1fbfc71;
+its parameters equal the selected full checkpoint despite different export metadata. Fresh128-pair
+validation scored35.7421875%±5.4264534points, so the reliable-win target remains unmet. This experimental
+policy has not been promoted or deployed. The research export has a different metadata/hash; the final
+package above is the one bound to the held-out protocol.
 
 After a completed production verdict, independently check the saved evidence without rerunning games:
 

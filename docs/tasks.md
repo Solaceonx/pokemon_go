@@ -109,8 +109,12 @@ no final outcome has opened.
 The64-pair selection38811 is now complete: reference22.265625%±6.558549, teacher-fit30.859375%±6.432494,
 RL-endpoint32.812500%±7.310600points. Endpoint wins the registered point-score rule; paired change
 versus reference+10.546875±8.579491 is positive on this selection cohort, while change over teacher-fit
-+1.953125±8.544716 remains uncertain. Selected-only128fresh38812 confirmation is running; no final
-policy or outcome is locked/open yet.
++1.953125±8.544716 remains uncertain. Selected-only128fresh38812 confirmation completed35.7421875%
+±5.4264534points, still a clear loss. The registered budget rule locked this RL endpoint; actual
+validation-only12-game canary completed and exact compact parameters/hashes verified. Production
+worker27444 now runs three fixed1,000-pairing full-engine held-out blocks under guard26776 and the
+original deadline. Policy/source/data/samples are locked; no further training or selection is allowed.
+All hashes and the Windows BelowNormal priority correction are in budget-finalization-v1 receipts.
 The final evaluator now supports both flat and shared-matchup networks, validates all candidate screens
 and exact compact predictions, and binds the selection records. Immutable final-v3 is prepared; the actual
 validation-only game canary remains pending while teacher32 owns the worker. No final holdout is open.
