@@ -221,7 +221,8 @@ async function reviewDecisions(game) {
   const show = (done) => {
     const rows = found.map((r) => `<div class="move ${r.label}"><span class="tag">${MARK[r.label]}</span>${clock(240 - r.t)} ·
       ${r.mon} v ${r.foe}: you ${r.did} (wins ${Math.round(100 * r.mine)}%); to ${r.better} wins ${Math.round(100 * r.best)}%</div>`).join("");
-    const head = done ? (found.length ? `Your costliest decisions, of ${count} looked at (each played out with the bot on both sides; a judgement, not a proof):`
+    const head = done ? (found.length ? `The simulator's opinion of your costliest decisions, of ${count} looked at (each option played out with the bot on both sides).
+      On an exam of real positions two strong players chose its top pick no more often than random picks would, so treat these as questions, not verdicts:`
                                       : `No clear mistakes in the ${count} decisions looked at.`)
                       : `Looking at your decisions… ${found.length ? "" : ""}${Math.min(count, done === false ? found.length : count)}`;
     box.innerHTML = `<div class="caption">${head}</div>` + rows;
@@ -247,7 +248,7 @@ async function reviewDecisions(game) {
   if (G !== game) return;
   if (!w || w.none || !w.better) { extra.innerHTML = `<div class="caption">No single different decision clearly turned this game around.</div>`; return; }
   const line = (w.line || []).map((e) => `<div class="${e[1] ? "bot" : ""}">${clock(240 - e[0])} ${e[1] ? "Bot" : "You"}: ${e[2].replace(/</g, "&lt;")}</div>`).join("");
-  extra.innerHTML = `<div class="caption"><b>How you could have won:</b> at ${clock(240 - w.t)} (${w.mon} v ${w.foe}), ${w.better}
+  extra.innerHTML = `<div class="caption"><b>The simulator's guess at how you could have won:</b> at ${clock(240 - w.t)} (${w.mon} v ${w.foe}), ${w.better}
     instead (you ${w.did}): wins ${Math.round(100 * w.best)}% of play-outs, against ${Math.round(100 * w.mine)}%.</div>` +
     (w.found && line ? `<details open><summary>One way it goes from there (a play-out that wins, the bot playing both sides after)</summary><div class="tl">${line}</div></details>` : "");
 }
