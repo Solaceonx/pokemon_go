@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-11-02.
+Last updated 2026-11-03.
 
 ## Standalone Double DQN experiment — 2026-11-01 (Codex DQN, task 38; in progress)
 
@@ -410,6 +410,32 @@ serial chain to finish below target, with enough budget remaining. A unit check 
 unchanged reference weights, and bit-identical optimizer/parameters after interruption and epoch resumption.
 Full checks now pass **305 tests (7 optional video skips)** and **108/108 PvPoke battles**; none of these
 software checks establishes playing strength. The existing numerical worker continues unchanged.
+
+**Third paired-return validation and registered allocation stop — 2026-11-03.** Round three collected
+**300 training positions**, all **300 original-choice controls matching**, with **79 differing-outcome
+positions**, then completed 30 epochs/60 updates. On the unchanged 64 full-engine32 validation pairings,
+seed 38211, it scored **24.609375% ± 6.501554 points**, interval **18.107821–31.110929%**. Its paired change
+from the starting control was **−5.078125 ± 10.189631 points**, interval **−15.267756 to +5.111506 points**:
+no established improvement. All intervals were recomputed from saved pair scores. Model/data hashes are
+retained in `round_003_artifacts.json`; exact results are `screen_003_summary.json` and
+`screen_003_paired_change.json`.
+
+All three complete candidates failed to exceed the starting control, and **initial.npz** remained selected.
+The waiting v8 successor applied the previously registered allocation rule, verified the predecessor
+identity and wrote the cooperative STOP. Both the CF worker and its original controller exited before
+the fresh-confirmation worker started at 00:30:37 UTC. The fourth collector had begun one game but saved
+**zero labelled positions** and performed no fit or validation; its raw `fewer than eight` reason accompanies
+the intentional STOP and does not describe the three complete 300-position rounds. The original stopped
+`result.json` remains unchanged. The reserved **128-pair fresh engine32 confirmation, seed 38212**, is now
+running separately under the original eight-hour and overall deadlines; no confirmation score is claimed
+before completion. The shared encoder still has no strength result and follows only if this check is below
+target. Final-test teams and the global policy lock remain untouched.
+
+Readiness verification of the completed training-only batches also passed: **900 positions, 900 matching
+original-choice controls, 239 differing-outcome positions**, one common reference-policy hash, and the
+recorded reference decisions reproduced. `residual-v1/input_readiness.json` retains these source hashes and
+counts. This checks the prepared residual trial's inputs, without fitting or establishing strength; that
+follow-up remains unstarted and unqueued.
 
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training

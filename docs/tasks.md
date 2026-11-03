@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, DQN/representation/planning trials below target, paired-return RL running (2026-11-02; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
+| **38** | **Standalone Double DQN against a frozen engine** — Codex DQN; PR #12, trials below target; paired-return RL stopped under allocation rule, fresh confirmation running and shared encoder queued (2026-11-03; separate from task 37 / PPO) | NumPy; one worker, within two-day budget |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco (big job, 2026-10-28) | Marco's machine, ~50-70 core-hours |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
 | **34** | **Readable baits: throwing and shielding them evolved against each other** (`scripts/coevolve_baits.py`, `pogo/coevo.py`) — on the owner's PC (`docs/run_elsewhere.md` section 6); Marco: do not run | Owner's PC, ~1 h |
@@ -78,15 +78,17 @@ stage was stopped at 5,400 saved games to redirect computing after the owner req
 Cross-entropy refinement subsequently scored 24.80% ± 4.97 on 128 fresh full-engine validation pairings.
 Independent learned-policy Monte Carlo planning confirmed at 34.96% ± 5.11 on 128 fresh full-engine
 validation pairings. The bench-augmentation trial retained prior averaged inference, which confirmed at
-32.03% ± 4.41 on 128 fresh full-engine validation pairings. Paired-return RL is now running from immutable
-runtime v4 after all four original-choice frozen-engine replay canary controls matched. All are
+32.03% ± 4.41 on 128 fresh full-engine validation pairings. Paired-return RL completed three non-improving
+rounds from immutable runtime v4, then stopped under its registered allocation rule. The retained policy's
+fresh 128-pair confirmation is running separately before the queued shared-encoder trial. All are
 validation results; final tests remain unopened. A training-only bench-order audit found 73/256 changed
 decisions under equivalent own-bench labels. The controlled augmentation/invariant-inference trial did
 not establish a strength gain. Paired-return training uses fresh validation confirmation. A method-preserving final evaluator
 is prepared; its full frozen-engine canary is pending. A smaller shared-matchup Double DQN backend is
 prepared as an unmeasured fallback with a serial successor that finishes CF's reserved confirmation before
 switching; no second training worker has started. The first two paired-return candidates scored
-23.44% ± 6.06 and 19.53% ± 6.77 on the 64-pair validation screen, retaining the initial policy.
+23.44% ± 6.06 and 19.53% ± 6.77 on the 64-pair validation screen; the third scored 24.61% ± 6.50, retaining
+the initial policy. All 900 training controls matched; the source inputs are ready for the unstarted residual trial.
 An unstarted residual-return follow-up can reuse the first three complete training batches; its plan
 requires a free worker after the current serial chain and fresh selected-setting validation.
 Current checks: 305 tests (7 optional video skips),
