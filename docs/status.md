@@ -552,6 +552,12 @@ all teams are training teams, and source hashes match. `low_ce_round1_controlled
 records the exact comparison. This is optimization/integrity evidence only; post-training strength
 will be evaluated on the registered schedule after round four.
 
+**PPO round seventy-two (2026-11-03 03:43 UTC):** 18,432 training games; greedy validation
+**37.11%, CI [32.23%, 42.19%]**, stochastic **24.80%, CI [20.12%, 29.49%]**. This ties the
+selected round-24 mean; the deterministic selection rule keeps that existing checkpoint. It does
+not establish another gain. `mc3_progress_round72.json` records the complete progression and paired
+comparison. The lower-weight trial continues its fixed training schedule alongside the main run.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
