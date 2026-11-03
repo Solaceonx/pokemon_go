@@ -3668,3 +3668,24 @@ disagree: rulebook 67%, trained bot 58%, `matching` 47%, engine 36%. Where the e
 11 to 3. The owner switches far less than the engine (2 against 7 of 26) and shields far more than the networks (6 against 1 of 7). The play-out judge's top
 choice matches the owner no better than chance (42% against 38%), so the earlier "staying in when a switch wins" finding, which came from it, is not
 supported. Website exam for friends: `exam.html`; `import_played.py --store` files their answers in `runs/exam/answers/` (not in git).
+
+## Faster play-outs: exact caches for duels and the shield rule's play-outs (2026-11-02, Marco): about 2× faster, the same games
+
+Profiling self-play at the website's settings (task 39's games, cProfile) put about 55% of the time in the play-outs of the
+rest of the visible battle that `Planner.shield` runs for each option (`_play_out` with `_rollout` players; reached from the
+trained bot's shield prompts and from `_doomed`, which asks its own shield advice while planning a throw), and about 20% in
+one-on-one `duel`s for outlooks. Both use fixed dice (seed 0) and players that keep nothing between battles, so the result
+depends only on the starting position, and inside the engine's imagined battles the same positions come up again and again:
+86-90% of duels and 73-79% of play-outs were repeats. `pogo/agents.py` now caches both, keyed by every Pokémon's full state
+(build, health, energy, stat stages), shields, switch waits and the Morpeko rule (which `scripts/check_pvpoke.py` switches
+off), up to 50,000 entries each (about 85 MB when both are full); `PLAYOUT_CACHE = False` turns it off.
+
+The same 6 self-play games (task 39's first-round seed, games 10-15, the website's settings with no clock), on Marco's PC
+with task 39's job busy on 16 other threads: 14.0 CPU seconds a game before, 6.6 after (2.1×), and every logged move, winner
+and turn count identical. A prototype on 7 other games gave 2.1× and 3.0×. `tests/test_playout_cache.py` plays the same games
+with and without the cache for the trained bot, the rulebook and the engine, and checks that a hit equals a fresh play-out and
+that the Morpeko rule and the size limit hold. 266 tests pass; PvPoke 108 of 108.
+
+On the website the engine's searches get about twice as fast, so fewer are cut short by the time limits: live play changes
+(more imagined battles finish in time), so `scripts/release_check.py` has to pass again before a build. It was not run here
+(it calls `nice`, which Windows does not have). Not measured: speed and memory in the browser.

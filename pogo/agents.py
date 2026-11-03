@@ -13,6 +13,7 @@ import json
 import random
 from functools import lru_cache
 
+from . import battle as _battle
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, Battle, Mon, View, apply_buffs, damage
 from .gamedata import DATA, effectiveness
 
@@ -48,17 +49,75 @@ def _sweeper_field() -> tuple:
     return tuple(GameData().meta(50))
 
 
+# Exact caches for the two play-outs that most decisions lean on: duel() and the rest of the visible battle in
+# Planner._play_out (the shield rule, sacrifices, replacements). Both use fixed dice and players that keep nothing
+# between battles, so the result depends only on the starting position, and inside the engine's imagined battles the
+# same positions come up again and again (about 2 to 3 times faster self-play, the same games; docs/status.md). Keys
+# hold every Pokémon's full state and the Morpeko rule (scripts/check_pvpoke.py switches it off), so a hit is the
+# number the play-out would give. They assume the rollout players' rules and the matchup table stay as they are while
+# a process runs; anything that changes those must call clear_playout_cache().
+PLAYOUT_CACHE = True
+# Entries in each, then it starts again. A self-play game at the website's settings adds about 12,000 to each, at about
+# 850 bytes an entry, so both full take about 85 MB.
+_CACHE_SIZE = 50_000
+_duels: dict = {}
+_rollouts: dict = {}
+
+
+def clear_playout_cache() -> None:
+    _duels.clear()
+    _rollouts.clear()
+
+
+def _state(mon: Mon) -> tuple:
+    return mon.build, mon.hp, mon.energy, mon.atk_stage, mon.def_stage
+
+
+def _mons(states) -> list[Mon]:
+    out = []
+    for build, hp, energy, atk, dfn in states:
+        mon = Mon(build, hp, energy)
+        mon.atk_stage, mon.def_stage = atk, dfn
+        out.append(mon)
+    return out
+
+
+def _keep(cache: dict, key, value):
+    if PLAYOUT_CACHE:
+        if len(cache) >= _CACHE_SIZE:
+            cache.clear()
+        cache[key] = value
+    return value
+
+
 def duel(mine: Mon, theirs: Mon, my_shields: int, their_shields: int, coming_in: bool = False) -> float:
     """Play out a one-on-one between two mashers from the given states.
 
     Returns my share of health left minus theirs, between -1 (I faint at their
     full health) and +1.
     """
+    key = (_state(mine), _state(theirs), my_shields, their_shields, coming_in, _battle.MORPEKO_TOGGLES)
+    if PLAYOUT_CACHE and key in _duels:
+        return _duels[key]
     a, b = mine.copy(), theirs.copy()
     if coming_in:
         a.atk_stage = a.def_stage = 0  # a Pokémon coming in starts without stat changes
     Battle([a], [b], _MASHER, _MASHER, seed=0, shields=(my_shields, their_shields)).run()
-    return max(a.hp, 0) / a.build.hp - max(b.hp, 0) / b.build.hp
+    return _keep(_duels, key, max(a.hp, 0) / a.build.hp - max(b.hp, 0) / b.build.hp)
+
+
+def _rollout_outcome(order: list[Mon], foes: list[Mon], shields: tuple, switch_wait: tuple, matchups: bool) -> tuple:
+    """The rest of the visible battle between rollout players from these Pokémon (Planner._play_out): both teams'
+    states at the end, our active slot, shields and switch wait, their shields, and the turns it took."""
+    key = (tuple(map(_state, order)), tuple(map(_state, foes)), shields, switch_wait, matchups, _battle.MORPEKO_TOGGLES)
+    if PLAYOUT_CACHE and key in _rollouts:
+        return _rollouts[key]
+    battle = Battle([m.copy() for m in order], [m.copy() for m in foes], _rollout(matchups), _rollout(matchups),
+                    seed=0, shields=shields, switch_wait=switch_wait)
+    battle.run()
+    a, b = battle.sides
+    return _keep(_rollouts, key, (tuple(map(_state, a.team)), a.active, a.shields, a.switch_wait,
+                                  tuple(map(_state, b.team)), b.shields, battle.turn))
 
 
 _safety: dict = {}
@@ -656,13 +715,10 @@ class Planner:
             return setup + self._standing([mine] + bench, 0, my_shields, switch_wait, foes, foe_shields, unseen, view.turn)
         best = None
         for order in orders:
-            battle = Battle([m.copy() for m in order], [m.copy() for m in foes],
-                            _rollout(matchups), _rollout(matchups), seed=0,
-                            shields=(my_shields, foe_shields), switch_wait=(switch_wait, view.foe_switch_wait))
-            battle.run()
-            a, b = battle.sides
-            value = self._standing(a.team, a.active, a.shields, a.switch_wait, b.team, b.shields, unseen,
-                                   view.turn + battle.turn)
+            team, active, shields, wait, their_team, their_shields, turns = _rollout_outcome(
+                order, foes, (my_shields, foe_shields), (switch_wait, view.foe_switch_wait), matchups)
+            value = self._standing(_mons(team), active, shields, wait, _mons(their_team), their_shields, unseen,
+                                   view.turn + turns)
             best = value if best is None else max(best, value)
         return setup + best
 
