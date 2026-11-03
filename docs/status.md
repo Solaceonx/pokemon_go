@@ -67,6 +67,24 @@ agreement when an actual old game seed must be resampled, and rejects rehashed t
 and altered confidence margins. **323tests pass,7optional video skips;108/108 PvPoke exact**. No new
 final game has been opened and no new strength gain is claimed.
 
+**Initial validation and first resumed learning checkpoint — 21:28–31UTC.** The unchanged starting
+policy scored **34.765625% ±6.7817400137points** (95%), interval **27.9838849863–41.5473650137%**,
+on64independent mirrored validation pairings/128games, fresh mixed seed39011, full frozen engine32.
+This is a clear validation loss and a baseline for the registered checkpoint comparison, not a new
+held-out result or gain. All draws, both validation folds, new game seeds, sides, legal scores and
+confidence calculations were independently reconstructed with the separate continuation auditor.
+`initial_validation_artifacts.json` binds the raw journal and summary hashes.
+
+Stage1 began **2026-11-03T21:28:56.0325565Z**, with its persistent deadline
+**2026-11-04T05:28:56.0325565Z**. The first atomic checkpoint records **475total games /18new games**,
+**1,888batches /3,776Adam steps**, with20,774replay positions. Actual online parameters changed,
+optimizer steps continued from3,632, RNG advanced, parameters/target remained finite, and the target
+network retained the original update schedule. The full first checkpoint is retained locally as
+`first_complete_checkpoint.npz`, SHA-256 `2a6f736b201d6925e4d72571dd894d15551a579f4bafb7aad6d0a42d59d44231`.
+`first_learning_checkpoint_artifacts.json` records the checks. Guard21804/worker22396 remain healthy;
+the four bounded stages and new final sample counts/deadline continue unchanged. No trained-stage
+validation or new final outcome has been inspected yet.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

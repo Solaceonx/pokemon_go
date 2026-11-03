@@ -154,6 +154,7 @@ def audit(run_name):
             or protocol['source_model_sha256'] != sha(model) or protocol['policy_sha256'] != sha(package/'policy.npz')
             or protocol['baseline'] != f.manifest or protocol['blocks'] != plan['final_blocks']
             or protocol['pairs_per_block'] != 1000 or protocol['split'] != 'test'
+            or protocol['recipe'] != dict(mode='direct',samples=0,edge=.03,stride=8,network='shared-matchup-v1')
             or protocol['exclusion_sha256'] != sha(path) or protocol['deadline_unix'] != plan['absolute_deadline_unix']
             or protocol['source_manifest_sha256'] != activation['source_manifest_sha256']): raise ValueError('New policy/protocol lock changed')
     full,_,_=load_network(model)

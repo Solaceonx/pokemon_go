@@ -67,3 +67,10 @@ validation-only selection, actual canary, original/new locks, source/data/compac
 It writes only small `audit.json`; `evidence_verified=true` alone is not proof of winning.
 Auditor preparation checks pass323tests,7skips;108/108 PvPoke exact. Its corruption coverage uses only
 validation games, and the checker is not imported by the long-running numerical worker.
+
+The initial fresh64-pair validation completed34.765625%±6.7817400137points (95%), interval
+27.9838849863–41.5473650137%, a clear loss. This is the unchanged starting policy's validation baseline.
+Stage1 began21:28:56UTC, with persistent eight-hour deadlineNovember4 05:28:56UTC. Actual resumed
+learning reached its first atomic checkpoint at475total/18new games,1,888batches/3,776Adam steps;
+online weights changed, RNG advanced and target/optimizer state continued correctly. The checkpoint
+and exact verification receipts are retained locally; no strength gain is claimed from training counters.
