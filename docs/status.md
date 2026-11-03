@@ -456,6 +456,17 @@ fits the fixed 80 warm-up epochs, then uses its persistent one-hour RL allocatio
 selection/confirmation seeds. Its training agreement is a fitting diagnostic, with no strength result
 yet. The original overall deadline and one numerical worker remain enforced; final holds are unopened.
 
+**Shared encoder warm-up internal validation — 2026-11-03.** The fixed 80-epoch fit completed with loss
+**0.014734190070592892** and **82.92%** agreement on the trainer's 10,000-example training diagnostic.
+Neither is a playing-strength measure. Before RL updates, the unchanged trainer's internal validation
+on **64 mirrored pairings / 128 battles**, seed **38031**, full engine32, scored **33.593750% ± 7.656250
+points**, interval **25.937500–41.250000%**: still a clear loss. Raw paired scores, team folds, model hash
+and interval were verified; `relational-v1/bootstrap_artifacts.json` binds the checkpoint and evidence.
+This is internal validation, not the trial's seed-38511 endpoint selection or its fresh seed-38512
+confirmation, and supplies no established gain relative to a different-seed earlier model. RL continues
+under its original persistent one-hour clock, ending at 01:58:04 UTC; this clock includes the internal
+validation as preregistered. No settings, candidate count or validation sample size changed.
+
 Implementation and run instructions: draft PR #12; `scripts/double_dqn.py --help`. Frozen source archives and
 large replay/demonstration files stay local in `.dqn-cache/` and ignored run paths. Small protocols, training
 curves, exact invocations and evaluation summaries are retained under `runs/double-dqn/`.
