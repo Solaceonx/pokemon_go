@@ -3702,3 +3702,10 @@ size changes only the speed). Release check on the owner's Mac, commit b8e7318 (
 median **66 ms** (was 183), 99th percentile **245 ms** (was 477), **0% cut short** (was 11.3%), no fallbacks; crowd 69.0% ± 6.4
 against the trained bot's 66.5% ± 6.5. The website build ran a game against the engine in the browser without errors (site
 commit 31ec8c4). Browser speed and memory are still not measured.
+
+**2026-11-03, the owner's yes:** the website's decision review now says it is the simulator's opinion, which two strong players' exam
+answers do not support (site commit a5d78bb; built with `--unchecked`, a caption change only, after the release check above).
+**A higher bar for the engine's switches, screened on the exam** (`scripts/exam_variants.py`, `docs/benchmarking.md`): `switch_edge=0.1`
+changes 6 of 35 picks and lifts agreement where both players agree from 48% to 60% (12 to 15 of 25); 0.02 and 0.05 change almost
+nothing, `stay_after_replace` nothing. Against bots keep-the-switch settings have lost (task 35; 0.01–0.02 on the fixed code).
+Not adopted: it goes into exam 2 as a version, for fresh positions.
