@@ -1,12 +1,12 @@
 # Preserve experiment evidence exactly: receipts hash the original saved bytes.
 # Windows core.autocrlf must not rewrite these artifacts when staging or checking out.
-runs/double-dqn/** -text
+runs/double-dqn/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
 runs/budget-final-*.out -text
 runs/budget-final-*.err -text
 runs/final-verdict-*.out -text
 runs/heldout-second-*.out -text
-runs/continue-*.out -text
-runs/continue-*.err -text
+runs/continue-*.out -text whitespace=trailing-space,space-before-tab,cr-at-eol
+runs/continue-*.err -text whitespace=trailing-space,space-before-tab,cr-at-eol
 # New immutable-runtime entry points and their auditor keep stable source bytes.
 scripts/dqn_continue.py text eol=lf
 scripts/run_dqn_continue.ps1 text eol=lf
