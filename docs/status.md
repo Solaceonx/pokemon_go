@@ -85,6 +85,33 @@ network retained the original update schedule. The full first checkpoint is reta
 the four bounded stages and new final sample counts/deadline continue unchanged. No trained-stage
 validation or new final outcome has been inspected yet.
 
+**Stage1 validation completed — November4,05:40:56UTC.** After its fixed eight-hour allocation, the
+endpoint scored **37.109375% ±7.0718829786points** (95%), interval **30.0374920214–44.1812579786%**,
+on the same **64 independent mirrored validation pairings /128games**, mixed seed39011, full frozen
+engine32. Its paired change from the unchanged initial policy was **+2.343750 ±8.0727016100points**,
+95% interval **−5.7289516100 to +10.4164516100points**. The change is inconclusive and the endpoint
+remains a clear validation loss to the engine. These are checkpoint-selection data; no new final
+test has opened and no reliable-win claim follows.
+
+The completed endpoint has **5,391total games /4,934new games**, **21,552replay update batches** and
+**43,104Adam steps**. Parameters, optimizer moments and target are finite. Its SHA-256 is
+`3cdccd45974cb13be1b05075e3e801f993619f7aa429453bcd6fd06feb95005e`.
+The ordinary complete-game/snapshot ending at05:29:00.7700133UTC was **4.7374568seconds after**
+the stored05:28:56.0325565stage cutoff; no allocation restarted and the overall deadline is unchanged.
+
+Independent reconstruction checked all64draws, both validation folds, old-seed exclusions, game seeds,
+player sides, legal outcomes, confidence calculations and matched initial-cohort differences. All39
+immutable numerical sources, the serial guard,95baseline files and original completed global lock/verdict
+remain intact. `stage_1_artifacts.json` binds the evidence; raw-journal SHA-256
+`c040d88995f767597af93c4f84b3b6172ab152e265e4e791cb4af89700fc6a24`, summary SHA-256
+`3b9f2b3072556b7336bc65419203acd4a3d7316691a3203591512ffc14b44e65`.
+Required checks pass again: **323tests,7optional video skips;108/108 PvPoke exact**.
+
+The same worker22396/guard21804 moved to **stage2 at2026-11-04T05:40:56.4510396Z**. Its persistent
+deadline is **2026-11-04T13:40:56.4510396Z**. Settings, source/data identities, held-out exclusions,
+final counts and November5 20:59:47UTC deadline remain fixed. The initial and stage1 endpoints both
+remain eligible under the registered eventual selection rule; neither is promoted from this screen.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

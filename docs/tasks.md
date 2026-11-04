@@ -75,9 +75,12 @@ and three1,000-pairing blocks. Prior PR #12 results and all original artifacts s
 precedes implementation or any new numerical worker. Initial checks passed317tests; the implementation
 now passes322tests,7skips,108/108 PvPoke exact. Its immutable source/guard preflight passes without
 starting a worker. See `docs/double_dqn_continue.md`. The reliable-win goal remains unmet.
-The continuation activated21:17:06UTC under guard21804/worker22396, verified BelowNormal. Initial
-fresh validation runs before the four bounded stages. The separate new independent auditor is ready;
-323tests pass,7skips,108/108 PvPoke exact. Prior completed results remain unchanged.
+The continuation activated21:17:06UTC under guard21804/worker22396, verified BelowNormal. Stage1
+completed5,391total/4,934new games;64-pair validation scored37.109375%±7.0718829786points, a clear loss.
+Paired change from initial+2.343750±8.0727016100points is inconclusive. Stage2 runs05:40:56–13:40:56UTC
+November4 with unchanged settings/deadline. All raw validation evidence and runtime/baseline hashes
+were independently checked.323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
+the reliable-win goal remains unmet and all prior completed results remain unchanged.
 
 **Prior completed experiment.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
 November3 22:40:49UTC deadline. Draft PR #12 retains a standalone NumPy Double DQN pilot, compact policy,

@@ -74,3 +74,13 @@ Stage1 began21:28:56UTC, with persistent eight-hour deadlineNovember4 05:28:56UT
 learning reached its first atomic checkpoint at475total/18new games,1,888batches/3,776Adam steps;
 online weights changed, RNG advanced and target/optimizer state continued correctly. The checkpoint
 and exact verification receipts are retained locally; no strength gain is claimed from training counters.
+
+Stage1 completed5,391total/4,934new games,21,552batches/43,104Adam steps. Its64-pair validation scored
+37.109375%±7.0718829786points (95%), interval30.0374920214–44.1812579786%. The matched change from
+the initial policy is+2.343750±8.0727016100points (−5.7289516100 to+10.4164516100), so no gain is
+established and it remains a clear validation loss. Raw draws/seeds/sides/scores/intervals,39runtime
+sources,guard and95baseline hashes were independently checked; `stage_1_artifacts.json` binds them.
+The endpoint was saved4.7374568seconds beyond the stage cutoff during ordinary whole-game/snapshot
+completion, with no renewed allocation. Stage2 startedNovember4 05:40:56.4510396UTC and ends at its
+persistent13:40:56.4510396UTC deadline. The same single worker continues unchanged; final teams remain
+unopened. Required checks still pass323tests,7skips;108/108 PvPoke exact.
