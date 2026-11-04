@@ -86,3 +86,15 @@ The endpoint was saved4.7374568seconds beyond the stage cutoff during ordinary w
 completion, with no renewed allocation. Stage2 startedNovember4 05:40:56.4510396UTC and ends at its
 persistent13:40:56.4510396UTC deadline. The same single worker continues unchanged; final teams remain
 unopened. Required checks still pass323tests,7skips;108/108 PvPoke exact.
+
+Stage2 completed10,352total/9,895new games (4,961during stage2),41,396replay batches/82,792Adam steps.
+Its64-pair validation scored35.937500%±7.3916067735points (95%), interval28.5458932265–43.3291067735%:
+another clear loss. Paired change from initial is+1.171875±8.0513505623points (−6.8794755623 to
++9.2232255623); versus stage1,−1.171875±7.9020441300points (−9.0739191300 to+6.7301691300).
+Neither difference is established. The independent stage receipt verifies all draws/seeds/sides/intervals,
+finite parameters/optimizer/target,39runtime files,guard,95baseline files, original/copied data and old locks.
+The endpoint saved7.6652448seconds after its fixed stage cutoff during whole-game/snapshot completion;
+the overall allocation did not change. `stage_2_artifacts.json` retains exact evidence/hashes.
+Stage3 beganNovember4 13:51:47.818418UTC and ends21:51:47.818418UTC; the same single worker continues.
+All three completed candidates stay eligible under the registered eventual selection rule. No new final
+test has opened.323tests pass with7optional skips;108/108 PvPoke exact. The reliable-win goal is unmet.

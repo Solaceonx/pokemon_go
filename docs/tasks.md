@@ -77,9 +77,12 @@ now passes322tests,7skips,108/108 PvPoke exact. Its immutable source/guard prefl
 starting a worker. See `docs/double_dqn_continue.md`. The reliable-win goal remains unmet.
 The continuation activated21:17:06UTC under guard21804/worker22396, verified BelowNormal. Stage1
 completed5,391total/4,934new games;64-pair validation scored37.109375%±7.0718829786points, a clear loss.
-Paired change from initial+2.343750±8.0727016100points is inconclusive. Stage2 runs05:40:56–13:40:56UTC
-November4 with unchanged settings/deadline. All raw validation evidence and runtime/baseline hashes
-were independently checked.323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
+Paired change from initial+2.343750±8.0727016100points is inconclusive. Stage2 completed10,352total/
+9,895new games;64-pair validation scored35.937500%±7.3916067735points (28.5458932265–43.3291067735%),
+another clear loss. Change from initial+1.171875±8.0513505623points is inconclusive. Stage3 runs
+November4 13:51:47–21:51:47UTC with unchanged settings/deadline. All raw validation evidence, finite
+checkpoint/optimizer/target and runtime/baseline/data hashes were independently checked.
+323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
 the reliable-win goal remains unmet and all prior completed results remain unchanged.
 
 **Prior completed experiment.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original

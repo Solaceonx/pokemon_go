@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-11-03.
+Last updated 2026-11-04.
 
 ## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; running)
 
@@ -119,6 +119,34 @@ only the copied file while leaving its source intact and confirms rejection. The
 dataset, original inputs,39immutable runtime files and guard all match their registered hashes.
 **323tests pass,7optional skips;108/108 PvPoke exact**. `copied_data_integrity.json` and the updated
 auditor preparation receipt bind this check. No numerical runtime, learner state, settings or deadline changed.
+
+**Stage2 validation completed — November4,13:51:47UTC.** The second eight-hour endpoint scored
+**35.937500% ±7.3916067735points** (95%), interval **28.5458932265–43.3291067735%**, on the registered
+**64 mirrored validation pairings /128games**, mixed seed39011 against full frozen engine32. It remains
+a clear loss. Its paired change from initial is **+1.171875 ±8.0513505623points**, interval
+**−6.8794755623 to +9.2232255623points**; versus stage1 it is **−1.171875 ±7.9020441300points**,
+interval **−9.0739191300 to +6.7301691300points**. Neither change is established. These are validation
+selection data, not a new held-out benchmark; the reliable-win target remains unmet.
+
+The endpoint records **10,352total games /9,895new games**, including **4,961games in stage2**,
+**41,396replay update batches /82,792Adam steps**. Parameters, optimizer moments and target are finite.
+Checkpoint SHA-256: `5acdc3c1f3ef1b216a2a9eca4940f19bbd13a7c9200cc7ca87e05fe05b8daa9d`.
+It was saved at13:41:04.1162844UTC, **7.6652448seconds after** the persistent13:40:56.4510396cutoff,
+during ordinary complete-game/snapshot completion, with no renewed allocation or changed overall deadline.
+
+Independent reconstruction verified all64draws, both validation folds, excluded old game seeds, sides,
+legal scores and confidence intervals. The39immutable runtime files, guard,95baseline files, original
+and copied teacher data, exact initial full state and prior global lock/verdict remain intact.
+`continue-v1/stage_2_artifacts.json` binds these checks and the paired comparisons. Raw-journal SHA-256:
+`6a09dbbaae7e3b96193600c8f5a2b51a1d13d59d085d93b141865ec3508428e0`; summary SHA-256:
+`1aba311695e02eb3faaff53aa55b67916749b1fc113bb04e2657b84eedf9c394`.
+Required checks pass again: **323tests,7optional video skips;108/108 PvPoke exact**, retained in
+`runs/continue-stage-2-tests.out` and `runs/continue-stage-2-pvpoke.out`.
+
+The same worker22396/guard21804 automatically entered **stage3 at2026-11-04T13:51:47.818418Z**,
+with immutable deadline **2026-11-04T21:51:47.818418Z**. Initial, stage1 and stage2 remain candidates;
+selection waits for all eligible stages under the registered rule. Settings, frozen opponent, exclusions,
+final counts and November5 20:59:47UTC deadline stay fixed. No new final test has opened.
 
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
