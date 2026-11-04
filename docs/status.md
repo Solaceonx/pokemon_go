@@ -148,6 +148,34 @@ with immutable deadline **2026-11-04T21:51:47.818418Z**. Initial, stage1 and sta
 selection waits for all eligible stages under the registered rule. Settings, frozen opponent, exclusions,
 final counts and November5 20:59:47UTC deadline stay fixed. No new final test has opened.
 
+**Stage3 validation completed — November4,22:02:50UTC.** The third eight-hour endpoint scored
+**31.640625% ±6.6599107207points** (95%), interval **24.9807142793–38.3005357207%**, on the same
+**64 mirrored validation pairings /128games**, mixed seed39011, full frozen engine32. It is another
+clear validation loss. The paired change from initial is **−3.125000 ±7.7552625502points**, interval
+**−10.8802625502 to +4.6302625502points**; versus stage2, **−4.296875 ±7.8358280186points**, interval
+**−12.1327030186 to +3.5389530186points**. Neither difference is established. No improvement or
+reliable win is proven, and these selection data are not new held-out benchmark results.
+
+The endpoint has **15,408total games /14,951new games**, including **5,056during stage3**,
+**61,620replay update batches /123,240Adam steps**. Parameters, optimizer moments and target remain
+finite. Checkpoint SHA-256: `ba6396a6b8a166a84b0296d789bc12d715fa090f71dfb3c95471c73eec300c8a`.
+It saved at21:52:00.833449UTC, **13.0150309seconds after** the persistent21:51:47.818418cutoff during
+ordinary whole-game/snapshot completion, without a new allocation or changed overall deadline.
+
+`continue-v1/stage_3_artifacts.json` binds independently reconstructed draws, both validation folds,
+old-seed exclusions, sides, scores, intervals and paired differences. All39runtime files, the guard,
+95baseline files, original/copied teacher data, exact initial full state and prior global lock/verdict
+remain intact. Raw-journal SHA-256: `781fb6d15e958d23fc692554d7c701b13dc58c5e2298eef4f7b800f01969c3c1`;
+summary SHA-256: `fe49e7d86f8cbf8de3e363b59c647a096c94dbc3a5869dbeb69cd8f30265159a`.
+Required checks pass again: **323tests,7optional video skips;108/108 PvPoke exact**, saved in
+`runs/continue-stage-3-tests.out` and `runs/continue-stage-3-pvpoke.out`.
+
+The same worker22396/guard21804 entered the final registered **stage4 at2026-11-04T22:02:50.6474683Z**,
+with persistent deadline **2026-11-05T06:02:50.6474683Z**. Initial and all three completed stage
+endpoints remain eligible; selection waits for the remaining stage under the original rule. All settings,
+frozen opponent, exclusions, final counts and November5 20:59:47UTC deadline remain fixed. No new final
+test has opened, and the reliable-win goal remains unmet.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

@@ -98,3 +98,14 @@ the overall allocation did not change. `stage_2_artifacts.json` retains exact ev
 Stage3 beganNovember4 13:51:47.818418UTC and ends21:51:47.818418UTC; the same single worker continues.
 All three completed candidates stay eligible under the registered eventual selection rule. No new final
 test has opened.323tests pass with7optional skips;108/108 PvPoke exact. The reliable-win goal is unmet.
+
+Stage3 completed15,408total/14,951new games (5,056during stage3),61,620replay batches/123,240Adam steps.
+Its64-pair validation scored31.640625%±6.6599107207points (95%), interval24.9807142793–38.3005357207%:
+another clear loss. Change from initial−3.125000±7.7552625502points (−10.8802625502 to+4.6302625502),
+and versus stage2−4.296875±7.8358280186points (−12.1327030186 to+3.5389530186), are both inconclusive.
+The stage receipt independently verifies raw draws/seeds/sides/folds/scores/intervals, finite checkpoint
+state and unchanged runtime/guard/baseline/data/old locks. Whole-game/snapshot completion ended
+13.0150309seconds after the stored cutoff, without extending the allocation. `stage_3_artifacts.json`
+retains exact evidence/hashes. Stage4, the final registered stage, runsNovember4 22:02:50.6474683UTC
+throughNovember5 06:02:50.6474683UTC. The same worker continues; all four existing candidates remain
+eligible pending that stage. No new final test has opened.323tests pass,7optional skips;108/108 PvPoke exact.

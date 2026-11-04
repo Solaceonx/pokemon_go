@@ -79,9 +79,13 @@ The continuation activated21:17:06UTC under guard21804/worker22396, verified Bel
 completed5,391total/4,934new games;64-pair validation scored37.109375%±7.0718829786points, a clear loss.
 Paired change from initial+2.343750±8.0727016100points is inconclusive. Stage2 completed10,352total/
 9,895new games;64-pair validation scored35.937500%±7.3916067735points (28.5458932265–43.3291067735%),
-another clear loss. Change from initial+1.171875±8.0513505623points is inconclusive. Stage3 runs
-November4 13:51:47–21:51:47UTC with unchanged settings/deadline. All raw validation evidence, finite
-checkpoint/optimizer/target and runtime/baseline/data hashes were independently checked.
+another clear loss. Change from initial+1.171875±8.0513505623points is inconclusive. Stage3 completed
+15,408total/14,951new games;64-pair validation scored31.640625%±6.6599107207points
+(24.9807142793–38.3005357207%), another clear loss. Paired change from initial−3.125000±7.7552625502
+points is inconclusive. The final registered stage4 runsNovember4 22:02:50UTC throughNovember5 06:02:50UTC
+with unchanged settings/deadline. All raw validation evidence, finite checkpoint/optimizer/target and
+runtime/baseline/data hashes were independently checked. Initial and all three completed stage endpoints
+remain eligible; selection waits for stage4 under the original rule.
 323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
 the reliable-win goal remains unmet and all prior completed results remain unchanged.
 
