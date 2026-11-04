@@ -3870,3 +3870,12 @@ form-changer and no network was trained with form-changers, so the bots on both 
 Quagsire / shadow Sableye / shadow Corviknight 51.1% ± 3.1; Jellicent / Clodsire / Mandibuzz 47.2%, with Araquanid 46.0%; the rest
 40-52%. One round against a bot-piloted field, so a lead, not a verdict. Next: how the bots play into Mimikyu's Disguise; a
 counter check of the Charjabug team (`self_consistent_teams.py`); the owner's and KM's read.
+**The owner's Disguise rule, then the same search again** (2026-11-04): while a Mimikyu's Disguise is up, both the rulebook and
+the trained bot throw their cheapest ready charged move (`Planner(disguise=True)`, the default on this branch; test in
+`tests/test_forms.py`). Same command with `--finals 1000`; the first run is in `runs/wide-teams/before-disguise-rule/`.
+Mimikyu's lead mostly survives: 203 of the 303 shortlisted teams have it, and the best, Diggersby / Mimikyu / shadow Charjabug,
+wins 66.8% ± 2.9 (the best before, 69.1% ± 2.0). Without Mimikyu the best are shadow Charjabug / Thievul / shadow Marowak
+59.7% ± 3.0 and Carbink / shadow Charjabug / shadow Marowak 58.1% ± 3.1 (58.9% before); the owner's Quag / Sab / Corv 52.7%,
+Jellicent / Clodsire / Mandibuzz 52.0%, with Araquanid 47.7%. Shadow Charjabug, Carbink, shadow Marowak and Stunfisk recur.
+Either Mimikyu is this strong, or the bots have other blind spots with a Pokémon no network was trained with; the players' read
+decides which. The rule changes `pogo/`, so it reaches the website only after a release check and the owner's yes.

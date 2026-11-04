@@ -37,7 +37,8 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 OUT = ROOT / "runs" / "wide-teams"
 REFERENCE = [["quagsire", "sableye_shadow", "corviknight_shadow"], ["jellicent", "clodsire", "araquanid"],
-             ["jellicent", "clodsire", "mandibuzz"]]
+             ["jellicent", "clodsire", "mandibuzz"],
+             ["charjabug_shadow", "carbink", "marowak_shadow"]]
 
 _w: dict = {}
 

@@ -131,6 +131,12 @@ def _matchup_table() -> dict:
     return json.loads(path.read_text()) if path.exists() else {}
 
 
+def disguised(mon) -> bool:
+    """A Mimikyu whose Disguise is still up: the next charged move that is not shielded does 1 damage."""
+    rule = mon.build.rule or {}
+    return rule.get("trigger") == "charged_move_damage" and rule.get("effect") == "protect"
+
+
 def safety(build, field: list) -> float:
     """How well a fresh Pokémon holds up against the field on average: mean one-on-one margin at one shield each."""
     key = (build.uid, id(field))
@@ -243,6 +249,8 @@ class Planner:
     known_team: once every Pokémon they have left has been seen, swap in a bench Pokémon that beats at
               least two of them even without the usual margin: whatever they switch to, it is a matchup
               we win (the owner). known_edge is how far ahead a one-on-one must be to count as beaten.
+    disguise: while their Mimikyu's Disguise is up, throw the cheapest charged move as soon as one is ready:
+              the Disguise takes whatever hits it for 1 damage (the owner, 2026-11-04).
     sweeper:  extra value per shield saved or drawn while setting up a teammate after
               losing the lead and being counter-swapped. Zero disables the rule.
               sweep_chance is the required fraction of shieldless two-opponent
@@ -266,7 +274,7 @@ class Planner:
                  catch: bool = False, catch_gain: float = 0.2,
                  rush: bool = False, rush_threat: bool = False, known_team: bool = False, known_edge: float = 0.4,
                  punish_gain: float | None = None, fast_first: float = 0.0, last_always: bool = True,
-                 even_cost: str = "best"):
+                 even_cost: str = "best", disguise: bool = True):
         if bait not in ("cheap", "never", "farm", "mix", "read", "even", "calibrated"):
             raise ValueError(f"unknown bait rule {bait!r}")
         if shields not in ("always", "never", "threshold", "lookahead"):
@@ -291,6 +299,7 @@ class Planner:
         # (the old rule: Empoleon's resisted Hydro Cannon at Jellicent over Drill Peck); "best" the one that leaves
         # us better off, shielded or not as they are likely to (a sure stat change counts even when shielded).
         self.even_cost = even_cost
+        self.disguise = disguise
         self.switches = switches
         self.good_matchup = good_matchup
         self.matchup_weight = matchup_weight
@@ -370,6 +379,8 @@ class Planner:
         ready = [k for k, move in enumerate(moves) if mon.energy >= move.energy]
         if not ready:
             return FAST
+        if self.disguise and disguised(foe):
+            return CHARGED[min(ready, key=lambda k: moves[k].energy)]
         fast = mon.build.fast
         hit = [damage(mon, move, foe) for move in moves]
         if self.last_gasp:
