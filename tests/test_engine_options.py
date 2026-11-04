@@ -100,6 +100,25 @@ class EngineOptions(unittest.TestCase):
         self.play(reader, target, games=2)
         self.assertGreater(reader.reads, 0)
 
+    def test_robust_choice(self):
+        with self.assertRaises(ValueError):
+            self.engine(robust=0.5)
+        e = self.engine(opponents="mix", robust=1.0)
+        # Two looks a style. Option 1 is better on the weighted mean, option 0 in the worst case (PvPoke's AI).
+        by_style = {name: ({0: 1.2, 1: 0.2 if name == "pvpoke" else 1.8}, 2) for name in e._styles}
+        worth = e._robust_worth(by_style, [0, 1])
+        self.assertGreater(worth[0], worth[1])
+        e.robust = 0.0
+        worth = e._robust_worth(by_style, [0, 1])
+        self.assertGreater(worth[1], worth[0])
+        self.assertAlmostEqual(worth[0], 0.6)
+        e.robust = 0.0  # p = 0 is not off: the styles still take turns
+        self.play(e, Learner(q=self.net, margin=0.02, seed=9), games=1)
+        self.assertGreater(e.looks, 0)
+        self.assertEqual(set(e.style_rounds), {n for n, s in e._styles.items() if s["weight"] > 0})  # each style had its own looks
+        counts = list(e.style_rounds.values())
+        self.assertLessEqual(max(counts) - min(counts), e.looks)  # in turn: at most one round apart per decision
+
     def test_genes_round_trip_and_cma(self):
         defaults = {g[0]: g[4] for g in evolve_rules.GENES}
         self.assertEqual(evolve_rules.decode(evolve_rules.GENES, evolve_rules.encode(evolve_rules.GENES)), defaults)

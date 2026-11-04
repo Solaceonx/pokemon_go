@@ -17,6 +17,12 @@ plays as before (docs/tasks.md, 25, 28 and 29):
   the trained bot; profile=True weights the mix by how well each style's shield and bait rates fit what this
   opponent has done; unseen="teams" draws their unseen Pokémon from listed teams that fit what has been seen
   (task 28).
+- robust=p (with opponents="mix"): the imagined opponents go round the styles in turn, so each style judges every
+  option with looks of its own, and an option is worth (1 - p) x the styles' weighted mean + p x its worst style.
+  p = 0 is the mix with the weights applied after the looks; p = 1 plays for the worst case over the styles. A best
+  response to one imagined opponent is only right against that opponent (docs/benchmarking.md: the engine's gain
+  falls from +17 to -2 as the opponent gets less like what it imagines); this trades some of it for play that holds
+  up whoever they are.
 - mix=True: when both sides have a charged move ready, solve the small game of our options against theirs and
   draw our choice from the mix; temperature > 0: choose among close options at random, weighted by worth
   (task 29). Those draws use their own generator (`_mix_rng`), so a probe that copies the engine's search cannot
@@ -150,7 +156,7 @@ class Engine(Learner):
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
                  mix_switch: bool = False, random_hold: bool = False, matching: bool = False,
                  no_tell_bait: bool = False, judge: str = "steps", switch_edge: float = 0.0,
-                 stay_after_replace: bool = False, **settings):
+                 stay_after_replace: bool = False, robust: float | None = None, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
@@ -158,6 +164,12 @@ class Engine(Learner):
             raise ValueError(f"unknown judge {judge!r}")
         self.judge = judge
         self.switch_edge, self.stay_after_replace = switch_edge, stay_after_replace
+        if robust is not None and opponents != "mix":
+            raise ValueError("robust needs opponents='mix'")
+        self.robust = robust  # None: off; 0.0 still gives each style its own looks
+        self._forced_style = None  # the style of the imagined opponent in the current round of looks (robust)
+        self._style_turn = 0  # where the round of styles continues at the next decision (robust)
+        self.style_rounds = {}  # rounds of looks each style has had in this game (robust)
         self._replaced_at = None  # the turn of our last replacement after a faint
         # Who plays inside the look-ahead: "quick", the cheap rollout player, or "bot", the trained bot itself.
         self.rollout = rollout
@@ -308,9 +320,24 @@ class Engine(Learner):
     def _imagined_opponent(self, rng: random.Random):
         if self.opponents != "mix":
             return Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32))
-        weights = self._style_weights()
-        name = rng.choices(list(weights), list(weights.values()))[0]
+        if self._forced_style is not None:
+            name = self._forced_style
+        else:
+            weights = self._style_weights()
+            name = rng.choices(list(weights), list(weights.values()))[0]
         return style_player(name, rng, self.q, self.margin, self.pool, self._human_settings)
+
+    def _robust_worth(self, by_style: dict, options: list) -> dict:
+        """Each option's worth from per-style looks: (1 - p) x the styles' weighted mean + p x the worst style."""
+        weights = self._style_weights()
+        means = {name: {k: totals[k] / n for k in options} for name, (totals, n) in by_style.items()}
+        total = sum(weights[name] for name in means) or 1.0
+        out = {}
+        for k in options:
+            mean = sum(weights[name] * m[k] for name, m in means.items()) / total
+            worst = min(m[k] for m in means.values())
+            out[k] = (1.0 - self.robust) * mean + self.robust * worst
+        return out
 
     # deciding
 
@@ -368,23 +395,40 @@ class Engine(Learner):
             if mixed is not None:
                 return mixed
         totals, rounds = dict.fromkeys(options, 0.0), 0
-        for s in seeds:
+        # robust: the rounds go round the styles in turn, and each style's looks are kept apart
+        names = [n for n, s in self._styles.items() if s["weight"] > 0] if self.robust is not None else []
+        by_style = {}
+        if names:  # carry the round on from decision to decision, so few samples still reach every style in time
+            names = names[self._style_turn:] + names[:self._style_turn]
+            self._style_turn = (self._style_turn + len(seeds)) % len(names)
+        for i, s in enumerate(seeds):
+            self._forced_style = names[i % len(names)] if names else None
             done = {}
-            for k in options:
-                if self._out_of_time():
-                    break
-                done[k] = self._timed_look(view, head, k, s)
+            try:
+                for k in options:
+                    if self._out_of_time():
+                        break
+                    done[k] = self._timed_look(view, head, k, s)
+            finally:
+                self._forced_style = None
             if len(done) < len(options):
                 break
             for k in options:
                 totals[k] += done[k]
             rounds += 1
+            if names:
+                name = names[i % len(names)]
+                style_totals, n = by_style.get(name, (dict.fromkeys(options, 0.0), 0))
+                for k in options:
+                    style_totals[k] += done[k]
+                by_style[name] = (style_totals, n + 1)
+                self.style_rounds[name] = self.style_rounds.get(name, 0) + 1
         self.looks += 1
         if rounds == 0:
             self.fell_back += 1
             return pick
         self.cut += rounds < len(seeds)
-        worth = {k: totals[k] / rounds for k in options}
+        worth = self._robust_worth(by_style, options) if by_style else {k: totals[k] / rounds for k in options}
         if self.switch_edge and head in ("swap", "mid_swap"):
             worth = {k: v - (self.switch_edge if k else 0.0) for k, v in worth.items()}  # option 0 stays
         if self.temperature > 0:
