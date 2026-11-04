@@ -1,0 +1,11 @@
+round_1: self-play of runs/general-decide/q.npz with runs/eval/eval.npz, 50 games (0 already saved), seed 390101, 3 workers
+  50 of 50 games, 5 min, 15.9 core-seconds a game, about 0 min to go
+  eval: 486 positions; held-out log loss 0.6970 new against 0.6897 before
+  q shield: 433 decisions, 40 held back (0 the engine overrode); fit 0.7258 new against 0.7715 before; agreement 90.0% against 100.0%, where the engine overrode - against -; old bot's picks replayed 100.0%
+  q throw: 1552 decisions, 150 held back (16 the engine overrode); fit 0.7849 new against 0.8433 before; agreement 82.0% against 89.3%, where the engine overrode 12.5% against 0.0%; old bot's picks replayed 100.0%
+  q swap: 383 decisions, 31 held back (4 the engine overrode); fit 0.7040 new against 0.7513 before; agreement 80.6% against 87.1%, where the engine overrode 0.0% against 0.0%; old bot's picks replayed 100.0%
+  q replace: 87 decisions, 9 held back (2 the engine overrode); fit 0.2531 new against 0.3953 before; agreement 77.8% against 77.8%, where the engine overrode 50.0% against 0.0%; old bot's picks replayed 100.0%
+
+timing: 50 games on 3 workers: 15.9 core-seconds a game (median 16.1, 90th percentile 22.6, longest 31.4); 356 turns, 54 decisions a game, the engine overrode the bot at 12.6% of them
+the brief: 10,000 games a round, 6,000 if a game takes over 40 core-seconds; so 10,000 games a round
+rough job: self-play 133 core-hours, measuring 55, E_0's own battles 5, confirmation 31: about 224 core-hours (75 hours on 3 workers)
