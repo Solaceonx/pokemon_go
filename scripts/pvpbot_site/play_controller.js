@@ -198,6 +198,10 @@ async function play(config) {
   INFO = await (await fetch("species.json")).json();
   for (const s of INFO.species) { BY_NAME[s.name.toLowerCase()] = s; BY_ID[s.id] = s; }
   $("species").innerHTML = INFO.species.map((s) => `<option value="${s.name}">`).join("");
+  const presets = [INFO.mine, ["quagsire", "sableye_shadow", "corviknight_shadow"], ["jellicent", "clodsire", "araquanid"],
+                   ["jellicent", "clodsire", "mandibuzz"], ...INFO.top.slice(0, 3).map((t) => t.team)];
+  $("preset").innerHTML = presets.map((t, i) => `<option value="${i}">${i ? "" : "The owner's team: "}${t.map(name).join(" / ")}</option>`).join("");
+  $("preset").onchange = () => slots("my-team", presets[Number($("preset").value)].map(name));
   slots("my-team", INFO.mine.map(name));
   slots("foe-custom", ["Corviknight", "Tinkaton", "Mandibuzz"]);
   $("top-team").innerHTML = `<option value="any">Any of them at random</option>` +

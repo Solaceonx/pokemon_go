@@ -30,16 +30,16 @@
   <p class="sub">A Great League battle against a trained bot, run in your browser. You fast-move all the time; tap a charged move to throw it, a Pokémon to swap.</p>
   <nav><a href="./">Line-up odds</a> · <b>Battle the bot</b></nav>
   <datalist id="species"></datalist>
-  <div class="box"><h2>Your team (lead first)</h2><div id="my-team"></div>
+  <div class="box"><h2>Your team (lead first)</h2><select id="preset"></select><div id="my-team"></div>
     <label class="own"><input type="checkbox" id="owned" checked> use the owner's own IVs and moves where known</label></div>
   <div class="box"><h2>The bot's team</h2>
     <div class="choices">
-      <label><input type="radio" name="foe" value="random" checked>Random</label>
-      <label><input type="radio" name="foe" value="top">Top team</label>
+      <label><input type="radio" name="foe" value="random">Random</label>
+      <label><input type="radio" name="foe" value="top" checked>Top team</label>
       <label><input type="radio" name="foe" value="custom">Custom</label>
     </div>
-    <div id="foe-random" class="small">Three at random from the top 50 of the Great League rankings.</div>
-    <div id="foe-top" hidden><select id="top-team"></select><div class="small">From the project's list of strongest teams in simulation.</div></div>
+    <div id="foe-random" class="small" hidden>Three at random from the top 50 of the Great League rankings.</div>
+    <div id="foe-top"><select id="top-team"></select><div class="small">From the project's list of strongest teams in simulation.</div></div>
     <div id="foe-custom" hidden></div>
   </div>
   <div class="box"><h2>Opponent and speed</h2>
@@ -48,8 +48,8 @@
       <label><input type="radio" name="bot" value="learner">Trained bot</label>
     </div>
     <div class="choices">
-      <label><input type="radio" name="speed" value="1">Game speed</label>
-      <label><input type="radio" name="speed" value="1.5" checked>1.5× slower</label>
+      <label><input type="radio" name="speed" value="1" checked>Game speed</label>
+      <label><input type="radio" name="speed" value="1.5">1.5× slower</label>
       <label><input type="radio" name="speed" value="2">2× slower</label>
     </div>
     <input id="player" placeholder="Your name (optional, saved with your games)">
