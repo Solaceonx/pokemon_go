@@ -141,6 +141,15 @@ class ContinuationTests(unittest.TestCase):
                 for a,b in zip(retained_target.p,target.p): np.testing.assert_array_equal(a,b)
                 self.assertNotEqual(info['numpy_rng'],meta['numpy_rng'])
                 for name,digest in identity.items(): self.assertEqual(trainer.sha(source/name),digest)
+                with patch.object(checker,'ROOT',root):
+                    checker.verify_inputs(run,plan)
+                    data=run/'demonstrations.npz'
+                    original_data=data.read_bytes()
+                    data.write_bytes(original_data+b'altered-copy')
+                    with self.assertRaisesRegex(ValueError,'Copied teacher data changed'):
+                        checker.verify_inputs(run,plan)
+                    data.write_bytes(original_data)
+                    checker.verify_inputs(run,plan)
                 net.p[-1][0] += 1
                 net.save(source/'endpoint.npz')
                 with self.assertRaisesRegex(ValueError,'input changed'):

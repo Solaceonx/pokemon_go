@@ -112,6 +112,14 @@ deadline is **2026-11-04T13:40:56.4510396Z**. Settings, source/data identities, 
 final counts and November5 20:59:47UTC deadline remain fixed. The initial and stage1 endpoints both
 remain eligible under the registered eventual selection rule; neither is promoted from this screen.
 
+**Copied-data audit coverage tightened while stage2 runs.** The independent checker now verifies the
+actual continuation copy of `demonstrations.npz` against the registered sealed-data hash, in addition
+to verifying the original source data and exact initial full checkpoint. A regression test mutates
+only the copied file while leaving its source intact and confirms rejection. The production copied
+dataset, original inputs,39immutable runtime files and guard all match their registered hashes.
+**323tests pass,7optional skips;108/108 PvPoke exact**. `copied_data_integrity.json` and the updated
+auditor preparation receipt bind this check. No numerical runtime, learner state, settings or deadline changed.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

@@ -23,6 +23,16 @@ def fingerprint(names):
     return hashlib.sha256(('dqn-final-exclusion-v1:'+'|'.join(sorted(names))).encode()).digest()
 
 
+def verify_inputs(run, plan):
+    for name,digest in plan['source_sha256'].items():
+        if sha(ROOT/'runs/double-dqn'/plan['source_run']/name) != digest:
+            raise ValueError('Original checkpoint/data changed')
+    if sha(run/'initial.npz') != plan['source_sha256']['endpoint.npz']:
+        raise ValueError('Continuation did not start from the exact full saved state')
+    if sha(run/'demonstrations.npz') != plan['source_sha256']['demonstrations.npz']:
+        raise ValueError('Copied teacher data changed during the continuation')
+
+
 def audit_block(directory, report, f, field, seed, pairs, split, old_teams, old_seeds,
                 model_sha, exclusion_sha, plan_sha=PLAN_SHA):
     config = json.loads((directory/'config.json').read_text())
@@ -112,10 +122,7 @@ def audit(run_name):
     manifest=json.loads((runtime/'source_manifest.json').read_text())
     for name,digest in manifest.items():
         if sha(runtime/name) != digest: raise ValueError('Runtime changed: '+name)
-    for name,digest in plan['source_sha256'].items():
-        if sha(ROOT/'runs/double-dqn'/plan['source_run']/name) != digest: raise ValueError('Original checkpoint/data changed')
-    if sha(run/'initial.npz') != plan['source_sha256']['endpoint.npz']:
-        raise ValueError('Continuation did not start from the exact full saved state')
+    verify_inputs(run, plan)
     f=frozen()
     choice=json.loads((run/'choice.json').read_text())
     if choice['plan_sha256'] != PLAN_SHA or choice['rule'] != plan['selection']['candidates']:

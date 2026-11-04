@@ -67,6 +67,8 @@ validation-only selection, actual canary, original/new locks, source/data/compac
 It writes only small `audit.json`; `evidence_verified=true` alone is not proof of winning.
 Auditor preparation checks pass323tests,7skips;108/108 PvPoke exact. Its corruption coverage uses only
 validation games, and the checker is not imported by the long-running numerical worker.
+The checker verifies both the original teacher dataset and the actual copy loaded by this continuation;
+its regression coverage rejects a changed copy even when the registered original remains intact.
 
 The initial fresh64-pair validation completed34.765625%±6.7817400137points (95%), interval
 27.9838849863–41.5473650137%, a clear loss. This is the unchanged starting policy's validation baseline.
