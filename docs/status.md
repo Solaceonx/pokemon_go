@@ -3739,6 +3739,15 @@ total for three rounds, their measuring and the confirmation is about 224 core-h
 battles 5, confirmation 31), below the brief's 300-350. The fits printed in that run (45 games to fit on) only show that the
 pipeline works.
 
-**Round 1, from Marco's report (2026-11-03; its files are not pushed yet):** 10,000 games; against E_0 48.6% ± 1.5 head to head,
+**Round 1, from Marco's report (2026-11-03):** 10,000 games; against E_0 48.6% ± 1.5 head to head,
 crowd −0.7 ± 2.6, PvPoke −1.6 ± 2.9: no gain. Round 2 is paused at about game 3,900. The scripts were merged into `main` while
 paused (the owner's yes); Marco's run uses its own checkout.
+
+Round 1's files (Marco, 2026-11-03): `runs/engine-loop/round_1/q.npz` and `eval.npz` (the round's networks), `fit.json`,
+`runs/engine-loop/rounds.json` (the round's fit and measurement) and the run's log `runs/engine-loop.out`. Self-play took 18.6
+core-seconds a game (16 workers on the PC, before the play-out caches), the whole round 297 minutes. On the held-back tenth of
+the games the new q predicts who won a little better than the old one on every head (log loss of the chosen option: throw 0.497
+against 0.505, swap 0.555 against 0.568, shield 0.563 against 0.582, replace 0.528 against 0.542) but plays the engine's pick
+less often (throw 80.9% against 85.0%, swap 80.6% against 83.9%, replace 73.4% against 75.9%), and where the engine overrode
+the trained bot (throws, swaps and replacements; no shield calls) it plays the engine's pick only 3–10% of the time. The engine overrode at 12.8% of the round's decisions
+(71,056 of 554,063). Measured searches were slower with the round's networks: median 344 ms against 250 ms for E_0 in the same run.

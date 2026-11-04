@@ -1,0 +1,138 @@
+round_1: self-play of runs/general-decide/q.npz with runs/eval/eval.npz, 10000 games (0 already saved), seed 390101, 16 workers
+  480 of 10000 games, 10 min, 18.2 core-seconds a game, about 203 min to go
+  1020 of 10000 games, 21 min, 18.0 core-seconds a game, about 182 min to go
+  1550 of 10000 games, 31 min, 18.1 core-seconds a game, about 170 min to go
+  2110 of 10000 games, 41 min, 18.1 core-seconds a game, about 154 min to go
+  2630 of 10000 games, 51 min, 18.2 core-seconds a game, about 144 min to go
+  3140 of 10000 games, 61 min, 18.3 core-seconds a game, about 134 min to go
+  3680 of 10000 games, 72 min, 18.3 core-seconds a game, about 123 min to go
+  4210 of 10000 games, 82 min, 18.3 core-seconds a game, about 112 min to go
+  4750 of 10000 games, 92 min, 18.2 core-seconds a game, about 102 min to go
+  5250 of 10000 games, 102 min, 18.3 core-seconds a game, about 93 min to go
+  5730 of 10000 games, 112 min, 18.4 core-seconds a game, about 84 min to go
+  6240 of 10000 games, 122 min, 18.4 core-seconds a game, about 74 min to go
+  6760 of 10000 games, 134 min, 18.5 core-seconds a game, about 64 min to go
+  7250 of 10000 games, 144 min, 18.6 core-seconds a game, about 55 min to go
+  7790 of 10000 games, 154 min, 18.6 core-seconds a game, about 44 min to go
+  8340 of 10000 games, 164 min, 18.6 core-seconds a game, about 33 min to go
+  8830 of 10000 games, 174 min, 18.5 core-seconds a game, about 23 min to go
+  9350 of 10000 games, 184 min, 18.6 core-seconds a game, about 13 min to go
+  9900 of 10000 games, 194 min, 18.6 core-seconds a game, about 2 min to go
+  10000 of 10000 games, 197 min, 18.6 core-seconds a game, about 0 min to go
+  eval: 98074 positions; held-out log loss 0.6407 new against 0.6512 before
+  q shield: 83426 decisions, 9129 held back (0 the engine overrode); fit 0.5630 new against 0.5816 before; agreement 96.8% against 100.0%, where the engine overrode - against -; old bot's picks replayed 100.0%
+  q throw: 320872 decisions, 35109 held back (5252 the engine overrode); fit 0.4965 new against 0.5047 before; agreement 80.9% against 85.0%, where the engine overrode 7.2% against 0.0%; old bot's picks replayed 100.0%
+  q swap: 77751 decisions, 8620 held back (1389 the engine overrode); fit 0.5547 new against 0.5679 before; agreement 80.6% against 83.9%, where the engine overrode 9.9% against 0.0%; old bot's picks replayed 100.0%
+  q replace: 17234 decisions, 1922 held back (464 the engine overrode); fit 0.5276 new against 0.5420 before; agreement 73.4% against 75.9%, where the engine overrode 3.0% against 0.0%; old bot's picks replayed 100.0%
+  $ python3 scripts/engine_versus.py --tag engine-loop-versus --baseline "samples=32" --candidates "samples=32,q=runs/engine-loop/round_1/q.npz,eval=runs/engine-loop/round_1/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 750 --workers 16 --seed 3902 --field mixed --pause-file C:\Users\marco\Developer\pokemon_go\runs\engine-loop\PAUSE
+1200 jobs to run on 16 workers
+  85 results, 1 min
+  215 results, 2 min
+  330 results, 3 min
+  450 results, 4 min
+  570 results, 5 min
+  685 results, 6 min
+  800 results, 7 min
+  915 results, 8 min
+  1040 results, 9 min
+  1140 results, 10 min
+  1245 results, 11 min
+  1370 results, 12 min
+  1505 results, 14 min
+  1670 results, 15 min
+  1820 results, 16 min
+  1975 results, 17 min
+  2120 results, 18 min
+  2245 results, 19 min
+  2255 results, 21 min
+  2320 results, 22 min
+  2335 results, 24 min
+  2355 results, 25 min
+  2405 results, 26 min
+  2420 results, 27 min
+  2435 results, 28 min
+  2490 results, 29 min
+  2500 results, 30 min
+  2550 results, 31 min
+  2570 results, 33 min
+  2595 results, 34 min
+  2630 results, 35 min
+  2660 results, 36 min
+  2685 results, 37 min
+  2710 results, 38 min
+  2740 results, 40 min
+  2770 results, 41 min
+  2795 results, 42 min
+  2820 results, 43 min
+  2845 results, 44 min
+  2885 results, 45 min
+  2920 results, 47 min
+  2955 results, 48 min
+  2990 results, 50 min
+  3025 results, 51 min
+  3055 results, 52 min
+  3075 results, 53 min
+  3105 results, 54 min
+  3135 results, 56 min
+  3160 results, 57 min
+  3200 results, 58 min
+  3220 results, 59 min
+  3245 results, 60 min
+  3290 results, 62 min
+  3300 results, 63 min
+  3335 results, 64 min
+  3365 results, 65 min
+  3385 results, 66 min
+  3425 results, 67 min
+  3450 results, 69 min
+  3480 results, 70 min
+  3505 results, 71 min
+  3525 results, 72 min
+  3560 results, 73 min
+  3575 results, 74 min
+  3600 results, 75 min
+  3630 results, 76 min
+  3660 results, 77 min
+  3705 results, 78 min
+  3755 results, 79 min
+  3850 results, 80 min
+  3950 results, 82 min
+  4060 results, 83 min
+  4175 results, 84 min
+  4270 results, 85 min
+  4375 results, 86 min
+  4480 results, 87 min
+  4590 results, 88 min
+  4705 results, 89 min
+  4815 results, 90 min
+  4920 results, 91 min
+  5035 results, 92 min
+  5145 results, 93 min
+  5250 results, 94 min
+  5395 results, 95 min
+  5535 results, 96 min
+  5670 results, 97 min
+  5820 results, 98 min
+  5970 results, 99 min
+
+baseline: samples=32
+  against the crowd: 73.8% ± 2.2
+  against the pvpoke: 84.7% ± 2.6
+
+candidate 1: samples=32,q=runs/engine-loop/round_1/q.npz,eval=runs/engine-loop/round_1/eval.npz
+  head to head against the baseline, 1500 pairings both ways: 48.6% ± 1.5
+  against the crowd: 73.1% ± 2.2, -0.7 ± 2.6 points on the baseline
+  against the pvpoke: 83.1% ± 2.7, -1.6 ± 2.9 points on the baseline
+  search time per searched decision: median 344 ms, 99th percentile 1297, worst 2516 (this machine)
+
+results: runs\engine_versus\engine-loop-versus.json
+round 1: head to head against E_0 48.6% ± 1.5; crowd -0.7 ± 2.6 points; pvpoke -1.6 ± 2.9 points
+round_2: self-play of runs/engine-loop/round_1/q.npz with runs/engine-loop/round_1/eval.npz, 10000 games (0 already saved), seed 390102, 16 workers
+  360 of 10000 games, 10 min, 20.5 core-seconds a game, about 269 min to go
+  820 of 10000 games, 20 min, 21.2 core-seconds a game, about 226 min to go
+  1280 of 10000 games, 30 min, 21.1 core-seconds a game, about 207 min to go
+  1780 of 10000 games, 41 min, 20.9 core-seconds a game, about 189 min to go
+  2250 of 10000 games, 51 min, 20.8 core-seconds a game, about 176 min to go
+  2740 of 10000 games, 61 min, 20.7 core-seconds a game, about 163 min to go
+  3200 of 10000 games, 72 min, 20.8 core-seconds a game, about 152 min to go
+  3630 of 10000 games, 82 min, 20.9 core-seconds a game, about 143 min to go

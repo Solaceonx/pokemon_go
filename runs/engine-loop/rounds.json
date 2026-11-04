@@ -1,0 +1,139 @@
+[
+ {
+  "round": 1,
+  "networks_from": [
+   "runs/general-decide/q.npz",
+   "runs/eval/eval.npz"
+  ],
+  "self_play_seed": 390101,
+  "core_seconds_a_game": 18.55255,
+  "fit": {
+   "games": 10000,
+   "decisions": 554063,
+   "engine_overrode": 71056,
+   "positions": 98074,
+   "eval": {
+    "train": 88426,
+    "held": 9648,
+    "log_loss": [
+     0.6407403354607311,
+     0.6512372077651969
+    ]
+   },
+   "q": {
+    "shield": {
+     "train": 83426,
+     "held": 9129,
+     "overrode_held": 0,
+     "replayed": 1.0,
+     "new": {
+      "fit": 0.5629895449213486,
+      "choice": 0.08612171478244231,
+      "agreement": 0.967685398181619,
+      "agreement_overrode": null
+     },
+     "old": {
+      "fit": 0.5815517045538655,
+      "choice": 0.21434374435123194,
+      "agreement": 1.0,
+      "agreement_overrode": null
+     }
+    },
+    "throw": {
+     "train": 320872,
+     "held": 35109,
+     "overrode_held": 5252,
+     "replayed": 1.0,
+     "new": {
+      "fit": 0.49653659653059856,
+      "choice": 0.5263975490654598,
+      "agreement": 0.8087100173744624,
+      "agreement_overrode": 0.0715917745620716
+     },
+     "old": {
+      "fit": 0.5047423562690838,
+      "choice": 0.7854881511274376,
+      "agreement": 0.8504087271070095,
+      "agreement_overrode": 0.0
+     }
+    },
+    "swap": {
+     "train": 77751,
+     "held": 8620,
+     "overrode_held": 1389,
+     "replayed": 1.0,
+     "new": {
+      "fit": 0.5546666188506814,
+      "choice": 0.48398061478128385,
+      "agreement": 0.8055684454756381,
+      "agreement_overrode": 0.09935205183585313
+     },
+     "old": {
+      "fit": 0.567906951909949,
+      "choice": 0.6492948607427913,
+      "agreement": 0.8388631090487239,
+      "agreement_overrode": 0.0
+     }
+    },
+    "replace": {
+     "train": 17234,
+     "held": 1922,
+     "overrode_held": 464,
+     "replayed": 1.0,
+     "new": {
+      "fit": 0.5275822913869443,
+      "choice": 0.5756902638343453,
+      "agreement": 0.7341311134235172,
+      "agreement_overrode": 0.03017241379310345
+     },
+     "old": {
+      "fit": 0.5419744016961967,
+      "choice": 0.7809996299406182,
+      "agreement": 0.7585848074921956,
+      "agreement_overrode": 0.0
+     }
+    }
+   }
+  },
+  "versus": {
+   "candidate": "samples=32,q=runs/engine-loop/round_1/q.npz,eval=runs/engine-loop/round_1/eval.npz",
+   "baseline": "samples=32",
+   "seed": 3902,
+   "head_to_head": [
+    0.48633333333333334,
+    0.014908695680987967
+   ],
+   "crowd": {
+    "score": [
+     0.7306666666666667,
+     0.022323891308721033
+    ],
+    "change": [
+     -0.007,
+     0.025686358904209002
+    ]
+   },
+   "pvpoke": {
+    "score": [
+     0.8306666666666667,
+     0.026795887782957353
+    ],
+    "change": [
+     -0.016,
+     0.02933179627805287
+    ]
+   },
+   "search_ms": [
+    343.8,
+    1296.9,
+    2515.6
+   ],
+   "search_ms_baseline": [
+    250.0,
+    1125.0,
+    2578.1
+   ]
+  },
+  "minutes": 297.1
+ }
+]
