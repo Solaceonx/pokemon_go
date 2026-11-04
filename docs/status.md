@@ -3855,3 +3855,18 @@ The control repeats task 35 at 8 imagined battles (its confirm at 32: crowd +3.2
 `robust` is the control's (median 31 ms, 99th percentile 141-156 on the PC). Printout `runs/robust_screen.out`; the per-battle file `runs/engine_versus/robust-screen.json` is on Marco's PC.
 Merged 2026-11-03 as a record (the owner's yes); no default changes. Next: screen `robust=0.5` on the exam, where people play
 less like the imagined styles than bots do.
+
+## Teams from the top 300, not only PvPoke's top 50 (2026-11-04, the owner's request; `scripts/wide_teams.py`)
+
+The owner: good teams often use Pokémon ranked 100-300. One run, about 30 minutes on the owner's Mac with 3 workers:
+`python3 scripts/wide_teams.py --pool 300 --shortlist 300 --battles 400 --finalists 20 --finals 2000` (`runs/wide-teams/run.out`,
+`result.json`; the one-on-one table `runs/wide-teams/matchups.json`, 2 MB, is not in git and rebuilds in 26 s). 303 Pokémon, all
+4,559,881 legal teams quick-scored against the mixed field's weights; the best 300 played 400 battles each against the mixed
+field, both sides the trained bot reading the wide one-on-one table; 20 finalists then 2,000 fresh battles per lead.
+**Every finalist has Mimikyu** (best: shadow Hydreigon / Mimikyu / Stunfisk 69.1% ± 2.0). Not to be trusted yet: Mimikyu is a
+form-changer and no network was trained with form-changers, so the bots on both sides probably spend big moves into its Disguise.
+**Without form-changers** (`scripts/wide_teams_noforms.py`, the 15 best shortlisted, 1,000 fresh battles per lead, seed 2,
+`runs/wide-teams/noforms.out`): shadow Charjabug (#48) / Carbink (#47) / shadow Marowak (#82) **58.9% ± 3.0**; the owner's
+Quagsire / shadow Sableye / shadow Corviknight 51.1% ± 3.1; Jellicent / Clodsire / Mandibuzz 47.2%, with Araquanid 46.0%; the rest
+40-52%. One round against a bot-piloted field, so a lead, not a verdict. Next: how the bots play into Mimikyu's Disguise; a
+counter check of the Charjabug team (`self_consistent_teams.py`); the owner's and KM's read.
