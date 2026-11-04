@@ -136,3 +136,52 @@ round_2: self-play of runs/engine-loop/round_1/q.npz with runs/engine-loop/round
   2740 of 10000 games, 61 min, 20.7 core-seconds a game, about 163 min to go
   3200 of 10000 games, 72 min, 20.8 core-seconds a game, about 152 min to go
   3630 of 10000 games, 82 min, 20.9 core-seconds a game, about 143 min to go
+round_2: self-play of runs/engine-loop/round_1/q.npz with runs/engine-loop/round_1/eval.npz, 10000 games (3910 already saved), seed 390102, 16 workers
+  5030 of 10000 games, 10 min, 7.8 core-seconds a game, about 44 min to go
+  6240 of 10000 games, 20 min, 7.9 core-seconds a game, about 33 min to go
+round_2: self-play of runs/engine-loop/round_1/q.npz with runs/engine-loop/round_1/eval.npz, 10000 games (6300 already saved), seed 390102, 32 workers
+  7970 of 10000 games, 10 min, 9.1 core-seconds a game, about 12 min to go
+  9830 of 10000 games, 20 min, 9.1 core-seconds a game, about 1 min to go
+  10000 of 10000 games, 21 min, 9.1 core-seconds a game, about 0 min to go
+  eval: 97020 positions; held-out log loss 0.6378 new against 0.6344 before
+  q shield: 82864 decisions, 9317 held back (0 the engine overrode); fit 0.5464 new against 0.5424 before; agreement 98.3% against 100.0%, where the engine overrode - against -; old bot's picks replayed 100.0%
+  q throw: 332584 decisions, 37343 held back (5812 the engine overrode); fit 0.4882 new against 0.4883 before; agreement 84.0% against 84.4%, where the engine overrode 0.8% against 0.0%; old bot's picks replayed 100.0%
+  q swap: 79643 decisions, 8875 held back (1409 the engine overrode); fit 0.5445 new against 0.5471 before; agreement 81.8% against 84.1%, where the engine overrode 2.7% against 0.0%; old bot's picks replayed 100.0%
+  q replace: 17319 decisions, 1915 held back (481 the engine overrode); fit 0.5209 new against 0.5254 before; agreement 74.7% against 74.9%, where the engine overrode 0.0% against 0.0%; old bot's picks replayed 100.0%
+  $ python3 scripts/engine_versus.py --tag engine-loop-versus --baseline "samples=32" --candidates "samples=32,q=runs/engine-loop/round_2/q.npz,eval=runs/engine-loop/round_2/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 750 --workers 32 --seed 3902 --field mixed --pause-file C:\Users\marco\Developer\pokemon_go\runs\engine-loop\PAUSE
+750 jobs to run on 32 workers
+  6005 results, 1 min
+  6160 results, 2 min
+  6270 results, 3 min
+  6340 results, 4 min
+  6460 results, 5 min
+  6575 results, 6 min
+  6665 results, 8 min
+  6780 results, 9 min
+  6875 results, 10 min
+  6980 results, 11 min
+  7090 results, 12 min
+  7185 results, 13 min
+  7295 results, 14 min
+  7445 results, 15 min
+  7755 results, 16 min
+  8110 results, 17 min
+  8435 results, 18 min
+  8780 results, 19 min
+  9130 results, 20 min
+  9485 results, 21 min
+
+baseline: samples=32
+  against the crowd: 73.8% ± 2.2
+  against the pvpoke: 84.7% ± 2.6
+
+candidate 1: samples=32,q=runs/engine-loop/round_2/q.npz,eval=runs/engine-loop/round_2/eval.npz
+  head to head against the baseline, 1500 pairings both ways: 46.9% ± 1.5
+  against the crowd: 73.0% ± 2.2, -0.8 ± 2.5 points on the baseline
+  against the pvpoke: 82.7% ± 2.7, -1.9 ± 3.0 points on the baseline
+  search time per searched decision: median 141 ms, 99th percentile 719, worst 1438 (this machine)
+
+results: runs\engine_versus\engine-loop-versus.json
+round 2: head to head against E_0 46.9% ± 1.5; crowd -0.8 ± 2.5 points; pvpoke -1.9 ± 3.0 points
+
+rounds: runs/engine-loop/rounds.json; next: --confirm
