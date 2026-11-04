@@ -3720,6 +3720,12 @@ search rows, so every website record before this kept only the searches after th
 the same game is replayed on the Mac): the engine searched as usual, the record lost them (`play_api.step` keeps them now; test in
 `tests/test_game_evaluators.py`). The browser's search times in older records are therefore a partial sample. Built with `--unchecked`:
 neither change touches a decision or its timing.
+**2026-11-04, why the engine kept Tinkaton in against the owner's Quagsire** (website game, owner's question): the swap question is
+asked only when a matchup starts, and the website network has no mid-matchup swap head, so later swaps are the rulebook's. At the
+lead it rated stay 54%, Florges 37%, Rillaboom 38%. Both real teams known, trained bot on both sides, 300 games each: Florges 77% ± 5,
+stay 27% ± 5, Rillaboom 21% ± 5. The engine with the owner's real back line: horizon 20 still says stay (56%), play-outs to the end say
+Florges (80%); with guessed back lines it says stay either way. Asked afresh at 3:40 (Tinkaton 50 HP): Florges 60%, Rillaboom 62%,
+stay 46%. Task 43 lets the engine search mid-matchup swaps.
 
 ## Training the engine on its own games (task 39, 2026-11-02, Marco): built and timed
 
