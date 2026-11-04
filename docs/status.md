@@ -3713,6 +3713,13 @@ Not adopted: it goes into exam 2 as a version, for fresh positions.
 Jellicent / Clodsire with Araquanid or Mandibuzz, the top three of the list), and the bot's team now defaults to a top team and the speed
 to game speed. Release check passed (commit 299a514, which includes the robust-choice merge): median 67 ms, 99th percentile 253 ms, 0% cut
 short, crowd 69.0% ± 6.4, the same as before.
+**2026-11-04, two website bugs the owner hit:** (1) the end-of-battle box was fixed to the screen without scrolling, so once the decision
+review and "how you could have won" made it taller than the screen, Play again / Change teams were out of reach (`scripts/play/index.html`:
+the overlay scrolls). (2) A shield or replace prompt rewinds the step to a snapshot of the bot, and `RealTime.clone()` starts with no
+search rows, so every website record before this kept only the searches after the person's last prompt (1–8 per game, against ~17 when
+the same game is replayed on the Mac): the engine searched as usual, the record lost them (`play_api.step` keeps them now; test in
+`tests/test_game_evaluators.py`). The browser's search times in older records are therefore a partial sample. Built with `--unchecked`:
+neither change touches a decision or its timing.
 
 ## Training the engine on its own games (task 39, 2026-11-02, Marco): built and timed
 

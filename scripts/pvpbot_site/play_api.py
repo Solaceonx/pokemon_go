@@ -115,15 +115,19 @@ def step(job: str) -> str:
     j = json.loads(job)
     s = _s
     battle, person = s["battle"], s["person"]
-    snap = (battle.clone(None, None), s["bot"].clone(), list(battle.log), list(battle.hits), len(person.choices))
+    # The engine's search rows go with the snapshot: a clone starts with none, which lost every row before a prompt.
+    snap = (battle.clone(None, None), s["bot"].clone(), list(battle.log), list(battle.hits), len(person.choices),
+            list(getattr(s["bot"], "rows", [])))
     person.action, person.answers, person.took = j["action"], list(j["answers"]), False
     seen = len(battle.log)
     try:
         battle.step()
     except NeedInput as need:
-        twin, bot, log, hits, kept = snap
+        twin, bot, log, hits, kept, rows = snap
         restored = twin.clone(person, bot)
         restored.log, restored.hits = log, hits
+        if hasattr(bot, "rows"):
+            bot.rows = rows
         del person.choices[kept:]
         s["battle"], s["bot"] = restored, bot
         return json.dumps({"need": need.kind, "options": need.options, "state": state()})

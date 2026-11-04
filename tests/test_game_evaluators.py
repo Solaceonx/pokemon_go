@@ -66,6 +66,26 @@ class GameEvaluators(unittest.TestCase):
             self.assertFalse(s["bot"].evaluator._agent._outlooks)
             self.assertFalse(s["view_ev"]._agent._outlooks)
 
+    def test_site_keeps_the_engines_searches_across_prompts(self):
+        """A shield or replace prompt rewinds the step; the engine's earlier search rows must survive it."""
+        job = json.dumps(dict(mine=self.mine, theirs=self.theirs, owned=False, bot="engine", tick_ms=500))
+        with patch.dict(play_api._s, dict(gd=self.gd, pool=self.pool, net=None, ev=Evaluator(), owned={}), clear=True), \
+                patch.object(play_api.random, "getrandbits", return_value=29):
+            play_api.new(job)
+            s, prompts, most = play_api._s, 0, 0
+            while s["battle"].winner is None:
+                answers = []
+                while True:
+                    out = json.loads(play_api.step(json.dumps({"action": None, "answers": answers})))
+                    if "need" not in out:
+                        break
+                    prompts += 1
+                    self.assertGreaterEqual(len(s["bot"].rows), most)
+                    answers.append(False if out["need"] == "shield" else out["options"][0])
+                most = len(s["bot"].rows)
+        self.assertGreater(prompts, 0)
+        self.assertGreater(most, 0)
+
 
 if __name__ == "__main__":
     unittest.main()
