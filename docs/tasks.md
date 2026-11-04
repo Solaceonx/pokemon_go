@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco; done 2026-10-30: **varied imagined opponents confirmed at 32** (51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke on a fresh seed); judging changes do not help and keeping the switch is worse. Not adopted: run before the nesting fix, and on the exam `matching` plays the two players' shared answer least often (`status.md`) | Done |
 | **27** | **Give the engine the time it has** — Marco; done 2026-10-18: **32 imagined battles adopted** (53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke on a fresh seed); a longer look-ahead does not help. Also found and fixed the shared evaluation cache in the measuring scripts | Done |
@@ -56,7 +57,7 @@ and push that before starting.
 | 7 | Opponent stats from CP, move priority and damage | Python |
 | 16, 17, 22 | Footage: acceptance work on public VODs, the reserved official sample, whole-VOD splitting | Codex; video access |
 | 15 | Train the bot on the tracker's uncertain picture | **On hold** until real-game testing |
-| 13 | Live loop on the phone | Owner only |
+| 13 | Live loop on the phone (iPhone Mirroring on the Mac) | Superseded by task 40 |
 
 **Done or stopped** (details in `status.md`): 2–4 and 12 (footage to game states, by `scripts/recording/`),
 6 (PvPoke's AI, `pogo/pvpoke_ai.py`), 9 (exact endgames, `pogo/endgame.py`, no significant gain),
@@ -64,6 +65,63 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 40. The live loop on an Android phone from the PC — for the Claude agent on the owner's PC (the owner, 2026-11-04)
+
+**Why.** The bot's strategy has stopped improving in simulation (tasks 31, 35, 39), and the owner finds the website
+engine hard to beat; what is missing now is real games. The iPhone route (task 13: iPhone Mirroring on the Mac,
+`helper/phonectl.swift`, `pogo/phone.py`) passes taps, but synthetic drags are slow (about a second a stroke) and a press
+that lingers reads as a long-press; the charged-move minigame needs quick, curved drags (a charged move does a quarter
+to all of its damage by how well it is swiped, and every number the bot learned assumes it is swiped well). On Android
+over USB, scrcpy mirrors the screen at about 35-70 ms (its own figure) and injects touches directly, drags included.
+The phone plays on the owner's **second account**; the owner accepts the ban risk there (automating the game breaks
+Niantic's terms). Never the owner's main account.
+
+**Rules for this task, on top of `AGENTS.md`.**
+- Installs are downloads: ask the owner first, naming each one and its source, official sources only (Android
+  platform-tools from developer.android.com, scrcpy from github.com/Genymobile/scrcpy releases, Python packages from
+  PyPI). The reader needs Python 3.12 (rapidocr does not install on 3.13); `scripts/recording/README.md` lists its
+  packages.
+- **No input to the phone until the owner says so for that step.** Test gestures only on a harmless screen: a blank
+  drawing app, or Android's developer option "Pointer location", which draws every touch. Never on the home screen,
+  in lists, mail or messages (on the iPhone a test drag rearranged the owner's apps). One gesture at a time; stop
+  at the first surprise. In the game, the keep-out zones in `pogo/controls.py` stay (the flee button forfeits).
+- Team Leader (training) battles before GO Battle League; GO Battle League only with the owner's yes.
+- Recordings and frames stay out of git (no large files); results go in small text files and `docs/status.md`.
+
+**The team.** Jellicent (Hex / Surf / Shadow Ball) and Clodsire (Poison Sting / Earthquake / Stone Edge), with Araquanid
+or Mandibuzz third: the owner's choice once caught, with the real IVs. All are in the bot's matchup table
+(`data/matchups.json`, 50 species; a Pokémon outside it counts every matchup as even, so do not swap in one that is
+not there without measuring). Put the alt team in its own file beside `data/owner_team.json`, never over it.
+
+**Steps.** Each one ends with its numbers in `docs/status.md`, and the next starts only with the owner's yes.
+
+1. **Connect.** `adb devices` sees the phone; scrcpy mirrors it. Write `pogo/android.py` with the same interface as
+   `pogo.phone.Phone` (`doctor`, `shot`, `tap`, `drag`, `path`, `record`, with its dry run and action cap), frames
+   taken from scrcpy's video stream (`adb exec-out screencap` takes hundreds of ms a frame, too slow) and touches through
+   scrcpy's control channel (`adb shell input` only as a fallback: it cannot draw fast curves). Tests with a fake device,
+   no phone needed. Measure the delay from a change on the screen to the frame arriving, at the 50th and 99th percentiles.
+2. **Calibrate.** The reader's regions and the touch points in `pogo/controls.py` were measured on iPhone recordings
+   (1206 x 2622); the Android screen has another shape. From 2-3 of the owner's screen recordings of battles on the
+   Android phone, re-measure them (`scripts/recording/contact_sheet.py`, `overlay_controls.py`), then run
+   `python3 scripts/recording/run.py` on the recordings and compare its verdicts with the iPhone ones (`status.md`,
+   real recordings).
+3. **Watch only (no input).** The owner plays; live frames go through the reader, the tracker and the engine
+   (`pogo.realtime.WEBSITE`), and every decision's choice is logged with its time. Record the screen at the same time
+   so the live states can be checked against `run.py` on the recording. Measure screen-to-decision delay against the
+   targets in `status.md` (99% within 500 ms, aim 215 ms in all). Done when five games are logged, with the delay
+   figures and how often the live state (shields, Pokémon left, who is out, energy) matches the recording's.
+4. **Input check (the owner's yes).** On "Pointer location": taps, then `path` drags at minigame speed; measure the delay
+   from sending to the touch showing.
+5. **The minigame (the owner's yes).** Record the owner's own swipes for each charged-move type on the team (`record`
+   listens and never acts): Water (Surf), Ghost (Shadow Ball), Ground (Earthquake), Rock (Stone Edge), plus the third's.
+   Ghost and Ground are not in the swipe library (`data/minigame/`) at all. Replay them in Team Leader battles and
+   read the rating the game shows (Excellent, Great, Nice).
+6. **Whole battles against Team Leaders (the owner's yes),** the bot choosing and sending every touch; then the owner
+   decides on GO Battle League.
+
+**Done when** steps 1-3 are done and written up, with `pogo/android.py`, its tests and the calibration in a pull request
+(tests and `scripts/check_pvpoke.py` pass). Steps 4-6 follow as the owner allows.
 
 ## 39. Train the engine on its own games — for Marco (big job, the owner chose it 2026-11-02)
 
