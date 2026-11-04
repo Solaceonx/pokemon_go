@@ -37,6 +37,8 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — for Marco (the owner, 2026-11-04) | Marco's machine, a few hours |
+| **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco; done 2026-10-30: **varied imagined opponents confirmed at 32** (51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke on a fresh seed); judging changes do not help and keeping the switch is worse. Not adopted: run before the nesting fix, and on the exam `matching` plays the two players' shared answer least often (`status.md`) | Done |
@@ -65,6 +67,57 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 41. Shield calls the way strong players make them — for Marco (the owner, 2026-11-04; Marco's idea E)
+
+**Why.** Two strong players answered the exam (`docs/benchmarking.md`). Its clearest split is shields: on the owner's 7
+shield calls the owner and the rulebook shield 6, the trained bot and the engine 1; where both players agree, 3 of the
+engine's misses are hits both shield and it does not. The engine's shield calls are the trained bot's
+(`Learner.shield` in `pogo/learner.py`: the rulebook's call, `Planner.shield`, overruled when the q's shield head rates the
+other answer higher by the margin, 0.02; one margin serves every head). Task 25 found that letting the engine search
+shields gains nothing against bots. So the question is narrower: how far should the learned head overrule the rulebook?
+Its shield habit was learned against bots, which do not bait the way people do.
+
+**Build.** A separate margin for the shield head (`shield_margin`, default the current margin, so nothing changes), and
+`shield_toward=1`, under which the head may turn a "no" into a shield but never a shield into a "no". Both must reach the
+trained bot inside the engine (an `Engine` keyword passed on, and keys in `scripts/engine_versus.py`), so the owner's Mac
+can score the same settings on the exam with `scripts/exam_variants.py` (the answers are not in the repo). Tests: the
+defaults play the same games as before.
+
+**Candidates** (at the website's settings, 32 imagined battles): `shield_margin` 0.05, 0.1, 1 (the rulebook decides), and
+`shield_toward=1`; baseline the website engine.
+
+**Judges, all three, in this order.**
+1. **Exact endgames** (`python3 scripts/bench.py score ... --rulers endgame`, the frozen `runs/bench/endgame-1.jsonl.gz`):
+   points given away against exact play, on its 48 shield calls (22 from real games) reported on their own. No model
+   of the opponent, so it is the independent judge, but only for late positions.
+2. **Bot fields:** `engine_versus.py --field mixed`, 1,500 pairings both ways, 1,500 crowd, 750 PvPoke, against the website
+   engine. A candidate must not lose beyond the margin on any of them.
+3. **The exam:** the owner's Mac scores the candidates once they are pushed. Print how often each candidate shields per
+   shield prompt, for comparison with the players.
+
+**Done when** the table of all candidates on judges 1 and 2 is in `status.md` with the commands, the best on judges 1-2
+is confirmed on a fresh seed (2,000 / 2,000 / 1,000), and the code is in a pull request. The owner decides after the exam
+score. Expect a few hours.
+
+## 42. Opponents fitted to people — for Marco after task 41 (Marco's idea A)
+
+**Why.** The engine plans against a copy of itself, so its gain falls as opponents get less like it (+17 against the
+trained bot, −2 against PvPoke's AI, and the owner is about as far from it as PvPoke's AI; `docs/benchmarking.md`). Task 35's
+mix of hand-varied styles helps against bots but not on the exam. Fitting the styles to people is the direct fix.
+
+**Data, and its limit.** About 55 website games of human decisions, nearly all the owner's, plus the two exams. A small
+model of the owner (`scripts/people_model.py`) picks the owner's move 66% of the time against the trained bot's 62% and
+stops improving after about 10 games, so expect a small change at first. The games are not in git: the owner's Mac
+exports every human decision as the trained bot sees it (inputs, options, the choice, no names) to a small file under
+`runs/people/` when Marco starts. Task 40's live games will add real opponents' decisions; refit then.
+
+**Fit.** The rulebook's settings (task 30's genes) chosen to play what the people played, on four fifths of the games, by
+how often the rulebook's pick is theirs; scored on the held-back fifth against the rulebook, the trained bot and the
+people model. **Use** it as one imagined style in the engine's mix, and alone.
+
+**Judge** on the exam (the owner's Mac) and real games, and on the bot fields for no loss. **Never by battles against the
+fitted opponent itself:** that is how `matching` looked good in simulation and ranked last with both players.
 
 ## 40. The live loop on an Android phone from the PC — for the Claude agent on the owner's PC (the owner, 2026-11-04)
 
