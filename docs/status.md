@@ -3709,6 +3709,10 @@ answers do not support (site commit a5d78bb; built with `--unchecked`, a caption
 changes 6 of 35 picks and lifts agreement where both players agree from 48% to 60% (12 to 15 of 25); 0.02 and 0.05 change almost
 nothing, `stay_after_replace` nothing. Against bots keep-the-switch settings have lost (task 35; 0.01–0.02 on the fixed code).
 Not adopted: it goes into exam 2 as a version, for fresh positions.
+**2026-11-04, the owner's request:** the website offers ready-made teams (the owner's, Quagsire / shadow Sableye / shadow Corviknight,
+Jellicent / Clodsire with Araquanid or Mandibuzz, the top three of the list), and the bot's team now defaults to a top team and the speed
+to game speed. Release check passed (commit 299a514, which includes the robust-choice merge): median 67 ms, 99th percentile 253 ms, 0% cut
+short, crowd 69.0% ± 6.4, the same as before.
 
 ## Training the engine on its own games (task 39, 2026-11-02, Marco): built and timed
 
