@@ -3738,3 +3738,7 @@ game; the engine overrode the trained bot at 12.6% of decisions. That is under 4
 total for three rounds, their measuring and the confirmation is about 224 core-hours (self-play 133, measuring 55, E_0's own
 battles 5, confirmation 31), below the brief's 300-350. The fits printed in that run (45 games to fit on) only show that the
 pipeline works.
+
+**Round 1, from Marco's report (2026-11-03; its files are not pushed yet):** 10,000 games; against E_0 48.6% ± 1.5 head to head,
+crowd −0.7 ± 2.6, PvPoke −1.6 ± 2.9: no gain. Round 2 is paused at about game 3,900. The scripts were merged into `main` while
+paused (the owner's yes); Marco's run uses its own checkout.
