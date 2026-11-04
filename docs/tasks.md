@@ -39,6 +39,7 @@ and push that before starting.
 |---|---|---|
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; on the exam next (owner's Mac) | Owner's Mac |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
+| **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — for Marco after task 41, before 42 (the owner, 2026-11-04) | Marco's machine, a few hours |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco; done 2026-10-30: **varied imagined opponents confirmed at 32** (51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke on a fresh seed); judging changes do not help and keeping the switch is worse. Not adopted: run before the nesting fix, and on the exam `matching` plays the two players' shared answer least often (`status.md`) | Done |
@@ -101,6 +102,48 @@ defaults play the same games as before.
 **Done when** the table of all candidates on judges 1 and 2 is in `status.md` with the commands, the best on judges 1-2
 is confirmed on a fresh seed (2,000 / 2,000 / 1,000), and the code is in a pull request. The owner decides after the exam
 score. Expect a few hours.
+
+## 43. Let the engine search swaps in the middle of a matchup — for Marco after task 41, before 42 (the owner, 2026-11-04)
+
+**Why.** In a website game (2026-11-04) the engine led Tinkaton into the owner's Quagsire (Mud Shot / Mud Bomb / Stone
+Edge), took a Mud Bomb, and stayed in at 50 HP with 90 energy, throwing Bulldoze; the owner asked why it did not swap to
+Florges. The engine asks the swap question once, when a matchup starts (`Planner._pick_switch` returns nothing once
+`_judged` holds the matchup; `Learner._swap_choice` → the "swap" head). At 4:00 it rated stay 54%, Florges 37%,
+Rillaboom 38% (96 imagined battles), and that was the last time it asked. Later swaps go through
+`Learner._pick_switch`, which offers the "mid_swap" head only when the network has one; the website's
+`runs/general-decide/q.npz` does not (task 20 trained one, not adopted), so every mid-matchup swap is the rulebook's
+sacrifice/rescue rule and the engine's `mid_swap` head is never reached. A fresh engine asked at 3:40 (Tinkaton 50 HP)
+rates Florges 60%, Rillaboom 62%, stay 46%. With both real teams known and the trained bot playing both sides, a swap
+to Florges at 4:00 wins 77% ± 5 and staying 27% ± 5 (300 games each). The lead call itself is mostly unknowable:
+against guessed back lines the engine prefers staying even with play-outs to the end (60% against 49%), and only with
+the owner's real back line and play-outs to the end does it flip (Florges 80%). The re-ask later in the matchup is
+the part to fix.
+
+**Build.** An `Engine` keyword, `mid_swap_search` (default off, so nothing changes), under which the trained bot's
+mid-matchup gate opens without a learned head: `Learner._decide("mid_swap", ...)` already falls back to the rulebook's
+choice when the head is missing, so the engine's search then gets the decision with the rulebook's pick as default.
+Gates to try (when the swap question is asked again in an already judged matchup):
+- **task 20's gate:** the switch is ready, our Pokémon can act, and they are at most two fast moves from their cheapest
+  charged move;
+- **after a charged move lands on us:** once per charged move;
+- **both.**
+
+Reach it from `scripts/engine_versus.py` keys and `scripts/exam_variants.py`. Tests: off plays the same games as before.
+
+**Candidates** (website settings, 32 imagined battles): each gate, and each gate with `switch_edge` 0.05 (task 35 found
+keep-the-switch settings lose against bots, while the exam rewards switching less often, so the bar for a mid-matchup
+switch is part of the question). Baseline: the website engine.
+
+**Judges.**
+1. **Bot fields:** `engine_versus.py --field mixed`, 1,500 pairings both ways, 1,500 crowd, 750 PvPoke, against the
+   website engine. A candidate must not lose beyond the margin on any of them.
+2. **Time:** more decisions are searched, so run `scripts/release_check.py`'s timing on the best (p99 under 800 ms, cut
+   short under 20%).
+3. **The exam:** the owner's Mac scores the candidates once pushed. Report how often each switches mid-matchup per
+   battle, beside the baseline.
+
+**Done when** the table of candidates on judges 1 and 2 is in `status.md` with the commands, the best is confirmed on a
+fresh seed (2,000 / 2,000 / 1,000), and the code is in a pull request. The owner decides after the exam score.
 
 ## 42. Opponents fitted to people — for Marco after task 41 (Marco's idea A)
 

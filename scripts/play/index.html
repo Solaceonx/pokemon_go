@@ -84,9 +84,11 @@ body { display: flex; justify-content: center; }
 .big .icon .badge { width: 50px; height: 50px; font-size: 9px; }
 .log { font-size: 12px; color: var(--dim); min-height: 64px; }
 .log div.foe { color: #f3b0ae; }
-.overlay { position: fixed; inset: 0; background: rgba(5, 9, 14, .72); display: none; align-items: center; justify-content: center; padding: 16px; }
+.overlay { position: fixed; inset: 0; background: rgba(5, 9, 14, .72); display: none; align-items: center; justify-content: center; padding: 16px;
+  overflow-y: auto; }  /* the end-of-battle review can be taller than the screen */
 .overlay.open { display: flex; }
-.dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; width: 100%; max-width: 380px; text-align: center; }
+.dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; width: 100%; max-width: 380px; text-align: center;
+  margin: auto; }  /* centred when it fits, scrolls from its top when it does not */
 .dialog h2 { margin: 0 0 6px; font-size: 20px; }
 .dialog p { margin: 0 0 14px; color: var(--dim); }
 .row { display: flex; gap: 10px; }
