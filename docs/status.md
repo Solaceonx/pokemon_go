@@ -3645,8 +3645,8 @@ not measured: 32 imagined battles on the fixed build, the browser's speed, and r
 
 The website got the rollout fix on 2026-11-01 (site commit b6fddc5; `matching` not switched on).
 
-When task 35's branch is merged, its "worst times include stalls of the machine" must be corrected: the clock is CPU
-time and the cause was the nesting.
+Task 35's section (merged 2026-11-03, below) had put its worst search times down to stalls of the machine; it is corrected
+there: the clock is CPU time and the cause was the nesting.
 
 ## Benchmarks evaluated (2026-11-01, the owner: "much better benchmarking", and how to evaluate a benchmark)
 
@@ -3751,3 +3751,90 @@ against 0.505, swap 0.555 against 0.568, shield 0.563 against 0.582, replace 0.5
 less often (throw 80.9% against 85.0%, swap 80.6% against 83.9%, replace 73.4% against 75.9%), and where the engine overrode
 the trained bot (throws, swaps and replacements; no shield calls) it plays the engine's pick only 3–10% of the time. The engine overrode at 12.8% of the round's decisions
 (71,056 of 554,063). Measured searches were slower with the round's networks: median 344 ms against 250 ms for E_0 in the same run.
+
+**Round 2 (Marco, 2026-11-03): worse head to head; by the owner's rule, no round 3 and no confirmation. Task 39 ends here.**
+10,000 games from round 1's networks (seed 390102), in three stretches: games 0-3,909 on the old code (20.9 core-seconds a
+game, 16 workers), 3,910-6,299 with the play-out caches from `main` (7.9, 16 workers), 6,300-9,999 at 32 workers on the 16-core
+PC (9.1; two threads a core inflate CPU time a game). The caches leave the games as they were; the pauses and the worker count
+change nothing either. Self-play took 37 core-hours (round 1: 52). On the held-back tenth the new networks are no better than
+round 1's: eval log loss 0.638 against 0.634; q's fit to who won throw 0.4882 against 0.4883, swap 0.545 against 0.547, shield
+0.546 against 0.542, replace 0.521 against 0.525; the engine's pick played throw 84.0% against 84.4%, swap 81.8% against 84.1%,
+shield 98.3% against 100%, replace 74.7% against 74.9%, and where the engine overrode the trained bot (13.5% of the round's
+570,000 decisions) 0-3%. Against E_0 on the same battles as round 1 (seed 3902): **head to head 46.9% ± 1.5**, below 50%
+beyond the margin; crowd 73.0% against 73.8%, −0.8 ± 2.5; PvPoke's AI 82.7% against 84.7%, −1.9 ± 3.0. Searches with the
+caches: median 141 ms, 99th percentile 719, worst 1,438 (32 workers; E_0's 250 ms is from round 1 on the old code, so the two
+are not comparable). The owner's rule (2026-11-03) was a round 3 only if round 2 beat E_0 by more than its margin; it lost. So
+in two rounds the trained bot did not take up what the engine finds by search: with this loss and 10,000 games a round it
+learns to predict who won about as well and copies almost none of the overrides, and the engine built on it plays no better
+(round 1) and then worse (round 2). Files: `runs/engine-loop/round_2/q.npz`, `eval.npz`, `fit.json`, `rounds.json` (both
+rounds; round 2's `minutes` covers only the last stretch) and the log `runs/engine-loop.out`. Not scored on the exam here: the
+players' answers are not in the repo.
+
+## Fixing the engine's look-ahead (task 35, 2026-10-29/30): varied imagined opponents help; keeping the switch does not
+
+Defaults and the website are unchanged; the owner decides on adoption after checking the search times in the browser.
+Merged 2026-11-03 as a record (the owner's yes). Every run here predates the fix of the same-cost rule's nesting (2026-10-31,
+above), so the search times below are the nesting's, and the scores are of the nested build.
+
+**Grid, mixed field** (`engine_versus.py --tag look-grid --field mixed --seed 3551 --pairings 1000 --crowd 1000 --pvpoke 500
+--baseline "samples=8"` with the eight candidates from the task 35 run sheet, `runs/look_grid.out`; started on 6 workers,
+interrupted by hand and resumed by tag on 2). Baseline: 8 imagined battles, 72.0% ± 2.8 against
+the crowd and 80.9% ± 3.4 against PvPoke's AI. Differences are paired, in points:
+
+| Setting (all with samples=8) | Head to head | Crowd | PvPoke | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| judge=turn, horizon=40 | 50.2% ± 1.8 | +0.9 ± 2.9 | +4.2 ± 3.5 | 36 / 630 / 18,041 |
+| judge=turn, horizon=80 | 49.4% ± 1.8 | +0.3 ± 2.8 | +1.3 ± 3.4 | 56 / 1,012 / 18,362 |
+| judge=end | 52.2% ± 1.9 | −2.0 ± 3.5 | −5.1 ± 4.7 | 79 / 1,631 / 18,614 |
+| **opponents=mix, matching=1** | **51.0% ± 1.8** | **+4.8 ± 2.9** | **+11.2 ± 3.6** | 42 / 708 / 23,227 |
+| opponents=mix, matching=1, judge=end | 51.7% ± 1.9 | +1.7 ± 3.3 | +7.8 ± 4.0 | 65 / 1,374 / 23,366 |
+| switch_edge=0.05, stay_after_replace=1 | 37.9% ± 2.0 | −10.8 ± 3.3 | −3.5 ± 3.6 | 47 / 679 / 18,342 |
+| switch_edge=0.1, stay_after_replace=1 | 36.9% ± 2.0 | −11.7 ± 3.4 | −4.9 ± 3.8 | 61 / 1,018 / 35,553 |
+| all of mix, judge=end, switch_edge=0.05, stay_after_replace=1 | 41.1% ± 2.0 | −6.5 ± 3.6 | +4.6 ± 4.2 | 81 / 1,793 / 35,558 |
+
+Varied imagined opponents are the clear best by the run sheet's rule (largest crowd and PvPoke gain, head to head not
+below 50%); no other candidate is close, so only it was confirmed. Judging every look at the same turn changes little;
+playing it to the end costs time and does not help. Keeping the switch (`switch_edge`, `stay_after_replace`) loses
+heavily head to head and against the crowd: in simulation, the swaps the search finds are worth making.
+
+**Confirmed at the live 32 imagined battles on the fresh seed 3552** (`engine_versus.py --tag look-confirm --field mixed
+--seed 3552 --workers 18 --pairings 2000 --crowd 2000 --pvpoke 1000 --baseline "samples=32" --candidates
+"samples=32,opponents=mix,matching=1"`, `runs/look_confirm.out`): **head to head 51.7% ± 1.2; against the crowd 76.3%
+against 73.1%, +3.2 ± 1.9; against PvPoke's AI 92.8% against 83.9%, +8.9 ± 2.1.** Better against both fields beyond the
+margin and better head to head.
+
+**Search time is not settled.** Confirm run, per searched decision: median 271 ms, 99th percentile 4,157, worst 269,149
+(18 workers on 6 performance and 12 efficiency cores). Task 27's plain 32 on 7 workers was 240 / 885 / 2,132. The medians
+are close, but the tails are not comparable: every grid candidate, including ones that only change the judging, has a worst
+of 18–36 s. (Corrected 2026-11-03: these were first put down to stalls of the machine, but the clock is CPU time; the cause
+was the same-cost rule nesting look-aheads, fixed 2026-10-31.) The live budget is 300–2,300 ms a decision, so
+`samples=32,opponents=mix,matching=1` needs a clean timing (one worker, `realtime_trial.py --timing`) and the browser check
+before it can be adopted. Since then the exam (`docs/benchmarking.md`): where the two players agree, `matching` plays their
+answer least often of the four versions (46%), so it stays off.
+
+## Robust choice across the opponent styles (2026-11-03, Marco): no gain at 8 imagined battles; playing for the worst style loses
+
+A best response to one imagined opponent is only right against that opponent (`docs/benchmarking.md`: the engine's gain falls
+from +17 against the trained bot to -2 against PvPoke's AI), and a probe of 200 `matching` searches found the styles disagreeing
+on the best option 36% of the time. `Engine(robust=p)` (branch `robust-choice`, needs `opponents="mix"`) sends the imagined
+opponents round the styles in turn so each style judges every option with looks of its own, then scores an option at
+(1 - p) x the styles' weighted mean + p x its worst style; `engine_versus.py` reads `robust=`. Screen on the PC, 16 workers,
+27 minutes: `--field mixed --seed 4601`, samples=8, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke, 250 reader pairs,
+baseline the plain engine at samples=8 (crowd 71.9% ± 2.8, PvPoke 84.6% ± 3.2, reader 51.3% ± 3.8).
+
+| candidate (all samples=8) | head to head | crowd | PvPoke's AI | reader |
+|---|---|---|---|---|
+| `opponents=mix,matching=1` (control) | 50.3% ± 1.7 | +3.7 ± 3.0 | +9.0 ± 3.2 | +2.1 ± 4.6 |
+| control + `robust=0.5` | 50.8% ± 1.8 | +3.9 ± 2.9 | +7.1 ± 3.2 | +3.1 ± 4.9 |
+| control + `robust=1` | 47.2% ± 1.8 | +1.8 ± 3.1 | +2.0 ± 3.4 | +0.7 ± 4.8 |
+
+Playing for the worst style loses: it is beaten by the plain engine head to head and gives up most of `matching`'s gain against
+PvPoke's AI and the crowd. `robust=0.5` is the control within the margins on every judge (0.2 to 1.9 points apart). With 8 looks
+over 4 styles each style's mean rests on 2 play-outs, so the worst of them is mostly noise, and the gain against PvPoke's AI comes
+from `matching` telling the styles apart, which the worst case throws away. Not taken to 32 imagined battles: the adoption rule
+wants a gain on the mixed field first and there is none. A `robust=0` candidate meant to separate the per-style looks from the
+worst-case weight came out identical to the control because the code took 0 as off; fixed afterwards (`None` is off), not rerun.
+The control repeats task 35 at 8 imagined battles (its confirm at 32: crowd +3.2 ± 1.9, PvPoke +8.9 ± 2.1). Search time with
+`robust` is the control's (median 31 ms, 99th percentile 141-156 on the PC). Printout `runs/robust_screen.out`; the per-battle file `runs/engine_versus/robust-screen.json` is on Marco's PC.
+Merged 2026-11-03 as a record (the owner's yes); no default changes. Next: screen `robust=0.5` on the exam, where people play
+less like the imagined styles than bots do.
