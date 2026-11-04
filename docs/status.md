@@ -3842,3 +3842,74 @@ The control repeats task 35 at 8 imagined battles (its confirm at 32: crowd +3.2
 `robust` is the control's (median 31 ms, 99th percentile 141-156 on the PC). Printout `runs/robust_screen.out`; the per-battle file `runs/engine_versus/robust-screen.json` is on Marco's PC.
 Merged 2026-11-03 as a record (the owner's yes); no default changes. Next: screen `robust=0.5` on the exam, where people play
 less like the imagined styles than bots do.
+
+## Task 41: separate shield-head controls (2026-11-04, Marco): **no gain against bots; more shielding loses**
+
+`Learner` now accepts a separate `shield_margin` (defaulting to its existing margin) and `shield_toward=1`
+(the learned head may add a shield but cannot overrule a rulebook shield), passed through the engine's own calls;
+both players inside imagined battles keep their default settings. `bench.py`, `engine_versus.py` and
+`exam_variants.py` accept the keys, and `engine_versus.py` saves and prints actual shields per shield prompt for
+candidates and baseline.
+
+**Judge 1, exact endgames** (`runs/task41_screen.out`, seed 4101): lower points lost is better.
+Fixture correction: `runs/bench/endgame-1.jsonl.gz` has 318 positions, **48 shield calls, 6 from real games**;
+22 is the total number of real-game positions, not real-game shield calls. **37 of the 48 shield calls are on
+our last Pokémon** (3 of the 6 real-game calls): counted by loading each shield row with `bench.restore`, backed
+by `GameData`, and checking `battle.views[row["side"]].me.left() == 1`, exactly the condition in `Learner.shield`.
+Those calls go to the rulebook whatever these settings, leaving only 11 calls where the head can differ;
+judge 1 can barely separate the settings.
+
+| Setting (all `samples=32`) | Total points lost | Shield-call points lost |
+|---|---|---|
+| Website engine | 5.24 ± 2.26 | 3.12 |
+| `shield_margin=0.05` | 5.24 ± 2.26 | 3.12 |
+| `shield_margin=0.1` | 5.56 ± 2.28 | 5.21 |
+| `shield_margin=1` | 5.56 ± 2.28 | 5.21 |
+| `shield_toward=1` | 5.24 ± 2.26 | 3.12 |
+
+**Judge 2, mixed bot fields** (`runs/task41_screen.out`, seed 4101): 1,500 pairings both ways,
+1,500 crowd battles and 750 PvPoke battles per build, against the website engine at `samples=32`, without
+website time limits. Scores are win shares; margins are 95%; parentheses give the paired difference from
+the baseline in points. Shield counts include only actual prompts with a shield available, not imagined battles;
+the baseline's head-to-head count pools all candidate matchups.
+
+| Setting (all `samples=32`) | Head to head | Crowd score (Δ points) | PvPoke score (Δ points) | Head-to-head shields / prompts | Crowd shields / prompts | PvPoke shields / prompts |
+|---|---|---|---|---|---|---|
+| Website engine | — | 74.3% ± 2.2 | 83.9% ± 2.6 | 22848/59900 (38.1%) | 2779/7713 (36.0%) | 1298/3583 (36.2%) |
+| `shield_margin=0.05` | 49.9% ± 1.4 | 74.2% ± 2.2 (-0.0 ± 1.5) | 84.9% ± 2.5 (+1.0 ± 1.5) | 5732/14606 (39.2%) | 2790/7446 (37.5%) | 1303/3484 (37.4%) |
+| `shield_margin=0.1` | 48.0% ± 1.5 | 72.2% ± 2.3 (-2.1 ± 1.7) | 82.8% ± 2.7 (-1.1 ± 2.0) | 5747/13859 (41.5%) | 2804/7040 (39.8%) | 1324/3334 (39.7%) |
+| `shield_margin=1` | 47.0% ± 1.5 | 70.4% ± 2.3 (-3.9 ± 1.9) | 82.1% ± 2.7 (-1.8 ± 2.1) | 5744/13340 (43.1%) | 2783/6885 (40.4%) | 1319/3273 (40.3%) |
+| `shield_toward=1` | 46.7% ± 1.5 | 71.4% ± 2.3 (-2.9 ± 1.7) | 82.7% ± 2.7 (-1.2 ± 1.9) | 5846/12904 (45.3%) | 2855/6682 (42.7%) | 1349/3191 (42.3%) |
+
+Baseline head-to-head shields / prompts against each candidate in row order:
+5712/15084 (37.9%); 5706/14989 (38.1%); 5710/14923 (38.3%); 5720/14904 (38.4%).
+
+**Confirmation, fresh seed 4141** (`runs/task41_confirm.out`): `shield_margin=0.05`, the best setting on
+judges 1–2, on 2,000 pairings both ways, 2,000 crowd and 1,000 PvPoke. Head to head **49.5% ± 1.2**;
+crowd **71.0% ± 2.0** against **71.7% ± 2.0**, **−0.8 ± 1.2 points**; PvPoke **82.4% ± 2.4** against
+**83.5% ± 2.3**, **−1.1 ± 1.4 points**. Shields / prompts, candidate against baseline: head to head
+7619/19537 (39.0%) against 7606/20126 (37.8%); crowd 3712/9856 (37.7%) against 3714/10223 (36.3%);
+PvPoke 1773/4732 (37.5%) against 1768/4897 (36.1%).
+
+Against bots no setting helps. Shielding more often loses: `shield_toward=1` and `shield_margin` 0.1 and 1
+lose beyond the margin both head to head and against the crowd. `shield_margin=0.05` equals the website
+engine within the margins, including on the fresh seed. **Defaults unchanged. The exam on Luke's Mac decides**,
+since people bait in ways bots do not; score all the candidates with `scripts/exam_variants.py` before deciding.
+The exam has not been run here.
+
+**Commands as run** (`runs/task41-screen.cmd`, then `runs/task41-confirm.cmd`):
+
+```cmd
+cd /d "C:\Users\marco\Developer\pokemon_go-task41" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\bench.py score "samples=32" "samples=32,shield_margin=0.05" "samples=32,shield_margin=0.1" "samples=32,shield_margin=1" "samples=32,shield_toward=1" --rulers endgame --workers 32 --seed 4101 --label task41-screen >> runs\task41_screen.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --pairings 1500 --crowd 1500 --pvpoke 750 --workers 32 --seed 4101 --tag task41-screen --baseline "samples=32" --candidates "samples=32,shield_margin=0.05" "samples=32,shield_margin=0.1" "samples=32,shield_margin=1" "samples=32,shield_toward=1" >> runs\task41_screen.out 2>&1
+```
+
+```cmd
+cd /d "C:\Users\marco\Developer\pokemon_go-task41" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --pairings 2000 --crowd 2000 --pvpoke 1000 --workers 32 --seed 4141 --tag task41-confirm --baseline "samples=32" --candidates "samples=32,shield_margin=0.05" >> runs\task41_confirm.out 2>&1
+```
+
+**Time and cost, Marco's PC, 2026-11-04:** Ryzen 9 9950X3D, 16 physical cores / 32 hardware threads,
+32 workers, one NumPy thread per worker. Screen 5:58–7:16 am: about 78 minutes including about a minute for
+bench; confirmation 7:19–7:50 am: about 31 minutes (the log's final progress line says 32 minutes).
+From Marco's wall times, screen ≈41.6 worker-thread-hours / 20.8 physical-core-hours; confirmation ≈16.5 / 8.3;
+total **≈58.1 thread-hours, or 29.1 physical-core-hours**. These are elapsed time × workers or physical cores,
+not measured summed CPU time. The full suite passes on Marco's PC: 287 tests, 7 skipped; PvPoke 108 of 108.

@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — for Marco (the owner, 2026-11-04) | Marco's machine, a few hours |
+| **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; on the exam next (owner's Mac) | Owner's Mac |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
@@ -68,7 +68,9 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 41. Shield calls the way strong players make them — for Marco (the owner, 2026-11-04; Marco's idea E)
+## 41. Shield calls the way strong players make them — for Marco (2026-11-04; Marco's idea E)
+
+**State.** measured 2026-11-04, no gain against bots; on the exam next (owner's Mac).
 
 **Why.** Two strong players answered the exam (`docs/benchmarking.md`). Its clearest split is shields: on the owner's 7
 shield calls the owner and the rulebook shield 6, the trained bot and the engine 1; where both players agree, 3 of the
@@ -89,7 +91,7 @@ defaults play the same games as before.
 
 **Judges, all three, in this order.**
 1. **Exact endgames** (`python3 scripts/bench.py score ... --rulers endgame`, the frozen `runs/bench/endgame-1.jsonl.gz`):
-   points given away against exact play, on its 48 shield calls (22 from real games) reported on their own. No model
+   points given away against exact play, on its 48 shield calls (6 from real games) reported on their own. No model
    of the opponent, so it is the independent judge, but only for late positions.
 2. **Bot fields:** `engine_versus.py --field mixed`, 1,500 pairings both ways, 1,500 crowd, 750 PvPoke, against the website
    engine. A candidate must not lose beyond the margin on any of them.

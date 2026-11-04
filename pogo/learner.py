@@ -269,7 +269,8 @@ class Learner(Planner):
 
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
-                 forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False, **settings):
+                 forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False,
+                 shield_margin: float | None = None, shield_toward: bool = False, **settings):
         super().__init__(**settings)
         # The owner: farm right up until they have a move. True: when the rulebook is still farming towards that
         # moment (Planner._hold_plan), the networks may not throw early.
@@ -286,6 +287,8 @@ class Learner(Planner):
         self.greedy = greedy
         self.q = q  # with a QNet, shields and throws go to the option it rates best
         self.margin = margin  # ... but only when that beats the Planner's pick by this much
+        self.shield_margin = margin if shield_margin is None else shield_margin
+        self.shield_toward = shield_toward  # the shield head may add a shield, but never overrule one
         self.mid_swap = mid_swap
         self.departed = 0  # how often it overruled the Planner
         self.departures: dict = {}  # (decision, Planner's pick, its pick) -> count
@@ -331,7 +334,10 @@ class Learner(Planner):
             if head == "throw":  # holding is worth whatever the best length of hold is worth
                 v = [max(v[0], v[3], v[4]), v[1], v[2]]
             best = max((k for k in range(len(mask)) if mask[k]), key=lambda k: v[k])
-            choice = best if v[best] - v[advice] > self.margin else advice
+            margin = self.shield_margin if head == "shield" else self.margin
+            choice = best if v[best] - v[advice] > margin else advice
+            if head == "shield" and self.shield_toward and advice:
+                choice = advice
             if choice != advice:
                 self.departed += 1
                 self.departures[head, advice, choice] = self.departures.get((head, advice, choice), 0) + 1

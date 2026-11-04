@@ -14,6 +14,8 @@ Judges:
 
 `check` puts a ladder of known strengths and deliberately broken bots through every judge: a judge earns trust by
 ranking the ladder and catching the damage, and repeating with new dice. BUILDS below lists them; results go to runs/bench/.
+`score` also accepts engine_versus.py settings, for example "samples=32,shield_margin=0.1".
+Use --endgame-limit only for a small smoke run; omit it when measuring strength.
 """
 from __future__ import annotations
 
@@ -28,6 +30,7 @@ import os
 import random
 import sys
 import time
+from contextlib import nullcontext
 from pathlib import Path
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "MKL_NUM_THREADS"):
@@ -46,6 +49,7 @@ from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 from pogo.reader import Reader  # noqa: E402
 from pogo.review import Logged, Replay  # noqa: E402
 from pogo.teamshape import mixed_field  # noqa: E402
+from engine_versus import parse  # noqa: E402
 
 OUT = ROOT / "runs" / "bench"
 ENDGAMES = OUT / "endgame-1.jsonl.gz"
@@ -139,6 +143,18 @@ BUILDS = {
 }
 LADDER = ["random", "masher", "rulebook", "trained", "engine8"]
 BROKEN = {name: "trained" for name in ("no_shields", "all_shields", "no_switches", "no_throws", "first_bench", "first_listed")}
+
+
+def build(name: str, seed: int):
+    """A named benchmark player, or the same engine settings accepted by engine_versus.py."""
+    if name in BUILDS:
+        return BUILDS[name](seed)
+    kw = parse(name)
+    if kw is None:
+        return trained(seed)
+    ev = Evaluator.load(ROOT / kw.pop("eval")).model if "eval" in kw else _s["ev"]
+    q = QNet.load(str(ROOT / kw.pop("q"))) if "q" in kw else _s["net"]
+    return Engine(Evaluator(ev), _s["site_pool"], rollout="bot", q=q, seed=seed, **kw)
 
 
 # ---------------------------------------------------------------- frozen positions
@@ -308,7 +324,7 @@ def endgame_job(task):
     out = []
     for k, row in enumerate(rows):
         battle = restore(row["state"])
-        agent = BUILDS[name](seed + k)
+        agent = build(name, seed + k)
         view = battle.views[row["side"]]
         if row["kind"] == "shield":
             worth = row["worth"]["yes" if agent.shield(view, row["foe_energy"]) else "no"]
@@ -368,7 +384,7 @@ def people_job(task):
     gd = _s["gd"]
     teams = [[gd.build(sid, mv, level=lv, ivs=tuple(iv)) for sid, mv, lv, iv in t] for t in saved["teams"]]
     tally: list = []
-    person = Copying(Replay(saved["my_choices"]), BUILDS[name](seed), tally)
+    person = Copying(Replay(saved["my_choices"]), build(name, seed), tally)
     Battle(teams[0], teams[1], person, Logged(saved["log"]), seed=saved["seed"], record=True).run()
     return Path(path).stem, tally
 
@@ -392,7 +408,7 @@ def field_job(task):
         rng = random.Random(seed * 1_000_003 + n)
         a, b = _s["draw"](rng), _s["draw"](rng)
         dice = rng.getrandbits(32)
-        out[n] = points(Battle(a, b, BUILDS[name](dice % 99989), opponent(kind, dice), seed=dice).run(), 0)
+        out[n] = points(Battle(a, b, build(name, dice % 99989), opponent(kind, dice), seed=dice).run(), 0)
     return out
 
 
@@ -406,7 +422,7 @@ def exploit_job(task):
         pair = []
         for cls in (Engine, Reader):
             probe = cls(Evaluator(_s["ev"]), _s["site_pool"], rollout="bot", samples=4, edge=0.03, q=_s["net"], margin=0.02, seed=dice % 99971)
-            target = BUILDS[name](dice % 99989)
+            target = build(name, dice % 99989)
             if cls is Reader:
                 probe.target, probe.target_side = target, 1
             pair.append(points(Battle(a, b, probe, target, seed=dice).run(), 0))
@@ -424,6 +440,8 @@ def margin(values) -> float:
 
 def cluster(rows) -> tuple[float, float]:
     """Mean of (source, value) rows, with a margin treating each source (a game, a battle) as one sample."""
+    if not rows:  # a small smoke may have no positions of one kind
+        return float("nan"), float("nan")
     groups = collections.defaultdict(list)
     for source, value in rows:
         groups[source].append(value)
@@ -433,17 +451,25 @@ def cluster(rows) -> tuple[float, float]:
     return mean, 1.96 * math.sqrt(sum(x * x for x in per)) / n
 
 
-def judge_all(names, rulers, workers, seed=1, field_n=400, exploit_n=100) -> dict:
+def judge_all(names, rulers, workers, seed=1, field_n=400, exploit_n=100, endgame_limit=None) -> dict:
     results = {name: {} for name in names}
     rows = []
     if "endgame" in rulers:
         with gzip.open(ENDGAMES, "rt") as f:
             rows = [json.loads(line) for line in f]
+        if endgame_limit is not None:
+            rows = rows[:endgame_limit]
+            print(f"Smoke only: first {len(rows)} endgame positions", flush=True)
+        shields = [r for r in rows if r["kind"] == "shield"]
+        print(f"Endgames: {len(rows)} positions, {len(shields)} shield calls "
+              f"({sum(r['source'].startswith('real') for r in shields)} shield calls from real games)", flush=True)
     games = sorted(g for g in glob.glob(str(ROOT / "games" / "played" / "*-web.json")) if not json.loads(Path(g).read_text()).get("player"))
-    with multiprocessing.get_context("spawn").Pool(workers, initializer=setup) as pool:
+    with (multiprocessing.get_context("spawn").Pool(workers, initializer=setup) if workers > 1 else nullcontext()) as pool:
+        if pool is None:
+            setup()
         if "endgame" in rulers:
             tasks = [(name, seed * 1000 + k, rows[k:k + 50]) for name in names for k in range(0, len(rows), 50)]
-            out = pool.map(endgame_job, tasks, chunksize=1)
+            out = pool.map(endgame_job, tasks, chunksize=1) if pool else map(endgame_job, tasks)
             for task, got in zip(tasks, out):
                 results[task[0]].setdefault("_endgame", []).extend(got)
             for name in names:
@@ -457,7 +483,8 @@ def judge_all(names, rulers, workers, seed=1, field_n=400, exploit_n=100) -> dic
                                             "rows": both}
         if "people" in rulers:
             tasks = [(name, g, seed + k) for name in names for k, g in enumerate(games)]
-            for task, (game, tally) in zip(tasks, pool.map(people_job, tasks, chunksize=1)):
+            out = pool.map(people_job, tasks, chunksize=1) if pool else map(people_job, tasks)
+            for task, (game, tally) in zip(tasks, out):
                 results[task[0]].setdefault("_people", []).extend((game, kind, same) for kind, same in tally)
             for name in names:
                 got = results[name].pop("_people")
@@ -472,11 +499,13 @@ def judge_all(names, rulers, workers, seed=1, field_n=400, exploit_n=100) -> dic
         if "field" in rulers:
             for kind in ("trained", "crowd", "pvpoke"):
                 tasks = [(name, kind, k, 20, seed + 7) for name in names for k in range(0, field_n, 20)]
-                for task, got in zip(tasks, pool.imap(field_job, tasks, chunksize=1)):
+                out = pool.imap(field_job, tasks, chunksize=1) if pool else map(field_job, tasks)
+                for task, got in zip(tasks, out):
                     results[task[0]].setdefault(kind, {}).update(got)
         if "exploit" in rulers:
             tasks = [(name, k, 10, seed + 13) for name in names for k in range(0, exploit_n, 10)]
-            for task, got in zip(tasks, pool.imap(exploit_job, tasks, chunksize=1)):
+            out = pool.imap(exploit_job, tasks, chunksize=1) if pool else map(exploit_job, tasks)
+            for task, got in zip(tasks, out):
                 results[task[0]].setdefault("exploit", {}).update(got)
     return results
 
@@ -522,7 +551,7 @@ def save(label, results) -> None:
 
 def score(args) -> None:
     rulers = args.rulers.split(",")
-    results = judge_all(args.builds, rulers, args.workers, args.seed)
+    results = judge_all(args.builds, rulers, args.workers, args.seed, endgame_limit=args.endgame_limit)
     print("\n".join(table(results, rulers)))
     save(args.label or "+".join(args.builds)[:60], results)
 
@@ -599,16 +628,23 @@ def main() -> None:
     p.add_argument("--battles", type=int, default=300)
     p.add_argument("--workers", type=int, default=3)
     p = sub.add_parser("score")
-    p.add_argument("builds", nargs="+", choices=sorted(BUILDS))
+    p.add_argument("builds", nargs="+", help="a named build or engine settings as key=value,key=value")
     p.add_argument("--rulers", default="endgame,people,field")
     p.add_argument("--label", default="")
     p.add_argument("--workers", type=int, default=3)
     p.add_argument("--seed", type=int, default=1)
+    p.add_argument("--endgame-limit", type=int, help="smoke only: score the first N frozen positions")
     p = sub.add_parser("check")
     p.add_argument("--rulers", default="endgame,people,field")
     p.add_argument("--workers", type=int, default=3)
     p.add_argument("--seed", type=int, default=1)
     args = parser.parse_args()
+    if args.command == "score":
+        for name in args.builds:
+            if name not in BUILDS:
+                parse(name)  # reject a mistyped setting before starting workers
+        if args.endgame_limit is not None and args.endgame_limit < 1:
+            parser.error("--endgame-limit must be positive")
     {"freeze": freeze, "score": score, "check": check}[args.command](args)
 
 

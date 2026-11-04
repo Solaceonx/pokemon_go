@@ -5,6 +5,7 @@
 
 Replays every game the exam's positions come from, as scripts/exam_positions.py does, with the rulebook, the trained bot, the
 website's engine and each variant (engine settings as `key=value,...`) asking at every decision, the variants with the engine's dice.
+Shield variants use shield_margin=0.05 (or 0.1, 1) and shield_toward=1.
 The engine's picks must come out as the exam's key has them. Each variant is scored where each person answered and where all of them
 agree. A screen only: the positions were chosen where versions disagree and these answers are already known, so a variant that does
 well here is tested on fresh positions before anything changes.
@@ -32,7 +33,12 @@ def parse(spec: str) -> dict:
     out = {}
     for part in filter(None, spec.split(",")):
         k, v = part.split("=")
-        out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
+        if k == "shield_toward":
+            if v not in ("0", "1"):
+                raise SystemExit("shield_toward must be 0 or 1")
+            out[k] = bool(int(v))
+        else:
+            out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
     return out
 
 
