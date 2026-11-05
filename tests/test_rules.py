@@ -305,6 +305,54 @@ class Tracking(unittest.TestCase):
         self.assertIn("MUD_SHOT", foe.ruled_out)  # ground on steel would have said so
         self.assertEqual((foe.mon.build.fast.id, foe.fast_from), ("THUNDER_SHOCK", "inferred"))
 
+    @staticmethod
+    def _quiet(t, mine, theirs, until):
+        from pogo.tracker import Observation
+        for k in range(int(until / 0.5) + 1):
+            t.update(Observation(t=0.5 * k, my_species=mine, foe_species=theirs, my_hp=1.0, foe_hp=1.0,
+                                 my_shields=2, foe_shields=2, my_left=3, foe_left=3))
+
+    def test_our_charged_move_lands_when_their_bar_is_not_read(self):
+        # The look after a charged move often has the bars still hidden. Its damage is taken off by the rules,
+        # as when the bar lags, not left out until a later look reads the bar.
+        from pogo.tracker import Observation, Tracker
+        for shields, taken in ((2, "damage"), (1, "shield"), (None, "nothing")):
+            t = Tracker(GD, [GD.default("azumarill")])
+            self._quiet(t, "azumarill", "registeel", 3.0)
+            me, foe = t.me.mon, t.foes["registeel"].mon
+            move = me.build.charged[0]
+            self.assertLess(move.buff_chance, 1)  # so the damage is the same before and after the move
+            hit = {"damage": damage(me, move, foe), "shield": 1, "nothing": 0}[taken]
+            t.update(Observation(t=13.5, my_species="azumarill", foe_species="registeel", my_hp=1.0, my_charged=0,
+                                 my_shields=2, foe_shields=shields, my_left=3, foe_left=3))
+            self.assertEqual(foe.hp, foe.build.hp - hit, taken)  # with the shield counter unread, nothing is assumed
+
+    def test_no_damage_by_the_rules_on_a_disguise(self):
+        # Mimikyu's disguise takes a charged move for 1, which the tracker does not follow: with no reading of the
+        # bar, its health is left alone rather than guessed.
+        from pogo.tracker import Observation, Tracker
+        t = Tracker(GD, [GD.default("azumarill")])
+        self._quiet(t, "azumarill", "mimikyu", 3.0)
+        foe = t.foes["mimikyu"].mon
+        t.update(Observation(t=13.5, my_species="azumarill", foe_species="mimikyu", my_hp=1.0, my_charged=0,
+                             my_shields=2, foe_shields=2, my_left=3, foe_left=3))
+        self.assertEqual(foe.hp, foe.build.hp)
+
+    def test_their_charged_move_lands_when_my_bar_is_not_read(self):
+        from pogo.tracker import Observation, Tracker
+        t = Tracker(GD, [GD.default("azumarill")])
+        self._quiet(t, "azumarill", "melmetal", 10.0)
+        me, foe = t.me.mon, t.foes["melmetal"].mon
+        move = next(m for m in foe.build.charged if m.id == "DOUBLE_IRON_BASH")
+        hit = damage(foe, move, me)
+        t.update(Observation(t=20.5, my_species="azumarill", foe_species="melmetal", foe_hp=1.0, foe_charged=True,
+                             foe_move="DOUBLE_IRON_BASH", my_shields=2, foe_shields=2, my_left=3, foe_left=3))
+        self.assertEqual(me.hp, me.build.hp - hit)
+        warnings = t.warnings
+        t.update(Observation(t=21.0, my_species="azumarill", foe_species="melmetal", my_hp=me.hp / me.build.hp,
+                             foe_hp=1.0, my_shields=2, foe_shields=2, my_left=3, foe_left=3))
+        self.assertEqual(t.warnings, warnings)  # the bar, once read, agrees: no unexplained drop
+
 
 class Learning(unittest.TestCase):
     def test_learner_without_a_policy_plays_as_the_planner(self):

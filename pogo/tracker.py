@@ -319,7 +319,10 @@ class Tracker:
                 self._their_attacks(obs, None, my_shields_before)
             self.hp_turn = self.turn
         elif obs.foe_charged and they_changed != "faint":
-            self._their_attacks(obs, None, my_shields_before)
+            # My bar was not read this look. If the Pokémon they hit is still the one out, their move's damage
+            # is taken off by the rules.
+            self._their_attacks(obs, None, my_shields_before,
+                                unread=not i_changed and (obs.my_shields is not None or my_shields_before == 0))
 
         # What I did to them, from their health bar and my own energy.
         if obs.my_charged is not None and i_changed != "faint" and obs.my_charged < len(mon.build.charged):
@@ -336,6 +339,12 @@ class Tracker:
                 if foe.mon.hp - seen < 0.6 * expected:  # their bar has not caught up with the hit yet
                     foe.mon.hp = max(0, foe.mon.hp - expected)
                     obs = Observation(**{**asdict(obs), "foe_hp": None})
+            elif obs.foe_hp is None and not they_changed and (obs.foe_shields is not None or foe_shields_before == 0) \
+                    and not _disguised(foe.mon):
+                # Their bar was not read this look (it is often still hidden as fighting resumes): take the hit
+                # off by the rules, as when the bar lags, instead of leaving their health as it was before the move.
+                # Only when the shield counter was read, so that whether it was blocked is known.
+                foe.mon.hp = max(0, foe.mon.hp - expected)
         if obs.foe_hp is not None:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
@@ -611,8 +620,9 @@ class Tracker:
             self._note(t, "foe_fast_confirmed", species=foe.mon.build.species_id, move=left[0].id,
                        ruled_out=sorted(foe.ruled_out))
 
-    def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int) -> None:
-        """Split a drop in my health into their fast moves and, if they threw one, their charged move."""
+    def _their_attacks(self, obs: Observation, drop: int | None, my_shields_before: int, unread: bool = False) -> None:
+        """Split a drop in my health into their fast moves and, if they threw one, their charged move.
+        unread: my bar was not read, but my Pokémon that was hit is still out and the shield counter was read."""
         mon, foe = self.me.mon, self.foe
         fast = foe.mon.build.fast
         per_hit = damage(foe.mon, fast, mon)
@@ -669,6 +679,11 @@ class Tracker:
             best = min(((abs(drop - damage(foe.mon, m, mon) - j * per_hit), k, j)
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
             moves, extra = [moves[best[1]]], best[2]
+        if drop is None and unread and (shielded or len(moves) == 1) and not _disguised(mon):
+            # No reading of my bar this look: take the hit off by the rules, as when the bar lags behind it,
+            # instead of leaving my health as it was before the move. An unnamed move is taken only when it is
+            # the one move they could afford.
+            mon.hp = max(0, mon.hp - (1 if shielded else damage(foe.mon, moves[0], mon)))
         self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
         before, by_clock = [foe.lo, foe.hi], foe.by_clock()
         if foe.hi < min(m.energy for m in moves) <= by_clock:
@@ -683,6 +698,13 @@ class Tracker:
             apply_buffs(foe.mon, mon, moves[0])
         self._note(obs.t, "foe_charged", move=moves[0].id if len(moves) == 1 else None, shielded=shielded,
                    energy=[foe.lo, foe.hi], energy_before=before, energy_before_by_clock=by_clock)
+
+
+def _disguised(mon: Mon) -> bool:
+    """A Pokémon whose disguise may take a charged move for 1 damage (Mimikyu). The tracker does not follow the
+    disguise breaking, so the rules' damage is not trusted for it when the bar is not read."""
+    rule = mon.build.rule
+    return bool(rule and rule.get("trigger") == "charged_move_damage" and rule.get("effect") == "protect")
 
 
 def _word(move_type: str, target: Mon) -> str | None:
