@@ -4766,3 +4766,64 @@ the owner took the phone back. Fixes after battle 14, each replayed on the battl
 `variant: "live-log"`), 109 battles of 2026-11-07 and 08 (34 league, 75 training), built from `runs/live/*.jsonl` by
 `scripts/live/live_record.py`, with `games/live/index.json` and the analysis in `notes`. The recordings themselves
 (about 9 GB) stay on the owner's PC: the repository is public.
+
+## Charged-move damage when the bar is not read (2026-11-04, Claude on the owner's PC): adopted
+
+**Found with the game record** (`scripts/recording/game_record.py`, `docs/game_record.md`: one readable file per
+tracked game, `game.json` plus a play-by-play `game.txt`). Read as a play-by-play, the owner's first recording had
+"Sky Attack -> Cramorant 60% -> 60%". The tracker took a charged move's damage off only when the first look after
+it read the target's bar, or saw the bar lagging. When that look read no bar (bars are often still hidden as
+fighting resumes), the health stayed at its value from before the move until a later look read the bar, and
+our own health's catch-up drop then showed up as "unexplained". This happened after 17 of 50 unshielded charged
+moves in the owner's six recording folders and 137 of 330 in the public clips.
+
+**The change** (`pogo/tracker.py`). With no reading of the target's bar in that look, the move's damage is taken
+off by the rules, as was already done when the bar lags. It is taken off only when:
+- the shield counter was read in that look (so whether the move was blocked is known);
+- the Pokémon hit is still the one out;
+- for their moves, the move was named or was the only one they could afford;
+- the target is not Mimikyu. The tracker does not follow the Disguise breaking, and the rules' damage would put
+  it at 10% where it stood at 78% (the one bad case found, on the owner's recordings, before the guard was added).
+
+Tests: `tests/test_rules.py`, `Tracking` (three new).
+
+**How it was measured.** Every game was tracked again from its saved looks, with the old tracker and then the new
+one. The owner's six recording folders hold four battles, two of them tracked twice. The public clips were
+re-tracked with `scripts/recording/retrack_public.py OUT` (and `--told`, with the same results). The measure is
+`scripts/recording/unread_health.py OUT --no-faints`: at each look where a bar was not read, the tracker's health
+for that Pokémon is compared with the next reading of the same Pokémon within 3 s. `--no-faints` leaves out the
+10 s before a faint, where the next "reading" is often the replacement's bar under the old name; that is the
+same for both trackers. The reserved sample was measured once, after the change was fixed, and nothing was tuned
+on it.
+
+| First look after a charged move, bar unread: tracker against the next reading | Looks | Before | After |
+|---|---|---|---|
+| Owner's recordings: off by, on average | 6 | 23.8 points | 2.5 |
+| ... within 10% | | 33% | 100% |
+| Public clips, exposed (`2894502346`, `2897295240`): off by | 18 | 22.3 points | 6.6 |
+| ... within 10% | | 33% | 72% |
+| Reserved sample (`2897166800`, `2897312743`): off by | 10 | 25.8 points | 5.2 |
+| ... within 10% | | 30% | 90% |
+
+Over all unread looks within 4 s after a charged move, the average miss went from 7.6 to 5.6 points (owner, 64
+looks), 14.6 to 13.3 (exposed, 230) and 12.4 to 10.1 (reserved, 179). Other unread looks are unchanged. On the
+reserved two-screen matches, one view's picture of the opponent against the other player's own bar reading went
+from 4.3 to 3.9 points off on average (1,941 looks; within 3% 79.6% to 79.9%). Against the other view's state,
+health within 3% went from 77.2% to 77.0%; that state is the other view's tracker, which the change moves as well.
+The rest is unchanged:
+- who is out, shields and Pokémon left;
+- their energy against their buttons (within two fast moves 73.3% to 73.1%, a difference of one or two of 744
+  moments);
+- the verdicts (owner 6 of 6 pass, public 0 of 43);
+- unexplained health changes (51 to 49, 683 to 681);
+- `scripts/check_tracker.py` gives identical output: its camera always reads the bars, so the change never acts
+  there.
+
+Tests and `scripts/check_pvpoke.py` (108 of 108) pass. The two numpy tests in `test_rules.Learning` were not run:
+there is no numpy on this PC.
+
+**Not done.** The published game folders under `games/` were not re-tracked. That would rewrite the reserved
+clips' protected files, so they still carry the old tracker's states until the pipeline is run again. Unnamed
+charged moves with more than one move they could afford, and a Mimikyu's broken Disguise, are still left
+unhandled when the bar is not read. Most of the remaining miss in public clips is those cases, plus a few where
+the rules' damage overshoots (stats assumed).
