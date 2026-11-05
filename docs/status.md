@@ -339,6 +339,24 @@ excludes all previous final compositions, so the new point score is not a paired
 old benchmark. All negative evidence is retained. Existing323-test/7-skip and108/108 PvPoke checks
 cover the unchanged software; no redundant numerical tests or source edits accompanied this record.
 
+**Second complete held-out block — November5,20:22:29UTC.** All **1,000 mirrored pairings /
+2,000games**, mixed39092, scored **26.250000% ±1.7740509454percentage points** (95%), interval
+**24.4759490546–28.0240509454%**. This is another clear loss to the full frozen engine32, and the
+second required mixed lower95bound above50% also fails. `second_final_block_artifacts.json`
+independently verifies every draw, both test folds, reconstructed old-composition/seed exclusions,
+player sides, paired outcomes, clustered confidence interval and unchanged source/guard/baseline/
+model/lock/priority/recovery evidence. Raw SHA-256:
+`e01a3628de2a8762bfbc2e555feac1db535bf19b9aab413a3e03c2f99fcbd32b`;
+summary SHA-256: `a2ff7bda25b84299677c81fe18623580bae469b28649e350e5ebdbc7ce973051`.
+
+The standard-field block started20:22:29UTC and continues under the unchanged20:59:47UTC deadline.
+The overall6,000-game benchmark is still incomplete and cannot meet the reliable-win criterion,
+regardless of the remaining standard result. No score-based early stop, reselection, sample reduction,
+baseline change or further research occurred. The full final audit remains deferred until a complete
+verdict; if the deadline stops the partial block, independently verify saved partial identities/counts
+without presenting it as the predeclared complete test. Required final closure checks and honest partial
+report follow the deadline. Existing323-test/7-skip and108/108 checks cover this unchanged software.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

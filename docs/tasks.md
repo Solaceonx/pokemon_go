@@ -174,6 +174,12 @@ loss fails a required gate; reliable-win criterion cannot pass for this policy. 
 continue to the original20:59:47UTC deadline without tuning, reselection or reduced samples. The
 full benchmark remains incomplete; `first_final_block_artifacts.json` retains this negative evidence.
 
+Task38 second held-out block completedNovember5 20:22:29UTC: mixed39092,1,000mirrored pairings /
+2,000games,26.250000%±1.7740509454points (95%), interval24.4759490546–28.0240509454%. Independent
+block audit passes; this is another clear loss and fails the second mixed win gate. The standard block
+continues only to20:59:47UTC, with unchanged samples/policy/baseline. Overall benchmark remains
+incomplete; reliable-win target failed. Retain `second_final_block_artifacts.json` and all negative data.
+
 ## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
 
 **Why.** The engine loses website games to the owner on decisions its search makes against the trained bot's own

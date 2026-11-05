@@ -168,3 +168,9 @@ This clear loss fails a required gate, so this policy cannot meet the reliable-w
 checker independently audited all draws/exclusions/seeds/sides/outcomes/CI and source/model/baseline
 identities in `first_final_block_artifacts.json`. Remaining blocks continue unchanged until the fixed
 deadline; the full benchmark is incomplete and its final audit must wait for a complete verdict.
+
+The second complete held-out block, mixed39092, finishedNovember5 20:22:29UTC:1,000mirrored pairings /
+2,000games scored26.250000%±1.7740509454points (95%), interval24.4759490546–28.0240509454%.
+`second_final_block_artifacts.json` independently verifies all draws/exclusions/seeds/sides/outcomes/CI
+and fixed identities. This also fails its required gate. The standard block continues only until the
+unchanged20:59:47UTC deadline; do not treat an incomplete block as the fixed1,000-pair test.
