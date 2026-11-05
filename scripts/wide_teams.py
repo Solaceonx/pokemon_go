@@ -27,7 +27,7 @@ import math  # noqa: E402
 import random  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
-from multiprocessing import Pool  # noqa: E402
+from multiprocessing import Pool, get_context  # noqa: E402
 from pathlib import Path  # noqa: E402
 
 import numpy as np  # noqa: E402
@@ -36,11 +36,38 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 OUT = ROOT / "runs" / "wide-teams"
+FORMS = ["mimikyu", "morpeko_full_belly", "cramorant", "aegislash_shield"]
 REFERENCE = [["quagsire", "sableye_shadow", "corviknight_shadow"], ["jellicent", "clodsire", "araquanid"],
              ["jellicent", "clodsire", "mandibuzz"],
              ["charjabug_shadow", "carbink", "marowak_shadow"]]
 
 _w: dict = {}
+_shipped_tables = None
+
+
+def set_matchup_table(path=None) -> None:
+    """Use a run's table in both players; None restores the shipped table, also in a serial run."""
+    import pogo.agents as agents
+    import pogo.learner as learner
+    global _shipped_tables
+    if _shipped_tables is None:
+        _shipped_tables = agents._matchup_table, learner._matchup_table
+    if path is None:
+        agents._matchup_table, learner._matchup_table = _shipped_tables
+    else:
+        wide = json.loads(Path(path).read_text())
+        agents._matchup_table = learner._matchup_table = lambda: wide
+
+
+def run_jobs(function, jobs, workers, initializer, initargs=(), chunksize=1, spawn=False):
+    """One worker runs directly, without multiprocessing pipes (also useful in Windows sandboxes)."""
+    if workers == 1:
+        initializer(*initargs)
+        yield from map(function, jobs)
+    else:
+        factory = get_context("spawn").Pool if spawn else Pool
+        with factory(workers, initializer, initargs) as runner:
+            yield from runner.imap_unordered(function, jobs, chunksize=chunksize)
 
 
 def species_pool(gd, n: int) -> list:
@@ -143,13 +170,12 @@ def main() -> None:
     todo = [(i, j) for i in range(n) for j in range(i + 1, n)
             if ids[j] not in wide.get(ids[i], {}) and ids[i] not in wide.get(ids[j], {})]
     print(f"{n} Pokémon; {len(todo)} new one-on-ones to play", flush=True)
-    with Pool(args.workers, _init, (args.pool, None)) as runner:
-        for done, (i, j, m) in enumerate(runner.imap_unordered(_pair, todo, chunksize=200), 1):
-            wide.setdefault(ids[i], {})[ids[j]] = m
-            wide.setdefault(ids[j], {}).setdefault(ids[i], -m)
-            if done % 10000 == 0:
-                print(f"  {done} of {len(todo)} ({time.time() - t0:.0f}s)", flush=True)
-                path.write_text(json.dumps(wide))
+    for done, (i, j, m) in enumerate(run_jobs(_pair, todo, args.workers, _init, (args.pool, None), 200), 1):
+        wide.setdefault(ids[i], {})[ids[j]] = m
+        wide.setdefault(ids[j], {}).setdefault(ids[i], -m)
+        if done % 10000 == 0:
+            print(f"  {done} of {len(todo)} ({time.time() - t0:.0f}s)", flush=True)
+            path.write_text(json.dumps(wide))
     path.write_text(json.dumps(wide))
     table = np.array([[wide[a].get(b, -wide[b].get(a, 0.0)) if a != b else 0.0 for b in ids] for a in ids])
     print(f"one-on-ones ready ({time.time() - t0:.0f}s)", flush=True)
