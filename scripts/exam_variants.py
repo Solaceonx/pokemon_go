@@ -37,6 +37,10 @@ def parse(spec: str) -> dict:
             if v not in ("0", "1"):
                 raise SystemExit("shield_toward must be 0 or 1")
             out[k] = bool(int(v))
+        elif k == "mid_swap_search":
+            if v not in ("ready", "hit", "both"):
+                raise ValueError(f"unknown mid_swap_search {v!r}")
+            out[k] = v
         else:
             out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
     return out

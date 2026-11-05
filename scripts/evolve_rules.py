@@ -183,7 +183,7 @@ def engine_job(task):
     if not engine_versus._state:
         engine_versus.setup()
     spec = ",".join(f"{k}={v}" for k, v in settings.items())
-    _, _, out, _ = engine_versus.job(("h2h", spec, spec, "", start, count, seed))
+    _, _, out, _, _ = engine_versus.job(("h2h", spec, spec, "", start, count, seed))
     return index, sum(out.values()), count
 
 

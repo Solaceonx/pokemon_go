@@ -167,7 +167,7 @@ class Measurement(unittest.TestCase):
     def test_counting_does_not_change_the_game_or_count_copies(self):
         pool = versus._state["pool"]
         plain = versus.pilot(None, 3)
-        counted = versus.ShieldCalls(versus.pilot(None, 3))
+        counted = versus.Counted(versus.pilot(None, 3))
         games = [Battle(pool[:3], pool[10:13], p, Planner(seed=4), seed=5, record=True) for p in (plain, counted)]
         self.assertEqual(games[0].run(), games[1].run())
         self.assertEqual(games[0].log, games[1].log)
@@ -186,26 +186,26 @@ class Measurement(unittest.TestCase):
                 parts = [versus.job((field, "bot", "bot", "bot", n, 1, 41)) for n in (0, 1)]
             saved = {}
             for part in reversed(parts):
-                versus.record(saved, part)
-            versus.record(saved, parts[0])
+                versus.collect(saved, part)
+            versus.collect(saved, parts[0])
             self.assertEqual(saved["results"][field]["bot"], {str(n): v for n, v in whole[2].items()})
-            calls = saved["shield_calls"][field]["bot"]
+            calls = saved["activity"][field]["bot"]
             self.assertEqual(calls, {str(n): v for n, v in whole[4].items()})
-            self.assertGreater(sum(r["prompts"] for r in calls.values()), 0)
+            self.assertGreater(sum(r["ours"]["prompts"] for r in calls.values()), 0)
             if field == "h2h":
                 self.assertGreater(sum(r["baseline"]["prompts"] for r in calls.values()), 0)
             for r in calls.values():
-                self.assertLessEqual(r["shields"], 4 if field in ("h2h", "reader") else 2)
-                self.assertLessEqual(r["shields"], r["prompts"])
+                self.assertLessEqual(r["ours"]["shields"], 4 if field in ("h2h", "reader") else 2)
+                self.assertLessEqual(r["ours"]["shields"], r["ours"]["prompts"])
 
     def test_zero_prompts_are_reported_without_a_rate(self):
-        self.assertEqual(versus.shield_rate([{"shields": 0, "prompts": 0}]), "0 / 0 (n/a)")
+        self.assertEqual(versus.shield_rate([{"ours": {"shields": 0, "prompts": 0}}]), "0 / 0 (n/a)")
 
     def test_one_battle_smoke_has_no_estimated_margin(self):
         score, margin = versus.estimate([1.0])
         self.assertEqual(score, 1.0)
         self.assertTrue(math.isnan(margin))
-        self.assertEqual(versus.summary([1.0]), "100.0% ± nan")
+        self.assertEqual(versus.summary([1.0]), "100.0% (one result; margin unavailable)")
 
 
 if __name__ == "__main__":

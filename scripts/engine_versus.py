@@ -9,7 +9,7 @@ A setting is "key=value,key=value" on top of the confirmed engine (samples 4, ho
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, shield_margin (float), shield_toward (0 | 1),
 heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
-temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), eval (path to an evaluation
+temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
 team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
 overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
@@ -27,13 +27,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import multiprocessing
 import os
 import random
 import sys
 import time
 from collections import Counter
-from contextlib import nullcontext
 from pathlib import Path
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "MKL_NUM_THREADS"):
@@ -44,7 +44,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from pogo.agents import varied  # noqa: E402
 from pogo.arena import low_priority, mean_and_margin  # noqa: E402
-from pogo.battle import DRAW, Battle  # noqa: E402
+from pogo.battle import DRAW, SWITCH, Battle  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
@@ -55,7 +55,7 @@ from pogo.teamlist import drawer  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
-SHIELD_COUNTS = "per-battle-v1"
+COUNTING = "per-battle-v2"  # shield prompts and mid-matchup swaps, both sides of h2h
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
 _state: dict = {}
 
@@ -81,6 +81,10 @@ def parse(spec: str) -> dict | None:
                      "stay_after_replace"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge"):
+            out[key] = value
+        elif key == "mid_swap_search":
+            if value not in ("ready", "hit", "both"):
+                raise SystemExit(f"unknown mid_swap_search {value!r}")
             out[key] = value
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")
@@ -145,15 +149,22 @@ def points(winner: int, side: int) -> float:
     return 1.0 if winner == side else 0.5 if winner == DRAW else 0.0
 
 
-class ShieldCalls:
-    """Count only the real battle's prompts; imagined players and reader copies are unwrapped."""
+class Counted:
+    """Count the real battle's shield prompts and voluntary switches after the lead, without enabling Learner.log
+    (which changes its gates). Imagined players and reader copies are unwrapped."""
 
     def __init__(self, inner):
-        self.inner = inner
+        self.inner, self.mid_swaps = inner, 0
         self.shields, self.prompts = 0, 0
 
     def __getattr__(self, name):
         return getattr(self.inner, name)
+
+    def act(self, view):
+        action = self.inner.act(view)
+        # replace() is a different call; turn zero is the lead decision.
+        self.mid_swaps += action in SWITCH and view.turn > 0
+        return action
 
     def shield(self, view, energy, *move):
         answer = self.inner.shield(view, energy, *move)
@@ -161,8 +172,17 @@ class ShieldCalls:
         self.shields += bool(answer)
         return answer
 
-    def counts(self):
-        return {"shields": self.shields, "prompts": self.prompts}
+    def counts(self) -> dict:
+        return dict(battles=1, mid_swaps=self.mid_swaps,
+                    mid_swap_searches=getattr(self.inner, "mid_swap_searches", 0),
+                    searches=getattr(self.inner, "looks", 0),
+                    search_seconds=sum(r[3] for r in getattr(self.inner, "rows", [])) / 1000,
+                    shields=self.shields, prompts=self.prompts)
+
+
+def add_counts(total: dict, counts: dict) -> None:
+    for key, value in counts.items():
+        total[key] = total.get(key, 0) + value
 
 
 def job(task):
@@ -177,61 +197,71 @@ def _job(task):
     kind, name, spec, base, start, count, seed = task
     wait_while_paused(_state.get("pause"))
     s = _state
-    out, searches, calls = {}, [], {}
+    out, searches, activity = {}, [], {}
     for n in range(start, start + count):
         rng = random.Random(seed * 1_000_003 + n)
         a, b = s["draw"](rng), s["draw"](rng)
         dice = rng.getrandbits(32)
+        counts = activity[n] = {"ours": {}}
         if kind == "h2h":
             pair = []
-            ours_calls, base_calls = Counter(), Counter()
+            counts["baseline"] = {}
             for ours, theirs in ((a, b), (b, a)):
-                me = ShieldCalls(pilot(parse(spec), rng.getrandbits(32)))
-                them = ShieldCalls(pilot(parse(base), rng.getrandbits(32)))
+                me = Counted(pilot(parse(spec), rng.getrandbits(32)))
+                them = Counted(pilot(parse(base), rng.getrandbits(32)))
                 pair.append(points(Battle(ours, theirs, me, them, seed=dice).run(), 0))
                 searches += [r[3] for r in getattr(me, "rows", [])]
-                ours_calls.update(me.counts())
-                base_calls.update(them.counts())
+                add_counts(counts["ours"], me.counts())
+                add_counts(counts["baseline"], them.counts())
             out[n] = sum(pair) / 2
-            calls[n] = {**ours_calls, "baseline": dict(base_calls)}
         elif kind == "reader":
             pair = []
-            ours_calls = Counter()
             for ours, theirs in ((a, b), (b, a)):
-                me = ShieldCalls(pilot(parse(spec), rng.getrandbits(32)))
+                me = Counted(pilot(parse(spec), rng.getrandbits(32)))
                 probe = pilot(dict(CONFIRMED), rng.getrandbits(32), cls=Reader)
-                probe.target, probe.target_side = me, 1
+                probe.target, probe.target_side = me.inner, 1
                 pair.append(points(Battle(theirs, ours, probe, me, seed=dice).run(), 1))
-                ours_calls.update(me.counts())
+                add_counts(counts["ours"], me.counts())
             out[n] = sum(pair) / 2
-            calls[n] = dict(ours_calls)
         else:
-            me = ShieldCalls(pilot(parse(spec), dice))
+            me = Counted(pilot(parse(spec), dice))
             them = varied(random.Random(dice), s["pool"]) if kind == "crowd" else PvpokeAI()
             out[n] = points(Battle(a, b, me, them, seed=dice).run(), 0)
             searches += [r[3] for r in getattr(me, "rows", [])]
-            calls[n] = me.counts()
-    return kind, name, out, searches, calls
+            add_counts(counts["ours"], me.counts())
+    return kind, name, out, searches, activity
 
 
-def record(saved: dict, result) -> None:
-    """Merge a worker's scores and counts by battle number, so resuming cannot count a prompt twice."""
-    kind, spec, out, searches, calls = result
+def collect(saved: dict, result) -> None:
+    """Merge one worker's complete battles by battle number: counts survive restarts and changed chunk sizes, and a
+    repeated result cannot count a prompt twice."""
+    kind, spec, out, searches, activity = result
     saved.setdefault("results", {}).setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
-    saved.setdefault("shield_calls", {}).setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in calls.items()})
+    saved.setdefault("activity", {}).setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in activity.items()})
     hist = saved.setdefault("search_ms", {}).setdefault(spec, {})
     for ms in searches[:200]:
         key = str(round(ms, 1))
         hist[key] = hist.get(key, 0) + 1
 
 
-def shield_rate(rows, baseline=False) -> str:
-    counts = Counter()
-    for row in rows:
-        counts.update(row["baseline"] if baseline else {k: row[k] for k in ("shields", "prompts")})
-    shields, prompts = counts["shields"], counts["prompts"]
+def shield_rate(rows, side: str = "ours") -> str:
+    shields = sum(row.get(side, {}).get("shields", 0) for row in rows)
+    prompts = sum(row.get(side, {}).get("prompts", 0) for row in rows)
     rate = f"{100 * shields / prompts:.1f}%" if prompts else "n/a"
     return f"{shields} / {prompts} ({rate})"
+
+
+def activity_summary(rows: dict, side: str = "ours") -> str:
+    totals = {}
+    for row in rows.values():
+        add_counts(totals, row.get(side, {}))
+    n = totals.get("battles", 0)
+    if not n:
+        return "no battles"
+    return (f"{totals['mid_swaps'] / n:.3f} mid-matchup swaps/battle, "
+            f"{totals['mid_swap_searches'] / n:.3f} mid-matchup searches/battle "
+            f"({n} battles; {totals['searches'] / n:.2f} total searches/battle, "
+            f"{totals['search_seconds'] / n:.3f} search seconds/battle)")
 
 
 def estimate(values: list) -> tuple[float, float]:
@@ -241,6 +271,8 @@ def estimate(values: list) -> tuple[float, float]:
 
 def summary(values: list) -> str:
     m, h = estimate(values)
+    if math.isnan(h):
+        return f"{100 * m:.1f}% (one result; margin unavailable)"
     return f"{100 * m:.1f}% ± {100 * h:.1f}"
 
 
@@ -265,8 +297,8 @@ def main() -> None:
     path = ROOT / "runs" / "engine_versus" / f"{args.tag}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
-    if saved.get("results") and saved.get("shield_counting") != SHIELD_COUNTS:
-        raise SystemExit(f"{path} has no shield prompt counts; use a new tag")
+    if saved.get("results") and saved.get("counting") != COUNTING:
+        raise SystemExit(f"{path} has no combined shield and switch counts; use a new tag")
     if saved and saved.get("evaluator_cache") not in (CACHE_POLICY, "per_player"):  # task 29 wrote "per_player"
         raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
@@ -276,8 +308,10 @@ def main() -> None:
     if saved and saved.get("field", "standard") != args.field:
         raise SystemExit(f"{path} was made with --field {saved.get('field', 'standard')}; use that or another tag")
     saved.update(seed=args.seed, baseline=args.baseline, field=args.field,
-                 evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY), shield_counting=SHIELD_COUNTS)
+                 evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY), counting=COUNTING)
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
+    activity = saved.setdefault("activity", {})  # same field/spec/battle keys as the scores; h2h keeps both sides
+    saved["mid_swap_definition"] = "voluntary SWITCH actions after turn zero; replacements excluded"
     times = saved.setdefault("search_ms", {})
     # Exact frequencies of the rounded timings keep checkpoints small without dropping tail observations.
     for spec, recorded in times.items():
@@ -290,47 +324,51 @@ def main() -> None:
         for kind, count in (("h2h", args.pairings if name != "baseline" else 0), ("crowd", args.crowd),
                             ("pvpoke", args.pvpoke), ("reader", args.reader)):
             have = results.get(kind, {}).get(spec, {})
-            start = 0
-            while start < count:
-                if str(start) in have:
-                    start += 1
-                    continue
-                end = start + 1
-                while end < min(start + args.chunk, count) and str(end) not in have:
-                    end += 1
-                plan.append((kind, spec, spec, args.baseline, start, end - start, args.seed))
-                start = end
+            counted = activity.get(kind, {}).get(spec, {})
+            missing = [n for n in range(count) if str(n) not in have or str(n) not in counted]
+            # Keep jobs contiguous, and never repeat completed battles when resuming with a different chunk size.
+            while missing:
+                start = missing[0]
+                length = 1
+                while length < min(args.chunk, len(missing)) and missing[length] == start + length:
+                    length += 1
+                plan.append((kind, spec, spec, args.baseline, start, length, args.seed))
+                missing = missing[length:]
     print(f"{len(plan)} jobs to run on {args.workers} workers", flush=True)
     t0, last = time.time(), time.time()
     if plan:
-        with (multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field, args.pause_file))
-              if args.workers > 1 else nullcontext()) as pool:
-            if pool is None:
-                setup(args.field, args.pause_file)
-            for result in (pool.imap_unordered(job, plan) if pool else map(job, plan)):
-                record(saved, result)
+        def receive(parts):
+            nonlocal last
+            for result in parts:
+                collect(saved, result)
                 if time.time() - last > 60:
                     path.write_text(json.dumps(saved))
                     last = time.time()
                     print(f"  {sum(len(v) for r in results.values() for v in r.values())} results, "
                           f"{(time.time() - t0) / 60:.0f} min", flush=True)
+        if args.workers == 1:  # also works where Windows sandbox permissions prevent spawning a pipe
+            setup(args.field, args.pause_file)
+            receive(map(job, plan))
+        else:
+            with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup,
+                                                            initargs=(args.field, args.pause_file)) as pool:
+                receive(pool.imap_unordered(job, plan))
     path.write_text(json.dumps(saved))
 
     def values(kind, spec):
         got = results.get(kind, {}).get(spec, {})
         return [got[k] for k in sorted(got, key=int)]
 
-    def calls(kind, spec):
-        return saved.get("shield_calls", {}).get(kind, {}).get(spec, {}).values()
-
     print(f"\nbaseline: {args.baseline or 'the confirmed engine'}")
-    head_calls = [row for spec in args.candidates for row in calls("h2h", spec)]
-    if head_calls:
-        print(f"  head to head, all candidates: shields / shield prompts {shield_rate(head_calls, baseline=True)}")
+    head_rows = [row for spec in args.candidates for row in activity.get("h2h", {}).get(spec, {}).values()]
+    if head_rows:
+        print(f"  head to head, all candidates: baseline shields / shield prompts {shield_rate(head_rows, 'baseline')}")
     base = {kind: values(kind, args.baseline) for kind in ("crowd", "pvpoke", "reader")}
     for kind, v in base.items():
         if v:
-            print(f"  against the {kind}: {summary(v)}; shields / shield prompts {shield_rate(calls(kind, args.baseline))}")
+            print(f"  against the {kind}: {summary(v)}")
+            rows = activity[kind][args.baseline]
+            print(f"    baseline: {activity_summary(rows)}; shields / shield prompts {shield_rate(rows.values())}")
     for name, spec in named.items():
         if name == "baseline":
             continue
@@ -338,20 +376,25 @@ def main() -> None:
         h2h = values("h2h", spec)
         if h2h:
             print(f"  head to head against the baseline, {len(h2h)} pairings both ways: {summary(h2h)}")
-            print(f"    shields / shield prompts {shield_rate(calls('h2h', spec))}; "
-                  f"baseline {shield_rate(calls('h2h', spec), baseline=True)}")
+            rows = activity["h2h"][spec]
+            print(f"    candidate: {activity_summary(rows)}; shields / shield prompts {shield_rate(rows.values())}")
+            print(f"    baseline:  {activity_summary(rows, 'baseline')}; shields / shield prompts "
+                  f"{shield_rate(rows.values(), 'baseline')}")
         for kind in ("crowd", "pvpoke", "reader"):
             v = values(kind, spec)
             if v and len(v) == len(base[kind]):
                 diff = [x - y for x, y in zip(v, base[kind])]
                 m, h = estimate(diff)
-                print(f"  against the {kind}: {summary(v)}, {100 * m:+.1f} ± {100 * h:.1f} points on the baseline")
-                print(f"    shields / shield prompts {shield_rate(calls(kind, spec))}")
+                margin = " (margin unavailable)" if math.isnan(h) else f" ± {100 * h:.1f}"
+                print(f"  against the {kind}: {summary(v)}, {100 * m:+.1f}{margin} points on the baseline")
+                rows = activity[kind][spec]
+                print(f"    candidate: {activity_summary(rows)}; shields / shield prompts {shield_rate(rows.values())}")
         t = np.array([float(ms) for ms, count in times.get(spec, {}).items() for _ in range(count)])
         if len(t):
             print(f"  search time per searched decision: median {np.median(t):.0f} ms, 99th percentile "
                   f"{np.percentile(t, 99):.0f}, worst {t.max():.0f} (this machine)")
-    print(f"\nresults: {path.relative_to(ROOT)}")
+    print(f"\nelapsed: {time.time() - t0:.1f} seconds")
+    print(f"results: {path.relative_to(ROOT)}")
 
 
 if __name__ == "__main__":

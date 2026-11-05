@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -39,6 +40,8 @@ def timing_problems(summary: dict) -> list:
 
 
 def run(*command) -> subprocess.CompletedProcess:
+    if os.name == "nt" and command[0] == "nice":
+        command = command[1:]  # realtime_trial's workers already lower their priority on Windows
     print("  $", " ".join(command), flush=True)
     return subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
 
