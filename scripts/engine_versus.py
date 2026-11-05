@@ -12,6 +12,8 @@ temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 |
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
 team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
 overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
+"website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
+With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
 round), against the crowd, against PvPoke's AI, and against a reader (pogo.reader: an engine that predicts its
@@ -26,7 +28,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import multiprocessing
 import os
 import random
 import sys
@@ -48,8 +49,9 @@ from pogo.gamedata import GameData  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 from pogo.reader import Reader  # noqa: E402
-from pogo.realtime import RealTime  # noqa: E402
+from pogo.realtime import WEBSITE, RealTime  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
+from scripts.wide_teams import run_jobs  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
@@ -61,12 +63,16 @@ def parse(spec: str) -> dict | None:
     """'samples=16,heads=throw+shield' -> settings on top of the confirmed engine; 'bot' -> None (the trained bot)."""
     if spec.strip() == "bot":
         return None
+    parts = list(filter(None, (p.strip() for p in spec.split(","))))
     out = dict(CONFIRMED)
-    for part in filter(None, (p.strip() for p in spec.split(","))):
+    if parts and parts[0] == "website":
+        out.update(WEBSITE, pool=50)
+        parts = parts[1:]
+    for part in parts:
         key, value = part.split("=", 1)
         if key == "heads":
             out[key] = tuple(value.split("+"))
-        elif key in ("samples", "horizon"):
+        elif key in ("samples", "horizon", "pool"):
             out[key] = int(value)
         elif key in ("edge", "margin", "temperature", "switch_edge", "robust"):
             out[key] = float(value)
@@ -86,7 +92,7 @@ def wait_while_paused(path: str | None) -> None:
         time.sleep(30)
 
 
-def setup(field: str = "standard", pause: str | None = None) -> None:
+def setup(field: str = "standard", pause: str | None = None, team_pool: int | None = None) -> None:
     low_priority()
     gd = GameData()
     if field == "pvpoke":
@@ -99,7 +105,8 @@ def setup(field: str = "standard", pause: str | None = None) -> None:
         pool = gd.meta(50)
         draw = drawer(gd, pool)
     _state.update(gd=gd, pool=pool, draw=draw, net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
-                  evals={}, pause=pause)
+                  evals={}, pause=pause, our_draw=drawer(gd, gd.meta(team_pool)) if team_pool else draw,
+                  team_pool=team_pool, pools={})
 
 
 def evaluator(path: str | None) -> Evaluator:
@@ -130,8 +137,15 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
     ev = Evaluator(evaluator(kw.pop("eval", None)).model)
     q = network(kw.pop("q", None))
     margin = kw.pop("margin")
+    n = kw.pop("pool", None)
+    pool = s["pool"]
+    if n is not None:
+        if n not in s["pools"]:
+            s["pools"][n] = s["gd"].meta(n)
+        pool = s["pools"][n]
+    kw.setdefault("rollout", "bot")
     extra = NO_LIMIT if cls is RealTime else {}
-    return cls(ev, s["pool"], rollout="bot", q=q, margin=margin, seed=seed, **kw, **extra)
+    return cls(ev, pool, q=q, margin=margin, seed=seed, **kw, **extra)
 
 
 def points(winner: int, side: int) -> float:
@@ -153,7 +167,8 @@ def _job(task):
     out, searches = {}, []
     for n in range(start, start + count):
         rng = random.Random(seed * 1_000_003 + n)
-        a, b = s["draw"](rng), s["draw"](rng)
+        a = s["our_draw"](rng)
+        b = (s["our_draw"] if kind in ("h2h", "reader") else s["draw"])(rng)
         dice = rng.getrandbits(32)
         if kind == "h2h":
             pair = []
@@ -197,6 +212,8 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=2701)
     parser.add_argument("--field", choices=("standard", "pvpoke", "mixed"), default="standard",
                         help="opposing teams: the usual draw, or as PvPoke's usage data has them")
+    parser.add_argument("--team-pool", type=int, choices=(50,),
+                        help="top-50 teams for the compared pilots; --field still supplies crowd/PvPoke teams")
     parser.add_argument("--pause-file", help="while this file exists, workers finish the job they are on and wait")
     args = parser.parse_args()
     for spec in [args.baseline, *args.candidates]:
@@ -212,7 +229,10 @@ def main() -> None:
         raise SystemExit(f"{path} used a different baseline; use that baseline or another tag")
     if saved and saved.get("field", "standard") != args.field:
         raise SystemExit(f"{path} was made with --field {saved.get('field', 'standard')}; use that or another tag")
+    if saved and saved.get("team_pool") != args.team_pool:
+        raise SystemExit(f"{path} used a different --team-pool; use that or another tag")
     saved.update(seed=args.seed, baseline=args.baseline, field=args.field,
+                 team_pool=args.team_pool,
                  evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY))
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
     times = saved.setdefault("search_ms", {})
@@ -233,18 +253,18 @@ def main() -> None:
     print(f"{len(plan)} jobs to run on {args.workers} workers", flush=True)
     t0, last = time.time(), time.time()
     if plan:
-        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field, args.pause_file)) as pool:
-            for kind, spec, out, searches in pool.imap_unordered(job, plan):
-                results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
-                hist = times.setdefault(spec, {})
-                for ms in searches[:200]:
-                    key = str(round(ms, 1))
-                    hist[key] = hist.get(key, 0) + 1
-                if time.time() - last > 60:
-                    path.write_text(json.dumps(saved))
-                    last = time.time()
-                    print(f"  {sum(len(v) for r in results.values() for v in r.values())} results, "
-                          f"{(time.time() - t0) / 60:.0f} min", flush=True)
+        for kind, spec, out, searches in run_jobs(job, plan, args.workers, setup,
+                                                 (args.field, args.pause_file, args.team_pool), spawn=True):
+            results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
+            hist = times.setdefault(spec, {})
+            for ms in searches[:200]:
+                key = str(round(ms, 1))
+                hist[key] = hist.get(key, 0) + 1
+            if time.time() - last > 60:
+                path.write_text(json.dumps(saved))
+                last = time.time()
+                print(f"  {sum(len(v) for r in results.values() for v in r.values())} results, "
+                      f"{(time.time() - t0) / 60:.0f} min", flush=True)
     path.write_text(json.dumps(saved))
 
     def values(kind, spec):

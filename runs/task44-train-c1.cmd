@@ -1,0 +1,1 @@
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\decide.py --pool 300 --minutes 60 --workers 3 --run task44/candidate-1 >> runs\task44_train-c1.out 2>&1

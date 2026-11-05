@@ -1,0 +1,1 @@
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --pilot engine --engine-pool 50 --net runs/general-decide/q.npz --teams 10 --battles 100 --workers 3 --seed 4402 --out runs/task44/engine50 >> runs\task44_engine50.out 2>&1

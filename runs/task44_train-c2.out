@@ -1,0 +1,39 @@
+team: any (random threes from 304 Pokémon; requested pool 300)
+teams: random threes
+opponents: variations of the Planner
+field: usual; form inputs: True; play-outs per option: 1
+workers: 3; play-outs scored by: result
+mid-matchup swap: True; examples per round: all
+collected this round: 90135 shield, 31664 throw, 60404 swap, 15386 replace, 230174 mid_swap
+
+round 1: 16225 battles (0 of them 1v1 against PvPoke) in 30.1 min; examples so far: 90135 shield, 31664 throw, 60404 swap, 15386 replace, 230174 mid_swap
+  shield: average result by option 61.8% 60.2%
+  throw: average result by option 62.3% 59.9% 59.0% 54.2% 37.7%
+  swap: average result by option 62.6% 55.3% 58.4%
+  replace: average result by option 54.9% 55.2%
+  mid_swap: average result by option 65.2% 54.3% 56.1%
+  overrule when ahead by 0.02: +2.5 ± 3.2 points against the Planner
+  overrule when ahead by 0.05: +4.1 ± 2.6 points against the Planner
+  overrule when ahead by 0.1: +2.5 ± 1.9 points against the Planner
+collected this round: 81565 shield, 26200 throw, 51054 swap, 12856 replace, 183833 mid_swap
+
+round 2: 13613 battles (0 of them 1v1 against PvPoke) in 30.1 min; examples so far: 171700 shield, 57864 throw, 111458 swap, 28242 replace, 414007 mid_swap
+  shield: average result by option 62.5% 61.1%
+  throw: average result by option 63.2% 61.3% 60.1% 55.4% 38.9%
+  swap: average result by option 64.1% 56.6% 59.5%
+  replace: average result by option 55.9% 56.3%
+  mid_swap: average result by option 66.6% 55.8% 57.5%
+  overrule when ahead by 0.02: +2.2 ± 3.0 points against the Planner
+  overrule when ahead by 0.05: +2.5 ± 2.5 points against the Planner
+  overrule when ahead by 0.1: +1.0 ± 1.7 points against the Planner
+
+final test on 3000 fresh battles, overruling when ahead by 0.05
+  with learned decisions   64.6% ± 1.7
+  Planner, same teams      60.9% ± 1.7
+  difference               +3.7 ± 1.5 points (same battles for both); overruled the Planner per battle: mid_swap 0.15, replace 0.00, shield 0.34, swap 0.06, throw 0.40
+
+the same model on top-50 teams against the usual crowd, with the shipped table
+  with learned decisions   66.2% ± 1.7
+  Planner, same teams      60.9% ± 1.7
+  difference               +5.3 ± 1.5 points (same battles for both); overruled the Planner per battle: mid_swap 0.18, replace 0.00, shield 0.49, swap 0.08, throw 0.39
+files: runs/task44/candidate-2/q.npz, margin.txt, examples.npz

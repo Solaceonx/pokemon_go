@@ -3924,3 +3924,195 @@ The 51-300 group again with the shipped 50-Pokémon one-on-one table (as the web
 in full to form-changer teams (Aegislash teams are the weakest, -3 to +16), and about 60% of it to teams outside the top 50
 (the weakest: shadow Milotic / shadow Greninja / Drapion -4). Not yet tested: the engine's search on such teams, and
 whether training examples from a wider mix of teams recover the rest of the edge.
+
+
+## The bot and engine for any team (task 44, 2026-11-05, Marco): **no new network ships; the engine already handles unfamiliar teams**
+
+Built `decide.py --pool` training with optional form-changers, the wide one-on-one table and a closing top-50 check.
+Added the website engine and its unseen-species pool to `any_team_test.py`, top-50 pilot teams to `engine_versus.py`,
+and shared worker/table handling for the measurements.
+
+**Part A, training.** Three workers each, `--minutes 60`, two rounds, the usual crowd; candidate 1 uses 300 Pokémon,
+candidates 2 and 3 use 304 with form-changers. Candidate 2 beat candidate 1 on judge 1, so candidate 3 uses its recipe
+with `--start runs/general-decide/q.npz` (the current bot pilots the first collection round). Each closing test uses
+3,000 fresh battles; the rulebook scores 60.9% ± 1.7 in every cell, and each trained score below also has margin ±1.7.
+Edges are paired trained-minus-rulebook points; all reported margins here are 95%. Sources: `runs/task44_train-c1.out`,
+`task44_train-c2.out`, `task44_train-c3.out`; saved networks and chosen margins in `runs/task44/candidate-{1,2,3}/`.
+
+| Candidate | Recipe | Chosen margin | Wide trained score | Wide edge | Top-50 trained score | Top-50 edge |
+|---|---|---|---|---|---|---|
+| 1 | `--pool 300` | 0.05 | 64.2% | +3.3 ± 1.5 | 66.1% | +5.2 ± 1.6 |
+| 2 | `--pool 300 --forms` | 0.05 | 64.6% | +3.7 ± 1.5 | 66.2% | +5.3 ± 1.5 |
+| 3 | candidate 2 + `--start` current q | 0.02 | 66.4% | +5.4 ± 1.8 | 67.1% | +6.2 ± 1.9 |
+
+**Judge 1, networks alone.** Seed 8, 20 teams per group, 200 battles each, against the mixed field piloted by the current
+bot; the same teams and dice for every network, wide one-on-ones for both pilots. This judge fixes the overrule margin
+at 0.02 for every network, including candidates 1 and 2 whose training chose 0.05. The rulebook's unrounded group scores
+are identical in all four JSON files (printed: 36.9%, 29.1%, 35.1%). `runs/task44_judge1.out` lists current, 1, 2;
+`runs/task44_judge1-c3.out` lists 3. These are each network's paired edge over the rulebook, not over the current network:
+
+| Network | Top 50 | Ranks 51-300 | With a form-changer |
+|---|---|---|---|
+| Current | +9.4 ± 1.7 | +2.8 ± 1.5 | +9.1 ± 1.6 |
+| Candidate 1 | +5.9 ± 1.6 | +3.1 ± 1.5 | +7.5 ± 1.6 |
+| Candidate 2 | +8.2 ± 1.6 | +4.2 ± 1.5 | +10.0 ± 1.6 |
+| Candidate 3 | +6.9 ± 1.7 | +4.6 ± 1.5 | +9.6 ± 1.6 |
+
+| Candidate minus current, points (means only) | Top 50 | Ranks 51-300 | With a form-changer |
+|---|---|---|---|
+| 1 | -3.5125 | +0.3750 | -1.6000 |
+| 2 | -1.1625 | +1.4500 | +0.9375 |
+| 3 | -2.4500 | +1.8250 | +0.5375 |
+
+**Missing evidence: the candidate-minus-current per-battle margins cannot be recovered.** The files actually present
+are `runs/task44/judge1-current.json` and `judge1-candidate-{1,2,3}.json`, with group scores and rounded per-team edges;
+there are no per-battle arrays or `judge1-*/` directories. The script keeps battle scores in memory but writes only those
+summaries. The means above are `100 * (candidate.groups[g].trained - current.groups[g].trained)` from the unrounded
+JSON values, equal to the mean paired difference because the battles match. For the requested margin one needs each
+`d_i = candidate_score_i - current_score_i`, then `100 * 1.96 * sd(d_i, ddof=1) / sqrt(4000)`; the covariance is absent.
+Subtracting or combining the two rulebook margins cannot supply it. Thus the networks gain +0.375, +1.450 and +1.825
+points on ranks 51-300, but whether any gain clears the paired margin, with no loss beyond it in the other groups,
+is **not established by the saved evidence**. No candidate can be certified as passing that rule here. The current
+network's edge on ranks 51-300 is +2.8 on seed 8 against +4.9 on the earlier seed 7: seeds matter at this size.
+The same logs' ranks 51-300 diagnostic with the shipped table rather than the wide table gives current +1.7 ± 1.3,
+candidate 1 -0.3 ± 1.3, candidate 2 -0.6 ± 1.3, candidate 3 +0.3 ± 1.3 points for each network against itself.
+
+**Judge 2, website engine on each q against the website engine on the current q.** Mixed opposing field, top-50 pilot
+teams, website settings and the existing evaluator throughout; seed 4401, 1,500 head-to-head pairings played both ways,
+1,500 crowd and 750 PvPoke battles. Baseline crowd 69.8% ± 2.3, PvPoke 81.8% ± 2.7, identical in both logs.
+`runs/task44_judge2.out` (1 and 2, 12 workers), `runs/task44_judge2-c3.out` (3, 20 workers). Crowd and PvPoke columns
+are paired differences from baseline; head to head is a score, with 50% even.
+
+| Candidate | Head to head | Crowd difference | PvPoke difference | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| 1 | 41.7% ± 1.5 | -3.3 ± 2.9 | +0.7 ± 3.5 | 141 / 812 / 1,703 |
+| 2 | 42.6% ± 1.5 | -5.7 ± 2.8 | -2.7 ± 3.4 | 141 / 844 / 3,406 |
+| 3 | 42.5% ± 1.5 | -4.3 ± 2.8 | -2.4 ± 3.5 | 172 / 938 / 1,859 |
+
+**Confirmation: candidate 3, selected as best of the three overall, although all three lose on judge 2.** This is an
+overall selection, not a claim that 3 won each column: 2's head-to-head point estimate is slightly higher and 1 does
+better against the outside opponents. Fresh seed 4444, 2,000 pairings both ways / 2,000 crowd / 1,000 PvPoke, 32 workers
+(`runs/task44_confirm.out`). Baseline crowd 72.9% ± 1.9, PvPoke 82.8% ± 2.3.
+
+| Candidate | Head to head | Crowd score; difference | PvPoke score; difference | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| 3, seed 4444 | 41.1% ± 1.3 | 65.5% ± 2.1; -7.3 ± 2.4 | 82.7% ± 2.3; -0.1 ± 2.9 | 172 / 922 / 1,953 |
+
+**No new network ships.** On top-50 teams all three engines lose about 7.5 points head to head (shortfalls from 50%:
+8.3, 7.4, 7.5), beyond the margin; the fresh seed confirms the loss, at **8.9 ± 1.3 points below even**, not 7.5.
+The small network-only gains outside the top 50 do not rescue that result. **Untested hypothesis, not a finding:**
+the engine loses much more with these networks than they lose alone (judge 2 versus judge 1, different opponents and
+comparisons, so not a controlled interaction test). One possible reason is that `runs/eval/eval.npz` was fitted to
+games played with the current q; tasks 31 and 39 refit the evaluator on games from the policy being used, with task 39
+also updating q. A new q may need its own evaluator before the engine can use it. No such refit was tested in task 44.
+
+**Part B, unfamiliar teams.** Current q on both sides, engine minus trained bot, seed 4402, 10 teams per group and 100
+battles each, 3 workers per run. The website's unseen pool is 50; the wide pool is the top 300 plus form-changers.
+Sources: `runs/task44_engine50.out`, `runs/task44_engine300.out`, summaries under `runs/task44/engine{50,300}.*`.
+
+| Unseen pool | Group | Engine / trained score | Engine minus trained | Searches | Median / 99th ms | Cut short | Fallback |
+|---|---|---|---|---|---|---|---|
+| 50 | Top 50 | 59.6% / 41.0% | +18.6 ± 3.5 | 24,592 | 125.0 / 500.0 | 6.0% | 0.1% |
+| 50 | Ranks 51-300 | 54.1% / 29.4% | +24.7 ± 3.3 | 19,388 | 109.4 / 468.8 | 2.4% | 0.0% |
+| 50 | With a form-changer | 59.3% / 39.9% | +19.4 ± 3.3 | 22,346 | 109.4 / 468.8 | 6.3% | 0.2% |
+| 300 + forms | Top 50 | 60.2% / 41.0% | +19.2 ± 3.4 | 25,023 | 125.0 / 578.1 | 10.2% | 0.2% |
+| 300 + forms | Ranks 51-300 | 52.0% / 29.4% | +22.5 ± 3.2 | 19,342 | 125.0 / 562.5 | 5.2% | 0.1% |
+| 300 + forms | With a form-changer | 61.0% / 39.9% | +21.1 ± 3.3 | 22,790 | 109.4 / 531.2 | 11.1% | 0.2% |
+
+The website engine already beats the trained bot by about 20 points in every group, including unfamiliar teams, and
+on all 10 teams in each group. Its edge does not shrink on ranks 51-300. The wider pool adds nothing beyond the
+reported margins: its score changes are +0.65, -2.20 and +1.65 points (unrounded JSON), all smaller than the reported
+engine-minus-bot margins; a direct paired pool-change margin is not saved. It cuts more searches short in every group.
+The 99th percentiles are below the brief's 800 ms threshold on this PC; browser timing was not measured.
+
+**Time and cost.** Marco's PC, Ryzen 9 9950X3D, 16 physical cores / 32 hardware threads, 2026-11-05, one NumPy thread
+per worker. Stage one (trainings 1 and 2 plus both Part B runs, 12 workers together) was 05:58-07:04; judge 1 for
+current/1/2 was 07:06-07:09; training 3 was 07:11-08:17; judge 2 for 1/2 was 07:11-09:24; candidate 3's judges were
+08:18-09:24; confirmation was 09:26-10:08. Use the logs' elapsed lines where available. The training logs report
+30.1 minutes per collection round, not total fit/test time, so their cost uses the 66-minute clock windows.
+
+| Job | Elapsed basis | Workers | Thread-hours | Physical-core-hour equivalents (2 threads/core) |
+|---|---|---|---|---|
+| Train 1 + 2 | 66 min each, clock window | 3 each | 6.60 | 3.30 |
+| Part B, pool 50 | 3,423 s, log | 3 | 2.85 | 1.43 |
+| Part B, pool 300 + forms | 3,929 s, log | 3 | 3.27 | 1.64 |
+| Judge 1, current / 1 / 2 | 57 + 60 + 60 s, logs | 10 | 0.49 | 0.25 |
+| Train 3 | 66 min, clock window | 3 | 3.30 | 1.65 |
+| Judge 1, candidate 3 | 65 s, log | 10 | 0.18 | 0.09 |
+| Judge 2, candidates 1 + 2 | about 132 min, last progress line | 12 | 26.40 | 13.20 |
+| Judge 2, candidate 3 | about 50 min, last progress line | 20 | 16.67 | 8.33 |
+| Confirmation | about 42 min, last progress line and clock window | 32 | 22.40 | 11.20 |
+| Total, approximate (unrounded sum) | logs plus training windows | | 82.17 | 41.08 |
+
+Thread-hours are elapsed hours times configured workers, an allocation estimate, not measured CPU consumption;
+physical-core-hour equivalents divide that by two for this CPU's two hardware threads per core, not a claim of equal
+throughput or measured physical-core usage. The engine-judge logs end with progress lines, not final elapsed totals.
+In particular, candidate 3's 50-minute judge 2 progress line plus its 65-second judge 1 does not account for its full
+66-minute reported window. Budgeting the whole reported windows gives about **88 thread-hours / 44 physical-core-hour
+equivalents**, an upper allocation estimate; the gap cannot be assigned from these logs. Actual physical-core CPU-hours
+were not recorded.
+
+**Commands as run** (Windows `cmd.exe`; copied verbatim from the named command files, not rerun for this write-up).
+
+`runs/task44-train-c1.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\decide.py --pool 300 --minutes 60 --workers 3 --run task44/candidate-1 >> runs\task44_train-c1.out 2>&1
+```
+
+`runs/task44-train-c2.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\decide.py --pool 300 --forms --minutes 60 --workers 3 --run task44/candidate-2 >> runs\task44_train-c2.out 2>&1
+```
+
+`runs/task44-train-c3.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\decide.py --pool 300 --forms --start runs/general-decide/q.npz --minutes 60 --workers 3 --run task44/candidate-3 >> runs\task44_train-c3.out 2>&1
+```
+
+`runs/task44-judge1.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --seed 8 --workers 10 --net runs/general-decide/q.npz --out runs/task44/judge1-current >> runs\task44_judge1.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --seed 8 --workers 10 --net runs/task44/candidate-1/q.npz --out runs/task44/judge1-candidate-1 >> runs\task44_judge1.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --seed 8 --workers 10 --net runs/task44/candidate-2/q.npz --out runs/task44/judge1-candidate-2 >> runs\task44_judge1.out 2>&1
+```
+
+`runs/task44-judge2.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --team-pool 50 --pairings 1500 --crowd 1500 --pvpoke 750 --workers 12 --seed 4401 --tag task44-judge2 --baseline "website,q=runs/general-decide/q.npz" --candidates "website,q=runs/task44/candidate-1/q.npz" "website,q=runs/task44/candidate-2/q.npz" >> runs\task44_judge2.out 2>&1
+```
+
+`runs/task44-judge-c3.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --seed 8 --workers 10 --net runs/task44/candidate-3/q.npz --out runs/task44/judge1-candidate-3 >> runs\task44_judge1-c3.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --team-pool 50 --pairings 1500 --crowd 1500 --pvpoke 750 --workers 20 --seed 4401 --tag task44-judge2-c3 --baseline "website,q=runs/general-decide/q.npz" --candidates "website,q=runs/task44/candidate-3/q.npz" >> runs\task44_judge2-c3.out 2>&1
+```
+
+`runs/task44-confirm.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --team-pool 50 --pairings 2000 --crowd 2000 --pvpoke 1000 --workers 32 --seed 4444 --tag task44-confirm --baseline "website,q=runs/general-decide/q.npz" --candidates "website,q=runs/task44/candidate-3/q.npz" >> runs\task44_confirm.out 2>&1
+```
+
+`runs/task44-partb-50.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --pilot engine --engine-pool 50 --net runs/general-decide/q.npz --teams 10 --battles 100 --workers 3 --seed 4402 --out runs/task44/engine50 >> runs\task44_engine50.out 2>&1
+```
+
+`runs/task44-partb-300.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-task44" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\any_team_test.py --pilot engine --engine-pool 300 --net runs/general-decide/q.npz --teams 10 --battles 100 --workers 3 --seed 4402 --out runs/task44/engine300 >> runs\task44_engine300.out 2>&1
+```
+
+The exam was not run. This branch's `exam_variants.py` accepts answer files, `--tag`, `--variants` and `--workers`,
+but no q path; its variant parser accepts numbers (and the `stay_after_replace` boolean), so `--variants q=...` cannot
+load candidate 3 either. Luke can decide on this result; an exam on his Mac is only follow-up if he still wants it,
+and needs q-path support first. Task 44 is only in `main`'s `docs/tasks.md`; update its state there when recording the
+decision, not in this branch. PR target: `wide-teams`.
+
+Checks: the full suite passes on Marco's PC, 289 tests with 7 skipped; PvPoke 108 of 108.
+Only this status entry and `runs/task44-pr-body.md` were edited for the write-up; no measurements were rerun.

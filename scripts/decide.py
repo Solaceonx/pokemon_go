@@ -106,7 +106,8 @@ def options_for(head: str, mask: tuple) -> list[int]:
 
 def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw, throw_share: float = 0.1,
             pvpoke_share: float = 0.0, mid_swap: bool = True, score: str = "result", horizon: int = 0,
-            wide: bool = False, both_sides: float = 0.0, forms: bool = False, playouts: int = 1):
+            wide: bool = False, both_sides: float = 0.0, forms: bool = False, playouts: int = 1,
+            own_pool=None):
     """Play battles; at each decision (a sample of the throw decisions), play out every option.
 
     With pvpoke_share, that share of battles is one against one versus PvPoke's AI. The port is
@@ -120,6 +121,7 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
     dice shared by all options of the decision) and the results averaged: steadier targets, fewer examples.
     """
     rng = random.Random(seed)
+    our_draw = (lambda rng: rng.sample(own_pool, 3)) if own_pool is not None else draw
     data = {head: ([], []) for head in Q_HEADS}
     battles, pvpoke_battles, stop = 0, 0, time.time() + seconds
     while time.time() < stop:
@@ -133,10 +135,10 @@ def collect(team, pool, q, margin: float, crowd, seconds: float, seed: int, draw
             their_log = []
             me = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32))
             them = Learner(q=q, margin=margin, log=their_log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32))
-            battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
+            battle = Battle(team or our_draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         else:
             me, them = Learner(q=q, margin=margin, log=log, mid_swap=mid_swap, wide=wide, forms=forms, seed=rng.getrandbits(32)), crowd(rng)
-            battle = Battle(team or draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
+            battle = Battle(team or our_draw(rng), draw(rng), me, them, seed=rng.getrandbits(32))
         logs = [log] if their_log is None else [log, their_log]  # whose decisions this battle teaches
         while battle.winner is None:
             snapshot = (battle.clone(None, None), me.clone(), them.clone())
@@ -176,17 +178,32 @@ def sample_examples(data, count: int, seed: int):
     return sampled
 
 
+def training_pool(gd, n: int = 50, forms: bool = False):
+    """Keep the original top-50 draw exactly; wider pools add the field and reference teams."""
+    from scripts.wide_teams import FORMS, species_pool
+    pool = gd.meta(50) if n == 50 else species_pool(gd, n)
+    pool = [b for b in pool if b.forms is None]
+    if forms:
+        pool += [gd.default(s) for s in FORMS]
+    return pool
+
+
 def world(config: dict):
     """The pool, our team, the source of teams and the source of opponents, from plain settings.
 
     Kept separate so that worker processes can rebuild the same world for themselves.
     """
     gd = GameData()
-    pool = gd.meta(50)
+    pool = training_pool(gd, config.get("pool", 50), config.get("forms", False))
+    if config.get("pool", 50) > 50:
+        from scripts.wide_teams import OUT, set_matchup_table
+        set_matchup_table(OUT / "matchups.json")
     team = [gd.default(sid) for sid in config["team"]] if config["team"] else None
     if config.get("field") == "mixed":  # teams as people bring them (pogo.teamshape.mixed_field), form-changers included
         from pogo.teamshape import mixed_field
-        pool, draw = mixed_field(gd)
+        field_pool, draw = mixed_field(gd)
+        if config.get("pool", 50) == 50 and not config.get("forms", False):
+            pool = field_pool
     elif config["teams"]:
         from pogo.teamlist import drawer
         draw = drawer(gd, pool, config["teams"])
@@ -216,7 +233,8 @@ def collect_job(job):
                    pvpoke_share=config.get("pvpoke_share", 0.0), mid_swap=config["mid_swap"],
                    score=config.get("score", "result"), horizon=config.get("horizon", 0), wide=config.get("wide", False),
                    both_sides=config.get("both_sides", 0.0), forms=config.get("forms", False),
-                   playouts=config.get("playouts", 1))
+                   playouts=config.get("playouts", 1),
+                   own_pool=pool if config.get("pool", 50) > 50 and config.get("field") == "mixed" else None)
 
 
 def main() -> None:
@@ -230,6 +248,8 @@ def main() -> None:
     parser.add_argument("--teams", metavar="FILE", help="draw half of all teams from this list (data/teams.json) instead of at random")
     parser.add_argument("--resume", action="store_true", help="carry on from the model and examples already in the run folder")
     parser.add_argument("--run", help="name of the run folder under runs/")
+    parser.add_argument("--pool", type=int, default=50,
+                        help="training species: 50 keeps the original draw; wider pools include the mixed field and reference teams")
     parser.add_argument("--minutes", type=float, default=30, help="time spent generating examples, over all rounds")
     parser.add_argument("--rounds", type=int, default=2)
     parser.add_argument("--no-mid-swap", action="store_true", help="train the four original heads only (controlled ablation)")
@@ -264,19 +284,25 @@ def main() -> None:
         parser.error("--examples-per-round must be positive")
     if args.minutes <= 0 or args.rounds <= 0 or args.workers <= 0:
         parser.error("--minutes, --rounds and --workers must be positive")
+    if args.pool < 3:
+        parser.error("--pool must be at least 3")
+    if args.pool != 50 and not args.run:
+        parser.error("use --run with a different --pool to keep the shipped network intact")
 
     low_priority()
     config = {"team": args.team, "teams": args.teams, "opponents": args.opponents, "exploit": args.exploit,
               "pvpoke_share": args.pvpoke_share, "mid_swap": not args.no_mid_swap, "score": args.score,
               "horizon": args.horizon, "wide": args.wide, "both_sides": args.both_sides, "forms": args.forms,
-              "playouts": args.playouts, "field": args.field}
+              "playouts": args.playouts, "field": args.field, "pool": args.pool}
     gd, pool, team, draw, crowd = world(config)
     folder = ROOT / "runs" / (args.run or (("-".join(args.team) if team else "general") + "-decide"))
     folder.mkdir(parents=True, exist_ok=True)
     rivals, target = args.opponents, args.exploit
     old_crowd = lambda rng: varied(rng, pool)  # noqa: E731
 
-    print("team: " + (", ".join(b.name for b in team) if team else "any (random threes from the top 50)"))
+    print("team: " + (", ".join(b.name for b in team) if team else
+                      "any (random threes from the top 50)" if args.pool == 50 and not args.forms else
+                      f"any (random threes from {len(pool)} Pokémon; requested pool {args.pool})"))
     print("teams: " + (f"half from {args.teams}, half random" if args.teams else "random threes"))
     if target:
         print(f"opponents: always the bot using {args.exploit} (this run trains an exploiter)")
@@ -287,7 +313,7 @@ def main() -> None:
           + (f", judged by the evaluation after {args.horizon} turns" if args.horizon else ""), flush=True)
     print(f"mid-matchup swap: {config['mid_swap']}; examples per round: {args.examples_per_round or 'all'}", flush=True)
 
-    def versus_planner(q, margin, battles, seed, on_team, against=None):
+    def versus_planner(q, margin, battles, seed, on_team, against=None, on_pool=None, on_draw=None):
         pilots = []
         against = against or crowd
 
@@ -295,8 +321,8 @@ def main() -> None:
             pilots.append(Learner(q=q, margin=margin, mid_swap=config["mid_swap"]))
             return pilots[-1]
 
-        learned = field_results(on_team, pool, pilot, against, battles, seed, draw)
-        planned = field_results(on_team, pool, Planner, against, battles, seed, draw)
+        learned = field_results(on_team, on_pool or pool, pilot, against, battles, seed, on_draw or draw)
+        planned = field_results(on_team, on_pool or pool, Planner, against, battles, seed, on_draw or draw)
         overruled: dict = {}
         for p in pilots:
             for (head, _, _), n in p.departures.items():
@@ -318,6 +344,8 @@ def main() -> None:
         q = QNet.load(args.start)
         if q.wide != args.wide:
             parser.error("--start model and --wide disagree")
+        if q.forms and not args.forms:
+            parser.error("--start model needs --forms")
         if max(ps[0].shape[0] for ps in q.params.values()) < inputs:
             q = q.widened(inputs)
         margin = 0.02
@@ -352,7 +380,9 @@ def main() -> None:
         else:
             fresh, battles, pvpoke_battles = collect(team, pool, q, margin, crowd, seconds, args.seed + round_no, draw,
                                                      pvpoke_share=args.pvpoke_share, mid_swap=config["mid_swap"], score=args.score,
-                                                     horizon=args.horizon, wide=args.wide, both_sides=args.both_sides)
+                                                     horizon=args.horizon, wide=args.wide, both_sides=args.both_sides,
+                                                     forms=args.forms, playouts=args.playouts,
+                                                     own_pool=pool if args.pool > 50 and args.field == "mixed" else None)
         collected = {head: len(x) for head, (x, _) in fresh.items()}
         collection_seconds = time.time() - t0
         if args.examples_per_round is not None:
@@ -394,7 +424,15 @@ def main() -> None:
         other = [gd.default(sid) for sid in args.also_test]
         print(f"\nthe same model piloting {', '.join(b.name for b in other)}, {args.final_battles} fresh battles")
         show("also", *versus_planner(q, margin, args.final_battles, args.seed + 998, other))
-    print(f"files: runs/{folder.name}/q.npz, margin.txt, examples.npz")
+    if args.pool > 50:
+        from scripts.wide_teams import set_matchup_table
+        set_matchup_table(None)
+        usual_pool = gd.meta(50)
+        print("\nthe same model on top-50 teams against the usual crowd, with the shipped table")
+        show("top 50", *versus_planner(q, margin, args.final_battles, args.seed + 999, None,
+                                     against=lambda rng: varied(rng, usual_pool), on_pool=usual_pool,
+                                     on_draw=lambda rng: rng.sample(usual_pool, 3)))
+    print(f"files: {folder.relative_to(ROOT).as_posix()}/q.npz, margin.txt, examples.npz")
 
 
 if __name__ == "__main__":
