@@ -35,6 +35,25 @@ and push that before starting.
 
 ## Open tasks
 
+### 37. Standalone reinforcement-learning agent against a frozen engine — Codex (completed; win target failed, 2026-11-03)
+
+Owner-requested work, with up to two days of computing or available usage. Build a separate NumPy agent;
+freeze main's search engine, settings, data and model files; train on an explicit team split; select on
+validation only; evaluate the locked checkpoint on held-out teams and fresh seeds with pairing-clustered
+confidence intervals. Save resumable checkpoints and experiment logs. Review draft PR #10 for tracker context.
+Do not replace the website or engine defaults. Record unsuccessful runs as well as gains in `docs/status.md`.
+
+Completed: standalone agent, resumable training, locked checkpoints, journals, PR #10 review and the
+full audited 9,600-battle held-out test. Scores: mixed 35.06% [33.35–36.77%] and 33.21% [31.48–34.94%];
+standard 33.96% [32.27–35.71%] and 34.67% [32.94–36.35%]. Every gate failed. Both offline-return
+follow-ups also failed validation; neither entered a new final test. The compact final audit bundle is
+committed; full training arrays/intermediate checkpoints remain local. All long jobs/controllers exited.
+346 tests OK (7 video skips), 108/108 PvPoke exact. Draft PR #11 preserves the work; the win target is unmet.
+
+**Done when.** The standalone agent and reproducible train/evaluate commands exist, checks pass, and an
+honest held-out result with confidence intervals establishes whether it reliably beats the frozen current
+engine. A failed strength target must be reported plainly. Tasks 33, 34, 35 and tracker PR #10 remain separate.
+
 | # | Task | Needs |
 |---|---|---|
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — for Marco (the owner, 2026-11-04) | Marco's machine, a few hours |

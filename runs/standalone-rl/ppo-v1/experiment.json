@@ -1,0 +1,32 @@
+{
+  "acceptance": "each mixed seed block: pairing bootstrap 95% lower > .5 AND Hoeffding one-sided 97.5% lower > .5; each standard seed block: bootstrap lower > .5",
+  "algorithm": "masked actor-critic PPO; terminal win=+1, draw=0, loss=-1; imitation initialization",
+  "baseline": {
+    "edge": 0.03,
+    "horizon": 20,
+    "margin": 0.02,
+    "rollout": "bot",
+    "samples": 32
+  },
+  "budget_deadline_unix": 1793758067.0551736,
+  "commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "created_unix": 1793585267.0551736,
+  "frozen_manifest_sha256": "666702e0db79714380bed6af0750d3f4053bca3da5b1cd7c99be41b4600980dc",
+  "numpy": "2.3.5",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "primary_endpoint": "mixed field vs full frozen engine, stochastic policy, two fresh seed blocks",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "review_pr": "https://github.com/Solaceonx/pokemon_go/pull/10",
+  "run": "ppo-v1",
+  "schema": 1,
+  "seed": 37001,
+  "snapshot": ".rl-cache/frozen/59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "sources": {
+    "pogo/rl_experiment.py": "12c44ecfb6bd30517d09d9b109edab3566dc35586e932d1c9a6b778bcf5c8975",
+    "pogo/standalone_rl.py": "349990b7cc679bc3d54fd766b68a51070c0579589b16c9878e7b44b0f91995f2",
+    "scripts/standalone_rl.py": "25b5392c169b9bd6c497fbd8a9d53405aef592efacf701883c3a850565174560"
+  },
+  "split": "70% train / 15% validation / 15% test; unordered trios; same species allowed",
+  "split_salt": "standalone-rl-v1-team-split-2026-11-01",
+  "test_seeds": "generated only after checkpoint lock; never used for selection"
+}

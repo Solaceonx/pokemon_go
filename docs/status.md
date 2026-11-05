@@ -1,5 +1,859 @@
 # Project status, for anyone picking this up
 
+## Standalone RL against a frozen engine — 2026-11-01–03 (Codex, task 37 complete; win target failed)
+
+Owner-requested standalone reinforcement learning, with up to two days of computing or available usage.
+Work is on `codex/standalone-rl`, draft PR #11. Protocol, commands, artifact descriptions and the review
+of tracker PR #10 are in `docs/standalone_rl.md`. **The reliable-win target was not met.**
+
+**Final held-out result, 2026-11-03 19:22 UTC:** all 9,600 registered battles completed. Scores and
+pairing-bootstrap 95% intervals: mixed seed blocks **35.06% [33.35–36.77%]** and **33.21%
+[31.48–34.94%]**; standard blocks **33.96% [32.27–35.71%]** and **34.67% [32.94–36.35%]**.
+Every primary/cross-check gate failed. `mc-ppo-v3/test_results.json` records the complete false verdict;
+`final_evaluation_audit.json` verifies all scores, statistics, pinned sources/model, exact regenerated
+schedules and training/validation separation. Earlier completed blocks are unchanged from their
+partial audits. The selected greedy round-104 checkpoint remains locked after 30,720 main training games.
+
+The nine-member `final_audit_inputs.tar.gz` (1,934,458 bytes) packages exact final pairing logs,
+schedules and lineage bytes. Its complete audit is identical to the local-input audit;
+`final_audit_inputs_manifest.json` records every member's hash and the reproduction command.
+The main journal and selected/rejected checkpoints with optimizer state are committed. All intermediate
+checkpoints and raw training batches remain saved locally. `final_process_cleanup_audit.json` verifies
+zero remaining owned long jobs/controllers and empty benchmark stderr. **346 tests OK (7 video skips),
+108/108 PvPoke exact**. PR #10 still has the reviewed head at the last check. Implementation and evaluation
+are complete within the requested budget; the playing-strength target failed. The entries below record
+the experiment history, including unsuccessful alternatives and operational fixes.
+
+Baseline: main `59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9`, archived source/data/Q/evaluation
+weights with per-file SHA-256 hashes. A separately imported snapshot supplies the simulator and engine;
+32 imagined battles, 20-step horizon, bot rollouts, edge .03, margin .02, no time cuts, fresh evaluator
+cache for every player/game. Mixed-field pool, standard-field cross-check. Existing defaults unchanged.
+
+Implemented a separate 366-input NumPy actor-critic choosing legal actions, shields and replacements
+without any Planner/search call or private state at runtime. Initialization imitates the frozen Learner
+on training teams. PPO uses terminal win/loss rewards against the frozen engine, Learner and self-play.
+Unordered team trios are hashed into disjoint training, validation and final-test partitions, keeping all
+leads together. Validation chooses the checkpoint; locking generates fresh final seeds and forbids further
+training in that run. Evaluation reverses teams and seats and reports pairing-cluster bootstrap intervals
+plus a conservative Hoeffding lower bound. Checkpoints include Adam moments; raw batches, episode logs,
+protocol/source hashes and append-only pairing records are retained locally.
+
+**Checks before implementation:** 263 tests OK (7 video-dependent skips); 108/108 PvPoke battles exact.
+**Implementation checks:** full suite 277 OK (7 skipped), followed by two more passing fairness/resume
+regressions (16 standalone tests total). Tiny pipeline runs used a 32-unit model, 16 imitation games,
+8 PPO games and 2 validation pairings. They exercised save/resume, lock, final evaluation and replay of
+cached results; the nearly random policy scored zero on all four two-pairing test blocks. These tiny runs
+are pipeline checks only, not a playing-strength estimate or an architecture selection test.
+
+**PR #10 review:** head `5cce9110dfb4d17c9c6e6db6151ddc2dba8bf3c7`, isolated archive:
+275 tests OK (7 skipped), 108/108 PvPoke exact. Reviewed cap rollback, forms/protection, sampling,
+pairing statistics and callback leakage; no blocking finding reproduced. Its Learner scores near 59%
+are against a Planner and do not demonstrate wins over the current search engine. The tracker changes
+are not merged into this experiment's frozen opponent.
+
+**Running:** first substantial experiment `ppo-v1`, seed 37001, 128 validation pairings; 16,384
+imitation games then PPO, at most three low-priority workers with one NumPy thread each. Final-test
+plan is 1,200 pairings per fresh seed and field (9,600 battles total), with weights locked beforehand.
+Training results and the honest final success/failure verdict will be appended here.
+
+**First development measurement (`ppo-v1`, imitation initialization only):** after 16,384 teacher games,
+the independent policy scored **19.34%, bootstrap 95% CI [14.84%, 24.02%]** against the full frozen engine
+on 128 validation pairings / 256 battles. The search used 1,564.6 core-seconds across three workers.
+This is validation data, not the reserved final test, and it is a poor result. PPO training now follows;
+neither agreement with the teacher nor this initialized checkpoint meets the strength target.
+
+**First PPO pilot, stopped at a checkpoint:** after four rounds / 1,024 training games, the same
+128 validation pairings gave **18.75%, CI [14.26%, 23.44%]**, against the full 32-sample engine. No
+improvement established. The pilot was stopped before editing its driver; its source is preserved at
+`ace8536c29f91445506ed1930b926f6d8215133e`, and its best and round-4 checkpoints and logs are saved.
+
+**Second experiment (`ppo-v2`):** independent policy heads and critic, per-parameter Adam clocks,
+and a .1-weight auxiliary loss from the frozen engine's public actions in games already being played.
+These are the actual actions, not short-horizon search-value targets. Only the RL side's terminal
+rewards train its critic. Warm start copies the first experiment's best policy/value outputs exactly
+and explicitly resets optimizer moments. Greedy/stochastic mode is selected only on validation.
+The driver now supports unattended prepare/train/lock/test and restores missing frozen caches by commit.
+The tiny independent-network pipeline passed all phases, including recording 185 public opponent
+decisions in its 8-game PPO batch; its weak scores are pipeline checks only. Full suite: 288 tests OK
+(7 video-dependent skips), 108/108 reference battles exact. Final strength evaluation is pending.
+
+**Second experiment's initial controls:** the migrated stochastic policy reproduced all 128 pairing
+outcomes / 256 battles of v1's initial validation exactly, including winners and draws, on the same
+schedule and seeds (`repeatability_check.json`). Greedy inference scored **25.00%, CI [20.31%, 29.88%]**,
+against stochastic **19.34%, CI [14.84%, 24.02%]**. Both remain far below the target. This is an inference-mode
+comparison before PPO updates, not a learning gain or a final test. Paired differences are saved in
+`initial_mode_comparison.json`; the driver selects the mode on validation only.
+
+The long run is live (initial PID 22220). A Windows launcher now sets BelowNormal priority before
+starting Python and rejects a duplicate live run. Its help-only execution, duplicate rejection and
+priority inheritance were checked without starting extra battle workers. The existing Windows
+`low_priority()` helper had silently left the active job at Normal priority; its parent and all three
+verified workers were explicitly lowered and read back at BelowNormal. No active experiment source
+was edited. The saved absolute deadline is the original work budget, 2026-11-03 17:42:10 Los Angeles.
+
+**Eight-round validation and runtime split audit:** after 2,048 v2 training games, stochastic inference
+scored **27.54%, CI [22.66%, 32.62%]** against the full frozen engine on 128 validation pairings / 256
+battles, up from 19.34% before training: **+8.20 percentage points, paired CI [1.95, 14.84]**.
+Paired differences are saved in
+`learning_comparison_00008_stochastic.json`; greedy validation is still running. This is a gain on
+validation for PPO plus public demonstrations, not evidence that the engine has been beaten.
+The actual 2,048 saved training episodes contain 1,984 distinct trios, with zero overlap against the
+194 distinct validation trios; every trio has its intended hash partition. All 6,144 training RNG
+seeds are disjoint from the 768 validation RNG seeds, episode indices are contiguous, registered source
+hashes match, and the final test is still unopened (`partition_audit_through_round_00008.json`).
+
+**Complete round-eight selection:** greedy inference scored **31.64%, CI [26.56%, 36.72%]**, and was
+selected over stochastic inference's 27.54%. The initial greedy score was 25.00%; its paired gain is
+**6.64 points, CI [0.00, 13.28]**, touching zero. The paired comparison is saved in
+`learning_comparison_00008_greedy.json`. Training resumed from the latest weights, with
+the selected round-8 checkpoint retained separately. This remains below the engine and is not final-test
+evidence of a reliable win.
+
+Added `pogo.standalone_policy.load_agent` to load the selected inference mode from checkpoint metadata;
+the earlier raw-constructor example would have defaulted to stochastic mode even when greedy had won
+validation. On the actual round-8 best checkpoint, both policy-weight fingerprint and mode match the
+evaluated policy (`deployment_check_round_00008.json`). Raw round checkpoints need an explicit mode
+instead of silently inheriting a previous champion's setting. A fresh-process test loads the independent
+policy without importing Planner, Learner, engine or simulator modules. Full suite: **291 tests OK**
+(7 video-dependent skips); **108/108 PvPoke exact**. This loader is separate from the unchanged running
+training source; it does not affect the experiment.
+
+**Round sixteen:** after 4,096 PPO games, stochastic inference scored **26.37%, CI [21.68%, 31.25%]**,
+and greedy inference **32.81%, CI [27.73%, 37.89%]**. Greedy was retained as the current best. The small
+increase over round eight does not establish another gain; paired differences are in
+`learning_comparison_00016_greedy.json`. The complete six-point development curve is saved in
+`validation_history.json`. Training now leaves the 8-sample curriculum and uses the full 32-sample
+frozen engine. Every validation so far has already used 32 samples. The final-test data remains reserved.
+
+The first full-strength training batch is also confirmed in the live log: round 17 used **32 engine
+samples**, 256 games, and 1,238.8 summed worker-seconds. Source hashes still match the registered run,
+the parent and all three workers remain live at BelowNormal priority, and stderr is empty.
+
+Prepared an unused, training-only per-decision RL fallback (`pogo/counterfactual_rl.py`) while PPO
+continues. It labels every legal action with complete-battle returns using common dice, then optimizes
+the standalone policy from those utilities. Captured policy weights and controller/evaluator caches are
+private to each fork. It replays the actual choice exactly on both seats and passes repeatability,
+cache-isolation and gradient-direction tests. Those functional tests use one-sample engines; a full-32
+counterfactual training trial and playing-strength evaluation have not been run. No active PPO source
+was changed. **297 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
+Added a separate resumable counterfactual trial driver, still unused by the active PPO run. It
+collects greedy actions and sampled auxiliary heads, applies full-option terminal-return updates to
+actions, and restricts PPO to the sampled shield/replacement decisions. Recent labels have a bounded
+replay window; method-source fingerprints supplement the unchanged evaluation fingerprints. Tests
+confirm no invalid policy-gradient rows from greedy actions, all-greedy counterfactual continuation,
+bit-identical split/continuous optimization, and no final-test opening by `train`. Controller tests
+use one-sample engines and mocked validation. A real full-32 replay/pipeline control remains a gate
+before any strength trial; no counterfactual playing-strength result is claimed.
+
+**Round twenty-four and method decision:** after 6,144 PPO games, stochastic validation scored
+**25.98%, CI [21.09%, 31.05%]**, and greedy **31.45%, CI [26.17%, 36.52%]**. Relative to round sixteen,
+the paired greedy change was **-1.37 points, CI [-7.62, 5.08]**. The full-strength phase supplied no
+clear gain. The verified parent and three workers were stopped after saving round 24; PPO can resume
+from that checkpoint, and the selected round-16 policy remains available. Final tests are unopened.
+
+The counterfactual replay gate now passes with the selected 128-unit policy and full 32-sample
+engines on both seats: forcing the real action reproduces the complete winner, turn, team HP/energy,
+shields/switch timers and environment RNG state. Details are in `counterfactual_full32_replay_check.json`.
+The real multiprocessing pipeline also passed one training round / two collection games, both
+validation modes, checkpoint selection, locking and all four fresh-seed/field final blocks. Collection
+used one-sample engines; validation and final blocks used 32. Two-pairing final scores were 25%, 0%,
+25%, 25%, with the strength verdict false. These tiny controls provide no strength evidence;
+`counterfactual_pipeline_check.json` records their settings and provenance.
+Full suite: **300 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
+**Counterfactual pilot launched:** `cf-pilot-v1`, implementation `e51fb8c`, warm-starting the selected
+PPO round-16 policy with optimizer moments explicitly reset for the method change. Four-hour cap,
+at most 12 rounds of 64 training games, full 32-sample opponents, two common-dice playouts per legal
+action, validation every four rounds on the same 128-pairing selection schedule. Parent PID 17436 and
+three workers are verified at BelowNormal priority. The `train` command saves checkpoints and leaves
+the final strength test unopened. Source hashes and the original shared deadline match the saved
+protocol (`launch_check.json`, `commands.txt`). No playing-strength result from this method yet.
+
+The pilot's initial validation reproduces **all 512 battle outcomes exactly** across stochastic and
+greedy modes from PPO round 16, including individual winners/draws and scores. Policy fingerprints
+and schedules match; the controls are saved as `initial_repeatability_*.json`. Greedy remains
+32.81% [27.73%, 37.89%]. This verifies transfer and evaluation repeatability; it is not a new gain.
+
+**Counterfactual round four:** 256 training games / sampled positions, all against the full 32-sample
+engine. Stochastic validation scored **23.05%, CI [18.36%, 28.13%]**; greedy scored
+**25.59%, CI [20.31%, 30.86%]**. Relative to the initial greedy policy, the paired change is
+**-7.23 points, CI [-14.26, -0.20]**. This checkpoint is worse and was not selected. The pilot's
+best remains its unchanged PPO initialization. It continues within its four-hour exploratory budget
+to the next planned validation; no final strength test has been opened.
+
+The saved 256 episodes have 423 distinct training trios, no overlap with the 194 validation trios,
+disjoint seed domains and contiguous indices. Seventy-five sampled positions have different terminal
+utilities among legal actions. Registered sources still match. The first checkpoint and Adam state
+are finite; its local fixed-label improvement was small and did not predict this validation loss.
+Reports: `partition_audit_through_round_00004.json`, `training_health_00001.json`, and
+`learning_comparison_00004_*.json`. An offline six-permutation diagnostic on the first training batch
+found only a small label-score change (25.78% to 26.95%); it is not validation evidence, and no ensemble
+or inference change was made.
+
+Prepared an unused actor-only initialization trainer, `scripts/pretrain_engine_policy.py`, from the
+full-engine public actions already collected in PPO rounds 17–24. The audit finds **57,405 action,
+8,127 shield and 1,511 replacement examples** from 2,048 episodes / 1,997 distinct training trios.
+Every trio has the training partition; engine episodes use 32 samples, and example counts match their
+episode logs. File hashes are registered for resumption. Updates leave the critic unchanged and
+save an optimizer checkpoint each epoch. This is supervised refinement before further RL, not an RL
+strength result. It has not run on the real dataset yet; the counterfactual pilot continues unchanged.
+Full suite: **303 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**. The new tests check
+actor-only learning, exact split/continuous optimizer resumption, demonstration mutation rejection,
+and rejection of non-training teams, weak teachers and inconsistent example counts.
+
+Prepared an unused terminal-return PPO entry point, `scripts/monte_carlo_rl.py`, for the next RL
+trial. It uses gamma=1 and lambda=1, so every decision's advantage is the completed game's reward
+minus that state's value estimate. Its source is included in both parent and spawned-worker hashes;
+historical experiment files remain unchanged. Registration preserves every initial network weight
+and updates its experiment fingerprint. Two unit tests pass; a real multiprocessing pipeline check
+is still required before a strength trial. No strength result from this variant is claimed.
+Full suite: **305 tests OK** (7 video-dependent skips), **108/108 PvPoke exact**.
+
+**Counterfactual pilot stopped at round eight:** 512 games. Stochastic validation fell to
+**13.28%, CI [9.38%, 17.19%]**; greedy fell to **20.70%, CI [16.02%, 25.39%]**. The paired greedy
+change from initialization is **-12.11 points, CI [-19.14, -4.69]**. Both modes deteriorated; this
+method did not help, and the verified parent/three workers were stopped after saving round eight.
+Its unchanged initialization remains its best. All 512 episodes pass the split/seed audit: 749 distinct
+training trios, zero overlap with 194 validation trios, contiguous indices; final test unopened.
+
+**Full-engine actor pretraining completed:** `engine-bc-v1`, 16 epochs on the audited 67,043 examples.
+Weights and optimizer are finite; critic weights are bit-identical to initialization. Training agreement
+at epoch 16 is 84.43% for actions, 84.41% for shields and 71.81% for replacements. These are training
+fit diagnostics, not strength scores. Epochs **4 and 16** are registered as the two validation candidates,
+with the existing 32.81% PPO policy retained as another option. Exported candidates preserve all
+network weights and explicitly reset optimizer moments before the next RL method.
+
+The terminal-return PPO variant's real multiprocessing pipeline now passes train/validate/lock/test.
+All **295** saved worker return labels are exactly terminal game rewards; all five registered source
+hashes match. Its four two-pairing final scores were 25%, 50%, 50%, 25%, and its strength verdict is
+false. The tiny run is a functional check only (`monte_carlo_pipeline_check.json`). Epoch-four
+validation is now running as `mc-bc4`; `mc-bc16` is prepared and queued to start only after that pool
+closes normally. Both use the full frozen engine, the same 128 development pairings and both inference
+modes. Their commands stop after validation, leaving the substantial final strength test unopened.
+
+**First pretrained candidate:** epoch-four greedy validation is **32.42%, CI [27.15%, 37.50%]**;
+stochastic is **22.46%, CI [17.97%, 26.96%]**. Neither improves the retained 32.81% PPO policy.
+The job completed normally, and epoch-sixteen validation started afterward with a new three-worker
+pool. The same fixed development cases are used; neither candidate opens a final test.
+
+Prepared a separate independent rollout controller (`pogo/planning_rl.py`) around the learned policies.
+It uses public observations and the rules simulator, a supplied public pool for unseen teammates,
+common dice across legal actions, and complete terminal returns. A fixed neural-confidence gate
+controls simulation cost; ties keep the neural preference. No inference weight updates occur. This
+adds model-based planning to an RL policy, so any measured gain must not be attributed solely to
+policy training. Its runtime imports no Planner, Learner or search-player module. Tests cover hidden
+team privacy, legal/tied actions, RNG consumption, source/model guards and both seat allocations.
+With the actual 128-unit checkpoints, fully revealed public-world simulations reproduce complete
+frozen-rule games on both seats, including HP/energy/stages/timers and RNG state
+(`planning_physics_check.json`). **313 tests OK** (7 video skips), **108/108 PvPoke exact**. No playing
+strength result or real multiprocessing pipeline result from this controller is claimed yet.
+
+**Pretrained candidate selection complete:** epoch-sixteen greedy validation is
+**31.64%, CI [26.76%, 36.52%]**, and stochastic **21.29%, CI [16.99%, 25.59%]**. Its paired greedy
+change from retained PPO is **-1.17 points, CI [-7.62, 5.27]**. Neither registered epoch exceeds the
+existing PPO checkpoint, so that policy is retained (`engine-bc-v1/validation_selection.json`).
+
+**Next RL run launched:** `mc-ppo-v3`, from PPO v2's best round-16 weights/optimizer, full 32-sample
+training from the first round, gamma=1/lambda=1, .01 anchor and .1 public-opponent demonstration loss.
+Two BelowNormal workers, one NumPy thread each. The absolute original work deadline is unchanged,
+with a ten-hour final-test reserve; the run command trains, locks and tests automatically unless
+superseded by a better validated method. Checkpoints and episode logs save every round. Initial
+controls are running; no new learning-strength result from this run yet.
+
+The independent planning controller's real multiprocessing validate/lock/test pipeline now passes:
+**513 searches / 1,399 actual rollout games** were executed across its small controls; source and
+both model fingerprints match. Its four two-pairing fresh-seed block scores were all 25%, with the
+strength verdict false. This is a functional control only (`planning_pipeline_check.json`). A separate
+two-training-pair timing run with four scenarios and confidence .98 took 31.7 summed seconds over
+four battles; its scores are not strength evidence. Preregistered 32-pairing validation screens now
+compare confidence .98 and 1.0, each with four scenarios, alongside the same-case pure policy's
+**28.13%, CI [17.19%, 39.06%]**. One planning worker runs alongside the two PPO workers. The highest
+screening variant must beat that same-case control to advance to full 128-pairing confirmation;
+all substantial final tests remain unopened (`planning_screen_plan.json`).
+The 128-pairing confirmation uses a preregistered separate seed domain, distinct from screening;
+this was registered before inspecting aggregate screening outcomes. Final test seeds remain sealed
+until the eventual selected checkpoint and complete controller are locked.
+
+**PPO through round twenty-four:** after 6,144 new full-engine training games, greedy validation is
+**37.11%, CI [32.23%, 41.99%]**, the nominal best so far. Round eight was 36.72% [32.03%, 41.21%]
+and round sixteen 30.66% [25.98%, 35.16%]. These remain below 50%; the selected checkpoint is saved as
+`mc-ppo-v3/selected_round_00024.npz`. Its parameters match the evaluated policy fingerprint. The audit
+finds 4,096 distinct training trios, zero overlap with 194 validation trios, disjoint seed domains,
+contiguous episode indices, unchanged source hashes and finite weights/optimizer state. All **39,169**
+checked return labels across rounds 1/8/16/24 equal the completed game's reward exactly. Complete
+development history and the audit are saved; the long job is still live.
+
+**Rollout screens:** confidence .98 scored **32.81%, CI [23.44%, 42.19%]**; confidence 1.0 scored
+**36.72%, CI [26.56%, 47.66%]** on 32 pairings each. The same-case pure-policy control is 28.13%.
+The latter variant advances under the preregistered rule, but this is not a reliable win. Its separate
+128-pairing confirmation is running with seed **8221690905823504610**, fixed before inspecting
+aggregate screen outcomes. It uses one worker alongside two PPO workers.
+
+Prepared a capacity test with `scripts/widen_standalone_policy.py`: expand each independent tanh
+network from 128 to 512 hidden units while preserving its initial function. Balanced perturbations
+allow the duplicated units to learn independently. This targets the standalone global 366-feature
+policy, distinct from the older decision-Q width experiments. A snapshot of the current PPO best is
+retained, optimizer moments are explicitly reset for the new parameterization, and the unchanged
+deployment format loads the result. On the actual checkpoint, probability errors are at most
+4.47e-7, value errors 1.79e-6, and no greedy probe action changes. This is an initialization control,
+not a strength result. The existing audited engine-action data will be used after the confirmation
+worker finishes; no fourth long-job worker is started. **316 tests OK** (7 video skips), **108/108 PvPoke exact**.
+
+**Independent rollout confirmation complete:** the fixed confidence-1/four-scenario controller scored
+**35.55%, CI [30.08%, 41.02%]** on 128 pairings with the separate preregistered seed. It does not beat
+the engine; no substantive final test was opened. The capacity fit then used the freed worker and
+completed all 16 epochs. Its action/shield/replacement training agreements are 85.86% / 86.55% / 77.90%.
+These fit numbers do not establish strength. Critic weights remain unchanged from the expanded
+initialization, all checkpoint values are finite, and exported epoch-4/16 candidates preserve weights
+while resetting optimizer state. `mc-wide4` validation is now running with one worker alongside PPO's two.
+
+A checked capacity handoff controller (`scripts/finish_capacity_trial.ps1`) finishes the two registered
+validations, then stops only the verified owned PPO process/children after a new committed checkpoint.
+`scripts/select_capacity_candidate.py` binds selected weights to complete 128-pairing records and
+requires a positive paired 95% interval before promoting a larger network. Otherwise the existing
+policy continues. After this comparison the selected RL job resumes with all three workers, with a
+twelve-hour final-test reserve inside the original absolute deadline. This avoids leaving a worker
+idle if the interactive session is absent. Controller events and the decision are retained under
+`runs/standalone-rl/capacity-control`; no final strength verdict is inferred from validation.
+Full suite: **319 tests OK** (7 video skips), **108/108 PvPoke exact**. The selection utility also
+passes an integration check against the completed original BC candidates and retains the current PPO
+policy. The controller's PowerShell syntax is parsed before launch; live process identity, start time,
+command line, child count and committed progress are checked before its bounded handoff.
+
+The first controller startup stopped safely at its identity guard. PowerShell had already converted
+the JSON UTC timestamp to a `DateTime`; parsing that value as text again lost its timezone and
+shifted the expected instant by eight hours. No Python process was stopped. The guard now preserves
+the existing timestamp type; the live process differs by only 0.009 seconds from its recorded start.
+A PowerShell regression covers string, JSON-converted DateTime and DateTimeOffset inputs before restart.
+
+**Capacity epoch four:** greedy validation is **30.47%, CI [25.98%, 34.96%]**; stochastic is
+**23.44%, CI [18.75%, 28.13%]**. The larger model has not improved strength. The checked controller
+completed this job and started epoch-sixteen validation with the same one-worker allocation.
+The nominal PPO round-24 gain over its initialization is **+4.30 points, paired CI [-2.15, 10.55]**;
+that interval does not establish another learning gain. Absolute strength remains below the engine.
+
+Prepared an unused student-state correction variant (`pogo/student_correction.py`,
+`scripts/student_correction_rl.py`). A separate frozen expert labels the actual states the student
+visits, while the student still makes all training actions and receives on-policy terminal rewards.
+The expert receives actual public callbacks; rejected action plans are rolled back and actual
+physical actions update its decision context. No teacher state is a neural input. Expert-control
+replay reproduces complete frozen-engine games on both seats; real collection tests verify actual
+student returns, legal public labels and labels from both student/opponent states. The bounded
+eight-round expert replay window is tested. Deployment/evaluation still use the ordinary standalone
+network, with no expert calls. This addresses distribution mismatch in the earlier opponent-only
+demonstrations; it has not run a real pipeline or strength trial yet. No extra long-job worker is started.
+Full suite: **324 tests OK** (7 video skips), **108/108 PvPoke exact**. The existing training and capacity
+controller sources are unchanged; this variant is prepared separately and remains unused.
+
+**Student-state pilot queued (2026-11-02 19:21 UTC):** full 32-sample expert-control replay also
+matches terminal states and battle RNG exactly in both seats (47 and 33 expert labels), recorded in
+`runs/standalone-rl/student_correction_full_strength_replay.json`. This is functional fidelity,
+not strength. After verifying and stopping only the old orchestration process, the controller was
+updated and restarted; the active Python training/validation jobs and their sources were untouched.
+After epoch-sixteen capacity validation frees its worker, it will run a four-game real pipeline,
+then a bounded 512-game correction pilot (four batches of 128, one worker, at most six hours).
+Both policy modes get the same 128-pair validation schedule as the main run, with 32 engine samples.
+The preregistered settings and positive-paired-interval promotion gate are in `student_pilot_plan.json`.
+The main PPO run keeps two workers throughout. The controller then resumes the original selected
+PPO/capacity run on three workers, preserving the original deadline and twelve-hour final reserve;
+student promotion requires inspection of its completed validation. Pilot failure does not silently
+promote it. Full checks still pass: **324 tests OK**, 7 skips, **108/108 PvPoke exact**.
+
+**Capacity comparison complete:** epoch sixteen greedy validation is **32.62%, CI [27.93%, 37.30%]**;
+stochastic is **22.66%, CI [17.97%, 27.34%]**. Against the 37.11% parent, the paired changes are
+epoch four **-6.64 points, CI [-12.89, -0.39]**, epoch sixteen **-4.49, CI [-11.52, 2.73]**.
+Neither qualifies for promotion; `capacity_validation_snapshot.json` binds the exact checkpoints and
+paired schedule. Greater supervised fit and capacity did not improve measured strength in this trial.
+
+The queued four-game student pipeline initially exited before running any battle: the controller
+called `train` without `prepare`, so `experiment.json` did not exist. Only the verified controller was
+stopped; both main PPO workers were left running. `Launch-Job` now prepares a new training run before
+launching it, and the actual student preparation command passed. The corrected controller was restarted
+and the real pipeline is running. Training/evaluation module sources remain unchanged. Full checks
+after this orchestration fix: **324 tests OK**, 7 skips, **108/108 PvPoke exact**.
+
+The corrected real student pipeline completed one four-game PPO batch at 32 engine samples plus
+initial/post-update validation. Its saved data contains **118 actual student decisions/returns and
+262 legal expert labels (118 student-state, 144 opponent-state)**. All eight team trios are in the
+training partition; all four games lost, and every saved return is exactly -1. Checkpoint parameters
+and optimizer arrays are finite and all eight registered source hashes match. This is a functional
+check, not a strength result; its two-pair scores are not used for promotion. The audit is saved as
+`student_correction_pipeline_audit.json`. The preregistered 512-game `mc-student-v1` pilot started at
+**2026-11-02 19:45 UTC**, alongside the main PPO's two workers. The larger-model trials remain rejected.
+
+**PPO through round forty:** 10,240 training games; round 32 greedy **35.74%, CI [30.66%, 41.02%]**;
+round 40 greedy **33.01%, CI [27.73%, 38.28%]**, stochastic **28.12%, CI [23.24%, 33.01%]**.
+The selected checkpoint remains round 24 at 37.11%. Round forty minus the selected checkpoint is
+**-4.10 points, paired CI [-10.55, 2.34]**. This does not establish further improvement.
+`mc3_progress_round40.json` records every scheduled validation through this point and checkpoint hashes.
+
+The student-state pilot completed its initial validation at **2026-11-02 20:37 UTC**. All **512 battle
+outcomes** (both modes, 128 pairings each) exactly reproduce its parent, PPO round 24: stochastic
+26.95%, greedy 37.11%, with matching weights, schedules, per-battle scores and winners. The eight
+registered sources match, and the initial optimizer moments/counters are zero as specified for the
+method change. `student_correction_baseline_audit.json` records these checks. This is a controlled
+baseline rather than a new strength result. The pilot has now begun collecting its training batches;
+both training runs remain unlocked and their final-test seeds have not been generated.
+
+**Student-state pilot round one (2026-11-02 21:04 UTC):** saved 128 full-strength training games,
+4,952 actual student decisions and 9,936 legal expert labels (4,952 student-state, 4,984 opponent-state).
+All 222 distinct trios are in the training partition. Saved return counts match the terminal rewards
+and decision counts exactly: 3,831 loss decisions, 1,100 win decisions, 21 draw decisions. Parameters,
+Adam arrays and inputs are finite; all eight source hashes match. The action-head update stopped after
+two epochs at its configured KL guard (0.02198); shield/replacement completed four epochs. The batch
+training score is 19.92%, not a validation-strength result. No post-training validation is scheduled
+until round four. The checkpoint, raw data and `student_correction_round1_audit.json` are saved;
+the pilot continues, and the main PPO has committed round 43 (11,008 games) without a new selected best.
+
+**PPO round forty-eight:** 12,288 training games. Greedy validation is **32.81%, CI [27.93%, 37.70%]**;
+stochastic is **28.12%, CI [23.05%, 33.20%]**. The selected checkpoint remains round 24 at 37.11%.
+The paired greedy change from that selection is **-4.30 points, CI [-10.74, 2.15]**.
+`mc3_progress_round48.json` records the complete scheduled progression; further improvement is unproven.
+
+**Student-state training complete:** all four batches, 512 games, 705 distinct training trios,
+17,884 student decisions and 37,298 expert labels (17,884 student-state, 19,414 opponent-state).
+There is zero trio overlap with the 194 validation trios and zero seed overlap. Return counts exactly
+match terminal episode rewards: 13,844 loss decisions, 4,019 win decisions and 21 draw decisions.
+All inputs, parameters and optimizer arrays are finite; labels are legal and all eight source hashes
+match. All four checkpoints and raw batches are saved. `student_correction_training_audit_round4.json`
+binds their hashes. Post-training validation is running; these training checks do not establish strength.
+
+**Measured slot-symmetry diagnostic:** on the first saved correction batch's 9,936 training labels,
+the fixed parent policy's six-slot-permutation probability average improves expert agreement:
+actions **72.77% to 74.35%**, shields **77.52% to 79.65%**, replacements **56.73% to 62.86%**.
+Cross-entropy also falls on every head (action 0.851 to 0.737, shield 0.478 to 0.424, replacement
+0.736 to 0.651). This is a training-label diagnostic only, not playing strength; see
+`slot_symmetry_training_diagnostic.json`. Own mon blocks, active flags, pair-interaction rows and
+physical switch/replacement actions are relabeled together. The resulting inference-only module
+(`pogo/slot_ensemble.py`) averages the frozen neural policy without a teacher or search call.
+Six tests cover actual public-view equivalence, probability equivariance, legal masks/forced actions,
+clone RNG independence, a deployment import check excluding Engine/Learner/Planner/simulator, and
+an actual paired worker run that verifies ensemble inference in both seats. The driver supplies its
+own pairing worker because the shared evaluator constructs an ordinary single-view agent internally.
+
+`slot_ensemble_plan.json` preregisters one greedy 128-pair comparison of this fixed rule using the
+immutable selected round-24 checkpoint, after a two-pair real pipeline. A positive paired lower bound
+over the concurrent selected neural baseline is required to retain it for final evaluation. The checked
+controller queues this on the worker freed by the student pilot, then resumes the original neural run
+on three workers pending comparison. Restart checks skip completed/running jobs, verified against the
+actual completed capacity/pipeline runs and live student job, so no duplicate worker is created.
+All existing Python workers and their source files were left unchanged. The original deadline and
+twelve-hour final reserve remain. Full suite: **330 tests OK**, 7 video skips, **108/108 PvPoke exact**.
+
+**Student-state correction result (2026-11-02 23:20 UTC): rejected.** After 512 games, greedy
+validation is **32.42%, CI [27.34%, 37.50%]**; stochastic is **19.92%, CI [15.62%, 24.41%]**.
+The paired changes from the controlled starting policy are greedy **-4.69 points, CI [-11.13, 1.76]**,
+stochastic **-7.03, CI [-13.09, -0.78]**. The best checkpoint remains the unchanged initialization at
+37.11%, with exactly the same weights/outcomes as the main selected checkpoint. This is not a learning
+gain. `student_correction_validation_decision.json` binds the selected and trained outcomes and records
+the failed promotion gate. All four training checkpoints, batches and logs remain saved; the method
+is not receiving further training under this pilot.
+
+The slot-ensemble real evaluation pipeline then passed: two pairings/four battles at 32 engine samples,
+with **237 actual ensemble decisions** (46, 59, 79, 53 by battle). Model parameters, optimizer arrays
+and counters are unchanged; zero bootstrap/training games; all six source hashes match. This proves
+the actual evaluation path uses the adapter, not playing strength. The audit is saved in
+`slot_ensemble_pipeline_audit.json`. The registered 128-pair `slot-ensemble-v1` validation started at
+**2026-11-02 23:20 UTC**, using the freed worker while the main PPO keeps two workers.
+
+**Slot-ensemble result (2026-11-02 23:46 UTC): rejected.** Full 128-pair validation is **32.62%,
+CI [27.34%, 37.70%]**, versus the unchanged single-view parent's 37.11%. The paired change is
+**-4.49 points, CI [-11.33, 2.54]**. All 256 battles used the actual ensemble (12,219 decisions), all
+six source hashes match and the neural parameters are unchanged. The input/output relabeling passed
+its mathematical tests, but improved expert-label agreement did not improve playing strength.
+`slot_ensemble_validation_decision.json` records the failed promotion gate; this adapter is not
+selected for deployment/final evaluation. No more variants are selected from this diagnostic.
+The controller is waiting for the next committed main PPO round before returning its worker to that
+run, preserving all three-worker, original-deadline and final-reserve safeguards.
+
+**Three-worker handoff verified (2026-11-03 00:10 UTC):** main PPO committed round 56,
+14,336 training games. Greedy validation is **35.35%, CI [30.47%, 40.43%]**; stochastic is
+**25.59%, CI [20.90%, 30.47%]**. The best remains greedy round 24 at 37.11%. The controller
+completed the registered comparisons and resumed `mc-ppo-v3` on exactly three workers; the parent
+and all three children are BelowNormal. All five source hashes match, the original absolute deadline
+is unchanged, and the running command reserves twelve hours for the full fresh-seed final protocol.
+The run is not locked and final-test seeds have not been generated. `mc3_progress_round56.json`
+records the complete validation progression and this handoff. Upstream main's new task-39 entry was
+merged after verifying its diff changes only `docs/tasks.md`; the frozen opponent remains unchanged.
+
+**Bounded greedy-opponent rollout follow-up (registered 2026-11-03 00:23 UTC):** the earlier
+independent rollout agent used the BC16 neural opponent stochastically. That model's measured score
+is 21.29% stochastic versus 31.64% greedy. `scripts/evaluate_greedy_rollouts_rl.py` reuses the same
+independent public-world simulator with greedy opponent continuations, four scenarios and confidence
+1.0, plus the current fixed round-24 own policy. The previous stochastic implementation stays intact.
+Nine source hashes bind the variant and physics; three tests cover registration/reload, rejecting a
+stochastic configuration, and actual paired games that observe greedy neural continuations on both
+simulated sides. All **333 tests pass**, 7 video skips; **108/108 PvPoke exact**.
+
+`greedy_rollout_plan.json` fixes a two-pair functional pipeline, a 32-pair screen matched exactly to the
+first 32 round-24 neural-control cases, and one independent 128-pair confirmation only if the screen
+mean exceeds that control. The fresh confirmation seed is registered before any outcome. Confirmation
+must have bootstrap lower bound above 50% before retaining it for full final testing; final mixed and
+standard gates remain required. No setting is tuned on the confirmation. The screen schedule has
+already been checked identical to its neural-control prefix, and both policy files are pinned by hash.
+
+`scripts/run_greedy_rollout_trial.ps1` is live, waiting for a committed PPO round to allocate two main
+workers plus one trial worker. Its process record/events are in `runs/standalone-rl/greedy-rollout-control`.
+It restores three main workers after either the completed trial or a failure, stopping only verified
+owned trial processes when necessary. The original absolute deadline and twelve-hour final reserve
+remain. To pause work while this controller is live, stop this controller before the owned Python jobs.
+The older capacity controller is now a checkpoint-handoff helper with a guarded two/three-worker option.
+
+**Greedy-rollout pipeline and screen:** the controller handed off at committed PPO round 59,
+15,104 games, to two main workers and one trial slot. The four-battle, 32-sample functional pipeline
+passed: **152 searches, 1,668 rollouts and 279,649 simulated turns**, all nine source hashes matching,
+greedy opponent mode registered, and parameters/optimizer unchanged. `greedy_rollout_pipeline_audit.json`
+records it. This is functional evidence, not a strength estimate.
+
+The fixed 32-pair screen scored **35.94%, CI [25.00%, 46.88%]**, against **28.91%** for its matched
+32-case neural control. Paired change **+7.03 points, CI [-7.81, 22.66]** is inconclusive. It meets the
+preregistered mean-only screen rule, so the independent 128-pair confirmation started at
+**2026-11-03 00:44 UTC** with the previously registered seed, unchanged models/settings and one worker.
+The main PPO continues on two workers; all three are BelowNormal. No claim of a gain or reliable wins
+is made from the screen, and substantive final-test data remains unopened.
+
+**Greedy-rollout independent confirmation (2026-11-03 01:20 UTC): target not met.** On the
+preregistered fresh seed, 128 pairings/256 battles score **36.33%, CI [30.86%, 41.41%]**. All nine
+sources and the registered seed/settings match. Every battle used independent search: **7,470 searches,
+81,676 rollouts and 15,356,809 simulated turns**. `greedy_rollout_confirmation_audit.json` binds the
+pairing log, opponent model and decision. The inconclusive screen gain does not establish reliable
+wins, and this fixed rollout candidate does not trigger an early switch to final testing.
+The controlled trial is closed; its controller is waiting for the next committed PPO checkpoint to
+restore all three training workers. The main selected checkpoint is still round 24 at 37.11%; the
+original deadline and twelve-hour final-test reserve remain in force.
+
+**Lower-weight correction follow-up (registered 2026-11-03 01:35 UTC):** the weight-1 pilot's
+first action update reached KL 0.02198 and stopped after two epochs, and its post-training strength
+fell. A separate adaptive validation experiment, `mc-student-lowce-v1`, tests **demo weight 0.1**,
+the main PPO's existing weight, on the same public student-state correction method. It starts from
+the same fixed round-24 policy with the method's optimizer reset. This changes the optimization
+weight and data budget, not runtime rules or representation. The failed weight-1 pilot stays closed.
+
+`low_ce_plan.json` fixes at most **12 batches of 128 games (1,536 games), ten hours**, validation
+every four batches on the same complete 128-pair schedule/both modes, and no early stop based on a
+partial score. The side run reserves fourteen hours before the original deadline to leave selection
+time; the eventual chosen three-worker run keeps the original twelve-hour final-test reserve.
+No final-test data has been used. This is explicitly an adaptive follow-up to validation results,
+not a preregistered claim made before the earlier experiments.
+
+After verifying the completed rollout controller's PID/start identity, it was stopped during its
+checkpoint wait; both main PPO workers were left running. `scripts/run_low_ce_trial.ps1` now owns
+the free worker and records under `runs/standalone-rl/low-ce-control`. When the bounded side run
+ends, it waits for a committed main checkpoint, freezes the comparison, and uses
+`scripts/select_student_candidate.py` to promote only a higher mean with a positive paired 95%
+lower bound. It then resumes the selected run on three workers with the full lock/fresh-seed final
+protocol. Its failure path stops only verified owned processes and restores the main allocation.
+The selection helper's actual initial-policy negative control passed; all **333 tests** and
+**108/108 PvPoke** checks pass. The new side run started at **2026-11-03 01:37 UTC**, on one worker
+alongside the continuing two-worker main run. Stop this new controller first when pausing work.
+
+**PPO through round sixty-four (2026-11-03 01:50 UTC):** 16,384 training games. Greedy validation
+is **34.77%, CI [30.08%, 39.46%]**; stochastic is **25.00%, CI [19.92%, 30.27%]**. The selected
+best is unchanged: greedy round 24, 37.11%. `mc3_progress_round64.json` records the complete
+progression and the current two-main/one-side-worker allocation. The lower-weight side trial is
+still checking its unchanged starting policy before training; no final-test data has been opened.
+
+**Lower-weight baseline verified (2026-11-03 02:30 UTC):** all 512 battle outcomes reproduce the
+fixed round-24 parent exactly, including per-battle scores/winners, weights and schedules, in both
+stochastic (26.95%) and greedy (37.11%) modes. All eight source hashes match, optimizer moments and
+counters are zero, and actual launch arguments match the prospective weight-0.1/12-round plan.
+`low_ce_baseline_audit.json` records these checks. This is the controlled starting point, not a new
+learned gain. The trial has begun on-policy training, with the main PPO continuing beside it.
+
+**Controlled first lower-weight update (2026-11-03 02:57 UTC):** 128 games, 4,952 student
+decisions and 9,936 expert labels. Every replay/expert array and every game field except elapsed
+time exactly matches the failed weight-1 pilot's first batch, so this measures the intended loss-weight
+change on identical data. With weight 0.1, action KL is **0.00580 versus 0.02198**, and all four
+epochs finish instead of stopping after two at the KL guard. The checkpoint/optimizer are finite,
+all teams are training teams, and source hashes match. `low_ce_round1_controlled_audit.json`
+records the exact comparison. This is optimization/integrity evidence only; post-training strength
+will be evaluated on the registered schedule after round four.
+
+**PPO round seventy-two (2026-11-03 03:43 UTC):** 18,432 training games; greedy validation
+**37.11%, CI [32.23%, 42.19%]**, stochastic **24.80%, CI [20.12%, 29.49%]**. This ties the
+selected round-24 mean; the deterministic selection rule keeps that existing checkpoint. It does
+not establish another gain. `mc3_progress_round72.json` records the complete progression and paired
+comparison. The lower-weight trial continues its fixed training schedule alongside the main run.
+
+**Lower-weight first four batches saved (2026-11-03 04:14 UTC):** 512 games, 705 distinct
+training trios, 19,043 actual student decisions and 38,689 expert labels (19,043 student-state,
+19,646 opponent-state). There is zero overlap with the 194 validation trios and zero seed overlap.
+Saved return counts exactly match terminal rewards: 14,648 loss decisions, 4,277 win decisions and
+118 draw decisions. All labels are legal, inputs/parameters/optimizer arrays are finite, and all
+eight source hashes match. All four checkpoint hashes are saved in `low_ce_training_audit_round4.json`;
+raw checkpoints and batches remain local. Both post-training validation modes are now being evaluated
+on the registered 128-pair schedule; these integrity counts do not establish playing strength.
+
+**Lower-weight round-four validation (2026-11-03 05:08 UTC): no established gain.** Greedy
+score is **36.52%, CI [31.25%, 41.80%]**; stochastic **24.41%, CI [19.53%, 29.30%]**. The paired
+greedy change from its controlled starting policy is **-0.59 points, CI [-6.84, 5.86]**. Relative
+to the failed weight-1 round-four update, the lower-weight greedy point estimate is +4.10 points,
+but its paired CI **[-1.56, 9.77]** does not establish that gain either. The selected checkpoint
+remains the unchanged initialization at 37.11%. `low_ce_validation_round4.json` records both modes
+and comparisons. The prospective bounded trial continues to its remaining scheduled evaluations
+without changing settings. No final-test data has been opened.
+
+**Expanded training audit:** all 18,432 committed main-PPO episodes through round 72 have
+contiguous indices and valid outcomes. The 7,750 distinct training trios have zero overlap with the
+194 validation trios, and no training/validation seed overlaps. Counts are 14,693 frozen-engine,
+1,900 Learner and 1,839 self-play games; every engine game records 32 samples. All five source
+hashes match. `mc3_training_audit_round72.json` records the checks. This verifies the growing
+training dataset's partition/provenance, not a strength gain; final-test data is still unopened.
+
+**PPO round eighty (2026-11-03 05:35 UTC): new selected point estimate, not an established gain.**
+After 20,480 training games, greedy validation is **37.50%, CI [32.42%, 42.58%]**; stochastic is
+**29.10%, CI [24.22%, 34.18%]**. The mean-only checkpoint rule now selects greedy round 80.
+Its paired change from round 24 is **+0.39 points, CI [-6.05, 6.84]**, which does not establish a
+gain or reliable wins. The finite weights/optimizer and exact validation fingerprint are bound in
+`mc3_progress_round80.json`. An immutable `mc-ppo-v3/selected_round_00080.npz` is saved/published
+for deployment/reproduction; its metadata records greedy mode. The lower-weight trial keeps its
+prospectively fixed round-24 initialization; no starting weights or settings are changed in flight.
+
+**PPO round eighty-eight (2026-11-03 07:27 UTC): no new selected checkpoint.** After 22,528
+training games, greedy validation is **36.33%, CI [31.25%, 41.41%]** and stochastic is **26.95%,
+CI [22.07%, 31.84%]**. Round 80 remains selected at 37.50%. The paired greedy change from that
+selected checkpoint is **-1.17 points, CI [-7.81, 5.47]**. Complete 128-pair records, checkpoint
+fingerprints, finite parameters/optimizer and all five registered source hashes were verified;
+`mc3_progress_round88.json` records the result. Final tests remain unopened. The bounded lower-weight
+correction trial has reached its round-eight validation. Regression checks were repeated:
+**333 tests OK (7 video skips), 108/108 PvPoke exact**. PR #10 still has the reviewed head.
+
+**Lower-weight correction round eight (2026-11-03 07:52 UTC): no gain.** After 1,024 training
+games, greedy validation is **31.64%, CI [26.95%, 36.33%]** and stochastic is **20.90%,
+CI [16.41%, 25.39%]**. Against the unchanged initialization, paired changes are **-5.47 points,
+CI [-11.33, 0.59]**, and **-6.05 points, CI [-11.72, -0.20]**, respectively. These are exploratory
+comparisons, not fresh-seed final results. The initial greedy checkpoint remains selected at 37.11%.
+`low_ce_validation_round8.json` binds the complete records to the checkpoint and matching eight
+source hashes; parameters and optimizer are finite. The fixed round-12 endpoint continues without
+changing settings. No final test has been opened.
+
+**PPO round ninety-six (2026-11-03 09:17 UTC): tied point estimate, earlier checkpoint retained.**
+After 24,576 training games, greedy validation is **37.50%, CI [32.42%, 42.77%]**, and stochastic
+is **25.20%, CI [19.92%, 30.66%]**. The paired greedy change from selected round 80 is **0.00
+points, CI [-6.25, 6.64]**. Ties do not replace the earlier checkpoint, and neither result establishes
+reliable wins. `mc3_progress_round96.json` records the complete 128-pair checks, matching five
+source hashes, finite checkpoint/optimizer and comparisons against rounds 80 and 24. The correction
+trial has saved 1,408 games and continues to its fixed round-12 endpoint. Final tests remain unopened.
+
+Upstream through `9bedfe1` adds exact rollout caches to the current player. Before merging it, a fresh
+training initialization confirmed that neither active method imports working-tree `pogo.agents`;
+the opponent uses the separately namespaced archived module from `59836c8`. No registered experiment
+source changed. The merged tree passes **336 tests (7 video skips)** and **108/108 PvPoke exact**.
+Both active source guards still match and stderr remains empty. The benchmark continues to use E0;
+it does not silently adopt the new cache implementation or its timing results.
+
+**Complete lower-weight training audit (2026-11-03 09:43 UTC):** all 1,536 games are saved, with
+55,387 student decisions and 114,769 legal expert labels (55,387 student-state and 59,382 opponent
+labels). All inputs and every saved checkpoint/optimizer are finite. The 1,611 distinct training
+trios have no overlap with the 194 validation trios; all teams have the intended partition and there
+are no seed overlaps. Episode indices are contiguous and every game uses 32 engine samples. Replay
+return counts match the actual terminal results exactly (40,955 loss, 281 draw, 14,151 win labels).
+`low_ce_training_audit_round12.json` records all twelve checkpoint hashes and eight matching source
+hashes. Round-12 validation is running; this is an integrity check, not a playing-strength gain.
+
+**Lower-weight correction endpoint (2026-11-03 10:35 UTC): trial closed without improvement.**
+Round 12 / 1,536 games scores **31.64% greedy, CI [26.56%, 36.72%]**, and **21.88% stochastic,
+CI [17.19%, 26.95%]**. Paired changes from initialization are **-5.47 points, CI [-12.50, 1.56]**,
+and **-5.08 points, CI [-11.72, 1.76]**, respectively. The selected checkpoint remains the unchanged
+initialization at 37.11%. `low_ce_validation_round12.json` records the complete checks and confirms
+the training journal closed normally. No settings changed during this bounded follow-up, and no
+strength gain is established. The controller now waits for the next committed main checkpoint before
+the registered allocation comparison; two main workers remain active. Final tests are unopened.
+
+**PPO round 104 and completed handoff (2026-11-03 11:11 UTC):** after 26,624 training games,
+greedy validation is **39.26%, CI [33.98%, 44.34%]** and stochastic is **29.10%, CI [24.22%,
+34.18%]**. Greedy round 104 becomes the selected checkpoint. Its paired change from round 80 is
+**+1.76 points, CI [-4.69, 8.20]**; no additional gain or reliable wins are established.
+`mc3_progress_round104.json` binds the complete records and finite checkpoint/optimizer to all five
+matching source hashes. Immutable `mc-ppo-v3/selected_round_00104.npz` has the same parameters as
+the evaluated model; a fresh-process deployment check loads its greedy mode and exact fingerprint
+without importing Engine, Planner, Learner or the simulator (`deployment_check_round_00104.json`).
+
+The registered comparison retained main round 104 against the correction trial's unchanged initial
+checkpoint: candidate-minus-main **-2.15 points, CI [-9.57, 5.27]**, so promotion was false.
+`low_ce_allocation_decision.json` preserves that complete decision. The controller exited normally
+after resuming `mc-ppo-v3` on **three actual BelowNormal workers**; parent identity/start time and
+all worker priorities were read back (`low_ce_handoff_audit.json`). The original deadline, twelve-hour
+final reserve, 1,200 final pairings per seed/field and all training settings were verified in the new
+launch record. No side jobs remain and final tests are still unopened.
+
+**Initialization lineage audit (2026-11-03):** the original bootstrap driver and experiment module
+match registered source commit `ace8536`. Team/seed generation, split functions and salt match the
+current protocol; the runtime constructor differs only in its path-scoped module namespace. The
+16,384-game bootstrap schedule was deterministically reconstructed, then combined with the 4,096
+saved PPO-v2 episodes used by the warm start. Its 8,257 distinct training trios and RNG seeds have
+zero overlap with the 323 registered mixed/standard validation trios and their seeds. All 1,417,130
+stored imitation examples are finite and legal, their 64 shard hashes are recorded, and counts match
+the bootstrap journal. `initialization_lineage_audit.json` documents the proof and limitation:
+bootstrap team schedules are reconstructed from exact registered source because per-episode bootstrap
+team logs were not saved. This checks initialization provenance, without making a strength claim.
+
+**PPO round 112 (2026-11-03 12:27 UTC): no new selection.** After 28,672 training games,
+greedy validation is **37.11%, CI [32.03%, 42.19%]**, and stochastic is **27.54%, CI [22.66%,
+32.42%]**. The paired greedy change from selected round 104 is **-2.15 points, CI [-7.81, 3.32]**.
+The selected weights/export remain unchanged at 39.26%. `mc3_progress_round112.json` records the
+complete checks, finite parameters/optimizer and matching five source hashes. Three workers continue
+toward the original training cutoff; final tests remain unopened and the twelve-hour reserve is intact.
+
+**Training stopped and final model locked (2026-11-03 13:46:58 UTC):** round 120 / 30,720 games
+is the last training round. Its greedy validation is **38.87%, CI [33.98%, 43.75%]**, and stochastic
+is **28.91%, CI [24.22%, 33.79%]**. The paired greedy change from selected round 104 is **-0.39
+points, CI [-6.64, 5.86]**; round 104 remains selected at 39.26%. `mc3_progress_round120.json`
+records the final development measurement. Training is now forbidden in this locked run.
+
+The immutable final policy is `mc-ppo-v3/locked.npz`, SHA-256
+`91601fd8e8c799142bd5a6339199c4e5a408ade5d9e13ee7518ed90edb0c6649`, with the exact evaluated
+round-104 parameters and greedy mode. `lock.json`, `test_plan.json` and `final_protocol_locked.json`
+pin the sources, configuration and two fresh seeds. The planned **9,600 final battles are running**:
+1,200 paired cases per seed/field, two seeds, mixed and standard fields. No complete test block existed
+when the protocol audit was captured. The original absolute budget deadline remains unchanged.
+A fresh-process locked-policy deployment check passed without importing the old players or simulator.
+Three actual evaluation workers were read back at BelowNormal priority with one thread each
+(`final_launch_audit.json`, `deployment_check_locked.json`). This is not a final strength result.
+
+**Complete main-training audit:** all 120 committed rounds, 30,720 episodes, 1,163,172 student
+decisions and 985,018 public expert labels are saved. Inputs, every checkpoint and every optimizer
+are finite; labels are legal and terminal-return counts match episode results. Counts are 24,525
+engine, 3,139 Learner and 3,056 self-play games, with 32 samples recorded throughout. The main data
+has 9,963 distinct training trios; including initialization gives 11,970, with zero overlap against
+the 323 registered validation trios or their seeds. Both warm-start links preserve every parameter
+exactly. The first started test schedule also passes team/seed separation; all four schedules will
+be checked after completion. `mc3_final_training_audit.json` records every checkpoint/batch hash
+and the initialization reference. No inference, training or scoring source was changed.
+
+**First complete final block (2026-11-03 15:05 UTC), mixed seed 0:** 1,200 independent pairings /
+2,400 battles give **35.06% battle score, bootstrap 95% CI [33.35%, 36.77%]**. Wins/draws/losses
+are 829/25/1,546; a draw counts one half. The one-sided 97.5% Hoeffding lower bound is **31.14%**.
+This block fails the preregistered primary gate. The other three blocks continue with the same
+locked policy, seeds, source and sample plan; the complete evaluation is not finished.
+
+`scripts/audit_standalone_final.py` now provides a read-only audit of completed blocks. It recomputes
+scores from winners in both seats, reproduces statistics using the evaluator's schedule-derived
+bootstrap seed, checks its original schedule-serialization convention, regenerates frozen schedules
+exactly, verifies the model/source pins and rejects training/validation trio or seed overlap. The
+first block passes these integrity checks (`final_block_mixed_0_audit.json`); its weak score is unchanged.
+The auditor changes no policy, training or evaluation source. Four new guard tests cover both seats
+and draws, incorrect seat scores, duplicate indices and inconsistent statistics. **340 tests OK
+(7 video skips), 108/108 PvPoke exact**. Raw logs and lineage caches remain saved locally.
+
+**Second complete final block (2026-11-03 16:22 UTC), mixed seed 1:** 1,200 pairings / 2,400
+battles score **33.21%, bootstrap 95% CI [31.48%, 34.94%]**. Both mandatory mixed-field blocks
+therefore fail their gates. The reusable audit passes both blocks (4,800 battles), including exact
+schedule regeneration, registered bootstrap seeds, score mappings and separation checks
+(`final_block_mixed_1_audit.json`). The two standard-field blocks continue unchanged.
+
+**Registered bounded offline follow-up (2026-11-03, before fitting):** the audited main dataset now
+contains 1,163,172 public decisions with complete terminal-return labels. A separate
+`offline-returns-v1` trial fits per-action return estimates, with the legal-action log-sum-exp penalty
+from [CQL, equation 4](https://arxiv.org/html/2006.04779v3). It uses Monte-Carlo returns instead of
+Bellman targets, so CQL's theoretical guarantees are not claimed. No test examples or outcomes are
+used for fitting or candidate selection. The original locked model and all its test inputs remain fixed.
+
+`offline_returns_plan.json` fixes one candidate: existing round-104 representation, actor output heads
+scaled by .1, optimizer reset, alpha .1, learning rate .0002, batches of 1,024, at most four epochs or
+15 fitting minutes, whichever comes first, and greedy inference only. The critic and all runtime code
+are unchanged. Three numerical/functional tests check the loss gradient against finite differences,
+legal masking, positive-scale greedy preservation, and updates leaving other heads untouched.
+Full suite: **343 tests OK (7 video skips), 108/108 PvPoke exact**.
+
+Its 128-pair validation must have bootstrap lower bound above 50% AND positive paired-improvement
+lower bound against main round 104; at least 5.5 hours must remain. Only then can it lock a separate
+model and generate two new final seeds for the same 9,600-battle protocol. The controller limits total
+long-job compute to three workers: original test two, offline fit/validation one; it restores the original
+three on a negative trial, or boosts a qualified candidate after the original finishes. Original test
+resumption reuses its exact pairing cache, sources, weights, mode, seeds and sample plan. The absolute
+deadline remains 1793756530. Stop `run_offline_returns_trial.ps1` first if pausing while it is live.
+
+**Offline trial v1: functional failure before strength measurement (2026-11-03 16:43 UTC).** Four
+epochs / 4,652,688 row presentations finished in 29.5 seconds, with candidate and optimizer checkpoints
+saved. The validation call passed an extra positional argument and raised before any validation battle.
+This is not a playing-strength result. Cleanup also raced with the exiting parent; the original locked
+benchmark was manually restored to three workers from its unchanged pairing cache. No policy, source,
+seed, sample-count or completed-result change occurred in that benchmark.
+
+The helper call now matches the evaluator's actual signature, with a regression test exercising the
+closed-fit handoff against an autospecced evaluator. Controller cleanup tolerates already-exited owned
+processes and still reaches allocation restoration. **344 tests OK (7 video skips), 108/108 PvPoke exact**.
+The failed attempt and original plan are preserved. `offline-returns-v2` is registered before fitting,
+with the same data, objective, initialization and hyperparameters, and corrected plumbing; no strength
+outcome was used to change it. The current registration is `offline_returns_plan.json`, with the first
+registration preserved as `offline_returns_plan_v1.json`.
+
+**Corrected offline run is validating (2026-11-03 17:08 UTC):** v2 completed the same four epochs /
+4,652,688 row presentations in 29.6 seconds. Every parameter and optimizer moment is bit-identical
+to the unmeasured v1 candidate; both are finite, and data/hyperparameters are unchanged
+(`offline_returns_retry_audit.json`). Its actual 128-pair greedy validation is now running.
+The original locked benchmark remains unchanged. Two original workers plus one offline-validation
+worker were verified at BelowNormal priority, configured for one NumPy thread each, with one OS
+thread observed per worker (`offline_returns_resource_audit.json`). The corrected controller is live;
+the original three-worker allocation will be restored if validation fails its fixed gate.
+
+**Offline return trial rejected (2026-11-03 17:25 UTC):** all 128 validation pairings / 256 battles
+completed: **30.46875%, bootstrap 95% [25.58594%, 35.35156%]**, 77 wins / 2 draws / 177 losses.
+Against the matched round-104 baseline the change is **−8.78906 percentage points,
+95% [−14.25781, −3.32031]**. Neither validation gate passed; no new final test was opened.
+`offline_returns_validation_audit.json` independently checks score mapping, statistics, exact regenerated
+validation schedule, source pins, checkpoint hashes and the decision. The rejected `best.npz` retains
+parameters and optimizer state; all intermediate checkpoints and raw pairing logs remain local.
+
+The controller's immediate restart first hit the launcher's live-parent guard while the stopped parent
+was still exiting. Its error cleanup then successfully restored the original test with three workers
+(parent 26864, workers 1660 / 22060 / 20844), all BelowNormal and configured for one NumPy thread each.
+The controller and offline run have exited. The diagnostic and events are retained; the original model,
+mode, sources, seeds, sample count and completed results remain unchanged. Both mandatory mixed-field
+blocks have failed; the two registered standard-field blocks continue to completion.
+
+**One final offline ablation registered (2026-11-03 17:36 UTC):** `offline-returns-mse-v1` removes
+only the conservative action penalty (alpha 0 instead of 0.1), retaining the same parent, training data,
+seed, four epochs, rate, head scaling and validation schedule. This tests whether that penalty caused
+the return-fit regression. `offline_mse_plan.json` fixes this as the last additional candidate, with
+the same validation lower-bound gates, fresh 9,600-battle final test only if qualified, 5.5-hour reserve,
+original deadline and three-worker cap. The original locked study remains unchanged. The controller
+now takes alpha from the plan and waits for an owned stopped parent to exit before resuming it;
+each control run can retain its own diagnostics. No gameplay rule was added.
+
+The zero-penalty fit completed all four epochs / 4,652,688 row presentations in 29.5 seconds and
+entered validation. The original two workers plus one candidate worker are verified BelowNormal
+(`offline_mse_resource_audit.json`). The handoff left a 588-byte, mostly NUL stderr fragment stamped
+at the exact resume instant. The new parent subsequently logged both unchanged cached blocks and
+continued fresh pairings through index 995. That fragment was preserved before clearing the active
+error flag (`offline_mse_handoff_audit.json` and its raw archive); fresh errors remain monitored.
+No pairing record or scientific source was changed.
+
+**Third locked block complete (2026-11-03 17:59 UTC):** standard-field seed block 0 scores
+**33.95833%, bootstrap 95% [32.27083%, 35.70833%]**, with Hoeffding lower bound 30.03783%.
+It fails the registered cross-check gate. `final_block_standard_0_audit.json` independently verifies
+all three completed blocks / 7,200 battles, including score mapping, intervals, regenerated schedules,
+source/model pins and training/validation separation. The fourth and last original block is running.
+
+**Final offline ablation rejected (2026-11-03 18:06 UTC):** alpha 0 completed all 128 validation
+pairings / 256 battles: **21.09375%, bootstrap 95% [16.40625%, 25.78125%]**, 54 wins / 0 draws /
+202 losses. Paired change from round 104 is **−18.16406 percentage points, 95% [−24.80957, −11.52344]**.
+No promotion gate passed and no new final test was opened. `scripts/audit_offline_returns.py` reproduces
+the audits of both trials, including source/model pins, legal score mapping, regenerated schedules,
+finite parameters and optimizer states, paired statistics and promotion decisions. Both pass integrity
+checks; neither passes the strength target. See `offline_mse_validation_audit.json` and the saved rejected
+`offline-returns-mse-v1/best.npz`. All raw data and intermediate optimizer checkpoints remain local.
+
+The controller waited for stopped processes but then queried a process whose `StartTime` had become
+null during exit. Error cleanup successfully restored the original three-worker test (parent 27632,
+workers 20088 / 10452 / 24692), all BelowNormal; the candidate and controller are now exited and the
+active benchmark stderr is empty. Its diagnostic is retained under `offline-mse-control`. After that
+controller exited, its liveness check was hardened against this race. Four isolated PowerShell probes
+pass: null start time, matching start time, a stale/reused PID and a process exiting during inspection.
+The scientific sources of both
+studies are unchanged. Only the original fourth block remains; no more candidates will start.
+
+**Portable audit inputs verified (2026-11-03 18:19 UTC):** the read-only final auditor now accepts
+`--input-bundle`, reading logs, schedules and lineage bytes in memory without extracting paths. It can
+restore the pinned frozen opponent from Git into an absent cache. A seven-member, 1.8 MB compressed
+bundle reproduces all three completed blocks / 7,200 battles bit-for-bit, including an integration
+check with a separate initially empty frozen cache. The active engine cache was untouched. The final
+nine-member bundle will include the last block once it completes. Two archive integrity guards cover
+duplicate members and parent-directory paths. **346 tests OK (7 video skips), 108/108 PvPoke exact**.
+See `audit_bundle_portability_check.json`. The scientific evaluator, sources and test plan are unchanged.
+
 Read this before suggesting improvements. It says what the project is, what has been
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.

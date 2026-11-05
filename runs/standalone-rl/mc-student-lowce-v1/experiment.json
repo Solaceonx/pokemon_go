@@ -1,0 +1,92 @@
+{
+  "acceptance": "each mixed seed block: pairing bootstrap 95% lower > .5 AND Hoeffding one-sided 97.5% lower > .5; each standard seed block: bootstrap lower > .5",
+  "algorithm": "on-policy PPO with public frozen-expert corrections on student-visited states",
+  "baseline": {
+    "edge": 0.03,
+    "horizon": 20,
+    "margin": 0.02,
+    "rollout": "bot",
+    "samples": 32
+  },
+  "budget_deadline_unix": 1793756530.0,
+  "commit": "59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "created_unix": 1793669837.1114593,
+  "expert_replay_rounds": 8,
+  "frozen_manifest_canonical_sha256": "8edd2bc1c1cd3a08afaebe74754ddbd30ae303122853d342aa286e82b3c5b7eb",
+  "frozen_manifest_sha256": "666702e0db79714380bed6af0750d3f4053bca3da5b1cd7c99be41b4600980dc",
+  "gae_lambda": 1.0,
+  "gamma": 1.0,
+  "implementation_git_head": "fabe203438903fed3bc45f8b8ba8015774a7b463",
+  "initialization": {
+    "checkpoint": "runs\\standalone-rl\\mc-ppo-v3\\selected_round_00024.npz",
+    "metadata": {
+      "adam_steps": {
+        "act.b1": 2696,
+        "act.b2": 2696,
+        "act.out_b": 2696,
+        "act.out_w": 2696,
+        "act.w1": 2696,
+        "act.w2": 2696,
+        "critic.b1": 3336,
+        "critic.b2": 3336,
+        "critic.out_b": 3336,
+        "critic.out_w": 3336,
+        "critic.w1": 3336,
+        "critic.w2": 3336,
+        "replace.b1": 160,
+        "replace.b2": 160,
+        "replace.out_b": 160,
+        "replace.out_w": 160,
+        "replace.w1": 160,
+        "replace.w2": 160,
+        "shield.b1": 480,
+        "shield.b2": 480,
+        "shield.out_b": 480,
+        "shield.out_w": 480,
+        "shield.w1": 480,
+        "shield.w2": 480
+      },
+      "features": 366,
+      "schema": 2,
+      "selection": "validation_only",
+      "source_checkpoint_sha256": "f5fd0e169989fcd60148d4228cda2bc6fab9572b7c7cab4b151d34d91854612c",
+      "state": {
+        "best_greedy": true,
+        "best_round": 24,
+        "best_validation": 0.37109375,
+        "training_games": 6144
+      },
+      "updates": 3336
+    },
+    "sha256": "9bfde8643a7ac3735b56be4ea460c415b5dd55e97a652315f47c1018d4d05e03"
+  },
+  "network": "independent",
+  "numpy": "2.3.5",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "primary_endpoint": "mixed field vs full frozen engine; greedy/stochastic mode selected on validation only; two fresh seed blocks",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "review_pr": "https://github.com/Solaceonx/pokemon_go/pull/10",
+  "run": "mc-student-lowce-v1",
+  "schema": 1,
+  "seed": 37001,
+  "snapshot": ".rl-cache/frozen/59836c86f4c9ccf7e8d35ef7c94268e64c1a4ba9",
+  "sources": {
+    "pogo/counterfactual_rl.py": "0b90c9231c4d0519cf509dc68f4bd57af4d18e1881754913feec87d898c0fc0c",
+    "pogo/rl_experiment.py": "74a90306e1aca5160629b0b5f0262ef1d888b09618480c7e8ecbda31a6d59872",
+    "pogo/standalone_rl.py": "6bc1e78d7642df7c6db066c33cd8a78fff1b0782f9cf2377ff69163770b7d416",
+    "pogo/standalone_rl_v2.py": "37bf604e12ae3fefe3e67e6787f23c9e25079b01e0d10c4c74a082d624e0bacb",
+    "pogo/student_correction.py": "5ff43118257ec8e15cd5eecfe2f8a1c55f263675d042e9c6e6750afa47a53fbb",
+    "scripts/monte_carlo_rl.py": "eb6ad3d21e919d7bf5c4b9fdcfc4e4cf3414d2df98d5842d417b36e66da57028",
+    "scripts/standalone_rl.py": "396e0b319324e514d693e522f3667577ec99a1a9f8b94c3b0eca71482757526a",
+    "scripts/student_correction_rl.py": "061fd2c2dd7732820cd8aac7e111969fdcf4efa4cef6cf307abf636f6de0ac1b"
+  },
+  "split": "70% train / 15% validation / 15% test; unordered trios; same species allowed",
+  "split_salt": "standalone-rl-v1-team-split-2026-11-01",
+  "student_state_corrections": true,
+  "test_seeds": "generated only after checkpoint lock; never used for selection",
+  "training_opponents": "100% frozen engine; sample count logged per batch",
+  "validation_modes": [
+    false,
+    true
+  ]
+}
