@@ -38,7 +38,7 @@ and push that before starting.
 | # | Task | Needs |
 |---|---|---|
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record (defaults unchanged); on the exam next (owner's Mac) | Owner's Mac |
-| **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
+| **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
 | **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — Marco; measured 2026-11-04, **no gain against bots**; merged 2026-11-05 as a record (defaults unchanged); on the exam next (owner's Mac) | Owner's Mac; results in `status.md` |
 | **44** | **The bot and the engine for any team: train on teams from the top 300 and form-changers, and test the engine on unfamiliar teams** — for Marco after task 43 (the owner, 2026-11-05) | Marco's machine, a few hours |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
@@ -210,9 +210,12 @@ mix of hand-varied styles helps against bots but not on the exam. Fitting the st
 
 **Data, and its limit.** About 55 website games of human decisions, nearly all the owner's, plus the two exams. A small
 model of the owner (`scripts/people_model.py`) picks the owner's move 66% of the time against the trained bot's 62% and
-stops improving after about 10 games, so expect a small change at first. The games are not in git: the owner's Mac
-exports every human decision as the trained bot sees it (inputs, options, the choice, no names) to a small file under
-`runs/people/` when Marco starts. Task 40's live games will add real opponents' decisions; refit then.
+stops improving after about 10 games, so expect a small change at first. **The data is on branch `task42-export`
+(2026-11-05); start from it:** `runs/people/owner_games.jsonl`, the owner's 35 website games with no names (538 of their
+decisions), each with its teams, dice and both sides' decisions, so every position replays exactly as in
+`scripts/exam_positions.py` (`scripts/export_people.py` made it and checks the replay). **Never fit on a game's
+`held_out` decisions:** they are the exam's 40 positions, and the owner answered many of them as played. The two exams'
+answers stay private. Task 40's live games will add real opponents' decisions; refit then.
 
 **Fit.** The rulebook's settings (task 30's genes) chosen to play what the people played, on four fifths of the games, by
 how often the rulebook's pick is theirs; scored on the held-back fifth against the rulebook, the trained bot and the
