@@ -6,7 +6,8 @@
         [--reader 0] [--workers 64] [--seed 2701]
 
 A setting is "key=value,key=value" on top of the confirmed engine (samples 4, horizon 20, edge 0.03, the trained bot
-inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, heads (joined by "+", for example
+inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, shield_margin (float), shield_toward (0 | 1),
+heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
 temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), eval (path to an evaluation
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
@@ -32,6 +33,7 @@ import random
 import sys
 import time
 from collections import Counter
+from contextlib import nullcontext
 from pathlib import Path
 
 for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "MKL_NUM_THREADS"):
@@ -53,6 +55,7 @@ from pogo.teamlist import drawer  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
+SHIELD_COUNTS = "per-battle-v1"
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
 _state: dict = {}
 
@@ -68,8 +71,12 @@ def parse(spec: str) -> dict | None:
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "temperature", "switch_edge", "robust"):
+        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust"):
             out[key] = float(value)
+        elif key == "shield_toward":
+            if value not in ("0", "1"):
+                raise SystemExit("shield_toward must be 0 or 1")
+            out[key] = bool(int(value))
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
                      "stay_after_replace"):
             out[key] = value not in ("0", "false", "False", "")
@@ -138,6 +145,26 @@ def points(winner: int, side: int) -> float:
     return 1.0 if winner == side else 0.5 if winner == DRAW else 0.0
 
 
+class ShieldCalls:
+    """Count only the real battle's prompts; imagined players and reader copies are unwrapped."""
+
+    def __init__(self, inner):
+        self.inner = inner
+        self.shields, self.prompts = 0, 0
+
+    def __getattr__(self, name):
+        return getattr(self.inner, name)
+
+    def shield(self, view, energy, *move):
+        answer = self.inner.shield(view, energy, *move)
+        self.prompts += 1
+        self.shields += bool(answer)
+        return answer
+
+    def counts(self):
+        return {"shields": self.shields, "prompts": self.prompts}
+
+
 def job(task):
     """kind is h2h (candidate against baseline, both ways), crowd, pvpoke or reader; returns points by battle number."""
     try:
@@ -150,36 +177,70 @@ def _job(task):
     kind, name, spec, base, start, count, seed = task
     wait_while_paused(_state.get("pause"))
     s = _state
-    out, searches = {}, []
+    out, searches, calls = {}, [], {}
     for n in range(start, start + count):
         rng = random.Random(seed * 1_000_003 + n)
         a, b = s["draw"](rng), s["draw"](rng)
         dice = rng.getrandbits(32)
         if kind == "h2h":
             pair = []
+            ours_calls, base_calls = Counter(), Counter()
             for ours, theirs in ((a, b), (b, a)):
-                me, them = pilot(parse(spec), rng.getrandbits(32)), pilot(parse(base), rng.getrandbits(32))
+                me = ShieldCalls(pilot(parse(spec), rng.getrandbits(32)))
+                them = ShieldCalls(pilot(parse(base), rng.getrandbits(32)))
                 pair.append(points(Battle(ours, theirs, me, them, seed=dice).run(), 0))
                 searches += [r[3] for r in getattr(me, "rows", [])]
+                ours_calls.update(me.counts())
+                base_calls.update(them.counts())
             out[n] = sum(pair) / 2
+            calls[n] = {**ours_calls, "baseline": dict(base_calls)}
         elif kind == "reader":
             pair = []
+            ours_calls = Counter()
             for ours, theirs in ((a, b), (b, a)):
-                me = pilot(parse(spec), rng.getrandbits(32))
+                me = ShieldCalls(pilot(parse(spec), rng.getrandbits(32)))
                 probe = pilot(dict(CONFIRMED), rng.getrandbits(32), cls=Reader)
                 probe.target, probe.target_side = me, 1
                 pair.append(points(Battle(theirs, ours, probe, me, seed=dice).run(), 1))
+                ours_calls.update(me.counts())
             out[n] = sum(pair) / 2
+            calls[n] = dict(ours_calls)
         else:
-            me = pilot(parse(spec), dice)
+            me = ShieldCalls(pilot(parse(spec), dice))
             them = varied(random.Random(dice), s["pool"]) if kind == "crowd" else PvpokeAI()
             out[n] = points(Battle(a, b, me, them, seed=dice).run(), 0)
             searches += [r[3] for r in getattr(me, "rows", [])]
-    return kind, name, out, searches
+            calls[n] = me.counts()
+    return kind, name, out, searches, calls
+
+
+def record(saved: dict, result) -> None:
+    """Merge a worker's scores and counts by battle number, so resuming cannot count a prompt twice."""
+    kind, spec, out, searches, calls = result
+    saved.setdefault("results", {}).setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
+    saved.setdefault("shield_calls", {}).setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in calls.items()})
+    hist = saved.setdefault("search_ms", {}).setdefault(spec, {})
+    for ms in searches[:200]:
+        key = str(round(ms, 1))
+        hist[key] = hist.get(key, 0) + 1
+
+
+def shield_rate(rows, baseline=False) -> str:
+    counts = Counter()
+    for row in rows:
+        counts.update(row["baseline"] if baseline else {k: row[k] for k in ("shields", "prompts")})
+    shields, prompts = counts["shields"], counts["prompts"]
+    rate = f"{100 * shields / prompts:.1f}%" if prompts else "n/a"
+    return f"{shields} / {prompts} ({rate})"
+
+
+def estimate(values: list) -> tuple[float, float]:
+    """A one-battle smoke has a score, but no estimated margin."""
+    return (values[0], float("nan")) if len(values) == 1 else mean_and_margin(values)
 
 
 def summary(values: list) -> str:
-    m, h = mean_and_margin(values)
+    m, h = estimate(values)
     return f"{100 * m:.1f}% ± {100 * h:.1f}"
 
 
@@ -204,6 +265,8 @@ def main() -> None:
     path = ROOT / "runs" / "engine_versus" / f"{args.tag}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
+    if saved.get("results") and saved.get("shield_counting") != SHIELD_COUNTS:
+        raise SystemExit(f"{path} has no shield prompt counts; use a new tag")
     if saved and saved.get("evaluator_cache") not in (CACHE_POLICY, "per_player"):  # task 29 wrote "per_player"
         raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
@@ -213,7 +276,7 @@ def main() -> None:
     if saved and saved.get("field", "standard") != args.field:
         raise SystemExit(f"{path} was made with --field {saved.get('field', 'standard')}; use that or another tag")
     saved.update(seed=args.seed, baseline=args.baseline, field=args.field,
-                 evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY))
+                 evaluator_cache=saved.get("evaluator_cache", CACHE_POLICY), shield_counting=SHIELD_COUNTS)
     results = saved.setdefault("results", {})  # results[kind][spec] = {battle number: points}
     times = saved.setdefault("search_ms", {})
     # Exact frequencies of the rounded timings keep checkpoints small without dropping tail observations.
@@ -227,19 +290,25 @@ def main() -> None:
         for kind, count in (("h2h", args.pairings if name != "baseline" else 0), ("crowd", args.crowd),
                             ("pvpoke", args.pvpoke), ("reader", args.reader)):
             have = results.get(kind, {}).get(spec, {})
-            for start in range(0, count, args.chunk):
-                if str(start) not in have:
-                    plan.append((kind, spec, spec, args.baseline, start, min(args.chunk, count - start), args.seed))
+            start = 0
+            while start < count:
+                if str(start) in have:
+                    start += 1
+                    continue
+                end = start + 1
+                while end < min(start + args.chunk, count) and str(end) not in have:
+                    end += 1
+                plan.append((kind, spec, spec, args.baseline, start, end - start, args.seed))
+                start = end
     print(f"{len(plan)} jobs to run on {args.workers} workers", flush=True)
     t0, last = time.time(), time.time()
     if plan:
-        with multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field, args.pause_file)) as pool:
-            for kind, spec, out, searches in pool.imap_unordered(job, plan):
-                results.setdefault(kind, {}).setdefault(spec, {}).update({str(n): v for n, v in out.items()})
-                hist = times.setdefault(spec, {})
-                for ms in searches[:200]:
-                    key = str(round(ms, 1))
-                    hist[key] = hist.get(key, 0) + 1
+        with (multiprocessing.get_context("spawn").Pool(args.workers, initializer=setup, initargs=(args.field, args.pause_file))
+              if args.workers > 1 else nullcontext()) as pool:
+            if pool is None:
+                setup(args.field, args.pause_file)
+            for result in (pool.imap_unordered(job, plan) if pool else map(job, plan)):
+                record(saved, result)
                 if time.time() - last > 60:
                     path.write_text(json.dumps(saved))
                     last = time.time()
@@ -251,11 +320,17 @@ def main() -> None:
         got = results.get(kind, {}).get(spec, {})
         return [got[k] for k in sorted(got, key=int)]
 
+    def calls(kind, spec):
+        return saved.get("shield_calls", {}).get(kind, {}).get(spec, {}).values()
+
     print(f"\nbaseline: {args.baseline or 'the confirmed engine'}")
+    head_calls = [row for spec in args.candidates for row in calls("h2h", spec)]
+    if head_calls:
+        print(f"  head to head, all candidates: shields / shield prompts {shield_rate(head_calls, baseline=True)}")
     base = {kind: values(kind, args.baseline) for kind in ("crowd", "pvpoke", "reader")}
     for kind, v in base.items():
         if v:
-            print(f"  against the {kind}: {summary(v)}")
+            print(f"  against the {kind}: {summary(v)}; shields / shield prompts {shield_rate(calls(kind, args.baseline))}")
     for name, spec in named.items():
         if name == "baseline":
             continue
@@ -263,12 +338,15 @@ def main() -> None:
         h2h = values("h2h", spec)
         if h2h:
             print(f"  head to head against the baseline, {len(h2h)} pairings both ways: {summary(h2h)}")
+            print(f"    shields / shield prompts {shield_rate(calls('h2h', spec))}; "
+                  f"baseline {shield_rate(calls('h2h', spec), baseline=True)}")
         for kind in ("crowd", "pvpoke", "reader"):
             v = values(kind, spec)
             if v and len(v) == len(base[kind]):
                 diff = [x - y for x, y in zip(v, base[kind])]
-                m, h = mean_and_margin(diff)
+                m, h = estimate(diff)
                 print(f"  against the {kind}: {summary(v)}, {100 * m:+.1f} ± {100 * h:.1f} points on the baseline")
+                print(f"    shields / shield prompts {shield_rate(calls(kind, spec))}")
         t = np.array([float(ms) for ms, count in times.get(spec, {}).items() for _ in range(count)])
         if len(t):
             print(f"  search time per searched decision: median {np.median(t):.0f} ms, 99th percentile "

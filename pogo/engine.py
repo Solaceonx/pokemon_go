@@ -156,8 +156,9 @@ class Engine(Learner):
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
                  mix_switch: bool = False, random_hold: bool = False, matching: bool = False,
                  no_tell_bait: bool = False, judge: str = "steps", switch_edge: float = 0.0,
-                 stay_after_replace: bool = False, robust: float | None = None, **settings):
-        super().__init__(**settings)
+                 stay_after_replace: bool = False, robust: float | None = None,
+                 shield_margin: float | None = None, shield_toward: bool = False, **settings):
+        super().__init__(shield_margin=shield_margin, shield_toward=shield_toward, **settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
         if judge not in ("steps", "turn", "end"):
@@ -567,6 +568,8 @@ class Engine(Learner):
         elif head in ("swap", "mid_swap"):
             first = None if option == 0 else SWITCH[others[option - 1]]
         if self.rollout == "bot":
+            # Both imagined players keep the default shield margin and direction. These settings
+            # change the engine's own shield calls, not either side of its look-ahead.
             us = Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32), even_cost=self.even_cost)
             them = self._imagined_opponent(rng)
         else:

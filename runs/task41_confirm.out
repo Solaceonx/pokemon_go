@@ -1,0 +1,48 @@
+1600 jobs to run on 32 workers
+  335 results, 1 min
+  750 results, 2 min
+  1155 results, 3 min
+  1575 results, 4 min
+  1985 results, 5 min
+  2395 results, 6 min
+  2820 results, 7 min
+  3005 results, 8 min
+  3165 results, 9 min
+  3300 results, 10 min
+  3400 results, 11 min
+  3505 results, 12 min
+  3650 results, 13 min
+  3785 results, 14 min
+  3880 results, 15 min
+  4005 results, 16 min
+  4135 results, 17 min
+  4265 results, 19 min
+  4375 results, 20 min
+  4485 results, 21 min
+  4610 results, 22 min
+  4735 results, 23 min
+  4835 results, 24 min
+  5060 results, 25 min
+  5490 results, 26 min
+  5890 results, 27 min
+  6305 results, 28 min
+  6730 results, 29 min
+  7130 results, 30 min
+  7585 results, 31 min
+  7985 results, 32 min
+
+baseline: samples=32
+  head to head, all candidates: shields / shield prompts 7606 / 20126 (37.8%)
+  against the crowd: 71.7% ± 2.0; shields / shield prompts 3714 / 10223 (36.3%)
+  against the pvpoke: 83.5% ± 2.3; shields / shield prompts 1768 / 4897 (36.1%)
+
+candidate 1: samples=32,shield_margin=0.05
+  head to head against the baseline, 2000 pairings both ways: 49.5% ± 1.2
+    shields / shield prompts 7619 / 19537 (39.0%); baseline 7606 / 20126 (37.8%)
+  against the crowd: 71.0% ± 2.0, -0.8 ± 1.2 points on the baseline
+    shields / shield prompts 3712 / 9856 (37.7%)
+  against the pvpoke: 82.4% ± 2.4, -1.1 ± 1.4 points on the baseline
+    shields / shield prompts 1773 / 4732 (37.5%)
+  search time per searched decision: median 125 ms, 99th percentile 656, worst 1453 (this machine)
+
+results: runs\engine_versus\task41-confirm.json

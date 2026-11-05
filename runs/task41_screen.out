@@ -1,0 +1,127 @@
+Endgames: 318 positions, 48 shield calls (6 shield calls from real games)
+| build | endgame points lost | moves | shields | real games | blunders |
+|---|---|---|---|---|---|
+| samples=32 | 5.24 ± 2.26 | 5.62 | 3.12 | 3.79 | 8.5% |
+| samples=32,shield_margin=0.05 | 5.24 ± 2.26 | 5.62 | 3.12 | 3.79 | 8.5% |
+| samples=32,shield_margin=0.1 | 5.56 ± 2.28 | 5.62 | 5.21 | 3.79 | 8.8% |
+| samples=32,shield_margin=1 | 5.56 ± 2.28 | 5.62 | 5.21 | 3.79 | 8.8% |
+| samples=32,shield_toward=1 | 5.24 ± 2.26 | 5.62 | 3.12 | 3.79 | 8.5% |
+3450 jobs to run on 32 workers
+  325 results, 1 min
+  735 results, 2 min
+  1140 results, 3 min
+  1550 results, 4 min
+  1975 results, 5 min
+  2250 results, 6 min
+  2375 results, 7 min
+  2450 results, 8 min
+  2575 results, 9 min
+  2740 results, 11 min
+  2870 results, 12 min
+  2965 results, 13 min
+  3085 results, 14 min
+  3215 results, 15 min
+  3340 results, 16 min
+  3450 results, 17 min
+  3580 results, 18 min
+  3715 results, 19 min
+  4130 results, 20 min
+  4525 results, 21 min
+  4935 results, 22 min
+  5375 results, 23 min
+  5775 results, 24 min
+  6005 results, 25 min
+  6165 results, 26 min
+  6315 results, 27 min
+  6445 results, 28 min
+  6525 results, 30 min
+  6660 results, 31 min
+  6780 results, 32 min
+  6905 results, 33 min
+  7025 results, 34 min
+  7145 results, 35 min
+  7285 results, 36 min
+  7400 results, 37 min
+  7745 results, 38 min
+  8170 results, 39 min
+  8615 results, 40 min
+  9020 results, 41 min
+  9480 results, 42 min
+  9750 results, 43 min
+  9900 results, 44 min
+  10010 results, 45 min
+  10100 results, 46 min
+  10240 results, 47 min
+  10385 results, 48 min
+  10505 results, 49 min
+  10605 results, 50 min
+  10740 results, 51 min
+  10880 results, 53 min
+  11010 results, 54 min
+  11115 results, 55 min
+  11390 results, 56 min
+  11800 results, 57 min
+  12225 results, 58 min
+  12655 results, 59 min
+  13080 results, 60 min
+  13470 results, 61 min
+  13530 results, 62 min
+  13665 results, 63 min
+  13825 results, 64 min
+  13985 results, 65 min
+  14095 results, 66 min
+  14195 results, 67 min
+  14325 results, 68 min
+  14460 results, 69 min
+  14590 results, 70 min
+  14695 results, 71 min
+  14830 results, 72 min
+  14975 results, 73 min
+  15405 results, 74 min
+  15840 results, 75 min
+  16270 results, 76 min
+  16685 results, 77 min
+  17130 results, 78 min
+
+baseline: samples=32
+  head to head, all candidates: shields / shield prompts 22848 / 59900 (38.1%)
+  against the crowd: 74.3% ± 2.2; shields / shield prompts 2779 / 7713 (36.0%)
+  against the pvpoke: 83.9% ± 2.6; shields / shield prompts 1298 / 3583 (36.2%)
+
+candidate 1: samples=32,shield_margin=0.05
+  head to head against the baseline, 1500 pairings both ways: 49.9% ± 1.4
+    shields / shield prompts 5732 / 14606 (39.2%); baseline 5712 / 15084 (37.9%)
+  against the crowd: 74.2% ± 2.2, -0.0 ± 1.5 points on the baseline
+    shields / shield prompts 2790 / 7446 (37.5%)
+  against the pvpoke: 84.9% ± 2.5, +1.0 ± 1.5 points on the baseline
+    shields / shield prompts 1303 / 3484 (37.4%)
+  search time per searched decision: median 125 ms, 99th percentile 656, worst 1469 (this machine)
+
+candidate 2: samples=32,shield_margin=0.1
+  head to head against the baseline, 1500 pairings both ways: 48.0% ± 1.5
+    shields / shield prompts 5747 / 13859 (41.5%); baseline 5706 / 14989 (38.1%)
+  against the crowd: 72.2% ± 2.3, -2.1 ± 1.7 points on the baseline
+    shields / shield prompts 2804 / 7040 (39.8%)
+  against the pvpoke: 82.8% ± 2.7, -1.1 ± 2.0 points on the baseline
+    shields / shield prompts 1324 / 3334 (39.7%)
+  search time per searched decision: median 125 ms, 99th percentile 656, worst 1469 (this machine)
+
+candidate 3: samples=32,shield_margin=1
+  head to head against the baseline, 1500 pairings both ways: 47.0% ± 1.5
+    shields / shield prompts 5744 / 13340 (43.1%); baseline 5710 / 14923 (38.3%)
+  against the crowd: 70.4% ± 2.3, -3.9 ± 1.9 points on the baseline
+    shields / shield prompts 2783 / 6885 (40.4%)
+  against the pvpoke: 82.1% ± 2.7, -1.8 ± 2.1 points on the baseline
+    shields / shield prompts 1319 / 3273 (40.3%)
+  search time per searched decision: median 125 ms, 99th percentile 656, worst 1453 (this machine)
+
+candidate 4: samples=32,shield_toward=1
+  head to head against the baseline, 1500 pairings both ways: 46.7% ± 1.5
+    shields / shield prompts 5846 / 12904 (45.3%); baseline 5720 / 14904 (38.4%)
+  against the crowd: 71.4% ± 2.3, -2.9 ± 1.7 points on the baseline
+    shields / shield prompts 2855 / 6682 (42.7%)
+  against the pvpoke: 82.7% ± 2.7, -1.2 ± 1.9 points on the baseline
+    shields / shield prompts 1349 / 3191 (42.3%)
+  search time per searched decision: median 125 ms, 99th percentile 641, worst 1422 (this machine)
+
+results: runs\engine_versus\task41-screen.json
