@@ -24,6 +24,7 @@ to `games/<recording>-1`, `-2`, ...; the report is `games/report.json`.
 | Build the looks | `assemble.py` | plain python3 | `team.json`, `observations.jsonl`, `timeline.json` |
 | Track | `scripts/track.py` | plain python3 | `state.json`, `states.jsonl`, `events.jsonl`, `track.json` |
 | Judge | `verdict.py` | plain python3 | `verdict.json` |
+| Write it up | `game_record.py` | plain python3 | `game.json` (one record of the whole game) and `game.txt` (a play-by-play); see `docs/game_record.md` |
 
 Reading is the slow step and is done once; its output is kept, so everything after it can be
 re-run whenever the assembly or the tracker changes:
