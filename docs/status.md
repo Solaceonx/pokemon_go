@@ -3879,3 +3879,28 @@ wins 66.8% ± 2.9 (the best before, 69.1% ± 2.0). Without Mimikyu the best are 
 Jellicent / Clodsire / Mandibuzz 52.0%, with Araquanid 47.7%. Shadow Charjabug, Carbink, shadow Marowak and Stunfisk recur.
 Either Mimikyu is this strong, or the bots have other blind spots with a Pokémon no network was trained with; the players' read
 decides which. The rule changes `pogo/`, so it reaches the website only after a release check and the owner's yes.
+
+**Against nine teams top players use now** (2026-11-04, the owner's list; Great League with megas allowed;
+`scripts/top_player_teams.py`, output `runs/wide-teams/top_players_leads.out`). Each team plays each players' team with all
+nine lead pairs, 25 battles each, both sides the trained bot with the Disguise rule, PvPoke's default moves and IVs (Mega
+Sableye, absent from PvPoke's Great League rankings, gets Sableye's moves at PvPoke's listed IVs). With teams fixed the bots
+play nearly the same game every time (one lead order per pairing gave 0% or 100%), so the printed ±2 is too small: there
+are about 70 distinct games per team, call it ±7.
+
+| Team | v the players' teams | v the mixed field |
+|---|---|---|
+| Mimikyu / Morpeko / Jumpluff (players') | 70.8% | 63.9% |
+| Diggersby / Mimikyu / shadow Charjabug (our search's best) | 66.1% | 63.8% |
+| Mega Sableye / Dunsparce / Corviknight (players') | 59.7% | 60.5% |
+| Melmetal / Altaria / Florges (players') | 58.8% | 47.9% |
+| Carbink / Mimikyu / shadow Charjabug | 58.5% | 62.1% |
+| Jellicent / Clodsire / Mandibuzz | 50.5% | 48.5% |
+| shadow Charjabug / Thievul / shadow Marowak | 48.0% | 62.1% |
+| Quag / shadow Sab / shadow Corv (the owner's) | 43.2% | 51.2% |
+| Mimikyu / Stunfisk / shadow Marowak | 39.3% | 65.6% |
+| Jellicent / Clodsire / Araquanid | 35.8% | 44.6% |
+
+The players' other five teams score 36.8-50.9% against the rest. Mimikyu is on four of the nine and on the best team, so the
+simulator's Mimikyu finding matches the players. The mixed field (PvPoke's usage) does not predict this field: Mimikyu /
+Stunfisk / shadow Marowak is best against it and near worst here, Melmetal / Altaria / Florges the reverse. A team search for
+the current format should use teams players actually run as the field.
