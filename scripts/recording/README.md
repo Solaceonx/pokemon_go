@@ -36,7 +36,9 @@ python3 scripts/recording/verdict.py games/<name>
 ```
 
 `rhythm.py games/<name>` is an independent count of energy from exact times, for checking the
-tracker's own count.
+tracker's own count. `unread_health.py <folder of tracked games> --no-faints` checks the tracker's health at
+the looks where a bar was not read against the next reading (`docs/status.md`, "Charged-move damage when the
+bar is not read").
 
 ## The screen reader
 
