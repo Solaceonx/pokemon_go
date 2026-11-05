@@ -6,7 +6,42 @@ says how to run things.
 
 Last updated 2026-11-05.
 
-## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; running)
+## Standalone Double DQN continuation — 2026-11-03–05 (Codex DQN, task 38; budget stopped, strength target failed)
+
+**Final outcome: reliable-win target failed.** The fixed48-hour allocation endedNovember5
+20:59:47UTC /12:59:47p.m. Pacific. The unchanged guard stopped its verified worker; terminal metadata
+was written20:59:47.854923UTC, within the guard's existing polling interval. Both worker8456 and
+guard20796 are absent. No worker, training or benchmark was restarted after the deadline.
+
+| New held-out block | Saved mirrored pairings /required | Score ±95% margin (percentage points) | 95% interval |
+| --- | --- | --- | --- |
+| Mixed39091 | 1,000 /1,000 | 26.050000% ±1.7472519926 | 24.3027480074–27.7972519926% |
+| Mixed39092 | 1,000 /1,000 | 26.250000% ±1.7740509454 | 24.4759490546–28.0240509454% |
+| Standard39091 | 193 /1,000 | Incomplete; no registered estimate | Not reported |
+
+The two complete mixed blocks are clear losses, and both required mixed win gates fail. Only
+**2,193 /3,000mirrored pairings (4,386 /6,000games)** were saved complete. The standard sample was
+not reduced or promoted: no score/interval is presented as its registered1,000-pair result. There is
+no complete new three-block verdict, and the full verdict auditor was not run. The earlier complete
+6,000-game losses remain unchanged. The system-restart gap and earlier CPU contention consumed
+wall time; neither changed the original deadline or authorized more research.
+
+`budget-stop-20261105/audit_saved.py` independently verifies the complete mixed blocks, every saved
+standard draw/seed/fold/side/legal paired outcome, contiguous193-pair prefix, unused-composition/seed
+restrictions,39runtime sources,guard,95baseline files,original/copied inputs,all stage checkpoints,
+selected compact parameters,old/new locks and retained approval/recovery receipts. Its four corruption
+checks reject changed teams,seeds,sides and illegal outcomes. It reads the incomplete journal without
+repairing or scoring it. `audit.json` records saved_evidence_verified=true, complete_benchmark=false,
+strength_target_met=false; terminal process/state/log snapshots are beside it. Standard raw SHA-256:
+`8bcb105b02e05be7e2c5def5c23d6ce19632c067198c24e07dfa094427919426`.
+
+Required terminal checks passed: **323tests,7optional skips;108/108 PvPoke battles exact**. Logs are
+`runs/continue-v1-final-tests.out` and `runs/continue-v1-final-pvpoke.out`. The91,443-byte compact
+failed-policy artifact remains SHA-256 `7ab364134eabc5ea04f2346c1140bb989113031ce0983be7105776c029bd6e46`;
+full checkpoints,optimizer/target/RNG/replay,data and raw journals remain local and ignored. Small
+closure evidence and the compact policy are retained for review, with no promotion,merge or deployment.
+Task38 is stopped at its authorized budget with its strength target unmet. The heartbeat is removed
+after this final evidence is published; no further experiment is authorized by this stopped allocation.
 
 The owner explicitly authorized **another 48 hours** after reviewing the completed losing benchmark.
 The new allocation begins at the observed approval time **2026-11-03 20:59:47 UTC** and ends at

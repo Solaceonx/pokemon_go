@@ -1,5 +1,23 @@
 # Double DQN continuation (task 38)
 
+**Stopped at the authorized November5 20:59:47UTC deadline; reliable-win target failed.** Both complete
+1,000-pair mixed blocks lost:26.050000%±1.7472519926points (95%),CI24.3027480074–27.7972519926%,
+and26.250000%±1.7740509454points,CI24.4759490546–28.0240509454%. Standard39091 saved193/1,000pairs
+and has no registered strength estimate. Total complete saved games:4,386/6,000. No complete new
+verdict exists; the full three-block auditor was not run. No further job or deadline extension occurred.
+
+Audit the saved terminal evidence without running games:
+
+```powershell
+python runs/double-dqn/continue-v1/budget-stop-20261105/audit_saved.py
+```
+
+It verifies both complete blocks and every saved partial pairing,source/data/model/lock identities,
+exclusions and terminal receipts without treating the incomplete standard sample as a reduced test.
+Four corruption checks reject changed teams,seeds,sides and illegal outcomes. Terminal checks pass
+323tests,7optional skips;108/108 PvPoke exact. The compact policy is a failed experiment artifact;
+full optimizer/target/RNG/replay/checkpoints/data/raw journals remain local. Earlier records follow.
+
 The owner authorized a new 48-hour allocation after the completed benchmark failed. The fixed deadline
 is November 5, 2026 at 20:59:47 UTC / 12:59:47 p.m. Pacific. The registered plan and exclusion data are
 under `runs/double-dqn/continue-v1/`. The tested implementation and immutable runtime are prepared.

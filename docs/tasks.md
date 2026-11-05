@@ -65,7 +65,21 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 38. Standalone Double DQN against a frozen engine — Codex DQN (new continuation claimed, 2026-11-03)
+## 38. Standalone Double DQN against a frozen engine — Codex DQN (budget stopped, reliable-win target failed, 2026-11-05)
+
+**Final state:** the authorized continuation stopped atNovember5 20:59:47UTC. Complete mixed39091
+and39092 blocks each ran1,000mirrored pairings/2,000games and lost clearly:26.050000%±1.7472519926
+and26.250000%±1.7740509454points (95%), respectively. Standard39091 saved193of1,000required pairs;
+no registered strength estimate is reported for it. Total complete saved evidence:2,193pairs/4,386games
+of3,000pairs/6,000games required. Both mixed gates fail; no full new verdict exists. The ultimate
+reliable-win goal remains unmet, and no further research or deadline extension was performed.
+
+`continue-v1/budget-stop-20261105/` retains independently verified full/partial saved evidence and
+terminal process/state/log receipts; the compact selected policy is retained as a failed artifact.
+All39runtime and95baseline files,guard,original/copied inputs,checkpoints and old/new locks verify.
+Required final checks:323tests OK,7optional skips;108/108 PvPoke exact. Full checkpoints/replay/data/raw
+journals remain local. PR12 preserves the historical completed6,000-game loss table. No promotion,
+merge or deployment; monitoring stops after final publication. Earlier chronological records follow.
 
 **New continuation.** The owner authorized another48hours, ending2026-11-05 20:59:47UTC. Registered
 `continue-v1/plan.json` resumes the saved full Double DQN state for up to four eight-hour stages, selects
