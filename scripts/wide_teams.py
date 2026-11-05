@@ -120,6 +120,7 @@ def main() -> None:
     parser.add_argument("--finals", type=int, default=600)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--table-only", action="store_true", help="stop after the one-on-ones (runs/wide-teams/matchups.json)")
     args = parser.parse_args()
     from pogo.arena import low_priority
     from pogo.gamedata import GameData
@@ -152,6 +153,8 @@ def main() -> None:
     path.write_text(json.dumps(wide))
     table = np.array([[wide[a].get(b, -wide[b].get(a, 0.0)) if a != b else 0.0 for b in ids] for a in ids])
     print(f"one-on-ones ready ({time.time() - t0:.0f}s)", flush=True)
+    if args.table_only:
+        return
 
     # 2. quick score against the field's weights
     usage = pvpoke_usage()

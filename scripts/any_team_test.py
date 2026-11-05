@@ -1,11 +1,14 @@
 """Does the trained bot's edge over the rulebook hold on teams it never trained with? (the owner, 2026-11-05)
 
-    python3 scripts/any_team_test.py [--teams 20] [--battles 200] [--workers 3] [--seed 7]
+    python3 scripts/any_team_test.py [--teams 20] [--battles 200] [--workers 3] [--seed 7] [--net runs/general-decide/q.npz]
+
+Needs runs/wide-teams/matchups.json (not in git; `python3 scripts/wide_teams.py --table-only` builds it in under a minute).
 
 Three groups of --teams random legal teams: PvPoke's top 50 (what the network trained on), ranks 51-300 (none in the
 top 50), and teams with a form-changer (Mimikyu, Morpeko, Cramorant or Aegislash) beside two of the top 50. Each team
 plays --battles battles against the mixed field twice, piloted once by the trained bot and once by the rulebook
-(Planner), with the same opponents and dice; the opponents are the trained bot. Both read the wide one-on-ones of
+(Planner), with the same opponents and dice; the opponents are the trained bot on the website's network, whichever
+--net pilots our side. Both read the wide one-on-ones of
 scripts/wide_teams.py (Aegislash added), so the table's coverage is not what is measured. The 51-300 group is played a
 third way too: the trained bot with the shipped 50-Pokémon table, as the website has it. Writes
 runs/wide-teams/any_team.out and .json.
@@ -41,7 +44,7 @@ def builds(gd) -> list:
     return pool + [gd.default(s) for s in FORMS if s not in have]
 
 
-def _init(table_path: str | None) -> None:
+def _init(table_path: str | None, net: str = "runs/general-decide/q.npz") -> None:
     from pogo.arena import low_priority
     from pogo.gamedata import GameData
     from pogo.learner import QNet
@@ -55,6 +58,7 @@ def _init(table_path: str | None) -> None:
         wide = json.loads(Path(table_path).read_text())
         agents._matchup_table = learner._matchup_table = lambda: wide
     _w["net"] = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
+    _w["ours"] = QNet.load(str(ROOT / net))
     _w["draw"] = mixed_field(gd)[1]
 
 
@@ -77,7 +81,7 @@ def _battles(job) -> tuple:
         rng = random.Random(seed * 1_000_003 + k)
         foe = _w["draw"](rng)
         dice = rng.getrandbits(32)
-        me = Learner(q=_w["net"], margin=0.02, seed=dice % 99991) if pilot == "trained" else Planner(seed=dice % 99991)
+        me = Learner(q=_w["ours"], margin=0.02, seed=dice % 99991) if pilot == "trained" else Planner(seed=dice % 99991)
         winner = Battle(ours, foe, me, Learner(q=_w["net"], margin=0.02, seed=dice % 99989), seed=dice).run()
         points.append(1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0)
     return key, pilot, start, points
@@ -100,6 +104,7 @@ def main() -> None:
     parser.add_argument("--battles", type=int, default=200)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--net", default="runs/general-decide/q.npz", help="the network piloting our side (path from the repo root)")
     args = parser.parse_args()
     from pogo.arena import low_priority
     from pogo.gamedata import GameData
@@ -146,9 +151,9 @@ def main() -> None:
             got.setdefault((key, pilot + tag), {})[start] = points
 
     # same dice: battle k of a team draws the same opponent and seed whoever pilots it (jobs are chunked identically)
-    with Pool(args.workers, _init, (str(path),)) as runner:
+    with Pool(args.workers, _init, (str(path), args.net)) as runner:
         collect(runner, jobs(list(groups), ["trained", "rulebook"]))
-    with Pool(args.workers, _init, (None,)) as runner:
+    with Pool(args.workers, _init, (None, args.net)) as runner:
         collect(runner, jobs(["ranks 51-300"], ["trained"]), " (shipped table)")
     print(f"battles played ({time.time() - t0:.0f}s)\n", flush=True)
 
