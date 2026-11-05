@@ -40,6 +40,7 @@ and push that before starting.
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — for Marco (the owner, 2026-11-04) | Marco's machine, a few hours |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
 | **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — Marco; measured 2026-11-04, **no gain against bots**; on the exam next (owner's Mac) | Owner's Mac; results in `status.md` |
+| **44** | **The bot and the engine for any team: train on teams from the top 300 and form-changers, and test the engine on unfamiliar teams** — for Marco after task 43 (the owner, 2026-11-05) | Marco's machine, a few hours |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco; done 2026-10-30: **varied imagined opponents confirmed at 32** (51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke on a fresh seed); judging changes do not help and keeping the switch is worse. Not adopted: run before the nesting fix, and on the exam `matching` plays the two players' shared answer least often (`status.md`) | Done |
@@ -100,6 +101,60 @@ defaults play the same games as before.
 **Done when** the table of all candidates on judges 1 and 2 is in `status.md` with the commands, the best on judges 1-2
 is confirmed on a fresh seed (2,000 / 2,000 / 1,000), and the code is in a pull request. The owner decides after the exam
 score. Expect a few hours.
+
+## 44. The bot and the engine for any team — for Marco after task 43 (the owner, 2026-11-05)
+
+**Why.** The owner wants the engine to play any team, not only teams from PvPoke's top 50. The trained bot's networks
+were trained on top-50 teams only (`scripts/decide.py` draws from `gd.meta(50)`, no form-changers), but their inputs
+are general (health, energy, damage of each move against this opponent, move costs, shields, the rulebook's pick), not
+species. `scripts/any_team_test.py` (2026-11-05; `status.md` on `wide-teams`, "Does the trained bot work on any team?") played 60 random
+teams, each piloted once by the trained bot and once by the rulebook with the same opponents and dice:
+
+| Group | Trained minus rulebook |
+|---|---|
+| Top 50 (trained on) | +8.2 ± 1.6 points |
+| Ranks 51-300 | +4.9 ± 1.5 |
+| With a form-changer (Mimikyu, Morpeko, Cramorant, Aegislash) | +8.4 ± 1.6 |
+
+So the bot keeps its edge with form-changers but loses about 40% of it on teams outside the top 50. The one-on-one
+table's coverage made no difference (the shipped 50-Pokémon table against a 304-Pokémon one: -0.1 ± 1.3). The engine
+has not been tested on such teams; it imagines their unseen Pokémon from its `pool` (`pogo/engine.py`, top 50 on the
+website).
+
+**Start from branch `wide-teams`** (not merged: it holds the owner's Disguise rule in `pogo/`, `scripts/wide_teams.py`,
+`scripts/any_team_test.py`). Build the 304-Pokémon one-on-ones first: `python3 scripts/wide_teams.py --table-only`
+(under a minute; `runs/wide-teams/matchups.json`, not in git).
+
+**Part A: train for any team.** Give `scripts/decide.py` a `--pool N` option (default 50: nothing changes) that draws
+example teams from `wide_teams.species_pool(gd, N)` (the top N, the mixed field's Pokémon, the reference teams), plus
+the four form-changers when `--forms` is on, and reads the wide table. Candidates, each with the same example time as
+the current model (`--minutes 60`, three workers):
+1. `--pool 300`;
+2. `--pool 300 --forms` (form-changers in the pool and the form inputs);
+3. the better of 1 and 2 with `--start runs/general-decide/q.npz`.
+
+Task 33's planned retrain (two play-outs per option, `--field mixed`) is a fair fourth if time allows.
+
+**Judges for A.**
+1. **Any team:** `python3 scripts/any_team_test.py --net <candidate> --seed 8` (a fresh seed). The candidate must
+   raise the ranks 51-300 edge beyond the margin and lose nothing beyond the margin on the other two groups.
+2. **No loss where we are now:** the candidate against the current `q.npz` on the usual bot fields, top-50 teams:
+   `decide.py`'s closing test against the rulebook, and `engine_versus.py --field mixed` with the website engine on
+   each network (1,500 pairings both ways, 1,500 crowd, 750 PvPoke).
+3. **The exam:** the owner's Mac scores the best once pushed.
+
+**Part B: the website engine on unfamiliar teams.** Add a `--pilot engine` choice to `any_team_test.py`: the
+website engine (`pogo/realtime.py` `WEBSITE` settings, 32 imagined battles) in place of the rulebook, so the table
+reads engine minus trained bot per group; 10 teams per group and 100 battles each are enough to start. Run it twice:
+- with the engine's `pool` as on the website (top 50);
+- with the pool widened to `species_pool(gd, 300)` plus the form-changers.
+
+The opponents are the mixed field throughout. If the engine's edge shrinks on the 51-300 group, report whether the
+wider pool brings it back, and the search time per decision (release check: p99 under 800 ms).
+
+**Done when** the tables for A and B are in `status.md` with the commands, the best network is confirmed on a fresh
+seed (2,000 / 2,000 / 1,000 on judge 2), and the code is in a pull request against `wide-teams`. The owner decides
+after the exam whether the new network ships.
 
 ## 43. Let the engine search swaps in the middle of a matchup — for Marco after task 41, before 42 (the owner, 2026-11-04)
 
