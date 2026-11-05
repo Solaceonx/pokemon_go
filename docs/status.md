@@ -4006,3 +4006,20 @@ Defaults are unchanged. The exam on Luke's Mac decides: score all six candidates
 the private answers are not in this checkout, so no exam result is claimed here.
 
 Tasks 41 and 43 merged to `main` 2026-11-05 as records (the owner's yes); no default changes. `engine_versus.py` now has one counter, `Counted`, for shield prompts and mid-matchup swaps; per-battle files keep both under `activity` (`counting: per-battle-v2`), so files from either branch need a new tag.
+
+**Exam screen of tasks 41 and 43, 2026-11-05** (`scripts/exam_variants.py` on the owner's Mac, both players' answers, 35
+positions, about 3 minutes; the printout stays with the private answers in `runs/exam/`). Picks matching the owner / the
+second player / where both agree (25), against the website engine's 12 / 19 / 12:
+
+| Setting | Picks changed | Owner | Second player | Both agree |
+|---|---|---|---|---|
+| `shield_margin=0.05` | 3 | **15** | **20** | **14** |
+| `shield_margin=0.1`, `shield_margin=1`, `shield_toward=1` (each) | 5 | 15 | 18 | 13 |
+| `mid_swap_search=ready` (also with `switch_edge=0.05`) | 3 (5) | 10 | 17 | 10 |
+| `mid_swap_search=hit` (also with `switch_edge=0.05`) | 1 (3) | 13 | 19 | 12 |
+| `mid_swap_search=both` (also with `switch_edge=0.05`) | 2 (4) | 11 | 18 | 11 |
+
+`shield_margin=0.05` is the only setting better for both players: its 3 changed picks all match the owner, and it tied the
+website engine against bots on the fresh seed. The larger shield settings help the owner but cost the second player one pick, and
+lost against bots. No swap gate helps; `ready`, which lost most against bots, also loses most here. A screen only (few positions,
+chosen where versions disagree): nothing adopted. `shield_margin=0.05` goes into exam 2 as a version, for fresh positions.
