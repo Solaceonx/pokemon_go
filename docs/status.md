@@ -4,7 +4,7 @@ Read this before suggesting improvements. It says what the project is, what has 
 measured, what has already been tried and did not work, and what is open. The README
 says how to run things.
 
-Last updated 2026-11-04.
+Last updated 2026-11-05.
 
 ## Standalone Double DQN continuation — 2026-11-03 (Codex DQN, task 38; running)
 
@@ -175,6 +175,32 @@ with persistent deadline **2026-11-05T06:02:50.6474683Z**. Initial and all three
 endpoints remain eligible; selection waits for the remaining stage under the original rule. All settings,
 frozen opponent, exclusions, final counts and November5 20:59:47UTC deadline remain fixed. No new final
 test has opened, and the reliable-win goal remains unmet.
+
+**All four training stages completed; validation pending — November5,06:03–22UTC.** Stage4 saved
+its full endpoint at **06:03:08.4340785UTC**: **20,198total games /19,741new games**, including
+**4,790in stage4**, **80,780replay update batches /161,560Adam steps**. Online parameters, optimizer
+moments and target are finite. Checkpoint SHA-256:
+`5cc5a7c8f4c6e6c731c55cb1bb98822c6410b420a35331614437a3a202fcf741`.
+Ordinary whole-game/snapshot completion ended **17.7866101seconds after** the stored06:02:50.6474683
+stage cutoff; no allocation restarted and the overall deadline stayed fixed. The independent
+`stage_4_checkpoint_artifacts.json` verifies the endpoint, all39runtime files, guard,95baseline files,
+original/copied teacher data, exact initial full state and old global lock/verdict. This is a training
+receipt only: no stage4 validation score, selected policy or new reliable-win result is available yet.
+
+The existing worker22396 moved to its registered64-pair validation, but then received very little CPU.
+At approximately06:20UTC, system counters showed **all16cores at100% and processor queue length50**.
+Its single thread was runnable/Ready, with normal memory use and unchanged BelowNormal priority/path/start;
+CPU time advanced only **63.8125seconds between06:07:35 and06:17:35UTC**. Stdout had no completed
+20-pair progress batch and stderr remained empty. This is resource starvation, not evidence of a dead
+process or permission to restart it. `cpu_capacity_issue.json` retains the observations.
+
+The owner was notified once and asked to free capacity, explicitly authorize Normal priority for this
+single worker, or retain the settings and accept partial results at the fixed deadline. **Authorization
+is pending at this record; no priority, process, source, baseline, sample count or deadline changed.**
+The same worker continues and saves complete pairings; observation expiry cannot justify a duplicate.
+Checks passed **323tests,7optional video skips;108/108 PvPoke exact**, retained in
+`runs/continue-stage-4-tests.out` and `runs/continue-stage-4-pvpoke.out`.
+The reliable-win target remains unmet. The November5 **20:59:47UTC** absolute deadline is unchanged.
 
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 

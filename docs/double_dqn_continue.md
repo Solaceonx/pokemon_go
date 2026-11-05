@@ -109,3 +109,13 @@ state and unchanged runtime/guard/baseline/data/old locks. Whole-game/snapshot c
 retains exact evidence/hashes. Stage4, the final registered stage, runsNovember4 22:02:50.6474683UTC
 throughNovember5 06:02:50.6474683UTC. The same worker continues; all four existing candidates remain
 eligible pending that stage. No new final test has opened.323tests pass,7optional skips;108/108 PvPoke exact.
+
+All four training stages completed. Stage4 saved20,198total/19,741new games (4,790in this stage),
+80,780replay batches/161,560Adam steps atNovember5 06:03:08.4340785UTC,17.7866101seconds after its
+stored cutoff during ordinary whole-game/snapshot completion. `stage_4_checkpoint_artifacts.json`
+independently verifies finite online/optimizer/target state and unchanged runtime/guard/baseline/inputs.
+Stage4 validation is still pending: by06:20UTC all16CPU cores were saturated with queue50, leaving the
+same single runnable BelowNormal worker little CPU. `cpu_capacity_issue.json` records this resource
+issue. A user choice about freeing capacity or explicitly allowing Normal priority is pending; do not
+change priority based on elapsed time or restart the live worker. No source or deadline changed.
+Checks pass323tests,7optional skips;108/108 PvPoke exact. No new strength result is established.

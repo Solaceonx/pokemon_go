@@ -86,6 +86,12 @@ points is inconclusive. The final registered stage4 runsNovember4 22:02:50UTC th
 with unchanged settings/deadline. All raw validation evidence, finite checkpoint/optimizer/target and
 runtime/baseline/data hashes were independently checked. Initial and all three completed stage endpoints
 remain eligible; selection waits for stage4 under the original rule.
+Stage4 training has now completed20,198total/19,741new games,80,780batches/161,560Adam steps, with
+independently verified finite checkpoint/target/optimizer and unchanged source/data/baseline/locks.
+Its64-pair validation is pending under severe CPU contention (16cores100%, queue50 aroundNovember5
+06:20UTC). The same worker remains live at BelowNormal; an owner choice about freeing CPU or authorizing
+Normal priority is pending. No priority/process/source/deadline change or duplicate worker is authorized
+by that unanswered question. The fixedNovember5 20:59:47UTC deadline and reliable-win target remain.
 323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
 the reliable-win goal remains unmet and all prior completed results remain unchanged.
 
