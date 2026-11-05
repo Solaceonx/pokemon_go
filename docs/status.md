@@ -3855,3 +3855,81 @@ The control repeats task 35 at 8 imagined battles (its confirm at 32: crowd +3.2
 `robust` is the control's (median 31 ms, 99th percentile 141-156 on the PC). Printout `runs/robust_screen.out`; the per-battle file `runs/engine_versus/robust-screen.json` is on Marco's PC.
 Merged 2026-11-03 as a record (the owner's yes); no default changes. Next: screen `robust=0.5` on the exam, where people play
 less like the imagined styles than bots do.
+
+## Mid-matchup swap search (task 43, 2026-11-04, Marco): **no gain against bots; on the exam next**
+
+`Engine(mid_swap_search=...)`, off by default, reopens the swap question in an already judged matchup when switching is legal,
+through three gates: `ready` when they are at most two fast moves from their cheapest charged move (including one already ready),
+`hit` once after their charged move lands on us, and `both` for either. It changes only the engine's own decisions; the imagined
+players keep their defaults.
+
+**Screen, mixed field** (`runs/task43_screen.out`, seed 4301): website settings, 32 imagined battles, 1,500 head-to-head
+pairings both ways, 1,500 crowd battles and 750 PvPoke battles. All margins are 95%; differences are paired points on the
+baseline, as printed, not differences of the rounded scores. In the tables, `+ edge` means `switch_edge=0.05`.
+
+| Gate (all samples=32) | Head to head | Crowd | Crowd points on baseline | PvPoke's AI | PvPoke points on baseline |
+|---|---|---|---|---|---|
+| website engine (baseline) | — | 73.9% ± 2.2 | — | 83.9% ± 2.6 | — |
+| `ready` | 45.3% ± 1.5 | 66.4% ± 2.4 | -7.5 ± 2.6 | 81.4% ± 2.8 | -2.5 ± 3.2 |
+| `hit` | 49.6% ± 1.4 | 72.1% ± 2.3 | -1.8 ± 1.9 | 83.5% ± 2.6 | -0.3 ± 2.5 |
+| `both` | 44.9% ± 1.5 | 67.2% ± 2.4 | -6.7 ± 2.6 | 81.0% ± 2.8 | -2.9 ± 3.3 |
+| `ready` + edge | 41.1% ± 1.6 | 59.7% ± 2.5 | -14.1 ± 3.0 | 81.2% ± 2.8 | -2.7 ± 3.3 |
+| `hit` + edge | 38.7% ± 1.6 | 60.3% ± 2.5 | -13.5 ± 2.8 | 79.9% ± 2.9 | -3.9 ± 3.1 |
+| `both` + edge | 42.4% ± 1.6 | 60.4% ± 2.5 | -13.5 ± 3.0 | 81.2% ± 2.8 | -2.7 ± 3.3 |
+
+**Mid-matchup activity in the screen.** Each cell is swaps / searches per battle, as printed. The swap counter counts
+voluntary switches after turn zero, excluding replacements; the search counter counts the `mid_swap` head. The baseline's
+head-to-head activity differs with the candidate it faces; the crowd and PvPoke baseline battles are shared.
+
+| Gate | Head to head, candidate | Head to head, baseline | Crowd | PvPoke's AI |
+|---|---|---|---|---|
+| website engine (baseline) | — | — | 1.701 / 0.000 | 1.195 / 0.000 |
+| `ready` | 2.578 / 4.095 | 2.491 / 0.000 | 2.490 / 5.672 | 2.159 / 7.973 |
+| `hit` | 2.205 / 1.072 | 2.188 / 0.000 | 1.988 / 1.485 | 1.553 / 2.052 |
+| `both` | 2.589 / 4.319 | 2.501 / 0.000 | 2.503 / 6.136 | 2.193 / 8.655 |
+| `ready` + edge | 1.891 / 10.738 | 2.334 / 0.000 | 1.723 / 12.491 | 1.531 / 13.092 |
+| `hit` + edge | 1.171 / 2.252 | 1.901 / 0.000 | 1.061 / 2.589 | 1.015 / 2.820 |
+| `both` + edge | 1.931 / 11.462 | 2.353 / 0.000 | 1.745 / 13.463 | 1.489 / 14.708 |
+
+**Confirmation on fresh seed 4343** (`runs/task43_confirm.out`): `hit` was the best of the screen and the only candidate
+with no loss beyond the margin on any field. Rechecked on the mixed field with 2,000 pairings both ways, 2,000 crowd and
+1,000 PvPoke battles, it loses against the crowd beyond the margin (-2.1 ± 1.6); head to head includes 50% within its
+margin, and the PvPoke gain includes zero. It fails the brief's no-loss requirement.
+
+| Setting (samples=32) | Head to head | Crowd | Crowd points on baseline | PvPoke's AI | PvPoke points on baseline |
+|---|---|---|---|---|---|
+| website engine (baseline) | — | 74.2% ± 1.9 | — | 83.9% ± 2.3 | — |
+| `mid_swap_search=hit` | 48.9% ± 1.2 | 72.1% ± 2.0 | -2.1 ± 1.6 | 85.2% ± 2.2 | +1.4 ± 2.0 |
+
+**Live timing, immediately after confirmation** (`runs/task43_timing.out`, `runs/task43-timing.json`,
+`runs/task43-timing-baseline.json`): `realtime_trial.py --timing 30 --workers 1 --seed 3553`, each setting against the crowd
+under live deadlines. The clock is `cpu`, as printed. `hit` passes the brief's timing limits: p99 below 800 ms and fewer
+than 20% cut short; this is the PC measurement, not a browser timing.
+
+| Setting (samples=32) | Searched decisions | Median ms | 99th ms | Worst ms | Cut short | No complete round |
+|---|---|---|---|---|---|---|
+| website engine | 822 | 94 | 312 | 391 | 1.2% | 0.0% |
+| `mid_swap_search=hit` | 838 | 109 | 385 | 406 | 2.5% | 0.0% |
+
+**Cost, Marco's PC, Ryzen 9 9950X3D (16 physical cores / 32 threads).** Both strength runs used 32 workers, one NumPy
+thread each. The screen's logged elapsed time is 8,999.9 seconds: **80.0 thread-hours / 40.0 physical-core-hours**;
+confirmation is 2,001.3 seconds: **17.8 thread-hours / 8.9 physical-core-hours**. Together: **97.8 thread-hours /
+48.9 physical-core-hours**. These are elapsed time × 32 threads or × 16 physical cores, divided by 3,600, not measured CPU
+utilisation. The timing
+runs do not record elapsed time, so their cost is not included.
+
+**Commands as run** (Windows `cmd`; `runs/task43-screen.cmd`, then `runs/task43-confirm.cmd`; the latter chains the
+confirmation and both timing runs):
+
+```cmd
+cd /d C:\Users\marco\Developer\pokemon_go-task43 && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\engine_versus.py --field mixed --pairings 1500 --crowd 1500 --pvpoke 750 --workers 32 --seed 4301 --tag task43-screen --baseline "samples=32" --candidates "samples=32,mid_swap_search=ready" "samples=32,mid_swap_search=hit" "samples=32,mid_swap_search=both" "samples=32,mid_swap_search=ready,switch_edge=0.05" "samples=32,mid_swap_search=hit,switch_edge=0.05" "samples=32,mid_swap_search=both,switch_edge=0.05" >> runs\task43_screen.out 2>&1
+cd /d "C:\Users\marco\Developer\pokemon_go-task43" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --pairings 2000 --crowd 2000 --pvpoke 1000 --workers 32 --seed 4343 --tag task43-confirm --baseline "samples=32" --candidates "samples=32,mid_swap_search=hit" >> runs\task43_confirm.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\realtime_trial.py --timing 30 --workers 1 --seed 3553 --settings "samples=32,mid_swap_search=hit" --save runs\task43-timing.json >> runs\task43_timing.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\realtime_trial.py --timing 30 --workers 1 --seed 3553 --settings "samples=32" --save runs\task43-timing-baseline.json >> runs\task43_timing.out 2>&1
+```
+
+Against bots no gate helps. Of the plain gates, `ready` (searching when they are about to throw) loses most against the
+crowd; `both` is slightly worse head to head. Adding `switch_edge=0.05` makes every gate much worse head to head and against
+the crowd, as task 35 found for keep-the-switch settings. Why `ready` loses this much was not diagnosed here. Whether the
+20-turn look-ahead undervalues a swap into a charged move, for example, is an open question, not a finding of this run;
+the Tinkaton diagnosis above showed horizon 20 and play-outs to the end disagreeing with the real back line known.
+Defaults are unchanged. The exam on Luke's Mac decides: score all six candidates with `scripts/exam_variants.py`;
+the private answers are not in this checkout, so no exam result is claimed here.

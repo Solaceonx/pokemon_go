@@ -37,6 +37,8 @@ plays as before (docs/tasks.md, 25, 28 and 29):
 - The owner: in linear games, win the matchups and keep the switch. switch_edge: a swap the search finds must beat
   staying by this much more (staying keeps the switch); stay_after_replace=True: never swap out on the turn a
   Pokémon came in after a faint (send in the one wanted instead) (task 35).
+- mid_swap_search: ask again in a judged matchup without needing a learned mid_swap head. "ready" uses task 20's
+  gate, "hit" asks after their charged move, and "both" uses either gate (task 43). Off by default.
 """
 from __future__ import annotations
 
@@ -156,7 +158,8 @@ class Engine(Learner):
                  mix: bool = False, temperature: float = 0.0, mix_shield: bool = False,
                  mix_switch: bool = False, random_hold: bool = False, matching: bool = False,
                  no_tell_bait: bool = False, judge: str = "steps", switch_edge: float = 0.0,
-                 stay_after_replace: bool = False, robust: float | None = None, **settings):
+                 stay_after_replace: bool = False, robust: float | None = None,
+                 mid_swap_search: str | None = None, **settings):
         super().__init__(**settings)
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
@@ -164,6 +167,11 @@ class Engine(Learner):
             raise ValueError(f"unknown judge {judge!r}")
         self.judge = judge
         self.switch_edge, self.stay_after_replace = switch_edge, stay_after_replace
+        if mid_swap_search not in (None, False, "ready", "hit", "both"):
+            raise ValueError(f"unknown mid_swap_search {mid_swap_search!r}")
+        self.mid_swap_search = mid_swap_search
+        self._swap_hit = None  # (turn, our slot) of their last charged move, consumed at our next action
+        self.mid_swap_searches = 0
         if robust is not None and opponents != "mix":
             raise ValueError("robust needs opponents='mix'")
         self.robust = robust  # None: off; 0.0 still gives each style its own looks
@@ -244,6 +252,10 @@ class Engine(Learner):
 
     def saw_throw(self, view: View, move, foe_energy: int, could_shield: bool) -> None:
         super().saw_throw(view, move, foe_energy, could_shield)
+        if self.mid_swap_search in ("hit", "both"):
+            # The callback precedes damage; only the next action can search the position after it lands.
+            # Shielded moves count too. A faint discards this trigger in replace().
+            self._swap_hit = (view.turn, view.me.active)
         charged = view.foe.build.charged
         self._their_throw = next((k for k, m in enumerate(charged) if m is move or m.id == move.id), None)
         ready = [m for m in view.foe.build.charged if m.energy <= foe_energy]
@@ -342,13 +354,26 @@ class Engine(Learner):
     # deciding
 
     def act(self, view: View) -> int:
-        if self.matching and self._styles:
-            self._watch(view)
-            action = self._act(view)
-            if action in CHARGED and view.foe_shields > 0:
-                self._pending_shield = self._style_shares(view, shield_energy=view.me.mon.energy)
-            return action
-        return self._act(view)
+        try:
+            if self.matching and self._styles:
+                self._watch(view)
+                action = self._act(view)
+                if action in CHARGED and view.foe_shields > 0:
+                    self._pending_shield = self._style_shares(view, shield_energy=view.me.mon.energy)
+                return action
+            return self._act(view)
+        finally:
+            self._swap_hit = None  # no delayed hit search when the switch was unavailable
+
+    def _mid_swap_gate(self, view: View) -> bool:
+        if not self.mid_swap_search:
+            return super()._mid_swap_gate(view)
+        if not self.mid_swap or "mid_swap" not in self.heads:
+            return False
+        ready = self.mid_swap_search in ("ready", "both") and self._mid_swap_ready(view)
+        hit = (self.mid_swap_search in ("hit", "both") and self._swap_hit is not None
+               and view.turn > self._swap_hit[0] and view.me.active == self._swap_hit[1])
+        return ready or hit
 
     def _act(self, view: View) -> int:
         theirs = self._mixed_actions("simultaneous", view) if self.switches and "mid_swap" in self.heads else []
@@ -375,6 +400,7 @@ class Engine(Learner):
         return choice
 
     def replace(self, view: View) -> int:
+        self._swap_hit = None
         self._replaced_at = view.turn
         return super().replace(view)
 
@@ -387,6 +413,7 @@ class Engine(Learner):
         pick = super()._decide(head, view, mask, planner_choice, foe_energy)  # the trained bot's choice
         if len(options) < 2:
             return pick
+        self.mid_swap_searches += head == "mid_swap"
         self._foe_energy = foe_energy if foe_energy is not None else view.foe.energy
         seeds = [self.rng.getrandbits(32) for _ in range(self.samples)]
         theirs = self._mixed_actions(head, view)
@@ -567,6 +594,7 @@ class Engine(Learner):
         elif head in ("swap", "mid_swap"):
             first = None if option == 0 else SWITCH[others[option - 1]]
         if self.rollout == "bot":
+            # mid_swap_search changes only the engine's decisions; imagined trained bots keep their defaults.
             us = Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32), even_cost=self.even_cost)
             them = self._imagined_opponent(rng)
         else:

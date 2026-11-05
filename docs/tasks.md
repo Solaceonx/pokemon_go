@@ -39,7 +39,7 @@ and push that before starting.
 |---|---|---|
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — for Marco (the owner, 2026-11-04) | Marco's machine, a few hours |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; the data export comes from the owner's Mac | Marco's machine; small data |
-| **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — for Marco after task 41, before 42 (the owner, 2026-11-04) | Marco's machine, a few hours |
+| **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — Marco; measured 2026-11-04, **no gain against bots**; on the exam next (owner's Mac) | Owner's Mac; results in `status.md` |
 | **40** | **The live loop on an Android phone from the PC: connect, calibrate, watch only, then input step by step** — for the Claude agent on the owner's PC (the owner, 2026-11-04); replaces the iPhone route of task 13 | Owner's PC, an Android phone on USB, the owner present |
 | **39** | **Train the engine on its own games: the trained bot learns the engine's choices, the evaluation learns who won, three rounds** — for Marco (the owner, 2026-11-02: the medium size); built 2026-11-02 (`scripts/engine_loop.py`); done 2026-11-03 after two rounds of 10,000 games: **no gain** (round 1 48.6% ± 1.5 head to head against E_0, round 2 46.9% ± 1.5; crowd and PvPoke within the margins). Round 3 and the confirmation not run (the owner's rule: only if round 2 beat E_0 beyond its margin). Networks in `runs/engine-loop/round_N/` for the exam (`status.md`) | Done |
 | **35** | **Fix the engine's look-ahead: varied imagined opponents, fair judging, keeping the switch** — Marco; done 2026-10-30: **varied imagined opponents confirmed at 32** (51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke on a fresh seed); judging changes do not help and keeping the switch is worse. Not adopted: run before the nesting fix, and on the exam `matching` plays the two players' shared answer least often (`status.md`) | Done |
@@ -102,6 +102,8 @@ is confirmed on a fresh seed (2,000 / 2,000 / 1,000), and the code is in a pull 
 score. Expect a few hours.
 
 ## 43. Let the engine search swaps in the middle of a matchup — for Marco after task 41, before 42 (the owner, 2026-11-04)
+
+**State:** measured 2026-11-04, **no gain against bots**; on the exam next (owner's Mac).
 
 **Why.** In a website game (2026-11-04) the engine led Tinkaton into the owner's Quagsire (Mud Shot / Mud Bomb / Stone
 Edge), took a Mud Bomb, and stayed in at 50 HP with 90 energy, throwing Bulldoze; the owner asked why it did not swap to

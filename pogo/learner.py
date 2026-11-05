@@ -393,16 +393,23 @@ class Learner(Planner):
         choice = self._decide("swap", view, (True, others[0] in bench, others[1] in bench), planner_choice)
         return None if choice == 0 else others[choice - 1]
 
-    def _pick_switch(self, view: View) -> int | None:
-        me, foe = view.me, view.foe
+    def _mid_swap_ready(self, view: View) -> bool:
+        # Task 20's energy window, including an already affordable move.
+        foe = view.foe
+        return (foe.energy + 2 * foe.build.fast.energy_gain
+                >= min((move.energy for move in foe.build.charged), default=float("inf")))
+
+    def _mid_swap_gate(self, view: View) -> bool:
         # Old models keep their original path, without describing extra positions. Logging
         # and forced choices also enable the head before it has been fitted for the first time.
         enabled = self.mid_swap and (self.log is not None or "mid_swap" in self.forced
                                     or (self.q is not None and "mid_swap" in self.q.params))
-        if (not enabled or me.busy or me.mon.hp <= 0 or me.switch_wait or not me.bench()
-                or self._judged != (me.active, foe.build.uid)
-                or foe.energy + 2 * foe.build.fast.energy_gain
-                < min((move.energy for move in foe.build.charged), default=float("inf"))):
+        return enabled and self._mid_swap_ready(view)
+
+    def _pick_switch(self, view: View) -> int | None:
+        me, foe = view.me, view.foe
+        if (not self._mid_swap_gate(view) or me.busy or me.mon.hp <= 0 or me.switch_wait or not me.bench()
+                or self._judged != (me.active, foe.build.uid)):
             return Planner._pick_switch(self, view)
 
         others = [j for j in range(3) if j != me.active]

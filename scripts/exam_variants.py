@@ -32,7 +32,12 @@ def parse(spec: str) -> dict:
     out = {}
     for part in filter(None, spec.split(",")):
         k, v = part.split("=")
-        out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
+        if k == "mid_swap_search":
+            if v not in ("ready", "hit", "both"):
+                raise ValueError(f"unknown mid_swap_search {v!r}")
+            out[k] = v
+        else:
+            out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
     return out
 
 

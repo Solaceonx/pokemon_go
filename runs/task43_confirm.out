@@ -1,0 +1,51 @@
+1600 jobs to run on 32 workers
+  320 results, 1 min
+  730 results, 2 min
+  1170 results, 3 min
+  1550 results, 4 min
+  1965 results, 5 min
+  2405 results, 6 min
+  2830 results, 7 min
+  3005 results, 8 min
+  3165 results, 10 min
+  3285 results, 11 min
+  3420 results, 12 min
+  3545 results, 13 min
+  3625 results, 14 min
+  3755 results, 15 min
+  3895 results, 16 min
+  4025 results, 17 min
+  4130 results, 18 min
+  4235 results, 19 min
+  4375 results, 20 min
+  4515 results, 21 min
+  4605 results, 22 min
+  4725 results, 23 min
+  4865 results, 24 min
+  5150 results, 25 min
+  5530 results, 26 min
+  5885 results, 27 min
+  6270 results, 29 min
+  6620 results, 30 min
+  6990 results, 31 min
+  7325 results, 32 min
+  7700 results, 33 min
+
+baseline: samples=32
+  against the crowd: 74.2% ± 1.9
+    baseline: 1.704 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2000 battles; 24.23 total searches/battle, 4.524 search seconds/battle)
+  against the pvpoke: 83.9% ± 2.3
+    baseline: 1.221 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1000 battles; 24.20 total searches/battle, 4.363 search seconds/battle)
+
+candidate 1: samples=32,mid_swap_search=hit
+  head to head against the baseline, 2000 pairings both ways: 48.9% ± 1.2
+    candidate: 2.165 mid-matchup swaps/battle, 1.098 mid-matchup searches/battle (4000 battles; 23.89 total searches/battle, 4.160 search seconds/battle)
+    baseline:  2.142 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4000 battles; 23.01 total searches/battle, 3.947 search seconds/battle)
+  against the crowd: 72.1% ± 2.0, -2.1 ± 1.6 points on the baseline
+    candidate: 1.972 mid-matchup swaps/battle, 1.502 mid-matchup searches/battle (2000 battles; 25.46 total searches/battle, 5.070 search seconds/battle)
+  against the pvpoke: 85.2% ± 2.2, +1.4 ± 2.0 points on the baseline
+    candidate: 1.552 mid-matchup swaps/battle, 2.080 mid-matchup searches/battle (1000 battles; 26.25 total searches/battle, 5.226 search seconds/battle)
+  search time per searched decision: median 125 ms, 99th percentile 734, worst 1484 (this machine)
+
+elapsed: 2001.3 seconds
+results: runs\engine_versus\task43-confirm.json
