@@ -160,6 +160,13 @@ is recorded in status.md. Strength target: the selected standalone policy has a 
 two predeclared fresh-seed final tests against the full frozen engine; report plainly if it fails. Training and
 evaluation must fit within the owner's two-day budget and the shared limit of three workers.
 
+Task38 recovery update, November5 16:18:50UTC: a likely system restart ended the original guard/worker.
+The unchanged guard resumed serial attempt2 as20796/8456 with owner-authorizedNormal priority,
+preserving717 complete pairings and recovering the incomplete next row. Selected policy, source,
+locks,sample counts and20:59:47UTC deadline remain fixed. `recovery-20261105T1618/` retains receipts.
+The interruption makes a complete benchmark unlikely in the remaining window; the win target remains
+unmet. No further training or selection is authorized by this recovery.
+
 ## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
 
 **Why.** The engine loses website games to the owner on decisions its search makes against the trained bot's own

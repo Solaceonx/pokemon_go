@@ -152,3 +152,12 @@ SHA69d59dd349b7990e32c90db078f64cb28dc91d88f90aaaa57a421379e2a35b62.
 The three-block6,000-game held-out benchmark started09:54:37.9230423UTC with unchanged source,
 baseline,exclusions,samples and20:59:47UTC absolute deadline. No partial/final outcomes were inspected
 at startup. The same Normal worker/one numerical thread continues, and the reliable-win goal is unmet.
+
+Infrastructure recovery atNovember5 16:18:50UTC followed the disappearance of both original processes.
+System uptime suggests a restart around13:36:23UTC; the cause is unknown. Immutable recovery retained
+717 complete paired rows and regenerated the incomplete final fragment's original pairing. Current
+guard20796/worker8456 are serial attempt2, using the same runtime, selected policy, locks, inputs and
+deadline. Owner-authorizedNormal priority persists; one numerical thread plus idle OS helpers were
+verified. `recovery-20261105T1618/` retains prior receipts, journal hash, recovery and progress evidence.
+The lost wall time makes all6,000games unlikely by20:59:47UTC. Do not reduce samples or extend the
+deadline: save partial evidence and report the unmet target honestly if the benchmark remains incomplete.

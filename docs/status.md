@@ -292,6 +292,32 @@ sampled with replacement. No partial or final test outcomes were inspected for t
 The same one-thread Normal worker continues; no source/model/data/sample/deadline change occurred.
 The reliable-win target remains unmet until a complete valid benchmark proves the full criterion.
 
+**Infrastructure recovery — November5,16:18:50UTC.** At16:17UTC both original worker22396 and
+guard21804 were absent, with no terminal verdict or stderr. System uptime places the current boot
+around13:36:23UTC, shortly after the last journal write at13:35:51UTC; a system restart is inferred,
+but its cause is unknown. The718 journal lines included one incomplete final JSON fragment. The
+unchanged, tested recovery code retained717 complete mirrored pairings and regenerated only the
+uncommitted next pairing with its originally locked draw/seeds. No partial outcomes were inspected
+for strength or selection. `recovery-20261105T1618/before.json` preserves the original journal hash,
+process absence and boot estimate; prior launch/controller/state receipts are copied beside it.
+
+The immutable guard preflight verified all39 runtime files and the separate guard, then launched
+serial attempt2: guard20796 at16:18:50.2219159UTC, worker8456 at16:18:50.5024036UTC. The existing
+owner approval for Normal priority was retained for this same experiment. The selectedstage1 policy,
+choice,plan,compact policy and production lock hashes remain unchanged; complete confirmation/canary
+rows were reused, with no repeated games or new research. At16:19UTC final progress passed720pairings.
+One thread accounts for numerical CPU; three transient initialization helpers had at most0.03125CPU
+seconds each and subsequently exited. The process settled to one thread. NumPy remains limited to
+one thread by the unchanged runtime environment.
+`applied.json` and `progress.json` retain current identities, priority and source/lock checks.
+
+The interruption consumed nearly three hours of wall time, so a complete6,000-game benchmark is
+unlikely by the unchanged **20:59:47UTC /12:59:47p.m. Pacific** deadline. The original sample counts
+and stopping rule remain fixed; preserve any partial result and report the reliable-win target unmet
+unless all registered evidence completes and passes. No deadline extension, tactical change, policy
+reselection, competing-process action, merge or deployment occurred. Existing323-test/7-skip and
+108/108 PvPoke checks cover the unchanged software; this is infrastructure recovery, not a code change.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,
