@@ -119,3 +119,13 @@ same single runnable BelowNormal worker little CPU. `cpu_capacity_issue.json` re
 issue. A user choice about freeing capacity or explicitly allowing Normal priority is pending; do not
 change priority based on elapsed time or restart the live worker. No source or deadline changed.
 Checks pass323tests,7optional skips;108/108 PvPoke exact. No new strength result is established.
+
+AtNovember5 08:10:00UTC the existing timeout path finished the in-progress battle after the fixed
+07:59:47screening cutoff. Stage4 retained19of64required pairings and was excluded from selection;
+its partial outcomes were not scored or used to choose a policy. The registered maximum-point/earliest-tie
+rule selectedstage_1.npz from initial plus the three complete stage screens. Its previously reported
+37.109375%±7.0718829786points is still a clear loss. `selection_artifacts.json` independently verifies
+all four complete candidate blocks, exact model/source/data/baseline identities and selection-before-
+confirmation order. The choice remains fixed for fresh128-pair confirmation39012, actual validation-only
+canary and the new final benchmark. No final test has opened; the priority question is unanswered,
+the same BelowNormal worker continues, and the20:59:47UTC absolute deadline is unchanged.

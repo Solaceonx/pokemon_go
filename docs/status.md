@@ -202,6 +202,32 @@ Checks passed **323tests,7optional video skips;108/108 PvPoke exact**, retained 
 `runs/continue-stage-4-tests.out` and `runs/continue-stage-4-pvpoke.out`.
 The reliable-win target remains unmet. The November5 **20:59:47UTC** absolute deadline is unchanged.
 
+**Validation-only selection recorded — November5,08:10:00UTC.** The registered candidate-screening
+cutoff was **07:59:47UTC**. Under the documented CPU starvation, the in-progress battle returned after
+that cutoff; the existing immutable driver retained **19complete stage4 pairings out of64required**,
+excluded the incomplete screen and selected from the four complete screens only. It did not lower the
+sample count, compute a stage4 strength result or use partial outcomes for selection. Its partial journal
+is retained locally, SHA-256 `0dda657c1152b13eb335b75e6f2716bcb3295ba5fdc262defa6085817d3d6dac`.
+
+The initial,stage1,stage2,stage3 order and maximum-point/earliest-tie rule selected **stage_1.npz**,
+SHA-256 `3cdccd45974cb13be1b05075e3e801f993619f7aa429453bcd6fd06feb95005e`. Its already-reported
+screen was **37.109375% ±7.0718829786points**, interval **30.0374920214–44.1812579786%**, a clear
+validation loss. Selection is not evidence of a gain or reliable win. `choice.json` was saved at
+**08:10:00.411038UTC**,10minutes13.411038seconds after the screening cutoff while the current battle
+finished and the existing timeout path returned. No allocation restarted; no later screen was admitted.
+
+`selection_artifacts.json` independently reconstructs all four complete64-pair candidate blocks,
+draws/seeds/sides/scores/intervals and the selection rule; it also verifies candidate model hashes,
+39runtime files,guard,95baseline files, original/copied inputs and old global lock/verdict. Choice SHA-256:
+`594da192dbad529246db318ca6630bba95036cde167683c279d16bec3b1429d4`.
+Selection was saved before the fresh selected-only **128-pair confirmation, seed39012**, whose config
+SHA-256 is `ff54fa854c546a7650784862c9e752a1df77cb5a3212499aca191da37d0f773c`.
+That fixed confirmation now runs under the existing absolute deadline, as implemented before activation;
+it cannot change selection. No new final test has opened. Worker22396 remains live at BelowNormal,
+the CPU-priority choice is still unanswered, and **20:59:47UTC** remains the absolute deadline.
+The reliable-win target remains unmet. The previously saved323-test/7-skip and108/108 checks cover
+the unchanged software; no redundant test run or numerical worker was started for this result update.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

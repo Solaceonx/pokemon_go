@@ -92,6 +92,13 @@ Its64-pair validation is pending under severe CPU contention (16cores100%, queue
 06:20UTC). The same worker remains live at BelowNormal; an owner choice about freeing CPU or authorizing
 Normal priority is pending. No priority/process/source/deadline change or duplicate worker is authorized
 by that unanswered question. The fixedNovember5 20:59:47UTC deadline and reliable-win target remain.
+The screening cutoff passed at07:59:47UTC. The existing timeout path returned at08:10UTC, retaining
+19of64stage4 pairings and excluding that incomplete screen without using partial outcomes. The registered
+point-score/earliest-tie rule selectedstage1 from the four complete screens, still37.109375%±7.0718829786
+points (30.0374920214–44.1812579786%), a clear loss. Independent selection evidence is retained in
+`selection_artifacts.json`; fresh selected-only128-pair confirmation39012 now runs under the unchanged
+absolute deadline. No new final test has opened, no priority change was authorized or performed,
+and the reliable-win goal remains unmet.
 323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
 the reliable-win goal remains unmet and all prior completed results remain unchanged.
 
