@@ -167,6 +167,13 @@ locks,sample counts and20:59:47UTC deadline remain fixed. `recovery-20261105T161
 The interruption makes a complete benchmark unlikely in the remaining window; the win target remains
 unmet. No further training or selection is authorized by this recovery.
 
+Task38 first held-out block completedNovember5 17:12:49UTC: mixed39091,1,000mirrored pairings /
+2,000games,26.050000%±1.7472519926points (95%), interval24.3027480074–27.7972519926%. Independent
+block audit verifies all fresh draws/exclusions/seeds/sides/outcomes/CI and fixed identities. This clear
+loss fails a required gate; reliable-win criterion cannot pass for this policy. Remaining fixed blocks
+continue to the original20:59:47UTC deadline without tuning, reselection or reduced samples. The
+full benchmark remains incomplete; `first_final_block_artifacts.json` retains this negative evidence.
+
 ## 35. Fix the engine's look-ahead — Marco (big job, assigned 2026-10-28)
 
 **Why.** The engine loses website games to the owner on decisions its search makes against the trained bot's own

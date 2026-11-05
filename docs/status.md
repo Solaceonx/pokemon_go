@@ -318,6 +318,27 @@ unless all registered evidence completes and passes. No deadline extension, tact
 reselection, competing-process action, merge or deployment occurred. Existing323-test/7-skip and
 108/108 PvPoke checks cover the unchanged software; this is infrastructure recovery, not a code change.
 
+**First complete held-out block — November5,17:12:49UTC.** The fixedstage1 policy completed all
+**1,000 mirrored pairings /2,000games** on unused mixed-field test teams, seed39091, against the
+full frozen engine32. Score: **26.050000% ±1.7472519926percentage points** (95%), interval
+**24.3027480074–27.7972519926%**. This is a clear held-out loss and fails the required mixed lower95
+bound above50%. Consequently this policy cannot satisfy the complete reliable-win criterion.
+
+The separate checker independently reconstructed every draw, both original test folds, exclusion of
+all1,380old final compositions and17,751old game seeds, player sides, legal paired outcomes and the
+clustered interval. It verified39runtime files,guard,95baseline files,policy/protocol/choice identities,
+old locks and retained priority/recovery receipts. `first_final_block_artifacts.json` records this
+completed-block audit; it is not the still-pending full three-block audit. Raw SHA-256:
+`7f1b0b26930369199e2e20bb99362d0231e96c3dfc8266fceb9b2473e948ef3c`;
+summary SHA-256: `3c7d340dbcb0e3f2a9acb622bacda5d50630bdaee7d84bd1078de825a868570a`.
+
+The remaining fixed blocks continue under the same selected policy, full baseline, sample counts and
+**20:59:47UTC** deadline; there is no score-based early stop, tuning or reselection. The three-block
+benchmark remains incomplete, and the original restart-related deadline risk remains. This population
+excludes all previous final compositions, so the new point score is not a paired comparison with the
+old benchmark. All negative evidence is retained. Existing323-test/7-skip and108/108 PvPoke checks
+cover the unchanged software; no redundant numerical tests or source edits accompanied this record.
+
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 
 **Final state:** the full prescribed6,000-game benchmark completed on November3 at18:31:34UTC,

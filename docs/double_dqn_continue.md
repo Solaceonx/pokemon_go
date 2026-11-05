@@ -161,3 +161,10 @@ deadline. Owner-authorizedNormal priority persists; one numerical thread plus id
 verified. `recovery-20261105T1618/` retains prior receipts, journal hash, recovery and progress evidence.
 The lost wall time makes all6,000games unlikely by20:59:47UTC. Do not reduce samples or extend the
 deadline: save partial evidence and report the unmet target honestly if the benchmark remains incomplete.
+
+The first complete held-out block, mixed39091, finishedNovember5 17:12:49UTC:1,000mirrored pairings /
+2,000games scored26.050000%±1.7472519926percentage points (95%), interval24.3027480074–27.7972519926%.
+This clear loss fails a required gate, so this policy cannot meet the reliable-win criterion. The separate
+checker independently audited all draws/exclusions/seeds/sides/outcomes/CI and source/model/baseline
+identities in `first_final_block_artifacts.json`. Remaining blocks continue unchanged until the fixed
+deadline; the full benchmark is incomplete and its final audit must wait for a complete verdict.
