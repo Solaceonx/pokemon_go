@@ -3904,3 +3904,23 @@ The players' other five teams score 36.8-50.9% against the rest. Mimikyu is on f
 simulator's Mimikyu finding matches the players. The mixed field (PvPoke's usage) does not predict this field: Mimikyu /
 Stunfisk / shadow Marowak is best against it and near worst here, Melmetal / Altaria / Florges the reverse. A team search for
 the current format should use teams players actually run as the field.
+
+## Does the trained bot work on any team? (2026-11-05, the owner's request; `scripts/any_team_test.py`)
+
+Sixty random legal teams in three groups of 20: PvPoke's top 50 (the network trained on these), ranks 51-300 (none in the
+top 50), and teams with a form-changer (Mimikyu, Morpeko, Cramorant or Aegislash) beside two of the top 50. Each team
+played 200 battles against the mixed field twice, piloted by the trained bot (`q.npz`, margin 0.02) and by the rulebook,
+same opponents and dice (opponents: the trained bot; both pilots read the wide one-on-ones; Disguise rule on). Output in
+`runs/wide-teams/any_team.out`; seed 7, about 100 s on three workers.
+
+| Group | Trained bot | Rulebook | Trained minus rulebook | Teams where trained is better |
+|---|---|---|---|---|
+| Top 50 | 45.1% | 36.9% | +8.2 ± 1.6 points | 20 of 20 |
+| Ranks 51-300 | 34.8% | 30.0% | +4.9 ± 1.5 | 18 of 20 |
+| With a form-changer | 42.2% | 33.8% | +8.4 ± 1.6 | 18 of 20 |
+
+The 51-300 group again with the shipped 50-Pokémon one-on-one table (as the website has it, every unknown pair 0):
+-0.1 ± 1.3 points against the wide table, so the table's coverage does not matter to the trained bot. Its edge carries over
+in full to form-changer teams (Aegislash teams are the weakest, -3 to +16), and about 60% of it to teams outside the top 50
+(the weakest: shadow Milotic / shadow Greninja / Drapion -4). Not yet tested: the engine's search on such teams, and
+whether training examples from a wider mix of teams recover the rest of the edge.
