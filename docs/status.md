@@ -223,10 +223,74 @@ draws/seeds/sides/scores/intervals and the selection rule; it also verifies cand
 Selection was saved before the fresh selected-only **128-pair confirmation, seed39012**, whose config
 SHA-256 is `ff54fa854c546a7650784862c9e752a1df77cb5a3212499aca191da37d0f773c`.
 That fixed confirmation now runs under the existing absolute deadline, as implemented before activation;
-it cannot change selection. No new final test has opened. Worker22396 remains live at BelowNormal,
-the CPU-priority choice is still unanswered, and **20:59:47UTC** remains the absolute deadline.
+it cannot change selection. At that selection-time record, no new final test had opened; worker22396
+remained at BelowNormal and the CPU-priority choice was unanswered. **20:59:47UTC** remained the deadline.
 The reliable-win target remains unmet. The previously saved323-test/7-skip and108/108 checks cover
 the unchanged software; no redundant test run or numerical worker was started for this result update.
+
+**Owner-authorized priority exception applied — November5,09:21:37UTC.** The owner explicitly answered
+**"Authorize Normal priority for this worker"**. After checking the actual Python path, exact original
+start time, one numerical thread, plan/choice/runtime-manifest/guard hashes and unchanged deadline,
+only existing worker22396 changed from BelowNormal to **Normal** at **09:21:37.5117424UTC**. It kept
+the same PID/start and single numerical thread. The guard and competing processes were untouched;
+no process restarted. This is an explicit owner-approved OS scheduling exception to the registered
+BelowNormal preference, applied after all training and validation-only selection were complete.
+
+`priority_override_authorization.json` records the exact approval and scope, SHA-256
+`d41c4bd4b9d50478eaebb62b86feca404aff4fa294be7d6d9aa80fdea26597b3`;
+`priority_override_applied.json` records verified actual priority and process identity. Original plan,
+imported runtime,guard,models,data,baseline,sample counts and **20:59:47UTC** deadline remain unchanged.
+Selection stays fixed atstage1 and research stays closed. Historical launch/controller receipts still
+say BelowNormal because they describe initial launch; actual priority and the separate override receipt
+are authoritative for current scheduling. The old unanswered-priority dependency is resolved.
+
+At **09:25:42.559122UTC**, the same one-thread Normal worker had gained **220.859375CPU seconds in
+245.0473796elapsed seconds**, **90.1292539265% of one CPU core**, and confirmation reached **50/128pairs**.
+`priority_override_progress.json` retains this observation. This is scheduling/progress evidence, not
+a strength result. Confirmation, actual canary and the fixed new benchmark continue under the same
+absolute deadline; the reliable-win goal remains unmet. Existing323-test/7-skip and108/108 PvPoke
+checks cover the unchanged software; this OS-priority/receipt update adds no tests or numerical worker.
+
+**Selected-only fresh confirmation completed — November5,09:52:35UTC.** The fixedstage1 policy scored
+**32.031250% ±5.0384341895points** (95%), interval **26.9928158105–37.0696841895%**, on all
+**128 mirrored validation pairings /256games**, fresh mixed seed39012 against full frozen engine32.
+This is another clear validation loss. It does not establish a gain, and selection stays fixed; no
+fallback or reselection followed this result. These are validation data, not new held-out evidence.
+
+`confirmation_artifacts.json` independently reconstructs all128draws, both validation folds, old-seed
+exclusions, sides, scores and confidence calculations. The selected source model,choice,39runtime files,
+guard,95baseline files, original/copied inputs and old global lock/verdict remain intact. It also binds
+the owner-authorized priority exception. Raw-journal SHA-256:
+`00ab1bd15803ee68e97139833e23fb961e4e5156ecc9649ea5bf63eeae37bb78`;
+summary SHA-256: `af4ffabf691c5e6ae8da7a4a3bc489ab45ea488aadce3414a2c681b727965d11`.
+
+**Actual validation-only canary and new production lock completed —09:54:37UTC.** All three blocks
+completed two mirrored pairings/four games each, six pairings/12games total. Their exact scores are
+retained for protocol verification; the sample is too small for a strength claim.
+
+| Canary field / seed | Score ±95% margin, percentage points | 95% interval |
+| --- | --- | --- |
+| Mixed39095 | 25.000000% ±49.0000000000 | 0.0000000000–74.0000000000% |
+| Mixed39096 | 100.000000% ±96.0322791320 | 3.9677208680–100.0000000000% |
+| Standard39095 | 0.000000% ±96.0322791320 | 0.0000000000–96.0322791320% |
+
+`canary_lock_artifacts.json` independently verifies every canary draw/seed/side/outcome/interval,
+validation-only folds and exact compact parameters. The91,443-byte compact policy has SHA-256
+`7ab364134eabc5ea04f2346c1140bb989113031ce0983be7105776c029bd6e46`; its parameters exactly match
+selectedstage1, with compact optimizer moments/steps cleared. The full training checkpoint stays intact.
+Canary receipt SHA-256: `4d52cfa91af46af9e76f6e2ef73542701407a2494a00cc40a2aef32450c17e14`.
+The new run-local `test_lock.json` equals `final/protocol.json`, SHA-256
+`69d59dd349b7990e32c90db078f64cb28dc91d88f90aaaa57a421379e2a35b62`, saved before the final phase.
+It binds policy/source/data/choice/exclusions/canary/counts/deadline; the old global lock is unchanged.
+
+The predeclared held-out benchmark began **2026-11-05T09:54:37.9230423Z**, initially mixed39091.
+It still requires **1,000mirrored pairings /2,000games per block**, mixed39091, mixed39092 and
+standard39091, all6,000games complete. Both mixed lower95 bounds must exceed50%, and standard upper95
+must reach50%. Both actual teams remain original testfold9 and absent from all1,380prior compositions;
+actual32-bit seeds exclude17,751prior game seeds. This is the fixed unused-composition population,
+sampled with replacement. No partial or final test outcomes were inspected for this startup record.
+The same one-thread Normal worker continues; no source/model/data/sample/deadline change occurred.
+The reliable-win target remains unmet until a complete valid benchmark proves the full criterion.
 
 ## Standalone Double DQN experiment — 2026-11-01–03 (Codex DQN, task 38; stopped, strength target unmet)
 

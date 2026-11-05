@@ -127,5 +127,28 @@ rule selectedstage_1.npz from initial plus the three complete stage screens. Its
 37.109375%±7.0718829786points is still a clear loss. `selection_artifacts.json` independently verifies
 all four complete candidate blocks, exact model/source/data/baseline identities and selection-before-
 confirmation order. The choice remains fixed for fresh128-pair confirmation39012, actual validation-only
-canary and the new final benchmark. No final test has opened; the priority question is unanswered,
-the same BelowNormal worker continues, and the20:59:47UTC absolute deadline is unchanged.
+canary and the new final benchmark. At that record no final test had opened, the priority question was
+unanswered and the same BelowNormal worker continued under the20:59:47UTC absolute deadline.
+
+The owner subsequently answered "Authorize Normal priority for this worker". AtNovember5
+09:21:37.5117424UTC, only the exact identity-verified worker22396 changed toNormal, with the same
+PID/start and one numerical thread. Separate authorization/application receipts retain this approved
+OS scheduling exception; the original plan,guard and imported runtime stay unchanged. No process
+restarted, other processes were untouched, and model selection/data/baseline/sample counts/deadline
+stay fixed. At09:25:42UTC the worker used220.859375CPU seconds over245.0473796elapsed seconds
+(90.1292539265%of one core), reaching50/128confirmation pairs. `priority_override_progress.json`
+records this progress, which is not a strength result. Research stays closed and the selectedstage1
+policy stays fixed; the reliable-win target still requires the complete registered benchmark.
+
+Fresh selected-only confirmation39012 completed all128pairs/256games atNovember5 09:52:35UTC:
+32.031250%±5.0384341895points (95%), interval26.9928158105–37.0696841895%, a clear validation loss.
+`confirmation_artifacts.json` independently verifies draws/bothfolds/seeds/sides/scores/CIs and unchanged
+model/source/data/baseline/old locks. Selection stayed fixed. The actual validation-only canary then
+completed2pairs per block/12games total; its wide intervals are recorded in status/receipts and establish
+no strength result. The91,443-byte compact policy SHA is
+7ab364134eabc5ea04f2346c1140bb989113031ce0983be7105776c029bd6e46, exact selectedstage1 parameters.
+`canary_lock_artifacts.json` verifies all canary evidence and the new local lock equal to final/protocol,
+SHA69d59dd349b7990e32c90db078f64cb28dc91d88f90aaaa57a421379e2a35b62.
+The three-block6,000-game held-out benchmark started09:54:37.9230423UTC with unchanged source,
+baseline,exclusions,samples and20:59:47UTC absolute deadline. No partial/final outcomes were inspected
+at startup. The same Normal worker/one numerical thread continues, and the reliable-win goal is unmet.

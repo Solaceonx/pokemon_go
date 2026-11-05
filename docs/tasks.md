@@ -97,10 +97,21 @@ The screening cutoff passed at07:59:47UTC. The existing timeout path returned at
 point-score/earliest-tie rule selectedstage1 from the four complete screens, still37.109375%±7.0718829786
 points (30.0374920214–44.1812579786%), a clear loss. Independent selection evidence is retained in
 `selection_artifacts.json`; fresh selected-only128-pair confirmation39012 now runs under the unchanged
-absolute deadline. No new final test has opened, no priority change was authorized or performed,
-and the reliable-win goal remains unmet.
-323tests pass,7skips,108/108 PvPoke exact. No new final test has opened;
-the reliable-win goal remains unmet and all prior completed results remain unchanged.
+absolute deadline. At that record no new final test had opened and no priority change was authorized
+or performed. The owner later explicitly authorizedNormal priority for this worker; at09:21:37UTC
+only the exact existing22396 changed toNormal, same PID/start/one numerical thread, no restart.
+Separate authorization/application/progress receipts preserve the exception; original plan/runtime/guard,
+selectedstage1,baseline/data,sample counts and20:59:47UTC deadline remain fixed. By09:25:42UTC,
+confirmation reached50/128pairs and the worker used90.13%of one core. This is progress evidence;
+the reliable-win goal remains unmet until the complete benchmark proves the registered criterion.
+Fresh selected-only128-pair confirmation39012 completed32.031250%±5.0384341895points
+(26.9928158105–37.0696841895%), another clear validation loss; the model stayed fixed. Independent
+confirmation and actual12-game validation-only canary/lock audits passed. The new compact policy SHA is
+7ab364134eabc5ea04f2346c1140bb989113031ce0983be7105776c029bd6e46; new local protocol SHA is
+69d59dd349b7990e32c90db078f64cb28dc91d88f90aaaa57a421379e2a35b62. The fixed three-block6,000-game
+held-out benchmark startedNovember5 09:54:37.9230423UTC, same one-thread Normal worker, baseline,
+exclusions, sample counts and20:59:47UTC deadline.323tests/7skips and108/108 PvPoke checks cover the
+unchanged software. The reliable-win target is unmet; all prior completed results remain unchanged.
 
 **Prior completed experiment.** The prescribed benchmark completed at2026-11-03 18:31:34UTC within the original
 November3 22:40:49UTC deadline. Draft PR #12 retains a standalone NumPy Double DQN pilot, compact policy,
