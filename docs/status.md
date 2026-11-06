@@ -4323,3 +4323,10 @@ present, n >= 25): Rillaboom 18%, Thievul 30%, shadow Annihilape 32%, Vigoroth 3
 Quagsire 42%, shadow Quagsire and shadow Ninetales 48%. One-on-ones: Rillaboom, Thievul and the Annihilapes beat all
 three of ours; Quagsire and Hisuian Electrode beat Snorlax and Vigoroth (only Stunfisk wins); Tinkaton and Mandibuzz
 beat Stunfisk.
+
+**Wider Vigoroth screen** (2026-11-06, scratch screen.py): partners from PvPoke's top 150 with no elite / legacy moves
+and no megas (98 species, 4,728 pairs); the 45 pairs with the best one-on-one coverage of the mixed field, each lead
+100 battles, trained bot both sides; finals 600 fresh battles. Stunfisk / Vigoroth / Diggersby 59.7% ± 3.9, Diggersby
+lead 58.9%, Vigoroth / Snorlax / Stunfisk 58.3%, Carbink / Vigoroth / Gourgeist (large) 56.9%, shadow Forretress /
+Vigoroth / Diggersby 56.2%, shadow Dusknoir / Vigoroth / Stunfisk 55.6%, Carbink / Gourgeist (super) 55.6%; all within
+the margins of each other. Diggersby (level 47), Carbink (50), shadow Sableye (47), Pachirisu (50) need XL candy.
