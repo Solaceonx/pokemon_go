@@ -4284,3 +4284,23 @@ decision, not in this branch. PR target: `wide-teams`.
 
 Checks: the full suite passes on Marco's PC, 289 tests with 7 skipped; PvPoke 108 of 108.
 Only this status entry and `runs/task44-pr-body.md` were edited for the write-up; no measurements were rerun.
+
+## A live team around Vigoroth, no Community Day or Elite TM moves (2026-11-05, the owner's request)
+
+Vigoroth plus two of the 24 table Pokémon whose PvPoke movesets need no Elite TM (`eliteMoves`/`legacyMoves` in the game
+master), PvPoke's moves and default IVs, the trained bot piloting. Against the mixed field (varied crowd): all 272 pairs,
+each lead, 40 battles; the best 20 pairs at 300; the best 10 line-ups on 1,500 fresh battles: **Carbink / Vigoroth /
+Galarian Corsola 79.7% ± 2.0, Carbink / Vigoroth / Stunfisk 79.6% ± 2.0**, then Marowak, shadow Forretress, Mandibuzz or
+Jellicent with Vigoroth / Stunfisk at about 76%. Against the nine teams top players use now (as in
+`scripts/top_player_teams.py`: the wide table, every lead pair, 20 battles each, trained bot both sides), five finalists:
+
+| Team | All nine | Weakest |
+|---|---|---|
+| **Carbink / Vigoroth / Stunfisk** | **62.7% ± 2.4** | Snorlax / Jumpluff / shadow Quagsire 9%, Mega Sableye / Dunsparce / Corviknight 36% |
+| Carbink / Vigoroth / Galarian Corsola | 56.2% ± 2.4 | Mega Sableye / Dunsparce / Corviknight 17%, Snorlax / Jumpluff / shadow Quagsire 24% |
+| Marowak / Vigoroth / Stunfisk | 51.4% ± 2.4 | Snorlax / Jumpluff / shadow Quagsire 0% |
+| Mandibuzz / Vigoroth / Stunfisk | 49.1% ± 2.4 | |
+| Jellicent / Vigoroth / Stunfisk | 46.9% ± 2.4 | Mimikyu / Morpeko / Jumpluff 9% |
+
+Carbink (level 50) and Galarian Corsola (47.5) need XL candy at PvPoke's IVs; Vigoroth (28.5) and Stunfisk (26) do not.
+Scripts were one-off (scratchpad), built from `scripts/roster_teams.py`'s `field_results` and `top_player_teams._battles`.
