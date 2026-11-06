@@ -4304,3 +4304,10 @@ Jellicent with Vigoroth / Stunfisk at about 76%. Against the nine teams top play
 
 Carbink (level 50) and Galarian Corsola (47.5) need XL candy at PvPoke's IVs; Vigoroth (28.5) and Stunfisk (26) do not.
 Scripts were one-off (scratchpad), built from `scripts/roster_teams.py`'s `field_results` and `top_player_teams._battles`.
+
+**Third partner for Vigoroth / Stunfisk, by lead** (same nine teams, every lead pair, 10 battles each; 22 partners).
+Best: **Snorlax** (Psywave / Body Slam / Earthquake, level 17.5) 64.4% ± 3.3 over all leads, **73% leading Snorlax**, and
+that lead beats the shadow Quagsire lead of Snorlax / Jumpluff / shadow Quagsire; Carbink 63.3% (69% leading it, but 0
+against the Quagsire lead); Clodsire 62.2% (66% leading Vigoroth); Jellicent 51.8% (58% leading Stunfisk); Marowak 51.9%.
+The owner's worry is borne out: a Carbink or Marowak lead loses to the Quagsire lead outright. Against one Quagsire team
+only, and fixed-team bot battles are nearly deterministic, so read those as win or lose, not as rates.
