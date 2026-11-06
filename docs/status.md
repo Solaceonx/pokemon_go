@@ -4330,3 +4330,9 @@ and no megas (98 species, 4,728 pairs); the 45 pairs with the best one-on-one co
 lead 58.9%, Vigoroth / Snorlax / Stunfisk 58.3%, Carbink / Vigoroth / Gourgeist (large) 56.9%, shadow Forretress /
 Vigoroth / Diggersby 56.2%, shadow Dusknoir / Vigoroth / Stunfisk 55.6%, Carbink / Gourgeist (super) 55.6%; all within
 the margins of each other. Diggersby (level 47), Carbink (50), shadow Sableye (47), Pachirisu (50) need XL candy.
+
+**Third for Vigoroth / Jellicent** (2026-11-06, scratch third_j.py; same candidates; the 30 best thirds by coverage,
+every lead 100 battles, finals 600 fresh battles, trained bot both sides): Jellicent / Vigoroth / Stunfisk 60.0% ± 3.9,
+Jellicent / Vigoroth / Morgrem 58.5% (Morgrem level 49.5, XL), Carbink / Vigoroth / Jellicent 57.8% (XL), Vigoroth
+lead with Morgrem 56.2%, Vigoroth lead with Stunfisk 54.8%, Jellicent / Vigoroth / Marowak 54.5% (level 31.5),
+Diggersby 51.2%, shadow Sableye 48.7%, shadow Alolan Muk 48.1%, Wigglytuff 45.3%. Lead Jellicent with this core.
