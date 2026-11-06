@@ -4336,3 +4336,11 @@ every lead 100 battles, finals 600 fresh battles, trained bot both sides): Jelli
 Jellicent / Vigoroth / Morgrem 58.5% (Morgrem level 49.5, XL), Carbink / Vigoroth / Jellicent 57.8% (XL), Vigoroth
 lead with Morgrem 56.2%, Vigoroth lead with Stunfisk 54.8%, Jellicent / Vigoroth / Marowak 54.5% (level 31.5),
 Diggersby 51.2%, shadow Sableye 48.7%, shadow Alolan Muk 48.1%, Wigglytuff 45.3%. Lead Jellicent with this core.
+
+**Movesets for Jellicent / Vigoroth / Stunfisk** (2026-11-06, scratch moves.py; one move changed at a time, 600 battles
+v the field each, same dice, paired difference): PvPoke's defaults best at 63.0% ± 3.8 (Jellicent Hex / Surf / Shadow
+Ball, Vigoroth Scratch / Body Slam / Bulldoze, Stunfisk Thunder Shock / Mud Bomb / Discharge). Jellicent Ice Beam for
+Shadow Ball -0.8 ± 5.0 (a wash); Vigoroth Rock Slide for Bulldoze -6.6 ± 4.9; Jellicent Ice Beam for Surf -7.9;
+Vigoroth Brick Break -8.2; Stunfisk Muddy Water -9.4; Stunfisk Mud Shot -10.2; Jellicent Bubble -12.8; Vigoroth Counter
+-16.7 ± 4.9 (Scratch here is 3 damage and 4 energy a turn, Counter 4 and 3). The bots' one-on-one table assumes default
+moves for every Pokémon, which may count against the variants somewhat.
