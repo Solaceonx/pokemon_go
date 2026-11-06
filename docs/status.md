@@ -4311,3 +4311,15 @@ that lead beats the shadow Quagsire lead of Snorlax / Jumpluff / shadow Quagsire
 against the Quagsire lead); Clodsire 62.2% (66% leading Vigoroth); Jellicent 51.8% (58% leading Stunfisk); Marowak 51.9%.
 The owner's worry is borne out: a Carbink or Marowak lead loses to the Quagsire lead outright. Against one Quagsire team
 only, and fixed-team bot battles are nearly deterministic, so read those as win or lose, not as rates.
+
+**Snorlax / Vigoroth / Stunfisk, weak spots** (the owner's pick, 2026-11-06; scratch scripts weak.py and cmp.py). Both
+sides trained bot, the same 900 mixed-field teams for every line-up (so differences are paired):
+Vigoroth lead 60.4% ± 3.2, Carbink / Vigoroth / Stunfisk 59.6%, Snorlax lead 54.8%, Stunfisk lead 54.8%, the task 40
+team Jellicent / Clodsire / Araquanid 45.6%. (The 75-80% of the team screen above is against the weaker varied crowd.)
+So lead Vigoroth into the general field; the Snorlax lead was best only against the nine teams. Leading Snorlax against
+the nine, it loses the Morpeko, shadow Ninetales, Corviknight, Melmetal and Vigoroth leads, and goes 23% against
+Snorlax / Jumpluff / shadow Quagsire (wins only the Quagsire lead). Opponents present in our field losses (score when
+present, n >= 25): Rillaboom 18%, Thievul 30%, shadow Annihilape 32%, Vigoroth 39%, shadow Sableye 40%, Annihilape 42%,
+Quagsire 42%, shadow Quagsire and shadow Ninetales 48%. One-on-ones: Rillaboom, Thievul and the Annihilapes beat all
+three of ours; Quagsire and Hisuian Electrode beat Snorlax and Vigoroth (only Stunfisk wins); Tinkaton and Mandibuzz
+beat Stunfisk.
