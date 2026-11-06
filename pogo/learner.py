@@ -24,7 +24,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .agents import Planner, _matchup_table, duel, fasts_to_wait
+from .agents import Planner, _matchup_table, disguised, duel, fasts_to_wait
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, View, damage
 
 # Decisions judged option by option. For a throw: hold for one more fast move, throw the first
@@ -364,6 +364,8 @@ class Learner(Planner):
         ready = [mon.energy >= move.energy for move in moves]
         if not any(ready) or foe.hp <= damage(mon, mon.build.fast, foe):
             return FAST
+        if self.disguise and disguised(foe):  # the owner's rule, not the head's: the Disguise takes any hit
+            return CHARGED[min((k for k in range(len(moves)) if ready[k]), key=lambda k: moves[k].energy)]
 
         def planner_choice() -> int:
             action = Planner._pick_move(self, view)

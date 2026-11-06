@@ -32,6 +32,30 @@ class Forms(unittest.TestCase):
         leave_field(mimikyu)
         self.assertEqual((mimikyu.build.species_id, mimikyu.def_stage), ("mimikyu_busted", -1))
 
+    def test_cheapest_move_into_a_disguise(self):
+        """The owner's rule: while the Disguise is up, the cheapest ready charged move; then the usual choice."""
+        from pogo.agents import Planner
+        from pogo.battle import CHARGED, Battle
+        from pogo.learner import Learner, QNet
+        net = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
+        for agent in (Planner(seed=0), Learner(q=net, margin=0.02, seed=0)):
+            # Without shields to bait, Corviknight would throw Iron Head (50) rather than Air Cutter (40).
+            battle = Battle([self.gd.default("corviknight")], [self.gd.default("mimikyu")], agent, Planner(seed=1), seed=0,
+                            shields=(1, 0))
+            me = battle.sides[0].mon
+            me.energy = 100
+            moves = me.build.charged
+            cheap = CHARGED[min(range(len(moves)), key=lambda k: moves[k].energy)]
+            agent.disguise = False
+            self.assertNotEqual(agent.act(battle.views[0]), cheap)
+            agent.disguise = True
+            self.assertEqual(agent.act(battle.views[0]), cheap)
+            change_form(battle.sides[1].mon, "mimikyu_busted")
+            agent.disguise = False
+            usual = agent.act(battle.views[0])
+            agent.disguise = True
+            self.assertEqual(agent.act(battle.views[0]), usual)
+
     def test_blade_stats_match_pvpoke(self):
         blade = self.gd.default("aegislash_shield").forms["aegislash_blade"]
         self.assertEqual((blade.level, blade.hp), (22, 139))
