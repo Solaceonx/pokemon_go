@@ -4344,3 +4344,10 @@ Shadow Ball -0.8 ± 5.0 (a wash); Vigoroth Rock Slide for Bulldoze -6.6 ± 4.9; 
 Vigoroth Brick Break -8.2; Stunfisk Muddy Water -9.4; Stunfisk Mud Shot -10.2; Jellicent Bubble -12.8; Vigoroth Counter
 -16.7 ± 4.9 (Scratch here is 3 damage and 4 energy a turn, Counter 4 and 3). The bots' one-on-one table assumes default
 moves for every Pokémon, which may count against the variants somewhat.
+
+**Clodsire / Araquanid as a core** (2026-11-07, scratch third_core.py; as the Vigoroth / Jellicent screen, same
+finals dice): best thirds shadow Houndoom (Clodsire lead) 54.4% ± 4.0 and Dunsparce (Araquanid lead) 53.8%; then
+shadow Sableye 49.7%, shadow Vigoroth 49.3%, Diggersby 48.7%, Vigoroth 46.4%, Jellicent 45.3%, Snorlax 41.7%; the
+reference Jellicent / Vigoroth / Stunfisk 60.0% on the same dice. Field Pokémon that beat both one-on-one (share of
+field slots): Mimikyu 7.6%, shadow Quagsire 3.0%, Galarian Corsola 2.9%, Corviknight 2.8%, Jellicent 2.1%, Araquanid
+1.9%, Annihilape 1.1%.
