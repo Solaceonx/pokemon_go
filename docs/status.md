@@ -4351,3 +4351,9 @@ shadow Sableye 49.7%, shadow Vigoroth 49.3%, Diggersby 48.7%, Vigoroth 46.4%, Je
 reference Jellicent / Vigoroth / Stunfisk 60.0% on the same dice. Field Pokémon that beat both one-on-one (share of
 field slots): Mimikyu 7.6%, shadow Quagsire 3.0%, Galarian Corsola 2.9%, Corviknight 2.8%, Jellicent 2.1%, Araquanid
 1.9%, Annihilape 1.1%.
+
+**Two partners for Clodsire** (2026-11-07, for another account; scratch screen_clod.py, as the wider Vigoroth screen):
+Diggersby / Clodsire / shadow Vigoroth 57.8% ± 3.9 (Diggersby XL), shadow Houndoom / Clodsire / Aromatisse 56.4%,
+Jellicent / Clodsire / Stunfisk 56.2% (all regular, no XL), Clodsire / shadow Dusknoir / Piloswine 54.8%, Clodsire /
+shadow Sableye / shadow Vigoroth 54.8%; then Wigglytuff, Galarian Corsola, shadow Murkrow, Pachirisu, Gourgeist,
+Carbink thirds 46-52%. All the top five within margins of each other.
