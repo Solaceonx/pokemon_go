@@ -1036,8 +1036,6 @@ class Player:
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
-        if self.decision in CHARGED and t - self.button_seen_t > 0.5:
-            return  # no button on screen: a close-up or a prompt coming, where a tap at the button goes nowhere
         if self.decision in CHARGED:
             k = self.decision - CHARGED[0]
             # On the count alone (the buttons unread) a throw that came to nothing is not tried again for 3 s: each
