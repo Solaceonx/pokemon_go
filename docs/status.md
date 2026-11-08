@@ -4827,3 +4827,40 @@ clips' protected files, so they still carry the old tracker's states until the p
 charged moves with more than one move they could afford, and a Mimikyu's broken Disguise, are still left
 unhandled when the bar is not read. Most of the remaining miss in public clips is those cases, plus a few where
 the rules' damage overshoots (stats assumed).
+
+**A set swipe pattern for every charged move's type (2026-11-08, late afternoon; the owner: "practice against team
+leaders until you can have set scripts for each type of charge move ... at the end of the day we should have one set
+script for every typing").** League battles stopped. The owner built a second party for it, Melmetal (Superpower,
+Double Iron Bash), Umbreon (Dark Pulse, Foul Play), Gengar (Sludge Bomb, Drain Punch) (`data/team_melmetal.json`;
+moves as the names under its buttons showed them, the PvPoke defaults first assumed being wrong for all three), and
+Jellicent's Bubble Beam became Ice Beam (a TM).
+- **Icons by each move's own cut-out** (`scripts/live/move_icons.py`, templates `data/minigame/android/icon_<move>.png`,
+  cut by `scripts/live/cut_icon_template.py`: of the colour detector's candidates with a white symbol in the middle
+  and a ring of the type's colour, the sharpest forty, and of those the one most like the rest). The colour
+  detectors find icons in the dust and earth (Mud Bomb's own mud clouds, the same place every time), which a learnt
+  pattern then copies. With the cut-outs, real icons scored about 0.9 to 0.97 and the rest under 0.85 for Mud Bomb,
+  Discharge, Double Iron Bash, Shadow Ball, Superpower and Foul Play; Bubble Beam, Bulldoze and Dark Pulse did not
+  separate and need cut-outs by hand. The recordings are 540 x 1200; cut-outs are made and matched on half-size
+  frames.
+- **Learnt patterns** (`scripts/live/learn_choreography.py` on those sightings), scored on held-out minigames as the
+  share of icon sightings the stroke's path passes over:
+
+  | Move (type) | Minigames | Learnt path | Sweep alone |
+  |---|---|---|---|
+  | Mud Bomb (ground) | 30 | 82% | 61% |
+  | Discharge (electric) | 30 | 74% | 55% |
+  | Shadow Ball (ghost) | 30 | 82% | 59% |
+  | Foul Play (dark) | 12 | 83% | 66% |
+  | Double Iron Bash (steel) | 9 | 99% | 81% |
+  | Superpower (fighting) | 4 | too few | |
+
+  Installed for the five, beside Body Slam's from the morning. The live stroke also chases icons by the cut-out
+  where there is one.
+- **Who of ours is out, in training:** the header shows nicknames there, and Melmetal and Umbreon are both ".gl1"
+  (Gengar was taken for Melmetal a whole battle, its minigames hunting Steel icons). The type icons in our header's
+  corner now say which (three frames in a row agreeing).
+- **Labels for learning:** each of the second party's throws is labelled from its recording (our header's types just
+  before it, and the button tapped), as the logs named some wrongly before the team file was right.
+- Still to do: Superpower, Drain Punch, Sludge Bomb, Dark Pulse need more minigames (Gengar comes out seldom);
+  Ice Beam and Bulldoze need the first party; Bubble Beam, Bulldoze, Dark Pulse need cut-outs by hand; whether two
+  moves of one type share a pattern is not settled (the Ground pair could not be compared with the colour detector).
