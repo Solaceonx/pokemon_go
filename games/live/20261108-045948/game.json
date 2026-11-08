@@ -1,0 +1,516 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-045948",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-045948.jsonl",
+  "recording": "battle-20261108-045948.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794142797.77
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 105.874,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BUBBLE_BEAM",
+      "name": "Bubble Beam",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 3
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "plusle",
+    "name": "Plusle",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "GRASS_KNOT",
+      "name": "Grass Knot",
+      "energy": 50,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "QUICK_ATTACK",
+     "name": "Quick Attack",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "electrode",
+    "name": "Electrode",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "jolteon",
+    "name": "Jolteon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 6,
+   "theirs": 1
+  },
+  "we_shielded": 1,
+  "shield_prompts": 1,
+  "fast_taps": 244,
+  "looks": 76
+ },
+ "bot": {
+  "throw_beaten": 2,
+  "throw_before_fainting": 3
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "plusle"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 9.773,
+   "pokemon": "plusle",
+   "move": "Grass Knot",
+   "move_id": "GRASS_KNOT",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    48,
+    48
+   ],
+   "state": {
+    "look_t": 9.01,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.909,
+     "shields": 2,
+     "left": 3,
+     "energy": 73,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "plusle",
+     "hp_share": 0.714,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      48,
+      48
+     ],
+     "fast_move": "QUICK_ATTACK"
+    }
+   },
+   "cost": 50
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 16.272,
+   "pokemon": "jellicent",
+   "move": "Bubble Beam",
+   "move_id": "BUBBLE_BEAM",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.19,
+   "state": {
+    "look_t": 13.57,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.902,
+     "shields": 2,
+     "left": 3,
+     "energy": 86,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "plusle",
+     "hp_share": 0.707,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      6,
+      6
+     ],
+     "fast_move": "QUICK_ATTACK"
+    }
+   },
+   "icons_chased": 53
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 30.145,
+   "pokemon": "jellicent",
+   "move": "Bubble Beam",
+   "move_id": "BUBBLE_BEAM",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.18,
+   "state": {
+    "look_t": 28.474,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.889,
+     "shields": 1,
+     "left": 3,
+     "energy": 62,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "plusle",
+     "hp_share": 0.229,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      62,
+      62
+     ],
+     "fast_move": "QUICK_ATTACK"
+    }
+   },
+   "icons_chased": 51
+  },
+  {
+   "kind": "switch",
+   "t": 40.87,
+   "side": "theirs",
+   "from": "plusle",
+   "to": "electrode",
+   "known_from": "seen",
+   "state": {
+    "look_t": 40.87,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.882,
+     "shields": 1,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 42.723,
+   "from": "jellicent",
+   "to": "stunfisk",
+   "seconds_after_tap": 1.38,
+   "state": {
+    "look_t": 42.407,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": 0.949,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      16,
+      16
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 49.667,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.86,
+   "state": {
+    "look_t": 48.486,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 54,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": 0.007,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      48,
+      48
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 90
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 63.672,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.18,
+   "state": {
+    "look_t": 61.745,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.963,
+     "shields": 1,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      96,
+      96
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 92
+  },
+  {
+   "kind": "faint",
+   "t": 73.843,
+   "side": "theirs",
+   "pokemon": "electrode",
+   "next": "jolteon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 73.843,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.963,
+     "shields": 1,
+     "left": 3,
+     "energy": 8,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 78.829,
+   "pokemon": "stunfisk",
+   "move": "Discharge",
+   "move_id": "DISCHARGE",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.04,
+   "state": {
+    "look_t": 77.511,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.956,
+     "shields": 1,
+     "left": 3,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 38
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 92.725,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.07,
+   "state": {
+    "look_t": 90.969,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.929,
+     "shields": 1,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.586,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      90,
+      90
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 89
+  },
+  {
+   "kind": "end",
+   "t": 105.874,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-045948.jsonl"
+ ]
+}

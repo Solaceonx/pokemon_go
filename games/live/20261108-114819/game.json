@@ -1,0 +1,872 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-114819",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-114819.jsonl",
+  "recording": "battle-20261108-114819.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794167314.263
+ },
+ "result": {
+  "value": "loss",
+  "from": "result screen"
+ },
+ "seconds": 210.544,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "BUBBLE_BEAM",
+      "name": "Bubble Beam",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": true
+   }
+  ],
+  "theirs": [
+   {
+    "species": "haunter",
+    "name": "Haunter",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "SHADOW_PUNCH",
+      "name": "Shadow Punch",
+      "energy": 35,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "ASTONISH",
+     "name": "Astonish",
+     "known_from": "inferred"
+    },
+    "fainted": true
+   },
+   {
+    "species": "stunfisk_galarian",
+    "name": "Stunfisk (Galarian)",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "ROCK_SLIDE",
+      "name": "Rock Slide",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 4
+     }
+    ],
+    "fast_move": {
+     "id": "MUD_SHOT",
+     "name": "Mud Shot",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "THUNDERBOLT",
+      "name": "Thunderbolt",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 7,
+   "theirs": 7
+  },
+  "we_shielded": 2,
+  "shield_prompts": 2,
+  "fast_taps": 725,
+  "looks": 216
+ },
+ "bot": {
+  "shield_override": 2,
+  "armed": 2,
+  "armed_fired": 1,
+  "waiting_for_better": 8,
+  "throw_before_fainting": 2,
+  "armed_replaced": 1,
+  "active_corrected": 1
+ },
+ "notes": {
+  "result": "loss",
+  "went_wrong": "charged taps held 7 to 10 s waiting to see a button (a guard added an hour before); Stunfisk fainted with Mud Bomb chosen and never tapped",
+  "fixed": "yes",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "haunter"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 3.6,
+   "from": "jellicent",
+   "to": "stunfisk",
+   "seconds_after_tap": 1.93,
+   "state": {
+    "look_t": 3.265,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 24,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      8,
+      8
+     ],
+     "fast_move": "SHADOW_CLAW"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 8.305,
+   "pokemon": "haunter",
+   "move": "Shadow Punch",
+   "move_id": "SHADOW_PUNCH",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    40,
+    40
+   ],
+   "state": {
+    "look_t": 7.764,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.848,
+     "shields": 2,
+     "left": 3,
+     "energy": 34,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": 0.646,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "SHADOW_CLAW"
+    }
+   },
+   "cost": 35
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 19.593,
+   "pokemon": "stunfisk",
+   "move": "Discharge",
+   "move_id": "DISCHARGE",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.97,
+   "state": {
+    "look_t": 17.228,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      10,
+      15
+     ],
+     "fast_move": "ASTONISH"
+    }
+   },
+   "icons_chased": 52
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 33.378,
+   "pokemon": "haunter",
+   "move": null,
+   "move_id": null,
+   "move_known_from": null,
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    60,
+    65
+   ],
+   "state": {
+    "look_t": 33.07,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.545,
+     "shields": 1,
+     "left": 3,
+     "energy": 48,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": 0.377,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      60,
+      65
+     ],
+     "fast_move": "ASTONISH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 42.939,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.28,
+   "state": {
+    "look_t": 40.991,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 57,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      20,
+      30
+     ],
+     "fast_move": "ASTONISH"
+    }
+   },
+   "icons_chased": 93
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 53.179,
+   "from": "stunfisk",
+   "to": "vigoroth",
+   "seconds_after_tap": 2.46,
+   "state": {
+    "look_t": 52.901,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.956,
+     "shields": 0,
+     "left": 3,
+     "energy": 12,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": 0.101,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      30,
+      40
+     ],
+     "fast_move": "ASTONISH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 68.418,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.26,
+   "state": {
+    "look_t": 66.826,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "haunter",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      70,
+      80
+     ],
+     "fast_move": "ASTONISH"
+    }
+   },
+   "icons_chased": 49
+  },
+  {
+   "kind": "faint",
+   "t": 83.759,
+   "side": "theirs",
+   "pokemon": "haunter",
+   "next": "stunfisk_galarian",
+   "known_from": "seen",
+   "state": {
+    "look_t": 83.759,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 19,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": 0.956,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 94.484,
+   "pokemon": "stunfisk_galarian",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 94.231,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 42,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 98.403,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.46,
+   "state": {
+    "look_t": 96.511,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.067,
+     "shields": 0,
+     "left": 3,
+     "energy": 42,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   },
+   "icons_chased": 75
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 108.832,
+   "from": "vigoroth",
+   "to": "stunfisk",
+   "seconds_after_tap": 3.49,
+   "state": {
+    "look_t": 108.832,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 12,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": 0.694,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 118.42,
+   "pokemon": "stunfisk_galarian",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 118.022,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 21,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 122.5,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.53,
+   "state": {
+    "look_t": 120.508,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.242,
+     "shields": 0,
+     "left": 3,
+     "energy": 30,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": 0.673,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   },
+   "icons_chased": 97
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 142.671,
+   "pokemon": "stunfisk_galarian",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 142.329,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 51,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      72,
+      72
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 145.322,
+   "pokemon": "stunfisk",
+   "next": "vigoroth",
+   "state": {
+    "look_t": 144.857,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 51,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 163.437,
+   "pokemon": "stunfisk_galarian",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 163.215,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 1,
+     "energy": 49,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 166.756,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.76,
+   "state": {
+    "look_t": 164.677,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.465,
+     "shields": 0,
+     "left": 1,
+     "energy": 62,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "stunfisk_galarian",
+     "hp_share": 0.094,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      55,
+      55
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   },
+   "icons_chased": 63
+  },
+  {
+   "kind": "switch",
+   "t": 179.679,
+   "side": "theirs",
+   "from": "stunfisk_galarian",
+   "to": "melmetal",
+   "known_from": "seen",
+   "state": {
+    "look_t": 179.679,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 1,
+     "energy": 13,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "melmetal",
+     "hp_share": 0.997,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 184.945,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.54,
+   "state": {
+    "look_t": 182.867,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 1,
+     "energy": 38,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "melmetal",
+     "hp_share": 0.909,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 56
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 202.7,
+   "pokemon": "melmetal",
+   "move": "Thunderbolt",
+   "move_id": "THUNDERBOLT",
+   "cost": 55,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 201.669,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.229,
+     "shields": 0,
+     "left": 1,
+     "energy": 29,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "melmetal",
+     "hp_share": 0.141,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      63,
+      63
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 210.544,
+   "result": "loss",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-114819.jsonl"
+ ]
+}

@@ -1,0 +1,663 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-104053",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-104053.jsonl",
+  "recording": "battle-20261108-104053.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794163272.968
+ },
+ "result": {
+  "value": "loss",
+  "from": "result screen"
+ },
+ "seconds": 144.299,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "BUBBLE_BEAM",
+      "name": "Bubble Beam",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true
+   }
+  ],
+  "theirs": [
+   {
+    "species": "leafeon",
+    "name": "Leafeon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "SOLAR_BEAM",
+      "name": "Solar Beam",
+      "energy": 80,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "QUICK_ATTACK",
+     "name": "Quick Attack",
+     "known_from": "inferred"
+    },
+    "fainted": true
+   },
+   {
+    "species": "dachsbun",
+    "name": "Dachsbun",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "PSYCHIC_FANGS",
+      "name": "Psychic Fangs",
+      "energy": 35,
+      "known_from": "seen",
+      "times_used": 2
+     }
+    ],
+    "fast_move": {
+     "id": "FIRE_FANG",
+     "name": "Fire Fang",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "aerodactyl",
+    "name": "Aerodactyl",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "ROCK_THROW",
+     "name": "Rock Throw",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 5,
+   "theirs": 3
+  },
+  "we_shielded": 0,
+  "shield_prompts": 3,
+  "fast_taps": 218,
+  "looks": 74
+ },
+ "bot": {
+  "decision_dropped": 1,
+  "throw_before_fainting": 2,
+  "armed": 3,
+  "armed_expired": 1,
+  "active_corrected": 1
+ },
+ "notes": {
+  "result": "loss",
+  "went_wrong": "lost with both shields; farmed on, believing Dachsbun far from a move (16 counted, threw Psychic Fangs, 35); Body Slams Great (owner)",
+  "fixed": "partly: their energy given a margin",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "leafeon"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 8.634,
+   "from": "jellicent",
+   "to": "vigoroth",
+   "seconds_after_tap": 2.47,
+   "state": {
+    "look_t": 8.424,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 60,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": 0.741,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      28,
+      28
+     ],
+     "fast_move": "RAZOR_LEAF"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 14.371,
+   "side": "theirs",
+   "from": "leafeon",
+   "to": "dachsbun",
+   "known_from": "seen",
+   "state": {
+    "look_t": 14.371,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.633,
+     "shields": 2,
+     "left": 3,
+     "energy": 43,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "CHARM"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 18.097,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.64,
+   "state": {
+    "look_t": 15.932,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.552,
+     "shields": 2,
+     "left": 3,
+     "energy": 51,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "CHARM"
+    }
+   },
+   "icons_chased": 91
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 31.697,
+   "pokemon": "dachsbun",
+   "move": "Psychic Fangs",
+   "move_id": "PSYCHIC_FANGS",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    16,
+    16
+   ],
+   "state": {
+    "look_t": 29.269,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 31,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": 0.798,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      16,
+      16
+     ],
+     "fast_move": "CHARM"
+    }
+   },
+   "cost": 35
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 41.893,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.54,
+   "state": {
+    "look_t": 40.048,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.202,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": 0.768,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      0,
+      1
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "icons_chased": 84
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 55.561,
+   "from": "vigoroth",
+   "to": "stunfisk",
+   "seconds_after_tap": 1.35,
+   "state": {
+    "look_t": 55.561,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": 0.013,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      30,
+      31
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 58.228,
+   "pokemon": "dachsbun",
+   "move": "Psychic Fangs",
+   "move_id": "PSYCHIC_FANGS",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    36,
+    37
+   ],
+   "state": {
+    "look_t": 56.1,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.943,
+     "shields": 2,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dachsbun",
+     "hp_share": 0.162,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      36,
+      37
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "cost": 35
+  },
+  {
+   "kind": "switch",
+   "t": 68.905,
+   "side": "theirs",
+   "from": "dachsbun",
+   "to": "leafeon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 68.905,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.734,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      48,
+      48
+     ],
+     "fast_move": "RAZOR_LEAF"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 71.899,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.32,
+   "state": {
+    "look_t": 69.972,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.566,
+     "shields": 2,
+     "left": 3,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": 0.424,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      52,
+      52
+     ],
+     "fast_move": "RAZOR_LEAF"
+    }
+   },
+   "icons_chased": 95
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 87.695,
+   "pokemon": "leafeon",
+   "move": "Solar Beam",
+   "move_id": "SOLAR_BEAM",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    68,
+    68
+   ],
+   "state": {
+    "look_t": 85.773,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.135,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      68,
+      68
+     ],
+     "fast_move": "RAZOR_LEAF"
+    }
+   },
+   "cost": 80
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 97.395,
+   "pokemon": "stunfisk",
+   "next": "jellicent",
+   "state": {
+    "look_t": 85.773,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.135,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      68,
+      68
+     ],
+     "fast_move": "RAZOR_LEAF"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 100.788,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.45,
+   "state": {
+    "look_t": 98.904,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.465,
+     "shields": 2,
+     "left": 3,
+     "energy": 60,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "leafeon",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      20,
+      20
+     ],
+     "fast_move": "QUICK_ATTACK"
+    }
+   },
+   "icons_chased": 61
+  },
+  {
+   "kind": "faint",
+   "t": 115.54,
+   "side": "theirs",
+   "pokemon": "leafeon",
+   "next": "aerodactyl",
+   "known_from": "seen",
+   "state": {
+    "look_t": 115.54,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.256,
+     "shields": 2,
+     "left": 2,
+     "energy": 38,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "aerodactyl",
+     "hp_share": 0.976,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      8,
+      8
+     ],
+     "fast_move": "DRAGON_BREATH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 118.233,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.61,
+   "state": {
+    "look_t": 116.069,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.256,
+     "shields": 2,
+     "left": 2,
+     "energy": 38,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "aerodactyl",
+     "hp_share": 0.939,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      12,
+      12
+     ],
+     "fast_move": "DRAGON_BREATH"
+    }
+   },
+   "icons_chased": 59
+  },
+  {
+   "kind": "end",
+   "t": 144.299,
+   "result": "loss",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-104053.jsonl"
+ ]
+}

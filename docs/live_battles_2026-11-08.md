@@ -7,6 +7,7 @@ the afternoon and named the faults quoted below.
 
 ## Where everything is
 
+- **Game records** (in git): `games/live/<STAMP>/game.json` and `game.txt`, one per battle (`scripts/live/live_record.py`), with `games/live/index.json`.
 - **Logs** (in git): `runs/live/<STAMP>.jsonl`, one line per event: every tap, every look given to the tracker (what
   the screen showed and what the tracker believed: `"foe": [species, energy lo, energy hi, fast move, ...]`), every
   engine decision, throws, minigames with the stroke's path. `runs/live/runner-*.jsonl` are the menu runner's logs.

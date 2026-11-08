@@ -1,0 +1,575 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-010017",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-010017.jsonl",
+  "recording": "battle-20261108-010017.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794128430.257
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 146.518,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 3
+     },
+     {
+      "id": "BUBBLE_BEAM",
+      "name": "Bubble Beam",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "raichu",
+    "name": "Raichu",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "cranidos",
+    "name": "Cranidos",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "ZEN_HEADBUTT",
+     "name": "Zen Headbutt",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "magneton",
+    "name": "Magneton",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 5,
+   "theirs": 3
+  },
+  "we_shielded": 2,
+  "shield_prompts": 2,
+  "fast_taps": 194,
+  "looks": 104
+ },
+ "bot": {
+  "switch_not_taken": 1,
+  "shield_override": 1,
+  "their_charged_unprompted": 1,
+  "throw_before_fainting": 2
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "raichu"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 9.454,
+   "pokemon": "raichu",
+   "move": null,
+   "move_id": null,
+   "move_known_from": null,
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    48,
+    48
+   ],
+   "state": {
+    "look_t": 7.262,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.848,
+     "shields": 2,
+     "left": 3,
+     "energy": 36,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      48,
+      48
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 21.442,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.53,
+   "state": {
+    "look_t": 18.636,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.768,
+     "shields": 1,
+     "left": 3,
+     "energy": 60,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      19,
+      24
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 51
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 32.456,
+   "pokemon": "raichu",
+   "move": null,
+   "move_id": null,
+   "move_known_from": null,
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    67,
+    72
+   ],
+   "state": {
+    "look_t": 31.075,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.62,
+     "shields": 1,
+     "left": 3,
+     "energy": 26,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": 0.64,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      67,
+      72
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 45.47,
+   "pokemon": "jellicent",
+   "move": "Bubble Beam",
+   "move_id": "BUBBLE_BEAM",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.52,
+   "state": {
+    "look_t": 43.765,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": 0.532,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      54,
+      64
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 34
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 64.667,
+   "pokemon": "raichu",
+   "move": null,
+   "move_id": null,
+   "cost": null,
+   "move_known_from": null,
+   "shielded": false,
+   "seen_by": "pause",
+   "state": {
+    "look_t": 64.667,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 28,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": 0.044,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      25,
+      40
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 68.715,
+   "from": "jellicent",
+   "to": "vigoroth",
+   "seconds_after_tap": 1.41,
+   "state": {
+    "look_t": 68.715,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.983,
+     "shields": 0,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "raichu",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      41,
+      56
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 72.333,
+   "side": "theirs",
+   "from": "raichu",
+   "to": "cranidos",
+   "known_from": "seen",
+   "state": {
+    "look_t": 72.333,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.976,
+     "shields": 0,
+     "left": 3,
+     "energy": 32,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "cranidos",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "TAKE_DOWN"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 79.493,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.63,
+   "state": {
+    "look_t": 77.723,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.842,
+     "shields": 0,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "cranidos",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": [
+      12,
+      12
+     ],
+     "fast_move": "ZEN_HEADBUTT"
+    }
+   },
+   "icons_chased": 16
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 107.426,
+   "pokemon": "vigoroth",
+   "next": "jellicent",
+   "state": {
+    "look_t": 95.559,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.539,
+     "shields": 0,
+     "left": 3,
+     "energy": 46,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "cranidos",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      30,
+      30
+     ],
+     "fast_move": "ZEN_HEADBUTT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 114.154,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.7,
+   "state": {
+    "look_t": 112.358,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.108,
+     "shields": 0,
+     "left": 2,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "cranidos",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      48,
+      48
+     ],
+     "fast_move": "ZEN_HEADBUTT"
+    }
+   },
+   "icons_chased": 46
+  },
+  {
+   "kind": "switch",
+   "t": 124.655,
+   "side": "theirs",
+   "from": "cranidos",
+   "to": "magneton",
+   "known_from": "seen",
+   "state": {
+    "look_t": 124.655,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.047,
+     "shields": 0,
+     "left": 2,
+     "energy": 13,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magneton",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 132.155,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.18,
+   "state": {
+    "look_t": 129.857,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.054,
+     "shields": 0,
+     "left": 2,
+     "energy": 42,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magneton",
+     "hp_share": 0.869,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 47
+  },
+  {
+   "kind": "end",
+   "t": 146.518,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-010017.jsonl"
+ ]
+}
