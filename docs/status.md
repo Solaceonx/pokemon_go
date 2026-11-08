@@ -4372,3 +4372,10 @@ on coverage, the 40 best with each lead 100 battles, the best 8 line-ups 1,000 f
 Mimikyu leading 73.4%, 71.9%); Blastoise / Mimikyu / Forretress 65.5%; Forretress / Tinkaton / Cramorant 65.0%. Master:
 Xerneas / Keldeo (resolute) / Yveltal 72.8% ± 2.7; Xerneas / Lunala / Yveltal 70.8%; White Kyurem / Origin Palkia /
 Xerneas 70.7%; Origin Palkia / Xerneas / Yveltal 69.0%. A synthetic field, not real usage; a lead, not a verdict.
+
+**Against weak teams** (2026-11-07, the owner's question; scratch vigo/weakfoes.py): Jellicent (Bubble Beam / Shadow
+Ball) / Vigoroth / Stunfisk, trained bot, against random released non-legendary species with random IVs and random legal
+moves, rulebook pilots: about 1300 CP 99.7% ± 0.7, about 1500 CP 93.8% ± 2.7 (300 battles each). In the sim the bot sees
+the opponents' true stats; live, the tracker reads the opponent's CP (`Foe.cp`) but builds every opponent at PvPoke's
+default level and IVs for its species and assumes the usual moves until others are seen, so a 1300 CP Pokémon is
+treated as full strength (cautious, not stuck). Using the read CP to set the level is a small open fix.
