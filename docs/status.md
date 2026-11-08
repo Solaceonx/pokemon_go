@@ -4398,3 +4398,19 @@ next Walrein 58.2, Forretress 57.2, Florges 56.4. Ultra League above the best ow
 69.8, Empoleon 67.7, Tinkaton 67.6, shadow Corviknight 67.6, Forretress 66.9, Cresselia 66.7, Registeel 66.1, Alolan
 Muk 65.8, Lapras 65.8, Snorlax 65.6; shadow Snorlax 62.7, below regular here though PvPoke ranks it higher. Margins are
 ± 3.7-4.0, so gains under about 4 points are not clear.
+
+## The first day of live GO Battle League battles, against the line-up odds (2026-11-08)
+
+The phone bot (task 40, branch `task40-android`) played 24 GO Battle League battles on the owner's second account
+on 2026-11-08: 15 won, 9 lost; each battle and what went wrong is in `docs/live_battles_2026-11-08.md` on that branch.
+Against each opposing team as seen, the line-up odds: our team (Jellicent with Bubble Beam leading, Vigoroth,
+Stunfisk) against theirs at PvPoke's default builds, two equally good varied bots, 300 battles (`pogo.lineup.win_chance`;
+scratch live/odds.py). With all three of theirs seen (20 battles; Darmanitan has no Great League build), the odds add
+up to 16.3 expected wins; 14 were won. Of the 6 losses, 4 were line-ups the bots win 69 to 99% (Leafeon / Dachsbun /
+Aerodactyl 83, Hisuian Arcanine / Bruxish / Houndoom 99, Toxtricity / Galarian Rapidash / Jolteon 99, Gastrodon /
+Mega Charizard X / Scrafty 69), each traced on the branch to the phone side (a form misread, fast taps cut, our
+energy unread) or, for Dachsbun, their energy undercounted. The other 2 were close (Haunter / Galarian Stunfisk /
+Melmetal 52, Alolan Raichu / Mandibuzz / Hoopa 46), and one win came at 40 (Goodra / Umbreon / Espeon). The 3 losses
+with two of theirs seen came from the first night's faults, since fixed. At this rating the opponents' teams are
+weak, so the gap to the odds is reading and tapping, not strategy; Bubble Beam for Surf costs about 5 ± 4.5 points
+(above).
