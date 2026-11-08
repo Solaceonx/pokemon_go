@@ -301,6 +301,21 @@ def button_labels(a: np.ndarray) -> list:
     return out
 
 
+def button_rim(a: np.ndarray, k: int) -> float:
+    """How sharply button k's rim is drawn: the median brightness step across a circle near its edge, the best of a
+    few radii (a button on screen: 10 or more, empty; 150 or more, paid; hidden: under 4)."""
+    h, w = a.shape[:2]
+    g = a.astype(np.float32).mean(2)
+    cx, cy = BUTTONS[k][0] * w, BUTTONS[k][1] * h
+    ang = np.linspace(0, 2 * np.pi, 120, endpoint=False)
+
+    def ring(r):
+        xs = (cx + r * w * np.cos(ang)).astype(int).clip(0, w - 1)
+        ys = (cy + r * w * np.sin(ang)).astype(int).clip(0, h - 1)
+        return g[ys, xs]
+    return max(float(np.median(np.abs(ring(r + 0.006) - ring(r - 0.006)))) for r in np.arange(0.080, 0.104, 0.004))
+
+
 def my_energy(a: np.ndarray, costs) -> float | None:
     """Our energy from the buttons' fill (costs: the two charged moves' energy, in button order), or None when the
     buttons are not both on screen and in agreement."""
@@ -314,8 +329,14 @@ def my_energy(a: np.ndarray, costs) -> float | None:
         if lv is None or named is None:
             return None
         if lv == "uniform":
+            if named is False and float(np.mean(_button_parts(a, k)[3])) < 120 and button_rim(a, k) >= 7:
+                # an empty button: dark all over, its name plainly not showing, and its rim drawn. Without the rim
+                # test this read 0 on frames where the game hides the buttons (around charged moves; 2026-11-08:
+                # nearly all such frames had no rim, edge under 4, against 10 to 12 for an empty button shown).
+                spans.append([(0.0, max(3.0, 0.08 * c))])
+                continue
             if not named:
-                return None  # empty, or not a button at all (a dark close-up): the same to look at
+                return None  # bright, or its name unclear: not to be read
             spans.append([(c - tol, c + tol), (min(100.0, 2 * c) - tol, 100.0)])  # one throw's worth, or two
             continue
         if named != (lv >= 0.97) and abs(lv - 1) > 0.06:

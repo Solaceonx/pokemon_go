@@ -1041,7 +1041,7 @@ class Player:
                 break
             # A tap on the button is sometimes not taken although the move is paid for (2026-11-07: Bulldoze at
             # 57 energy of 55, Discharge at 49 of 40, both shown by the buttons): tap again while they say so.
-            e = screen.my_energy(rgb, costs)
+            e = screen.my_energy(rgb, costs) if on else None  # only with the fight on the screen
             named = screen.button_labels(rgb)[k] if on else None  # the name shows: paid for (readable in the flash)
             if ((e is not None and e >= move.energy) or named) and time.time() - last_tap > 0.6:
                 self.touch(point, f"charged move {k + 1} again: {move.name}")
