@@ -157,6 +157,7 @@ tap came late. The buttons show it exactly, and the player reads them on every f
 | `scripts/live/minigame_timing.py MEDIA STEM...` | when icons come and go, and the stroke, relative to Get Ready! |
 | `scripts/live/replay.py STEM [MEDIA]` | the live player in dry run on a recording, in real time, logging to `runs/replay/` |
 | `scripts/live/to_mp4.py RECORDING` | a playable video, timed to the log |
+| `scripts/live/resim.py STAMP --foe-fast species=MOVE` | the battle's looks again, with their true fast moves, and the engine's decisions set beside the live ones |
 
 Replaying is how every fix above was checked before it went to the phone. A recording is replayed at its own speed,
 and the player's decisions and taps are logged but not sent.
@@ -166,6 +167,6 @@ and the player's decisions and taps are logged but not sent.
 - **Counting fast moves exactly, ours and theirs.** Ours is read off the buttons. Theirs is counted by rhythm: a fast
   move every so many turns while their Pokémon is out, in `pogo.tracker`. With the orange strip left out, the steps
   in our bar show each of their fast moves landing. Work on counting from those steps began on 2026-11-08.
-- The game ignores some switch taps and some charged taps. Re-tapping covers charged moves. A switch tap is not yet
-  tried again.
+- The game drops a touch that starts just after another ends (2026-11-08). So switch and charged taps wait 0.25 s
+  after the last fast tap, and a switch that is still not taken is tried once more.
 - The Team Leaders lose to this team every time, so training tests the mechanics, not the strategy.

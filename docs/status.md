@@ -4515,3 +4515,87 @@ start of counting their fast moves from the steps in our bar rather than by rhyt
 colours, zones, timing, the stroke), the buttons, the bars, prompts, switches, the tools and the open problems.
 
 Tests (320) and `scripts/check_pvpoke.py` (108 of 108) pass. The code is on the branch `task40-android`.
+
+**Three more GO Battle League battles, each analysed on its recording (2026-11-08): 1 win, 2 losses; then stopped.**
+The owner asked for five, with up to 20 minutes of analysis after each, aiming at exact counts of both sides' fast
+moves. After the third the owner stopped the run ("you need to figure it out before you keep losing games on my
+account"). A new checker, run on each battle's recording (the scratch `fastcount.py`), gives the truth:
+- their fast moves: the steps in our bar, frame by frame;
+- their fast move itself: the gaps between those steps, the damage, and whether it pays for the charged moves they
+  threw ("<Pokémon> used <move>!" read from the recording);
+- ours: the buttons read offline.
+
+1. **Win v Raichu / Cranidos / Magneton.**
+   - The tracker's count of their energy was outside the truth at 84 of 103 looks.
+   - The tracker kept the guess Volt Switch for Raichu all game. Raichu's hits came 1.0 s apart and fit Thunder
+     Shock (9 a hit, every Brick Break paid for).
+   - Cranidos's Rock Tomb knocked Vigoroth out with no shields left, so no prompt came, and the count never took
+     off its 50 energy.
+   - The opening switch to Stunfisk (0.8 s) was ignored.
+   - Fixes:
+     - The bars' orange strip is left out (see above).
+     - Their hits are counted frame by frame, and the gaps between them rule out fast moves of the wrong length
+       (`Tracker.their_hit_gaps`).
+     - A guess that fits far worse than the best is dropped, with ties broken by usage.
+     - A fast move that could not have paid for one of their throws is ruled out (`Foe.by_move`).
+     - Their energy is now counted from the hits seen (`energy="hits"`, with `Observation.foe_hits` and
+       `my_hits`), not from a rhythm.
+     - The words "used <move>!" are read, giving the move and its cost.
+   - On the replay, the count was outside the truth at 42 of 104 looks, with Raichu read as Thunder Shock from
+     3.9 s.
+2. **Loss v Unfezant / Ninetales: the player itself broke it.**
+   - The new "used" reading ran OCR (0.3 to 0.5 s a read) on the loop, on every frame not counted as the fight. So
+     the fight coming back after a charged move was seen a second or more late, and a frame without bars stopped
+     the fast taps for a second. The owner, watching: "you consistently are not tapping fast moves ... also not
+     tapping after charge moves".
+   - The last 20 s, Vigoroth at 83% health, went unplayed: the loop never saw three fight frames in a row and quit
+     as if the game had crashed.
+   - Fixes:
+     - That reading and the result screen's go to their own threads.
+     - Fast taps go on through a stray frame (0.4 s), every 0.15 s (was 0.25).
+     - The player gives up only after 20 s with no battle header on screen.
+   - On the replay: 397 fast taps against 125 live; they resume 0.25 to 0.55 s after the fight comes back.
+3. **Loss v Jolteon / Kabutops.** The owner's four points, each found on the recording:
+   - **Jellicent stayed in against Jolteon.** The engine wanted Stunfisk. The first tap (0.97 s) fell during "GO!".
+     The second (6.6 s) was right on the portrait, but the fast taps after it took its place, as they do with a
+     charged move. Then the bench-strip fallback took a switch for seen at 14.9 s, and Jellicent was still out.
+     - Fixes: no switch before 1.5 s, and one chosen earlier is kept until then; no fast taps for 1.6 s after a
+       switch tap; one retry; the bench strip never decides alone.
+   - **Jellicent fainted with a move ready.** Its Hex brought it to 53 (both moves cost 50) at 4% health. The
+     buttons flash as a move becomes paid for, and the 0.5 s-old reading of 40 was trusted over the names under the
+     buttons, which showed both paid. The tap went in at 59.3 s, behind another Hex. Then the replacement prompt
+     went unanswered, because the player was still waiting for the throw.
+     - Fixes: readings count for 0.35 s (was 0.6); the names under the buttons only ever raise our energy and
+       override a stale reading; the count stands in at once; the throw's wait gives way to a replacement prompt and
+       re-taps while the name shows the move paid.
+   - **Stunfisk held Discharge and Mud Bomb into Kabutops's Water Pulse.** The tracker had Kabutops on Fury Cutter
+     (4 a hit). Its hits came 1.2 to 2 s apart and fit Waterfall (10 a hit), so the count said 20 to 24 when it had
+     50. With no shields left, the engine saw no threat.
+     - New rule (the owner's): with no shield left, when their count says a charged move that would take a third
+       of our health is ready, throw our hardest-hitting move first (`throw_before_theirs`).
+     - Rule: a move that never once lands at its own pace over four gaps is out.
+   - **After the Water Pulse, Stunfisk had a move and did not throw.** For about 2 s after a charged move the
+     buttons are dim with no names. The player read that as "nothing paid" and lowered our count from 49 to 39.
+     Fixed by the names-only-raise rule.
+   - On the replay: the opening switch goes at 1.52 s and is retried; Jellicent's throw is decided at 58.8 s, the
+     moment its moves are paid for; the replacement is answered; Stunfisk throws Mud Bomb at 81.7 s, before the
+     Water Pulse (83.3 s), with Kabutops's energy counted at exactly 50.
+   - Also: our own Bubble Beam, read in part as "JELLICENT USED BUBBLEBEA", was taken for their fast move Bubble.
+     Now the speaker's name and charged moves only are matched.
+- **Training navigation:** the runner's check for the Training card matched while the Battle tab was scrolled short,
+  and its taps opened the Nearby Battle QR code (closed again). It now also checks the three leaders' portrait
+  colours where it taps.
+
+- **Switch taps, the real cause (2026-11-08).** Over both days' logs, of the switch taps sent within 0.1 s of a fast
+  tap about 20 in 23 were ignored, and of those sent 0.13 s or more after one nearly all went through: the game drops
+  a touch that starts just after another ends. Switch and charged taps now wait until 0.25 s after the last fast tap
+  (`clear_of_fast_taps`). In the next three training battles both switches went through (1.35 and 1.94 s after
+  the tap), against none of five in the three before.
+- **Training hides some faults** (the owner): the Team Leaders wait about 2 s after a charged move before they
+  attack again; real players attack at once. Fast taps now resume 0.01 to 0.07 s after the fight comes back.
+- **Re-simulation** (the owner's idea): `scripts/live/resim.py STAMP --foe-fast species=MOVE ...` gives a battle's
+  looks again to a tracker told their true fast moves, and asks the engine (1.5 s a decision) what it would do. On
+  battle 3: 64 decisions the same, 6 different. At 82.9 s, with Kabutops's true 60 energy (live: 24, Fury
+  Cutter), it throws Mud Bomb; at 91.5 and 93.2 s it throws Mud Bomb with Stunfisk's true 49 to 58 (live: lowered to
+  39 by the dim names). Both are what the fixes above change.
+- Training since the fixes: 6 of 6 won.

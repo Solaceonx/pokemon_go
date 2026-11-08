@@ -61,6 +61,10 @@ class Observation:
     # then). On the first look to show the new one: how many seconds it has been out. Its fast moves are counted
     # from then, not from this look.
     foe_out_for: float | None = None
+    # Their fast moves seen landing on my health bar since the last look, counted frame by frame (live: each one a
+    # clean step in the bar). When given, it is the count of their hits; the drop still says which move it is.
+    foe_hits: int | None = None
+    my_hits: int | None = None  # the same for mine on their bar
 
 
 class Foe:
@@ -81,6 +85,10 @@ class Foe:
         self.ruled_out: set[str] = set()  # fast moves it cannot have: too little energy, or the wrong words on screen
         self.words: dict[int, dict[str, int]] = {}  # per Pokémon of mine it faced: quiet looks, and looks with each word
         self.misfit: dict[str, float] = {}  # how badly each fast move it could have fits those steps; lower is better
+        # Live, with their hits counted frame by frame: the energy it would have now with each fast move it could
+        # have, from those hits and its charged moves. A move that could not have paid for a charged move it threw
+        # is not its fast move.
+        self.by_move: dict[str, int] = {}
 
     def gain(self, amount: int) -> None:
         self.lo, self.hi = min(ENERGY_CAP, self.lo + amount), min(ENERGY_CAP, self.hi + amount)
@@ -340,6 +348,8 @@ class Tracker:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
                 landed, self.dealt = _whole_hits(self.dealt + foe.mon.hp - hp, damage(mon, mon.build.fast, foe.mon))
+                if obs.my_hits is not None:
+                    landed = obs.my_hits
                 if not self.by_rhythm:
                     mon.energy = min(ENERGY_CAP, mon.energy + landed * mon.build.fast.energy_gain)
             foe.mon.hp = hp
@@ -500,13 +510,43 @@ class Tracker:
         clear = len(ranked) < 2 or scores[best.id] < 0.6 * scores[ranked[1].id] - 0.05
         foe.misfit = {k: round(v, 2) for k, v in scores.items()}
         if not clear or scores[best.id] > 0.3:
-            return  # not enough to tell them apart yet
+            # Not enough to tell the best two apart yet. But a guess that fits far worse than both is dropped for
+            # the best, still as a guess (2026-11-08: Raichu's hits fitted Thunder Shock and Spark about equally,
+            # so Volt Switch, which fitted neither, was kept all game and their energy counted 16 every 2 s).
+            now = scores.get(build.fast.id)
+            if best.id != build.fast.id and scores[best.id] <= 0.3 and now is not None and now > 2 * scores[best.id] + 0.15                     and sum(1 for step in foe.steps if step[2] > 0) >= 4:
+                self._set_fast(t, foe, best)
+                foe.fast_from = "guessed"
+            return
         if best.id == build.fast.id:
             foe.fast_from = "inferred"
             return
         if sum(1 for step in foe.steps if step[2] > 0) < 4:
             return  # dropping the usual move takes a little more
         self._set_fast(t, foe, best)
+
+    def their_hit_gaps(self, t: float, gaps: list[float]) -> None:
+        """Seconds between their active Pokémon's fast moves landing on my bar, one after another with no charged
+        move or change of Pokémon between, timed frame by frame (live: the steps in pogo.android_screen.bars). A fast
+        move of n turns lands every n * 0.5 s when its user never pauses, and never more often; the bar shows a hit
+        up to a quarter second early or late, and now and then a step is misread.
+        - Too slow: a move whose turn is longer than three or more gaps (and a third of them), by 0.35 s, is out
+          (2026-11-08: Raichu's hits came 1.0 s apart; the tracker had kept the 4-turn Volt Switch all game).
+        - Never at its own pace: after four gaps or more, a move that never once landed within its own turn and a
+          bit is out (2026-11-08: Kabutops's hits came 1.2 to 2 s apart; the tracker had the 1-turn Fury Cutter, 4
+          energy a hit for Waterfall's 10, and Stunfisk held its moves into a Water Pulse it did not see coming)."""
+        foe = self.foe
+        if foe is None or not gaps:
+            return
+        options = [m for m in self._fast_options(foe) if m.id not in foe.ruled_out]
+        out = set()
+        for m in options:
+            short = sum(1 for g in gaps if g < m.turns * TURN - 0.35)
+            if short >= 3 and short >= len(gaps) / 3:
+                out.add(m.id)
+            if len(gaps) >= 4 and min(gaps) > 2 * m.turns * TURN - 0.15:
+                out.add(m.id)
+        self._drop_fast(t, foe, out)
 
     def learn_my_move(self, t: float, slot: int, move_id: str) -> int | None:
         """One of ours threw a charged move its assumed moveset did not have (no team sheet, or footage of
@@ -605,7 +645,10 @@ class Tracker:
             return  # nothing new, or it would rule out everything: then the evidence is at fault
         foe.ruled_out |= out
         if foe.mon.build.fast.id in foe.ruled_out:
-            self._set_fast(t, foe, min(left, key=lambda m: foe.misfit.get(m.id, 9.0)))
+            usage = self.gd.move_odds(foe.mon.build.species_id)["fast"]
+            self._set_fast(t, foe, min(left, key=lambda m: (foe.misfit.get(m.id, 9.0), -usage.get(m.id, 0.0))))
+            if len(left) > 1:
+                foe.fast_from = "guessed"  # the best of those left, not yet the only one
         elif len(left) == 1 and foe.fast_from != "inferred":
             foe.fast_from = "inferred"
             self._note(t, "foe_fast_confirmed", species=foe.mon.build.species_id, move=left[0].id,
@@ -629,11 +672,18 @@ class Tracker:
                     self.warnings += 1
                     self._note(obs.t, "unexplained", what="my health drop", drop=drop, expected_per_hit=per_hit)
                 foe.lost.append((mon, drop))
-                if landed and not self.by_rhythm:
+                if landed and not self.by_rhythm and obs.foe_hits is None:
                     foe.gain(landed * fast.energy_gain)
                     # Keep their rhythm if these hits fit it; otherwise restart it from now.
                     on_beat = self.beat + landed * fast.turns
                     self.beat = on_beat if 0 <= self.turn - on_beat < fast.turns else self.turn
+            if obs.foe_hits is not None:
+                landed, clean = obs.foe_hits, True
+                for m in self._fast_options(foe):
+                    foe.by_move[m.id] = min(ENERGY_CAP, foe.by_move.get(m.id, 0) + landed * m.energy_gain)
+                if landed and not self.by_rhythm:
+                    foe.gain(landed * fast.energy_gain)
+                    self.beat = self.turn
             if self.by_rhythm and not clean:
                 self.ahead = 0  # this look cannot say how many landed
             elif self.by_rhythm:
@@ -670,6 +720,16 @@ class Tracker:
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
             moves, extra = [moves[best[1]]], best[2]
         self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
+        if foe.by_move:
+            # Hits counted frame by frame: a fast move that would have left it short of the cheapest move it could
+            # have thrown, by more than one hit (one can land unseen as the charged move starts), is ruled out.
+            cost, short = min(m.energy for m in moves), set()
+            for m in self._fast_options(foe):
+                have = foe.by_move.get(m.id, 0) + (extra + 1) * m.energy_gain
+                if have < cost:
+                    short.add(m.id)
+                foe.by_move[m.id] = max(0, min(ENERGY_CAP, foe.by_move.get(m.id, 0) + extra * m.energy_gain) - cost)
+            self._drop_fast(obs.t, foe, short)
         before, by_clock = [foe.lo, foe.hi], foe.by_clock()
         if foe.hi < min(m.energy for m in moves) <= by_clock:
             foe.hi = by_clock  # the count missed hits while the bars were hidden; the clock is the ceiling

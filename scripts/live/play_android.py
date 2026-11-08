@@ -219,6 +219,43 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     return chased
 
 
+class HitSteps:
+    """Hits landing on one health bar, frame by frame: a drop of 2 pixels or more (of 148.5 for a full bar) in the
+    median of the last five frames that holds for four frames. Drops within 0.35 s are one hit (the bar can step
+    twice). Since the orange strip a hit leaves is no longer read as health (2026-11-08), each fast move is one clean
+    step, so their fast moves can be counted and timed as they land, not guessed from a rhythm."""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self) -> None:
+        self.vals: list = []
+        self.level = None
+        self.below = 0
+        self.last_hit = -9.0
+
+    def add(self, t: float, px: float):
+        """The size of a hit that landed by this frame, in pixels, or None."""
+        self.vals = (self.vals + [px])[-5:]
+        med = float(np.median(self.vals))
+        if self.level is None or len(self.vals) < 3:
+            self.level = med if self.level is None else max(self.level, med)
+            return None
+        if med >= self.level + 4:  # back up: a misread before, or another Pokémon
+            self.level, self.below = med, 0
+            return None
+        if self.level - med >= 2:
+            self.below += 1
+            if self.below >= 4:
+                size, self.level, self.below = self.level - med, med, 0
+                merged = t - self.last_hit < 0.35
+                self.last_hit = t
+                return None if merged else size
+        else:
+            self.below = 0
+        return None
+
+
 class Log:
     def __init__(self, path: Path):
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -237,7 +274,35 @@ class Log:
 class Player:
     def __init__(self, phone: Android, gd: GameData, team, live: bool, log: Log, frames: Path | None):
         self.phone, self.gd, self.team, self.live, self.log, self.frames = phone, gd, team, live, log, frames
-        self.tracker = Tracker(gd, team)
+        # Their energy from their hits seen landing (counted frame by frame, HitSteps), not from a rhythm that
+        # assumes they never pause; the rhythm stays the ceiling when they throw (Tracker, energy="hits").
+        self.tracker = Tracker(gd, team, energy="hits")
+        self.hits_since_look = 0
+        # "<Pokémon> used <move>!", read while the fight is off the screen: their charged move by name (its exact
+        # cost), and a throw of theirs even when no prompt came (2026-11-08: Cranidos's Rock Tomb knocked out
+        # Vigoroth with no shields left; the count never took off its 50 energy).
+        self.used_read_at = 0.0
+        self.used_busy = False
+        self.result_busy, self.result_seen = False, None
+        self.pending_lock = threading.Lock()  # pending_theirs and foe_move_seen are set from the reading thread
+        self.header_seen = 0.0  # the last frame with the battle header (cheap to check), for the no-fight guard
+        self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
+        self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
+        # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
+        # decision fully and wanted Stunfisk in; its next ones, on a short deadline, fell back to fast moves), or one
+        # the game ignored, tapped once more.
+        self.switch_wanted = None
+        self.switch_retried = False
+        self.foe_move_seen = None
+        self.used_names: dict = {}  # a move's name as read (letters only) -> the ids with that name
+        for m in gd.moves.values():
+            self.used_names.setdefault("".join(ch for ch in m.name.upper() if ch.isalpha()), []).append(m.id)
+        self.used_last = (None, 0.0)  # the last "used" text read for theirs, and when: it stays up a second or two
+        self.my_move_names = {"".join(ch for ch in m.name.upper() if ch.isalpha()) for b in team for m in b.charged}
+        self.my_names = {"".join(ch for ch in b.name.upper() if ch.isalpha()) for b in team}
+        charged_ids = {i for sp in gd.species.values() for i in sp.get("chargedMoves", [])}
+        self.used_names = {n: [i for i in ids if i in charged_ids] for n, ids in self.used_names.items()}
+        self.used_names = {n: ids for n, ids in self.used_names.items() if ids}
         ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
         self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
                                seed=int(time.time()) % 100000, **WEBSITE, turn_ms=500, cap_ms=300, clock=time.perf_counter)
@@ -280,6 +345,16 @@ class Player:
         self.names_seen = None
         self._names_raw = None
         self.queued_checked = 0.0
+        # Their fast moves landing on our bar, frame by frame (HitSteps): the times of those in the current unbroken
+        # stretch of fighting, and every gap between hits so far for each of their Pokémon. The gaps tell the tracker
+        # how many turns their fast move takes.
+        self.their_steps = HitSteps()
+        self.my_steps = HitSteps()  # ours landing on their bar
+        self.my_hits_since_look = 0
+        self.their_hits: list = []
+        self.hit_gaps: dict = {}
+        self.hits_key = None
+        self.last_fight_frame = 0.0
         # Fast moves on their own thread, so the engine's thinking (up to 300 ms a look) leaves no gaps: one tap in
         # five came more than 0.45 s after the last, and a one-turn move (Scratch) loses its turn at such a gap.
         self.touch_lock = threading.RLock()  # one touch at a time: fast taps, charged taps, the minigame stroke
@@ -296,9 +371,20 @@ class Player:
             if self.live:
                 self.phone.tap(*point)
 
+    def clear_of_fast_taps(self) -> None:
+        """Stop the fast taps and wait until 0.25 s have passed since the last began. The game drops a touch that
+        starts just after another ends: over both days' logs, of the switch taps sent within 0.1 s of a fast tap
+        about 20 in 23 were ignored, and of those sent 0.13 s or more after one nearly all went through (2026-11-08;
+        charged taps "sometimes not taken" were most likely the same)."""
+        self.tapping = False
+        with self.touch_lock:  # a fast tap under way ends first
+            wait = 0.25 - (time.time() - self.last_fast_tap)
+            if wait > 0:
+                time.sleep(wait)
+
     def _tap_fast(self) -> None:
         while not self.done:
-            if self.tapping and time.time() - self.last_fast_tap >= 0.25:
+            if self.tapping and time.time() - self.last_fast_tap >= 0.15:
                 with self.touch_lock:
                     if not self.tapping:  # turned off while another touch was under way (a charged tap)
                         continue
@@ -331,7 +417,9 @@ class Player:
                 else:
                     continue
             t = when - self.t0
-            if self.last_fight is not None and t - self.last_fight > 20.0:
+            if look.header:
+                self.header_seen = t
+            if self.last_fight is not None and t - self.last_fight > 20.0 and t - self.header_seen > 20.0:
                 # No fight on screen for 20 s, and no result: the game has gone (2026-11-07: it crashed to the
                 # home screen and the player went on for 200 s, tapping a prompt it thought it saw). Touch nothing.
                 self.tapping = False
@@ -347,7 +435,7 @@ class Player:
                 self.tapping = False
                 self.fight_frames = 0
                 self.queued = None  # our Pokémon fainted: a move it had waiting went with it
-                self.switching = None
+                self.switching = self.switch_wanted = None
                 self.fight_since = None
                 self.on_replace_prompt(t, look)
                 continue
@@ -356,8 +444,14 @@ class Player:
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
             self.fight_frames = self.fight_frames + 1 if look.header and len(look.bars) >= 1 else 0
             fighting = self.fight_frames >= 3
-            self.tapping = bool(fighting)
             if fighting:
+                self.fight_frame_t = t
+            # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
+            # the fast taps: they go on until the fight has been off for 0.4 s. Prompts stop them at once (above).
+            self.tapping = (bool(fighting) or (self.tapping and t - self.fight_frame_t < 0.4)) \
+                and time.time() >= self.hold_taps_until
+            if fighting:
+                self.watch_hits(t, look.bars)
                 if self.switching is not None:
                     self.check_switch(t, rgb)
                 self.read_energy(rgb, when)
@@ -383,10 +477,95 @@ class Player:
                 self.last_fight = t
             else:
                 self.fight_since = None
+                self.read_used(t, rgb)
                 result = self.result(rgb, t)
                 if result:
                     return result
         return None
+
+    def read_used(self, t: float, rgb) -> None:
+        """Read the top box for "... used <move>!" three times a second while the fight is off the screen. A move
+        that is not one of ours is theirs: noted for the next look, by name."""
+        if self.last_fight is None or time.time() - self.used_read_at < 0.33 or self.used_busy:
+            return
+        self.used_read_at = time.time()
+        self.used_busy = True
+        h, w = rgb.shape[:2]
+        crop = rgb[int(0.17 * h):int(0.30 * h), int(0.10 * w):int(0.90 * w)].copy()
+
+        def read():
+            try:
+                res, _ = self.names.ocr(crop)
+                self._used_text(t, res)
+            except Exception:  # noqa: BLE001
+                pass
+            finally:
+                self.used_busy = False
+        threading.Thread(target=read, daemon=True).start()
+
+    def _used_text(self, t: float, res) -> None:
+        text = "".join(ch for ch in " ".join(r[1] for r in (res or [])).upper() if ch.isalpha())
+        if "USED" not in text:
+            return
+        who, said = text.split("USED", 1)
+        # Ours: our Pokémon's name, or our move's, read in part too (2026-11-08: "JELLICENTUSEDBUBBLEBEA" was taken
+        # for their Bubble, a fast move, and 50 energy was taken off them for a throw they never made).
+        if any(who.endswith(n) for n in self.my_names) or \
+                any(said.startswith(n) or (len(said) >= 5 and n.startswith(said)) for n in self.my_move_names):
+            return
+        ids = next((i for n, i in sorted(self.used_names.items(), key=lambda x: -len(x[0])) if said.startswith(n)), None)
+        if not ids:
+            return
+        foe = self.tracker.foe
+        own = [i for i in ids if foe is not None and i in self.gd.species[foe.mon.build.species_id]["chargedMoves"]]
+        move = (own or ids)[0]
+        last, self.used_last = self.used_last, (text, time.time())
+        if last[0] == text and time.time() - last[1] < 3.0:
+            return  # the same words still up (2026-11-08: one Brick Break read three times, counted three times)
+        with self.pending_lock:
+            if not self.pending_theirs and time.time() - self.prompt_seen < 10.0:
+                # The words of a throw whose shield prompt the tracker has already had (the fight showed between):
+                # the same throw, not another.
+                self.log("their_charged_named", t, move=move, text=text[:40], counted_already=True)
+                return
+            self.foe_move_seen = move
+            self.log("their_charged_named", t, move=move, text=text[:40], prompted=self.pending_theirs)
+            self.pending_theirs = True
+
+    def watch_hits(self, t: float, bars: dict) -> None:
+        """Count their fast moves as they land on our bar (HitSteps), within unbroken fighting with the same two
+        Pokémon out; pass the gaps between them to the tracker (Tracker.their_hit_gaps)."""
+        foe = self.tracker.foe
+        key = (self.active, foe.mon.build.species_id if foe is not None else None)
+        if key != self.hits_key or t - self.last_fight_frame > 1.0:
+            self.their_steps.reset()
+            self.my_steps.reset()
+            self.their_hits = []
+            self.hits_key = key
+        self.last_fight_frame = t
+        theirs = bars.get("theirs")
+        if theirs is not None and foe is not None and self.my_steps.add(t, theirs * screen.BAR_INSIDE) is not None:
+            self.my_hits_since_look += 1
+        px = bars.get("mine")
+        if px is None or foe is None:
+            return
+        size = self.their_steps.add(t, px * screen.BAR_INSIDE)
+        if size is None:
+            return
+        self.log("their_hit", t, px=round(size, 1), foe=key[1])
+        self.hits_since_look += 1
+        if self.their_hits:
+            gaps = self.hit_gaps.setdefault(key[1], [])
+            gaps.append(round(t - self.their_hits[-1], 3))
+            try:
+                before = foe.mon.build.fast.id
+                self.tracker.their_hit_gaps(t, gaps)
+                if foe.mon.build.fast.id != before:
+                    self.log("foe_fast_by_gaps", t, foe=key[1], was=before, now=foe.mon.build.fast.id,
+                             gaps=sorted(gaps)[:5])
+            except Exception as error:  # noqa: BLE001
+                self.log("tracker_error", t, error=str(error))
+        self.their_hits.append(t)
 
     def labels_say(self):
         """The team slot whose moves the last reading of the names under the buttons names (one alone), or None."""
@@ -440,6 +619,7 @@ class Player:
             how = "buttons"
         if how is not None:
             self.log("switch_seen", t, to=self.team[slot].name, after_tap_s=round(time.time() - tapped, 2), by=how)
+            self.switch_wanted = None
             self.active = slot
             self.switch_ready_at = tapped + 45  # switch timer: our own count, the tracker has its own
             self.switching = None
@@ -449,13 +629,17 @@ class Player:
                 (self._switch_fits == ["old"] * 3 and time.time() - tapped > 1.5):
             self.log("switch_not_taken", t, to=self.team[slot].name, by="names" if said == self.active else "buttons")
             self.switching = None
+            if not self.switch_retried:  # the game ignored it: once more
+                self.switch_retried, self.switch_wanted = True, slot
             return
         if float(np.abs(screen.bench_strip(rgb) - before).mean()) > 45 and (since or time.time() - tapped < 2.0):
             since = since or time.time()
         else:
             since = None
         if time.time() - tapped > 5.0:
-            seen = since is not None and time.time() - since >= 0.6
+            # Nothing said in 5 s: taken as not taken. The bench strip alone was wrong (2026-11-08: "seen" at 14.9 s,
+            # Jellicent still out); if it did go, the names under the buttons correct it (check_active).
+            seen = False
             self.log("switch_seen" if seen else "switch_not_taken", t, to=self.team[slot].name, by="bench strip")
             if seen:
                 self.active = slot
@@ -493,8 +677,9 @@ class Player:
         return (least, most) if least <= most else None
 
     def energy(self, look=None) -> float | None:
-        """Our energy as the buttons showed it in the last 0.6 s, or None."""
-        if self.energy_read is not None and time.time() - self.energy_read[1] < 0.6:
+        """Our energy as the buttons showed it in the last 0.35 s, or None. The buttons flash as a move becomes paid
+        for and give no reading then; an older reading is stale by a fast move or more."""
+        if self.energy_read is not None and time.time() - self.energy_read[1] < 0.35:
             return self.energy_read[0]
         return None
 
@@ -508,10 +693,16 @@ class Player:
             self.my_left_seen = my_left
         if foe_left is not None and foe_left < self.foe_left_seen:
             self.foe_left_seen = foe_left
-        obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
-                          my_hp=look.bars.get("mine"), foe_hp=look.bars.get("theirs"), my_shields=my_sh, foe_shields=foe_sh,
-                          my_left=my_left, foe_left=foe_left, my_energy=self.energy(look),
-                          my_charged=self.pending_mine, foe_charged=self.pending_theirs, paused=paused)
+        with self.pending_lock:  # the "used" reading thread sets pending_theirs and foe_move_seen
+            obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
+                              my_hp=look.bars.get("mine"), foe_hp=look.bars.get("theirs"), my_shields=my_sh,
+                              foe_shields=foe_sh, my_left=my_left, foe_left=foe_left, my_energy=self.energy(look),
+                              my_charged=self.pending_mine, foe_charged=self.pending_theirs, paused=paused,
+                              foe_hits=self.hits_since_look, foe_move=self.foe_move_seen if self.pending_theirs else None,
+                              my_hits=self.my_hits_since_look)
+            self.hits_since_look = self.my_hits_since_look = 0
+            self.foe_move_seen = None
+            self.pending_theirs = False  # handed to the tracker in this look
         try:
             self.tracker.update(obs)
         except Exception as error:  # noqa: BLE001 - a bad look must not stop the battle
@@ -524,9 +715,12 @@ class Player:
                 self.log("energy_read", t, counted=mon_now.energy, read=round(obs.my_energy, 1))
             mon_now.energy = int(round(obs.my_energy))
         bounds = self.paid_bounds()
-        if obs.my_energy is None and bounds is not None and self.tracker.foe is not None:
+        if bounds is not None and self.tracker.foe is not None:
+            # The names only ever raise it: a name that shows says that move is paid for, but a name can be missing
+            # without the move being unpaid (just after a charged move the buttons are dim and show no names:
+            # 2026-11-08, Stunfisk with 49 was taken for 39 and did not throw).
             mon_now = self.tracker.me.mon
-            kept = min(max(mon_now.energy, bounds[0]), bounds[1])
+            kept = max(mon_now.energy, bounds[0])
             if kept != mon_now.energy:
                 self.log("energy_from_names", t, counted=mon_now.energy, least=bounds[0], most=bounds[1])
                 mon_now.energy = kept
@@ -559,18 +753,17 @@ class Player:
         # Our energy as the buttons show it. In a fight they are always on screen, so unread buttons mostly mean no
         # fight (a close-up): no throw then. Only if they have been unread for 8 s of fighting (the reader failing,
         # say on a bright daytime map) does the count stand in.
+        # Our energy: the buttons' reading; else the count (the last reading plus our hits seen landing on their bar
+        # since, so it does not run on in close-ups); never less than the names under the buttons show paid for
+        # (2026-11-08: Jellicent reached 53 at 4% health, the buttons flashed, the stale reading said 40, and it
+        # fainted before its throw went in).
         have = self.energy()
         bounds = self.paid_bounds()
-        if have is not None:
-            self.unread_since = None
-        elif bounds is not None:  # the fill unread, the names showing: the count kept within what they say
-            self.unread_since = None
-            counted = self.tracker.me.mon.energy if self.tracker.foe is not None else 0
-            have = min(max(counted, bounds[0]), bounds[1])
-        else:
-            self.unread_since = self.unread_since or t
-            counted = self.tracker.me.mon.energy if self.tracker.foe is not None else 0
-            have = counted if t - self.unread_since > 8.0 else 0
+        counted = self.tracker.me.mon.energy if self.tracker.foe is not None else 0
+        if have is None:
+            have = counted
+        if bounds is not None:
+            have = max(have, bounds[0])
         if view is not None and self.decision == FAST:
             # Never faint with a charged move in hand (the owner, 2026-11-07): when our health is low and a move is
             # paid for, throw the hardest-hitting one now, whatever the engine planned.
@@ -581,6 +774,18 @@ class Player:
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 self.decision = CHARGED[0] + k
                 self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share)
+            elif affordable and view.me.shields == 0 and self.tracker.foe is not None:
+                # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
+                # Water Pulse, and fainted with both): with no shield to block it, when they can throw a charged
+                # move that would hurt (a third of our health or more), throw ours first.
+                from pogo.battle import damage
+                foe = self.tracker.foe
+                ready = [m for m in foe.mon.build.charged if foe.hi + foe.mon.build.fast.energy_gain >= m.energy]
+                hurt = max((damage(foe.mon, m, view.me.mon) for m in ready), default=0)
+                if hurt >= 0.33 * view.me.mon.build.hp or hurt >= view.me.mon.hp:
+                    k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
+                    self.decision = CHARGED[0] + k
+                    self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
         if self.decision in CHARGED:
@@ -592,13 +797,27 @@ class Player:
                 self.throw(t, k, mon.charged[k])
                 self.decision = FAST
                 return
-        if self.decision in SWITCH and time.time() >= self.switch_ready_at:
+        # Not before 1.5 s: until then "GO!" is on the screen and the game takes no switch (2026-11-08: the opening
+        # switch to Stunfisk at 0.8 s and 0.97 s was ignored both times).
+        if self.decision in SWITCH and self.switch_wanted is None and (t < 1.5 or self.switching is not None):
+            self.switch_wanted = self.decision - SWITCH[0]
+        if self.switch_wanted is not None and self.switching is None and self.decision == FAST and t >= 1.5:
+            self.decision = SWITCH[0] + self.switch_wanted  # still wanted: tap it now
+        if self.decision in SWITCH and time.time() >= self.switch_ready_at and t >= 1.5:
             slot = self.decision - SWITCH[0]
             order = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
+            if slot not in order:
+                self.switch_wanted = None
             if slot in order and rgb is not None:
                 before = screen.bench_strip(rgb)
+                self.clear_of_fast_taps()
                 self.touch(BENCH[order.index(slot)], f"switch to {self.team[slot].name}")
+                self.switch_wanted = None
                 self.switching = (slot, time.time(), before, None, 0)  # self.active changes once it is seen
+                # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
+                # takes its place (2026-11-08: Stunfisk's portrait tapped at 6.6 s, fast taps every 0.15 s after, no
+                # switch). No fast taps for 1.6 s: the longest of our fast moves is 1.5 s.
+                self.hold_taps_until = time.time() + 1.6
                 self.decision = FAST
                 return
         # fast moves: the tapping thread, while self.tapping
@@ -623,6 +842,7 @@ class Player:
             self.switching = None
             self.energy_read = self._energy_raw = None
         point = controls.CHARGED_BUTTONS[k]
+        self.clear_of_fast_taps()
         self.touch(point, f"charged move {k + 1}: {move.name}")
         tapped = last_tap = time.time()
         costs = [m.energy for m in self.team[self.active].charged]
@@ -638,7 +858,13 @@ class Player:
             last = when
             # The top box is read (0.3 to 0.4 s a read) only once the fight is off the screen, as it is within a
             # tenth of a second of Get Ready!; meanwhile every frame gets the quick looks, so a re-tap is on time.
-            on = screen.header_visible(rgb) and len(screen.bars(rgb)) >= 1
+            bars = screen.bars(rgb)
+            on = screen.header_visible(rgb) and len(bars) >= 1
+            if on:  # their fast moves keep landing while ours waits to start (2026-11-08: two went uncounted)
+                self.watch_hits(when - (self.t0 or when), bars)
+            if screen.replace_prompt(rgb):  # ours fainted first: the loop answers the prompt
+                self.log("throw_fainted", self.now(), move=move.id)
+                return
             said = "theirs" if screen.shield_prompt(rgb) else None if on else screen.cue(self.names.ocr, rgb)
             if said == "theirs":
                 # Theirs goes first; ours still waits and plays when theirs is over (2026-11-07: a Body Slam went
@@ -652,7 +878,8 @@ class Player:
             # A tap on the button is sometimes not taken although the move is paid for (2026-11-07: Bulldoze at
             # 57 energy of 55, Discharge at 49 of 40, both shown by the buttons): tap again while they say so.
             e = screen.my_energy(rgb, costs)
-            if e is not None and e >= move.energy and time.time() - last_tap > 0.6:
+            named = screen.button_labels(rgb)[k] if on else None  # the name shows: paid for (readable in the flash)
+            if ((e is not None and e >= move.energy) or named) and time.time() - last_tap > 0.6:
                 self.touch(point, f"charged move {k + 1} again: {move.name}")
                 last_tap = time.time()
             short = short + 1 if e is not None and e < move.energy - 3 else 0
@@ -808,17 +1035,31 @@ class Player:
         self.replacements += 1
 
     def result(self, rgb, t: float) -> str | None:
-        """The result screen's big words, read when the fight has been off the screen for a while."""
-        if self.last_fight is None or t - self.last_fight < 2.5 or int(t * 2) % 2:
+        """The result screen's big words, read when the fight has been off the screen for a while. The reading runs
+        on its own thread (OCR takes 0.3 to 0.5 s here): read on the loop, it held up the frames, so the fight coming
+        back was seen late or not at all (2026-11-08: 20 s of the last Pokémon's fight went unplayed)."""
+        if self.result_seen:
+            return self.result_seen
+        if self.last_fight is None or t - self.last_fight < 2.5 or self.result_busy:
             return None
-        crop = rgb[int(0.40 * rgb.shape[0]):int(0.60 * rgb.shape[0])]
-        res, _ = self.names.ocr(crop)
-        text = " ".join(r[1] for r in (res or [])).upper()
-        self.log("result_check", t, text=text[:80])
-        if "WIN" in text:
-            return "win"
-        if "GOOD" in text or "EFFORT" in text:
-            return "loss"
+        self.result_busy = True
+        crop = rgb[int(0.40 * rgb.shape[0]):int(0.60 * rgb.shape[0])].copy()
+
+        def read():
+            try:
+                res, _ = self.names.ocr(crop)
+                text = " ".join(r[1] for r in (res or [])).upper()
+                self.log("result_check", t, text=text[:80])
+                if "WIN" in text:
+                    self.result_seen = "win"
+                elif "GOOD" in text or "EFFORT" in text:
+                    self.result_seen = "loss"
+            except Exception:  # noqa: BLE001
+                pass
+            finally:
+                time.sleep(0.3)
+                self.result_busy = False
+        threading.Thread(target=read, daemon=True).start()
         return None
 
     def name(self, action) -> str:

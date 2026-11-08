@@ -43,6 +43,16 @@ def game_in_front(adb: str, serial: str) -> bool:
     return "com.nianticlabs.pokemongo" in out
 
 
+def leaders_in_place(im) -> bool:
+    """Whether the three Team Leaders are where LEADERS taps them: the coloured backs of their portraits, beside each
+    tap point, as on the Battle tab scrolled to the bottom (measured 2026-11-08: Blanche's light blue, Candela's pink,
+    Spark's yellow). The Training card can show higher up when the tab is not scrolled all the way; then the taps
+    land elsewhere (2026-11-08: they opened the Nearby Battle QR code)."""
+    p = lambda x, y: im.getpixel((x, y))[:3]
+    b, c, s = p(210, 1956), p(470, 1956), p(870, 1956)
+    return b[2] > b[0] + 30 and c[0] > c[1] + 15 and c[0] > c[2] + 15 and s[2] < s[1] - 30 and s[0] > 200
+
+
 def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
     """From whatever the phone shows after a battle back to the Battle tab scrolled to Training, by a few pixels of
     each screen (measured 2026-11-07): Training has the white card at (100, 1780) under the teal tab bar; the top of
@@ -59,7 +69,11 @@ def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
         im = shot()
         p = lambda x, y: im.getpixel((x, y))
         if is_white(p(100, 1780)) and is_teal(p(540, 140)):
-            return True
+            if leaders_in_place(im):
+                return True
+            # the Battle tab, the Training card not yet at the bottom: scroll on
+            subprocess.run([adb, "-s", serial, "shell", "input", "swipe", "540", "1500", "540", "700", "600"]); time.sleep(1.3)
+            continue
         if p(540, 2205)[0] > 200 and p(540, 2205)[1] < 100:  # the map: open the main menu
             subprocess.run([adb, "-s", serial, "shell", "input", "tap", "540", "2248"]); time.sleep(1.8)
         elif min(p(100, 600)) > 200 and p(100, 600)[1] > 245 and is_teal(p(840, 1484)):  # the main menu: Battle
