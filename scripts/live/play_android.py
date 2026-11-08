@@ -610,6 +610,7 @@ class Player:
                 self.names.offer(rgb, t)
                 self.names.offer_labels(rgb, t)
                 self.names.offer_mine(rgb, t)
+                self.read_my_types(rgb, t)
                 self.check_active(t)
                 # 4 s: an unprompted charged move holds the fight 7 s or so; a switch of theirs 2 to 3 s (2026-11-08:
                 # Greedent's switch to Vaporeon was taken for a throw, and Vaporeon's energy counted from too late)
@@ -733,6 +734,21 @@ class Player:
                 self.log("tracker_error", t, error=str(error))
         self.their_hits.append(t)
 
+    def read_my_types(self, rgb, t: float) -> None:
+        """Which of ours the type icons in our header's corner show (pogo.android_screen.header_types), once three
+        frames in a row agree: self.types_seen = (slot, time). In training the header shows nicknames, and the owner's
+        Melmetal and Umbreon are both ".gl1" (2026-11-08: Gengar was out and taken for Melmetal a whole battle, its
+        minigames hunting Steel icons); the icons say steel, dark, ghost and poison."""
+        types = set(screen.header_types(rgb, "mine"))
+        slot = None
+        if types:
+            fits = [j for j, b in enumerate(self.team)
+                    if {x for x in self.gd.species[b.species_id]["types"] if x != "none"} == types]
+            slot = fits[0] if len(fits) == 1 else None
+        self.types_hist = (getattr(self, "types_hist", []) + [slot])[-3:]
+        if slot is not None and self.types_hist.count(slot) == 3:
+            self.types_seen = (slot, t)
+
     def header_says(self):
         """The team slot our header names (GO Battle League shows the species), or None."""
         canon = lambda s: "".join(ch for ch in s.upper() if ch.isalpha())
@@ -771,6 +787,15 @@ class Player:
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
                          header=self.names.my_name)
                 self.active = mine
+                self.energy_read = self._energy_raw = None
+            return
+        # Our header's type icons: in training the header shows nicknames, which can be the same for two of ours
+        ts = getattr(self, "types_seen", None)
+        if ts is not None and ts[1] > self.active_changed_at + 0.3 and (ts, self.active) != getattr(self, "types_checked", None):
+            self.types_checked = (ts, self.active)
+            if ts[0] != self.active:
+                self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types")
+                self.active = ts[0]
                 self.energy_read = self._energy_raw = None
             return
         at = self.names.labels_at

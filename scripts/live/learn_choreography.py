@@ -34,6 +34,13 @@ TYPES = {"SHADOW_BALL": "ghost", "BUBBLE_BEAM": "water", "BULLDOZE": "ground", "
 DT, DX, DY = 0.25, 0.05, 0.025
 
 
+def move_type(move_id: str) -> str:
+    """A move's type from the game data, for moves not in TYPES."""
+    sys.path.insert(0, str(ROOT))
+    from pogo.gamedata import GameData
+    return GameData().moves[move_id].type
+
+
 def learn(sightings, share: float = 0.35) -> list:
     games = sorted({s[0] for s in sightings})
     cells = collections.defaultdict(set)
@@ -126,7 +133,7 @@ def main() -> None:
     a = ap.parse_args()
     s = [tuple(x) for x in json.load(open(a.sightings))]
     games = sorted({x[0] for x in s})
-    kind = TYPES[a.move]
+    kind = TYPES.get(a.move) or move_type(a.move)
     if a.test:
         random.Random(0).shuffle(games)
         held = set(games[:max(1, int(a.test * len(games)))])

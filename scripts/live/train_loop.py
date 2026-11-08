@@ -96,7 +96,9 @@ def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
             subprocess.run([adb, "-s", serial, "shell", "input", "tap", "840", "1484"]); time.sleep(2.5)
         elif is_white(p(100, 1780)):  # the Battle tab, not scrolled down to Training yet
             subprocess.run([adb, "-s", serial, "shell", "input", "swipe", "540", "1900", "540", "700", "600"]); time.sleep(1.3)
-        elif max(p(100, 1780)) < 60 and is_teal(p(540, 2256)):  # a result screen: the check under it
+        elif max(p(100, 1780)) < 140 and is_teal(p(540, 2256)) and not is_white(p(300, 2150)):
+            # a result screen: the check under it (by day the ground behind is grass, not dark: 69, 91, 56 at 13:50
+            # on 2026-11-08; no white card just above, as the Battle tab's own teal close button has)
             subprocess.run([adb, "-s", serial, "shell", "input", "tap", "540", "2256"]); time.sleep(2.0)
         else:
             time.sleep(1.5)  # something is loading
