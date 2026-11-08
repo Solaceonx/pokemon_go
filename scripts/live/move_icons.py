@@ -20,15 +20,24 @@ THRESHOLD = 0.9
 _cache: dict = {}
 
 
-def has_template(move_id: str) -> bool:
-    return (FOLDER / f"icon_{move_id.lower()}.png").exists()
+def template_path(move_id: str, move_type: str = ""):
+    """The move's own cut-out, else its type's: the icons are the type's (Foul Play's cut-out found Dark Pulse's
+    icons, 110 matches over 0.9 where Dark Pulse's own made 4; Mud Bomb's found Bulldoze's as well as its own)."""
+    for path in (FOLDER / f"icon_{move_id.lower()}.png", FOLDER / f"icon_type_{move_type.lower()}.png"):
+        if path.name != "icon_type_.png" and path.exists():
+            return path
+    return None
 
 
-def _templates(move_id: str, width: int) -> list:
-    key = (move_id, width)
+def has_template(move_id: str, move_type: str = "") -> bool:
+    return template_path(move_id, move_type) is not None
+
+
+def _templates(move_id: str, width: int, move_type: str = "") -> list:
+    key = (move_id, move_type, width)
     if key not in _cache:
-        path = FOLDER / f"icon_{move_id.lower()}.png"
-        if not path.exists():
+        path = template_path(move_id, move_type)
+        if path is None:
             _cache[key] = []
         else:
             base = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE).astype(np.float32)
@@ -37,9 +46,9 @@ def _templates(move_id: str, width: int) -> list:
     return _cache[key]
 
 
-def move_icons(rgb, move_id: str, threshold: float = THRESHOLD) -> list:
+def move_icons(rgb, move_id: str, threshold: float = THRESHOLD, move_type: str = "") -> list:
     """[(x, y, score)] as shares of the screen for a half-size frame (any size works; the cut-outs are scaled)."""
-    tps = _templates(move_id, rgb.shape[1])
+    tps = _templates(move_id, rgb.shape[1], move_type)
     if not tps:
         return []
     h, w = rgb.shape[:2]

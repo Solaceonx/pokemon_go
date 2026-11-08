@@ -183,11 +183,15 @@ def ring_matches(rgb, x: float, y: float, r: float, colour, tolerance: float = 6
     return float(np.abs(med - np.array(colour)).mean()) < tolerance
 
 
-def choreography(move_id: str) -> list:
+def choreography(move_id: str, move_type: str = "") -> list:
     """The icons a move's minigame is known to show, (t0, t1, x, y, share): seconds after Get Ready!, where, and in
-    what share of the recorded minigames (scripts/live/learn_choreography.py, data/minigame/android/<move>.json)."""
-    path = ROOT / "data" / "minigame" / "android" / f"{move_id.lower()}.json"
-    if not path.exists():
+    what share of the recorded minigames (scripts/live/learn_choreography.py). Its type's pattern first
+    (data/minigame/android/type_<type>.json, learnt on every move of the type: moves of one type share it, Foul Play's
+    covering 96% of Dark Pulse's held-out icons against 93% for Dark Pulse's own), else the move's own."""
+    folder = ROOT / "data" / "minigame" / "android"
+    path = next((p for p in (folder / f"type_{move_type.lower()}.json", folder / f"{move_id.lower()}.json")
+                 if p.name != "type_.json" and p.exists()), None)
+    if path is None:
         return []
     return [tuple(x) for x in json.loads(path.read_text(encoding="utf-8"))["icons"]]
 
@@ -252,9 +256,9 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 # Anywhere on screen: a round disc of icon size whose ring is the type's colour (grey for Normal).
                 # Water's icons stream right across the screen, over Jellicent's body, which is the same blue but
                 # not a disc of that size; Ghost's sit on a Jellicent dark with smoke.
-                if move_id and has_template(move_id):
-                    # the move's own icon cut out (move_icons.py): exact where the colour detectors are not
-                    icons = [(x, y) for x, y, v in move_icons(rgb[::2, ::2], move_id)]
+                if move_id and has_template(move_id, move_type):
+                    # the move's or its type's icon cut out (move_icons.py): exact where the colour detectors are not
+                    icons = [(x, y) for x, y, v in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]
                 else:
                     icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
             except Exception:  # noqa: BLE001
@@ -1422,7 +1426,7 @@ class Player:
                 # to 6.6 s after Get Ready! (icons show until 6.25 s; the rating is final by 6.8 s)
                 hunted = minigame_stroke(self.phone, seconds=path[-1][0] + 0.9, colour=icon_colour(move.type),
                                          zone=icon_zone(move.type), move_type=move.type, trace=trace,
-                                         predicted=choreography(move.id), ready_at=since, move_id=move.id)
+                                         predicted=choreography(move.id, move.type), ready_at=since, move_id=move.id)
             self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace)
         # From Get Ready! to here the fight was off the screen: off-screen time for the turns, and the fight must
         # be seen three frames running again before it counts
