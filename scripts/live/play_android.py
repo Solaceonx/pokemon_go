@@ -337,9 +337,11 @@ class Log:
 class Player:
     def __init__(self, phone: Android, gd: GameData, team, live: bool, log: Log, frames: Path | None):
         self.phone, self.gd, self.team, self.live, self.log, self.frames = phone, gd, team, live, log, frames
-        # Their energy from their hits seen landing (counted frame by frame, HitSteps), not from a rhythm that
-        # assumes they never pause; the rhythm stays the ceiling when they throw (Tracker, energy="hits").
-        self.tracker = Tracker(gd, team, energy="hits")
+        # Their energy by rhythm (a fast move every so many turns while out), the hits seen landing (HitSteps)
+        # keeping it in step. Counting only the hits seen fell short at all 17 of their throws named on 2026-11-08:
+        # a resisted fast move takes a pixel or less off our bar (Vaporeon's Water Gun on Jellicent), so it is never
+        # seen; the rhythm fell short at 10 of the 17, and with the turns measured on the frames at 6.
+        self.tracker = Tracker(gd, team)
         self.hits_since_look = 0
         # "<Pokémon> used <move>!", read while the fight is off the screen: their charged move by name (its exact
         # cost), and a throw of theirs even when no prompt came (2026-11-08: Cranidos's Rock Tomb knocked out
@@ -362,7 +364,14 @@ class Player:
             self.used_names.setdefault("".join(ch for ch in m.name.upper() if ch.isalpha()), []).append(m.id)
         self.used_last = (None, 0.0)
         self.my_throw_at = 0.0  # when a throw of ours last started (Get Ready!)
-        self.late_move = None  # a move of theirs named after its throw was already counted  # the last "used" text read for theirs, and when: it stays up a second or two
+        self.late_move = None  # a move of theirs named after its throw was already counted
+        # When a throw of theirs was last given to the tracker by any sign (prompt, pause, words): the words come a
+        # moment after the pause and must not count it again (2026-11-08: each of Altaria's Moonblasts was taken
+        # off its energy twice).
+        self.their_throw_at = 0.0
+        # Seconds the fight has been off the screen since the last look (measured on the frames), for the turns.
+        self.off_time, self.frame_t = 0.0, None
+        self.foe_seen_species = None  # the last "used" text read for theirs, and when: it stays up a second or two
         self.my_move_names = {"".join(ch for ch in m.name.upper() if ch.isalpha()) for b in team for m in b.charged}
         self.my_names = {"".join(ch for ch in b.name.upper() if ch.isalpha()) for b in team}
         charged_ids = {i for sp in gd.species.values() for i in sp.get("chargedMoves", [])}
@@ -511,6 +520,9 @@ class Player:
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
             self.fight_frames = self.fight_frames + 1 if look.header and len(look.bars) >= 1 else 0
             fighting = self.fight_frames >= 3
+            if self.frame_t is not None and not fighting and t - self.fight_frame_t > 0.4:
+                self.off_time += t - self.frame_t  # off the screen (beyond a missed bar or two)
+            self.frame_t = t
             if fighting:
                 self.fight_frame_t = t
             # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
@@ -534,10 +546,13 @@ class Player:
                 self.names.offer_labels(rgb, t)
                 self.names.offer_mine(rgb, t)
                 self.check_active(t)
-                if self.last_fight is not None and t - self.last_fight > 2.0 and self.pending_mine is None and not self.pending_theirs:
+                # 4 s: an unprompted charged move holds the fight 7 s or so; a switch of theirs 2 to 3 s (2026-11-08:
+                # Greedent's switch to Vaporeon was taken for a throw, and Vaporeon's energy counted from too late)
+                if self.last_fight is not None and t - self.last_fight > 4.0 and self.pending_mine is None and not self.pending_theirs:
                     # the fight stood still with no prompt and no throw of ours: their charged move, with no shield of ours to offer
                     if (look.my_shields or 0) == 0 and look.my_left == self.my_left_seen and look.foe_left == self.foe_left_seen:
                         self.pending_theirs = True
+                        self.their_throw_at = time.time()
                         self.log("their_charged_unprompted", t, gap=round(t - self.last_fight, 2))
                 if t - self.last_look >= LOOK:
                     self.give_look(t, look, rgb)
@@ -596,7 +611,7 @@ class Player:
         if last[0] == text and time.time() - last[1] < 3.0:
             return  # the same words still up (2026-11-08: one Brick Break read three times, counted three times)
         with self.pending_lock:
-            if not self.pending_theirs and time.time() - self.prompt_seen < 10.0:
+            if not self.pending_theirs and time.time() - max(self.prompt_seen, self.their_throw_at) < 10.0:
                 # The words of a throw whose shield prompt the tracker has already had (the fight showed between):
                 # the same throw, not another.
                 self.log("their_charged_named", t, move=move, text=text[:40], counted_already=True)
@@ -605,6 +620,7 @@ class Player:
             self.foe_move_seen = move
             self.log("their_charged_named", t, move=move, text=text[:40], prompted=self.pending_theirs)
             self.pending_theirs = True
+            self.their_throw_at = time.time()
 
     def watch_hits(self, t: float, bars: dict) -> None:
         """Count their fast moves as they land on our bar (HitSteps), within unbroken fighting with the same two
@@ -798,10 +814,12 @@ class Player:
 
     def give_look(self, t: float, look, rgb) -> None:
         my_left, foe_left, my_sh, foe_sh = self.header_now(look)
-        paused = None
-        if self.last_fight is not None and t - self.last_fight > 1.2:
-            gap = t - self.last_fight
-            paused = max(0.0, gap - 10.0 * ((self.pending_mine is not None) + self.pending_theirs))
+        # The turns since the last look are the time the fight was on the screen, measured frame by frame: the
+        # tracker takes 10 s off for each charged move, so that is given back (on this phone the fight is off for
+        # less, and the turns at the start of each stretch were lost; real players attack the moment it is back).
+        thrown = (self.pending_mine is not None) + self.pending_theirs
+        paused = self.off_time - 10.0 * thrown if (self.off_time > 0 or thrown) else None
+        self.off_time = 0.0
         if my_left is not None and my_left < self.my_left_seen:
             self.my_left_seen = my_left
             alive_after = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
@@ -820,13 +838,18 @@ class Player:
                     self.energy_read = self._energy_raw = None
         if foe_left is not None and foe_left < self.foe_left_seen:
             self.foe_left_seen = foe_left
+        out_for = None
+        if self.names.species is not None and self.names.species != self.foe_seen_species:
+            self.foe_seen_species = self.names.species
+            if self.names.read_at is not None:
+                out_for = max(0.0, t - self.names.read_at)  # read from a frame that long ago
         with self.pending_lock:  # the "used" reading thread sets pending_theirs and foe_move_seen
             obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
                               my_hp=look.bars.get("mine"), foe_hp=look.bars.get("theirs"), my_shields=my_sh,
                               foe_shields=foe_sh, my_left=my_left, foe_left=foe_left, my_energy=self.energy(look),
                               my_charged=self.pending_mine, foe_charged=self.pending_theirs, paused=paused,
                               foe_hits=self.hits_since_look, foe_move=self.foe_move_seen if self.pending_theirs else None,
-                              my_hits=self.my_hits_since_look)
+                              my_hits=self.my_hits_since_look, foe_out_for=out_for)
             self.hits_since_look = self.my_hits_since_look = 0
             self.foe_move_seen = None
             self.pending_theirs = False  # handed to the tracker in this look
@@ -996,8 +1019,13 @@ class Player:
             # tenth of a second of Get Ready!; meanwhile every frame gets the quick looks, so a re-tap is on time.
             bars = screen.bars(rgb)
             on = screen.header_visible(rgb) and len(bars) >= 1
+            bt = when - (self.t0 or when)
+            if self.frame_t is not None and not on:
+                self.off_time += max(0.0, bt - self.frame_t)  # the turns while ours waits: the fight, if on screen
+            self.frame_t = bt
             if on:  # their fast moves keep landing while ours waits to start (2026-11-08: two went uncounted)
-                self.watch_hits(when - (self.t0 or when), bars)
+                self.fight_frame_t = bt
+                self.watch_hits(bt, bars)
             if screen.replace_prompt(rgb):  # ours fainted first: the loop answers the prompt
                 self.log("throw_fainted", self.now(), move=move.id)
                 return
@@ -1101,6 +1129,12 @@ class Player:
                                          zone=icon_zone(move.type), move_type=move.type, trace=trace,
                                          predicted=choreography(move.id), ready_at=since)
             self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace)
+        # From Get Ready! to here the fight was off the screen: off-screen time for the turns, and the fight must
+        # be seen three frames running again before it counts
+        now_t = self.now()
+        self.off_time += max(0.0, now_t - (self.frame_t if self.frame_t is not None else now_t))
+        self.frame_t = now_t
+        self.fight_frames = 0
 
     def on_shield_prompt(self, t: float, look) -> None:
         if self.prompt_answered and time.time() - self.prompt_seen > 1.5:
@@ -1118,6 +1152,7 @@ class Player:
             return
         self.prompt_answered = True
         self.pending_theirs = True
+        self.their_throw_at = time.time()
         view = self.view()
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
