@@ -191,6 +191,24 @@ def choreography(move_id: str) -> list:
     return [tuple(x) for x in json.loads(path.read_text(encoding="utf-8"))["icons"]]
 
 
+def first_icon_s(move_id: str) -> float:
+    """Seconds from Get Ready! to the first icons of a move's minigame (its learnt choreography; 1.0 if none)."""
+    return min((x[0] for x in choreography(move_id) if x[4] >= 0.5), default=1.0)
+
+
+def minigame_on(rgb, move) -> bool:
+    """A frame with the buttons hidden and the move's minigame icons on it: our minigame has begun. The game does not
+    always say Get Ready! first (2026-11-08: a Body Slam started 2.2 s after its tap with no Get Ready!, the header
+    and our bar stayed up, and it went unswiped while the player took it for not taken)."""
+    if move.type != "normal":
+        # Normal's detector matches the icon itself and found nothing else on the day's 16 Body Slams; the colour
+        # ones find icons in the fight (Ground's in the brown earth a second before Mud Bomb started, on a replay)
+        return False
+    if any(v["present"] for v in screen.buttons(rgb).values()):
+        return False
+    return bool(find_icons(rgb, icon_colour(move.type), move.type, icon_zone(move.type)))
+
+
 def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, colour=None, zone=None,
                     move_type: str = "", trace: list | None = None, predicted: list | None = None,
                     ready_at: float | None = None) -> int:
@@ -633,6 +651,14 @@ class Player:
         if "USED" not in text:
             return
         who, said = text.split("USED", 1)
+        mine = "".join(ch for ch in self.team[self.active].name.upper() if ch.isalpha())
+        theirs = "".join(ch for ch in (self.gd.species[self.tracker.foe.mon.build.species_id]["speciesName"].split(" (")[0]
+                                       if self.tracker.foe is not None else "").upper() if ch.isalpha())
+        named_mine = any(said.startswith(n) or (len(said) >= 5 and n.startswith(said)) for n in self.my_move_names)
+        if len(who) >= 4 and mine and mine != theirs and (who in mine or mine.endswith(who)) and named_mine:
+            # "VIGOROTH USED BODY SLAM": ours by the name, whenever it came (2026-11-08: a Body Slam whose start was
+            # missed was taken for Charizard's, and 40 came off Charizard's count)
+            return
         # Ours: one of our moves, read whole or in part, within 12 s of a throw of ours starting (2026-11-08:
         # "JELLICENTUSEDBUBBLEBEA" was taken for their Bubble, a fast move; and in a Stunfisk mirror their
         # "STUNFISK USED EARTHQUAKE" was taken for ours by the name and ignored).
@@ -1179,6 +1205,7 @@ class Player:
         # box at the top is read until one shows. Fight bars going missing is not enough (ours hides behind
         # Jellicent often).
         since, last, started = None, 0.0, False
+        icon_frames = 0  # frames in a row showing the minigame's icons
         while time.time() - tapped < 3.0:
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
@@ -1208,6 +1235,12 @@ class Player:
             if said == "mine":
                 since, started = when, True
                 break
+            if time.time() - tapped > 0.3:
+                icon_frames = icon_frames + 1 if minigame_on(rgb, move) else 0
+                if icon_frames >= 2:
+                    since, started = when - first_icon_s(move.id), True
+                    self.log("minigame_seen", self.now(), move=move.id, by="icons")
+                    break
             # A tap on the button is sometimes not taken although the move is paid for (2026-11-07: Bulldoze at
             # 57 energy of 55, Discharge at 49 of 40, both shown by the buttons): tap again while they say so.
             e = screen.my_energy(rgb, costs) if on else None  # only with the fight on the screen
@@ -1255,16 +1288,29 @@ class Player:
         e = self.energy()
         # A move still to go would have gone within a couple of seconds of the fight being back (since this watch
         # began) with it paid for.
-        back = self.fight_since is not None and t - max(self.fight_since, made) > 2.0
+        # back: the fight with its buttons up (in our minigame the header and our bar stay up, the buttons do not)
+        back = self.fight_since is not None and t - max(self.fight_since, made) > 2.0 and t - self.button_seen_t < 0.5
         if time.time() > deadline or back or (e is not None and self.energy_read[1] > tapped + 1.0 and e < move.energy - 5):
             self.log("queued_dropped", t, move=move.id, read=None if e is None else round(e, 1))
             self.queued = None
             return False
-        if fighting or time.time() - self.queued_checked < 0.2:
+        if time.time() - self.queued_checked < 0.2:
             return False
-        self.queued_checked = time.time()
-        if screen.cue(self.names.ocr, rgb) != "mine":
-            return False
+        if fighting:
+            # the minigame can start with the header and our bar up and no Get Ready!: its icons say so
+            if t - self.button_seen_t < 0.3:
+                return False
+            self.queued_checked = time.time()
+            self.queued_icons = getattr(self, "queued_icons", 0) + 1 if minigame_on(rgb, move) else 0
+            if self.queued_icons < 2:
+                return False
+            self.queued_icons = 0
+            when = when - first_icon_s(move.id)
+            self.log("minigame_seen", t, move=move.id, by="icons", queued=True)
+        else:
+            self.queued_checked = time.time()
+            if screen.cue(self.names.ocr, rgb) != "mine":
+                return False
         self.queued = None
         self.pending_mine = k
         self.my_throw_at = time.time()
