@@ -4357,3 +4357,7 @@ Diggersby / Clodsire / shadow Vigoroth 57.8% ± 3.9 (Diggersby XL), shadow Hound
 Jellicent / Clodsire / Stunfisk 56.2% (all regular, no XL), Clodsire / shadow Dusknoir / Piloswine 54.8%, Clodsire /
 shadow Sableye / shadow Vigoroth 54.8%; then Wigglytuff, Galarian Corsola, shadow Murkrow, Pachirisu, Gourgeist,
 Carbink thirds 46-52%. All the top five within margins of each other.
+
+**Jellicent's moves as caught** (2026-11-07, scratch moves_bb.py, same 600 battles as the moveset test): Bubble Beam
+for Surf -4.8 ± 4.5 (borderline); Bubble fast with Bubble Beam -8.8 ± 5.2. A Charged TM on Bubble Beam gives Surf or
+Ice Beam (Ice Beam with Shadow Ball -7.9 against defaults, so about 3 points below Bubble Beam).

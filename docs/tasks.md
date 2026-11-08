@@ -226,6 +226,8 @@ fitted opponent itself:** that is how `matching` looked good in simulation and r
 
 ## 40. The live loop on an Android phone from the PC — for the Claude agent on the owner's PC (the owner, 2026-11-04)
 
+**State (2026-11-07): ready to start.** The phone is connected to the owner's PC and the team is caught (below).
+
 **Why.** The bot's strategy has stopped improving in simulation (tasks 31, 35, 39), and the owner finds the website
 engine hard to beat; what is missing now is real games. The iPhone route (task 13: iPhone Mirroring on the Mac,
 `helper/phonectl.swift`, `pogo/phone.py`) passes taps, but synthetic drags are slow (about a second a stroke) and a press
@@ -247,10 +249,26 @@ Niantic's terms). Never the owner's main account.
 - Team Leader (training) battles before GO Battle League; GO Battle League only with the owner's yes.
 - Recordings and frames stay out of git (no large files); results go in small text files and `docs/status.md`.
 
-**The team.** Jellicent (Hex / Surf / Shadow Ball) and Clodsire (Poison Sting / Earthquake / Stone Edge), with Araquanid
-or Mandibuzz third: the owner's choice once caught, with the real IVs. All are in the bot's matchup table
-(`data/matchups.json`, 50 species; a Pokémon outside it counts every matchup as even, so do not swap in one that is
-not there without measuring). Put the alt team in its own file beside `data/owner_team.json`, never over it.
+**The team (the owner, 2026-11-07): Jellicent / Vigoroth / Stunfisk, Jellicent leads.** Jellicent (fast move as on
+the phone; Bubble Beam / Shadow Ball), Vigoroth (Scratch / Body Slam / Bulldoze), Stunfisk (Thunder Shock / Mud Bomb /
+Discharge), all regular moves, no XL candy. In simulation it is the best team built around Vigoroth (60.0% ± 3.9 v the
+mixed field, trained bot both sides; 54.8% with Vigoroth leading; `status.md`, "Third for Vigoroth / Jellicent").
+Bubble Beam for Surf costs -4.8 ± 4.5 and Bubble for Hex -4.0 more ("Movesets for ..."). Read each Pokémon's CP, moves
+and appraisal on the phone (reading screens is fine) and write them to `data/alt_team.json` in the format of
+`data/owner_team.json`, never over it. All three are in the bot's matchup table (`data/matchups.json`); a Pokémon
+outside it counts every matchup as even, so do not swap one in without measuring. The table assumes default moves.
+
+**The owner's yes (2026-11-07):** "it can go play games on that account i don't care" — the agent may play the second
+account itself, Team Leader battles and GO Battle League, without asking again at each step below. The order still
+holds: each step's checks pass and are written up before the next. If the owner is not around to play, step 3 (watch
+only) may be skipped: calibrate (step 2) from scrcpy's own recording (`scrcpy --record`) of a Team Leader battle in
+which only fast-move taps are sent, after the input check (step 4). What the agent may touch in the game: the battle
+menus (Battle, Training / Team Leaders, GO Battle League, party selection, the battle itself, the reward screens) and
+read-only Pokémon screens (info, appraisal). Never: the shop or coins, items, power-up, evolve, TMs, transfer, trade,
+gifts, friends, settings, sign-in or any password. Stop sending input, save the frame and write it down at anything
+unexpected (a dialog, a purchase screen, a logged-out screen, another app). Keep the action cap and dry run of
+`pogo.phone.Phone`. Log every game (both teams, each decision with its time, the minigame ratings, who won) under
+`runs/live/` as small text; frames and recordings stay out of git.
 
 **Steps.** Each one ends with its numbers in `docs/status.md`, and the next starts only with the owner's yes.
 
@@ -272,8 +290,9 @@ not there without measuring). Put the alt team in its own file beside `data/owne
 4. **Input check (the owner's yes).** On "Pointer location": taps, then `path` drags at minigame speed; measure the delay
    from sending to the touch showing.
 5. **The minigame (the owner's yes).** Record the owner's own swipes for each charged-move type on the team (`record`
-   listens and never acts): Water (Surf), Ghost (Shadow Ball), Ground (Earthquake), Rock (Stone Edge), plus the third's.
-   Ghost and Ground are not in the swipe library (`data/minigame/`) at all. Replay them in Team Leader battles and
+   listens and never acts): Water (Bubble Beam), Ghost (Shadow Ball), Normal (Body Slam), Ground (Bulldoze, Mud Bomb),
+   Electric (Discharge); if the owner is not around, try the library's swipes and their nearest types. Ghost and Ground
+   are not in the swipe library (`data/minigame/`) at all. Replay them in Team Leader battles and
    read the rating the game shows (Excellent, Great, Nice).
 6. **Whole battles against Team Leaders (the owner's yes),** the bot choosing and sending every touch; then the owner
    decides on GO Battle League.
