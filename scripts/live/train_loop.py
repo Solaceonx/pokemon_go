@@ -43,14 +43,28 @@ def game_in_front(adb: str, serial: str) -> bool:
     return "com.nianticlabs.pokemongo" in out
 
 
+def leader_row(im):
+    """The height of the Team Leaders' portraits on the Battle tab scrolled to the bottom, or None: their coloured
+    backs side by side (Blanche's light blue, Candela's pink, Spark's yellow). It moves with the cards above them
+    (2026-11-08: 1956 in the morning, 2046 by the afternoon, when the season card grew)."""
+    p = lambda x, y: im.getpixel((x, y))[:3]
+    for y in range(1850, 2200, 10):
+        b, c, s = p(210, y), p(470, y), p(870, y)
+        if b[2] > b[0] + 30 and c[0] > c[1] + 15 and c[0] > c[2] + 15 and s[2] < s[1] - 30 and s[0] > 200:
+            return y + 5
+    return None
+
+
 def leaders_in_place(im) -> bool:
     """Whether the three Team Leaders are where LEADERS taps them: the coloured backs of their portraits, beside each
     tap point, as on the Battle tab scrolled to the bottom (measured 2026-11-08: Blanche's light blue, Candela's pink,
     Spark's yellow). The Training card can show higher up when the tab is not scrolled all the way; then the taps
     land elsewhere (2026-11-08: they opened the Nearby Battle QR code)."""
-    p = lambda x, y: im.getpixel((x, y))[:3]
-    b, c, s = p(210, 1956), p(470, 1956), p(870, 1956)
-    return b[2] > b[0] + 30 and c[0] > c[1] + 15 and c[0] > c[2] + 15 and s[2] < s[1] - 30 and s[0] > 200
+    y = leader_row(im)
+    if y is not None:
+        for name, (x, _) in LEADERS.items():
+            LEADERS[name] = (x, y)  # where they are now
+    return y is not None
 
 
 def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
@@ -68,6 +82,8 @@ def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
             continue
         im = shot()
         p = lambda x, y: im.getpixel((x, y))
+        if is_teal(p(540, 140)) and leaders_in_place(im):
+            return True  # the Battle tab at the bottom, the leaders found wherever the cards above put them
         if is_white(p(100, 1780)) and is_teal(p(540, 140)):
             if leaders_in_place(im):
                 return True
