@@ -264,7 +264,8 @@ holds: each step's checks pass and are written up before the next. If the owner 
 only) may be skipped: calibrate (step 2) from scrcpy's own recording (`scrcpy --record`) of a Team Leader battle in
 which only fast-move taps are sent, after the input check (step 4). What the agent may touch in the game: the battle
 menus (Battle, Training / Team Leaders, GO Battle League, party selection, the battle itself, the reward screens) and
-read-only Pokémon screens (info, appraisal). Never: the shop or coins, items, power-up, evolve, TMs, transfer, trade,
+read-only Pokémon screens (info, appraisal), and reward encounters after a battle, caught with Ultra Balls only (the
+owner, 2026-11-07; out of Ultra Balls, stop and tell the owner). Never: the shop or coins, items, power-up, evolve, TMs, transfer, trade,
 gifts, friends, settings, sign-in or any password. Stop sending input, save the frame and write it down at anything
 unexpected (a dialog, a purchase screen, a logged-out screen, another app). Keep the action cap and dry run of
 `pogo.phone.Phone`. Log every game (both teams, each decision with its time, the minigame ratings, who won) under
