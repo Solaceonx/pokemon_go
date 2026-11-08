@@ -20,6 +20,9 @@ BALLS = {"mine": (29, 58, 88), "theirs": (452, 482, 511)}
 SHIELDS = {"mine": (128, 153), "theirs": (387, 413)}
 HEADER_PATCHES = ((195, 124), (340, 124))  # inside the two header boxes, clear of text and icons
 FOE_NAME = (395, 76, 536, 106)  # x0, y0, x1, y1: their Pokémon's name, right-aligned in their header box
+# Ours, left-aligned in our header box. In GO Battle League it is the species ("Jellicent": online battles hide
+# nicknames); against the Team Leaders it is the nickname (".gl1" on the owner's spare account).
+MY_NAME = (4, 76, 130, 106)
 LABELS = (30, 1118, 510, 1150)  # the move names under the two charged-move buttons
 SHIELD_ICON = (258, 998, 282, 1022)  # the pink shield in the middle of the shield prompt
 NOT_NOW_ROW = (1133, 1147, 200, 340)  # y0, y1, x0, x1 of "NOT NOW" under it
@@ -407,6 +410,7 @@ class NameReader:
         self.species = None  # the last name read, as a species id
         self.read_at = None  # time of the frame it was read from
         self.labels, self.labels_at = [], None  # the last button labels read
+        self.my_name, self.my_name_at = "", None  # the last name read in our header
         self._sig = None
         self._busy = False
         self._lock = threading.Lock()
@@ -434,6 +438,32 @@ class NameReader:
         finally:
             with self._lock:
                 self._busy = False
+
+    def offer_mine(self, a: np.ndarray, t: float) -> None:
+        """Our Pokémon's name in our header, read in the background when that part changes: self.my_name, as read,
+        and self.my_name_at, the time of the frame it was read from. Its own thread and flag, so it waits for
+        neither of the other readings (2026-11-08: the names under the buttons show only for moves paid for, and
+        after a wrong switch the player took Jellicent for Vigoroth for 40 s)."""
+        sx, sy = _scale(a)
+        x0, y0, x1, y1 = MY_NAME
+        crop = a[int(y0 * sy):int(y1 * sy), int(x0 * sx):int(x1 * sx)]
+        sig = crop[::3, ::3].astype(int)
+        with self._lock:
+            if getattr(self, "_mine_busy", False) or (getattr(self, "_mine_sig", None) is not None
+                                                      and np.abs(sig - self._mine_sig).mean() < 6):
+                return
+            self._mine_busy, self._mine_sig = True, sig
+
+        def read():
+            try:
+                res, _ = self.ocr(crop.copy())
+                words = " ".join(r[1] for r in (res or []) if not re.match(r"^\W*CP", r[1], re.I))
+                with self._lock:
+                    self.my_name, self.my_name_at = words, t
+            finally:
+                with self._lock:
+                    self._mine_busy = False
+        threading.Thread(target=read, daemon=True).start()
 
     def offer_labels(self, a: np.ndarray, t: float) -> None:
         """The names under our two charged-move buttons, which say which of our Pokémon is out (the header shows

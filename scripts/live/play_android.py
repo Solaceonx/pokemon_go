@@ -388,6 +388,7 @@ class Player:
         self.history = []  # recent header readings, for a majority
         self.fight_since = None  # since when the fight has been on screen without a break
         self.labels_checked = None
+        self.header_checked = None
         self.replacements = 0  # replacement prompts answered: our faints
         self.prompt_shield, self.prompt_tapped = False, 0.0  # the answer to the shield prompt up now, and when tapped
         self.prompt_first = 0.0
@@ -530,6 +531,7 @@ class Player:
                     self.prompt_answered = self.replaced = False
                 self.names.offer(rgb, t)
                 self.names.offer_labels(rgb, t)
+                self.names.offer_mine(rgb, t)
                 self.check_active(t)
                 if self.last_fight is not None and t - self.last_fight > 2.0 and self.pending_mine is None and not self.pending_theirs:
                     # the fight stood still with no prompt and no throw of ours: their charged move, with no shield of ours to offer
@@ -638,6 +640,15 @@ class Player:
                 self.log("tracker_error", t, error=str(error))
         self.their_hits.append(t)
 
+    def header_says(self):
+        """The team slot our header names (GO Battle League shows the species), or None."""
+        canon = lambda s: "".join(ch for ch in s.upper() if ch.isalpha())
+        read = canon(self.names.my_name or "")
+        if len(read) < 4:
+            return None
+        hits = [j for j, b in enumerate(self.team) if canon(b.name) in read or read in canon(b.name)]
+        return hits[0] if len(hits) == 1 else None
+
     def labels_say(self):
         """The team slot whose moves the last reading of the names under the buttons names (one alone), or None."""
         canon = lambda s: "".join(ch for ch in s.upper() if ch.isalpha())
@@ -650,10 +661,24 @@ class Player:
     def check_active(self, t: float) -> None:
         """Which of ours is out, from the move names under the buttons (our header shows nicknames). While a switch
         is being checked, check_switch reads them."""
-        at = self.names.labels_at
-        if at is None or at == self.labels_checked or self.switching is not None:
+        if self.switching is not None:
             return
-        self.labels_checked = at
+        # Our header first: it names the species in GO Battle League, at every look, paid for or not. Checked again
+        # whenever the belief changes too, not only on a new reading.
+        mine = self.header_says()
+        key = (self.names.my_name_at, self.active)
+        if mine is not None and key != self.header_checked:
+            self.header_checked = key
+            if mine != self.active:
+                self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
+                         header=self.names.my_name)
+                self.active = mine
+                self.energy_read = self._energy_raw = None
+            return
+        at = self.names.labels_at
+        if at is None or (at, self.active) == self.labels_checked:
+            return
+        self.labels_checked = (at, self.active)
         best = self.labels_say()
         if best is not None and best != self.active:
             self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[best].name, labels=self.names.labels)
@@ -683,10 +708,21 @@ class Player:
         fits = "new" if e_new is not None and e_old is None else "old" if e_old is not None and e_new is None else None
         self._switch_fits = (self._switch_fits + [fits])[-3:] if looked > 1 else [fits]
         said = self.labels_say() if (self.names.labels_at or -1) > tapped_t + 0.3 else None
+        header = self.header_says() if (self.names.my_name_at or -1) > tapped_t + 0.3 else None
         how = None
-        if said == slot:
+        if header == slot:
+            how = "header"
+        elif header is not None and header == self.active and (self.names.my_name_at or -1) > tapped_t + 1.5:
+            self.log("switch_not_taken", t, to=self.team[slot].name, by="header")
+            self.switching = None
+            if not self.switch_retried:
+                self.switch_retried, self.switch_wanted = True, slot
+            return
+        elif said == slot:
             how = "names"
-        elif self._switch_fits == ["new"] * 3 and time.time() - tapped > 0.3:
+        elif self._switch_fits == ["new"] * 3 and time.time() - tapped > 1.0 and header is None:
+            # the energy fitting the new one's costs is weaker evidence (2026-11-08: taken for a switch 0.7 s after
+            # a tap the game ignored): only after a second, and only with no header name to go by
             how = "buttons"
         if how is not None:
             self.log("switch_seen", t, to=self.team[slot].name, after_tap_s=round(time.time() - tapped, 2), by=how)

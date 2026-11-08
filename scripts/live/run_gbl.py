@@ -38,6 +38,7 @@ class Runner:
         from rapidocr_onnxruntime import RapidOCR
         self.ocr = RapidOCR()
         self.wins = self.losses = self.battles = 0
+        self.last_why, self.same = None, 0  # the last menu tap, and how many times running
 
     def shot(self) -> np.ndarray:
         from PIL import Image
@@ -64,6 +65,12 @@ class Runner:
                                capture_output=True, text=True).stdout
         if "com.nianticlabs.pokemongo" not in focus:  # never a tap outside the game (it can crash to the home screen)
             raise RuntimeError(f"refused to tap {why}: Pokémon GO is not the app in front")
+        self.same = self.same + 1 if why == self.last_why else 1
+        self.last_why = why
+        if self.same > 4:
+            # the same tap five times running with no change: the button does nothing (2026-11-08: BATTLE greyed
+            # out once a set's five battles were played, tapped 150 times)
+            raise RuntimeError(f"tapped {why} five times running with nothing changing")
         h, w = 2400, 1080
         subprocess.run([self.adb, "-s", self.serial, "shell", "input", "tap", str(int(point[0] * w)), str(int(point[1] * h))])
         self.log("menu_tap", why=why, point=point)
@@ -86,6 +93,7 @@ class Runner:
         if start_tap:
             cmd += ["--start-tap", *map(str, start_tap)]
         self.log("battle_start", start_tap=start_tap)
+        self.last_why, self.same = None, 0
         done = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), None)
         result = json.loads(line)["result"] if line else None
@@ -173,7 +181,10 @@ def main() -> None:
         print(kind, json.dumps(data, default=str)[:200], flush=True)
 
     runner = Runner(a.serial, media, a.wins, a.max_battles, log)
-    why = runner.run()
+    try:
+        why = runner.run()
+    except RuntimeError as error:  # a refused tap: stop touching anything
+        why = f"stopped: {error}"
     log("done", why=why, wins=runner.wins, losses=runner.losses, battles=runner.battles)
 
 
