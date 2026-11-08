@@ -408,6 +408,39 @@ def read(a: np.ndarray, t: float) -> Look:
     return look
 
 
+# The type icons in each header's top corner (their Pokémon's on the right, right-aligned; ours on the left), and the
+# game's type colours: measured on this phone (2026-11-08) for fire, rock, ground, electric, water, psychic, ice,
+# ghost and normal within 10 of these, and the sky behind an empty slot 60 or more from all of them.
+TYPE_COLOURS = {"normal": (160, 162, 159), "fire": (251, 165, 76), "water": (83, 157, 223), "electric": (242, 217, 78),
+                "grass": (95, 189, 88), "ice": (117, 208, 193), "fighting": (211, 66, 95), "poison": (183, 99, 207),
+                "ground": (218, 124, 77), "flying": (161, 187, 236), "psychic": (250, 133, 129), "bug": (146, 188, 44),
+                "rock": (201, 187, 138), "ghost": (95, 109, 188), "dragon": (12, 105, 200), "dark": (89, 87, 97),
+                "steel": (86, 149, 163), "fairy": (238, 144, 230)}
+TYPE_SLOTS = {"theirs": (0.957, 0.902), "mine": (0.043, 0.098)}  # first type's slot, then the second's
+TYPE_Y = 0.0425
+
+
+def header_types(a: np.ndarray, side: str = "theirs") -> list:
+    """The types the header's icons show for that side's Pokémon (one or two), [] if none can be told."""
+    h, w = a.shape[:2]
+    r = max(3, int(0.016 * w))
+    yy, xx = np.mgrid[-r:r + 1, -r:r + 1]
+    disc = (xx ** 2 + yy ** 2) <= r * r
+    out = []
+    for cx in TYPE_SLOTS[side]:
+        x, y = int(cx * w), int(TYPE_Y * h)
+        px = a[y - r:y + r + 1, x - r:x + r + 1][disc].astype(float)
+        px = px[px.min(1) < 200]  # not the white symbol
+        if len(px) < 10:
+            break
+        col = np.median(px, 0)
+        name, d = min(((k, float(np.abs(col - np.array(v)).max())) for k, v in TYPE_COLOURS.items()), key=lambda x: x[1])
+        if d > 30:
+            break
+        out.append(name)
+    return out
+
+
 def species_lookup(gd) -> dict:
     """Screen names ("Plusle", "Mega Venusaur") to species ids. Where forms share a name, the one in the Great League
     rankings, the regular form before regional ones: 2026-11-08, "Darmanitan" was taken for Galarian Zen Darmanitan
@@ -428,13 +461,31 @@ def species_lookup(gd) -> dict:
             for name, sids in forms.items()}
 
 
+def form_by_types(gd, sid: str, types: list) -> str:
+    """Of the forms sharing sid's screen name, the one whose types are those the header's icons show (2026-11-08:
+    Hisuian Arcanine, fire and rock, was taken for the regular one until it threw Rock Slide, 130 s in; the icons
+    showed both types from the first second). sid itself when the icons tell nothing new."""
+    if not types:
+        return sid
+    name = re.sub(r" \(.*\)$", "", gd.species[sid]["speciesName"])
+    ranked = {e["speciesId"] for e in gd.rankings(1500)}
+    same = [x for x, p in gd.species.items() if re.sub(r" \(.*\)$", "", p["speciesName"]) == name
+            and not x.endswith("_shadow") and "(Shadow)" not in p["speciesName"]]
+    fits = [x for x in same if {t for t in gd.species[x]["types"] if t != "none"} == set(types)]
+    if sid in fits or not fits:
+        return sid
+    return min(fits, key=lambda x: (x not in ranked, same.index(x)))
+
+
 class NameReader:
     """Reads their Pokémon's name in a background thread when that part of the header changes."""
 
     def __init__(self, gd):
         from rapidocr_onnxruntime import RapidOCR
         self.ocr = RapidOCR()
+        self.gd = gd
         self.names = species_lookup(gd)
+        self.types = []  # their Pokémon's types as the header's icons last showed
         self.species = None  # the last name read, as a species id
         self.read_at = None  # time of the frame it was read from
         self.labels, self.labels_at = [], None  # the last button labels read
@@ -452,14 +503,18 @@ class NameReader:
             if self._busy or (self._sig is not None and np.abs(sig - self._sig).mean() < 6):
                 return
             self._busy, self._sig = True, sig
-        threading.Thread(target=self._read, args=(crop.copy(), t), daemon=True).start()
+        types = header_types(a, "theirs")
+        threading.Thread(target=self._read, args=(crop.copy(), t, types), daemon=True).start()
 
-    def _read(self, crop: np.ndarray, t: float) -> None:
+    def _read(self, crop: np.ndarray, t: float, types: list | None = None) -> None:
         try:
             res, _ = self.ocr(crop)
             words = [r[1] for r in (res or []) if not re.match(r"^\W*CP", r[1], re.I)]
             text = " ".join(words).strip()
             sid = self.match(text)
+            if sid and types:
+                sid = form_by_types(self.gd, sid, types)
+                self.types = types
             if sid:
                 with self._lock:
                     self.species, self.read_at = sid, t

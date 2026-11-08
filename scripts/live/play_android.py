@@ -973,7 +973,9 @@ class Player:
             recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
             hp_share = recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
             affordable = [k for k, m in enumerate(mon.charged) if have >= m.energy]
-            if hp_share < 0.35 and affordable:
+            if hp_share < 0.35 and affordable and self.better_soon(t, view, mon, have, affordable, hp_share):
+                pass  # the engine decides: a far better move is a few fast moves away and we live to throw it
+            elif hp_share < 0.35 and affordable:
                 from pogo.battle import damage
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 self.decision = CHARGED[0] + k
@@ -1038,6 +1040,35 @@ class Player:
                 self.decision = FAST
                 return
         # fast moves: the tapping thread, while self.tapping
+
+    def better_soon(self, t: float, view, mon, have: float, affordable: list, hp_share: float) -> bool:
+        """Low on health with a move paid for: is a far better move (a knock-out, or 2.5 times the damage) only a few
+        of our fast moves away, with their fast moves (one more for safety) leaving us alive till then, and no charged
+        move of theirs paid for now while we have no shield? The owner, 2026-11-08: "we should have thrown bulldoze
+        into the arcanine" (Vigoroth at 20% threw Body Slam, 38 damage and resisted, into Hisuian Arcanine; Bulldoze,
+        five Scratches away, did 156 to its 129, and Snarl takes 3% a hit)."""
+        from pogo.battle import damage
+        foe = self.tracker.foe
+        if foe is None:
+            return False
+        them, us = foe.mon, view.me.mon
+        now = max(damage(us, mon.charged[j], them) for j in affordable)
+        hp = hp_share * us.build.hp
+        if view.me.shields == 0 and any(foe.hi >= m.energy and damage(them, m, us) >= hp for m in them.build.charged):
+            return False  # they can knock us out with a charged move as it stands: throw ours first
+        hit = damage(them, them.build.fast, us)
+        for j, m in enumerate(mon.charged):
+            if j in affordable:
+                continue
+            more = math.ceil(max(0.0, m.energy - have) / mon.fast.energy_gain)
+            turns = more * mon.fast.turns
+            hits = math.ceil(turns / them.build.fast.turns) + 1
+            big = damage(us, m, them)
+            if (big >= them.hp or big >= 2.5 * now) and hits * hit < hp:
+                self.log("waiting_for_better", t, move=m.id, now=now, then=big, fast_moves=more, their_hits=hits,
+                         hp=round(hp, 1))
+                return True
+        return False
 
     @contextlib.contextmanager
     def engine_sees(self):
