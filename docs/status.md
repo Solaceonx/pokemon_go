@@ -4361,3 +4361,14 @@ Carbink thirds 46-52%. All the top five within margins of each other.
 **Jellicent's moves as caught** (2026-11-07, scratch moves_bb.py, same 600 battles as the moveset test): Bubble Beam
 for Surf -4.8 ± 4.5 (borderline); Bubble fast with Bubble Beam -8.8 ± 5.2. A Charged TM on Bubble Beam gives Surf or
 Ice Beam (Ice Beam with Shadow Ball -7.9 against defaults, so about 3 points below Bubble Beam).
+
+**Best team per league with every Pokémon allowed** (2026-11-07, the owner's question; scratch leagues/leagues.py;
+PvPoke's Ultra and Master rankings fetched 2026-11-06, not in git). Great League from the wide search above: Diggersby /
+Mimikyu / shadow Charjabug (66.8% ± 2.9 v the mixed field, 66.1% v the nine players' teams), the players' Mimikyu /
+Morpeko / Jumpluff 70.8% v those teams. Ultra and Master: PvPoke's top 60 (no megas; Master at level 50, 15/15/15),
+one-on-ones at 0/1/2 shields, a field of random threes from the top 50 weighted toward the top, all teams prescreened
+on coverage, the 40 best with each lead 100 battles, the best 8 line-ups 1,000 fresh battles, trained bot both sides
+(trained on Great League only). Ultra: Melmetal / Mimikyu / Forretress 73.7% ± 2.7 (the same three with Forretress or
+Mimikyu leading 73.4%, 71.9%); Blastoise / Mimikyu / Forretress 65.5%; Forretress / Tinkaton / Cramorant 65.0%. Master:
+Xerneas / Keldeo (resolute) / Yveltal 72.8% ± 2.7; Xerneas / Lunala / Yveltal 70.8%; White Kyurem / Origin Palkia /
+Xerneas 70.7%; Origin Palkia / Xerneas / Yveltal 69.0%. A synthetic field, not real usage; a lead, not a verdict.
