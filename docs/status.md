@@ -4417,3 +4417,10 @@ weak, so the gap to the odds is reading and tapping, not strategy; Bubble Beam f
 PvPoke's top 100, and those 13 went 9 won, about the day's rate (6 of 8 with two outside). They cost the reading, not
 the play: forms (Hisuian Arcanine, Galarian Stunfisk and Rapidash), a species with no ranking (Darmanitan) and fast
 moves other than PvPoke's (Fire Fang counted as Snarl) are what threw the tracker's energy counts off.
+
+Melmetal in place of one of the day's team (asked 2026-11-08; trained bot both sides, PvPoke default IVs, 1,200
+battles a team against the mixed field and 1,200 against random threes from PvPoke's ranks 101 to 400, the same
+opponents for every team). The day's team: 55.2% and 66.0% (± 2.8). Melmetal with Double Iron Bash (an Elite TM) and
+Dynamic Punch leading in Jellicent's place: 57.1% and 73.2%, the same against the meta and 7 points better against
+off-meta teams; in Stunfisk's or Vigoroth's place it is 5 to 6 points worse against the meta. Without Double Iron
+Bash (Dynamic Punch and Rock Slide) it is worse in every place: 39 to 46% and 61 to 65%.
