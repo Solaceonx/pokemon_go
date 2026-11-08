@@ -20,4 +20,5 @@ python3 scripts/live/live_record.py 20261108-105348
 ```
 
 The recordings (`battle-<STAMP>.h264` and `.mp4` with `.times`, and the minigame frames) are on the owner's PC, not
-in git: about 9 GB.
+in git: about 9 GB. The bot's own code (`scripts/live/`, `pogo/android*.py`) and the tools named in
+`docs/live_battles_2026-11-08.md` are on the `task40-android` branch.
