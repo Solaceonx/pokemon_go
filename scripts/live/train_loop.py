@@ -112,6 +112,7 @@ def main() -> None:
     ap.add_argument("--leaders", nargs="+", default=["spark", "candela", "blanche"])
     ap.add_argument("--media", default=r"C:\pogo-media\live")
     ap.add_argument("--team", default=str(ROOT / "data" / "alt_team.json"), help="the party's team file (play_android)")
+    ap.add_argument("--party", type=int, default=0, help="which saved party: swipes left on the party screen first")
     a = ap.parse_args()
     adb, _ = _tools(None)
     media = Path(a.media) / (time.strftime("%Y%m%d") + "-training")
@@ -142,6 +143,11 @@ def main() -> None:
         tap(LEADERS[leader]); time.sleep(2.2)
         tap(LEADER_BATTLE); time.sleep(2.2)
         tap(GREAT_LEAGUE); time.sleep(2.6)
+        for _ in range(a.party):  # the parties are side by side on the party screen: the next one is to the right
+            if not game_in_front(adb, a.serial):
+                raise SystemExit(1)
+            subprocess.run([adb, "-s", a.serial, "shell", "input", "swipe", "900", "1700", "180", "1700", "400"])
+            time.sleep(1.5)
         im, (r, g, b) = pixel(*USE_PARTY)
         if not (g > 180 and r < 150):  # not the party screen: stop rather than tap blind
             path = media / f"stopped-{time.strftime('%H%M%S')}.png"
