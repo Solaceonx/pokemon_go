@@ -88,6 +88,35 @@ def icon_zone(move_type: str):
     return (0.5, 0.62), (0.35, 0.18)
 
 
+# Where each type's icons come up on this phone, as a box to sweep (x0, x1, y0, y1, shares of the screen): the 2nd to
+# 98th percentile of the icons found on 14 recorded minigames of each move (2026-11-08), a little wider. Normal's grey
+# icons are found by their white ring symbol (scratch normal_det.py), most of them only on the dark background.
+SWEEP_BOX = {"normal": (0.08, 0.93, 0.52, 0.90), "ground": (0.05, 0.95, 0.54, 0.90),
+             "electric": (0.17, 0.83, 0.43, 0.74), "ghost": (0.08, 0.95, 0.40, 0.86),
+             "water": (0.05, 0.98, 0.27, 0.90)}
+SWEEP_ONLY = {"normal"}  # types whose icons the detector finds too seldom to chase: the sweep alone
+
+
+def sweep_path(box, spacing: float = 0.09) -> list:
+    """A back-and-forth raster over the box: rows `spacing` apart (shares of the height; an icon is 0.085 of the
+    width or more across in radius, about 0.04 of the height, so nothing fits between two rows), down and back up.
+    Waypoints (x, y), to be followed round and round."""
+    x0, x1, y0, y1 = box
+    rows = max(2, int(round((y1 - y0) / spacing)) + 1)
+    ys = [y0 + (y1 - y0) * k / (rows - 1) for k in range(rows)]
+    down = []
+    for k, y in enumerate(ys):
+        down += [(x0, y), (x1, y)] if k % 2 == 0 else [(x1, y), (x0, y)]
+    return down + down[::-1][1:-1]
+
+
+def sweep_box(move_type: str, zone) -> tuple:
+    if move_type in SWEEP_BOX:
+        return SWEEP_BOX[move_type]
+    (cx, cy), (spx, spy) = zone
+    return (max(0.03, cx - 2 * spx), min(0.98, cx + 2 * spx), max(0.25, cy - 2 * spy), min(0.90, cy + 2 * spy))
+
+
 COLOUR_BLOBS = {"ground"}  # types whose colour nothing else on screen shares: blobs of it count as icons too
 
 
@@ -144,8 +173,18 @@ def ring_matches(rgb, x: float, y: float, r: float, colour, tolerance: float = 6
     return float(np.abs(med - np.array(colour)).mean()) < tolerance
 
 
+def choreography(move_id: str) -> list:
+    """The icons a move's minigame is known to show, (t0, t1, x, y, share): seconds after Get Ready!, where, and in
+    what share of the recorded minigames (scripts/live/learn_choreography.py, data/minigame/android/<move>.json)."""
+    path = ROOT / "data" / "minigame" / "android" / f"{move_id.lower()}.json"
+    if not path.exists():
+        return []
+    return [tuple(x) for x in json.loads(path.read_text(encoding="utf-8"))["icons"]]
+
+
 def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, colour=None, zone=None,
-                    move_type: str = "") -> int:
+                    move_type: str = "", trace: list | None = None, predicted: list | None = None,
+                    ready_at: float | None = None) -> int:
     """The charged-move minigame as one unbroken touch: visit the icons found on the newest frame every 50 ms
     nearest first (by their round outline and the type's colour, find_icons), leaving out those the finger has just
     been over, and while none is left sweep a figure of eight over the zone the type's icons come up in (Water's at the upper
@@ -154,8 +193,12 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     from pogo import minigame
     from pogo.android import DOWN, MOVE, UP
     (cx, cy), (spx, spy) = zone or ((0.5, 0.62), (0.35, 0.18))
-    ax, ay = min(0.45, max(0.15, 1.3 * spx)), min(0.30, max(0.08, 1.3 * spy))
-    x, y = cx, cy
+    # With no icon to chase, the finger sweeps the box the type's icons come up in, row by row (the owner,
+    # 2026-11-08: a fixed pattern rather than relearning each time; the figure of eight it replaces went over one
+    # curve again and again, and Body Slam rated Great twice).
+    route = sweep_path(sweep_box(move_type, zone or ((cx, cy), (spx, spy))))
+    leg = 0
+    x, y = route[0]
     phone._send(DOWN, x, y)
     start = last_seen = time.perf_counter()
     chased, step = 0, 0.010
@@ -165,6 +208,11 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     pending: list = []
     trail = collections.deque()
     passed = 0.06  # the finger within this of an icon's centre (shares of the width; icons' radius is 0.085 or more)
+    # The move's known choreography: icons predicted where and when they have come up in most recorded minigames,
+    # each visited once, as if seen (the only icons for a type the detector seldom finds, Normal).
+    predicted = list(predicted or [])
+    done: set = set()
+    wall0 = time.time()
     while (now := time.perf_counter()) - start < seconds:
         if now - last_seen >= 0.05:
             last_seen = now
@@ -176,7 +224,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 # Anywhere on screen: a round disc of icon size whose ring is the type's colour (grey for Normal).
                 # Water's icons stream right across the screen, over Jellicent's body, which is the same blue but
                 # not a disc of that size; Ghost's sit on a Jellicent dark with smoke.
-                icons = find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
+                icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
@@ -185,15 +233,23 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 been = np.array([(px, py) for _, px, py in trail])
                 icons = [p for p in icons
                          if np.min(np.hypot(been[:, 0] - p[0], (been[:, 1] - p[1]) * 2.2)) > passed]
+            if predicted and ready_at is not None and not icons:
+                # only when none is seen: the icons the detector finds are chased first (all Excellent for the types
+                # it finds well), the predicted ones stand in for them, and the sweep for both
+                u = wall0 + (now - start) - ready_at  # seconds since Get Ready!
+                icons = [(px, py, k) for k, (a, b, px, py, _) in enumerate(predicted) if a <= u <= b and k not in done]
             if icons:
                 pending = icons
                 chased += 1
         # reached: Water's icons drift, so go to the centre seen rather than stop at its edge
+        for p_ in pending:
+            if len(p_) == 3 and math.hypot(p_[0] - x, (p_[1] - y) * 2.2) <= 0.02:
+                done.add(p_[2])  # a predicted icon visited
         pending = [p for p in pending if math.hypot(p[0] - x, (p[1] - y) * 2.2) > 0.02]
         target = min(pending, key=lambda p: math.hypot(p[0] - x, (p[1] - y) * 2.2)) if pending else None
-        u = now - start
-        goal = target or (min(0.99, max(0.03, cx + ax * math.sin(2 * math.pi * u / 0.9))),
-                          min(0.88, max(0.15, cy + ay * math.sin(2 * math.pi * u / 0.45))))
+        if target is None and math.hypot(route[leg][0] - x, (route[leg][1] - y) * 2.2) < 0.01:
+            leg = (leg + 1) % len(route)  # this waypoint of the sweep reached: on to the next
+        goal = target[:2] if target else route[leg]
         dx, dy = goal[0] - x, goal[1] - y
         dist = math.hypot(dx, dy * 2.2)  # the screen is 2.2 times taller than wide
         move = speed * step
@@ -203,10 +259,14 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
             x, y = goal
             if target is not None:
                 pending.remove(target)
+                if len(target) == 3:
+                    done.add(target[2])
         sx, sy = min(0.995, max(0.02, x)), min(0.90, max(0.15, y))
         if sy < 0.32:  # never near the run button at the top left (it forfeits): pogo.controls.KEEP_OUT, with room
             sx = max(sx, 0.22)
         trail.append((now, sx, sy))
+        if trace is not None and (not trace or now - start - trace[-1][0] >= 0.05):
+            trace.append((round(now - start, 2), round(sx, 3), round(sy, 3), int(target is not None)))
         controls.Gesture("tap", [(sx, sy)], 0, "minigame stroke").check()
         phone._send(MOVE, sx, sy)
         time.sleep(step)
@@ -957,9 +1017,12 @@ class Player:
             threading.Thread(target=keep, daemon=True).start()
         if self.live:
             with self.touch_lock:  # a fast tap under way ends first; none starts during the stroke
-                hunted = minigame_stroke(self.phone, seconds=path[-1][0] + 0.6, colour=icon_colour(move.type),
-                                         zone=icon_zone(move.type), move_type=move.type)
-            self.log("minigame", self.now(), move=move.id, icons_seen=hunted)
+                trace = []
+                # to 6.6 s after Get Ready! (icons show until 6.25 s; the rating is final by 6.8 s)
+                hunted = minigame_stroke(self.phone, seconds=path[-1][0] + 0.9, colour=icon_colour(move.type),
+                                         zone=icon_zone(move.type), move_type=move.type, trace=trace,
+                                         predicted=choreography(move.id), ready_at=since)
+            self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace)
 
     def on_shield_prompt(self, t: float, look) -> None:
         if self.prompt_answered and time.time() - self.prompt_seen > 1.5:
