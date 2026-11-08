@@ -4599,3 +4599,91 @@ account"). A new checker, run on each battle's recording (the scratch `fastcount
   Cutter), it throws Mud Bomb; at 91.5 and 93.2 s it throws Mud Bomb with Stunfisk's true 49 to 58 (live: lowered to
   39 by the dim names). Both are what the fixes above change.
 - Training since the fixes: 6 of 6 won.
+
+**GO Battle League through the night, the owner asleep (2026-11-08, from 05:30 on the phone's clock).** The owner:
+"you can do all available battles for the rest of the day provided you thoroughly analyze what's going wrong every
+time you lose, and run it against the engine too". Battles 4 to 10 of the day:
+
+| # | Result | Their team | Minigames Excellent | What the analysis found |
+|---|---|---|---|---|
+| 4 | loss | Galarian Stunfisk, Oinkologne | 4 of 6 | a Stunfisk mirror; see below |
+| 5 | win | Corviknight, Toxtricity, Cinderace | 7 of 7 | |
+| 6 | win | Suicune, Liepard, Froslass | 6 of 6 | the first Body Slam rated Excellent |
+| 7 | win | Hypno, Obstagoon, Altaria | 6 of 8 | after an unprompted faint, Jellicent was taken for Vigoroth for 30 s |
+| 8 | win | Throh, Snorlax, Timburr | 4 of 4 | |
+| 9 | win | Greedent, Vaporeon, Toxtricity | 8 of 8 | |
+
+The day so far: 7 wins and 3 losses in 10 GO Battle League battles, 5 wins in a row at the end. The tenth start found
+the set's five battles played (BATTLE greyed out).
+
+**Battle 4 (lost), each fault found on the recording, fixed and checked by replaying it:**
+- **Galarian Stunfisk shows as "Stunfisk".** The tracker built the regular one (Thunder Shock, Discharge), and the
+  "used" words ("STUNFISK USED EARTHQUAKE") were taken for our own Stunfisk's and ignored. Now:
+  - a charged move that only a regional form can have turns the tracker to that form (`Tracker._other_form`; on
+    the replay "stunfisk" became "stunfisk_galarian" at its first Earthquake);
+  - "used" words count as ours only within 12 s of our own throw starting;
+  - a move's name read after its prompt was already counted still teaches the move and form
+    (`Tracker.their_move_named`).
+- **The engine failed with "3 is not in list".** A fainted Stunfisk of theirs was still counted in the header's
+  "3 left", so the engine imagined a fourth opposing Pokémon, and a switch choice then failed on slot 3. Caught by
+  replaying the looks through the engine (`resim.py`). The imagined team is now capped at three (`pogo/engine.py`).
+- **The replacement prompt picked Jellicent, not Stunfisk.** Bulldoze was tapped just as Vigoroth fainted. Jellicent's
+  portrait on the prompt sits over the Bulldoze button, and our tap 90 ms later was dropped. A charged tap is now
+  cancelled when a prompt is on the frame just before it.
+- **Our last Pokémon sent in unasked.** With one left, the game sends it in without a prompt. The player, still taking
+  Jellicent for out, tapped "Bubble Beam" on Stunfisk's Mud Bomb button and hunted Water icons (Nice). Our header's
+  ball count now says so.
+- **Training-to-league navigation.** The runner scrolls the Battle tab back up to the league card. It leaves rewards
+  uncollected while BATTLE still works, and stops after five identical taps (BATTLE greyed out at 5/5 was tapped 150
+  times before this).
+
+**Battle 7: who of ours is out, from our header.** In GO Battle League our header names the species (online battles
+hide nicknames; against the Team Leaders it shows the owner's nicknames, ".gl1"). It is now read in the background
+at every change (`NameReader.offer_mine`). It confirms switches and corrects the player's belief within a reading.
+The names under the buttons, the old way, show only for moves paid for, so a low-energy Pokémon went unchecked for
+40 s. On battle 7's replay, the header caught Vigoroth fainting to Moonblast and Jellicent coming in unasked, 30 s
+before the live player did. Readings count only when newer than the last change of belief, and are taken afresh
+after one; without that, old names read before a switch flipped the belief back for a moment (battle 9).
+
+**Minigames: the fixed pattern** (the owner asked for one after Body Slam rated Great):
+- The figure of eight retraced one curve. It is replaced by a back-and-forth sweep of the box each type's icons come
+  up in on this phone (measured on 14 or more recorded minigames per move).
+- The icons follow much the same choreography every time. Body Slam: the right side at 1 s, the middle at 2.5 to
+  3 s, the left at 4 s, the bottom left at 4.5 to 5 s. `scripts/live/learn_choreography.py` learns where and when
+  from recorded minigames (`data/minigame/android/`), and the stroke visits predicted icons when it sees none.
+  - Scored on held-out minigames, the learnt path passes over 72 to 74% of Body Slam's icon sightings against 54%
+    for the sweep alone, and Mud Bomb 81% against 63%.
+- Normal's grey icons were invisible to the colour detector (outlines and grey rings matched Vigoroth's white fur
+  everywhere). They are now found by their white ring symbol in a grey disc (`scripts/live/normal_icons.py`, 23 ms
+  a half-size frame) and chased.
+- Body Slam since then: 6 of 7 Excellent (before: Great in both of the day's first two).
+- The stroke now runs to 6.6 s after Get Ready! (icons show until 6.25 s), and its path is logged.
+- The two other non-Excellent ratings were the wrong type hunted after a wrong belief about who was out (fixed
+  above), not the swipe.
+
+**Stopped at the set's rewards.** To start a new set every reward has to be collected, and this set's include a
+Pokémon encounter (3 wins). Encounters are the owner's call: the Stardust and the Rare Candies were collected, the
+encounter was not. `docs/tasks.md` on main says encounters may be caught with Ultra Balls only (the owner,
+2026-11-07). That was written in another session, so it is left for the owner to confirm in chat.
+
+**Their energy, judged by their own throws** (`scripts/live/throw_check.py`). When the screen names a charged
+move of theirs, they had at least its cost. So the tracker's range just before it should reach the cost:
+- **Counting only the hits seen** (the morning's change) fell short at all 17 named throws of battles 4 to 9. A
+  resisted fast move takes a pixel or less off our bar, so it is never seen: Vaporeon's Water Gun on Jellicent was
+  counted at 0, and it threw Liquidation (45) twice.
+- **The rhythm** (a fast move every so many turns while out) fell short at 10 of 17. Its turns were lost to short
+  gaps taken for a standstill, and to the 10 s taken off for each charged move, although the fight is off the
+  screen for less on this phone.
+- **Now:**
+  - the rhythm, kept in step by the hits seen;
+  - the turns are the time the fight was on the screen, measured frame by frame (the throw's wait and the minigame
+    included);
+  - a new Pokémon of theirs is counted from when its name first showed;
+  - each throw is counted once, whichever sign comes first (the "used" words came after the pause, and each of
+    Altaria's Moonblasts was taken off twice);
+  - an unannounced throw needs a pause of 4 s or more: today's were 7.1 to 8.2 s, and a switch of theirs, 2 to
+    3 s, had been taken for one (Greedent to Vaporeon).
+- **On replays of four battles, scored at the moment the tracker takes the throw off:** short at 3 of 11 named
+  throws, each by one or two fast moves (Vaporeon 42 and 39 for a 45), against 10 of 16 for the live count. Four
+  were over the cost by more than 30 (100 for Sky Attack's 50), which a player holding energy also gives.
+- Three Team Leader battles with the new count: 3 wins, no errors, 18 of 18 minigames Excellent.
