@@ -394,6 +394,10 @@ class Player:
         # A throw the engine wants once the fast moves under way and queued have paid for it: (button, give up at).
         # The fast taps stop meanwhile, so none is queued behind them, and the move is tapped as its button lights.
         self.armed = None
+        self.decided_for = 0  # which of ours was out when the engine last decided
+        # our bar's last readings on fight frames, (time, share): the low-health rule goes by their median, not one
+        # frame (2026-11-08: mid-switch our bar read 0.7% for a frame, at 54%, and a throw was tapped on it)
+        self.my_bar_seen = collections.deque(maxlen=12)
         self.last_fast_tap = 0.0
         self.switch_ready_at = 0.0
         self.my_left_seen, self.foe_left_seen = 3, 3
@@ -546,6 +550,8 @@ class Player:
                 and time.time() >= self.hold_taps_until and self.armed is None
             if fighting:
                 self.watch_hits(t, look.bars)
+                if "mine" in look.bars:
+                    self.my_bar_seen.append((t, look.bars["mine"]))
                 if self.switching is not None:
                     self.check_switch(t, rgb)
                 self.read_energy(rgb, when)
@@ -919,6 +925,7 @@ class Player:
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 self.decision = FAST
+            self.decided_for = self.active
             self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000))
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
@@ -926,6 +933,11 @@ class Player:
             if self.decision == FAST and self.armed is None and self.switching is None and self.switch_wanted is None:
                 self.look_ahead(t, view)
         mon = self.team[self.active]
+        if self.decision != FAST and self.decided_for != self.active:
+            # decided for the one that was out (2026-11-08: Shadow Ball chosen for Jellicent, the switch to
+            # Stunfisk seen 0.2 s later, and Stunfisk's Discharge tapped with no energy)
+            self.log("decision_dropped", t, was=self.name(self.decision), why="active changed")
+            self.decision, self.armed = FAST, None
         if self.armed is not None:
             k, until = self.armed
             if time.time() > until or self.switching is not None:
@@ -951,13 +963,15 @@ class Player:
         if view is not None and (self.decision == FAST or self.armed is not None):
             # Never faint with a charged move in hand (the owner, 2026-11-07): when our health is low and a move is
             # paid for, throw the hardest-hitting one now, whatever the engine planned.
-            hp_share = look.bars.get("mine", view.me.mon.hp / view.me.mon.build.hp)
+            recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
+            hp_share = recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
             affordable = [k for k, m in enumerate(mon.charged) if have >= m.energy]
             if hp_share < 0.35 and affordable:
                 from pogo.battle import damage
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 self.decision = CHARGED[0] + k
                 self.armed = None
+                self.decided_for = self.active
                 self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share)
             elif affordable and view.me.shields == 0 and self.tracker.foe is not None:
                 # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
@@ -971,6 +985,7 @@ class Player:
                     k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                     self.decision = CHARGED[0] + k
                     self.armed = None
+                    self.decided_for = self.active
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
