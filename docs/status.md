@@ -4413,4 +4413,7 @@ energy unread) or, for Dachsbun, their energy undercounted. The other 2 were clo
 Melmetal 52, Alolan Raichu / Mandibuzz / Hoopa 46), and one win came at 40 (Goodra / Umbreon / Espeon). The 3 losses
 with two of theirs seen came from the first night's faults, since fixed. At this rating the opponents' teams are
 weak, so the gap to the odds is reading and tapping, not strategy; Bubble Beam for Surf costs about 5 ± 4.5 points
-(above).
+(above). Almost every team was off-meta: in 13 of the 24 all of their Pokémon seen were outside
+PvPoke's top 100, and those 13 went 9 won, about the day's rate (6 of 8 with two outside). They cost the reading, not
+the play: forms (Hisuian Arcanine, Galarian Stunfisk and Rapidash), a species with no ranking (Darmanitan) and fast
+moves other than PvPoke's (Fire Fang counted as Snarl) are what threw the tracker's energy counts off.
