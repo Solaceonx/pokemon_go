@@ -38,6 +38,7 @@ def main() -> None:
     ap.add_argument("--ms", type=float, default=1500.0, help="thinking time per decision")
     ap.add_argument("--team", default=str(ROOT / "data" / "alt_team.json"))
     ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--window", nargs=2, type=float, help="print every decision between these two times")
     a = ap.parse_args()
     import play_android as pa
     gd = GameData()
@@ -84,10 +85,14 @@ def main() -> None:
             traceback.print_exc(limit=-4)
             continue
         f, lf = tracker.foe, r.get("foe")
-        if live is None or again == live:
+        shown = a.window is not None and a.window[0] <= r["t"] <= a.window[1]
+        if (live is None or again == live) and not shown:
             same += live is not None
             continue
-        differ += 1
+        if live is not None and again == live:
+            same += 1
+        else:
+            differ += live is not None
         was = f" (live tracker: {lf[1]}-{lf[2]} {lf[3]})" if lf else ""
         print(f"{r['t']:6.1f}  live {live:22s} again {again:22s}  ours {obs.my_species} {tracker.me.mon.energy:3d}"
               f" hp {obs.my_hp}  theirs {f.mon.build.species_id} {f.mon.build.fast.id} {f.lo}-{f.hi}{was}")

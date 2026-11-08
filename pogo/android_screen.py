@@ -409,16 +409,23 @@ def read(a: np.ndarray, t: float) -> Look:
 
 
 def species_lookup(gd) -> dict:
-    """Screen names ("Plusle", "Mega Venusaur") to species ids, regular forms first."""
-    names = {}
+    """Screen names ("Plusle", "Mega Venusaur") to species ids. Where forms share a name, the one in the Great League
+    rankings, the regular form before regional ones: 2026-11-08, "Darmanitan" was taken for Galarian Zen Darmanitan
+    (the first in the game data's order), which no league ranks, so the tracker failed for the whole of its stretch
+    and the engine threw Discharge where Mud Bomb was super effective. Regional forms are found later by their moves
+    (Tracker._other_form)."""
+    ranked = {e["speciesId"] for e in gd.rankings(1500)}
+    regional = ("_alolan", "_galarian", "_hisuian", "_paldean")
+    forms: dict[str, list] = {}
     for sid, p in gd.species.items():
         name = p["speciesName"]
         if "(Shadow)" in name or sid.endswith("_shadow"):
             continue
         m = re.match(r"^(.*) \(Mega( [XY])?\)$", name)
         screen = f"Mega {m.group(1)}{m.group(2) or ''}" if m else re.sub(r" \(.*\)$", "", name)
-        names.setdefault(screen.lower(), sid)
-    return names
+        forms.setdefault(screen.lower(), []).append(sid)
+    return {name: min(sids, key=lambda s: (s not in ranked, any(r in s for r in regional), sids.index(s)))
+            for name, sids in forms.items()}
 
 
 class NameReader:

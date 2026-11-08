@@ -352,6 +352,8 @@ class Player:
         self.pending_lock = threading.Lock()  # pending_theirs and foe_move_seen are set from the reading thread
         self.header_seen = 0.0  # the last frame with the battle header (cheap to check), for the no-fight guard
         self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
+        # The header and a bar on screen, buttons or not: the turn clock's test, as it was tuned (off_time)
+        self.screen_frames, self.screen_frame_t = 0, -9.0
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
         # decision fully and wanted Stunfisk in; its next ones, on a short deadline, fell back to fast moves), or one
@@ -391,6 +393,9 @@ class Player:
         self.prompt_answered = False
         self.replaced = False
         self.decision = FAST
+        # A throw the engine wants once the fast moves under way and queued have paid for it: (button, give up at).
+        # The fast taps stop meanwhile, so none is queued behind them, and the move is tapped as its button lights.
+        self.armed = None
         self.last_fast_tap = 0.0
         self.switch_ready_at = 0.0
         self.my_left_seen, self.foe_left_seen = 3, 3
@@ -503,12 +508,14 @@ class Player:
                 return None
             if look.shield_prompt:
                 self.tapping = False
+                self.armed = None
                 self.fight_frames = 0
                 self.fight_since = None
                 self.on_shield_prompt(t, look)
                 continue
             if look.replace_prompt:
                 self.tapping = False
+                self.armed = None
                 self.fight_frames = 0
                 self.queued = None  # our Pokémon fainted: a move it had waiting went with it
                 self.switching = self.switch_wanted = None
@@ -518,17 +525,26 @@ class Player:
             # The fight is on screen after three frames in a row with the header and a bar: in close-ups and
             # changes of Pokémon a false bar shows on a frame or two (2026-11-07, GO Battle League: looks given then
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
-            self.fight_frames = self.fight_frames + 1 if look.header and len(look.bars) >= 1 else 0
+            # And with a charged-move button on screen (bright or empty): in the close-ups of a charged move the
+            # header stays up and the camera puts one Pokémon's bar where the other's is (2026-11-08: after our
+            # Discharge, our 15% was read as Darmanitan's, and 13 s of close-ups after a Bubble Beam were taken for
+            # fighting). In the fight the buttons show on 97 to 100% of frames, in the close-ups on almost none.
+            on_screen = look.header and len(look.bars) >= 1
+            buttons_up = bool(look.buttons) and any(look.buttons[k]["present"] for k in ("left", "right"))
+            self.screen_frames = self.screen_frames + 1 if on_screen else 0
+            self.fight_frames = self.fight_frames + 1 if on_screen and buttons_up else 0
             fighting = self.fight_frames >= 3
-            if self.frame_t is not None and not fighting and t - self.fight_frame_t > 0.4:
+            if self.frame_t is not None and self.screen_frames < 3 and t - self.screen_frame_t > 0.4:
                 self.off_time += t - self.frame_t  # off the screen (beyond a missed bar or two)
             self.frame_t = t
+            if self.screen_frames >= 3:
+                self.screen_frame_t = t
             if fighting:
                 self.fight_frame_t = t
             # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
             # the fast taps: they go on until the fight has been off for 0.4 s. Prompts stop them at once (above).
             self.tapping = (bool(fighting) or (self.tapping and t - self.fight_frame_t < 0.4)) \
-                and time.time() >= self.hold_taps_until
+                and time.time() >= self.hold_taps_until and self.armed is None
             if fighting:
                 self.watch_hits(t, look.bars)
                 if self.switching is not None:
@@ -548,7 +564,10 @@ class Player:
                 self.check_active(t)
                 # 4 s: an unprompted charged move holds the fight 7 s or so; a switch of theirs 2 to 3 s (2026-11-08:
                 # Greedent's switch to Vaporeon was taken for a throw, and Vaporeon's energy counted from too late)
-                if self.last_fight is not None and t - self.last_fight > 4.0 and self.pending_mine is None and not self.pending_theirs:
+                # 5.5 s since the fight needs a button up (2026-11-08): a switch-in, buttons hidden, no longer counts
+                # as fighting, so a switch of theirs leaves a longer gap; the unprompted throws logged so far left
+                # 6.7 to 8.4 s.
+                if self.last_fight is not None and t - self.last_fight > 5.5 and self.pending_mine is None and not self.pending_theirs:
                     # the fight stood still with no prompt and no throw of ours: their charged move, with no shield of ours to offer
                     if (look.my_shields or 0) == 0 and look.my_left == self.my_left_seen and look.foe_left == self.foe_left_seen:
                         self.pending_theirs = True
@@ -902,7 +921,20 @@ class Player:
                 self.log("engine_error", t, error=str(error))
                 self.decision = FAST
             self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000))
+            if self.armed is not None and self.decision != FAST:
+                self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
+                self.armed = None
+            if self.decision == FAST and self.armed is None and self.switching is None and self.switch_wanted is None:
+                self.look_ahead(t, view)
         mon = self.team[self.active]
+        if self.armed is not None:
+            k, until = self.armed
+            if time.time() > until or self.switching is not None:
+                self.log("armed_expired", t, move=mon.charged[k].id, read=self.energy())
+                self.armed = None
+                self.decision = FAST
+            else:
+                self.decision = CHARGED[0] + k
         # Our energy as the buttons show it. In a fight they are always on screen, so unread buttons mostly mean no
         # fight (a close-up): no throw then. Only if they have been unread for 8 s of fighting (the reader failing,
         # say on a bright daytime map) does the count stand in.
@@ -917,7 +949,7 @@ class Player:
             have = counted
         if bounds is not None:
             have = max(have, bounds[0])
-        if view is not None and self.decision == FAST:
+        if view is not None and (self.decision == FAST or self.armed is not None):
             # Never faint with a charged move in hand (the owner, 2026-11-07): when our health is low and a move is
             # paid for, throw the hardest-hitting one now, whatever the engine planned.
             hp_share = look.bars.get("mine", view.me.mon.hp / view.me.mon.build.hp)
@@ -926,6 +958,7 @@ class Player:
                 from pogo.battle import damage
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 self.decision = CHARGED[0] + k
+                self.armed = None
                 self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share)
             elif affordable and view.me.shields == 0 and self.tracker.foe is not None:
                 # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
@@ -938,6 +971,7 @@ class Player:
                 if hurt >= 0.33 * view.me.mon.build.hp or hurt >= view.me.mon.hp:
                     k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                     self.decision = CHARGED[0] + k
+                    self.armed = None
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
@@ -946,7 +980,16 @@ class Player:
             # On the count alone (the buttons unread) a throw that came to nothing is not tried again for 3 s: each
             # try stops the fast moves for up to 2.4 s (2026-11-07: 16 tries in one battle, 12 for low health).
             sure = self.energy() is not None or time.time() - self.last_not_taken > 3.0
+            if self.armed is not None:
+                # armed: on the buttons' word only (the count runs ahead of them), the moment the button lights
+                read = self.energy()
+                sure = ((read is not None and read >= mon.charged[k].energy)
+                        or (bounds is not None and bounds[0] >= mon.charged[k].energy))
             if have >= mon.charged[k].energy and sure:
+                if self.armed is not None:
+                    self.log("armed_fired", t, move=mon.charged[k].id, read=self.energy(),
+                             waited=round(time.time() - self.armed_at, 2))
+                self.armed = None
                 self.throw(t, k, mon.charged[k])
                 self.decision = FAST
                 return
@@ -974,6 +1017,53 @@ class Player:
                 self.decision = FAST
                 return
         # fast moves: the tapping thread, while self.tapping
+
+    def look_ahead(self, t: float, view) -> None:
+        """Would the engine throw once the fast moves under way have paid for it? Then stop queuing more and throw
+        the moment the button lights. Our energy rises as each fast move lands (the button lights then), and by
+        then the fast taps have already queued the next one, which a charged tap cannot cut short: every throw went
+        one fast move late (the owner, 2026-11-08: "you did 3 than threw ... given thundershock is a 2 turn move,
+        you should've done two thundershocks than thrown"). The move under way and the one queued behind it (the
+        taps come every 0.15 s) still play out, so the engine is asked with the energy after both."""
+        mon = self.team[self.active]
+        have = self.energy()
+        bounds = self.paid_bounds()
+        if have is None:
+            return  # only on the buttons' reading: the count can run a fast move or two ahead
+        if bounds is not None:
+            have = max(have, bounds[0])
+        gain = mon.fast.energy_gain
+        soon = min(100.0, have + 2 * gain)
+        if not any(have < m.energy <= soon for m in mon.charged):
+            return
+        me = self.tracker.me.mon
+        kept, cap = me.energy, self.engine.cap_ms
+        me.energy, self.engine.cap_ms = int(soon), min(cap, 150)
+        try:
+            ahead = self.engine.act(self.view())
+        except Exception as error:  # noqa: BLE001
+            self.log("engine_error", t, error=str(error), ahead=True)
+            return
+        finally:
+            me.energy, self.engine.cap_ms = kept, cap
+        if ahead not in CHARGED:
+            return
+        k = ahead - CHARGED[0]
+        if not have < mon.charged[k].energy <= soon:
+            return  # paid for already: the usual way
+        # two of our fast moves and a little: if the button has not lit by then, the fast taps go on
+        self.armed = (k, time.time() + 2 * mon.fast.turns * 0.5 + 0.4)
+        self.armed_at = time.time()
+        self.tapping = False
+        two = mon.charged[k].energy > have + gain
+        if two:
+            # it takes the move under way and one more: make sure that one is queued (a tap within the last 0.15 s
+            # has queued it already, and another so soon could be dropped)
+            with self.touch_lock:
+                if time.time() - self.last_fast_tap >= 0.15:
+                    self.last_fast_tap = time.time()
+                    self.touch(controls.FIELD, "fast move (the last before a throw)")
+        self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1), moves=1 + two)
 
     def throw(self, t: float, k: int, move) -> None:
         self.queued = None  # a new tap stands for any move still waiting

@@ -445,7 +445,7 @@ class Tracker:
                 self._note(obs.t, "foe_switch", to=obs.foe_species)
         if obs.foe_species not in self.foes:
             # Assume the usual moveset and typical stats for the species until shown otherwise.
-            self.foes[obs.foe_species] = Foe(self.gd.default(obs.foe_species, allow_forms=True))
+            self.foes[obs.foe_species] = Foe(self._usual_build(obs.foe_species))
             if len(self._fast_options(self.foes[obs.foe_species])) == 1:
                 self.foes[obs.foe_species].fast_from = "inferred"  # the species has only the one
             told = self.foe_fast.get(obs.foe_species)
@@ -485,6 +485,17 @@ class Tracker:
         if move is not None:
             foe.used[move.id] = foe.used.get(move.id, 0) + 1
 
+    def _usual_build(self, species_id: str):
+        """PvPoke's recommended build, or for a species the league's rankings leave out, its likeliest moves at its
+        default level (2026-11-08: one unranked species stopped the tracker for a whole Pokémon's stretch)."""
+        try:
+            return self.gd.default(species_id, allow_forms=True)
+        except KeyError:
+            odds = self.gd.move_odds(species_id)
+            fast = max(odds["fast"], key=odds["fast"].get)
+            charged = sorted(odds["charged"], key=odds["charged"].get, reverse=True)[:2]
+            return self.gd.build(species_id, [fast, *charged], allow_forms=True)
+
     def _other_form(self, t: float, foe: Foe, name: str):
         """Their Pokémon threw a move its species cannot have: if exactly one regional form of it can, it is that
         form (2026-11-08: Galarian Stunfisk, named "Stunfisk" on screen, threw Earthquake; the tracker had built the
@@ -494,13 +505,16 @@ class Tracker:
         forms = [sid for sid, sp in self.gd.species.items()
                  if sid.split("_")[0] == base and sid != build.species_id and not sid.endswith("_shadow")
                  and any(name in (i, self.gd.moves[i].name) for i in sp.get("chargedMoves", []) if i in self.gd.moves)]
+        ranked = {e["speciesId"] for e in self.gd.rankings(1500)}
+        if len(forms) > 1 and any(f in ranked for f in forms):
+            forms = [f for f in forms if f in ranked]  # Avalanche: Galarian Darmanitan, not its unranked Zen mode
         if len(forms) != 1:
             return None
         form = forms[0]
         move = next(self.gd.moves[i] for i in self.gd.species[form]["chargedMoves"]
                     if i in self.gd.moves and name in (i, self.gd.moves[i].name))
         share = max(0, foe.mon.hp) / build.hp
-        fresh = self.gd.default(form, allow_forms=True)
+        fresh = self._usual_build(form)
         others = [m.id for m in fresh.charged if m.id != move.id]
         foe.mon = Mon(self.gd.build(form, [fresh.fast.id, move.id, *others][:1 + max(1, len(fresh.charged))],
                                     allow_forms=True))
