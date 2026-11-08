@@ -1060,7 +1060,12 @@ class Player:
             k = self.decision - CHARGED[0]
             # On the count alone (the buttons unread) a throw that came to nothing is not tried again for 3 s: each
             # try stops the fast moves for up to 2.4 s (2026-11-07: 16 tries in one battle, 12 for low health).
-            sure = self.energy() is not None or time.time() - self.last_not_taken > 3.0
+            # With no reading, the names under the buttons showing it paid for, or the count a fast move clear of the
+            # cost: on the count alone at the cost, 9 of a battle's throws were not taken (2026-11-08, by day, when
+            # the buttons read on a quarter of the frames), each stopping the fast taps for up to 3 s.
+            cost = mon.charged[self.decision - CHARGED[0]].energy
+            sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
+                time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain)
             if self.armed is not None:
                 # armed: on the buttons' word only (the count runs ahead of them), the moment the button lights
                 read = self.energy()
@@ -1224,9 +1229,9 @@ class Player:
         # Jellicent often).
         since, last, started = None, 0.0, False
         icon_frames = 0  # frames in a row showing the minigame's icons
-        # 2.3 s: over the day's throws Get Ready! came at most 1.9 s after the tap that started the move, and the
-        # wait stops the fast taps (2026-11-08: two 3 s waits on throws that were not paid for stalled Vigoroth)
-        while time.time() - tapped < 2.3:
+        # 3 s (2.3 s for one afternoon: 3 of 10 throws in a battle then started after the wait, 2.4 to 5 s after
+        # the tap, and their minigames were found late)
+        while time.time() - tapped < 3.0:
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
                 continue
