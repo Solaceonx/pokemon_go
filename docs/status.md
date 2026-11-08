@@ -4694,3 +4694,50 @@ move of theirs, they had at least its cost. So the tracker's range just before i
 - **Our own energy.** The buttons give a reading on about a third of the frames with the fight on screen; most of
   the rest are frames where the game hides the buttons around charged moves. An empty button reads as 0 only when
   its rim is drawn: without that test, hidden buttons read as 0 and would have stopped throws.
+
+**Battles 10 to 14 of the day (2026-11-08 afternoon, after the owner caught the set's encounter).** The owner
+watched and commented on each.
+
+| # | Result | Their team | Minigames Excellent | What went wrong |
+|---|---|---|---|---|
+| 10 | win | Regice, Pidgeot, Darmanitan | 7 of 8 | "Darmanitan" read as Galarian Zen (unranked), the tracker failed for its whole stretch; Discharge where Mud Bomb was super effective; three Thunder Shocks before the throw where two would do |
+| 11 | win | Magcargo, Zeraora, Celebi | 4 of 7 | arming two fast moves ahead stalled twice (below) |
+| 12 | win | Rapidash, Alolan Raichu, Rhyhorn | 4 of 6 | Shadow Ball chosen for Jellicent was tapped as Stunfisk's Discharge after the switch; a one-frame health misread (0.7% at 54%) fired a throw |
+| 13 | loss | Leafeon, Dachsbun, Aerodactyl | 3 of 5 | lost with both shields; farmed on, believing them far from a move (Dachsbun threw Psychic Fangs, 35, on a count of 16) |
+| 14 | loss | Hisuian Arcanine, Bruxish, Houndoom | 4 of 5 | Arcanine taken for the regular one until Rock Slide 130 s in; at 20% Vigoroth threw Body Slam (38 damage, resisted) where Bulldoze, five Scratches away, would have knocked it out (156 to its 129) |
+
+The day: 14 GO Battle League battles, 9 won. The set ended at 3 wins and 2 losses; its rewards (with a Pokémon
+encounter) are the owner's to collect.
+
+**Fixes, each replayed on the battle that showed it:**
+- **Names shared by forms.** The screen name goes to the form in the Great League rankings, the regular before
+  regional ones, and then to the form whose types the header's icons show: each header's top corner has one or two
+  type icons, and their colours on this phone are the game's standard type colours to within 10
+  (`android_screen.header_types`, `form_by_types`). Read right for all 12 Pokémon checked on the recordings, in
+  daylight and at half size; on battle 14's replay Arcanine was Hisuian from the first look. A species no ranking
+  has gets its likeliest moves instead of stopping the tracker.
+- **One fast move late.** Energy shows as a fast move lands, and by then the taps have started the next, so every
+  throw went one fast move late. Now (`look_ahead`): at each look, if the engine would throw once the fast move under
+  way has paid for it, the taps stop and the move is tapped as its button lights (waits of 0.3 to 0.8 s on battle
+  11). Arming two moves ahead, with one last tap, failed: a fast tap made during a move is not kept for after it
+  (Jellicent's energy stood at 37.6 for 3.6 s, twice).
+- **Close-ups taken for the fight.** In a charged move's close-ups the header stays up and the camera puts one
+  Pokémon's bar where the other's goes (our 15% read as Darmanitan's). A fight frame now needs a charged-move button
+  on screen: up on 97 to 100% of fighting frames and on almost no close-up frames, empty buttons included. The turn
+  clock goes by the same test, keeping the header and a bar while our move waits to start. Judged by 8 named throws
+  of theirs in four battles: with the header and a bar alone their energy was believed 100 at 7 (8 s of Zeraora's
+  Wild Charge counted as turns); this way short at 3, by a fast move or two.
+- **Their energy as the engine sees it:** two of their fast moves above the count (`FOE_MARGIN`), for decisions,
+  shields and the throw-first rule. On battle 13's replay Vigoroth's second Body Slam went before Psychic Fangs, and
+  Solar Beam was shielded.
+- **A decision is dropped when our active Pokémon changes;** the low-health rule goes by the median of our bar's
+  readings over 0.4 s, and waits when a far better move (a knock-out, or 2.5 times the damage) is a few fast moves
+  away and their fast moves leave us alive till then (`better_soon`). On battle 14's replay it still threw Body
+  Slam, because the tracker had Arcanine's fast move as Snarl (13 energy a 1.5 s): the hits came 0.7 to 0.9 s
+  apart, which fits Fire Fang, and on Fire Fang Arcanine was 10 short of Rock Slide.
+
+**Open: Body Slam in daylight.** Great in 5 of the last 6, Excellent 16 of 17 the night before. The Normal-icon
+detector looks for a white ring in a grey disc; by day (the sky's brightness 228 against 100 at night) the real
+icons' rings average 200 to 213 against its 215, and loosening it fires all over Vigoroth's white fur and eyes
+(an eye scores as high as an icon). On a real icon the grey inside the ring matches the grey outside it (to within
+4; Vigoroth's eye differs by 17), which may be the way in, together with the icons' larger sizes as they appear.
