@@ -4390,3 +4390,11 @@ shadow Forretress 69.8%, Tinkaton 67.6%, Forretress 66.9%, Alolan Muk 65.8%, Mim
 the shadow in the top 100: Great, Hydreigon +2.2 (#18 v #74), Steelix +2.2 (#89 v #136), Ninetales +1.7 (#3 v #13),
 Dusknoir +1.1, Shelgon +1.1, Dragonair +1.0; Ultra, Hydreigon +3.5 (#92 v #179), Snorlax +1.7 (#3 v #13), Cradily +1.4,
 Politoed +1.2, Milotic +0.9, Golisopod +0.8. Most other shadows score the same or lower than their regular forms.
+**The catch list, extended (2026-11-08).** Each candidate from PvPoke's top 200 (Great) or top 100 (Ultra), other forms
+of species already owned left out, put with its best two of the roster's Pokémon; the 35 most promising screened (100
+battles per lead), the best 15 through the same 600 battles as above. Great League above the best owned team (59.4%):
+shadow Hydreigon 65.3, Cramorant 62.0, shadow Forretress 61.3, shadow Greninja 61.2, Stunfisk 60.2, Melmetal 60.0;
+next Walrein 58.2, Forretress 57.2, Florges 56.4. Ultra League above the best owned team (64.9%): shadow Forretress
+69.8, Empoleon 67.7, Tinkaton 67.6, shadow Corviknight 67.6, Forretress 66.9, Cresselia 66.7, Registeel 66.1, Alolan
+Muk 65.8, Lapras 65.8, Snorlax 65.6; shadow Snorlax 62.7, below regular here though PvPoke ranks it higher. Margins are
+± 3.7-4.0, so gains under about 4 points are not clear.
