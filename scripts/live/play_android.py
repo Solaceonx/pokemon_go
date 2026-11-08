@@ -377,6 +377,7 @@ class Player:
         self.header_seen = 0.0  # the last frame with the battle header (cheap to check), for the no-fight guard
         self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
         self.button_seen_t = -9.0  # the last frame with a charged-move button on screen
+        self.fast_time = 0.0  # seconds since the last look with fast taps on and the fight on the clock
         self.clock_frame_t = -9.0  # the last frame the turn clock counted
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
@@ -560,6 +561,7 @@ class Player:
             # In the close-ups of a charged move the header stays up and the camera puts one Pokémon's bar where the
             # other's goes (2026-11-08: after our Discharge our 15% was read as Darmanitan's). A lone bar with no
             # button up is not read.
+            both_bars = len(look.bars) == 2
             if not buttons_up and len(look.bars) == 1:
                 look.bars = {}
             # The fight, for the fast taps and the looks, is the header and a bar, buttons or not: for an afternoon
@@ -572,7 +574,13 @@ class Player:
             # side's throw are off). Scored on 8 named throws of theirs in four battles: by the header and a bar
             # their energy was believed 100 at 7 (8 s of Zeraora's Wild Charge counted as turns); with a button,
             # short at 3 by a fast move or two, which FOE_MARGIN covers.
-            clock_on = fighting and t - self.button_seen_t < 1.0
+            # Also both bars up within 8 s of a button: Vigoroth stands white behind the empty buttons for seconds
+            # while it fights, and a clock held still there left both counts short (close-ups show a lone bar).
+            clock_on = fighting and (t - self.button_seen_t < 1.0 or (both_bars and t - self.button_seen_t < 8.0))
+            if self.tapping and fighting and self.frame_t is not None:
+                # time our fast moves could run, for our count (the fight, not the clock: the buttons go unseen
+                # behind Vigoroth for seconds while it attacks, and a count held still there was 15 short)
+                self.fast_time += min(0.2, max(0.0, t - self.frame_t))
             if self.frame_t is not None and not clock_on and t - self.clock_frame_t > 0.4:
                 self.off_time += t - self.frame_t  # off the screen (beyond a missed bar or two)
             self.frame_t = t
@@ -921,6 +929,7 @@ class Player:
             self.hits_since_look = self.my_hits_since_look = 0
             self.foe_move_seen = None
             self.pending_theirs = False  # handed to the tracker in this look
+        before = (self.tracker.me.mon.energy, self.tracker.me.mon) if self.tracker.foe is not None else None
         try:
             self.tracker.update(obs)
             late, self.late_move = self.late_move, None
@@ -928,6 +937,17 @@ class Player:
                 self.tracker.their_move_named(t, late)
         except Exception as error:  # noqa: BLE001 - a bad look must not stop the battle
             self.log("tracker_error", t, error=str(error))
+        if before is not None and obs.my_energy is None and self.tracker.me.mon is before[1]:
+            # With no reading, ours rises only by the fast moves there was time for: fast taps on and the fight on
+            # the screen. The tracker counts a fast move every so many turns, and while a throw waited to start, a
+            # prompt was up or the buttons were hidden that ran on (2026-11-08: Vigoroth's count went 43 to 63 in a
+            # 3 s wait with the taps off, two throws were tried on it and not taken, and it fainted with none thrown).
+            mon_now = self.tracker.me.mon
+            moves = math.ceil(self.fast_time / (mon_now.build.fast.turns * 0.5))
+            cap = before[0] + moves * mon_now.build.fast.energy_gain
+            if mon_now.energy > cap:
+                mon_now.energy = min(100, cap)
+        self.fast_time = 0.0
         if obs.my_energy is not None and self.tracker.foe is not None:
             # The buttons are the better witness: the count misses moves (a throw that went off after theirs),
             # turns lost between taps, and Pokémon seen coming in late. It takes the reading at once.
@@ -1204,7 +1224,9 @@ class Player:
         # Jellicent often).
         since, last, started = None, 0.0, False
         icon_frames = 0  # frames in a row showing the minigame's icons
-        while time.time() - tapped < 3.0:
+        # 2.3 s: over the day's throws Get Ready! came at most 1.9 s after the tap that started the move, and the
+        # wait stops the fast taps (2026-11-08: two 3 s waits on throws that were not paid for stalled Vigoroth)
+        while time.time() - tapped < 2.3:
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
                 continue
