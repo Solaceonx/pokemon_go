@@ -25,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 import numpy as np  # noqa: E402
+from move_icons import has_template, move_icons  # noqa: E402
 
 from pogo import android_screen as screen  # noqa: E402
 from pogo import controls  # noqa: E402
@@ -211,7 +212,7 @@ def minigame_on(rgb, move) -> bool:
 
 def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, colour=None, zone=None,
                     move_type: str = "", trace: list | None = None, predicted: list | None = None,
-                    ready_at: float | None = None) -> int:
+                    ready_at: float | None = None, move_id: str = "") -> int:
     """The charged-move minigame as one unbroken touch: visit the icons found on the newest frame every 50 ms
     nearest first (by their round outline and the type's colour, find_icons), leaving out those the finger has just
     been over, and while none is left sweep a figure of eight over the zone the type's icons come up in (Water's at the upper
@@ -251,7 +252,11 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 # Anywhere on screen: a round disc of icon size whose ring is the type's colour (grey for Normal).
                 # Water's icons stream right across the screen, over Jellicent's body, which is the same blue but
                 # not a disc of that size; Ghost's sit on a Jellicent dark with smoke.
-                icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
+                if move_id and has_template(move_id):
+                    # the move's own icon cut out (move_icons.py): exact where the colour detectors are not
+                    icons = [(x, y) for x, y, v in move_icons(rgb[::2, ::2], move_id)]
+                else:
+                    icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
@@ -1417,7 +1422,7 @@ class Player:
                 # to 6.6 s after Get Ready! (icons show until 6.25 s; the rating is final by 6.8 s)
                 hunted = minigame_stroke(self.phone, seconds=path[-1][0] + 0.9, colour=icon_colour(move.type),
                                          zone=icon_zone(move.type), move_type=move.type, trace=trace,
-                                         predicted=choreography(move.id), ready_at=since)
+                                         predicted=choreography(move.id), ready_at=since, move_id=move.id)
             self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace)
         # From Get Ready! to here the fight was off the screen: off-screen time for the turns, and the fight must
         # be seen three frames running again before it counts
