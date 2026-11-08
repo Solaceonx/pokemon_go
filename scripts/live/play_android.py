@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import contextlib
 import json
 import math
 import sys
@@ -38,6 +39,11 @@ from pogo.tracker import Observation, Tracker  # noqa: E402
 BENCH = ((0.90, 0.603), (0.90, 0.692))  # measured on the moto g stylus 5G (2024)
 SHIELD_YES, SHIELD_NO = (0.50, 0.842), (0.50, 0.950)  # the shield's centre and "NOT NOW" on this phone
 LOOK = 0.5  # seconds between looks given to the tracker (a turn)
+# Their energy as the engine is given it: the count and this many of their fast moves more. Judged by their named
+# throws (2026-11-08), the count fell short by a fast move or two at 3 of 8, and Dachsbun threw Psychic Fangs (35) on
+# a count of 16; believing them further from a move than they were, the engine farmed on (the owner's rule: until
+# they are about to get one) and threw late, and saw no need to shield (the owner: "you're attacking too late").
+FOE_MARGIN = 2
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -921,7 +927,8 @@ class Player:
         if view is not None and t - self.last_look < 0.05:  # a decision at each look
             t0 = time.perf_counter()
             try:
-                self.decision = self.engine.act(view)
+                with self.engine_sees():
+                    self.decision = self.engine.act(view)
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 self.decision = FAST
@@ -979,7 +986,7 @@ class Player:
                 # move that would hurt (a third of our health or more), throw ours first.
                 from pogo.battle import damage
                 foe = self.tracker.foe
-                ready = [m for m in foe.mon.build.charged if foe.hi + foe.mon.build.fast.energy_gain >= m.energy]
+                ready = [m for m in foe.mon.build.charged if foe.hi + FOE_MARGIN * foe.mon.build.fast.energy_gain >= m.energy]
                 hurt = max((damage(foe.mon, m, view.me.mon) for m in ready), default=0)
                 if hurt >= 0.33 * view.me.mon.build.hp or hurt >= view.me.mon.hp:
                     k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
@@ -1032,6 +1039,25 @@ class Player:
                 return
         # fast moves: the tapping thread, while self.tapping
 
+    @contextlib.contextmanager
+    def engine_sees(self):
+        """Within it the tracker shows the engine their energy FOE_MARGIN fast moves higher, and ours at least what
+        the names under the buttons show paid for; both are put back after."""
+        me, foe = self.tracker.me.mon, self.tracker.foe
+        kept = (me.energy, foe.mon.energy, foe.lo, foe.hi) if foe is not None else (me.energy,)
+        try:
+            bounds = self.paid_bounds()
+            if bounds is not None:
+                me.energy = max(me.energy, bounds[0])
+            if foe is not None:
+                extra = FOE_MARGIN * foe.mon.build.fast.energy_gain
+                foe.mon.energy, foe.lo, foe.hi = (min(100, x + extra) for x in (foe.mon.energy, foe.lo, foe.hi))
+            yield
+        finally:
+            me.energy = kept[0]
+            if foe is not None:
+                foe.mon.energy, foe.lo, foe.hi = kept[1:]
+
     def look_ahead(self, t: float, view) -> None:
         """Would the engine throw once the fast moves under way have paid for it? Then stop queuing more and throw
         the moment the button lights. Our energy rises as each fast move lands (the button lights then), and by
@@ -1055,7 +1081,8 @@ class Player:
         kept, cap = me.energy, self.engine.cap_ms
         me.energy, self.engine.cap_ms = int(soon), min(cap, 150)
         try:
-            ahead = self.engine.act(self.view())
+            with self.engine_sees():
+                ahead = self.engine.act(self.view())
         except Exception as error:  # noqa: BLE001
             self.log("engine_error", t, error=str(error), ahead=True)
             return
@@ -1255,7 +1282,8 @@ class Player:
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
         if view is not None and view.me.shields > 0:
             try:
-                shield = bool(self.engine.shield(view, self.tracker.foe.hi))
+                with self.engine_sees():
+                    shield = bool(self.engine.shield(view, self.tracker.foe.hi))
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 shield = True
@@ -1269,7 +1297,8 @@ class Player:
             # take a third of our health, unless we are nearly gone anyway.
             from pogo.battle import damage
             mon, foe = view.me.mon, self.tracker.foe.mon
-            moves = [m for m in foe.build.charged if m.energy <= max(self.tracker.foe.hi, min(x.energy for x in foe.build.charged))]
+            could = self.tracker.foe.hi + FOE_MARGIN * foe.build.fast.energy_gain
+            moves = [m for m in foe.build.charged if m.energy <= max(could, min(x.energy for x in foe.build.charged))]
             worst = max((damage(foe, m, mon) for m in moves), default=0)
             nearly_gone = mon.hp <= 2 * damage(foe, foe.build.fast, mon)
             if not nearly_gone and (worst >= mon.hp or worst >= 0.35 * mon.build.hp):
