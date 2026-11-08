@@ -429,7 +429,16 @@ class Tracker:
     def _their_active(self, obs: Observation) -> str | None:
         """Notice their active Pokémon changing. Returns "switch", "faint", "first" or None."""
         if obs.foe_species is not None:
-            obs = Observation(**{**asdict(obs), "foe_species": self.form_of.get(obs.foe_species, obs.foe_species)})
+            sid = self.form_of.get(obs.foe_species, obs.foe_species)
+            if sid not in self.foes:
+                # A form of one already seen is that one: a team cannot hold two of a species (2026-11-08: Galarian
+                # Rapidash, read once as "Rapidash" with its type icons hidden, was counted as a fourth Pokémon,
+                # and merging the two later lost the first one's health and energy).
+                name = self._screen_name(sid)
+                same = [x for x in self.foes if self._screen_name(x) == name]
+                if len(same) == 1:
+                    sid = self.form_of[obs.foe_species] = same[0]
+            obs = Observation(**{**asdict(obs), "foe_species": sid})
         if obs.foe_species is None or (self.foe and obs.foe_species == self.foe.mon.build.species_id):
             return None
         how = "first"
@@ -485,6 +494,10 @@ class Tracker:
         if move is not None:
             foe.used[move.id] = foe.used.get(move.id, 0) + 1
 
+    def _screen_name(self, species_id: str) -> str:
+        name = self.gd.species[species_id]["speciesName"]
+        return name.split(" (")[0]
+
     def _usual_build(self, species_id: str):
         """PvPoke's recommended build, or for a species the league's rankings leave out, its likeliest moves at its
         default level (2026-11-08: one unranked species stopped the tracker for a whole Pokémon's stretch)."""
@@ -524,7 +537,11 @@ class Tracker:
         old = build.species_id
         self.form_of[old] = form
         self.foes[form] = self.foes.pop(old, foe)
-        self.order = [form if x == old else x for x in self.order]
+        order = []
+        for x in (form if x == old else x for x in self.order):
+            if x not in order:
+                order.append(x)
+        self.order = order
         self._note(t, "foe_form", was=old, now=form, move=move.id)
         return move
 

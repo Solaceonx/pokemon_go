@@ -486,6 +486,7 @@ class NameReader:
         self.gd = gd
         self.names = species_lookup(gd)
         self.types = []  # their Pokémon's types as the header's icons last showed
+        self.resolved = {}  # a name's usual form -> the form its type icons showed
         self.species = None  # the last name read, as a species id
         self.read_at = None  # time of the frame it was read from
         self.labels, self.labels_at = [], None  # the last button labels read
@@ -513,9 +514,11 @@ class NameReader:
             text = " ".join(words).strip()
             sid = self.match(text)
             if sid and types:
-                sid = form_by_types(self.gd, sid, types)
+                self.resolved[sid] = form_by_types(self.gd, sid, types)
                 self.types = types
             if sid:
+                # a name once told apart by its type icons stays so when they are hidden on a later reading
+                sid = self.resolved.get(sid, sid)
                 with self._lock:
                     self.species, self.read_at = sid, t
         finally:

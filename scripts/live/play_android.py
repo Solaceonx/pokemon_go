@@ -358,6 +358,8 @@ class Player:
         self.pending_lock = threading.Lock()  # pending_theirs and foe_move_seen are set from the reading thread
         self.header_seen = 0.0  # the last frame with the battle header (cheap to check), for the no-fight guard
         self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
+        self.button_seen_t = -9.0  # the last frame with a charged-move button on screen
+        self.clock_frame_t = -9.0  # the last frame the turn clock counted
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
         # decision fully and wanted Stunfisk in; its next ones, on a short deadline, fell back to fast moves), or one
@@ -533,21 +535,31 @@ class Player:
             # The fight is on screen after three frames in a row with the header and a bar: in close-ups and
             # changes of Pokémon a false bar shows on a frame or two (2026-11-07, GO Battle League: looks given then
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
-            # And with a charged-move button on screen (bright or empty): in the close-ups of a charged move the
-            # header stays up and the camera puts one Pokémon's bar where the other's is (2026-11-08: after our
-            # Discharge, our 15% was read as Darmanitan's, and 13 s of close-ups after a Bubble Beam were taken for
-            # fighting). In the fight the buttons show on 97 to 100% of frames, in the close-ups on almost none.
             on_screen = look.header and len(look.bars) >= 1
             buttons_up = bool(look.buttons) and any(look.buttons[k]["present"] for k in ("left", "right"))
-            # The turn clock goes by the same test (throw() keeps the header and a bar while our move waits to
-            # start: the fight goes on then with the buttons hidden). Scored on 8 named throws of theirs in four
-            # battles: with the header and a bar alone their energy was believed 100 at 7 of them (the close-ups
-            # counted as turns: 8 s of Zeraora's Wild Charge); this way short at 3, by a fast move or two.
-            self.fight_frames = self.fight_frames + 1 if on_screen and buttons_up else 0
+            if buttons_up:
+                self.button_seen_t = t
+            # In the close-ups of a charged move the header stays up and the camera puts one Pokémon's bar where the
+            # other's goes (2026-11-08: after our Discharge our 15% was read as Darmanitan's). A lone bar with no
+            # button up is not read.
+            if not buttons_up and len(look.bars) == 1:
+                look.bars = {}
+            # The fight, for the fast taps and the looks, is the header and a bar, buttons or not: for an afternoon
+            # it needed a button up too, and the taps fell from 530 a battle to 200 (the owner: "you let the
+            # rapidash get in like 5 fast moves before you started tapping"). An empty button is see-through, and
+            # Vigoroth coming in, white behind it, hid both for 6 s while Toxtricity attacked.
+            self.fight_frames = self.fight_frames + 1 if on_screen else 0
             fighting = self.fight_frames >= 3
-            if self.frame_t is not None and not fighting and t - self.fight_frame_t > 0.4:
+            # The turn clock: the fight with a button seen in the last second (close-ups, prompts and the other
+            # side's throw are off). Scored on 8 named throws of theirs in four battles: by the header and a bar
+            # their energy was believed 100 at 7 (8 s of Zeraora's Wild Charge counted as turns); with a button,
+            # short at 3 by a fast move or two, which FOE_MARGIN covers.
+            clock_on = fighting and t - self.button_seen_t < 1.0
+            if self.frame_t is not None and not clock_on and t - self.clock_frame_t > 0.4:
                 self.off_time += t - self.frame_t  # off the screen (beyond a missed bar or two)
             self.frame_t = t
+            if clock_on:
+                self.clock_frame_t = t
             if fighting:
                 self.fight_frame_t = t
             # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
@@ -998,6 +1010,8 @@ class Player:
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
+        if self.decision in CHARGED and t - self.button_seen_t > 0.5:
+            return  # no button on screen: a close-up or a prompt coming, where a tap at the button goes nowhere
         if self.decision in CHARGED:
             k = self.decision - CHARGED[0]
             # On the count alone (the buttons unread) a throw that came to nothing is not tried again for 3 s: each
