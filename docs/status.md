@@ -4687,3 +4687,9 @@ move of theirs, they had at least its cost. So the tracker's range just before i
   throws, each by one or two fast moves (Vaporeon 42 and 39 for a 45), against 10 of 16 for the live count. Four
   were over the cost by more than 30 (100 for Sky Attack's 50), which a player holding energy also gives.
 - Three Team Leader battles with the new count: 3 wins, no errors, 18 of 18 minigames Excellent.
+- **After these changes, 5 more Team Leader battles:** 5 wins, 23 of 23 minigames Excellent (8 Body Slams, 1
+  Bulldoze). Since the Normal detector went in, Body Slam has rated Excellent 16 times of 17 (GO Battle League 6 of
+  7, training 10 of 10).
+- **Our own energy.** The buttons give a reading on about a third of the frames with the fight on screen; most of
+  the rest are frames where the game hides the buttons around charged moves. An empty button reads as 0 only when
+  its rim is drawn: without that test, hidden buttons read as 0 and would have stopped throws.

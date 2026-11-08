@@ -125,12 +125,56 @@ tap came late. The buttons show it exactly, and the player reads them on every f
 - In close-ups and changes of Pokémon, false single-frame bars show. The player counts the fight as on screen only
   after three frames in a row with the header and a bar.
 
+## Who of ours is out, and their moves by name
+
+- **Our header names our Pokémon.** In GO Battle League it shows the species ("Jellicent"), since online battles
+  hide nicknames; against the Team Leaders it shows the nickname (".gl1" on the spare account). The name is read in
+  the background whenever that part of the header changes (`NameReader.offer_mine`, box (4, 76, 130, 106) of the
+  540 x 1200 frame). It confirms switches and corrects the player's belief. The names under the charged-move buttons
+  show only for moves paid for, so they cannot say who is out at low energy.
+- **When the last Pokémon comes in.** With one Pokémon left the game sends it in itself, with no prompt.
+- **Their charged moves are named on screen:** "<Pokémon> used <move>!" in the box at the top, after the move. It
+  is read three times a second while the fight is off the screen, on its own thread (OCR on the loop held up the fast
+  taps for seconds). The rules:
+  - the words are ours only within 12 s of our own throw starting (in a Stunfisk mirror their "Stunfisk used
+    Earthquake!" was otherwise taken for ours);
+  - each throw is counted once, whichever sign came first: the prompt, the pause, or the words;
+  - a move only a regional form can have turns the opposing Pokémon into that form ("Stunfisk" on screen was
+    Galarian Stunfisk).
+- **Their throws and switches when we have no shields.** With no shield left there is no prompt. An unannounced
+  throw holds the fight 7 to 8 s; a switch of theirs holds it 2 to 3 s ("Go, Vaporeon!").
+
+## Counting their energy
+
+- **Judging the count.** Their named throws are the truth to judge it by: at a throw they had at least its cost
+  (`scripts/live/throw_check.py`).
+- **Seen hits alone fall short.** A resisted fast move takes a pixel or less off our bar, so it is never seen:
+  counting only the hits seen fell short at every named throw.
+- **What the tracker does now** (`pogo.tracker`): it counts by rhythm, a fast move every so many turns while their
+  Pokémon is out.
+  - The hits seen keep the rhythm in step, and the gaps between them rule out fast moves of the wrong length.
+  - The turns are the time the fight was on the screen, measured frame by frame.
+  - A new Pokémon is counted from when its name showed.
+- **The button rim.** The game hides the charged-move buttons on many frames around charged moves, while the header
+  and bars still show. A button reads as empty only when its rim is drawn (`android_screen.button_rim`).
+
+## Rewards between sets
+
+- When a set's five battles are played, BATTLE greys out until every reward is collected. The rewards are
+  Stardust, items (a "?" in a dark cloud is an item), a Pokémon encounter (a "?" in grass) and rank rewards.
+- The runner never collects anything. It leaves rewards while BATTLE still works, and stops after five identical
+  taps.
+- Encounters are the owner's call. A horizontal swipe on the rewards row flips the top tab to PARTY, whose party
+  screen has edit and delete buttons: don't swipe there.
+
 ## Prompts, switches, the rest
 
 - **Shield prompt:** the shield's centre is (0.50, 0.842), "NOT NOW" (0.50, 0.950). A tap while the prompt fades in
   is ignored, so the answer is tapped again every 0.4 s until it goes (for 5 s at most). Two prompts can come back
   to back (Garbodor's two Seed Bombs): a prompt back after 1.5 s away is a new one.
-- **Switches:** the bench portraits are at (0.90, 0.603) and (0.90, 0.692). The game sometimes ignores the tap,
+- **Switches:** the bench portraits are at (0.90, 0.603) and (0.90, 0.692). A Pokémon switched out takes the
+  slot of the one that came in, so the order on screen is not the party's. A touch that starts within about 0.1 s of
+  the previous one ending is dropped, so switch and charged taps wait 0.25 s after the last fast tap. The game sometimes ignores the tap,
   and any camera cut changes the portraits too. So a switch counts only when the buttons become the new Pokémon's
   moves: its names under the buttons, or an energy reading that fits its costs and not the old one's, three frames
   running. The old one's names a second after the tap say it was not taken. The bench strip decides only if neither
