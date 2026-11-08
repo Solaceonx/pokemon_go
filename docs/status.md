@@ -4361,3 +4361,129 @@ Carbink thirds 46-52%. All the top five within margins of each other.
 **Jellicent's moves as caught** (2026-11-07, scratch moves_bb.py, same 600 battles as the moveset test): Bubble Beam
 for Surf -4.8 ± 4.5 (borderline); Bubble fast with Bubble Beam -8.8 ± 5.2. A Charged TM on Bubble Beam gives Surf or
 Ice Beam (Ice Beam with Shadow Ball -7.9 against defaults, so about 3 points below Bubble Beam).
+
+## Task 40: the bot playing the second account on the Android phone (2026-11-07, the Claude agent on the owner's PC)
+
+**Set-up.** The phone is a moto g stylus 5G 2024 (adb `ZY22JPBNMW`, 1080 x 2400), mirrored by a scrcpy 5.0.1 client
+written in Python (`pogo/android.py`):
+- the server jar is pushed and started over `adb forward`;
+- the raw H.264 stream is decoded with PyAV, giving 540 x 1200 frames at up to 30 a second;
+- touches go on scrcpy's control channel.
+
+scrcpy came from the official GitHub release, with its SHA-256 checked against GitHub's digest; adb came from its
+bundle. Step 3 (watch only) was skipped, as the brief allows. Screen regions were measured on the phone's own frames
+(`pogo/android_screen.py`). The owner's yes to play: "it can go play games on that account i don't care" (task 40)
+and, today, "play until you've maxed out the number of battles for today, or you've won 3 games". Later the owner
+added: GO Battle League only once training gives full confidence and Excellent minigames 100% reliably, and at most 25
+GO Battle League battles a day.
+
+**The player.**
+- `scripts/live/play_android.py` plays one battle.
+- `scripts/live/train_loop.py` runs Team Leader battles back to back, with no screenshots between them.
+- `scripts/live/run_gbl.py` runs GO Battle League.
+- `report.py`, `ratings.py` and `audit_cues.py` (all in `scripts/live/`) score them.
+
+The website engine (`pogo.realtime.WEBSITE`, `runs/general-decide`) decides every move, shield and replacement from
+`pogo.tracker`. Every battle is screen-recorded (`C:\pogo-media\live\<date>[-training]\battle-*.h264` and `.times`,
+outside git) and logged under `runs/live/`.
+
+**What the phone taught (each found on the recordings, then fixed and checked on them).**
+- **Our energy is read from the charged buttons, not counted.**
+  - The count drifted 20 to 50 off, both ways: moves it never saw, Pokémon seen coming in late, and turns lost when a
+    fast tap came late (the engine's 300 ms decisions held up the loop).
+  - How this phone draws the buttons: short of a move's cost, the button is a dark see-through disc with the type's
+    colour rising from the bottom, and no name under it. At the cost, the whole disc turns a light shade and the name
+    shows. Past the cost, a darker shade rises again toward a second throw (the old reader took that for "fills
+    darker").
+  - `android_screen.my_energy` reads a level from 0 to 2 on both buttons. It accepts the reading only when both
+    buttons give the same energy and each name shows exactly when its move is paid for. On the recordings it gives
+    clean staircases: 13 a step for Hex, 4 for Scratch, 100 at the cap. The player takes it at every look and throws
+    on it.
+- **Fast taps cancel a queued charged tap.** With fast taps going on after a charged tap, a paid-for Discharge went
+  off only after the fourth tap, 3 s later. Most "not taken" throws were this. Now fast taps stop from the charged tap
+  until "Get Ready!", and the button is re-tapped every 0.6 s while it shows the move paid for.
+- **A throw beaten by theirs, or seen late, still goes off.** A Body Slam went off after Plusle's Discharge, and
+  another move 0.3 s after the player stopped waiting for it. With nobody watching, its minigame went unswiped.
+  - `audit_cues.py` finds every "Get Ready!" on a recording. Batch 8 had 39 of our moves and 35 swiped; batch 9 had 33
+    of 33.
+  - The player now watches for "Get Ready!" after any throw that has not started: 15 s after a beaten one, 12 s after
+    one not seen to start. It reads the top box only while the fight is off the screen (OCR takes 0.3 to 0.5 s here).
+- **Switch taps are sometimes ignored.** The player then took Stunfisk for out for 36 s, pressed Stunfisk's moves on
+  Jellicent's buttons, and hunted Ground icons in a Ghost minigame (no icons found).
+  - A switch now counts only when the bench portraits change: a difference over 45 for 0.6 s, starting within 2 s of
+    the tap. Until then there are no charged taps.
+  - At a throw, the button's paid-for colour must fit the move. The pair (button, type) names the move: 463 right
+    corrections against 4 wrong on recorded frames.
+- **Shield taps while the prompt fades in are ignored.** The first GO Battle League games used no shields at all
+  although the engine chose some. The answer is now re-tapped until the prompt goes; since then, shields chosen have
+  equalled shields used in every battle.
+  - On top of the engine: shield a hit that would knock us out or take 35% of our health (unless we are nearly gone),
+    and always shield on our last Pokémon.
+- **False readings, each fixed with a stricter shape check:**
+  - a trainer's pink aura read as the opponent's bar at 1%;
+  - Jellicent's lavender body read as a shield prompt;
+  - white field lines read as the replacement prompt.
+- **The minigame** is a closed-loop stroke: one touch held about 5 s, steering every 50 ms to the icons found by their
+  round outline, a ring of the type's colour and a white symbol, with colours measured per type on this phone.
+  - It visits the icons nearest first and skips icons the finger passed in the last 0.4 s (frames are 0.1 to 0.2 s
+    old). Without that, Shadow Ball, whose icons spread over all of Jellicent, once rated only Great.
+  - Timing on this phone: "Get Ready!" is caught within 0.15 s of its first frame; icons appear 1.0 to 1.45 s after it
+    and the rating ends 6.0 to 6.8 s after it. The stroke runs from 1.05 to 6.28 s.
+
+**GO Battle League, before those fixes: 2 wins, 5 losses.**
+- We lost to Toxtricity / Squawkabilly / Miltank, Bastiodon / Scrafty, Mimikyu / Morpeko, Machamp / Raboot / Salazzle
+  and Raichu / Palossand.
+- We beat Hitmonchan / Golbat and Pidgeotto / Sableye / Magmar.
+- The recordings showed shields not used, full energy kept until fainting, the opponent's bar misread, and poor
+  swipes.
+- The owner sent the player back to Team Leaders.
+
+**Team Leader training since (all wins).**
+
+| Batch | Change | Wins | Our moves swiped (audit) | Excellent of swiped |
+|---|---|---|---|---|
+| 5 | shield and prompt fixes | 6/6 | not audited | 32/33 |
+| 6 | Shadow Ball chase | 6/6 | not audited | 32/32 |
+| 7 | energy from the buttons, re-taps, queued throws, fast-tap thread | 6/6 | not audited | 25/25 |
+| 8 | switch check, no fast taps while throwing | 6/6 | 35/39 | 35/35 |
+| 9 | late "Get Ready!" watched | 6/6 | 33/33 | 33/33 |
+| 10 | the same, again (the game lagged and then crashed in one battle; after it, crash guards) | 6/6 | 35/35 | 34/34 (one minigame was never shown: lag) |
+
+The Team Leaders throw little (one shield prompt a battle) and lose to this team every time, so these batches test the
+mechanics (energy, throws, minigames, switches), not the strategy; the owner said as much.
+
+**GO Battle League after the fixes: 1 win in 1 battle** (Marowak / Garbodor / Boldore, who forfeited near the end).
+- Every one of our 5 moves was swiped, all Excellent; shields chosen equalled shields used.
+- Did the player know its energy? Whenever the buttons were on screen, yes: the reading was exact, and the player took it at each look and threw on it.
+- Two faults showed, both fixed and checked by replaying the recording through the player:
+  - **Close-ups taken for the fight.** In our Shadow Ball's close-up, Garbodor's faint and the change to Boldore, false single-frame bars made those frames count as fighting. The count rose by a Hex each look (16 real, 53 counted), and a Shadow Ball was tapped on the count and refused, stopping fast moves for 3 s. Now a frame counts as fighting only after three in a row, and throws wait for the buttons' reading (the count stands in only after 8 s of fighting with the buttons unread).
+  - **A second shield prompt ignored.** Garbodor threw Seed Bomb twice in a row, and its second prompt was taken for the first and left to time out. A prompt back after 1.5 s away now gets its own decision.
+- Also from the replay: a throw beaten by theirs went off 22 s later, behind two Seed Bombs and their shields. The watch for it now lasts until the fight has been back for 2 s.
+- The engine thinks up to 300 ms a decision (`cap_ms`), asked at each look (every 0.5 s). In this battle 125 of 145 decisions were instant (one sensible choice); the 20 searches took a median of 215 ms, at most 307 ms.
+
+**Set 2, battle 1: a win against Typhlosion / Lokix / Gengar** (the owner then stopped play to ask about one throw).
+- **The question:** why Discharge, not Mud Bomb (super effective), into Typhlosion?
+- **The decision:** at 120 s Stunfisk had 3% health, so the engine had to throw at once. It believed 43 energy: Discharge 40 was paid for, Mud Bomb 45 was not.
+- **Why the belief was wrong:** the screen already showed MUD BOMB's name, and the buttons read 45 to 47 a moment later. The fill was unreadable for a second while both buttons flashed on becoming paid for, so the count (34 plus one Thunder Shock's 9) stood in.
+- **The cost:** Discharge took Typhlosion from about 59% to 11% and Vigoroth finished it. Mud Bomb (about 1.9 times the damage) would very likely have knocked it out.
+- **The fix:** the names under the buttons now bound our energy when the fill is unread. A name showing means at least that move's cost; a name missing means less. On this battle's recording the names agreed with the fill on all 278 frames that had both. Replaying the battle through the player now throws Mud Bomb there.
+- **Also seen, and fixed:** a switch counted as seen 0.8 s after its tap had really been ignored. The tap came during "Stunfisk used Mud Bomb!", and the cut to Gengar changed the bench strip. The move names corrected who was out 4.5 s later.
+  - A switch is now confirmed only by what a switch alone changes: the buttons become the new Pokémon's moves, shown by their names (read in the background) or by an energy reading that fits only the new Pokémon's move costs, three frames running.
+  - The old Pokémon's names a second after the tap, or readings fitting only its costs, mean the tap was not taken. The bench strip decides only if neither has said anything in 5 s.
+  - Replaying three battles: all six switch taps came out as the recordings show (two real, four ignored, the false one among them). Real switches are now confirmed 2.1 to 3.3 s after the tap instead of 0.8 s, with charged taps held until then.
+
+**Crash guards.** The game crashed once to the Android home screen; the player went on for 200 s and tapped a prompt it thought it saw. Now:
+- the player stops after 20 s with no fight on screen;
+- shield answers are re-tapped for 5 s at most;
+- `train_loop.py` and `run_gbl.py` tap only when Pokémon GO is the app in front (`dumpsys window`).
+
+**The health bars' orange strip (2026-11-08).** A hit leaves an orange strip at the end of the bar's fill for a second
+or so. The bar reader took it for fill on some frames and not others, so the bars jumped 2 to 6 pixels each frame
+after every hit. It is now left out, and each fast move shows as one clean step on the recordings. This is the
+start of counting their fast moves from the steps in our bar rather than by rhythm.
+
+**For other agents:** `docs/android_play.md` gathers what the bot has learnt on the phone: the minigame (icon
+colours, zones, timing, the stroke), the buttons, the bars, prompts, switches, the tools and the open problems.
+
+Tests (320) and `scripts/check_pvpoke.py` (108 of 108) pass. The code is on the branch `task40-android`.
+
