@@ -992,6 +992,7 @@ class Player:
                 self.decision = FAST
             self.decided_for = self.active
             self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000))
+            self.no_weaker_move(t, view)
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
                 self.armed = None
@@ -1132,6 +1133,30 @@ class Player:
                          hp=round(hp, 1))
                 return True
         return False
+
+    def no_weaker_move(self, t: float, view) -> None:
+        """The engine's charged move, unless another we can pay for costs no more and hits harder: then that one
+        (2026-11-08, the owner: "why are we throwing mud bombs at a ninjask?": with 45 energy the engine chose Mud
+        Bomb, 15 damage to Ninjask, over Discharge, 79 and cheaper; it did so at any thinking time). Moves that raise
+        or lower stats are left to the engine."""
+        if self.decision not in CHARGED or self.tracker.foe is None:
+            return
+        from pogo.battle import damage
+        mon = self.team[self.active]
+        k = self.decision - CHARGED[0]
+        if k >= len(mon.charged) or getattr(mon.charged[k], "buff_chance", 0):
+            return
+        have = self.energy()
+        bounds = self.paid_bounds()
+        have = max(have if have is not None else self.tracker.me.mon.energy, bounds[0] if bounds else 0)
+        hit = {j: damage(view.me.mon, m, view.foe) for j, m in enumerate(mon.charged) if have >= m.energy}
+        better = [j for j in hit if j != k and mon.charged[j].energy <= mon.charged[k].energy
+                  and hit[j] > hit.get(k, damage(view.me.mon, mon.charged[k], view.foe))]
+        if better:
+            j = max(better, key=hit.get)
+            self.log("move_dominated", t, chose=mon.charged[k].id, now=mon.charged[j].id,
+                     damage=[hit.get(k), hit[j]])
+            self.decision = CHARGED[0] + j
 
     @contextlib.contextmanager
     def engine_sees(self):

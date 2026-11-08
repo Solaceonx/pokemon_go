@@ -93,6 +93,7 @@ def main() -> None:
     ap.add_argument("--battles", type=int, default=5)
     ap.add_argument("--leaders", nargs="+", default=["spark", "candela", "blanche"])
     ap.add_argument("--media", default=r"C:\pogo-media\live")
+    ap.add_argument("--team", default=str(ROOT / "data" / "alt_team.json"), help="the party's team file (play_android)")
     a = ap.parse_args()
     adb, _ = _tools(None)
     media = Path(a.media) / (time.strftime("%Y%m%d") + "-training")
@@ -130,7 +131,7 @@ def main() -> None:
             print(json.dumps({"stopped": "the party screen was not where expected", "frame": str(path)}), flush=True)
             break
         done = subprocess.run([sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", a.serial,
-                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media)],
+                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team],
                               capture_output=True, text=True, cwd=ROOT)
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), "{}")
         out = json.loads(line)
