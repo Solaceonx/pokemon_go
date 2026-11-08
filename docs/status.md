@@ -4379,3 +4379,14 @@ moves, rulebook pilots: about 1300 CP 99.7% ± 0.7, about 1500 CP 93.8% ± 2.7 (
 the opponents' true stats; live, the tracker reads the opponent's CP (`Foe.cp`) but builds every opponent at PvPoke's
 default level and IVs for its species and assumes the usual moves until others are seen, so a 1300 CP Pokémon is
 treated as full strength (cautious, not stuck). Using the read CP to set the level is a small open fix.
+
+**Best teams from one of the owner's PvP rosters, and the best single catch** (2026-11-07; scratch roster/kim_teams.py;
+names of the accounts kept out of the repo). Trained bot both sides, PvPoke moves and default IVs, 600 fresh battles per
+team. Great (22 owned, mixed field): Fearow / Diggersby / Charjabug 59.4% ± 3.9, Diggersby on all eight best; adding
+shadow Hydreigon 65.3%, Cramorant 62.0%, shadow Forretress 61.3%, Stunfisk 60.2%, Melmetal 60.0%. Ultra (17 owned,
+random threes from PvPoke's top 50): Melmetal / Ninetales / Oinkologne 64.9% ± 3.8, Melmetal on all eight best; adding
+shadow Forretress 69.8%, Tinkaton 67.6%, Forretress 66.9%, Alolan Muk 65.8%, Mimikyu 64.6%.
+**Shadow against regular in PvPoke's rankings** (Great copy of 2026-10-09, Ultra 2026-11-06), largest score gains with
+the shadow in the top 100: Great, Hydreigon +2.2 (#18 v #74), Steelix +2.2 (#89 v #136), Ninetales +1.7 (#3 v #13),
+Dusknoir +1.1, Shelgon +1.1, Dragonair +1.0; Ultra, Hydreigon +3.5 (#92 v #179), Snorlax +1.7 (#3 v #13), Cradily +1.4,
+Politoed +1.2, Milotic +0.9, Golisopod +0.8. Most other shadows score the same or lower than their regular forms.
