@@ -94,7 +94,7 @@ def icon_zone(move_type: str):
 SWEEP_BOX = {"normal": (0.08, 0.93, 0.52, 0.90), "ground": (0.05, 0.95, 0.54, 0.90),
              "electric": (0.17, 0.83, 0.43, 0.74), "ghost": (0.08, 0.95, 0.40, 0.86),
              "water": (0.05, 0.98, 0.27, 0.90)}
-SWEEP_ONLY = {"normal"}  # types whose icons the detector finds too seldom to chase: the sweep alone
+SWEEP_ONLY: set = set()  # types whose icons no detector finds: the predicted ones and the sweep alone
 
 
 def sweep_path(box, spacing: float = 0.09) -> list:
@@ -139,8 +139,11 @@ def find_icons(rgb, colour, move_type: str, zone) -> list:
     """The minigame icons in one frame, as (x, y) shares of the screen."""
     from pogo import minigame
     (cx, cy), (spx, spy) = zone
-    if colour is None:  # grey icons (Normal): the strict detector only, grey matches too much else
-        return [(x, y) for x, y, r in minigame.detect(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, None)]
+    if colour is None:
+        # Normal's grey icons: a grey disc with a white ring symbol in the middle (normal_icons, on a half-size frame,
+        # about 23 ms); outlines and grey rings matched Vigoroth's white fur everywhere (2026-11-08)
+        from normal_icons import normal_icons
+        return [(x, y) for x, y, v in normal_icons(rgb[::2, ::2], scales=(0.8, 1.0, 1.25, 1.6)) if 0.15 < y < 0.95]
     icons = [(x, y) for x, y, r in raw_circles(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, colour, 45)]
     if move_type in COLOUR_BLOBS:
         icons += [(x, y) for x, y, r in minigame.detect_colour(rgb, colour) if 0.045 <= r < 0.17
@@ -357,7 +360,9 @@ class Player:
         self.used_names: dict = {}  # a move's name as read (letters only) -> the ids with that name
         for m in gd.moves.values():
             self.used_names.setdefault("".join(ch for ch in m.name.upper() if ch.isalpha()), []).append(m.id)
-        self.used_last = (None, 0.0)  # the last "used" text read for theirs, and when: it stays up a second or two
+        self.used_last = (None, 0.0)
+        self.my_throw_at = 0.0  # when a throw of ours last started (Get Ready!)
+        self.late_move = None  # a move of theirs named after its throw was already counted  # the last "used" text read for theirs, and when: it stays up a second or two
         self.my_move_names = {"".join(ch for ch in m.name.upper() if ch.isalpha()) for b in team for m in b.charged}
         self.my_names = {"".join(ch for ch in b.name.upper() if ch.isalpha()) for b in team}
         charged_ids = {i for sp in gd.species.values() for i in sp.get("chargedMoves", [])}
@@ -568,9 +573,10 @@ class Player:
         if "USED" not in text:
             return
         who, said = text.split("USED", 1)
-        # Ours: our Pokémon's name, or our move's, read in part too (2026-11-08: "JELLICENTUSEDBUBBLEBEA" was taken
-        # for their Bubble, a fast move, and 50 energy was taken off them for a throw they never made).
-        if any(who.endswith(n) for n in self.my_names) or \
+        # Ours: one of our moves, read whole or in part, within 12 s of a throw of ours starting (2026-11-08:
+        # "JELLICENTUSEDBUBBLEBEA" was taken for their Bubble, a fast move; and in a Stunfisk mirror their
+        # "STUNFISK USED EARTHQUAKE" was taken for ours by the name and ignored).
+        if time.time() - self.my_throw_at < 12.0 and \
                 any(said.startswith(n) or (len(said) >= 5 and n.startswith(said)) for n in self.my_move_names):
             return
         ids = next((i for n, i in sorted(self.used_names.items(), key=lambda x: -len(x[0])) if said.startswith(n)), None)
@@ -578,6 +584,10 @@ class Player:
             return
         foe = self.tracker.foe
         own = [i for i in ids if foe is not None and i in self.gd.species[foe.mon.build.species_id]["chargedMoves"]]
+        base = foe.mon.build.species_id.split("_")[0] if foe is not None else None
+        forms = [i for i in ids if base and any(i in sp.get("chargedMoves", []) for sid, sp in self.gd.species.items()
+                                                if sid.split("_")[0] == base)]
+        own = own or forms
         move = (own or ids)[0]
         last, self.used_last = self.used_last, (text, time.time())
         if last[0] == text and time.time() - last[1] < 3.0:
@@ -587,6 +597,7 @@ class Player:
                 # The words of a throw whose shield prompt the tracker has already had (the fight showed between):
                 # the same throw, not another.
                 self.log("their_charged_named", t, move=move, text=text[:40], counted_already=True)
+                self.late_move = move  # its name still tells the move, and the form (given at the next look)
                 return
             self.foe_move_seen = move
             self.log("their_charged_named", t, move=move, text=text[:40], prompted=self.pending_theirs)
@@ -751,6 +762,20 @@ class Player:
             paused = max(0.0, gap - 10.0 * ((self.pending_mine is not None) + self.pending_theirs))
         if my_left is not None and my_left < self.my_left_seen:
             self.my_left_seen = my_left
+            alive_after = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
+            if my_left == 1 and len(alive_after) == 1 and time.time() - self.replace_tapped > 15.0:
+                # One of ours fainted with no prompt answered: with one left the game sends it in itself
+                # (2026-11-08: Jellicent fainted, Stunfisk came in unasked, and the player, still taking Jellicent
+                # for out, threw "Bubble Beam" on Stunfisk's Mud Bomb button and hunted Water icons: Nice).
+                self.tracker.me.team[self.active].hp = 0
+                alive = [j for j in range(len(self.team)) if self.tracker.me.team[j].hp > 0]
+                self.log("fainted_unprompted", t, was=self.team[self.active].name, left=my_left,
+                         now=self.team[alive[0]].name if len(alive) == 1 else None)
+                self.replacements += 1
+                if len(alive) == 1:
+                    self.active = alive[0]
+                    self.switching = self.switch_wanted = None
+                    self.energy_read = self._energy_raw = None
         if foe_left is not None and foe_left < self.foe_left_seen:
             self.foe_left_seen = foe_left
         with self.pending_lock:  # the "used" reading thread sets pending_theirs and foe_move_seen
@@ -765,6 +790,9 @@ class Player:
             self.pending_theirs = False  # handed to the tracker in this look
         try:
             self.tracker.update(obs)
+            late, self.late_move = self.late_move, None
+            if late is not None:
+                self.tracker.their_move_named(t, late)
         except Exception as error:  # noqa: BLE001 - a bad look must not stop the battle
             self.log("tracker_error", t, error=str(error))
         if obs.my_energy is not None and self.tracker.foe is not None:
@@ -903,6 +931,12 @@ class Player:
             self.energy_read = self._energy_raw = None
         point = controls.CHARGED_BUTTONS[k]
         self.clear_of_fast_taps()
+        now_rgb = self.phone.frame()[0]
+        if screen.replace_prompt(now_rgb) or screen.shield_prompt(now_rgb):
+            # A prompt came up: a tap at the button would land on it (2026-11-08: Bulldoze tapped as Vigoroth
+            # fainted chose Jellicent on the replacement prompt, where Jellicent's portrait sits over the button).
+            self.log("throw_cancelled", t, move=move.id, why="prompt")
+            return
         self.touch(point, f"charged move {k + 1}: {move.name}")
         tapped = last_tap = time.time()
         costs = [m.energy for m in self.team[self.active].charged]
@@ -957,6 +991,7 @@ class Player:
             self.energy_read = None
             return
         self.pending_mine = k
+        self.my_throw_at = time.time()
         self.log("throw_started", self.now(), move=move.id, after_tap_s=round(since - tapped, 2),
                  cue_t=round(since - (self.t0 or since), 3))
         self.minigame(k, move, since)
@@ -993,6 +1028,7 @@ class Player:
             return False
         self.queued = None
         self.pending_mine = k
+        self.my_throw_at = time.time()
         self.log("throw_started", self.now(), move=move.id, after_tap_s=round(when - tapped, 2), queued=True)
         self.minigame(k, move, when)
         return True

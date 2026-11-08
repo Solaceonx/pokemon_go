@@ -192,6 +192,9 @@ class Tracker:
         self.energy_off = 0.0
         self.energy_streak, self.energy_last = 0, 0.0  # looks in a row on which the buttons disagreed the same way
         self.foes: dict[str, Foe] = {}
+        # The screen names a regional form like the regular one ("Stunfisk" for Galarian Stunfisk too). Once a move
+        # shows which form it is: {species read from the screen: the form's species id}.
+        self.form_of: dict[str, str] = {}
         self.order: list[str] = []  # opposing species in the order they appeared
         self.foe: Foe | None = None  # their active Pokémon
         self.foe_shields = 2
@@ -425,6 +428,8 @@ class Tracker:
 
     def _their_active(self, obs: Observation) -> str | None:
         """Notice their active Pokémon changing. Returns "switch", "faint", "first" or None."""
+        if obs.foe_species is not None:
+            obs = Observation(**{**asdict(obs), "foe_species": self.form_of.get(obs.foe_species, obs.foe_species)})
         if obs.foe_species is None or (self.foe and obs.foe_species == self.foe.mon.build.species_id):
             return None
         how = "first"
@@ -462,12 +467,51 @@ class Tracker:
         move = next((self.gd.moves[i] for i in entry["chargedMoves"]
                      if i in self.gd.moves and name in (i, self.gd.moves[i].name)), None)
         if move is None:
-            return None
+            return self._other_form(t, foe, name)
         kept = [m.id for m in build.charged if foe.used.get(m.id)]
         spare = [m.id for m in build.charged if not foe.used.get(m.id)]
         charged = ([move.id] + kept + spare)[:max(len(build.charged), 1)]
         foe.mon.build = self.gd.build(build.species_id, [build.fast.id, *charged], level=build.level, ivs=build.ivs, allow_forms=True)
         self._note(t, "foe_move_learned", species=build.species_id, move=move.id)
+        return move
+
+    def their_move_named(self, t: float, name: str) -> None:
+        """The screen named a charged move of their active Pokémon after the tracker had already had that throw (its
+        shield prompt came first): learn the move, and the form it shows, without counting the throw again."""
+        foe = self.foe
+        if foe is None or any(name in (m.id, m.name) for m in foe.mon.build.charged):
+            return
+        move = self._learn_move(t, foe, name)
+        if move is not None:
+            foe.used[move.id] = foe.used.get(move.id, 0) + 1
+
+    def _other_form(self, t: float, foe: Foe, name: str):
+        """Their Pokémon threw a move its species cannot have: if exactly one regional form of it can, it is that
+        form (2026-11-08: Galarian Stunfisk, named "Stunfisk" on screen, threw Earthquake; the tracker had built the
+        regular one, with Thunder Shock and Discharge). Health share, energy and what it has used carry over."""
+        build = foe.mon.build
+        base = build.species_id.split("_")[0]
+        forms = [sid for sid, sp in self.gd.species.items()
+                 if sid.split("_")[0] == base and sid != build.species_id and not sid.endswith("_shadow")
+                 and any(name in (i, self.gd.moves[i].name) for i in sp.get("chargedMoves", []) if i in self.gd.moves)]
+        if len(forms) != 1:
+            return None
+        form = forms[0]
+        move = next(self.gd.moves[i] for i in self.gd.species[form]["chargedMoves"]
+                    if i in self.gd.moves and name in (i, self.gd.moves[i].name))
+        share = max(0, foe.mon.hp) / build.hp
+        fresh = self.gd.default(form, allow_forms=True)
+        others = [m.id for m in fresh.charged if m.id != move.id]
+        foe.mon = Mon(self.gd.build(form, [fresh.fast.id, move.id, *others][:1 + max(1, len(fresh.charged))],
+                                    allow_forms=True))
+        foe.mon.hp = round(share * foe.mon.build.hp)
+        foe.mon.energy = (foe.lo + foe.hi) // 2
+        foe.fast_from, foe.ruled_out, foe.misfit, foe.by_move = "guessed", set(), {}, {}
+        old = build.species_id
+        self.form_of[old] = form
+        self.foes[form] = self.foes.pop(old, foe)
+        self.order = [form if x == old else x for x in self.order]
+        self._note(t, "foe_form", was=old, now=form, move=move.id)
         return move
 
     def _their_rhythm(self, foe: Foe, in_air: bool = False, idle: int = 0) -> None:

@@ -126,7 +126,9 @@ def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, tea
     mine = [m.copy() for m in me.team]
     seen = view.foe_shown
     theirs = [m.copy() for m in seen]
-    unseen = max(0, view.foe_left - sum(m.hp > 0 for m in seen))
+    # Never more than three in all: live, the header can still count a Pokémon of theirs whose bar shows empty
+    # (2026-11-08: a fainted Stunfisk with "3 left" made a team of four, and a switch choice failed on slot 3).
+    unseen = max(0, min(view.foe_left - sum(m.hp > 0 for m in seen), 3 - len(seen)))
     taken = {m.build.species_id for m in seen}
     fitting = [(w, t) for w, t in teams if w > 0 and taken <= set(t)] if teams and unseen else []
     by_id = {b.species_id: b for b in pool}
@@ -511,7 +513,7 @@ class Engine(Learner):
             # imagine() orders the opposing side as the visible slots followed by guessed slots.
             seen = view.foe_shown
             bench = [i for i, m in enumerate(seen) if m is not view.foe and m.hp > 0]
-            unseen = max(0, view.foe_left - sum(m.hp > 0 for m in seen))
+            unseen = max(0, min(view.foe_left - sum(m.hp > 0 for m in seen), 3 - len(seen)))
             bench += list(range(len(seen), len(seen) + unseen))
             if bench:
                 return [*(self._their_throws(view) or [FAST]), *(SWITCH[i] for i in bench)]

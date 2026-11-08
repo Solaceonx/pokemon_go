@@ -79,7 +79,9 @@ def main() -> None:
         try:
             again = name(engine.act(tracker.view()), active)
         except Exception as error:  # noqa: BLE001
+            import traceback
             print(f"{r['t']:6.1f} engine error: {error}")
+            traceback.print_exc(limit=-4)
             continue
         f, lf = tracker.foe, r.get("foe")
         if live is None or again == live:

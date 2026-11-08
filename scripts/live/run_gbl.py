@@ -68,6 +68,11 @@ class Runner:
         subprocess.run([self.adb, "-s", self.serial, "shell", "input", "tap", str(int(point[0] * w)), str(int(point[1] * h))])
         self.log("menu_tap", why=why, point=point)
 
+    def battle_button(self, words) -> list:
+        """BATTLE in the Basic Rewards box (above PREMIUM REWARDS, if that is on screen), as [(x, y)]."""
+        premium = min((y for t, x, y in words if "PREMIUM" in t.upper()), default=1.0)
+        return [(x, y) for t, x, y in words if re.sub("[^A-Z]", "", t.upper()) == "BATTLE" and 0.6 < y < premium]
+
     def stop(self, why: str, a: np.ndarray) -> str:
         from PIL import Image
         path = self.media / f"stopped-{time.strftime('%H%M%S')}.png"
@@ -122,12 +127,15 @@ class Runner:
                 self.tap((0.5, card[1] + 0.02), "great league", words)
             elif "LETSGO" in flat:
                 self.tap(LETS_GO, "let's go", words)
-            elif "COLLECT" in flat:
+            elif "TRAINING" in flat and "BLANCHE" in flat and "GOBATTLELEAGUE" not in flat:
+                # the Battle tab scrolled down to Training (after training battles): back up to the league's card
+                subprocess.run([self.adb, "-s", self.serial, "shell", "input", "swipe", "540", "700", "540", "1900", "600"])
+                self.log("menu_swipe", why="up to the league card")
+            elif "COLLECT" in flat and not ("GOBATTLELEAGUE" in flat and self.battle_button(words)):
                 return self.stop("rewards to collect (an encounter needs Poke Balls: the owner's call)", a)
             elif "GOBATTLELEAGUE" in flat and "BATTLE" in flat:
-                # BATTLE in the Basic Rewards box (above PREMIUM REWARDS, if that is on screen)
-                premium = min((y for t, x, y in words if "PREMIUM" in t.upper()), default=1.0)
-                button = [(x, y) for t, x, y in words if re.sub("[^A-Z]", "", t.upper()) == "BATTLE" and 0.6 < y < premium]
+                # rewards waiting to be collected are left for the owner: the set goes on without them
+                button = self.battle_button(words)
                 if not button:
                     return self.stop("no Battle button", a)
                 self.tap((0.5, button[-1][1]), "battle (basic rewards)", words)
