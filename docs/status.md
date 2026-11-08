@@ -4741,3 +4741,28 @@ detector looks for a white ring in a grey disc; by day (the sky's brightness 228
 icons' rings average 200 to 213 against its 215, and loosening it fires all over Vigoroth's white fur and eyes
 (an eye scores as high as an icon). On a real icon the grey inside the ring matches the grey outside it (to within
 4; Vigoroth's eye differs by 17), which may be the way in, together with the icons' larger sizes as they appear.
+
+**Battles 15 to 24 of the day, and the game records (2026-11-08 afternoon).** The day ended at 24 GO Battle League
+battles, 15 won and 9 lost (each with what went wrong: `docs/live_battles_2026-11-08.md`). The 25th was not played:
+the owner took the phone back. Fixes after battle 14, each replayed on the battle that showed it:
+- **The fight is the header and a bar again, for the fast taps.** Needing a button on screen cut the fast taps
+  from about 530 a battle to 200: an empty button is see-through, and Vigoroth coming in hid both for 6 s while
+  Toxtricity attacked. Buttons now gate only the turn clock (a button within 1 s, or both bars within 8 s of one)
+  and the reading of a lone bar. A guard that held charged taps until a button was seen delayed Body Slams 7 to
+  10 s and left Stunfisk to faint with Mud Bomb chosen; it was taken out the next battle.
+- **Body Slam's icons** are found by matching a cut-out of the icon (`scripts/live/normal_icons.py`; real icons
+  scored 0.82 to 0.93, everything else 0.42 to 0.58): Excellent 13 of 14 swiped since, against 1 in 6 before.
+- **A Normal minigame that starts with no Get Ready!** is seen by its icons; our name in the "used" words says the
+  move is ours (a missed Body Slam had come off Charizard's count).
+- **A name's form stays once its type icons told it,** and a form of a Pokémon already seen is that one (a GO
+  Battle League team cannot hold two of a species).
+- **Our energy with no reading** rises only by the fast moves there was time for, and a throw on the count alone
+  needs the names under the buttons or a fast move's margin (Vigoroth's count went 43 to 63 in a throw's wait with
+  the taps off, and it fainted with no move thrown).
+- Still open: most "not taken" throws (9 in the last battle) come from our energy unread by day (22 to 26% of
+  fight frames against 33 to 45% at night).
+
+**Game records of every live battle:** `games/live/<STAMP>/game.json` and `game.txt` (schema `game-record-v1`,
+`variant: "live-log"`), 109 battles of 2026-11-07 and 08 (34 league, 75 training), built from `runs/live/*.jsonl` by
+`scripts/live/live_record.py`, with `games/live/index.json` and the analysis in `notes`. The recordings themselves
+(about 9 GB) stay on the owner's PC: the repository is public.
