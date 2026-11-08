@@ -4602,7 +4602,7 @@ account"). A new checker, run on each battle's recording (the scratch `fastcount
 
 **GO Battle League through the night, the owner asleep (2026-11-08, from 05:30 on the phone's clock).** The owner:
 "you can do all available battles for the rest of the day provided you thoroughly analyze what's going wrong every
-time you lose, and run it against the engine too". Battles 4 to 10 of the day:
+time you lose, and run it against the engine too". Battles 4 to 9 of the day:
 
 | # | Result | Their team | Minigames Excellent | What the analysis found |
 |---|---|---|---|---|
@@ -4613,8 +4613,9 @@ time you lose, and run it against the engine too". Battles 4 to 10 of the day:
 | 8 | win | Throh, Snorlax, Timburr | 4 of 4 | |
 | 9 | win | Greedent, Vaporeon, Toxtricity | 8 of 8 | |
 
-The day so far: 7 wins and 3 losses in 10 GO Battle League battles, 5 wins in a row at the end. The tenth start found
-the set's five battles played (BATTLE greyed out).
+The day: 6 wins and 3 losses in 9 GO Battle League battles (the league card: 12 wins in 20 battles this season,
+against 6 in 11 the night before), 5 wins in a row at the end. A tenth start found the set's five battles played
+(BATTLE greyed out); one start before battle 6 was lost to a dropped connection and played no battle.
 
 **Battle 4 (lost), each fault found on the recording, fixed and checked by replaying it:**
 - **Galarian Stunfisk shows as "Stunfisk".** The tracker built the regular one (Thunder Shock, Discharge), and the
