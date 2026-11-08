@@ -389,6 +389,7 @@ class Player:
         self.fight_since = None  # since when the fight has been on screen without a break
         self.labels_checked = None
         self.header_checked = None
+        self._last_active, self.active_changed_at = 0, -1.0
         self.replacements = 0  # replacement prompts answered: our faints
         self.prompt_shield, self.prompt_tapped = False, 0.0  # the answer to the shield prompt up now, and when tapped
         self.prompt_first = 0.0
@@ -663,9 +664,14 @@ class Player:
         is being checked, check_switch reads them."""
         if self.switching is not None:
             return
-        # Our header first: it names the species in GO Battle League, at every look, paid for or not. Checked again
-        # whenever the belief changes too, not only on a new reading.
-        mine = self.header_says()
+        if self.active != self._last_active:  # the belief changed (a switch, a replacement): older readings are stale
+            self._last_active, self.active_changed_at = self.active, t
+            with self.names._lock:  # and both are read again now, changed on screen or not (a wrong belief leaves
+                self.names._mine_sig = self.names._label_sig = None  # the screen as it was)
+        # Our header first: it names the species in GO Battle League, at every look, paid for or not. A reading
+        # counts only if it is newer than the last change of belief (2026-11-08: names under the buttons read before
+        # a switch were applied after it, and the belief flipped back for a moment).
+        mine = self.header_says() if (self.names.my_name_at or -1) > self.active_changed_at else None
         key = (self.names.my_name_at, self.active)
         if mine is not None and key != self.header_checked:
             self.header_checked = key
@@ -676,7 +682,7 @@ class Player:
                 self.energy_read = self._energy_raw = None
             return
         at = self.names.labels_at
-        if at is None or (at, self.active) == self.labels_checked:
+        if at is None or (at, self.active) == self.labels_checked or at <= self.active_changed_at:
             return
         self.labels_checked = (at, self.active)
         best = self.labels_say()
