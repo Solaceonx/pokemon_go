@@ -202,23 +202,38 @@ def timeline() -> list:
 
 
 def review_prepare(arg: str) -> str:
-    """The person's decisions in the finished game, for review_next (pogo.review): how many there are."""
+    """One player's decisions in the finished game (the person's, or with {"side": 1} the bot's), for review_next
+    (pogo.review): how many there are."""
+    a = json.loads(arg) if arg else {}
+    side = a.get("side", 0) if isinstance(a, dict) else 0
     s = _s
     rec = s.get("finished")
-    s["review_game"] = game_review.decisions(rec, s["gd"]) if rec else {"items": []}
-    s["review_judged"] = {}
-    return json.dumps({"count": len(s["review_game"]["items"])})
+    game = game_review.decisions(rec, s["gd"], side=side) if rec else {"items": [], "side": side}
+    if side == 0:
+        s["review_game"], s["review_judged"] = game, {}
+    else:
+        s["review_bot_game"], s["review_bot_judged"] = game, {}
+    return json.dumps({"count": len(game["items"])})
 
 
 def review_next(arg: str) -> str:
-    """One of them judged: what the person did, the best choice, both chances, and a label when it cost enough."""
-    i = json.loads(arg)["i"]
+    """One of them judged: what the player did, the best choice, both chances, and a label when it cost enough."""
+    a = json.loads(arg)
+    i, side = a["i"], a.get("side", 0)
     s = _s
-    item = s["review_game"]["items"][i]
-    out = game_review.judge(s["review_game"], item, s["net"], s["pool"], seed=item[1])
+    game = s["review_game"] if side == 0 else s["review_bot_game"]
+    item = game["items"][i]
+    out = game_review.judge(game, item, s["net"], s["pool"], seed=item[1])
     out["t"] = round(item[1] * TURN, 1)
-    s.setdefault("review_judged", {})[i] = out
+    s.setdefault("review_judged" if side == 0 else "review_bot_judged", {})[i] = out
     return json.dumps(out)
+
+
+def review_score(arg: str) -> str:
+    """Each player's score from the decisions judged so far (pogo.review.accuracy): {"you": ..., "bot": ...}."""
+    s = _s
+    return json.dumps({"you": game_review.accuracy(list(s.get("review_judged", {}).values())),
+                       "bot": game_review.accuracy(list(s.get("review_bot_judged", {}).values()))})
 
 
 def review_how_to_win(arg: str) -> str:

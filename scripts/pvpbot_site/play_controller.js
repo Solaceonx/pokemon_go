@@ -211,9 +211,18 @@ async function play(config) {
   flush();
 })();
 
-// After the battle, a chess.com-style look at the person's decisions (pogo/review.py): each played out with the
-// bot on both sides; the costly ones are marked ?? (blunder), ? (mistake), ?! (inaccuracy).
+// After the battle, a chess.com-style look at each player's decisions (pogo/review.py): each played out with the
+// bot on both sides; the costly ones are marked ?? (blunder), ? (mistake), ?! (inaccuracy), and each player gets an
+// accuracy score from them. The person's first, then the bot's.
 const MARK = { blunder: "??", mistake: "?", inaccuracy: "?!" };
+const costliest = (found) => found.sort((a, b) => b.cost - a.cost).slice(0, 6).sort((a, b) => a.t - b.t);
+const markedRows = (found, who) => found.map((r) => `<div class="move ${r.label}"><span class="tag">${MARK[r.label]}</span>${clock(240 - r.t)} ·
+  ${r.mon} v ${r.foe}: ${who} ${r.did} (wins ${Math.round(100 * r.mine)}%); to ${r.better} wins ${Math.round(100 * r.best)}%</div>`).join("");
+function scoreText(a) {
+  if (!a || a.accuracy === null) return "nothing to score";
+  const marks = ["blunder", "mistake", "inaccuracy"].filter((k) => a[k]).map((k) => `${a[k]} ${k}${a[k] > 1 ? "s" : ""}`);
+  return `<b>${Math.round(a.accuracy)}</b> (${marks.length ? marks.join(", ") : "nothing marked"} in ${a.decisions} decisions)`;
+}
 async function reviewDecisions(game) {
   const box = $("mistakes");
   if (!box) return;
@@ -221,16 +230,7 @@ async function reviewDecisions(game) {
   let count = 0;
   try { count = (await call("review_prepare", "")).count; } catch (e) { box.innerHTML = ""; return; }
   if (!count) { box.innerHTML = `<div class="caption">This game could not be replayed for a review of your decisions.</div>`; return; }
-  const found = [];
-  const show = (done) => {
-    const rows = found.map((r) => `<div class="move ${r.label}"><span class="tag">${MARK[r.label]}</span>${clock(240 - r.t)} ·
-      ${r.mon} v ${r.foe}: you ${r.did} (wins ${Math.round(100 * r.mine)}%); to ${r.better} wins ${Math.round(100 * r.best)}%</div>`).join("");
-    const head = done ? (found.length ? `The simulator's opinion of your costliest decisions, of ${count} looked at (each option played out with the bot on both sides).
-      On an exam of real positions two strong players chose its top pick no more often than random picks would, so treat these as questions, not verdicts:`
-                                      : `No clear mistakes in the ${count} decisions looked at.`)
-                      : `Looking at your decisions… ${found.length ? "" : ""}${Math.min(count, done === false ? found.length : count)}`;
-    box.innerHTML = `<div class="caption">${head}</div>` + rows;
-  };
+  let found = [];
   for (let i = 0; i < count; i++) {
     if (G !== game) return;
     let r;
@@ -238,12 +238,48 @@ async function reviewDecisions(game) {
     if (r.label) found.push(r);
     box.innerHTML = `<div class="caption">Looking at your decisions… ${i + 1} of ${count}</div>`;
   }
-  found.sort((a, b) => b.cost - a.cost);
-  found.splice(6);
-  found.sort((a, b) => a.t - b.t);
+  found = costliest(found);
   if (G !== game) return;
-  show(true);
-  if (!game.record || game.record.result !== "loss") return;
+  box.innerHTML = `<div class="caption">${found.length ? `The simulator's opinion of your costliest decisions, of ${count} looked at (each option played out with the bot on both sides).
+      On an exam of real positions two strong players chose its top pick no more often than random picks would, so treat these as questions, not verdicts:`
+    : `No clear mistakes in the ${count} decisions looked at.`}</div>` + markedRows(found, "you");
+  const score = document.createElement("div");
+  score.className = "caption";
+  box.prepend(score);
+  const scores = async (botNote) => {
+    let s;
+    try { s = await call("review_score", ""); } catch (e) { return; }
+    if (G !== game) return;
+    score.innerHTML = `<b>Accuracy</b> (100: no decision gave away win chance in the play-outs; Lichess's scale, 8 points lost scores 70, 15 scores 50, 25 scores 32):
+      you ${scoreText(s.you)}; the bot ${botNote || scoreText(s.bot)}.`;
+  };
+  await scores("not scored yet");
+  if (game.record && game.record.result === "loss") await howToWin(game, box);
+  await reviewBot(game, box, scores);
+}
+
+async function reviewBot(game, box, scores) {
+  let count = 0;
+  try { count = (await call("review_prepare", { side: 1 })).count; } catch (e) { return; }
+  if (G !== game) return;
+  if (!count) { await scores("not scored (its decisions could not be replayed)"); return; }
+  let found = [];
+  for (let i = 0; i < count; i++) {
+    if (G !== game) return;
+    let r;
+    try { r = await call("review_next", { i, side: 1 }); } catch (e) { continue; }
+    if (r.label) found.push(r);
+    await scores(`being scored… ${i + 1} of ${count}`);
+  }
+  if (G !== game) return;
+  await scores();
+  if (!found.length) return;
+  const more = document.createElement("details");
+  more.innerHTML = `<summary>The bot's costliest decisions, judged the same way</summary>` + markedRows(costliest(found), "it");
+  box.append(more);
+}
+
+async function howToWin(game, box) {
   const extra = document.createElement("div");
   extra.innerHTML = `<div class="caption">Looking for a way you could have won…</div>`;
   box.append(extra);

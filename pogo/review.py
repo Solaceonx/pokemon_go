@@ -13,9 +13,14 @@ play-outs, a closer one for those that look costly. The drop from the best choic
 
 It is "against players like the bot from there on", so a judgement, not a proof. For a lost game, `winning_line`
 finds a play-out that wins from the most promising different choice: one way the game could have been won.
+
+Either player can be reviewed (the owner, 2026-11-08: "after a game is over, you analyze what decisions you
+could've made to improve ... and then you can give each player a battle rating"): `decisions(..., side=1)` looks at
+the bot's decisions the same way, and `accuracy` turns one player's judged decisions into a score.
 """
 from __future__ import annotations
 
+import math
 import random
 
 from .agents import varied_settings
@@ -23,6 +28,7 @@ from .battle import CHARGED, DRAW, FAST, SWITCH, Battle, damage
 from .learner import Learner
 
 LABELS = ((0.25, "blunder"), (0.15, "mistake"), (0.08, "inaccuracy"))
+MARKS = {"blunder": "??", "mistake": "?", "inaccuracy": "?!"}
 
 
 class Replay:
@@ -102,7 +108,7 @@ class Logged:
 
 
 class _Watch:
-    """Plays as `inner` and notes the person's decisions worth reviewing, with the position just before the step."""
+    """Plays as `inner` and notes its decisions worth reviewing, with the position just before the step."""
 
     def __init__(self, inner):
         self.inner, self.calls, self.matchup = inner, [], None
@@ -139,9 +145,9 @@ class _Watch:
 
 
 class _Forced:
-    """The person's side in a play-out: as recorded until the decision under review, which comes out as `choice`;
-    then `on_decide()` hands both sides to the trained bot (a person replayed from a record cannot be asked what they
-    would do next) and returns the bot that plays on for the person."""
+    """The reviewed side in a play-out: as recorded until the decision under review, which comes out as `choice`;
+    then `on_decide()` hands both sides to the trained bot (a player replayed from a record cannot be asked what they
+    would do next) and returns the bot that plays on for the reviewed side."""
 
     def __init__(self, person, kind, choice, on_decide):
         self.inner, self.kind, self.choice, self.on_decide, self.pending = person, kind, choice, on_decide, True
@@ -168,13 +174,14 @@ class _Forced:
         return self.inner.replace(view)
 
 
-def decisions(record: dict, gd, limit: int = 30) -> dict:
-    """The person's decisions worth reviewing, in order: {"person", "bot", "items": [(snapshot, turn, kind, choice,
-    options)]}; no items if the record does not replay exactly."""
+def decisions(record: dict, gd, limit: int = 30, side: int = 0) -> dict:
+    """One player's decisions worth reviewing, in order (side 0 the person, 1 the bot): {"agents", "side", "items":
+    [(snapshot, turn, kind, choice, options)]}; no items if the record does not replay exactly."""
     teams = [[gd.build(sid, mv, level=level, ivs=tuple(ivs)) for sid, mv, level, ivs in t] for t in record["teams"]]
-    person, bot = Replay(record["my_choices"]), Logged(record["log"])
-    watch = _Watch(person)
-    battle = Battle(teams[0], teams[1], watch, bot, seed=record["seed"], record=True)
+    agents = [Replay(record["my_choices"]), Logged(record["log"])]
+    watch = _Watch(agents[side])
+    battle = Battle(teams[0], teams[1], *(watch if k == side else a for k, a in enumerate(agents)), seed=record["seed"],
+                    record=True)
     items = []
     while battle.winner is None:
         snap = battle.clone(None, None)
@@ -187,22 +194,24 @@ def decisions(record: dict, gd, limit: int = 30) -> dict:
     if len(items) > limit:  # keep the throws, shields and switches; drop the plainer fast-move moments first
         items = sorted(items, key=lambda d: (d[2] == "act" and d[3] == FAST, d[1]))[:limit]
         items.sort(key=lambda d: d[1])
-    return {"person": person, "bot": bot, "items": items if same else []}
+    return {"agents": agents, "side": side, "items": items if same else []}
 
 
 def _play_out(game: dict, snap, kind, choice, r: random.Random, net, pool, log: bool = False):
     """One play-out from the snapshot with this decision forced, then the bot on both sides; the battle after it."""
-    holder = {}
+    holder, side = {}, game["side"]
 
     def on_decide():
         twin = holder["battle"]
         foe = Learner(q=net, margin=r.choice((0.02, 0.05, 0.1)), **varied_settings(r, pool))
-        twin.agents[1] = foe
-        twin._saw_throw[1], twin._saw_shield[1], twin._sees_move[1] = foe.saw_throw, foe.saw_shield, False
+        twin.agents[1 - side] = foe
+        twin._saw_throw[1 - side], twin._saw_shield[1 - side], twin._sees_move[1 - side] = foe.saw_throw, foe.saw_shield, False
         twin.rng.seed(r.getrandbits(32))
         return Learner(q=net, margin=0.02, seed=r.getrandbits(30))
 
-    twin = snap.clone(_Forced(game["person"], kind, choice, on_decide), game["bot"])
+    agents = list(game["agents"])
+    agents[side] = _Forced(agents[side], kind, choice, on_decide)
+    twin = snap.clone(*agents)
     if log:
         twin.log = []
     holder["battle"] = twin
@@ -211,28 +220,28 @@ def _play_out(game: dict, snap, kind, choice, r: random.Random, net, pool, log: 
 
 
 def chance(game: dict, snap, kind, choice, plays: int, seed: int, net, pool) -> float:
-    """The person's chance of winning if this decision comes out as `choice`, the bot playing on for both sides
-    (theirs with shifted habits, a different one in each play-out; the same ones for every choice)."""
+    """The reviewed player's chance of winning if this decision comes out as `choice`, the bot playing on for both
+    sides (the other with shifted habits, a different one in each play-out; the same ones for every choice)."""
     points = 0.0
     for k in range(plays):
         winner = _play_out(game, snap, kind, choice, random.Random(seed * 7919 + k), net, pool).winner
-        points += 1.0 if winner == 0 else 0.5 if winner == DRAW else 0.0
+        points += 1.0 if winner == game["side"] else 0.5 if winner == DRAW else 0.0
     return points / plays
 
 
 def winning_line(game: dict, decision, option, net, pool, seed: int, tries: int = 16):
-    """A play-out in which the person, choosing `option` at this decision, goes on to win: its log from the decision
-    on ([turn, side, text]), or None if none of `tries` play-outs is won."""
+    """A play-out in which the reviewed player, choosing `option` at this decision, goes on to win: its log from the
+    decision on ([turn, side, text]), or None if none of `tries` play-outs is won."""
     snap = decision[0]
     for k in range(tries):
         twin = _play_out(game, snap, decision[2], option, random.Random(seed * 104729 + k), net, pool, log=True)
-        if twin.winner == 0:
+        if twin.winner == game["side"]:
             return [[t, side, text] for t, side, text in twin.log]
     return None
 
 
-def describe(snap, kind, choice) -> str:
-    view = snap.views[0]
+def describe(snap, kind, choice, side: int = 0) -> str:
+    view = snap.views[side]
     me = view.me
     if kind == "shield":
         return "shield" if choice else "no shield"
@@ -246,8 +255,9 @@ def describe(snap, kind, choice) -> str:
 
 
 def judge(game: dict, decision, net, pool, seed: int, screen: int = 4, confirm: int = 12) -> dict:
-    """One decision: the person's choice and the best one, with their chances, and a label when it cost enough."""
+    """One decision: the player's choice and the best one, with their chances, and a label when it cost enough."""
     snap, turn, kind, choice, options = decision
+    side = game["side"]
     first = {o: chance(game, snap, kind, o, screen, seed, net, pool) for o in options}
     best = max(first, key=first.get)
     if best == choice or first[best] - first[choice] < 0.08:
@@ -257,11 +267,32 @@ def judge(game: dict, decision, net, pool, seed: int, screen: int = 4, confirm: 
         top = chance(game, snap, kind, best, confirm, seed + 1, net, pool)
     cost = max(0.0, top - mine) if best != choice else 0.0
     label = next((name for limit, name in LABELS if cost >= limit), None)
-    view = snap.views[0]
-    return {"turn": turn, "kind": kind, "did": _past(describe(snap, kind, choice)), "better": describe(snap, kind, best),
-            "option": best,
+    view = snap.views[side]
+    return {"turn": turn, "kind": kind, "did": _past(describe(snap, kind, choice, side)),
+            "better": describe(snap, kind, best, side), "option": best,
             "mine": round(mine, 3), "best": round(top, 3), "cost": round(cost, 3), "label": label,
             "mon": view.me.mon.build.name, "foe": view.foe.build.name}
+
+
+def decision_score(cost: float) -> float:
+    """One decision out of 100 by the win chance it gave away, on Lichess's accuracy curve (8 points lost -> 70,
+    15 -> 51, 25 -> 32); costs under the inaccuracy line count as nothing, as the play-outs cannot tell them apart."""
+    points = 100 * cost if cost >= LABELS[-1][0] else 0.0
+    return min(100.0, max(0.0, 103.1668 * math.exp(-0.04354 * points) - 3.1669))
+
+
+def accuracy(judged: list) -> dict:
+    """One player's score for a game from their judged decisions: the mean of the plain and the harmonic mean of
+    `decision_score` (as Lichess averages, so one blunder shows), how many of each label, and the win chance given
+    away in all (costs under the inaccuracy line left out)."""
+    if not judged:
+        return {"decisions": 0, "accuracy": None, "given_away": 0.0, **{name: 0 for _, name in LABELS}}
+    scores = [decision_score(j["cost"]) for j in judged]
+    plain = sum(scores) / len(scores)
+    harmonic = len(scores) / sum(1 / max(s, 1.0) for s in scores)
+    return {"decisions": len(judged), "accuracy": round((plain + harmonic) / 2, 1),
+            "given_away": round(sum(j["cost"] for j in judged if j["cost"] >= LABELS[-1][0]), 3),
+            **{name: sum(j["label"] == name for j in judged) for _, name in LABELS}}
 
 
 def _past(text: str) -> str:

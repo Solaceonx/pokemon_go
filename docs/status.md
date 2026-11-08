@@ -1928,7 +1928,7 @@ How the rest of a chess engine maps onto this game:
 | Search | `pogo.engine.Engine`: at each judgement call (throw or hold, swap or stay, which replacement), play each option a few turns ahead in several imagined battles (their unseen Pokémon drawn at random, the same dice for every option) and judge where it ends up with the evaluation; take the best if it beats the trained bot's pick by `edge`. Both players choose at once, so a fuller search would treat a choice as a small game to solve (`solve_2x2` exists) rather than a minimax | first version built; see below |
 | Endgame tablebase | `pogo/endgame.py`, Marco's exact solver for at most two Pokémon a side | built; too slow for most two-against-two |
 | Opening book | the lead and team choice | the team searches |
-| Game review | the evaluation over a battle, and the moments it swung | in the browser game's end screen |
+| Game review | the evaluation over a battle, and the moments it swung; each player's costly decisions and an accuracy score (`pogo/review.py`, `scripts/review_game.py`) | in the browser game's end screen |
 
 The difference from chess that matters most: a decision has to be made within a fraction of a 500 ms turn, so
 the search must be shallow and the evaluation cheap, which is why the evaluation is a small network.
@@ -4390,3 +4390,29 @@ shadow Forretress 69.8%, Tinkaton 67.6%, Forretress 66.9%, Alolan Muk 65.8%, Mim
 the shadow in the top 100: Great, Hydreigon +2.2 (#18 v #74), Steelix +2.2 (#89 v #136), Ninetales +1.7 (#3 v #13),
 Dusknoir +1.1, Shelgon +1.1, Dragonair +1.0; Ultra, Hydreigon +3.5 (#92 v #179), Snorlax +1.7 (#3 v #13), Cradily +1.4,
 Politoed +1.2, Milotic +0.9, Golisopod +0.8. Most other shadows score the same or lower than their regular forms.
+
+## Post-game review of both players, with a score each (2026-11-08, the owner's request; `scripts/review_game.py`)
+
+The owner: "after a game is over, you analyze what decisions you could've made to improve ... and then you can give
+each player a battle rating". `pogo/review.py` already judged the person's decisions in the browser game (each choice
+played out every other way, the trained bot on both sides after it; blunder 25 points of win chance, mistake 15,
+inaccuracy 8). Now `decisions(..., side=1)` judges the bot's decisions the same way, and `accuracy` scores a player:
+each decision 100 when it cost nothing, on Lichess's curve otherwise (8 points lost -> 70, 15 -> 50, 25 -> 32; costs
+under 8 counted as nothing), the game's score the mean of the plain and harmonic means. Called "accuracy", not
+"battle rating", since PvPoke's battle rating is a health-and-damage score. The browser game's end screen shows both
+scores, the person's first, then the bot's once its decisions are judged, with its costliest decisions folded away.
+`python3 scripts/review_game.py GAME.json [...]` does the same for saved games (`tests/test_review.py`).
+
+**The owner's 56 saved games against the engine** (`games/played/`, 8 older ones lack the record to replay; 31 s
+with 3 workers): the owner averages 75.5, the engine 79.9. The higher score belongs to the winner in 36 of the 48
+games without a tie, more often than the line-up favourite wins (37 of 56). The owner scores 86.9 in games won and
+63.1 in games lost; the engine 80.6 and 79.1, so the owner's decisions, not the engine's, move the results.
+
+**Limits.** The judge is the trained bot: a score says how close a player came to what its play-outs prefer, and on
+the exam strong players agreed with its top pick no more often than chance. The play-outs know both full teams,
+which a player in the real game does not. The reviewed player plays on as the plain trained bot and the other as a
+varied, weaker one, so the chances shown lean to the reviewed side: from the same opening position of one game the
+owner wins 12 of 12 play-outs when reviewed and the engine 8 of 12 when it is. Costs compare a player's options under
+the same conditions, and both players get the same treatment, but a player far ahead by the judge's lights is rarely
+marked (one lost game scored the owner 100 and the winning engine 54). One game is about 17 decisions a side, so
+single scores are noisy; a set says more.
