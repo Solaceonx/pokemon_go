@@ -146,10 +146,10 @@ def find_icons(rgb, colour, move_type: str, zone) -> list:
     from pogo import minigame
     (cx, cy), (spx, spy) = zone
     if colour is None:
-        # Normal's grey icons: a grey disc with a white ring symbol in the middle (normal_icons, on a half-size frame,
-        # about 23 ms); outlines and grey rings matched Vigoroth's white fur everywhere (2026-11-08)
+        # Normal's grey icons: the icon itself matched on a half-size frame (normal_icons, about 15 ms); outlines and
+        # grey rings matched Vigoroth's white fur everywhere, and ring kernels missed the icons by day (2026-11-08)
         from normal_icons import normal_icons
-        return [(x, y) for x, y, v in normal_icons(rgb[::2, ::2], scales=(0.8, 1.0, 1.25, 1.6)) if 0.15 < y < 0.95]
+        return [(x, y) for x, y, v in normal_icons(rgb[::2, ::2]) if 0.15 < y < 0.95]
     icons = [(x, y) for x, y, r in raw_circles(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, colour, 45)]
     if move_type in COLOUR_BLOBS:
         icons += [(x, y) for x, y, r in minigame.detect_colour(rgb, colour) if 0.045 <= r < 0.17
