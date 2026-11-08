@@ -352,8 +352,6 @@ class Player:
         self.pending_lock = threading.Lock()  # pending_theirs and foe_move_seen are set from the reading thread
         self.header_seen = 0.0  # the last frame with the battle header (cheap to check), for the no-fight guard
         self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
-        # The header and a bar on screen, buttons or not: the turn clock's test, as it was tuned (off_time)
-        self.screen_frames, self.screen_frame_t = 0, -9.0
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
         # decision fully and wanted Stunfisk in; its next ones, on a short deadline, fell back to fast moves), or one
@@ -531,14 +529,15 @@ class Player:
             # fighting). In the fight the buttons show on 97 to 100% of frames, in the close-ups on almost none.
             on_screen = look.header and len(look.bars) >= 1
             buttons_up = bool(look.buttons) and any(look.buttons[k]["present"] for k in ("left", "right"))
-            self.screen_frames = self.screen_frames + 1 if on_screen else 0
+            # The turn clock goes by the same test (throw() keeps the header and a bar while our move waits to
+            # start: the fight goes on then with the buttons hidden). Scored on 8 named throws of theirs in four
+            # battles: with the header and a bar alone their energy was believed 100 at 7 of them (the close-ups
+            # counted as turns: 8 s of Zeraora's Wild Charge); this way short at 3, by a fast move or two.
             self.fight_frames = self.fight_frames + 1 if on_screen and buttons_up else 0
             fighting = self.fight_frames >= 3
-            if self.frame_t is not None and self.screen_frames < 3 and t - self.screen_frame_t > 0.4:
+            if self.frame_t is not None and not fighting and t - self.fight_frame_t > 0.4:
                 self.off_time += t - self.frame_t  # off the screen (beyond a missed bar or two)
             self.frame_t = t
-            if self.screen_frames >= 3:
-                self.screen_frame_t = t
             if fighting:
                 self.fight_frame_t = t
             # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
@@ -1023,8 +1022,9 @@ class Player:
         the moment the button lights. Our energy rises as each fast move lands (the button lights then), and by
         then the fast taps have already queued the next one, which a charged tap cannot cut short: every throw went
         one fast move late (the owner, 2026-11-08: "you did 3 than threw ... given thundershock is a 2 turn move,
-        you should've done two thundershocks than thrown"). The move under way and the one queued behind it (the
-        taps come every 0.15 s) still play out, so the engine is asked with the energy after both."""
+        you should've done two thundershocks than thrown"). Only for a move that the fast move under way pays for: a
+        fast tap made during a move is not kept for after it (2026-11-08, battle 11: armed two moves ahead with one
+        last tap, Jellicent's energy then stood at 37.6 for 3.6 s, twice), so the taps go on until the paying one."""
         mon = self.team[self.active]
         have = self.energy()
         bounds = self.paid_bounds()
@@ -1033,7 +1033,7 @@ class Player:
         if bounds is not None:
             have = max(have, bounds[0])
         gain = mon.fast.energy_gain
-        soon = min(100.0, have + 2 * gain)
+        soon = min(100.0, have + gain)
         if not any(have < m.energy <= soon for m in mon.charged):
             return
         me = self.tracker.me.mon
@@ -1051,19 +1051,11 @@ class Player:
         k = ahead - CHARGED[0]
         if not have < mon.charged[k].energy <= soon:
             return  # paid for already: the usual way
-        # two of our fast moves and a little: if the button has not lit by then, the fast taps go on
-        self.armed = (k, time.time() + 2 * mon.fast.turns * 0.5 + 0.4)
+        # the move under way and a little: if the button has not lit by then, the fast taps go on
+        self.armed = (k, time.time() + mon.fast.turns * 0.5 + 0.6)
         self.armed_at = time.time()
         self.tapping = False
-        two = mon.charged[k].energy > have + gain
-        if two:
-            # it takes the move under way and one more: make sure that one is queued (a tap within the last 0.15 s
-            # has queued it already, and another so soon could be dropped)
-            with self.touch_lock:
-                if time.time() - self.last_fast_tap >= 0.15:
-                    self.last_fast_tap = time.time()
-                    self.touch(controls.FIELD, "fast move (the last before a throw)")
-        self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1), moves=1 + two)
+        self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1))
 
     def throw(self, t: float, k: int, move) -> None:
         self.queued = None  # a new tap stands for any move still waiting
