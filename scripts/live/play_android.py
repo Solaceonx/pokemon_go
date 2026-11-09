@@ -508,6 +508,7 @@ class Player:
         self.labels_checked = None
         self.header_checked = None
         self._last_active, self.active_changed_at = 0, -1.0
+        self.last_reading_t = -1.0  # battle time of the buttons' last energy reading
         self.replacements = 0  # replacement prompts answered: our faints
         self.prompt_shield, self.prompt_tapped = False, 0.0  # the answer to the shield prompt up now, and when tapped
         self.prompt_first = 0.0
@@ -1018,6 +1019,7 @@ class Player:
         prev, self._energy_raw = self._energy_raw, ((e, when) if e is not None else None)
         if e is not None and prev is not None and when - prev[1] < 0.25 and abs(e - prev[0]) <= 5:
             self.energy_read = (e, when)
+            self.last_reading_t = when - (self.t0 or when)  # battle time of the last reading
         names = screen.button_labels(rgb)
         # Only with both buttons drawn, and not while our move's attack plays after its minigame (2026-11-08,
         # 231958: right after Surf's and Discharge's minigames the attack's white streaks filled the name boxes, both
@@ -1275,8 +1277,14 @@ class Player:
             # cost: on the count alone at the cost, 9 of a battle's throws were not taken (2026-11-08, by day, when
             # the buttons read on a quarter of the frames), each stopping the fast taps for up to 3 s.
             cost = mon.charged[self.decision - CHARGED[0]].energy
+            # On the count alone only when the buttons have gone unread 4 s (the reader failing), or ours is low
+            # and waiting could mean fainting with the energy: tapped on the count, 6 of 9 throws were not taken
+            # even after the count's fix (2026-11-09, 124910-130030; on a reading 1 of 24), a reading comes every
+            # second or so, and each wrong tap stops the fast taps for the 2.3 s wait.
+            stale = t - max(self.last_reading_t, self.active_changed_at) >= 4.0
+            urgent = view is not None and self.hp_now(t, view) < 0.35
             sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
-                time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain)
+                time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain and (stale or urgent))
             if self.armed is not None:
                 # armed: on the buttons' word only (the count runs ahead of them), the moment the button lights
                 read = self.energy()
