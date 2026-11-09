@@ -1,0 +1,644 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-143920",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-143920.jsonl",
+  "recording": "battle-20261108-143920.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794177568.961
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 150.424,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SUPER_POWER",
+      "name": "Superpower",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "umbreon",
+    "name": "Umbreon",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "SNARL",
+     "name": "Snarl",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "FOUL_PLAY",
+      "name": "Foul Play",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 6
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "gengar",
+    "name": "Gengar",
+    "known_from": "team_sheet",
+    "cp": 1495,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SLUDGE_BOMB",
+      "name": "Sludge Bomb",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "DRAIN_PUNCH",
+      "name": "Drain Punch",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "combusken",
+    "name": "Combusken",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "FLAMETHROWER",
+      "name": "Flamethrower",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "magcargo",
+    "name": "Magcargo",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "OVERHEAT",
+      "name": "Overheat",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "inferred"
+    },
+    "fainted": true
+   },
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "FLAMETHROWER",
+      "name": "Flamethrower",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 7,
+   "theirs": 3
+  },
+  "we_shielded": 2,
+  "shield_prompts": 3,
+  "fast_taps": 349,
+  "looks": 100
+ },
+ "bot": {
+  "throw_beaten": 2,
+  "throw_before_fainting": 2,
+  "throw_not_taken": 1,
+  "shield_override": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "combusken"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 4.499,
+   "from": "melmetal",
+   "to": "umbreon",
+   "seconds_after_tap": 2.73,
+   "state": {
+    "look_t": 4.453,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.98,
+     "shields": 2,
+     "left": 3,
+     "energy": 25,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.936,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 11.661,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.95,
+   "state": {
+    "look_t": 10.137,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.929,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      72,
+      72
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 36
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 26.429,
+   "pokemon": "combusken",
+   "move": "Flamethrower",
+   "move_id": "FLAMETHROWER",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 26.304,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 32.085,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.05,
+   "state": {
+    "look_t": 30.4,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.62,
+     "shields": 2,
+     "left": 3,
+     "energy": 52,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.219,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      59,
+      64
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 42
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 47.211,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.58,
+   "state": {
+    "look_t": 45.084,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.606,
+     "shields": 2,
+     "left": 3,
+     "energy": 64,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.027,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 38
+  },
+  {
+   "kind": "faint",
+   "t": 57.166,
+   "side": "theirs",
+   "pokemon": "combusken",
+   "next": "magcargo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 57.166,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.586,
+     "shields": 2,
+     "left": 3,
+     "energy": 37,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 65.557,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.67,
+   "state": {
+    "look_t": 63.394,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 53,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.808,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      54,
+      54
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 41
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 83.429,
+   "pokemon": "magcargo",
+   "move": "Overheat",
+   "move_id": "OVERHEAT",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 82.243,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 91.68,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.3,
+   "state": {
+    "look_t": 89.675,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 78,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.357,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "icons_chased": 39
+  },
+  {
+   "kind": "faint",
+   "t": 106.839,
+   "side": "theirs",
+   "pokemon": "magcargo",
+   "next": "flareon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 106.839,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 64,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.916,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 109.02,
+   "pokemon": "umbreon",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.58,
+   "state": {
+    "look_t": 106.839,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 64,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.916,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 46
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 130.897,
+   "pokemon": "flareon",
+   "move": "Flamethrower",
+   "move_id": "FLAMETHROWER",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    90,
+    90
+   ],
+   "state": {
+    "look_t": 127.906,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.202,
+     "shields": 1,
+     "left": 3,
+     "energy": 52,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      90,
+      90
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 137.314,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.99,
+   "state": {
+    "look_t": 134.96,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.182,
+     "shields": 1,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.054,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      44,
+      44
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 38
+  },
+  {
+   "kind": "end",
+   "t": 150.424,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-143920.jsonl"
+ ]
+}

@@ -113,6 +113,8 @@ def main() -> None:
     ap.add_argument("--media", default=r"C:\pogo-media\live")
     ap.add_argument("--team", default=str(ROOT / "data" / "alt_team.json"), help="the party's team file (play_android)")
     ap.add_argument("--party", type=int, default=0, help="which saved party: swipes left on the party screen first")
+    ap.add_argument("--practise", nargs="*", default=[], help="move ids thrown in place of the engine's (play_android)")
+    ap.add_argument("--open-with", help="species switched in at the start (play_android)")
     a = ap.parse_args()
     adb, _ = _tools(None)
     media = Path(a.media) / (time.strftime("%Y%m%d") + "-training")
@@ -155,7 +157,9 @@ def main() -> None:
             print(json.dumps({"stopped": "the party screen was not where expected", "frame": str(path)}), flush=True)
             break
         done = subprocess.run([sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", a.serial,
-                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team],
+                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team]
+                              + (["--practise", *a.practise] if a.practise else [])
+                              + (["--open-with", a.open_with] if a.open_with else []),
                               capture_output=True, text=True, cwd=ROOT)
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), "{}")
         out = json.loads(line)

@@ -4864,3 +4864,82 @@ Jellicent's Bubble Beam became Ice Beam (a TM).
 - Still to do: Superpower, Drain Punch, Sludge Bomb, Dark Pulse need more minigames (Gengar comes out seldom);
   Ice Beam and Bulldoze need the first party; Bubble Beam, Bulldoze, Dark Pulse need cut-outs by hand; whether two
   moves of one type share a pattern is not settled (the Ground pair could not be compared with the colour detector).
+
+**One set pattern for every type on both parties (2026-11-08, evening).** Every charged move's type on the two
+parties now has its own learnt pattern, `data/minigame/android/type_<type>.json`, and its own icon cut-out,
+`icon_type_<type>.png`. The stroke uses the type's pattern for every move of that type.
+
+| Type | Moves | Minigames | Learnt path | Sweep alone | Training ratings since |
+|---|---|---|---|---|---|
+| normal | Body Slam | 40 | 82% | 54% | 13 of 13 Excellent |
+| ghost | Shadow Ball | 30 | 82% | 59% | 2 of 2 |
+| ground | Mud Bomb, Bulldoze | 40 | 77% | 61% | 6 of 6, after the fix below (5 of 10 before) |
+| electric | Discharge | 30 | 74% | 55% | 18 of 18 |
+| ice | Ice Beam | 9 | 70% | 43% | 10 of 10, after the cut below (14 of 17 at 0.9, 4 of 8 with no cut-out) |
+| steel | Double Iron Bash | 11 | 95% | 81% | (Superpower practised instead) |
+| fighting | Superpower, Drain Punch | 18 | 74% | 71% | 11 of 11 |
+| dark | Foul Play, Dark Pulse | 52 | 82% | 67% | 13 of 13 |
+| poison | Sludge Bomb | 9 | 91% | 75% | 6 of 6 (before its pattern went in) |
+
+"Learnt path" and "Sweep alone" are the shares of held-out minigames' icon sightings that the path passes over.
+Water is no longer on either party: Jellicent's Bubble Beam is now Ice Beam.
+
+The last 10 Team Leader battles were all won, with 51 of 51 minigames Excellent: 6 with the second party, then 4
+with the first.
+
+- **Training options, to see the moves the engine seldom throws.** These are passed through
+  `scripts/live/train_loop.py` to `play_android.py`, for training only.
+  - `--practise MOVE ...`: whenever the engine throws a charged move, the Pokémon that knows a practised move throws
+    it instead. With two practised moves, it throws the one thrown less so far. Jellicent had thrown Shadow Ball
+    every time, and no Ice Beam minigame had been seen.
+  - `--open-with SPECIES`: the opening switch goes to that Pokémon. Gengar, last in its party, had come out in few
+    battles. At first the engine's own opening switch to Umbreon went in instead, in 3 battles of 6; any switch
+    asked for before the opening one is made now goes to the one named.
+  - `--party N`: picks the saved party.
+- **Ice's cut-out.**
+  - The colour detector's candidates gave sky twice, because ice's mint ring is close to the sky's blue. The colour
+    stored for ice (from the iPhone file) was also orange.
+  - `cut_icon_template.py --hue 78 94` now cuts from round discs of a given hue with a white symbol in the middle.
+    That cut the snowflake.
+  - At the usual 0.9 cut, the stroke missed small, far-off icons and half-covered ones, which score 0.73 to 0.89.
+    Nothing else on the Ice Beam frames reached 0.7. Ice's cut is now 0.75 (`move_icons.THRESHOLDS`).
+  - Ice's colour, zone and sweep box in `play_android.py` are now as measured on this phone.
+- **Ground uses both detectors.** With the cut-out alone, Mud Bomb's stroke chased icons 55 to 60% of the time and
+  rated Excellent 5 times in 10. With the colour detector (blobs included) it had chased 85 to 98% of the time and
+  rated Excellent 31 times in 36. Ground now chases the cut-out's icons and the colour detector's together: about
+  90% chasing again, and 6 of 6 Excellent. Discharge went the other way, from about 40% chasing to 65% on its
+  cut-out, and rated 18 of 18.
+- **League runner.**
+  - `run_gbl.py --team FILE --expect WORDS...`: USE THIS PARTY is tapped only when the party screen shows the
+    words. Otherwise the runner swipes to the next saved party, and stops after three swipes.
+  - The party screen shows nicknames (".gl1", ".gl5"), not species, so names did not work (the first try stopped
+    with no battle played). The CPs in order do: `--expect CP1498CP1499CP1499` for the first party, against 1499,
+    1497, 1498 for the second.
+  - It always played with `data/alt_team.json`, and since the second party was saved the Team Leader party screen
+    shows that party first.
+
+**The day's last 4 GO Battle League battles (2026-11-08, evening): 2 won, 2 lost; 24 of 25 minigames Excellent**
+(one Mud Bomb Great). All 4 were played with the first party, found on the party screen by its CPs.
+- **Lost to Shaymin, Gothitelle, Wailord (171011).** Jellicent stayed in against the Shaymin lead for 47 s. It
+  threw two Ice Beams and spent a shield on Seed Flare (152 damage against its 156 HP) before switching to
+  Vigoroth. The owner: it should have swapped out.
+  - **Why it stayed:** the engine judges a lead once, on the one-on-one at the shields as they are, 2 each.
+    Jellicent has no entry in the saved matchup table, so that one-on-one is all it goes on: Jellicent +0.06
+    against Magical Leaf, +0.49 against Hidden Power Rock. It leaves a matchup only below −0.18.
+  - **At fewer shields it is different:**
+
+    | One shield each | Jellicent | Vigoroth |
+    |---|---|---|
+    | Against Magical Leaf | −0.18 | −0.03 |
+    | Against Hidden Power Rock | −0.07 | +0.51 |
+
+  - **Re-run** with 1.5 s of thinking and the fast move known (`resim.py --ms 1500`), the engine still stayed.
+  - **Shaymin's fast move was most likely Hidden Power Rock.** Its hits were 5.9 to 6.1 px; Hidden Power Rock
+    predicts 5.7 and Magical Leaf 11.4, and tan orbs show on the recording. The live tracker went from Magical Leaf
+    to Zen Headbutt at 6 s, then to Hidden Power Rock, then back to Magical Leaf at the end.
+  - **Proposed, not done:** judge a lead on the one-on-one averaged over 0, 1 and 2 shields, as the saved table
+    is. That changes the engine, so it needs measuring in simulation first.
+- **Lost to Umbreon, Melmetal, Obstagoon (171347).** The opening switch to Vigoroth went in. Two things went wrong
+  later: a Shadow Ball was not taken (145.9 s; energy unread, counted 13), and the switch to Stunfisk after it was
+  not taken either. No single clear mistake was found.
+- **Won** against Qwilfish and Reuniclus (over in 23 s), and against Miltank, Jirachi, Snorlax.

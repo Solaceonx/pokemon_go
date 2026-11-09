@@ -1,0 +1,567 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-164425",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-164425.jsonl",
+  "recording": "battle-20261108-164425.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794185073.801
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 125.812,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 6
+     }
+    ],
+    "fainted": true
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "combusken",
+    "name": "Combusken",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "ROCK_SLIDE",
+      "name": "Rock Slide",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "inferred"
+    },
+    "fainted": true
+   },
+   {
+    "species": "magcargo",
+    "name": "Magcargo",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 6,
+   "theirs": 2
+  },
+  "we_shielded": 1,
+  "shield_prompts": 2,
+  "fast_taps": 320,
+  "looks": 108
+ },
+ "bot": {
+  "armed": 7,
+  "armed_expired": 3,
+  "active_corrected": 2,
+  "armed_fired": 1,
+  "throw_before_fainting": 3,
+  "shield_override": 1,
+  "waiting_for_better": 7,
+  "armed_replaced": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "combusken"
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 8.731,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.9,
+   "state": {
+    "look_t": 7.309,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.875,
+     "shields": 2,
+     "left": 3,
+     "energy": 59,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 76
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 26.604,
+   "pokemon": "combusken",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 25.883,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 58,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 30.167,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.77,
+   "state": {
+    "look_t": 28.701,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 71,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      50,
+      50
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 75
+  },
+  {
+   "kind": "faint",
+   "t": 40.501,
+   "side": "theirs",
+   "pokemon": "combusken",
+   "next": "magcargo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 40.501,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.525,
+     "shields": 2,
+     "left": 3,
+     "energy": 15,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 46.924,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.25,
+   "state": {
+    "look_t": 45.286,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 43,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.889,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 80
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 63.212,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.54,
+   "state": {
+    "look_t": 61.37,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.512,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 80
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 79.967,
+   "pokemon": "magcargo",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 78.426,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 37,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.135,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 86.147,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.31,
+   "state": {
+    "look_t": 84.368,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.094,
+     "shields": 1,
+     "left": 3,
+     "energy": 63,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      68,
+      68
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 80
+  },
+  {
+   "kind": "faint",
+   "t": 96.275,
+   "side": "theirs",
+   "pokemon": "magcargo",
+   "next": "flareon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 96.275,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.094,
+     "shields": 1,
+     "left": 3,
+     "energy": 22,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 102.658,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.82,
+   "state": {
+    "look_t": 100.337,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 63,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 73
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 112.376,
+   "pokemon": "jellicent",
+   "next": "vigoroth",
+   "state": {
+    "look_t": 111.636,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 21,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      63,
+      63
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 125.812,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-164425.jsonl"
+ ]
+}

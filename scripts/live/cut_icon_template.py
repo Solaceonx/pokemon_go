@@ -2,7 +2,11 @@
 detector whose centre is white (the type symbol), patches 45 px across on half-size frames, the median patch. Then
 match it on the same frames and show the score spread and a sheet of the best matches.
 
-    python3 scripts/live/cut_icon_template.py MOVE [N] [FOLDER]
+    python3 scripts/live/cut_icon_template.py MOVE [N] [FOLDER] [--hue LO HI]
+
+--hue: candidates are round discs of that OpenCV hue (0-180) with a white symbol in the middle, not the colour
+detector's: for a type whose ring colour is near the sky's (Ice's mint, hue about 86 against the sky's 102, picked
+clouds twice; as discs of hue 78-94 it cut the snowflake, real icons scoring 0.86-1.00 and the rest 0.62 or less).
 
 FOLDER holds mg_list.json ({move: [[stem, Get Ready! time, recording], ...]}) and gets tpl_MOVE.npy/.png and a sheet
 tplsheet_MOVE.png of the best matches; copy a good one to data/minigame/android/icon_MOVE.png.
@@ -21,6 +25,11 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts" / "live")
 import play_android as pa  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 
+HUE = None
+if "--hue" in sys.argv:
+    i = sys.argv.index("--hue")
+    HUE = (int(sys.argv[i + 1]), int(sys.argv[i + 2]))
+    del sys.argv[i:i + 3]
 SCR = Path(sys.argv[3]) if len(sys.argv) > 3 else ROOT / "runs" / "icon_templates"  # list, outputs and sheets
 SCR.mkdir(parents=True, exist_ok=True)
 move = sys.argv[1]
@@ -55,11 +64,38 @@ def frames():
                     yield f"{stem}@{near[0]}", t - near[0], fr.to_ndarray(format="rgb24")
 
 
+def discs(small, gray) -> list:
+    """Round discs of the hue, icon-sized (radius 12-30 px on the half frame), with a white symbol in the middle."""
+    hsv = cv2.cvtColor(np.ascontiguousarray(small), cv2.COLOR_RGB2HSV)
+    m = ((hsv[..., 0] >= HUE[0]) & (hsv[..., 0] <= HUE[1]) & (hsv[..., 1] > 60) & (hsv[..., 2] > 140)).astype(np.uint8)
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
+    out = []
+    H, W = small.shape[:2]
+    for c in cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]:
+        a = cv2.contourArea(c)
+        per = cv2.arcLength(c, True)
+        circ = 4 * np.pi * a / (per * per + 1e-6)
+        if not np.pi * 12 ** 2 <= a <= np.pi * 30 ** 2 or circ < 0.7:
+            continue
+        (cx, cy), _ = cv2.minEnclosingCircle(c)
+        cx, cy = int(cx), int(cy)
+        if not (R <= cx < W - R and R <= cy < H - R) or not 0.3 < cy / H < 0.9:
+            continue
+        if (small[cy - 3:cy + 4, cx - 3:cx + 4].min(2) > 200).mean() < 0.3:
+            continue
+        g2 = gray[cy - R:cy + R + 1, cx - R:cx + R + 1]
+        out.append((circ * float(g2.std()), g2))
+    return out
+
+
 pool, kept = [], []
 for g, dt, rgb in frames():
     small = rgb[::2, ::2]
     gray = cv2.cvtColor(small, cv2.COLOR_RGB2GRAY).astype(np.float32)
     kept.append((g, dt, small, gray))
+    if HUE is not None:
+        pool += discs(small, gray)
+        continue
     for x, y in pa.find_icons(rgb, colour, kind, pa.icon_zone(kind)):
         H, W = small.shape[:2]
         cx, cy = int(x * W), int(y * H)

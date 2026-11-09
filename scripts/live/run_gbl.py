@@ -39,6 +39,9 @@ class Runner:
         self.ocr = RapidOCR()
         self.wins = self.losses = self.battles = 0
         self.last_why, self.same = None, 0  # the last menu tap, and how many times running
+        self.expect: list = []  # words the party screen must show before USE THIS PARTY (the party's names)
+        self.team = None  # the team file passed to play_android
+        self.party_swipes = 0
 
     def shot(self) -> np.ndarray:
         from PIL import Image
@@ -90,6 +93,8 @@ class Runner:
     def play(self, start_tap=None) -> str | None:
         cmd = [sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", self.serial, "--live",
                "--frames", str(self.media)]
+        if self.team:
+            cmd += ["--team", self.team]
         if start_tap:
             cmd += ["--start-tap", *map(str, start_tap)]
         self.log("battle_start", start_tap=start_tap)
@@ -125,6 +130,18 @@ class Runner:
             if screen.header_visible(a[::2, ::2]) and len(screen.bars(a[::2, ::2])) >= 1:
                 self.play()  # a battle already under way
             elif "USETHISPARTY" in flat:
+                # Only the party the team file is for (2026-11-08: a second party was saved, and the party screens
+                # show the newest first): else the next saved party, a swipe left, and stop after three.
+                missing = [w for w in self.expect if w not in flat]
+                if missing:
+                    self.log("party_check", missing=missing, text=text[:200])
+                    if self.party_swipes >= 3:
+                        return self.stop(f"the party with {self.expect} not found", a)
+                    self.party_swipes += 1
+                    subprocess.run([self.adb, "-s", self.serial, "shell", "input", "swipe", "900", "1700", "180", "1700", "400"])
+                    time.sleep(1.5)
+                    continue
+                self.party_swipes = 0
                 self.play(start_tap=USE_PARTY)
             elif "NEXTBATTLE" in flat:
                 self.tap(NEXT_BATTLE, "next battle", words)
@@ -168,6 +185,8 @@ def main() -> None:
     ap.add_argument("--wins", type=int, default=3)
     ap.add_argument("--max-battles", type=int, default=25)
     ap.add_argument("--media", default=r"C:\pogo-media\live")
+    ap.add_argument("--team", help="the party's team file (play_android; its default is data/alt_team.json)")
+    ap.add_argument("--expect", nargs="*", default=[], help="words the party screen must show, as read with spaces taken out: its CPs in order, CP1498CP1499CP1499 (it shows nicknames, not species)")
     a = ap.parse_args()
     media = Path(a.media) / time.strftime("%Y%m%d")
     media.mkdir(parents=True, exist_ok=True)
@@ -181,6 +200,7 @@ def main() -> None:
         print(kind, json.dumps(data, default=str)[:200], flush=True)
 
     runner = Runner(a.serial, media, a.wins, a.max_battles, log)
+    runner.expect, runner.team = [w.upper() for w in a.expect], a.team
     try:
         why = runner.run()
     except RuntimeError as error:  # a refused tap: stop touching anything

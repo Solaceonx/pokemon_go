@@ -1,0 +1,260 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-170916",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-170916.jsonl",
+  "recording": "battle-20261108-170916.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794186569.855
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 22.8,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "qwilfish",
+    "name": "Qwilfish",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "POISON_STING",
+     "name": "Poison Sting",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "reuniclus",
+    "name": "Reuniclus",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "HIDDEN_POWER_FIGHTING",
+     "name": "Hidden Power (Fighting)",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 1,
+   "theirs": 0
+  },
+  "we_shielded": 0,
+  "shield_prompts": 0,
+  "fast_taps": 67,
+  "looks": 23
+ },
+ "bot": {},
+ "notes": {
+  "result": "win",
+  "went_wrong": "nothing: over in 23 s, the opponent seemingly gone after Qwilfish and Reuniclus",
+  "fixed": "",
+  "from": "docs/status.md (2026-11-08 evening)"
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "qwilfish"
+  },
+  {
+   "kind": "switch",
+   "t": 4.778,
+   "side": "theirs",
+   "from": "qwilfish",
+   "to": "reuniclus",
+   "known_from": "seen",
+   "state": {
+    "look_t": 4.778,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.949,
+     "shields": 2,
+     "left": 3,
+     "energy": 26,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "reuniclus",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "HIDDEN_POWER_FIGHTING"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 7.178,
+   "from": "jellicent",
+   "to": "stunfisk",
+   "seconds_after_tap": 2.02,
+   "state": {
+    "look_t": 7.178,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "reuniclus",
+     "hp_share": 0.842,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      8,
+      8
+     ],
+     "fast_move": "HIDDEN_POWER_FIGHTING"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 14.495,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.2,
+   "state": {
+    "look_t": 12.761,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 47,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "reuniclus",
+     "hp_share": 0.673,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "HIDDEN_POWER_FIGHTING"
+    }
+   },
+   "icons_chased": 82
+  },
+  {
+   "kind": "end",
+   "t": 22.8,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-170916.jsonl"
+ ]
+}

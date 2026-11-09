@@ -1,0 +1,432 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-161453",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-161453.jsonl",
+  "recording": "battle-20261108-161453.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794183302.199
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 81.407,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SUPER_POWER",
+      "name": "Superpower",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "umbreon",
+    "name": "Umbreon",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "SNARL",
+     "name": "Snarl",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "FOUL_PLAY",
+      "name": "Foul Play",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "gengar",
+    "name": "Gengar",
+    "known_from": "team_sheet",
+    "cp": 1495,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SLUDGE_BOMB",
+      "name": "Sludge Bomb",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "DRAIN_PUNCH",
+      "name": "Drain Punch",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "combusken",
+    "name": "Combusken",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "magcargo",
+    "name": "Magcargo",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 4,
+   "theirs": 0
+  },
+  "we_shielded": 0,
+  "shield_prompts": 0,
+  "fast_taps": 218,
+  "looks": 74
+ },
+ "bot": {
+  "armed": 1,
+  "armed_expired": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "combusken"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 4.621,
+   "from": "melmetal",
+   "to": "gengar",
+   "seconds_after_tap": 2.86,
+   "state": {
+    "look_t": 4.358,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.936,
+     "shields": 2,
+     "left": 3,
+     "energy": 8,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 11.117,
+   "pokemon": "gengar",
+   "move": "Sludge Bomb",
+   "move_id": "SLUDGE_BOMB",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.45,
+   "state": {
+    "look_t": 9.06,
+    "mine": {
+     "active": "gengar",
+     "hp_share": 0.822,
+     "shields": 2,
+     "left": 3,
+     "energy": 56,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.566,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      63,
+      63
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 20
+  },
+  {
+   "kind": "switch",
+   "t": 20.73,
+   "side": "theirs",
+   "from": "combusken",
+   "to": "magcargo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 20.73,
+    "mine": {
+     "active": "gengar",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 14,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 27.439,
+   "pokemon": "gengar",
+   "move": "Drain Punch",
+   "move_id": "DRAIN_PUNCH",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.72,
+   "state": {
+    "look_t": 26.177,
+    "mine": {
+     "active": "gengar",
+     "hp_share": 0.673,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 56
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 43.563,
+   "pokemon": "gengar",
+   "move": "Sludge Bomb",
+   "move_id": "SLUDGE_BOMB",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.01,
+   "state": {
+    "look_t": 42.026,
+    "mine": {
+     "active": "gengar",
+     "hp_share": 0.599,
+     "shields": 2,
+     "left": 3,
+     "energy": 52,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.182,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      81,
+      81
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 29
+  },
+  {
+   "kind": "faint",
+   "t": 53.628,
+   "side": "theirs",
+   "pokemon": "magcargo",
+   "next": "flareon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 53.628,
+    "mine": {
+     "active": "gengar",
+     "hp_share": 0.552,
+     "shields": 2,
+     "left": 3,
+     "energy": 11,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 57.021,
+   "from": "gengar",
+   "to": "umbreon",
+   "seconds_after_tap": 3.03,
+   "state": {
+    "look_t": 56.779,
+    "mine": {
+     "active": "gengar",
+     "hp_share": 0.997,
+     "shields": 2,
+     "left": 3,
+     "energy": 34,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.822,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 65.651,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.33,
+   "state": {
+    "look_t": 63.941,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.929,
+     "shields": 2,
+     "left": 3,
+     "energy": 53,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      90,
+      90
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 33
+  },
+  {
+   "kind": "end",
+   "t": 81.407,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-161453.jsonl"
+ ]
+}

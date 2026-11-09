@@ -1,0 +1,497 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-170026",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-170026.jsonl",
+  "recording": "battle-20261108-170026.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794186036.178
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 91.849,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 4
+     }
+    ],
+    "fainted": true
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "sneasel",
+    "name": "Sneasel",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "ICE_SHARD",
+     "name": "Ice Shard",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "sealeo",
+    "name": "Sealeo",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "POWDER_SNOW",
+     "name": "Powder Snow",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "vaporeon",
+    "name": "Vaporeon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 5,
+   "theirs": 0
+  },
+  "we_shielded": 0,
+  "shield_prompts": 0,
+  "fast_taps": 219,
+  "looks": 72
+ },
+ "bot": {
+  "active_corrected": 1,
+  "throw_before_fainting": 2,
+  "throw_not_taken": 2,
+  "queued_dropped": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "sneasel"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 4.604,
+   "from": "jellicent",
+   "to": "vigoroth",
+   "seconds_after_tap": 2.95,
+   "state": {
+    "look_t": 4.243,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.97,
+     "shields": 2,
+     "left": 3,
+     "energy": 24,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      20,
+      20
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 11.172,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.9,
+   "state": {
+    "look_t": 9.85,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.875,
+     "shields": 2,
+     "left": 3,
+     "energy": 47,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.552,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   },
+   "icons_chased": 60
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 19.212,
+   "pokemon": "vigoroth",
+   "next": "stunfisk",
+   "state": {
+    "look_t": 18.709,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 23,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 21.949,
+   "side": "theirs",
+   "from": "sneasel",
+   "to": "sealeo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 21.949,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.795,
+     "shields": 2,
+     "left": 3,
+     "energy": 22,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 25.729,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.19,
+   "state": {
+    "look_t": 24.012,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.795,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": 0.923,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      16,
+      16
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 41.328,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.05,
+   "state": {
+    "look_t": 39.737,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.7,
+     "shields": 2,
+     "left": 3,
+     "energy": 48,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      72,
+      72
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 42
+  },
+  {
+   "kind": "switch",
+   "t": 51.073,
+   "side": "theirs",
+   "from": "sealeo",
+   "to": "vaporeon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 51.073,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.66,
+     "shields": 2,
+     "left": 3,
+     "energy": 19,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 57.779,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.11,
+   "state": {
+    "look_t": 56.306,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.559,
+     "shields": 2,
+     "left": 3,
+     "energy": 60,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.774,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      30,
+      30
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 48
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 67.195,
+   "from": "vigoroth",
+   "to": "jellicent",
+   "seconds_after_tap": 1.02,
+   "state": {
+    "look_t": 67.195,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 24,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.323,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      39,
+      39
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 73.162,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.76,
+   "state": {
+    "look_t": 71.896,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.862,
+     "shields": 2,
+     "left": 3,
+     "energy": 59,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.202,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      66,
+      66
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 83
+  },
+  {
+   "kind": "end",
+   "t": 91.849,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-170026.jsonl"
+ ]
+}

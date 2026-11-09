@@ -70,10 +70,10 @@ def swipe_for(move) -> list:
 # the zone they come up in as (centre, spread). Water's stream in from the right edge (Jellicent's body below is the
 # same blue, so looking outside the zone chased it); Normal's are grey-white, with no colour to look for.
 ICON_COLOUR = {"ground": (210, 131, 86), "electric": (245, 215, 82), "ghost": (101, 108, 188), "water": (94, 167, 218),
-               "normal": None}
+               "normal": None, "ice": (117, 208, 193)}  # ice: mint discs (the iPhone file's colour was orange)
 ICON_ZONE = {"ground": ((0.50, 0.70), (0.31, 0.05)), "water": ((0.86, 0.42), (0.10, 0.11)),
              "electric": ((0.49, 0.58), (0.22, 0.10)), "ghost": ((0.60, 0.71), (0.24, 0.11)),
-             "normal": ((0.53, 0.60), (0.29, 0.16))}
+             "normal": ((0.53, 0.60), (0.29, 0.16)), "ice": ((0.58, 0.60), (0.15, 0.09))}
 
 
 def icon_colour(move_type: str):
@@ -100,7 +100,7 @@ def icon_zone(move_type: str):
 # icons are found by their white ring symbol (scratch normal_det.py), most of them only on the dark background.
 SWEEP_BOX = {"normal": (0.08, 0.93, 0.52, 0.90), "ground": (0.05, 0.95, 0.54, 0.90),
              "electric": (0.17, 0.83, 0.43, 0.74), "ghost": (0.08, 0.95, 0.40, 0.86),
-             "water": (0.05, 0.98, 0.27, 0.90)}
+             "water": (0.05, 0.98, 0.27, 0.90), "ice": (0.17, 0.83, 0.42, 0.85)}  # ice: 9 minigames (2026-11-08)
 SWEEP_ONLY: set = set()  # types whose icons no detector finds: the predicted ones and the sweep alone
 
 
@@ -259,6 +259,13 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 if move_id and has_template(move_id, move_type):
                     # the move's or its type's icon cut out (move_icons.py): exact where the colour detectors are not
                     icons = [(x, y) for x, y, v in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]
+                    if move_type in COLOUR_BLOBS:
+                        # Ground: the colour detector's too (2026-11-08: on the cut-out alone Mud Bomb's stroke chased
+                        # icons 55-60% of the time and rated Excellent 5 of 10; on the colour detector, blobs and
+                        # all, 85-98% and 31 of 36)
+                        more = find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
+                        icons += [p for p in more if all(math.hypot(p[0] - q[0], (p[1] - q[1]) * 2.2) > 0.06
+                                                         for q in icons)]
                 else:
                     icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
             except Exception:  # noqa: BLE001
@@ -479,6 +486,11 @@ class Player:
         self.touch_lock = threading.RLock()  # one touch at a time: fast taps, charged taps, the minigame stroke
         self.tapping = False  # fast taps on: the fight is on screen and nothing else is going on
         self.done = False
+        # Training only (--practise): charged moves thrown in place of the engine's choice, to record their minigames
+        self.practise: set = set()
+        self.practise_logged = 0.0
+        self.practised: dict = {}  # move id -> times thrown: of two practised moves, the one thrown less goes next
+        self.open_with = None  # training only (--open-with): the slot switched in first, whatever the engine asks for
         threading.Thread(target=self._tap_fast, daemon=True).start()
 
     # touching
@@ -1091,6 +1103,18 @@ class Player:
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
+        if self.decision in CHARGED and self.practise:
+            # training: when the engine throws, the one that knows the practised move throws it instead (2026-11-08:
+            # Jellicent threw Shadow Ball every time and Ice Beam's minigame was never seen)
+            mine = [j for j, m in enumerate(mon.charged) if m.id in self.practise]
+            p = min(mine, key=lambda j: (self.practised.get(mon.charged[j].id, 0), j)) if mine else None
+            if p is not None and p != self.decision - CHARGED[0]:
+                if time.time() - self.practise_logged > 1.0:
+                    self.log("practise", t, was=mon.charged[self.decision - CHARGED[0]].id, now=mon.charged[p].id)
+                    self.practise_logged = time.time()
+                self.decision = CHARGED[0] + p
+                if self.armed is not None:
+                    self.armed = (p, self.armed[1])
         if self.decision in CHARGED:
             k = self.decision - CHARGED[0]
             # On the count alone (the buttons unread) a throw that came to nothing is not tried again for 3 s: each
@@ -1116,6 +1140,12 @@ class Player:
                 return
         # Not before 1.5 s: until then "GO!" is on the screen and the game takes no switch (2026-11-08: the opening
         # switch to Stunfisk at 0.8 s and 0.97 s was ignored both times).
+        if self.open_with is not None and (self.open_with == self.active or self.tracker.me.team[self.open_with].hp <= 0):
+            self.open_with = None  # out already, or fainted: the engine's switches stand
+        if self.open_with is not None and self.decision in SWITCH:
+            # training: the opening switch is to the one asked for (2026-11-08: the engine's switch to Umbreon at 1.1 s
+            # went in instead of Gengar's, in 3 battles of 6)
+            self.decision = SWITCH[0] + self.open_with
         if self.decision in SWITCH and self.switch_wanted is None and (t < 1.5 or self.switching is not None):
             self.switch_wanted = self.decision - SWITCH[0]
         if self.switch_wanted is not None and self.switching is None and self.decision == FAST and t >= 1.5:
@@ -1129,6 +1159,8 @@ class Player:
                 before = screen.bench_strip(rgb)
                 self.clear_of_fast_taps()
                 self.touch(BENCH[order.index(slot)], f"switch to {self.team[slot].name}")
+                if slot == self.open_with:
+                    self.open_with = None
                 self.switch_wanted = None
                 self.switching = (slot, time.time(), before, None, 0)  # self.active changes once it is seen
                 # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
@@ -1254,6 +1286,7 @@ class Player:
 
     def throw(self, t: float, k: int, move) -> None:
         self.queued = None  # a new tap stands for any move still waiting
+        self.practised[move.id] = self.practised.get(move.id, 0) + 1
         # No fast taps from here until the move starts: a tap on the field after the charged tap takes its place
         # in the queue (2026-11-07: Discharge, paid for, tapped four times 0.7 s apart with fast taps between, went
         # off only after the last; most "not taken" throws were this). The loop turns them on again.
@@ -1557,6 +1590,8 @@ def main() -> None:
     ap.add_argument("--start-tap", type=float, nargs=2)
     ap.add_argument("--frames")
     ap.add_argument("--max-actions", type=int, default=1500)
+    ap.add_argument("--practise", nargs="*", default=[], help="training only: move ids thrown in place of the engine's")
+    ap.add_argument("--open-with", help="training only: the species switched in at the start (one rarely out)")
     a = ap.parse_args()
     gd = GameData()
     team = load_team(gd, Path(a.team))
@@ -1569,6 +1604,9 @@ def main() -> None:
     phone = Android(serial=a.serial, dry_run=not a.live, max_actions=a.max_actions, record=record)
     phone.start()
     player = Player(phone, gd, team, a.live, log, Path(a.frames) if a.frames else None)
+    player.practise = set(a.practise)
+    if a.open_with:
+        player.switch_wanted = player.open_with = next(j for j, b in enumerate(team) if b.species_id == a.open_with)
     log("team", 0.0, team=[(b.species_id, b.fast.id, [m.id for m in b.charged], b.cp) for b in team])
     try:
         if a.start_tap:

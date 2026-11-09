@@ -17,6 +17,10 @@ import numpy as np
 FOLDER = Path(__file__).resolve().parents[2] / "data" / "minigame" / "android"
 SIZES = (0.8, 1.0, 1.25, 1.6)
 THRESHOLD = 0.9
+# Ice's snowflake (2026-11-08): real icons 0.73 to 1.00, small far-off ones and half-covered ones mostly 0.75 to 0.89;
+# nothing else on the Ice Beam minigames' frames (sky, clouds, Jellicent, ice shards) reached 0.7. At 0.9 the stroke
+# missed most of the incoming icons and Ice Beam rated Great 3 times in 17.
+THRESHOLDS = {"ice": 0.75}
 _cache: dict = {}
 
 
@@ -46,8 +50,10 @@ def _templates(move_id: str, width: int, move_type: str = "") -> list:
     return _cache[key]
 
 
-def move_icons(rgb, move_id: str, threshold: float = THRESHOLD, move_type: str = "") -> list:
+def move_icons(rgb, move_id: str, threshold: float | None = None, move_type: str = "") -> list:
     """[(x, y, score)] as shares of the screen for a half-size frame (any size works; the cut-outs are scaled)."""
+    if threshold is None:
+        threshold = THRESHOLDS.get(move_type.lower(), THRESHOLD)
     tps = _templates(move_id, rgb.shape[1], move_type)
     if not tps:
         return []

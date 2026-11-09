@@ -1,0 +1,548 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-135637",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-135637.jsonl",
+  "recording": "battle-20261108-135637.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794175006.755
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 115.184,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SUPER_POWER",
+      "name": "Superpower",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 3
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "umbreon",
+    "name": "Umbreon",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "SNARL",
+     "name": "Snarl",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "FOUL_PLAY",
+      "name": "Foul Play",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "gengar",
+    "name": "Gengar",
+    "known_from": "team_sheet",
+    "cp": 1495,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_PUNCH",
+      "name": "Shadow Punch",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "sneasel",
+    "name": "Sneasel",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "FOUL_PLAY",
+      "name": "Foul Play",
+      "energy": 40,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "ICE_SHARD",
+     "name": "Ice Shard",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "sealeo",
+    "name": "Sealeo",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "POWDER_SNOW",
+     "name": "Powder Snow",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "vaporeon",
+    "name": "Vaporeon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 6,
+   "theirs": 1
+  },
+  "we_shielded": 0,
+  "shield_prompts": 1,
+  "fast_taps": 264,
+  "looks": 81
+ },
+ "bot": {
+  "throw_beaten": 1,
+  "throw_not_taken": 1,
+  "queued_dropped": 1,
+  "throw_before_fainting": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "sneasel"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 4.754,
+   "from": "melmetal",
+   "to": "umbreon",
+   "seconds_after_tap": 2.97,
+   "state": {
+    "look_t": 4.478,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.963,
+     "shields": 2,
+     "left": 3,
+     "energy": 34,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.943,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      20,
+      20
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 13.965,
+   "pokemon": "sneasel",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    60,
+    60
+   ],
+   "state": {
+    "look_t": 11.336,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.848,
+     "shields": 2,
+     "left": 3,
+     "energy": 58,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.714,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   },
+   "cost": 40
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 19.056,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.21,
+   "state": {
+    "look_t": 17.265,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.734,
+     "shields": 2,
+     "left": 3,
+     "energy": 58,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.687,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      20,
+      20
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   },
+   "icons_chased": 48
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 33.79,
+   "pokemon": "umbreon",
+   "move": "Foul Play",
+   "move_id": "FOUL_PLAY",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.86,
+   "state": {
+    "look_t": 31.401,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.734,
+     "shields": 2,
+     "left": 3,
+     "energy": 57,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.067,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   },
+   "icons_chased": 33
+  },
+  {
+   "kind": "switch",
+   "t": 44.606,
+   "side": "theirs",
+   "from": "sneasel",
+   "to": "sealeo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 44.606,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 56,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 54.967,
+   "from": "umbreon",
+   "to": "melmetal",
+   "seconds_after_tap": 3.76,
+   "state": {
+    "look_t": 54.475,
+    "mine": {
+     "active": "umbreon",
+     "hp_share": 0.929,
+     "shields": 2,
+     "left": 3,
+     "energy": 53,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": 0.822,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      64,
+      64
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 57.619,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.66,
+   "state": {
+    "look_t": 55.504,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.929,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": 0.822,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      72,
+      72
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 56
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 70.217,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.27,
+   "state": {
+    "look_t": 68.372,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.896,
+     "shields": 2,
+     "left": 3,
+     "energy": 44,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 67
+  },
+  {
+   "kind": "switch",
+   "t": 80.894,
+   "side": "theirs",
+   "from": "sealeo",
+   "to": "vaporeon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 80.894,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.896,
+     "shields": 2,
+     "left": 3,
+     "energy": 18,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.973,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      6,
+      6
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 84.171,
+   "pokemon": "melmetal",
+   "move": "Superpower",
+   "move_id": "SUPER_POWER",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.83,
+   "state": {
+    "look_t": 82.632,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 44,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.875,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      15,
+      15
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 37
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 97.589,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.33,
+   "state": {
+    "look_t": 95.903,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.795,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.29,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      42,
+      42
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 72
+  },
+  {
+   "kind": "end",
+   "t": 115.184,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-135637.jsonl"
+ ]
+}
