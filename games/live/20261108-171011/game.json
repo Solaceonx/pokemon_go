@@ -1,0 +1,769 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "game": "live-20261108-171011",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone (the owner's spare account)",
+  "log": "runs/live/20261108-171011.jsonl",
+  "recording": "battle-20261108-171011.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794186624.885
+ },
+ "result": {
+  "value": "loss",
+  "from": "result screen"
+ },
+ "seconds": 186.452,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 3
+     }
+    ],
+    "fainted": false
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false
+   }
+  ],
+  "theirs": [
+   {
+    "species": "shaymin_land",
+    "name": "Shaymin (Land)",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "SEED_FLARE",
+      "name": "Seed Flare",
+      "energy": 75,
+      "known_from": "seen",
+      "times_used": 2
+     }
+    ],
+    "fast_move": {
+     "id": "MAGICAL_LEAF",
+     "name": "Magical Leaf",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "gothitelle",
+    "name": "Gothitelle",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "PSYCHIC",
+      "name": "Psychic",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 2
+     }
+    ],
+    "fast_move": {
+     "id": "CONFUSION",
+     "name": "Confusion",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "wailord",
+    "name": "Wailord",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "ROLLOUT",
+     "name": "Rollout",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 7,
+   "theirs": 4
+  },
+  "we_shielded": 2,
+  "shield_prompts": 2,
+  "fast_taps": 325,
+  "looks": 106
+ },
+ "bot": {
+  "throw_beaten": 3,
+  "switch_not_taken": 2,
+  "shield_override": 1,
+  "throw_before_fainting": 4,
+  "throw_before_theirs": 2,
+  "armed": 4,
+  "armed_fired": 1,
+  "waiting_for_better": 2,
+  "armed_replaced": 1,
+  "throw_not_taken": 1,
+  "active_corrected": 1,
+  "queued_dropped": 1,
+  "their_charged_unprompted": 1
+ },
+ "notes": {
+  "result": "loss",
+  "went_wrong": "Jellicent stayed in on Shaymin for 47 s, two Ice Beams and a shield spent on Seed Flare (152 of its 156 HP), before going to Vigoroth; the owner: it should have swapped out. The engine judges a lead once, on the one-on-one at the shields as they are (2 each): Jellicent +0.06 with Magical Leaf, +0.49 with Hidden Power Rock, above its leave-below of -0.18 (Jellicent has no saved table entry). With 1 shield each Jellicent is -0.07 (HP Rock) or -0.18 (Magical Leaf), Vigoroth +0.51 or -0.03. Shaymin's fast move was most likely Hidden Power Rock (hits of 5.9-6.1 px against 5.7 predicted; Magical Leaf would be 11.4; tan orbs on the recording); the tracker went Magical Leaf, then Zen Headbutt at 6 s, then Hidden Power Rock, then Magical Leaf again at the end. Re-run with 1.5 s of thinking and the fast move known, the engine still stayed. Two switches the game did not take (49.6 s, 148.8 s).",
+  "fixed": "not yet: judging a lead on the shield-averaged one-on-one is proposed, to be measured in simulation first",
+  "from": "docs/status.md (2026-11-08 evening)"
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "shaymin_land"
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 13.044,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.68,
+   "state": {
+    "look_t": 10.808,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.788,
+     "shields": 2,
+     "left": 3,
+     "energy": 74,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "ZEN_HEADBUTT"
+    }
+   },
+   "icons_chased": 81
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 28.107,
+   "pokemon": "shaymin_land",
+   "move": "Seed Flare",
+   "move_id": "SEED_FLARE",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    60,
+    60
+   ],
+   "state": {
+    "look_t": 24.874,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.62,
+     "shields": 2,
+     "left": 3,
+     "energy": 68,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.646,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "ZEN_HEADBUTT"
+    }
+   },
+   "cost": 75
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 40.102,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.67,
+   "state": {
+    "look_t": 37.915,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.613,
+     "shields": 2,
+     "left": 3,
+     "energy": 68,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.599,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      13,
+      13
+     ],
+     "fast_move": "HIDDEN_POWER_ROCK"
+    }
+   },
+   "icons_chased": 83
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 51.316,
+   "from": "jellicent",
+   "to": "vigoroth",
+   "seconds_after_tap": 1.41,
+   "state": {
+    "look_t": 51.234,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      37,
+      37
+     ],
+     "fast_move": "HIDDEN_POWER_ROCK"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 51.787,
+   "side": "theirs",
+   "from": "shaymin_land",
+   "to": "gothitelle",
+   "known_from": "seen",
+   "state": {
+    "look_t": 51.787,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.936,
+     "shields": 1,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.997,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "CONFUSION"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 59.993,
+   "pokemon": "gothitelle",
+   "move": "Psychic",
+   "move_id": "PSYCHIC",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    42,
+    42
+   ],
+   "state": {
+    "look_t": 57.751,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 43,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.795,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      42,
+      42
+     ],
+     "fast_move": "CONFUSION"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 70.063,
+   "pokemon": "vigoroth",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.79,
+   "state": {
+    "look_t": 68.752,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.64,
+     "shields": 1,
+     "left": 3,
+     "energy": 43,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.774,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      0,
+      1
+     ],
+     "fast_move": "CONFUSION"
+    }
+   },
+   "icons_chased": 40
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 91.449,
+   "pokemon": "gothitelle",
+   "move": "Psychic",
+   "move_id": "PSYCHIC",
+   "cost": 55,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 83.871,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.013,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      28,
+      29
+     ],
+     "fast_move": "CONFUSION"
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 95.849,
+   "pokemon": "vigoroth",
+   "next": "jellicent",
+   "state": {
+    "look_t": 83.871,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.013,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      28,
+      29
+     ],
+     "fast_move": "CONFUSION"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 100.636,
+   "pokemon": "jellicent",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.12,
+   "state": {
+    "look_t": 99.141,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 43,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "gothitelle",
+     "hp_share": 0.175,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      14,
+      14
+     ],
+     "fast_move": "CONFUSION"
+    }
+   },
+   "icons_chased": 78
+  },
+  {
+   "kind": "switch",
+   "t": 115.096,
+   "side": "theirs",
+   "from": "gothitelle",
+   "to": "shaymin_land",
+   "known_from": "seen",
+   "state": {
+    "look_t": 115.096,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 1,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.512,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      37,
+      37
+     ],
+     "fast_move": "HIDDEN_POWER_ROCK"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 119.301,
+   "side": "theirs",
+   "from": "shaymin_land",
+   "to": "wailord",
+   "known_from": "seen",
+   "state": {
+    "look_t": 119.301,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.35,
+     "shields": 0,
+     "left": 2,
+     "energy": 16,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "wailord",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "ROLLOUT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 121.074,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.87,
+   "state": {
+    "look_t": 120.077,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.31,
+     "shields": 0,
+     "left": 2,
+     "energy": 16,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "wailord",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "ROLLOUT"
+    }
+   },
+   "icons_chased": 54
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 138.222,
+   "pokemon": "jellicent",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.87,
+   "state": {
+    "look_t": 136.002,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.162,
+     "shields": 0,
+     "left": 2,
+     "energy": 26,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "wailord",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      39,
+      39
+     ],
+     "fast_move": "ROLLOUT"
+    }
+   },
+   "icons_chased": 64
+  },
+  {
+   "kind": "switch",
+   "t": 148.887,
+   "side": "theirs",
+   "from": "wailord",
+   "to": "shaymin_land",
+   "known_from": "seen",
+   "state": {
+    "look_t": 148.887,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "HIDDEN_POWER_ROCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 165.936,
+   "pokemon": "shaymin_land",
+   "move": "Seed Flare",
+   "move_id": "SEED_FLARE",
+   "cost": 75,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "pause",
+   "state": {
+    "look_t": 165.936,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.963,
+     "shields": 0,
+     "left": 1,
+     "energy": 26,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.283,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      50,
+      50
+     ],
+     "fast_move": "MAGICAL_LEAF"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 172.238,
+   "pokemon": "stunfisk",
+   "move": "Mud Bomb",
+   "move_id": "MUD_BOMB",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.27,
+   "state": {
+    "look_t": 170.763,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 0,
+     "left": 1,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "shaymin_land",
+     "hp_share": 0.013,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "MAGICAL_LEAF"
+    }
+   },
+   "icons_chased": 95
+  },
+  {
+   "kind": "end",
+   "t": 186.452,
+   "result": "loss",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-171011.jsonl"
+ ]
+}
