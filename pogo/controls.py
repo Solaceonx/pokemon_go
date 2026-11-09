@@ -26,6 +26,26 @@ BENCH = ((0.915, 0.585), (0.915, 0.67))  # portraits at the right edge, earlier 
 SHIELD_YES, SHIELD_NO = (0.50, 0.815), (0.50, 0.952)
 REPLACE_TWO = ((0.33, 0.865), (0.67, 0.865))
 REPLACE_ONE = (0.50, 0.865)
+# The flee button in the fight, measured on this phone's recordings (2026-11-09): centre (0.078, 0.145), about 0.035
+# of the width in radius. It is not drawn in a charged move's minigame, whose icons (Stone Edge's above all) come up
+# in that corner. A minigame stroke ("stroke" gestures) keeps FLEE_CLEAR from its centre, distances in widths (the
+# screen is 2.2 times taller than wide), in place of KEEP_OUT's first circle; a drag does not press a button it passes
+# over (the stroke goes down and up on the open field).
+FLEE, FLEE_CLEAR, ASPECT = (0.078, 0.145), 0.09, 2.2
+
+
+def clear_of_flee(x: float, y: float) -> tuple:
+    """The point, or the nearest point FLEE_CLEAR from the flee button's centre."""
+    dx, dy = x - FLEE[0], (y - FLEE[1]) * ASPECT
+    d = (dx * dx + dy * dy) ** 0.5
+    if d >= FLEE_CLEAR:
+        return x, y
+    if d < 1e-9:
+        dx, dy, d = 0.0, 1.0, 1.0
+    k = (FLEE_CLEAR + 1e-6) / d
+    return FLEE[0] + dx * k, FLEE[1] + dy * k / ASPECT
+
+
 KEEP_OUT = [  # (centre, radius): never touched
     ((0.075, 0.18), 0.08),  # the run icon top left: flee, which forfeits the battle
     ((0.50, 0.03), 0.06),   # the top bar of the phone
@@ -49,7 +69,11 @@ class Gesture:
         for x, y in self.points:
             if not (0.0 <= x <= 1.0 and 0.0 <= y <= 1.0):
                 raise UnsafeTouch(f"{self.note}: point {x:.3f}, {y:.3f} is off the screen")
-            for (cx, cy), r in KEEP_OUT:
+            for k, ((cx, cy), r) in enumerate(KEEP_OUT):
+                if k == 0 and self.kind == "stroke":
+                    if ((x - FLEE[0]) ** 2 + ((y - FLEE[1]) * ASPECT) ** 2) ** 0.5 < FLEE_CLEAR:
+                        raise UnsafeTouch(f"{self.note}: point {x:.3f}, {y:.3f} is too near the flee button")
+                    continue
                 if (x - cx) ** 2 + (y - cy) ** 2 < r * r:
                     raise UnsafeTouch(f"{self.note}: point {x:.3f}, {y:.3f} is in a keep-out zone")
         return self

@@ -361,13 +361,14 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 pending.remove(target)
                 if len(target) == 3:
                     done.add(target[2])
-        sx, sy = min(0.995, max(0.02, x)), min(0.90, max(0.15, y))
-        if sy < 0.32:  # never near the run button at the top left (it forfeits): pogo.controls.KEEP_OUT, with room
-            sx = max(sx, 0.22)
+        # Never near the flee button at the top left (it forfeits): kept 0.09 of the width from it, the corner
+        # around it open (2026-11-09: a box of x < 0.22 above y 0.32 was kept clear, and Stone Edge, whose icons
+        # come up there, rated Great three times in one battle)
+        sx, sy = controls.clear_of_flee(min(0.995, max(0.02, x)), min(0.90, max(0.15, y)))
         trail.append((now, sx, sy))
         if trace is not None and (not trace or now - start - trace[-1][0] >= 0.05):
             trace.append((round(now - start, 2), round(sx, 3), round(sy, 3), int(target is not None)))
-        controls.Gesture("tap", [(sx, sy)], 0, "minigame stroke").check()
+        controls.Gesture("stroke", [(sx, sy)], 0, "minigame stroke").check()
         phone._send(MOVE, sx, sy)
         time.sleep(step)
     # Lift the finger on the open field, never over the bench portraits at the right edge (as the fight resumes, a
@@ -1206,8 +1207,14 @@ class Player:
                 foe = self.tracker.foe
                 ready = [m for m in foe.mon.build.charged if foe.hi + FOE_MARGIN * foe.mon.build.fast.energy_gain >= m.energy]
                 hurt = max((damage(foe.mon, m, view.me.mon) for m in ready), default=0)
-                if hurt >= 0.33 * view.me.mon.build.hp or hurt >= view.me.mon.hp:
-                    k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
+                k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
+                # Worth its energy: half the damage per energy of our best charged move or more, unless theirs would
+                # knock us out (2026-11-09: Snorlax on 172 of 192 threw Body Slam, 20 damage, into Skeledirge, whose
+                # Torch Song does 65, where Earthquake 25 energy later did 122; the owner: "you should be throwing
+                # earthquake on the skeledirge")
+                per = lambda m: damage(view.me.mon, m, view.foe) / m.energy
+                worth = per(mon.charged[k]) >= 0.5 * max(per(m) for m in mon.charged)
+                if hurt >= view.me.mon.hp or (hurt >= 0.33 * view.me.mon.build.hp and worth):
                     self.decision = CHARGED[0] + k
                     self.armed = None
                     self.decided_for = self.active
