@@ -35,6 +35,13 @@ and push that before starting.
 
 ## Open tasks
 
+**Additional battle-data audit — Codex, 2026-11-09, branch `battle-data-enrichment` (in progress).**
+At the owner's request, inspect task 40's live reader and recover additional
+time-aligned observations and diagnostics from completed saved logs and selected
+recordings. Work offline, publish a reproducible evidence report, and distinguish
+screen readings from tracker/engine beliefs. Do not modify the active phone loop,
+task 45's records, or the reserved footage's recognition settings.
+
 | # | Task | Needs |
 |---|---|---|
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
