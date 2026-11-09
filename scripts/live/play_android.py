@@ -452,6 +452,7 @@ class Player:
         self.fight_frame_t = -9.0  # the last frame counted as the fight, for keeping the fast taps on
         self.button_seen_t = -9.0  # the last frame with a charged-move button on screen
         self.fast_time = 0.0  # seconds since the last look with fast taps on and the fight on the clock
+        self.fast_carry = 0.0  # the part of a fast move counted at no look yet (the count with no reading)
         self.clock_frame_t = -9.0  # the last frame the turn clock counted
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
@@ -1089,11 +1090,18 @@ class Player:
             # prompt was up or the buttons were hidden that ran on (2026-11-08: Vigoroth's count went 43 to 63 in a
             # 3 s wait with the taps off, two throws were tried on it and not taken, and it fainted with none thrown).
             mon_now = self.tracker.me.mon
-            moves = math.ceil(self.fast_time / (mon_now.build.fast.turns * 0.5))
+            # Whole fast moves only, the part of one under way carried to the next look: rounded up at each look,
+            # a 1 s fast move counted one a look (two a second), and on the count alone 37 of 87 throws were not
+            # taken (2026-11-09, the third account's first 13 league battles; 1 of 27 tapped on a reading)
+            dur = mon_now.build.fast.turns * 0.5
+            moves = int((self.fast_carry + self.fast_time) / dur)
+            self.fast_carry = self.fast_carry + self.fast_time - moves * dur
             cap = before[0] + moves * mon_now.build.fast.energy_gain
             if mon_now.energy > cap:
                 mon_now.energy = min(100, cap)
         self.fast_time = 0.0
+        if obs.my_energy is not None or before is None or self.tracker.me.mon is not before[1]:
+            self.fast_carry = 0.0  # a reading, or another Pokémon: the count starts afresh
         if obs.my_energy is not None and self.tracker.foe is not None:
             # The buttons are the better witness: the count misses moves (a throw that went off after theirs),
             # turns lost between taps, and Pokémon seen coming in late. It takes the reading at once.
@@ -1264,7 +1272,9 @@ class Player:
                     self.log("armed_fired", t, move=mon.charged[k].id, read=self.energy(),
                              waited=round(time.time() - self.armed_at, 2))
                 self.armed = None
-                self.throw(t, k, mon.charged[k])
+                # on the count alone: no reading and no name under the buttons saying it is paid for
+                count_only = self.energy() is None and not (bounds is not None and bounds[0] >= mon.charged[k].energy)
+                self.throw(t, k, mon.charged[k], count_only=count_only)
                 self.decision = FAST
                 return
         # Not before 1.5 s: until then "GO!" is on the screen and the game takes no switch (2026-11-08: the opening
@@ -1500,7 +1510,7 @@ class Player:
         self.tapping = False
         self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1))
 
-    def throw(self, t: float, k: int, move) -> None:
+    def throw(self, t: float, k: int, move, count_only: bool = False) -> None:
         self.queued = None  # a new tap stands for any move still waiting
         self.practised[move.id] = self.practised.get(move.id, 0) + 1
         # No fast taps from here until the move starts: a tap on the field after the charged tap takes its place
@@ -1539,7 +1549,11 @@ class Player:
         icon_frames = 0  # frames in a row showing the minigame's icons
         # 3 s (2.3 s for one afternoon: 3 of 10 throws in a battle then started after the wait, 2.4 to 5 s after
         # the tap, and their minigames were found late)
-        while time.time() - tapped < 3.0:
+        # 2.3 s on the count alone: of 826 throws started on 11-08 and 11-09, 2 to 8% by fast move came later than
+        # that (2.9 s at most), and a late one is still watched for and swiped (watch_queued); a tap the count
+        # wrongly said was paid for stopped the fast taps for the whole wait (37 times in 13 battles)
+        wait = 2.3 if count_only else 3.0
+        while time.time() - tapped < wait:
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
                 continue
@@ -1592,7 +1606,7 @@ class Player:
             self.queued, self.cue_found = (k, move, tapped, time.time() + 40, self.now()), None
             self.queued_retapped = False
             read = self.energy()
-            self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy,
+            self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy, count_only=count_only,
                      read=None if read is None else round(read, 1))
             self.tracker.me.mon.energy = min(self.tracker.me.mon.energy, move.energy - 1)  # the button says not yet
             self.energy_read = None
@@ -1600,7 +1614,7 @@ class Player:
         self.pending_mine = k
         self.my_throw_at = time.time()
         self.log("throw_started", self.now(), move=move.id, after_tap_s=round(since - tapped, 2),
-                 cue_t=round(since - (self.t0 or since), 3))
+                 cue_t=round(since - (self.t0 or since), 3), count_only=count_only)
         self.minigame(k, move, since)
 
     def label_move(self, rgb, k: int):
