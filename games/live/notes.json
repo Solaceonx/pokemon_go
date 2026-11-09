@@ -254,5 +254,50 @@
   "went_wrong": "Engine: Vigoroth took Quagsire's Drain Punch (super effective) unshielded three times, at 87%, 51% and 13%, both shields up throughout; Stunfisk threw Discharge into Marowak (Ground, near immune) with Mud Bomb to hand. Tapping: the switch from Stunfisk on 22% to Jellicent took 9 s to be seen (the first tap not taken), and Marowak's Bone Club landed meanwhile.",
   "fixed": "",
   "from": "the analysis on 2026-11-09"
+ },
+ "20261109-120903": {
+  "went_wrong": "Minigame: all three Stone Edges rated Great; the icons were found but many come up in the top-left corner, which the stroke kept out of for the flee button. Player rule: throw_before_theirs threw Body Slam (20 damage) into Skeledirge twice, the first with Snorlax on 172 of 192 where Torch Song does 65; Earthquake would have done 122. Close call: the farm-down on Tsareena (6 HP) was refused because Triple Axel had raised its attack and two Razor Leafs could land before the second Poison Sting; the owner's line (farm, then Earthquake one-shots Skeledirge at 72%) would have worked, only one landing.",
+  "fixed": "94b8c31: the stroke keeps 0.09 of the width from the flee button only; throw_before_theirs only when theirs would knock us out or the move is worth its energy",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-123219": {
+  "went_wrong": "Reading: our energy count ran high with the buttons unread (close-ups, their throws): Snorlax's Body Slam tapped on 47 counted (25 real) and not taken, first thrown 17 s after the engine asked; Clodsire's Stone Edge on a 22 HP Ninetales tapped three times on the count and not taken, thrown 20 s late. Engine: no shields on Ninetales's throws while both were up.",
+  "fixed": "a721786 (whole fast moves only in the count; 2.3 s wait on count-only taps), 77cddaf and 32cf933 (no count-only throw unless the buttons are unread 4 s, ours is low, or the count is 40 over)",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-123923": {
+  "went_wrong": "Reading: Clodsire, our last Pokémon, one shield up, took two Aerial Aces and the final Liquidation unshielded: the last-Pokémon rule read our shields off the prompt's frame, where the header is dimmed. Also who was out flipped between Snorlax and Clodsire at 104-121 s. Engine: no shield on Dondozo's Liquidation early.",
+  "fixed": "2136026: the rule takes the header's counts as last seen",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-124247": {
+  "went_wrong": "Engine: declined all 7 shield prompts; lost with both shields up (Mantine never threw at the end). Reading: 0.7 s after the header showed the switch to Thievul its lit Night Slash button was taken for Snorlax's Body Slam (dark lit near normal), and for 10 s Snorlax was believed out, its minigame hunting normal icons.",
+  "fixed": "ed9b086: no move correction to another Pokémon against the header; shield prompts now log the engine's view",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-124910": {
+  "went_wrong": "Reading: with no shields left, Beedrill's Sludge Bomb countdown (5 s, header and bars up) was taken for the fight; our count ran 41 to 68 and a Stone Edge was tapped that could not go off. Engine: Thievul on 38 HP against a 7 HP Galarian Stunfisk did not shield Rock Slide and fainted; a shield went on Flame Charge.",
+  "fixed": "303ed90: the countdown is read and is not the fight",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-130528": {
+  "went_wrong": "Engine: a bad line-up for us (Alolan Ninetales); Snorlax took its first two charged moves unshielded, a shield went on Power Gem. No new reading fault found.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-131207": {
+  "went_wrong": "Engine: both of Clodsire's shields on Trailblaze. Reading: a count-only Stone Edge at 16% health was not taken (allowed on purpose at low health).",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-134115": {
+  "went_wrong": "Player gate (77cddaf, mine): held Snorlax's Body Slam on a count of 83 to 91 (the reading 90) for want of a fresh reading, and Lapras's Sparkling Aria went first.",
+  "fixed": "32cf933: a count 40 or more over the cost throws",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-134500": {
+  "went_wrong": "Engine: no shields on Stunfisk's Mud Bombs with Clodsire and then Thievul healthy; a shield left at the end.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
  }
 }
