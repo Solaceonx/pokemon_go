@@ -493,6 +493,7 @@ class Player:
         self.open_with = None  # training only (--open-with): the slot switched in first, whatever the engine asks for
         self.start_info: dict = {}  # written into the log's start row: the bot's version, account, team, league
         self.farm_logged = self.farm_checked = 0.0
+        self.farm_for, self.farm_since = None, 0.0
         self.foe_sid, self.foe_since, self.saved_for = None, 0.0, None  # save_the_low_one: their Pokémon and since when
         self.save_checked = None
         threading.Thread(target=self._tap_fast, daemon=True).start()
@@ -1085,14 +1086,14 @@ class Player:
             affordable = [k for k, m in enumerate(mon.charged) if have >= m.energy]
             if hp_share < 0.35 and affordable and self.better_soon(t, view, mon, have, affordable, hp_share):
                 pass  # the engine decides: a far better move is a few fast moves away and we live to throw it
-            elif hp_share < 0.35 and affordable and not self.farm_down(view, mon):
-                from pogo.battle import damage
-                k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
+            elif hp_share < 0.35 and affordable and not self.farm_down(view, mon, have, t, self.hardest(view, mon, affordable)):
+                k = mon.charged.index(self.hardest(view, mon, affordable))
                 self.decision = CHARGED[0] + k
                 self.armed = None
                 self.decided_for = self.active
                 self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share)
-            elif affordable and view.me.shields == 0 and self.tracker.foe is not None:
+            elif (affordable and view.me.shields == 0 and self.tracker.foe is not None
+                  and not self.farm_down(view, mon, have, t, self.hardest(view, mon, affordable))):
                 # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
                 # Water Pulse, and fainted with both): with no shield to block it, when they can throw a charged
                 # move that would hurt (a third of our health or more), throw ours first.
@@ -1106,7 +1107,8 @@ class Player:
                     self.armed = None
                     self.decided_for = self.active
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
-        if view is not None and self.decision in CHARGED and self.farm_down(view, mon):
+        if (view is not None and self.decision in CHARGED
+                and self.farm_down(view, mon, have, t, mon.charged[self.decision - CHARGED[0]])):
             if time.time() - self.farm_logged > 1.0:
                 self.log("farm_down", t, held=mon.charged[self.decision - CHARGED[0]].id, foe_hp=view.foe.hp)
                 self.farm_logged = time.time()
@@ -1219,21 +1221,36 @@ class Player:
         recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
         return recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
 
-    def farm_down(self, view, mon) -> bool:
+    def hardest(self, view, mon, affordable: list):
+        """Of the charged moves we can pay for, the one that hits their Pokémon hardest."""
+        from pogo.battle import damage
+        return mon.charged[max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))]
+
+    def farm_down(self, view, mon, have: float, t: float, move) -> bool:
         """Their Pokémon is three or fewer of our fast moves from fainting and ours outlives that, their fast moves
         and any charged move they could reach meanwhile included: farm it down and keep the energy (the owner,
         2026-11-08: Stunfisk threw Discharge into a Talonflame on 5% that three Thunder Shocks would have finished,
-        Incinerate being resisted)."""
+        Incinerate being resisted). Not when the throw costs nothing we need (energy for another charged move after
+        it), not with a fast move that barely scratches it, and not for longer than the fast moves should take
+        (2026-11-08, 204007: Jellicent held Surf for 17 s at 98 energy, the cap, against an Obstagoon on 1 to 5% that
+        Hex, resisted twice, could not finish, and took a Night Slash)."""
         from pogo.battle import damage
         foe, me = view.foe, view.me.mon
         if foe is None or foe.hp <= 0 or self.tracker.foe is None:
             return False
+        if have - move.energy >= min(m.energy for m in mon.charged):
+            return False  # another charged move is paid for after this one: throwing keeps nothing back
         hit = damage(me, mon.fast, foe)
-        if hit <= 0:
-            return False
+        if hit <= 0 or hit < 0.02 * foe.build.hp:
+            return False  # our fast move barely scratches it
         n = -(-foe.hp // hit)  # our fast moves to finish it
         if n > 3:
             return False
+        sid = foe.build.species_id
+        if self.farm_for != sid:
+            self.farm_for, self.farm_since = sid, t
+        if t - self.farm_since > n * mon.fast.turns * 0.5 + 2.0:
+            return False  # it should have fallen by now: the reading or the damage is off, so throw
         theirs = foe.build.fast
         landing = -(-(n * mon.fast.turns) // theirs.turns)  # their fast moves that can land meanwhile, at most
         incoming = landing * damage(foe, theirs, me)
