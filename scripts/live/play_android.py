@@ -549,6 +549,11 @@ class Player:
             last = when
             look = screen.read(rgb, when)
             if self.t0 is None:
+                if time.time() - start > 90.0:
+                    # no battle 90 s after the start tap (2026-11-09: one waited out its 7 minutes on a start that came
+                    # to nothing): the runner goes on from whatever screen this is
+                    self.log("no_battle", round(time.time() - start, 1))
+                    return None
                 if look.header and len(look.bars) == 2 and not look.shield_prompt and not look.replace_prompt:
                     self.t0 = when
                     # epoch lines the log up with the recording's .times; the rest is what the record needs (task 45)

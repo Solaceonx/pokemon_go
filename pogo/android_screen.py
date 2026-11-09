@@ -256,10 +256,12 @@ def _confirmed(side: str, share: float, t: float) -> bool:
     return False
 
 
-def bars_held(a: np.ndarray, t: float, keep_s: float = 3.0) -> dict:
+def bars_held(a: np.ndarray, t: float, keep_s: float = 10.0) -> dict:
     """bars(), and for a side it misses that it found in the last keep_s seconds, bar_near() at that place, kept
     only if not higher than that last reading (health does not come back in a fight; a Pokémon coming in is read
-    afresh by bars()). A reading far below the last one given out is held back until it repeats (_confirmed)."""
+    afresh by bars()). A reading far below the last one given out is held back until it repeats (_confirmed).
+    10 s, not 3 (2026-11-09): after their charged move the place was 6 to 7 s old when our bar came back under "ATTACK
+    FELL!" or "SUPER EFFECTIVE!", the buttons still hidden, and the fight was not taken up again for 3 to 7 s."""
     places = bar_places(a)
     out = {}
     fight = header_visible(a)

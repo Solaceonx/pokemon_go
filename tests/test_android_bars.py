@@ -45,7 +45,8 @@ class Bars(unittest.TestCase):
         self.assertNotIn("mine", screen.bars_held(hidden, 0.0))  # nothing read before: no place to look
         screen.bars_held(frame(0.62), 1.0)
         self.assertAlmostEqual(screen.bars_held(hidden, 1.5)["mine"], 0.6, delta=0.02)
-        self.assertNotIn("mine", screen.bars_held(hidden, 5.0))  # the place is too old by then
+        self.assertIn("mine", screen.bars_held(hidden, 8.0))  # still kept 7 s on (a charged move's length)
+        self.assertNotIn("mine", screen.bars_held(hidden, 20.0))  # too old by then
 
     def test_a_red_sliver_at_low_health(self):
         screen.bars_held(frame(0.1, RED), 0.0)

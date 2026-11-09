@@ -175,6 +175,9 @@ class SetEnd:
             if ("GOBATTLELEAGUE" in flat and "COLLECT" not in exact and "CLAIMRANKREWARDS" not in flat
                     and ("CHOOSEAREWARDTIER" in flat or re.search(r"[0-4]/5BATTLESPLAYED", flat))):
                 return f"the league card offers a new set (collected {self.collected}, caught {self.caught})"
+            if "CHOOSEYOURLEAGUE" in flat or "USETHISPARTY" in flat:
+                # the set is not over (2026-11-09: a start that came to nothing counted as a battle): the runner goes on
+                return "a set under way (the league choice is up)"
             if ("YOUWIN" in flat or "GOODEFFORT" in flat or "ITSADRAW" in flat) and "NEXTBATTLE" not in flat:
                 self.tap(0.5, 0.94, "the check under the result", words)  # as run_gbl.py's CHECK
             elif "NEXTBATTLE" in flat:
