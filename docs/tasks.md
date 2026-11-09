@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
 | **43** | **Let the engine search swaps in the middle of a matchup: today only the rulebook makes them** — Marco; measured 2026-11-04, **no gain against bots**; merged 2026-11-05 as a record; exam screen 2026-11-05: no gate helps | Done; results in `status.md` |
@@ -69,6 +70,49 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **taken: Claude on the owner's PC, 2026-11-08 (branch `task45-live-records`)**
+
+**Why.** The owner wants the live data "very well stored for future analysis". The records in `games/live/` are good
+(one folder per battle, every action with what the bot believed, raw logs with every tap and look, no account names),
+but a few things make later analysis harder. **Out of scope:** the recordings (the owner does not need them kept) and
+the Team Leader training battles (leave them as they are; nothing new needed for them). Everything below is for GO
+Battle League battles.
+
+**What to do.**
+1. **The raw log beside its record, on `main`.** Each league battle's log goes to `games/live/<STAMP>/log.jsonl`
+   (update `source.log` and `built_from`), and `scripts/live/live_record.py` writes new ones there. Today the logs of
+   the five evening league battles (20261108-132710, -170916, -171011, -171347, -171836) are only on
+   `task40-android`; after this, nothing a record needs should live only on a branch.
+2. **New fields in each league record** (null where not known; do not guess for old battles):
+   - **Rating and rank before and after the battle**, read from the GO Battle League screen the runner passes between
+     battles (or typed by the owner). This is what tests "low rating means off-meta opponents".
+   - **The bot's version**: the git commit it ran and whether the working tree had uncommitted changes, written in the
+     log's `start` row and the record's `source`.
+   - **Our team's exact stats**: IVs and level for each of our Pokémon (from the owner once, kept in a small file
+     such as `games/live/our_teams.json` keyed by team, copied into each record), not only CP.
+   - The league and season, and the start time as UTC ISO text beside the epoch.
+3. **Clear results.** Every league record's `result.value` is one of win, loss, draw, fragment; a fragment names the
+   battle it belongs to. Fix the two without one: 20261107-174540 is an 11 s fragment of 20261107-174643;
+   20261108-012546 is a loss (`docs/live_battles_2026-11-08.md`).
+4. **The format and the notes in one place on `main`.** Bring `docs/game_record.md` (branch
+   `game-record-and-charged-damage`) to `main` with a section on the live-log variant (the differences now listed at
+   the top of `live_record.py`), and give records a variant version number. Keep "what went wrong" in one place
+   (`games/live/notes.json`) and generate `index.json`'s `went_wrong` and the battle tables in
+   `docs/live_battles_*.md` from it, so the copies cannot drift.
+5. **Line-up odds in the index.** A committed `scripts/live/odds.py` adds `odds` (our chance from the line-ups) to
+   each league battle in `index.json`. The method used on 2026-11-08 (scratch, not committed): our team as recorded,
+   lead first, against theirs as seen; `pogo.lineup.win_chance` with `runs/general-decide/q.npz`, pool
+   `gd.meta(50)`, 300 battles, seed 7; a Pokémon of theirs not seen filled at random from PvPoke's Great League ranks
+   101 to 400 (6 draws of 50 battles); Darmanitan built as `darmanitan_standard`. It gave 29.1 expected wins for the
+   38 league battles to that evening, against 21 won (`docs/status.md`).
+6. **A check:** `tests/test_live_records.py`: every league record parses, has a result from the set above, both
+   teams, our IVs and levels, the bot's commit (new battles), and its `log.jsonl`; `index.json` lists exactly the
+   folders.
+
+**Done when** the above holds on `main` for every league battle so far and new ones are written that way, the test
+passes with the rest, and `docs/status.md` says what changed. Keep trainer names (ours and opponents') out of the
+public repo.
 
 ## 41. Shield calls the way strong players make them — for Marco (2026-11-04; Marco's idea E)
 

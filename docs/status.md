@@ -4390,6 +4390,93 @@ shadow Forretress 69.8%, Tinkaton 67.6%, Forretress 66.9%, Alolan Muk 65.8%, Mim
 the shadow in the top 100: Great, Hydreigon +2.2 (#18 v #74), Steelix +2.2 (#89 v #136), Ninetales +1.7 (#3 v #13),
 Dusknoir +1.1, Shelgon +1.1, Dragonair +1.0; Ultra, Hydreigon +3.5 (#92 v #179), Snorlax +1.7 (#3 v #13), Cradily +1.4,
 Politoed +1.2, Milotic +0.9, Golisopod +0.8. Most other shadows score the same or lower than their regular forms.
+**The catch list, extended (2026-11-08).** Each candidate from PvPoke's top 200 (Great) or top 100 (Ultra), other forms
+of species already owned left out, put with its best two of the roster's Pokémon; the 35 most promising screened (100
+battles per lead), the best 15 through the same 600 battles as above. Great League above the best owned team (59.4%):
+shadow Hydreigon 65.3, Cramorant 62.0, shadow Forretress 61.3, shadow Greninja 61.2, Stunfisk 60.2, Melmetal 60.0;
+next Walrein 58.2, Forretress 57.2, Florges 56.4. Ultra League above the best owned team (64.9%): shadow Forretress
+69.8, Empoleon 67.7, Tinkaton 67.6, shadow Corviknight 67.6, Forretress 66.9, Cresselia 66.7, Registeel 66.1, Alolan
+Muk 65.8, Lapras 65.8, Snorlax 65.6; shadow Snorlax 62.7, below regular here though PvPoke ranks it higher. Margins are
+± 3.7-4.0, so gains under about 4 points are not clear.
+
+## The first day of live GO Battle League battles, against the line-up odds (2026-11-08)
+
+The phone bot (task 40, branch `task40-android`) played 24 GO Battle League battles on the owner's second account
+on 2026-11-08: 15 won, 9 lost; each battle and what went wrong is in `docs/live_battles_2026-11-08.md` on that branch.
+Against each opposing team as seen, the line-up odds: our team (Jellicent with Bubble Beam leading, Vigoroth,
+Stunfisk) against theirs at PvPoke's default builds, two equally good varied bots, 300 battles (`pogo.lineup.win_chance`;
+scratch live/odds.py). With all three of theirs seen (20 battles; Darmanitan has no Great League build), the odds add
+up to 16.3 expected wins; 14 were won. Of the 6 losses, 4 were line-ups the bots win 69 to 99% (Leafeon / Dachsbun /
+Aerodactyl 83, Hisuian Arcanine / Bruxish / Houndoom 99, Toxtricity / Galarian Rapidash / Jolteon 99, Gastrodon /
+Mega Charizard X / Scrafty 69), each traced on the branch to the phone side (a form misread, fast taps cut, our
+energy unread) or, for Dachsbun, their energy undercounted. The other 2 were close (Haunter / Galarian Stunfisk /
+Melmetal 52, Alolan Raichu / Mandibuzz / Hoopa 46), and one win came at 40 (Goodra / Umbreon / Espeon). The 3 losses
+with two of theirs seen came from the first night's faults, since fixed. At this rating the opponents' teams are
+weak, so the gap to the odds is reading and tapping, not strategy; Bubble Beam for Surf costs about 5 ± 4.5 points
+(above). Almost every team was off-meta: in 13 of the 24 all of their Pokémon seen were outside
+PvPoke's top 100, and those 13 went 9 won, about the day's rate (6 of 8 with two outside). They cost the reading, not
+the play: forms (Hisuian Arcanine, Galarian Stunfisk and Rapidash), a species with no ranking (Darmanitan) and fast
+moves other than PvPoke's (Fire Fang counted as Snarl) are what threw the tracker's energy counts off.
+
+Melmetal in place of one of the day's team (asked 2026-11-08; trained bot both sides, PvPoke default IVs, 1,200
+battles a team against the mixed field and 1,200 against random threes from PvPoke's ranks 101 to 400, the same
+opponents for every team). The day's team: 55.2% and 66.0% (± 2.8). Melmetal with Double Iron Bash (an Elite TM) and
+Dynamic Punch leading in Jellicent's place: 57.1% and 73.2%, the same against the meta and 7 points better against
+off-meta teams; in Stunfisk's or Vigoroth's place it is 5 to 6 points worse against the meta. Without Double Iron
+Bash (Dynamic Punch and Rock Slide) it is worse in every place: 39 to 46% and 61 to 65%.
+With Surf on Jellicent (Hex; Shadow Ball, Surf) and Melmetal with Double Iron Bash, every three of the four with each
+lead, the same set-up: against the meta, Jellicent / Vigoroth / Stunfisk is best, 62.3% (Surf for Bubble Beam: +7);
+every team with Melmetal is 46 to 57%. Against off-meta teams, Melmetal / Jellicent / Stunfisk is best, 76.4%, against
+68.2% for Jellicent / Vigoroth / Stunfisk; every Melmetal team is 72 to 76%. Melmetal's second move: Dynamic Punch
+beats Rock Slide by 0 to 6 points and Super Power by 5 to 7. So Melmetal / Jellicent / Stunfisk while the opponents
+are off-meta, and Jellicent / Vigoroth / Stunfisk once they are not.
+
+All the league battles to the evening of 2026-11-08, from `games/live/index.json` on main: 38 (an 11 s fragment,
+20261107-174540, is the start of the next battle), 21 won and 17 lost, against 29.1 expected from the line-up odds
+(± 2.3 by chance alone; our team as recorded, theirs as seen, a Pokémon not seen filled at random from PvPoke's ranks
+101 to 400). 2026-11-07: 9 battles, 4 won, 6.6 expected; 2026-11-08: 29, 17 won, 22.5 expected. 7 of the 19 battles
+at 80% or better were lost; 2 of the 6 under 50% were won. Training against the Team Leaders: 109 won of 112 (3
+unfinished). The first league battle on the owner's own account (20261108-200541, log on `task40-android`), lost to
+Talonflame / Mimikyu / Lickilicky at 78% ± 5 odds: besides the three faults fixed in 9dbeb69, both shields went in the
+first 40 s on Mimikyu's Shadow Sneak. The shield override (shield a hit of 35% or more) takes the worst move they could
+have with the tracker's two-fast-move margin added to their energy: counted 48, plus 16, so Play Rough (60, 67 damage
+of Stunfisk's 172) looked possible. With the margin, any bait within two fast moves of the big move is shielded. Over the 39 league battles' logs: 133 shield prompts, 70 shielded,
+41 of them by the override against the engine's call (both in 20261108-200541).
+
+**Live shield calls measured (2026-11-08; the owner withdrew the 35% override: "i don't want this anymore", and asked
+for the shield calls to be worked out).** The live tracker's energy error first: at 72 live shield prompts whose move
+was named after, the move cost more than the tracker's upper bound 37 times (by 2 to 42 energy, mostly 10 to 20), so
+their energy runs low. Simulation (scratch `shield_sim.py`): our side the trained bot (the engine's shield call is the
+trained bot's; the engine does not search shields), shown their energy minus an undercount drawn from those 72;
+theirs varied bots with exact information; the same opponents and dice for every policy; differences paired against
+the trained bot's own call on the undercounted energy. 3,000 battles a cell, seed 1:
+
+| Shield policy | Live team v meta | v off-meta (PvPoke 101-400) | Mixed teams both sides |
+|---|---|---|---|
+| The bot's own call (undercounted energy) | 67.2% | 72.6% | 54.9% |
+| The same with their exact energy | +0.7 ± 1.0 | +0.0 ± 0.9 | +2.5 ± 1.0 |
+| Plus the 35% override with two fast moves of margin (live until now) | -13.4 ± 1.9 | -7.3 ± 1.8 | -8.9 ± 1.9 |
+| Plus the 35% override, no margin | -12.0 ± 1.9 | -6.0 ± 1.7 | -8.2 ± 1.9 |
+| Plus a knock-out-only override, with margin | -9.2 ± 1.6 | -2.0 ± 1.4 | -5.5 ± 1.6 |
+| Plus a knock-out-only override, no margin | -8.5 ± 1.6 | -1.7 ± 1.3 | -5.1 ± 1.6 |
+| The bot's call on the estimate plus one fast move | +0.1 ± 0.8 | -0.8 ± 0.8 | +0.5 ± 0.8 |
+| The bot's call on the estimate plus two fast moves | +0.5 ± 1.0 | -0.3 ± 1.0 | +0.7 ± 1.1 |
+| Always shield | -21.9 ± 2.1 | -12.4 ± 2.0 | -13.3 ± 2.1 |
+| Never shield (but the last Pokémon) | -52.5 ± 1.8 | -47.8 ± 1.8 | -42.3 ± 1.8 |
+
+Fresh seed 2, 2,000 battles a cell, against varied opponents, opponents who never bait and opponents who always throw
+the cheapest move: the live rule -7.1 to -11.2 against the meta and -3.4 to -7.2 off-meta; knock-out-only -4.8 to -6.3
+and -1.0 to -2.5; plus two fast moves +0.1 to +1.6 and -0.4 to +1.0 (inside the margins). **Adopted: no override; the
+engine's own call on the tracker's estimate,** always shielding with the last Pokémon (the bot's own rule). The
+tracker's undercount costs about a point (exact energy +0.7 to +2.5), not worth a margin.
+
+When that call shields (14,188 prompts, the live team, 1,000 battles each against the meta and off-meta): always with
+the last Pokémon; with two left 49%, with three 30%. Hits that would knock us out: 51%, rising with our health (27%
+under 10% of our HP, 56% at 20-30%, 72% at 40%, 80% above 70%): a nearly beaten Pokémon is not worth a shield. Hits
+that would not: 14% for a hit of 20-30% of our HP, 21% at 30%, 38-48% at 40% and more, and only 17% on our first
+Pokémon with both shields up. Shield counts weigh most: 56% when they have none left, 40% at one, 24% with both sides
+at two.
+
 
 ## Task 40: the bot playing the second account on the Android phone (2026-11-07, the Claude agent on the owner's PC)
 
