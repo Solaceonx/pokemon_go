@@ -1588,9 +1588,11 @@ class Player:
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
         if view is not None and view.me.shields > 0:
+            # The engine's own call on the tracker's estimate of their energy, no margin added and no override
+            # (2026-11-08, docs/status.md "Live shield calls measured": the owner withdrew the override that shielded
+            # any hit of 35% or more, which cost 7 to 13 points in simulation; the margin was worth nothing)
             try:
-                with self.engine_sees():
-                    shield = bool(self.engine.shield(view, self.tracker.foe.hi))
+                shield = bool(self.engine.shield(view, self.tracker.foe.hi))
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 shield = True
@@ -1598,19 +1600,6 @@ class Player:
             # The engine's own rule: with one Pokémon left there is nothing to save shields for. The tracker can
             # miss that our others have fainted (the header's count lags), so it is applied from our own count.
             shield = True
-        if not shield and view is not None and view.me.shields > 0 and self.tracker.foe is not None:
-            # The owner's call after watching (2026-11-07): the website engine saves shields far more than a player
-            # would (16 of 20 prompts unshielded over three lost games). Shield a hit that would knock us out or
-            # take a third of our health, unless we are nearly gone anyway.
-            from pogo.battle import damage
-            mon, foe = view.me.mon, self.tracker.foe.mon
-            could = self.tracker.foe.hi + FOE_MARGIN * foe.build.fast.energy_gain
-            moves = [m for m in foe.build.charged if m.energy <= max(could, min(x.energy for x in foe.build.charged))]
-            worst = max((damage(foe, m, mon) for m in moves), default=0)
-            nearly_gone = mon.hp <= 2 * damage(foe, foe.build.fast, mon)
-            if not nearly_gone and (worst >= mon.hp or worst >= 0.35 * mon.build.hp):
-                shield = True
-                self.log("shield_override", t, worst=worst, hp=mon.hp, max_hp=mon.build.hp)
         self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
