@@ -204,6 +204,8 @@ class Tracker:
         # immediately used to turn the later replacement into a timed switch.
         self._my_counter_seen = self._foe_counter_seen = False
         self._my_pending_faint = self._foe_pending_faint = None
+        # the last change of ours taken for a switch: (time, the Pokémon that left, the switch time before it)
+        self._last_switch = None
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -266,7 +268,17 @@ class Tracker:
         i_changed = self._my_active(obs)
         they_changed = self._their_active(obs)
         if obs.my_left is not None:
-            if self._my_counter_seen and obs.my_left < self.my_left and not i_changed:
+            recent = self._last_switch
+            if (self._my_counter_seen and obs.my_left < self.my_left and not i_changed and recent is not None
+                    and obs.t - recent[0] < 3.0 and recent[1] is not me.mon):
+                # The counter of Pokémon left lagged the header (2026-11-08: Vigoroth fainted, Stunfisk showed at
+                # 103.0 s, the counter fell at 104.1 s): the change taken for a switch was a faint. The one that
+                # left is out, and the switch timer it started is undone.
+                recent[1].hp = 0
+                self.my_switch_at = recent[2]
+                self._last_switch = None
+                self._note(obs.t, "my_faint", next=me.mon.build.species_id, counter_late=True)
+            elif self._my_counter_seen and obs.my_left < self.my_left and not i_changed:
                 self._my_pending_faint = was_mine
             self.my_left = obs.my_left
             self._my_counter_seen = True
@@ -408,6 +420,10 @@ class Tracker:
         nxt = self._turns[k + 1][1] if k + 1 < len(self._turns) else self.turn
         return min(nxt, turn + max(0, round((t - when) / TURN)))
 
+    def my_fainted(self) -> None:
+        """Ours has fainted (the player saw the prompt to send in the next one): the coming change is a faint."""
+        self._my_pending_faint = self.me.mon
+
     def _my_active(self, obs: Observation) -> str | None:
         """Notice my active Pokémon changing. Returns "switch", "faint" or None."""
         me = self.me
@@ -429,6 +445,7 @@ class Tracker:
         else:
             how = "switch"
             me.mon.atk_stage = me.mon.def_stage = 0
+            self._last_switch = (obs.t, me.mon, self.my_switch_at)
             self.my_switch_at = obs.t + SWITCH_SECONDS
             self._note(obs.t, "my_switch", to=obs.my_species)
         me.active = slot

@@ -492,6 +492,9 @@ class Player:
         self.practised: dict = {}  # move id -> times thrown: of two practised moves, the one thrown less goes next
         self.open_with = None  # training only (--open-with): the slot switched in first, whatever the engine asks for
         self.start_info: dict = {}  # written into the log's start row: the bot's version, account, team, league
+        self.farm_logged = self.farm_checked = 0.0
+        self.foe_sid, self.foe_since, self.saved_for = None, 0.0, None  # save_the_low_one: their Pokémon and since when
+        self.save_checked = None
         threading.Thread(target=self._tap_fast, daemon=True).start()
 
     # touching
@@ -1082,7 +1085,7 @@ class Player:
             affordable = [k for k, m in enumerate(mon.charged) if have >= m.energy]
             if hp_share < 0.35 and affordable and self.better_soon(t, view, mon, have, affordable, hp_share):
                 pass  # the engine decides: a far better move is a few fast moves away and we live to throw it
-            elif hp_share < 0.35 and affordable:
+            elif hp_share < 0.35 and affordable and not self.farm_down(view, mon):
                 from pogo.battle import damage
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 self.decision = CHARGED[0] + k
@@ -1103,6 +1106,15 @@ class Player:
                     self.armed = None
                     self.decided_for = self.active
                     self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
+        if view is not None and self.decision in CHARGED and self.farm_down(view, mon):
+            if time.time() - self.farm_logged > 1.0:
+                self.log("farm_down", t, held=mon.charged[self.decision - CHARGED[0]].id, foe_hp=view.foe.hp)
+                self.farm_logged = time.time()
+            self.decision, self.armed = FAST, None
+        if view is not None and self.switching is None and self.switch_wanted is None:
+            slot = self.save_the_low_one(t, view, mon, have)
+            if slot is not None:
+                self.switch_wanted, self.decision, self.armed = slot, SWITCH[0] + slot, None
         if self.switching is not None:
             return  # which of ours is out is not settled: no charged tap until it is
         if self.decision in CHARGED and self.practise:
@@ -1201,6 +1213,74 @@ class Player:
                          hp=round(hp, 1))
                 return True
         return False
+
+    def hp_now(self, t: float, view) -> float:
+        """Our health as a share: the median of the bar's last readings, else the tracker's."""
+        recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
+        return recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
+
+    def farm_down(self, view, mon) -> bool:
+        """Their Pokémon is three or fewer of our fast moves from fainting and ours outlives that, their fast moves
+        and any charged move they could reach meanwhile included: farm it down and keep the energy (the owner,
+        2026-11-08: Stunfisk threw Discharge into a Talonflame on 5% that three Thunder Shocks would have finished,
+        Incinerate being resisted)."""
+        from pogo.battle import damage
+        foe, me = view.foe, view.me.mon
+        if foe is None or foe.hp <= 0 or self.tracker.foe is None:
+            return False
+        hit = damage(me, mon.fast, foe)
+        if hit <= 0:
+            return False
+        n = -(-foe.hp // hit)  # our fast moves to finish it
+        if n > 3:
+            return False
+        theirs = foe.build.fast
+        landing = -(-(n * mon.fast.turns) // theirs.turns)  # their fast moves that can land meanwhile, at most
+        incoming = landing * damage(foe, theirs, me)
+        # their energy by the hits seen (the bottom of the tracker's range), not the clock's ceiling or the engine's
+        # margin: over a few fast moves of ours the count is good enough (2026-11-08: the ceiling, 50 five seconds
+        # after Talonflame's Flame Charge, made it look ready to Fly; the count said 0 to 10, and it threw nothing
+        # for 12 s)
+        hi = self.tracker.foe.lo + landing * theirs.energy_gain
+        ready = [m for m in foe.build.charged if m.energy <= hi]
+        if ready and view.me.shields == 0:
+            incoming += max(damage(foe, m, me) for m in ready)
+        if time.time() - self.farm_checked > 1.0:
+            self.farm_checked = time.time()
+            self.log("farm_down_check", self.now(), foe=foe.build.species_id, foe_hp=foe.hp, hit=hit, n=n,
+                     incoming=incoming, our_hp=me.hp, their_energy_top=hi, ready=[m.id for m in ready])
+        return incoming < me.hp
+
+    def save_the_low_one(self, t: float, view, mon, have: float):
+        """Their new Pokémon has just come in, ours is nearly out with no charged move near, and the switch is
+        free: the healthy one of ours that does best against it, so this one is kept for later, to take a charged
+        move (the owner, 2026-11-08: Stunfisk at 4% stayed in against a fresh Lickilicky, with Jellicent healthy
+        behind it, and fainted farming). The slot to switch to, or None."""
+        foe = self.tracker.foe
+        sid = foe.mon.build.species_id if foe is not None else None
+        if sid != self.foe_sid:
+            self.foe_sid, self.foe_since = sid, t
+        if sid is None or sid == self.saved_for or t - self.foe_since > 5.0:
+            return None
+        hp = self.hp_now(t, view)
+        if hp >= 0.25:
+            return None
+        healthy = [j for j in view.me.bench() if view.me.team[j].hp > 0.5 * view.me.team[j].build.hp]
+        why = ("the switch timer" if time.time() < self.switch_ready_at or view.me.switch_wait > 0 else
+               "a charged move is near" if have + 2 * mon.fast.energy_gain >= min(m.energy for m in mon.charged) else
+               "no healthy one on the bench" if not healthy else None)
+        if why:
+            if self.save_checked != sid:
+                self.save_checked = sid
+                self.log("save_the_low_one_not", t, against=sid, why=why, hp=round(hp, 3), energy=round(have, 1),
+                         switch_in_s=round(self.switch_ready_at - time.time(), 1), switch_wait=view.me.switch_wait)
+            return None
+        from pogo.agents import duel
+        best = max(healthy, key=lambda j: duel(view.me.team[j], view.foe, view.me.shields, view.foe_shields, coming_in=True))
+        self.saved_for = sid
+        self.log("save_the_low_one", t, out=self.team[self.active].name, to=self.team[best].name, against=sid,
+                 hp=round(self.hp_now(t, view), 3), energy=round(have, 1))
+        return best
 
     def no_weaker_move(self, t: float, view) -> None:
         """The engine's charged move, unless another we can pay for costs no more and hits harder: then that one
@@ -1526,6 +1606,9 @@ class Player:
                 self.replace_tapped = time.time()
             return
         self.replaced = True
+        # only a faint brings the prompt: the tracker must not take the change for a switch and start the switch
+        # timer (2026-11-08: the counter of Pokémon left lagged, and the engine thought it could not switch for 45 s)
+        self.tracker.my_fainted()
         bench = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
         view = self.view()
         slot = bench[0] if bench else None

@@ -2,7 +2,7 @@
 """Run the live player (dry run: taps only logged, none sent) on a recorded battle replayed at its own speed, to test
 its reading and its logic without the phone (task 40). Every fix to scripts/live/play_android.py was checked this way.
 
-    python3 scripts/live/replay.py STAMP [MEDIA_FOLDER]
+    python3 scripts/live/replay.py STAMP [MEDIA_FOLDER] [TEAM_FILE]
 
 The recording is MEDIA_FOLDER/battle-STAMP.h264 and .times (default C:/pogo-media/live/20261107-training); the log
 goes to runs/replay/STAMP-replay.jsonl. The touches the minigame stroke would make are dropped, so the recording's
@@ -75,7 +75,7 @@ class ReplayPhone:
 
 
 gd = GameData()
-team = pa.load_team(gd, ROOT / "data" / "alt_team.json")
+team = pa.load_team(gd, Path(sys.argv[3]) if len(sys.argv) > 3 else ROOT / "data" / "alt_team.json")  # [TEAM_FILE]
 log = pa.Log(ROOT / "runs" / "replay" / f"{stem}-replay.jsonl")
 phone = ReplayPhone()
 player = pa.Player(phone, gd, team, False, log, None)
