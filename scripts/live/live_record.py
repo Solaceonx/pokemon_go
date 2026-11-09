@@ -279,7 +279,13 @@ class Battle:
             actions.append({"kind": "end", "t": end["t"], "result": result, "result_from": result_from})
         actions.sort(key=lambda a: a["t"])
         foes_final = (end or {}).get("foes") or order
-        mode = "training" if set(foes_final) & LEADERS else "league"
+        start_row = start or {}
+        if "league" in start_row:
+            # logs from task 45 on say it: the league runner passes the league, training does not (2026-11-09: a
+            # league opponent's Flareon made the Team Leaders' rule below call a league battle training)
+            mode = "league" if start_row.get("league") else "training"
+        else:
+            mode = "training" if set(foes_final) & LEADERS else "league"
         bot = Counter(r["kind"] for r in rows if r["kind"] in BOT_EVENTS)
         charged = Counter(a["side"] for a in actions if a["kind"] == "charged")
         start = start or {}
