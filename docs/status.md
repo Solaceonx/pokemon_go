@@ -5117,7 +5117,10 @@ night).**
 catching pokemon and claiming items ... refresh the app after every set of 5, and always analyze the losses").**
 Jellicent's Ice Beam is now Surf: Shadow Ball is the left button, Surf the right, as read off a training battle.
 
-- **Result: 17 won, 8 lost**, in five sets of 4-1, 3-2, 3-2, 4-1 and 3-2. The rank went from 9 to 12. Three of the
+- **Result: 17 won, 8 lost**, in five sets of 4-1, 3-2, 3-2, 4-1 and 3-2. The line-up odds of 24 of them gave 15.2
+  expected wins; 16 were won (the 25th, against Mega Mewtwo Y, has no Great League build to give odds). Two losses
+  were at good odds: 013310 at 99% (Sylveon, Moltres, Durant) and 020914 at 80%. Four came at 10 to 20%. The rank went
+  from 9 to 12. Three of the
   sets' encounters were caught, with 1, 2 and 3 Ultra Balls; set 2's tiles were all stardust.
 - **`scripts/live/set_end.py`**, the end of a set:
   - taps through the result;
