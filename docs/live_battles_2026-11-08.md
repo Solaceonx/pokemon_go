@@ -25,6 +25,7 @@ the afternoon and named the faults quoted below.
 
 Times are seconds from the battle's start, as in its log.
 
+<!-- battles: made by scripts/live/battle_tables.py from games/live/notes.json; edit notes.json, not here -->
 | Stamp | Result | Their team | What went wrong | Fixed |
 |---|---|---|---|---|
 | 20261108-010017 | win | Raichu, Cranidos, Magneton | | |
@@ -51,6 +52,12 @@ Times are seconds from the battle's start, as in its log.
 | 20261108-122012 | win | Mega Beedrill, Drifblim, Gengar | Vigoroth threw nothing at Gengar (owner): our energy count ran 43 to 63 in a 3 s wait with the taps off; two throws tried on it, not taken; fainted | partly |
 | 20261108-123505 | loss | Gastrodon, Mega Charizard X, Scrafty | 10 throws not taken; 3 started 2.4 to 5 s after the tap, after a shortened wait gave them up, and were swiped late (Bulldoze Nice) | wait restored |
 | 20261108-124100 | loss | Alolan Raichu, Mandibuzz, Hoopa | 9 throws not taken, none of which started later: Vigoroth tried Bulldoze three times at 31% and fainted with none thrown, Jellicent the same with Shadow Ball at the end; two Dark Pulses unshielded on Stunfisk | count-only throws now need the names or a margin (untested live) |
+| 20261108-132710 | loss | Melmetal, Mimikyu, Ninjask | Mud Bomb thrown at Ninjask (15 damage) with Discharge (79 damage, cheaper) paid for: the engine chose it at any thinking time (the owner: "why are we throwing mud bombs at a ninjask??") | yes: a charged move another we can pay for beats (no dearer, harder hitting) is swapped for it (play_android.py no_weaker_move) |
+| 20261108-170916 | win | Qwilfish, Reuniclus | nothing: over in 23 s, the opponent seemingly gone after Qwilfish and Reuniclus | |
+| 20261108-171011 | loss | Shaymin (Land), Gothitelle, Wailord | Jellicent stayed in on Shaymin for 47 s, two Ice Beams and a shield spent on Seed Flare (152 of its 156 HP), before going to Vigoroth; the owner: it should have swapped out. The engine judges a lead once, on the one-on-one at the shields as they are (2 each): Jellicent +0.06 with Magical Leaf, +0.49 with Hidden Power Rock, above its leave-below of -0.18 (Jellicent has no saved table entry). With 1 shield each Jellicent is -0.07 (HP Rock) or -0.18 (Magical Leaf), Vigoroth +0.51 or -0.03. Shaymin's fast move was most likely Hidden Power Rock (hits of 5.9-6.1 px against 5.7 predicted; Magical Leaf would be 11.4; tan orbs on the recording); the tracker went Magical Leaf, then Zen Headbutt at 6 s, then Hidden Power Rock, then Magical Leaf again at the end. Re-run with 1.5 s of thinking and the fast move known, the engine still stayed. Two switches the game did not take (49.6 s, 148.8 s). | not yet: judging a lead on the shield-averaged one-on-one is proposed, to be measured in simulation first |
+| 20261108-171347 | loss | Umbreon, Melmetal, Obstagoon | Against Umbreon (Psychic), Melmetal (Rock Slide, Superpower), Obstagoon (Night Slash). The opening switch to Vigoroth went in at the second tap (6.1 s). Psychic, Superpower and Night Slash were each taken unshielded at the prompt by choice; a Shadow Ball was not taken at 145.9 s (energy counted 13, unread) and the switch to Stunfisk after it was not taken either (154.6 s), so Jellicent threw Ice Beam instead and Body Slam was beaten at 176.5 s. No single clear mistake found. | |
+| 20261108-171836 | win | Miltank, Jirachi, Snorlax | | |
+<!-- /battles -->
 
 ## What is still wrong, for whoever takes it up
 

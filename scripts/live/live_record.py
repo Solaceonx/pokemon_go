@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 """One game record per battle the bot played on the phone (task 40), in the format of the recorded-game pipeline
-(schema game-record-v1, docs/game_record.md on the game-record-and-charged-damage branch), built from the live
-player's log.
+(schema game-record-v1, docs/game_record.md, "The live-log variant"), built from the live player's log.
 
-    python3 scripts/live/live_record.py                 every log in runs/live/
+    python3 scripts/live/live_record.py                 every battle log there is
     python3 scripts/live/live_record.py STAMP [STAMP ...]
 
-For each runs/live/<STAMP>.jsonl (scripts/live/play_android.py) it writes games/live/<STAMP>/game.json and game.txt,
-and games/live/index.json listing them all. Nothing is read from the video. Notes on what went wrong, from the
-analysis of each battle, come from games/live/notes.json ({stamp: {"went_wrong": ..., "fixed": ...}}).
+A league battle's log is games/live/<STAMP>/log.jsonl (task 45: the raw log beside its record, copied there from
+runs/live/ the first time); a training battle's stays in runs/live/<STAMP>.jsonl. For each it writes
+games/live/<STAMP>/game.json and game.txt; then games/live/index.json lists every folder. Nothing is read from the
+video. Beside the records, in games/live/:
+- notes.json: what went wrong, from the analysis of each battle ({stamp: {"went_wrong", "fixed", "result",
+  "fragment_of", ...}}). It is the one place for it: index.json and the battle tables in docs/live_battles_*.md are
+  made from it (scripts/live/battle_tables.py).
+- context.json: what an older battle's log does not say ({stamp: {"account", "team_key", "league", "season",
+  "from"}}): the league and season as the menu runner read them on screen, the account and team as played. Battles
+  from task 45 on carry these in their log's start row.
+- our_teams.json: our teams' exact stats (level, IVs) by team key, copied into each record.
+- odds.json: each league battle's line-up odds (scripts/live/odds.py), copied into index.json.
 
 What differs from a record of a recording (`variant: "live-log"`):
 - `mine` is the bot; our team is as the bot was told it (`team_sheet`).
@@ -32,6 +40,10 @@ ROOT = Path(__file__).resolve().parents[2]
 LOGS = ROOT / "runs" / "live"
 OUT = ROOT / "games" / "live"
 SCHEMA = "game-record-v1"
+# 1: the first live records (2026-11-08); 2: task 45 (log beside the record, standing, bot version, our exact stats,
+# league and season, UTC start, a result from RESULTS)
+VARIANT_VERSION = 2
+RESULTS = ("win", "loss", "draw", "fragment")
 # the Team Leaders' teams in training (Blanche, Candela, Spark): a battle against one is training, the rest league
 LEADERS = {"sneasel", "sealeo", "plusle", "electrode", "combusken", "flareon", "uxie", "muk"}
 # events in the log that say the player went wrong or was unsure
@@ -74,6 +86,32 @@ def num(x):
     return int(x) if isinstance(x, str) and x.isdigit() else x
 
 
+def read_json(name: str) -> dict:
+    path = OUT / name
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def log_path(stamp: str):
+    """A battle's raw log: beside its record (league battles), else in runs/live/; None if neither."""
+    for path in (OUT / stamp / "log.jsonl", LOGS / f"{stamp}.jsonl"):
+        if path.exists():
+            return path
+    return None
+
+
+def utc(epoch):
+    from datetime import datetime, timezone
+    return datetime.fromtimestamp(epoch, timezone.utc).isoformat(timespec="seconds") if epoch else None
+
+
+def utc_from_stamp(stamp: str) -> str:
+    """A log's name is the PC's local time when the log was opened, a few seconds before the battle began (13 s for
+    20261108-171011 against its epoch). The PC keeps Pacific time: UTC-08:00 in November 2026."""
+    from datetime import datetime, timedelta, timezone
+    local = datetime.strptime(stamp, "%Y%m%d-%H%M%S").replace(tzinfo=timezone(timedelta(hours=-8)))
+    return local.astimezone(timezone.utc).isoformat(timespec="seconds")
+
+
 class Battle:
     def __init__(self, stamp: str, rows: list[dict]):
         self.stamp, self.rows = stamp, rows
@@ -104,8 +142,9 @@ class Battle:
                   "fast_move": foe[3] if len(foe) >= 4 else None}
         return {"look_t": lk["t"], "mine": mine, "theirs": theirs}
 
-    def record(self, notes: dict | None) -> dict:
+    def record(self, notes: dict | None, context: dict | None = None, teams: dict | None = None) -> dict:
         rows = self.rows
+        context = context or {}
         team_row = next((r for r in rows if r["kind"] == "team"), None)
         end = next((r for r in rows if r["kind"] == "end"), None)
         start = next((r for r in rows if r["kind"] == "start"), None)
@@ -232,21 +271,47 @@ class Battle:
             p["charged_moves"] = [{"id": m, "name": mname(m), "energy": MOVES.get(m, (0, None))[1], "known_from": "seen",
                                    "times_used": n} for m, n in p["charged_moves"].items()]
         result = end.get("result") if end else None
+        result_from = "result screen" if result else None
+        if (notes or {}).get("result") and notes["result"] != result:
+            # the analysis settles what the log could not: a fragment of another battle, a result screen not read
+            result, result_from = notes["result"], notes.get("result_from") or "notes.json"
         if end:
-            actions.append({"kind": "end", "t": end["t"], "result": result, "result_from": "result screen"})
+            actions.append({"kind": "end", "t": end["t"], "result": result, "result_from": result_from})
         actions.sort(key=lambda a: a["t"])
         foes_final = (end or {}).get("foes") or order
         mode = "training" if set(foes_final) & LEADERS else "league"
         bot = Counter(r["kind"] for r in rows if r["kind"] in BOT_EVENTS)
         charged = Counter(a["side"] for a in actions if a["kind"] == "charged")
+        start = start or {}
+        epoch = start.get("epoch")
+
+        def known(key):  # the log's start row (battles from task 45 on), else the context file, else not known
+            return start[key] if start.get(key) is not None else context.get(key)
+        team_key = known("team_key")
+        stats = (teams or {}).get(team_key) or {}
+        for p in mine_team:  # our exact stats, by species, from our_teams.json (null where not known)
+            entry = next((e for e in stats.get("pokemon", []) if e["species"] == p["species"]), {})
+            p["level"], p["ivs"], p["cp_on_screen"] = entry.get("level"), entry.get("ivs"), entry.get("cp")
+        after = next((r for r in rows if r["kind"] == "standing_after"), None)
+        log = f"games/live/{self.stamp}/log.jsonl" if mode == "league" else f"runs/live/{self.stamp}.jsonl"
+        result_entry = {"value": result, "from": result_from or "unknown"}
+        if (notes or {}).get("fragment_of"):
+            result_entry["fragment_of"] = notes["fragment_of"]
         rec = {
-            "schema": SCHEMA, "variant": "live-log", "game": f"live-{self.stamp}",
-            "source": {"kind": "live_bot", "mode": mode, "device": "android phone (the owner's spare account)",
-                       "log": f"runs/live/{self.stamp}.jsonl",
+            "schema": SCHEMA, "variant": "live-log", "variant_version": VARIANT_VERSION, "game": f"live-{self.stamp}",
+            "source": {"kind": "live_bot", "mode": mode, "device": "android phone",
+                       "account": known("account"), "team": team_key,
+                       "league": known("league"), "season": known("season"),
+                       "context_from": context.get("from"),
+                       "log": log,
                        "recording": f"battle-{self.stamp}.h264 / .mp4 with .times (not in git)",
-                       "epoch": (start or {}).get("epoch")},
-            "result": {"value": result, "from": "result screen" if end else "unknown"},
-            "seconds": end["t"] if end else (rows[-1]["t"] if rows else 0),
+                       "epoch": epoch, "started_utc": utc(epoch) or utc_from_stamp(self.stamp),
+                       "started_from": "epoch" if epoch else "the log's name (the PC's local time, UTC-08:00)",
+                       "bot": {"commit": start.get("commit"), "dirty": start.get("dirty")}},
+            "standing": {"before": start.get("standing"),
+                         "after": {k: v for k, v in after.items() if k not in ("t", "kind")} if after else None},
+            "result": result_entry,
+            "seconds": end["t"] if end else max((r["t"] for r in rows if r.get("t") is not None), default=0),
             "teams": {"mine": mine_team, "theirs": [theirs[s] for s in order if s in theirs]},
             "summary": {"charged": {"mine": charged.get("mine", 0), "theirs": charged.get("theirs", 0)},
                         "we_shielded": sum(1 for _, s in prompts if s), "shield_prompts": len(prompts),
@@ -255,7 +320,7 @@ class Battle:
             "bot": dict(bot),
             "notes": notes,
             "actions": actions,
-            "built_from": [f"runs/live/{self.stamp}.jsonl"],
+            "built_from": [log],
         }
         return rec
 
@@ -309,29 +374,50 @@ def text(rec: dict) -> str:
     return "\n".join(out) + "\n"
 
 
-def main(argv):
-    notes = {}
-    notes_path = OUT / "notes.json"
-    if notes_path.exists():
-        notes = json.loads(notes_path.read_text(encoding="utf-8"))
-    stamps = argv or sorted(p.stem for p in LOGS.glob("2026*.jsonl") if not p.stem.startswith("runner"))
+def write_index() -> list:
+    """games/live/index.json: every folder with a record, its went_wrong from notes.json and, for a league battle,
+    its odds from odds.json (made from them each time, so the copies cannot drift)."""
+    notes, odds = read_json("notes.json"), read_json("odds.json")
     index = []
-    for stamp in stamps:
-        path = LOGS / f"{stamp}.jsonl"
-        rows = [json.loads(l) for l in path.open(encoding="utf-8") if l.strip()]
-        if not any(r["kind"] == "look" for r in rows):
-            continue  # no battle in it (the runner stopped before one began)
-        rec = Battle(stamp, rows).record(notes.get(stamp))
-        folder = OUT / stamp
-        folder.mkdir(parents=True, exist_ok=True)
-        (folder / "game.json").write_text(json.dumps(rec, indent=1), encoding="utf-8")
-        (folder / "game.txt").write_text(text(rec), encoding="utf-8")
-        index.append({"stamp": stamp, "mode": rec["source"]["mode"], "result": rec["result"]["value"],
-                      "theirs": [p["species"] for p in rec["teams"]["theirs"]],
-                      "went_wrong": (rec["notes"] or {}).get("went_wrong"), "game": f"games/live/{stamp}/game.json"})
-    if not argv:
-        (OUT / "index.json").write_text(json.dumps(index, indent=1), encoding="utf-8")
-    print(f"{len(index)} games written to {OUT}")
+    for path in sorted(OUT.glob("*/game.json")):
+        rec = json.loads(path.read_text(encoding="utf-8"))
+        stamp = path.parent.name
+        entry = {"stamp": stamp, "mode": rec["source"]["mode"], "result": rec["result"]["value"],
+                 "theirs": [p["species"] for p in rec["teams"]["theirs"]],
+                 "went_wrong": (notes.get(stamp) or {}).get("went_wrong"), "game": f"games/live/{stamp}/game.json"}
+        if rec["source"]["mode"] == "league":
+            entry["odds"] = (odds.get(stamp) or {}).get("chance")
+        index.append(entry)
+    (OUT / "index.json").write_text(json.dumps(index, indent=1, ensure_ascii=False), encoding="utf-8")
+    return index
+
+
+def build(stamp: str, notes: dict, context: dict, teams: dict):
+    """Write one battle's record (and, for a league battle, its log beside it); None if there is no battle."""
+    path = log_path(stamp)
+    if path is None:
+        return None
+    rows = [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
+    if not any(r["kind"] == "look" for r in rows):
+        return None  # no battle in it (the runner stopped before one began)
+    rec = Battle(stamp, rows).record(notes.get(stamp), context.get(stamp), teams)
+    folder = OUT / stamp
+    folder.mkdir(parents=True, exist_ok=True)
+    beside = folder / "log.jsonl"
+    if rec["source"]["mode"] == "league" and not beside.exists():
+        beside.write_bytes(path.read_bytes())  # the raw log beside its record, byte for byte
+    (folder / "game.json").write_text(json.dumps(rec, indent=1), encoding="utf-8")
+    (folder / "game.txt").write_text(text(rec), encoding="utf-8")
+    return rec
+
+
+def main(argv):
+    notes, context, teams = read_json("notes.json"), read_json("context.json"), read_json("our_teams.json")
+    stamps = argv or sorted({p.stem for p in LOGS.glob("2026*.jsonl") if not p.stem.startswith("runner")}
+                            | {p.parent.name for p in OUT.glob("*/log.jsonl")})
+    built = [s for s in stamps if build(s, notes, context, teams) is not None]
+    index = write_index()
+    print(f"{len(built)} games written; {len(index)} in {OUT / 'index.json'}")
 
 
 if __name__ == "__main__":

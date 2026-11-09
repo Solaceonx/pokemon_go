@@ -4437,3 +4437,58 @@ All the league battles to the evening of 2026-11-08, from `games/live/index.json
 101 to 400). 2026-11-07: 9 battles, 4 won, 6.6 expected; 2026-11-08: 29, 17 won, 22.5 expected. 7 of the 19 battles
 at 80% or better were lost; 2 of the 6 under 50% were won. Training against the Team Leaders: 109 won of 112 (3
 unfinished).
+
+## The live league battles stored for later analysis (task 45, 2026-11-08, Claude on the owner's PC)
+
+Every GO Battle League battle the bot has played on the phone (38, and an 11 s fragment) is now stored in
+`games/live/` on `main` with everything a later analysis needs:
+
+- **The raw log beside each record:** `games/live/<STAMP>/log.jsonl`. The 34 that were in `runs/live/` were moved there,
+  and the 5 that were only on `task40-android` were copied in. `scripts/live/live_record.py` writes new ones there.
+  Training logs stay in `runs/live/`.
+- **Records are now version 2 of the live-log variant** (`variant_version: 2`; `docs/game_record.md`, now on `main`
+  with a section on the variant). New fields:
+  - **Result:** one of win, loss, draw, fragment. 20261107-174540 is a fragment of 20261107-174643, and
+    20261108-012546 is a loss.
+  - **UTC start:** from the epoch, or from the log's name for the first battles of 2026-11-07, which logged no epoch.
+  - **Account and team keys:** `spare`, `owner`; trainer names stay out.
+  - **League and season, as read on screen:**
+    - The runner's logs give the league for 33 battles.
+    - The season (Twilight Trails) was read on screen on 2026-11-07 at 17:39 and on 2026-11-08 at 21:49, so it is
+      known for 35 battles. For the 4 before the first sighting it is null.
+    - For the 5 battles started by hand, the league is null.
+  - **The bot's commit and whether its tree was dirty:** null before tonight.
+  - **Rank and rating before and after:** null before tonight. Rating shows only from rank 20, and both accounts are
+    below it.
+  - **Our level and IVs, from `games/live/our_teams.json`:** null until the owner gives them.
+- **What went wrong is in one place,** `games/live/notes.json`:
+  - `index.json`'s `went_wrong` and the table in `docs/live_battles_2026-11-08.md` are made from it
+    (`scripts/live/battle_tables.py`, `--check`). The table now has the day's 5 evening battles too.
+  - Two of its rows keep the true opposing team, which the tracker had wrong: Galarian Stunfisk, and Darmanitan.
+- **Line-up odds** are in `index.json` (`scripts/live/odds.py`, kept in `games/live/odds.json`), by the method in
+  the task. A Mega has no PvPoke Great League build, so it is built with its base form's ranked moves.
+
+  | League battles | Expected wins | Won | At 80% or better | Under 50% |
+  |---|---|---|---|---|
+  | 38 | 30.0 | 21 | 21, of which 8 lost | 5, of which 2 won |
+
+  The scratch run of the same 38 earlier today gave 29.1.
+- **`tests/test_live_records.py`** checks each league record:
+  - its version, result, teams, log beside it and UTC start;
+  - its commit, for battles from 2026-11-09 on;
+  - that no trainer name appears in the files;
+  - that `index.json` lists exactly the folders, with `went_wrong` from the notes;
+  - that the tables are up to date.
+
+  The level and IV check skips, saying why, until `our_teams.json` has them.
+- **The bot's side** (`task40-android`): `play_android.py` writes into the log's start row
+  - the commit,
+  - whether the code or data it runs on had uncommitted changes,
+  - the account and team keys,
+  - the league, season and standing it was given.
+
+  `run_gbl.py` reads the league card's CURRENT SEASON section on its first visit: it scrolls down, reads, and
+  scrolls back. That gives the rank in the badge (read as 15 on the owner's account), the season's wins and
+  battles, and the rating where shown. It passes them to the next battle, and appends them to the battle before as
+  its `standing_after`. It also no longer logs the matchmaking screen's text, which shows the opponent's trainer
+  name, and it strips our trainer names from what it logs.

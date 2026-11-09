@@ -71,7 +71,7 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **taken: Claude on the owner's PC, 2026-11-08 (branch `task45-live-records`)**
+## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **done 2026-11-08 (Claude on the owner's PC, branch `task45-live-records`), except our levels and IVs: `games/live/our_teams.json` waits on the owner (the test skips until then)**
 
 **Why.** The owner wants the live data "very well stored for future analysis". The records in `games/live/` are good
 (one folder per battle, every action with what the bot believed, raw logs with every tap and look, no account names),
