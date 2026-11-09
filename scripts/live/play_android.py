@@ -1792,7 +1792,14 @@ class Player:
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 shield = True
-        if last and (look.my_shields or 0) > 0:
+        # The counts as the header showed them before the prompt: on the prompt's own frame the header is dimmed
+        # and reads nothing (2026-11-09, 123923: Clodsire, our last, one shield up, took two Aerial Aces and the
+        # Liquidation that ended it unshielded, the rule never firing)
+        my_left_seen, _, my_sh_seen, _ = self.header_now(look)
+        last = last or (my_left_seen is not None and int(my_left_seen) == 1)
+        have_shield = (look.my_shields or 0) > 0 or (my_sh_seen is not None and int(my_sh_seen) > 0) or (
+            view is not None and view.me.shields > 0)
+        if last and have_shield:
             # The engine's own rule: with one Pokémon left there is nothing to save shields for. The tracker can
             # miss that our others have fainted (the header's count lags), so it is applied from our own count.
             shield = True
