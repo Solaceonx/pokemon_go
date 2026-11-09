@@ -4489,7 +4489,7 @@ where 22.5 were expected.
 
   Two wins came at 22%.
 - **The shield calls were already the engine's own:** the override came out in d156a24, before these battles. There
-  were 113 prompts and 43 shields; the both shields went in most battles.
+  were 113 prompts and 43 shields; both shields went in most battles.
 - **Our throws beaten by theirs:** 27 in all.
 - **Switch taps the game didn't take:** 17.
 - **Stunfisk threw Discharge 41 times and Mud Bomb 22**, including Discharge into Toxtricity four times (003216) and
