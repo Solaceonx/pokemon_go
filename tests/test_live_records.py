@@ -50,8 +50,11 @@ class LiveRecords(unittest.TestCase):
                     self.assertIn("level", p)
                     self.assertIn("ivs", p)
                 if stamp >= COMMIT_FROM:
-                    self.assertTrue(rec["source"]["bot"]["commit"], "the bot's commit is in the log's start row")
-                    self.assertIsNotNone(rec["source"]["bot"]["dirty"])
+                    bot = rec["source"]["bot"]
+                    # the commit, or why it could not be read (git timed out at a battle's start, 2026-11-09)
+                    self.assertTrue(bot["commit"] or bot.get("version_error"), "the bot's commit is in the log's start row")
+                    if bot["commit"]:
+                        self.assertIsNotNone(bot["dirty"])
 
     def test_our_exact_stats(self):
         """Level and IVs for each of ours, from games/live/our_teams.json (the owner gives them once)."""
