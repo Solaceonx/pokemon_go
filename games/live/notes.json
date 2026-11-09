@@ -197,5 +197,15 @@
   "went_wrong": "The owner disagreed with the shield calls: the engine's own call (the 35% override withdrawn that evening) let through all four charged moves on our first two with both shields up: Jellicent's Shadow Ball on our Jellicent at 18 s (super effective, to 16%), Body Slams at 34 s (Vigoroth 92% to 57%) and 77 s (Stunfisk, about 30%), and at 59 s on Vigoroth at 10% (right); then both shields went on Stunfisk, our last, against two Surfs. Fast taps stopped after charged moves (the owner: \"we forgot to tap after charge moves\"): after our Surf and Discharge the attack's white streaks read as the move names under the hidden buttons, the low-health throw fired again on 30 and 21 energy and was not taken, 3 to 5 s without taps each; Discharge, beaten by their Surf, waited 3.9 s; the fight after their Surf was taken up 1.5 s after both buttons were back (our bar under BLOCKED!). The tracker had Stunfisk at 1% while its bar showed about 44% (a reading of Jellicent coming in credited to Stunfisk).",
   "fixed": "the taps and readings: task40-android afd850c (names only with both buttons drawn and not just after our move, a beaten move tapped again, both buttons drawn count as the fight, no bar credited during a switch); the shield calls are the engine's (the owner)",
   "from": "the owner watching, and the analysis on 2026-11-08 late night"
+ },
+ "20261108-235033": {
+  "went_wrong": "Fast taps came back within 0.1 to 0.7 s after every charged move (the fixes of afd850c held); no throw was lost. Lost on matchups and shields, the engine's: Jellicent led into Talonflame and was switched to Vigoroth; shields went on Flame Charge (Vigoroth at 58%, 25 s) and Rock Tomb (Jellicent, 105 s); Stunfisk ended against Whiscash, whose Scald is super effective on it.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 early morning"
+ },
+ "20261108-235420": {
+  "went_wrong": "The engine switched Jellicent out for Stunfisk at once against a Morpeko lead (Mud Bomb 86 of its 118); they switched to Gastrodon at about 6 s (Earth Power 101 of Stunfisk's 172), with our switch timer running. Stunfisk threw Discharge into Gastrodon twice (27 damage; Mud Bomb 50, costing 45 against 40) and took Earth Power unshielded with both shields (62% to 3%), fainting with Discharge in hand. Their bar read 0.013 and 0.027 on single frames at 21 and 23 s (Gastrodon at about 95%).",
+  "fixed": "the false low readings: task40-android ac7fa72 (a big drop given out only once it repeats; replayed, none); the Discharge into Gastrodon is the engine's own choice (it still made it in the replay), and so are the shields",
+  "from": "the analysis on 2026-11-09 early morning"
  }
 }
