@@ -66,6 +66,23 @@ def shields(a: np.ndarray, side: str) -> int:
     return n
 
 
+# The countdown at the top centre while their charged move charges (5 to 0, 2026-11-09): a slate disc, about
+# (100, 115, 122), with a white ring and the number, centred near (0.5, 0.079) of the screen and about 0.08 of the
+# width in radius; the same with the shield prompt up and with no shields left ("No Protect Shields remaining!"),
+# where the header and both bars stay up and the fight looked live: our count ran on and a Stone Edge was tapped
+# that could not go off. Four points inside the disc (off the number) must be slate; the sky there is (200, 235, 247).
+COUNTDOWN_POINTS = ((245, 95), (295, 95), (270, 70), (270, 120))  # pixels of the 540 x 1200 frame
+SLATE = (100, 115, 122)
+
+
+def countdown(a: np.ndarray) -> bool:
+    hits = 0
+    for x, y in COUNTDOWN_POINTS:
+        c = _patch(a, x, y, 2)
+        hits += float(np.abs(c - np.array(SLATE)).max()) < 28
+    return hits >= 3
+
+
 def shield_prompt(a: np.ndarray) -> bool:
     sx, sy = _scale(a)
     x0, y0, x1, y1 = SHIELD_ICON
@@ -498,12 +515,14 @@ class Look:
     buttons: dict = field(default_factory=dict)
     shield_prompt: bool = False
     replace_prompt: bool = False
+    countdown: bool = False  # their charged move's countdown is up (with or without the shield prompt)
 
 
 def read(a: np.ndarray, t: float) -> Look:
     head = header_visible(a)
     look = Look(t=t, header=head, bars=bars_held(a, t), buttons=buttons(a), shield_prompt=shield_prompt(a))
     look.replace_prompt = not look.shield_prompt and replace_prompt(a)
+    look.countdown = countdown(a)
     if head:
         look.my_left, look.foe_left = left(a, "mine"), left(a, "theirs")
         look.my_shields, look.foe_shields = shields(a, "mine"), shields(a, "theirs")

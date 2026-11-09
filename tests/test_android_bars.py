@@ -108,3 +108,22 @@ class Drops(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Countdown(unittest.TestCase):
+    """Their charged move's countdown at the top centre (2026-11-09): a slate disc there, the sky otherwise."""
+
+    def frame(self, disc: bool):
+        a = np.zeros((1200, 540, 3), np.uint8)
+        a[:] = (200, 235, 247)  # sky
+        if disc:
+            yy, xx = np.mgrid[0:1200, 0:540]
+            a[(xx - 270) ** 2 + (yy - 95) ** 2 <= 44 ** 2] = (100, 115, 122)
+            a[(xx - 270) ** 2 + (yy - 95) ** 2 <= 8 ** 2] = (255, 255, 255)  # the number
+        return a
+
+    def test_disc_is_a_countdown(self):
+        self.assertTrue(screen.countdown(self.frame(True)))
+
+    def test_sky_is_not(self):
+        self.assertFalse(screen.countdown(self.frame(False)))

@@ -658,6 +658,21 @@ class Player:
                 self.fight_since = None
                 self.on_replace_prompt(t, look)
                 continue
+            if look.countdown:
+                # Their charged move's countdown with no prompt (we have no shields left): the fight is not on,
+                # whatever the header and bars say (2026-11-09, 124910: through Beedrill's 5 s our count ran 41 to 68
+                # and a Stone Edge was tapped that could not go off). No taps, no turns, and theirs is told to the
+                # tracker as thrown, once.
+                self.tapping = False
+                self.armed = None
+                self.fight_frames = 0
+                self.fight_since = None
+                with self.pending_lock:
+                    if not self.pending_theirs and time.time() - max(self.prompt_seen, self.their_throw_at) > 10.0:
+                        self.pending_theirs = True
+                        self.their_throw_at = time.time()
+                        self.log("their_charged_countdown", t)
+                continue
             # The fight is on screen after three frames in a row with the header and a bar: in close-ups and
             # changes of Pokémon a false bar shows on a frame or two (2026-11-07, GO Battle League: looks given then
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
