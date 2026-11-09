@@ -487,6 +487,8 @@ class Player:
         self.energy_read = None
         self._energy_raw = None
         self.queued = None  # (button, move, time tapped, deadline, battle time set): a move of ours still to start
+        self.cue_busy, self.cue_found = False, None  # watch_queued's Get Ready! read, on its own thread
+        self.armed_read = 0.0  # the energy read when the hold for a throw began
         # A switch tapped and not yet seen: (slot, time tapped, bench strip before, since when it differs, fighting
         # frames looked at). The game sometimes ignores the tap (2026-11-07: Jellicent stayed out; the player took
         # Stunfisk for out for 36 s and pressed Stunfisk's moves on Jellicent's buttons).
@@ -931,6 +933,9 @@ class Player:
         if how is not None:
             self.log("switch_seen", t, to=self.team[slot].name, after_tap_s=round(time.time() - tapped, 2), by=how)
             self.switch_wanted = None
+            # gone through: a fast tap can no longer take its place, so the taps go on now, not at the 1.6 s hold's
+            # end (2026-11-09: switches seen 0.86 s after the tap, the taps back 0.8 s later, every switch)
+            self.hold_taps_until = 0.0
             self.active = slot
             self.switch_ready_at = tapped + 45  # switch timer: our own count, the tracker has its own
             self.switching = None
@@ -1118,8 +1123,13 @@ class Player:
             self.decision, self.armed = FAST, None
         if self.armed is not None:
             k, until = self.armed
-            if time.time() > until or self.switching is not None:
-                self.log("armed_expired", t, move=mon.charged[k].id, read=self.energy())
+            e = self.energy()
+            # The fast move under way has landed (the reading rose by half a fast move's energy or more) and the move
+            # is still not paid for: the taps go on at once, not at the hold's end (2026-11-09: with Poison Sting
+            # 12 holds of 17 ran out, 1.6 to 1.8 s of no fast taps each; those that paid threw within 0.34 s)
+            rose = e is not None and e >= self.armed_read + 0.5 * mon.fast.energy_gain and e < mon.charged[k].energy
+            if time.time() > until or self.switching is not None or rose:
+                self.log("armed_expired", t, move=mon.charged[k].id, read=e, rose=rose)
                 self.armed = None
                 self.decision = FAST
             else:
@@ -1442,8 +1452,8 @@ class Player:
         if not have < mon.charged[k].energy <= soon:
             return  # paid for already: the usual way
         # the move under way and a little: if the button has not lit by then, the fast taps go on
-        self.armed = (k, time.time() + mon.fast.turns * 0.5 + 0.6)
-        self.armed_at = time.time()
+        self.armed = (k, time.time() + mon.fast.turns * 0.5 + 0.3)
+        self.armed_at, self.armed_read = time.time(), have
         self.tapping = False
         self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1))
 
@@ -1510,7 +1520,7 @@ class Player:
                 # Theirs goes first; ours still waits and plays when theirs is over (2026-11-07: a Body Slam went
                 # off after Plusle's Discharge, unswiped). The loop watches for its Get Ready!.
                 self.log("throw_beaten", self.now(), move=move.id)
-                self.queued = (k, move, tapped, time.time() + 40, self.now())
+                self.queued, self.cue_found = (k, move, tapped, time.time() + 40, self.now()), None
                 self.queued_retapped = False
                 return
             if said == "mine":
@@ -1536,7 +1546,7 @@ class Player:
             self.last_not_taken = time.time()
             # It may still go off a moment later (2026-11-07: four of 39 moves had Get Ready! up to half a second
             # after the wait, and went unswiped), or after theirs: the loop watches for it.
-            self.queued = (k, move, tapped, time.time() + 40, self.now())
+            self.queued, self.cue_found = (k, move, tapped, time.time() + 40, self.now()), None
             self.queued_retapped = False
             read = self.energy()
             self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy,
@@ -1584,7 +1594,11 @@ class Player:
             self.touch(controls.CHARGED_BUTTONS[k], f"charged move {k + 1} again (queued): {move.name}")
         if time.time() - self.queued_checked < 0.2:
             return False
-        if fighting:
+        found = self.cue_found  # Get Ready! read on the thread below, from a frame with the fight off
+        if found is not None and time.time() - found[1] <= 1.5:
+            when = found[0]
+            self.cue_found = None
+        elif fighting:
             # the minigame can start with the header and our bar up and no Get Ready!: its icons say so
             if t - self.button_seen_t < 0.3:
                 return False
@@ -1597,8 +1611,23 @@ class Player:
             self.log("minigame_seen", t, move=move.id, by="icons", queued=True)
         else:
             self.queued_checked = time.time()
-            if screen.cue(self.names.ocr, rgb) != "mine":
-                return False
+            # Read on its own thread (0.3 to 0.5 s a read): on the loop it held up the frames, and with the fight
+            # taken up only after three frames running, the fast taps came back 1.6 s after the fight did
+            # (2026-11-09: after their Thunder Punch, and after a throw the game was slow to start)
+            if not self.cue_busy:
+                self.cue_busy = True
+                frame, at = rgb.copy(), when
+
+                def read():
+                    try:
+                        if screen.cue(self.names.ocr, frame) == "mine":
+                            self.cue_found = (at, time.time())
+                    except Exception:  # noqa: BLE001
+                        pass
+                    finally:
+                        self.cue_busy = False
+                threading.Thread(target=read, daemon=True).start()
+            return False
         self.queued = None
         self.pending_mine = k
         self.my_throw_at = time.time()
