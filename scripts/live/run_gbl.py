@@ -88,7 +88,8 @@ class Runner:
     def battle_button(self, words) -> list:
         """BATTLE in the Basic Rewards box (above PREMIUM REWARDS, if that is on screen), as [(x, y)]."""
         premium = min((y for t, x, y in words if "PREMIUM" in t.upper()), default=1.0)
-        return [(x, y) for t, x, y in words if re.sub("[^A-Z]", "", t.upper()) == "BATTLE" and 0.6 < y < premium]
+        # below the BATTLE tab at the top (y 0.06); the card can sit higher once scrolled to read the season (0.56)
+        return [(x, y) for t, x, y in words if re.sub("[^A-Z]", "", t.upper()) == "BATTLE" and 0.25 < y < premium]
 
     def read_standing(self, a: np.ndarray, words: list, flat: str) -> None:
         """The league card on the Battle tab: the season's wins and battles, the rank in its badge (left of WINS),
@@ -218,9 +219,11 @@ class Runner:
                 return self.stop("rewards to collect (an encounter needs Poke Balls: the owner's call)", a)
             elif "GOBATTLELEAGUE" in flat and "BATTLE" in flat:
                 # rewards waiting to be collected are left for the owner: the set goes on without them
+                if not self.card_read and re.search(r"CURRENTSEASON.*WINS\d+", flat):
+                    self.card_read = True  # the season's figures are on screen as it is
+                    self.read_standing(a, words, flat)
                 if not self.card_read:
                     # the season's rank and figures are just below the fold: scroll down, read them, scroll back
-                    # (BATTLE is then where it was)
                     self.card_read = True
                     subprocess.run([self.adb, "-s", self.serial, "shell", "input", "swipe", "540", "1700", "540", "1250", "900"])
                     time.sleep(1.5)
