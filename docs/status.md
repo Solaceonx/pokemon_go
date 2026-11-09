@@ -4971,3 +4971,57 @@ CPs (1496, 1499, 1492).
   5 before the water pattern, 10 after). No league battles on it yet.
 - **Task 45's bot side** is in place (`play_android.py` start row, `run_gbl.py` standing reader; see `main`'s
   docs/status.md).
+
+**Play stopped by the owner after two league losses on their account, and the screen reading looked at (2026-11-08,
+night).**
+- **The losses:**
+  - 200541: Mimikyu, Talonflame, Lickilicky.
+  - 204007: Obstagoon, Azumarill, Tinkaton. Stopped at 208 s; it ended untouched in a loss.
+
+  The analysis is in `games/live/notes.json` and the 2026-11-08 table on `task45-live-records`.
+- **Fixed** (`play_android.py`, `pogo/tracker.py`):
+  - `farm_down`: farm a nearly fainted Pokémon down instead of throwing. It now holds a throw only when no other
+    charged move would be paid for after it, only with a fast move that does 2% of their health or more, and no
+    longer than the fast moves should take.
+  - `save_the_low_one`: switch a nearly fainted Pokémon out when they bring in a new one.
+  - A faint the Pokémon-left counter showed late was taken for a switch, and started a switch timer; now it is
+    undone.
+- **Open, for the owner** (who is updating the engine):
+  - Both shields went on cheap moves at high health: Shadow Sneak at 84% and 69%; Night Slash at 92% and 82%. The
+    shield rule from 2026-11-07 shields a hit of a third of our health or more.
+  - The engine switched Jellicent into Obstagoon.
+- **How the reader does** (fight looks in the 2026-11-08 league logs; scratch `reader_stats.py`):
+
+  | Reading | How it did |
+  |---|---|
+  | Our bar | read on 72% |
+  | Their bar | read on 71%; rose with the same Pokémon out 100 times (misreads) |
+  | Our energy | read on 53% |
+  | Shields | right (checked on 204007's recording: the opponent never shielded) |
+  | Our Pokémon-left counter | over 1 s late at 19 of 35 changes |
+
+  Of 30 fight looks with our bar unread (two battles, by eye):
+  - words over the bar ("NOT VERY EFFECTIVE...", "SUPER EFFECTIVE!", "BLOCKED!") in 5;
+  - a red sliver at 4% health in 4;
+  - our Pokémon not yet in, or fading in, in about 10;
+  - "GO!" or a close-up in the rest.
+- **A held fallback for the bars** (`android_screen.bars_held`, used by `read`): where `bars()` read a side in the
+  last 3 s, a fill run starting within 3 px of the same left end and within 40 rows. It does not need the light
+  borders, which words or a sliver hide. It still needs the dark empty part after the fill (so not a minigame's
+  icons, and not "GO!" over the bar), the same length over two to nine sampled rows, at least 4 px, and no more
+  than the last reading.
+  - **On five league recordings** (every third frame with the header up; scratch `bar_eval.py`):
+
+    | | Read before | Read with the fallback | Extra readings followed by a higher one within 1.5 s | `bars()`'s own rate |
+    |---|---|---|---|---|
+    | Our bar | 25.4% | 32.4% | 3.5% (15 of 425) | 3.1% |
+    | Their bar | 38.7% | 45.8% | 12.3% (59 of 478) | 11.1% |
+
+    The extra readings are as reliable as the reader's own. Most frames with the header up have no bar on them
+    (minigames, close-ups).
+  - **Replayed** 20261108-171011: both bars read on 87% of fight looks against 79% live, with no errors.
+  - `tests/test_android_bars.py` checks it on drawn bars.
+- **Next for the reader:**
+  - our energy (read on 53% of fight looks);
+  - their bar's misreads (11% of readings followed by a higher one);
+  - the Pokémon-left counters' lag.

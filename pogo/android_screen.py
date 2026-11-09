@@ -132,9 +132,9 @@ def _empty_mask(row: np.ndarray) -> np.ndarray:
 BAR_INSIDE = 148.5  # the fill of a full bar, in pixels of the 540-wide frame; every bar is the same size
 
 
-def bars(a: np.ndarray) -> dict:
-    """{"mine": share, "theirs": share} for each health bar found (a side is missing when its bar is not seen).
-    The fill (green, yellow or red) starts just inside the bar's light left border and runs for the share of
+def bar_places(a: np.ndarray) -> dict:
+    """{"mine": (share, top row, left end of the fill), ...} for each health bar found, rows and columns on the
+    540 x 1200 frame (a side is missing when its bar is not seen). The fill (green, yellow or red) starts just inside the bar's light left border and runs for the share of
     BAR_INSIDE that is left; the empty part is see-through, so it is not used. The orange strip a hit leaves is not
     fill (2026-11-08: counted on some frames and not others, it made the bar jump 2 to 6 pixels each frame for a
     second after every hit, so steps of one fast move could not be told from noise). A bar is three rows deep or more;
@@ -178,7 +178,78 @@ def bars(a: np.ndarray) -> dict:
             continue
         side = "mine" if g[0][1] / sx < W / 3 else "theirs"
         if side not in out:
-            out[side] = round(min(1.0, float(np.median([r[2] for r in g])) / full), 3)
+            out[side] = (round(min(1.0, float(np.median([r[2] for r in g])) / full), 3),
+                         round(g[0][0] / sy), round(float(np.median([r[1] for r in g])) / sx))
+    return out
+
+
+def bars(a: np.ndarray) -> dict:
+    """{"mine": share, "theirs": share} for each health bar found (a side is missing when its bar is not seen)."""
+    return {side: v[0] for side, v in bar_places(a).items()}
+
+
+def bar_near(a: np.ndarray, y_at: int, x_at: int, y_slack: int = 40, x_slack: int = 3) -> float | None:
+    """A health bar's share where one was just read (its top row and the left end of its fill, on the 540 x 1200
+    frame), without the checks bars() needs to find one anywhere: its light borders, which a word over the bar
+    ("NOT VERY EFFECTIVE...", "BLOCKED!") or a thin red sliver at low health hides. The dark, see-through part after
+    the fill is still required. The fill must start within x_slack of the same place and keep one length (within 3 pixels) over two to
+    nine rows sampled every two; None if no such run is there (2026-11-08: of 30 fight looks with our bar unread,
+    such words were over it in 5 and a red sliver of 4% in 4)."""
+    sx, sy = _scale(a)
+    full = BAR_INSIDE * sx
+    lo = max(int(BAR_ROWS[0] * sy), int((y_at - y_slack) * sy))
+    hi = min(int(BAR_ROWS[1] * sy), int((y_at + y_slack) * sy))
+    x_lo, x_hi = max(1, int((x_at - x_slack) * sx)), int((x_at + x_slack) * sx) + 1
+    runs = []
+    for y in range(lo, hi, 2):
+        row = a[y].astype(int)
+        m = _fill_mask(row)
+        if m[x_lo - 1] or not m[x_lo:x_hi].any():
+            continue  # no fill starting in the window (fill already running before it is not the bar's start)
+        x0 = x_lo + int(np.argmax(m[x_lo:x_hi]))
+        xs = np.nonzero(m[x0:int(x0 + full + 6 * sx)])[0]
+        ends = np.split(xs, np.nonzero(np.diff(xs) > 4)[0] + 1)[0]  # the run from x0, a blended pixel bridged
+        length = int(ends[-1]) + 1
+        if length > full + 5 * sx or length < 4 * sx:
+            continue  # too long for a bar, or a pixel or two (a bar that moved leaves those: 0.007 read for 0.35)
+        rest = row[x0 + length + int(3 * sx):int(x0 + full)]
+        if len(rest) > 8 * sx and ((rest.max(1) < 150) | _damage_mask(rest)).mean() < 0.7:
+            continue  # after the fill, not the bar's dark empty part (a minigame's icons, "GO!" over the bar)
+        runs.append((y, length))
+    best: list = []
+    for y, length in runs:  # the longest stack of rows two apart with one length
+        stack = [(y, length)]
+        for y2, l2 in runs:
+            if y2 == stack[-1][0] + 2 and abs(l2 - length) <= 3 * sx:
+                stack.append((y2, l2))
+        if len(stack) > len(best):
+            best = stack
+    if not 2 <= len(best) <= 9:
+        return None
+    return round(min(1.0, float(np.median([l for _, l in best])) / full), 3)
+
+
+_HINTS: dict = {}  # side -> (share, top row, left end, time) of the last bar bars() found with all its checks
+
+
+def bars_held(a: np.ndarray, t: float, keep_s: float = 3.0) -> dict:
+    """bars(), and for a side it misses that it found in the last keep_s seconds, bar_near() at that place, kept
+    only if not higher than that last reading (health does not come back in a fight; a Pokémon coming in is read
+    afresh by bars())."""
+    places = bar_places(a)
+    out = {}
+    for side, (share, y, x0) in places.items():
+        _HINTS[side] = (share, y, x0, t)
+        out[side] = share
+    for side in ("mine", "theirs"):
+        if side in out or side not in _HINTS:
+            continue
+        share, y, x0, at = _HINTS[side]
+        if t - at > keep_s or t < at:
+            continue
+        near = bar_near(a, y, x0)
+        if near is not None and near <= share + 0.03:
+            out[side] = near
     return out
 
 
@@ -400,7 +471,7 @@ class Look:
 
 def read(a: np.ndarray, t: float) -> Look:
     head = header_visible(a)
-    look = Look(t=t, header=head, bars=bars(a), buttons=buttons(a), shield_prompt=shield_prompt(a))
+    look = Look(t=t, header=head, bars=bars_held(a, t), buttons=buttons(a), shield_prompt=shield_prompt(a))
     look.replace_prompt = not look.shield_prompt and replace_prompt(a)
     if head:
         look.my_left, look.foe_left = left(a, "mine"), left(a, "theirs")
