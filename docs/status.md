@@ -4436,4 +4436,8 @@ All the league battles to the evening of 2026-11-08, from `games/live/index.json
 (± 2.3 by chance alone; our team as recorded, theirs as seen, a Pokémon not seen filled at random from PvPoke's ranks
 101 to 400). 2026-11-07: 9 battles, 4 won, 6.6 expected; 2026-11-08: 29, 17 won, 22.5 expected. 7 of the 19 battles
 at 80% or better were lost; 2 of the 6 under 50% were won. Training against the Team Leaders: 109 won of 112 (3
-unfinished).
+unfinished). The first league battle on the owner's own account (20261108-200541, log on `task40-android`), lost to
+Talonflame / Mimikyu / Lickilicky at 78% ± 5 odds: besides the three faults fixed in 9dbeb69, both shields went in the
+first 40 s on Mimikyu's Shadow Sneak. The shield override (shield a hit of 35% or more) takes the worst move they could
+have with the tracker's two-fast-move margin added to their energy: counted 48, plus 16, so Play Rough (60, 67 damage
+of Stunfisk's 172) looked possible. With the margin, any bait within two fast moves of the big move is shielded.
