@@ -491,6 +491,7 @@ class Player:
         self.practise_logged = 0.0
         self.practised: dict = {}  # move id -> times thrown: of two practised moves, the one thrown less goes next
         self.open_with = None  # training only (--open-with): the slot switched in first, whatever the engine asks for
+        self.start_info: dict = {}  # written into the log's start row: the bot's version, account, team, league
         threading.Thread(target=self._tap_fast, daemon=True).start()
 
     # touching
@@ -544,7 +545,8 @@ class Player:
             if self.t0 is None:
                 if look.header and len(look.bars) == 2 and not look.shield_prompt and not look.replace_prompt:
                     self.t0 = when
-                    self.log("start", 0.0, epoch=round(when, 3))  # lines the log up with the recording's .times
+                    # epoch lines the log up with the recording's .times; the rest is what the record needs (task 45)
+                    self.log("start", 0.0, epoch=round(when, 3), **self.start_info)
                 else:
                     continue
             t = when - self.t0
@@ -1582,6 +1584,19 @@ class Player:
         return str(action)
 
 
+def bot_version() -> tuple:
+    """(the git commit the bot runs, whether the code or data it runs on had uncommitted changes), or (None, None)."""
+    import subprocess
+    try:
+        head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True,
+                              timeout=10).stdout.strip()
+        changed = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", "pogo", "scripts", "data"],
+                                 capture_output=True, text=True, timeout=10).stdout.strip()
+        return (head, bool(changed)) if head else (None, None)
+    except Exception:  # noqa: BLE001
+        return None, None
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--serial")
@@ -1592,6 +1607,12 @@ def main() -> None:
     ap.add_argument("--max-actions", type=int, default=1500)
     ap.add_argument("--practise", nargs="*", default=[], help="training only: move ids thrown in place of the engine's")
     ap.add_argument("--open-with", help="training only: the species switched in at the start (one rarely out)")
+    # for the record (task 45), from train_loop.py and run_gbl.py: written into the log's start row
+    ap.add_argument("--account", help="the account's key (data/accounts/), never a trainer name")
+    ap.add_argument("--team-key", help="account/party, as in games/live/our_teams.json")
+    ap.add_argument("--league", help="the league as read on screen")
+    ap.add_argument("--season", help="the season as read on screen")
+    ap.add_argument("--standing", help="rank and rating read just before, as JSON")
     a = ap.parse_args()
     gd = GameData()
     team = load_team(gd, Path(a.team))
@@ -1605,6 +1626,10 @@ def main() -> None:
     phone.start()
     player = Player(phone, gd, team, a.live, log, Path(a.frames) if a.frames else None)
     player.practise = set(a.practise)
+    commit, dirty = bot_version()
+    player.start_info = {"commit": commit, "dirty": dirty, "account": a.account, "team_key": a.team_key,
+                         "league": a.league, "season": a.season,
+                         "standing": json.loads(a.standing) if a.standing else None}
     if a.open_with:
         player.switch_wanted = player.open_with = next(j for j, b in enumerate(team) if b.species_id == a.open_with)
     log("team", 0.0, team=[(b.species_id, b.fast.id, [m.id for m in b.charged], b.cp) for b in team])

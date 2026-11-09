@@ -105,17 +105,59 @@ def to_training(adb: str, serial: str, shot, steps: int = 16) -> bool:
     return False
 
 
+_ocr = None
+
+
+def party_words(im) -> str:
+    """The text of the middle party card (its CPs), letters and digits only, upper case."""
+    global _ocr
+    import re
+    import numpy as np
+    if _ocr is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _ocr = RapidOCR()
+    a = np.asarray(im)
+    h, w = a.shape[:2]
+    res, _ = _ocr(a[int(0.55 * h):int(0.80 * h), int(0.08 * w):int(0.92 * w)])  # the card in the middle only
+    return re.sub("[^A-Z0-9]", "", " ".join(r[1] for r in (res or [])).upper())
+
+
+def find_party(adb: str, serial: str, shot, expect: str, swipes: int = 6) -> bool:
+    """On the party screen, swipe left until the middle card shows the party's CPs in order (the cards show
+    nicknames, not species; 2026-11-08: each account keeps several Great League parties). False if none does."""
+    for k in range(swipes + 1):
+        if expect in party_words(shot()):
+            return True
+        if k < swipes:
+            if not game_in_front(adb, serial):
+                return False
+            subprocess.run([adb, "-s", serial, "shell", "input", "swipe", "900", "1700", "180", "1700", "400"])
+            time.sleep(1.5)
+    return False
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--serial", required=True)
     ap.add_argument("--battles", type=int, default=5)
     ap.add_argument("--leaders", nargs="+", default=["spark", "candela", "blanche"])
     ap.add_argument("--media", default=r"C:\pogo-media\live")
-    ap.add_argument("--team", default=str(ROOT / "data" / "alt_team.json"), help="the party's team file (play_android)")
-    ap.add_argument("--party", type=int, default=0, help="which saved party: swipes left on the party screen first")
+    ap.add_argument("--team", help="the party's team file (play_android); default: the account's party's")
+    ap.add_argument("--party", type=int, help="which saved party by swipes left on the party screen; default: the "
+                                              "account's party, found by its CPs")
+    ap.add_argument("--account", help="data/accounts/<NAME>.json (default: data/accounts/current.txt)")
+    ap.add_argument("--party-key", help="the account's party to train with (default: its league party)")
     ap.add_argument("--practise", nargs="*", default=[], help="move ids thrown in place of the engine's (play_android)")
     ap.add_argument("--open-with", help="species switched in at the start (play_android)")
     a = ap.parse_args()
+    sys.path.insert(0, str(ROOT / "scripts" / "live"))
+    import accounts
+    chosen = accounts.party(a.account, a.party_key)
+    if a.team is None:
+        a.team = chosen["team"]
+    expect = chosen["expect"] if a.party is None else None  # an explicit --party N: by swipes, as before
+    print(json.dumps({"account": a.account or accounts.current(), "party": chosen["key"], "team": a.team,
+                      "expect": expect}), flush=True)
     adb, _ = _tools(None)
     media = Path(a.media) / (time.strftime("%Y%m%d") + "-training")
     media.mkdir(parents=True, exist_ok=True)
@@ -145,11 +187,16 @@ def main() -> None:
         tap(LEADERS[leader]); time.sleep(2.2)
         tap(LEADER_BATTLE); time.sleep(2.2)
         tap(GREAT_LEAGUE); time.sleep(2.6)
-        for _ in range(a.party):  # the parties are side by side on the party screen: the next one is to the right
+        for _ in range(a.party or 0):  # the parties are side by side on the party screen: the next one is to the right
             if not game_in_front(adb, a.serial):
                 raise SystemExit(1)
             subprocess.run([adb, "-s", a.serial, "shell", "input", "swipe", "900", "1700", "180", "1700", "400"])
             time.sleep(1.5)
+        if expect is not None and not find_party(adb, a.serial, shot, expect):
+            path = media / f"stopped-{time.strftime('%H%M%S')}.png"
+            shot().save(path)
+            print(json.dumps({"stopped": f"no party showing {expect}", "frame": str(path)}), flush=True)
+            break
         im, (r, g, b) = pixel(*USE_PARTY)
         if not (g > 180 and r < 150):  # not the party screen: stop rather than tap blind
             path = media / f"stopped-{time.strftime('%H%M%S')}.png"
@@ -157,7 +204,9 @@ def main() -> None:
             print(json.dumps({"stopped": "the party screen was not where expected", "frame": str(path)}), flush=True)
             break
         done = subprocess.run([sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", a.serial,
-                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team]
+                               "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team,
+                               "--account", a.account or accounts.current(), "--team-key",
+                               f"{a.account or accounts.current()}/{chosen['key']}"]
                               + (["--practise", *a.practise] if a.practise else [])
                               + (["--open-with", a.open_with] if a.open_with else []),
                               capture_output=True, text=True, cwd=ROOT)

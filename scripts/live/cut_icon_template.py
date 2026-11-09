@@ -65,7 +65,7 @@ def frames():
 
 
 def discs(small, gray) -> list:
-    """Round discs of the hue, icon-sized (radius 12-30 px on the half frame), with a white symbol in the middle."""
+    """Round discs of the hue, icon-sized (radius 12-40 px on the half frame), with a white symbol in the middle."""
     hsv = cv2.cvtColor(np.ascontiguousarray(small), cv2.COLOR_RGB2HSV)
     m = ((hsv[..., 0] >= HUE[0]) & (hsv[..., 0] <= HUE[1]) & (hsv[..., 1] > 60) & (hsv[..., 2] > 140)).astype(np.uint8)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
@@ -75,7 +75,7 @@ def discs(small, gray) -> list:
         a = cv2.contourArea(c)
         per = cv2.arcLength(c, True)
         circ = 4 * np.pi * a / (per * per + 1e-6)
-        if not np.pi * 12 ** 2 <= a <= np.pi * 30 ** 2 or circ < 0.7:
+        if not np.pi * 12 ** 2 <= a <= np.pi * 40 ** 2 or circ < 0.7:  # water's are up to about 33 px
             continue
         (cx, cy), _ = cv2.minEnclosingCircle(c)
         cx, cy = int(cx), int(cy)

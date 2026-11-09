@@ -42,6 +42,13 @@ class Runner:
         self.expect: list = []  # words the party screen must show before USE THIS PARTY (the party's names)
         self.team = None  # the team file passed to play_android
         self.party_swipes = 0
+        # for the record (task 45): the account and team, the league and season as read, the standing last read
+        self.account = self.team_key = self.league = self.season = None
+        self.standing = None  # read on the league card since the last battle, for the next one
+        self.last_log = None  # the last battle's log, for the standing read after it
+        self.card_read = False
+        local = ROOT / "data" / "accounts" / "trainers.local.json"  # trainer names, never written to the logs
+        self.names = [n.upper() for n in json.loads(local.read_text(encoding="utf-8"))] if local.exists() else []
 
     def shot(self) -> np.ndarray:
         from PIL import Image
@@ -83,6 +90,40 @@ class Runner:
         premium = min((y for t, x, y in words if "PREMIUM" in t.upper()), default=1.0)
         return [(x, y) for t, x, y in words if re.sub("[^A-Z]", "", t.upper()) == "BATTLE" and 0.6 < y < premium]
 
+    def read_standing(self, a: np.ndarray, words: list, flat: str) -> None:
+        """The league card on the Battle tab: the season's wins and battles, the rank in its badge (left of WINS),
+        the rating where it shows (from rank 20). Kept for the next battle's start row, and written after the last
+        battle's log as its standing_after."""
+        season = re.search(r"POK[A-Z]?MONGO([A-Z]+?)GREATLEAGUE", flat)  # flat has no colons or accents
+        # the season's own figures, under CURRENT SEASON (the top of the tab has the lifetime ones; LAST SEASON follows)
+        part = flat.split("CURRENTSEASON", 1)[1] if "CURRENTSEASON" in flat else ""
+        part = re.split("ENDSIN|LASTSEASON|SEESCHEDULE", part)[0]
+        wins, battles = re.search(r"WINS(\d+)", part), re.search(r"BATTLES(\d+)", part)
+        rating = re.search(r"RATING(\d{3,4})", part)
+        rank = None
+        head = next((y for t, x, y in words if "CURRENTSEASON" in re.sub("[^A-Z]", "", t.upper())), None)
+        at = next(((x, y) for t, x, y in words if "WINS" in t.upper() and head is not None and y > head), None)
+        if at is not None:
+            h, w = a.shape[:2]
+            x0, x1 = max(0, int((at[0] - 0.40) * w)), max(1, int((at[0] - 0.04) * w))
+            y0, y1 = max(0, int((at[1] - 0.05) * h)), min(h, int((at[1] + 0.08) * h))
+            res, _ = self.ocr(a[y0:y1, x0:x1])
+            digits = [re.sub("[^0-9]", "", r[1]) for r in res or []]
+            rank = next((int(d) for d in digits if d and 1 <= int(d) <= 24), None)
+        self.standing = {"rank": rank, "rating": int(rating.group(1)) if rating else None,
+                         "season_wins": int(wins.group(1)) if wins else None,
+                         "season_battles": int(battles.group(1)) if battles else None,
+                         "read_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+        if season and season.group(1) == "TWILIGHTTRAILS":
+            self.season = "Twilight Trails"
+        elif season:
+            self.season = season.group(1).title()
+        self.log("standing", **self.standing, season=self.season)
+        if self.last_log is not None and self.last_log.exists():  # the battle before this reading: its after
+            with self.last_log.open("a", encoding="utf-8") as f:
+                f.write(json.dumps({"t": None, "kind": "standing_after", **self.standing}) + "\n")
+            self.last_log = None
+
     def stop(self, why: str, a: np.ndarray) -> str:
         from PIL import Image
         path = self.media / f"stopped-{time.strftime('%H%M%S')}.png"
@@ -95,6 +136,14 @@ class Runner:
                "--frames", str(self.media)]
         if self.team:
             cmd += ["--team", self.team]
+        for flag, value in (("--account", self.account), ("--team-key", self.team_key), ("--league", self.league),
+                            ("--season", self.season)):
+            if value:
+                cmd += [flag, value]
+        if self.standing:
+            cmd += ["--standing", json.dumps(self.standing)]
+        self.standing = None  # used: the next battle's is read after this one
+        self.card_read = False  # read the league card again when next on it
         if start_tap:
             cmd += ["--start-tap", *map(str, start_tap)]
         self.log("battle_start", start_tap=start_tap)
@@ -102,6 +151,7 @@ class Runner:
         done = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), None)
         result = json.loads(line)["result"] if line else None
+        self.last_log = Path(json.loads(line)["log"]) if line else None
         self.battles += 1
         self.wins += result == "win"
         self.losses += result == "loss"
@@ -122,7 +172,13 @@ class Runner:
             words = self.read(a)
             text = " ".join(t for t, _, _ in words).upper()
             flat = re.sub("[^A-Z0-9/]", "", text)
-            self.log("screen", text=text[:200])
+            if re.search(r"\bVS\b", text):  # the matchmaking screen
+                self.log("screen", text="(a VS screen: not logged, it shows the opponent's trainer name)")
+            else:
+                shown = text
+                for name in self.names:
+                    shown = shown.replace(name, "(trainer)")
+                self.log("screen", text=shown[:200])
             # The day's limit, in the words the game uses for it (not the league card's "Max CP: No limit").
             if any(p in flat for p in ("COMEBACKTOMORROW", "BATTLEDALOT", "DAILYLIMIT", "LIMITFORTODAY",
                                        "MAXIMUMNUMBEROFBATTLES", "REACHEDTHELIMIT", "REACHEDYOURLIMIT")):
@@ -149,6 +205,8 @@ class Runner:
                 card = next(((x, y) for t, x, y in words if "GREATLEAGUE" in re.sub("[^A-Z]", "", t.upper())), None)
                 if card is None:
                     return self.stop("no Great League card", a)
+                name = next((t for t, x, y in words if "GREATLEAGUE" in re.sub("[^A-Z]", "", t.upper())), "")
+                self.league = re.sub(r"\s+", " ", name.replace(":", ": ")).strip().title().replace(": ", ": ")
                 self.tap((0.5, card[1] + 0.02), "great league", words)
             elif "LETSGO" in flat:
                 self.tap(LETS_GO, "let's go", words)
@@ -160,6 +218,18 @@ class Runner:
                 return self.stop("rewards to collect (an encounter needs Poke Balls: the owner's call)", a)
             elif "GOBATTLELEAGUE" in flat and "BATTLE" in flat:
                 # rewards waiting to be collected are left for the owner: the set goes on without them
+                if not self.card_read:
+                    # the season's rank and figures are just below the fold: scroll down, read them, scroll back
+                    # (BATTLE is then where it was)
+                    self.card_read = True
+                    subprocess.run([self.adb, "-s", self.serial, "shell", "input", "swipe", "540", "1700", "540", "1250", "900"])
+                    time.sleep(1.5)
+                    b = self.shot()
+                    bw = self.read(b)
+                    self.read_standing(b, bw, re.sub("[^A-Z0-9/]", "", " ".join(t for t, _, _ in bw).upper()))
+                    subprocess.run([self.adb, "-s", self.serial, "shell", "input", "swipe", "540", "1250", "540", "1700", "900"])
+                    time.sleep(1.5)
+                    continue
                 button = self.battle_button(words)
                 if not button:
                     return self.stop("no Battle button", a)
@@ -185,7 +255,9 @@ def main() -> None:
     ap.add_argument("--wins", type=int, default=3)
     ap.add_argument("--max-battles", type=int, default=25)
     ap.add_argument("--media", default=r"C:\pogo-media\live")
-    ap.add_argument("--team", help="the party's team file (play_android; its default is data/alt_team.json)")
+    ap.add_argument("--team", help="the party's team file (play_android); default: the account's league party's")
+    ap.add_argument("--account", help="data/accounts/<NAME>.json (default: data/accounts/current.txt)")
+    ap.add_argument("--party-key", help="the account's party to play (default: its league party)")
     ap.add_argument("--expect", nargs="*", default=[], help="words the party screen must show, as read with spaces taken out: its CPs in order, CP1498CP1499CP1499 (it shows nicknames, not species)")
     a = ap.parse_args()
     media = Path(a.media) / time.strftime("%Y%m%d")
@@ -200,7 +272,14 @@ def main() -> None:
         print(kind, json.dumps(data, default=str)[:200], flush=True)
 
     runner = Runner(a.serial, media, a.wins, a.max_battles, log)
-    runner.expect, runner.team = [w.upper() for w in a.expect], a.team
+    sys.path.insert(0, str(ROOT / "scripts" / "live"))
+    import accounts
+    chosen = accounts.party(a.account, a.party_key)
+    runner.expect = [w.upper() for w in a.expect] or [chosen["expect"]]
+    runner.team = a.team or chosen["team"]
+    runner.account = a.account or accounts.current()
+    runner.team_key = f"{runner.account}/{chosen['key']}"
+    log("account", account=a.account or accounts.current(), party=chosen["key"], team=runner.team, expect=runner.expect)
     try:
         why = runner.run()
     except RuntimeError as error:  # a refused tap: stop touching anything

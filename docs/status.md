@@ -4943,3 +4943,31 @@ with the first.
   later: a Shadow Ball was not taken (145.9 s; energy unread, counted 13), and the switch to Stunfisk after it was
   not taken either. No single clear mistake was found.
 - **Won** against Qwilfish and Reuniclus (over in 23 s), and against Miltank, Jirachi, Snorlax.
+
+**The owner's own account, and the settings kept per account (2026-11-08, night).** The owner swapped the phone to
+their own account. Its party "377:" has the same three as the spare account's, in the same order, at different
+CPs (1496, 1499, 1492).
+- **Its moves, read off a training battle's recording** (scratch `read_moves.py`: who is out by our header's type
+  icons, the names under the buttons by OCR, the fast move by the steps between stable fill levels):
+
+  | Pokémon | Fast move | How it was told | Charged moves (left, right) |
+  |---|---|---|---|
+  | Jellicent | Hex | +12 to 13 energy every 1.5 s (Bubble would read about 10) | Surf, Shadow Ball |
+  | Vigoroth | Scratch | +4 every 0.49 s | Bulldoze, Body Slam |
+  | Stunfisk | Thunder Shock | Plusle's bar fell 0.012 a fast move; Thunder Shock predicts 0.016, Mud Shot 0.031 | Discharge, Mud Bomb |
+
+  The team file is `data/team_owner.json`.
+- **Settings per account:** `data/accounts/<key>.json` (`spare`, `owner`: keys, never trainer names) lists each
+  saved party's team file and the CPs that find it on the party screen. `scripts/live/accounts.py use <key or
+  trainer name>` says which account is on the phone (`data/accounts/current.txt`; trainer names map to keys in
+  `trainers.local.json`; neither file is committed). `train_loop.py` and `run_gbl.py` take `--account`, defaulting
+  to the current one, and the training loop finds the party by its CPs.
+- **Water, a set pattern too.** The colour detector's discs merged with Jellicent's blue body and the splashes, so
+  the icon was cut by hand (`icon_type_water.png`, 39 px: the drop and some of the disc). Real icons scored 0.92 to
+  0.99 against it, and nothing else more than 0.79. The pattern (`type_water.json`) was learnt on 30 Bubble Beam and
+  5 Surf minigames: 51% of held-out sightings passed over, against 34% for the sweep alone. Every type on both
+  accounts' teams now has a pattern.
+- **Training on the owner's account:** 8 Team Leader battles, all won, 40 of 40 minigames Excellent (Surf 15 of 15:
+  5 before the water pattern, 10 after). No league battles on it yet.
+- **Task 45's bot side** is in place (`play_android.py` start row, `run_gbl.py` standing reader; see `main`'s
+  docs/status.md).
