@@ -4440,4 +4440,5 @@ unfinished). The first league battle on the owner's own account (20261108-200541
 Talonflame / Mimikyu / Lickilicky at 78% ± 5 odds: besides the three faults fixed in 9dbeb69, both shields went in the
 first 40 s on Mimikyu's Shadow Sneak. The shield override (shield a hit of 35% or more) takes the worst move they could
 have with the tracker's two-fast-move margin added to their energy: counted 48, plus 16, so Play Rough (60, 67 damage
-of Stunfisk's 172) looked possible. With the margin, any bait within two fast moves of the big move is shielded.
+of Stunfisk's 172) looked possible. With the margin, any bait within two fast moves of the big move is shielded. Over the 39 league battles' logs: 133 shield prompts, 70 shielded,
+41 of them by the override against the engine's call (both in 20261108-200541).
