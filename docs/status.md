@@ -4430,3 +4430,10 @@ every team with Melmetal is 46 to 57%. Against off-meta teams, Melmetal / Jellic
 68.2% for Jellicent / Vigoroth / Stunfisk; every Melmetal team is 72 to 76%. Melmetal's second move: Dynamic Punch
 beats Rock Slide by 0 to 6 points and Super Power by 5 to 7. So Melmetal / Jellicent / Stunfisk while the opponents
 are off-meta, and Jellicent / Vigoroth / Stunfisk once they are not.
+
+All the league battles to the evening of 2026-11-08, from `games/live/index.json` on main: 38 (an 11 s fragment,
+20261107-174540, is the start of the next battle), 21 won and 17 lost, against 29.1 expected from the line-up odds
+(± 2.3 by chance alone; our team as recorded, theirs as seen, a Pokémon not seen filled at random from PvPoke's ranks
+101 to 400). 2026-11-07: 9 battles, 4 won, 6.6 expected; 2026-11-08: 29, 17 won, 22.5 expected. 7 of the 19 battles
+at 80% or better were lost; 2 of the 6 under 50% were won. Training against the Team Leaders: 109 won of 112 (3
+unfinished).
