@@ -175,5 +175,17 @@
   "went_wrong": "",
   "fixed": "",
   "from": "docs/status.md (2026-11-08 evening)"
+ },
+ "20261108-200541": {
+  "went_wrong": "The owner's account's first league battle. Two shields on Mimikyu's Shadow Sneak at 84% and 69% health (13.4, 38.8 s: the rule shields a hit of a third of our health or more). Stunfisk threw Discharge into Talonflame on 5% at 115.8 s; two Thunder Shocks would have finished it (the owner: farm down). When Lickilicky came in (142 s) Stunfisk at 4% stayed in and fainted farming instead of going to Jellicent (the owner): the tracker had taken Vigoroth's faint (102 s) for a switch, the Pokemon-left counter lagging the header by 1.1 s, and believed the switch timer ran to 148 s.",
+  "fixed": "partly: farm_down and save_the_low_one added and the faint taken for a switch fixed (task40-android 9dbeb69); farm_down misfired in the next battle and was narrowed (cf042c3); the shield rule is the owner's call",
+  "from": "the owner watching, and the analysis on 2026-11-08 night"
+ },
+ "20261108-204007": {
+  "went_wrong": "Both shields on Obstagoon's Night Slash with Jellicent at 92% and 82% health (59.1, 84.6 s: 56 of 156, over the third-of-health rule). The engine switched Jellicent into Obstagoon at 53 s though Night Slash is super effective on it and Hex is resisted twice. The new farm_down rule held Surf for 17 s (94 to 111 s) at 97 to 98 energy, capped, against an Obstagoon on 1 to 5% that Hex could not finish, overrode the throw-first guard at 98 s, and Jellicent took an unshielded Night Slash at 105 s. The owner stopped play at 208 s; the battle ended untouched in a loss (the result screen, GOOD EFFORT!).",
+  "fixed": "farm_down narrowed (task40-android cf042c3); the shield rule and the engine's switch are open",
+  "result": "loss",
+  "result_from": "the phone's result screen after the bot was stopped at 208 s (GOOD EFFORT!)",
+  "from": "the owner watching, and the analysis on 2026-11-08 night"
  }
 }
