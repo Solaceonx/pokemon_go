@@ -59,6 +59,34 @@ def load_team(gd: GameData, path: Path):
     return team
 
 
+def mon_record(m) -> dict:
+    """One Pokémon as the engine saw it: build (species, level, IVs, moves) and state."""
+    b = m.build
+    return {"species": b.species_id, "level": b.level, "ivs": list(b.ivs), "fast": b.fast.id,
+            "charged": [x.id for x in b.charged], "hp": int(m.hp), "energy": int(m.energy),
+            "stages": [int(m.atk_stage), int(m.def_stage)]}
+
+
+def view_record(view) -> dict:
+    """The whole view a decision was made on, to ask the engine again later (scripts/live/engine_view.py): the owner,
+    2026-11-09 (docs/status.md, the spare account's 25 battles): the live Discharge throws were not the engine's
+    judgment on the same matchups in the simulator, so the state the phone hands it is to be logged and replayed."""
+    me = view.me
+    num = lambda v: None if v is None else int(v)  # the header's counts are numpy integers (logged as text)
+    out = {"turn": num(view.turn), "me": {"active": num(me.active), "shields": num(me.shields),
+                                          "switch_wait": num(me.switch_wait), "busy": num(me.busy),
+                                          "team": [mon_record(m) for m in me.team]},
+           "foe": mon_record(view.foe), "foe_shields": num(view.foe_shields), "foe_switch_wait": num(view.foe_switch_wait),
+           "foe_busy": num(view.foe_busy), "foe_left": num(view.foe_left), "foe_shown": [mon_record(m) for m in view.foe_shown]}
+    for name in ("foe_move_odds", "foe_energy_odds"):
+        try:
+            v = getattr(view, name)
+        except Exception:  # noqa: BLE001
+            continue
+        out[name] = [[mv.id, round(pr, 3)] for mv, pr in v] if name == "foe_move_odds" else {str(k): round(pr, 3) for k, pr in v.items()}
+    return out
+
+
 def swipe_for(move) -> list:
     kind = TYPE_SWIPE.get(move.type, move.type)
     path = ROOT / "data" / "minigame" / f"{kind}.json"
@@ -1101,14 +1129,21 @@ class Player:
         view = self.view()
         if view is not None and t - self.last_look < 0.05:  # a decision at each look
             t0 = time.perf_counter()
+            seen = None
             try:
                 with self.engine_sees():
                     self.decision = self.engine.act(view)
+                    if self.decision != FAST:  # the view as the engine saw it (their energy with the margin)
+                        try:
+                            seen = view_record(view)
+                        except Exception as error:  # noqa: BLE001
+                            seen = {"error": str(error)}
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 self.decision = FAST
             self.decided_for = self.active
-            self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000))
+            extra = {"view": seen} if seen is not None else {}
+            self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000), **extra)
             self.no_weaker_move(t, view)
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
@@ -1161,7 +1196,7 @@ class Player:
                 self.decision = CHARGED[0] + k
                 self.armed = None
                 self.decided_for = self.active
-                self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share)
+                self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share, view=view_record(view))
             elif (affordable and view.me.shields == 0 and self.tracker.foe is not None
                   and not self.farm_down(view, mon, have, t, self.hardest(view, mon, affordable))):
                 # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
@@ -1176,7 +1211,8 @@ class Player:
                     self.decision = CHARGED[0] + k
                     self.armed = None
                     self.decided_for = self.active
-                    self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt)
+                    self.log("throw_before_theirs", t, move=mon.charged[k].id, foe_energy=[foe.lo, foe.hi], hurt=hurt,
+                             view=view_record(view))
         if (view is not None and self.decision in CHARGED
                 and self.farm_down(view, mon, have, t, mon.charged[self.decision - CHARGED[0]])):
             if time.time() - self.farm_logged > 1.0:
