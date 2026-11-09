@@ -4476,3 +4476,35 @@ under 10% of our HP, 56% at 20-30%, 72% at 40%, 80% above 70%): a nearly beaten 
 that would not: 14% for a hit of 20-30% of our HP, 21% at 30%, 38-48% at 40% and more, and only 17% on our first
 Pokémon with both shields up. Shield counts weigh most: 56% when they have none left, 40% at one, 24% with both sides
 at two.
+
+**The spare account's 25 league battles of 2026-11-09, looked at again (the owner: "can you analyze the games?").**
+Taken from the raw logs on `task40-android` and the records on `task45-live-records`. 17 won, 8 lost. The line-up
+odds of 24 of them gave 15.2 expected wins, and 16 were won, so the day went as the odds said. On 11-08, 17 were won
+where 22.5 were expected.
+
+- **The losses by odds:**
+  - four at 10 to 20% (bad line-up matchups);
+  - two at 43%;
+  - two at good odds: 013310 at 99% and 020914 at 80%.
+
+  Two wins came at 22%.
+- **The shield calls were already the engine's own:** the override came out in d156a24, before these battles. There
+  were 113 prompts and 43 shields; the both shields went in most battles.
+- **Our throws beaten by theirs:** 27 in all.
+- **Switch taps the game didn't take:** 17.
+- **Stunfisk threw Discharge 41 times and Mud Bomb 22**, including Discharge into Toxtricity four times (003216) and
+  into Marowak (021318). The engine on the same matchups in the simulator (scratch `stun/repro.py`) never throws
+  Discharge:
+  - It was asked 12 times per cell, the live engine and the trained bot alike, with and without the real-time clock.
+  - The cells covered Stunfisk at 86-90% health, our energy 40, 44 and 49, and their shields 0 to 2.
+  - Against Toxtricity it also covered Toxtricity's health from 20 to 100% and their energy from 20 to 80.
+  - Against Toxtricity it fast-moves every time. Against Marowak it switches out every time.
+
+  So the live throws come from the state the phone hands the engine, not from the engine's judgment. That state isn't
+  logged; the next step is to log the engine's view at each charged decision and replay it.
+  - Toxtricity's health bar was read jumping about: 4% at 71.4 s, then 23% at 73.0 s.
+  - The `decision` rows at 34 s and 55 s took 299 and 304 ms, the 300 ms cap. The same pick, the trained bot's, comes
+    out in the simulator either way.
+- **Vigoroth's fast move:** the account's Vigoroth has Scratch. Counter in its place would be worse: Jellicent (Surf)
+  / Vigoroth / Stunfisk, 1,500 paired battles a field, 62.2 ± 2.4% against the meta and 68.1 ± 2.4% off-meta with
+  Scratch; 39.8 ± 2.5% and 55.4 ± 2.5% with Counter (scratch `stun/vig.py`).
