@@ -4442,3 +4442,37 @@ first 40 s on Mimikyu's Shadow Sneak. The shield override (shield a hit of 35% o
 have with the tracker's two-fast-move margin added to their energy: counted 48, plus 16, so Play Rough (60, 67 damage
 of Stunfisk's 172) looked possible. With the margin, any bait within two fast moves of the big move is shielded. Over the 39 league battles' logs: 133 shield prompts, 70 shielded,
 41 of them by the override against the engine's call (both in 20261108-200541).
+
+**Live shield calls measured (2026-11-08; the owner withdrew the 35% override: "i don't want this anymore", and asked
+for the shield calls to be worked out).** The live tracker's energy error first: at 72 live shield prompts whose move
+was named after, the move cost more than the tracker's upper bound 37 times (by 2 to 42 energy, mostly 10 to 20), so
+their energy runs low. Simulation (scratch `shield_sim.py`): our side the trained bot (the engine's shield call is the
+trained bot's; the engine does not search shields), shown their energy minus an undercount drawn from those 72;
+theirs varied bots with exact information; the same opponents and dice for every policy; differences paired against
+the trained bot's own call on the undercounted energy. 3,000 battles a cell, seed 1:
+
+| Shield policy | Live team v meta | v off-meta (PvPoke 101-400) | Mixed teams both sides |
+|---|---|---|---|
+| The bot's own call (undercounted energy) | 67.2% | 72.6% | 54.9% |
+| The same with their exact energy | +0.7 ± 1.0 | +0.0 ± 0.9 | +2.5 ± 1.0 |
+| Plus the 35% override with two fast moves of margin (live until now) | -13.4 ± 1.9 | -7.3 ± 1.8 | -8.9 ± 1.9 |
+| Plus the 35% override, no margin | -12.0 ± 1.9 | -6.0 ± 1.7 | -8.2 ± 1.9 |
+| Plus a knock-out-only override, with margin | -9.2 ± 1.6 | -2.0 ± 1.4 | -5.5 ± 1.6 |
+| Plus a knock-out-only override, no margin | -8.5 ± 1.6 | -1.7 ± 1.3 | -5.1 ± 1.6 |
+| The bot's call on the estimate plus one fast move | +0.1 ± 0.8 | -0.8 ± 0.8 | +0.5 ± 0.8 |
+| The bot's call on the estimate plus two fast moves | +0.5 ± 1.0 | -0.3 ± 1.0 | +0.7 ± 1.1 |
+| Always shield | -21.9 ± 2.1 | -12.4 ± 2.0 | -13.3 ± 2.1 |
+| Never shield (but the last Pokémon) | -52.5 ± 1.8 | -47.8 ± 1.8 | -42.3 ± 1.8 |
+
+Fresh seed 2, 2,000 battles a cell, against varied opponents, opponents who never bait and opponents who always throw
+the cheapest move: the live rule -7.1 to -11.2 against the meta and -3.4 to -7.2 off-meta; knock-out-only -4.8 to -6.3
+and -1.0 to -2.5; plus two fast moves +0.1 to +1.6 and -0.4 to +1.0 (inside the margins). **Adopted: no override; the
+engine's own call on the tracker's estimate,** always shielding with the last Pokémon (the bot's own rule). The
+tracker's undercount costs about a point (exact energy +0.7 to +2.5), not worth a margin.
+
+When that call shields (14,188 prompts, the live team, 1,000 battles each against the meta and off-meta): always with
+the last Pokémon; with two left 49%, with three 30%. Hits that would knock us out: 51%, rising with our health (27%
+under 10% of our HP, 56% at 20-30%, 72% at 40%, 80% above 70%): a nearly beaten Pokémon is not worth a shield. Hits
+that would not: 14% for a hit of 20-30% of our HP, 21% at 30%, 38-48% at 40% and more, and only 17% on our first
+Pokémon with both shields up. Shield counts weigh most: 56% when they have none left, 40% at one, 24% with both sides
+at two.
