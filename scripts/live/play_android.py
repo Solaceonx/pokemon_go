@@ -1283,8 +1283,12 @@ class Player:
             # second or so, and each wrong tap stops the fast taps for the 2.3 s wait.
             stale = t - max(self.last_reading_t, self.active_changed_at) >= 4.0
             urgent = view is not None and self.hp_now(t, view) < 0.35
+            # Or far over the cost: after the count's fix, count-only taps not taken were 4 to 31 over it, and one
+            # held back at 43 over (134115: Snorlax on 83 to 91 for Body Slam's 40, the reading 90) let Lapras's
+            # Sparkling Aria go first.
             sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
-                time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain and (stale or urgent))
+                time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain
+                and (stale or urgent or have >= cost + 40))
             if self.armed is not None:
                 # armed: on the buttons' word only (the count runs ahead of them), the moment the button lights
                 read = self.energy()
