@@ -35,6 +35,18 @@ and push that before starting.
 
 ## Open tasks
 
+**Additional battle-data audit — Codex, 2026-11-09, branch `battle-data-enrichment` (completed offline snapshot).**
+At the owner's request, inspect task 40's live reader and recover additional
+time-aligned observations and diagnostics from completed saved logs and selected
+recordings. Work offline, publish a reproducible evidence report, and distinguish
+screen readings from tracker/engine beliefs. Do not modify the active phone loop,
+task 45's records, or the reserved footage's recognition settings. Delivered 207
+usable log sidecars (19,553 looks / 127,215 evidence rows), a local video-linked
+report, and 2,295 fresh pixel samples from three recordings. The 85 additional
+button-energy opportunities are unverified sample-frame estimates, not an
+accuracy gain. Results and limits: `docs/battle_evidence.md` and
+`runs/live-evidence-20261109.json`. Unknown historical engine states stay unknown.
+
 | # | Task | Needs |
 |---|---|---|
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
