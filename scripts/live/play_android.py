@@ -469,6 +469,8 @@ class Player:
         self.prompt_seen = 0.0  # the last frame with a shield prompt
         # Which moves' names show under the buttons (shown = paid for): (names, time) when two frames in a row agree
         self.names_seen = None
+        self.names_blocked_until = 0.0
+        self.queued_retapped = False
         self._names_raw = None
         self.queued_checked = 0.0
         # Their fast moves landing on our bar, frame by frame (HitSteps): the times of those in the current unbroken
@@ -581,8 +583,12 @@ class Player:
             # The fight is on screen after three frames in a row with the header and a bar: in close-ups and
             # changes of Pokémon a false bar shows on a frame or two (2026-11-07, GO Battle League: looks given then
             # counted fast moves that were not happening, and a Shadow Ball was tapped on 53 counted, 16 real).
-            on_screen = look.header and len(look.bars) >= 1
             buttons_up = bool(look.buttons) and any(look.buttons[k]["present"] for k in ("left", "right"))
+            both_buttons = bool(look.buttons) and all(look.buttons[k]["present"] for k in ("left", "right"))
+            # The header with a bar, or with both buttons drawn: they are drawn only in the fight (2026-11-08, 231958:
+            # after their Surf both buttons were back, paid, at 143.1 s, our bar under "BLOCKED!" and theirs read on
+            # some frames only; the fight was taken up again 1.5 s later, the fast taps with it)
+            on_screen = look.header and (len(look.bars) >= 1 or both_buttons)
             if buttons_up:
                 self.button_seen_t = t
             # In the close-ups of a charged move the header stays up and the camera puts one Pokémon's bar where the
@@ -621,7 +627,9 @@ class Player:
                 and time.time() >= self.hold_taps_until and self.armed is None
             if fighting:
                 self.watch_hits(t, look.bars)
-                if "mine" in look.bars:
+                if "mine" in look.bars and self.switching is None:
+                    # not while a switch is under way: the bar can be the one coming in (2026-11-08, 231958:
+                    # Jellicent's 10% coming in was put down to Stunfisk, at 86% before, as it left)
                     self.my_bar_seen.append((t, look.bars["mine"]))
                 if self.switching is not None:
                     self.check_switch(t, rgb)
@@ -915,6 +923,12 @@ class Player:
         if e is not None and prev is not None and when - prev[1] < 0.25 and abs(e - prev[0]) <= 5:
             self.energy_read = (e, when)
         names = screen.button_labels(rgb)
+        # Only with both buttons drawn, and not while our move's attack plays after its minigame (2026-11-08,
+        # 231958: right after Surf's and Discharge's minigames the attack's white streaks filled the name boxes, both
+        # "names" read, the low-health rule threw again with 30 and 21 energy, and the fast taps stopped 3 to 5 s
+        # while it was not taken; the rims there read 2 to 9, a button drawn 10 or more).
+        if time.time() < self.names_blocked_until or min(screen.button_rim(rgb, k) for k in (0, 1)) < 10:
+            names = [None, None]
         if None not in names:
             prev, self._names_raw = self._names_raw, (tuple(names), when)
             if prev is not None and prev[0] == tuple(names) and when - prev[1] < 0.25:
@@ -1447,6 +1461,7 @@ class Player:
                 # off after Plusle's Discharge, unswiped). The loop watches for its Get Ready!.
                 self.log("throw_beaten", self.now(), move=move.id)
                 self.queued = (k, move, tapped, time.time() + 40, self.now())
+                self.queued_retapped = False
                 return
             if said == "mine":
                 since, started = when, True
@@ -1472,6 +1487,7 @@ class Player:
             # It may still go off a moment later (2026-11-07: four of 39 moves had Get Ready! up to half a second
             # after the wait, and went unswiped), or after theirs: the loop watches for it.
             self.queued = (k, move, tapped, time.time() + 40, self.now())
+            self.queued_retapped = False
             read = self.energy()
             self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy,
                      read=None if read is None else round(read, 1))
@@ -1510,6 +1526,12 @@ class Player:
             self.log("queued_dropped", t, move=move.id, read=None if e is None else round(e, 1))
             self.queued = None
             return False
+        if (fighting and not self.queued_retapped and self.fight_since is not None
+                and t - max(self.fight_since, made) > 1.0 and (e is None or e >= move.energy)):
+            # Theirs is over and ours has not gone: tap it again (2026-11-08, 231958: Discharge, beaten by their
+            # Surf, waited 3.9 s with no fast taps after it, and went 1 s after the next tap)
+            self.queued_retapped = True
+            self.touch(controls.CHARGED_BUTTONS[k], f"charged move {k + 1} again (queued): {move.name}")
         if time.time() - self.queued_checked < 0.2:
             return False
         if fighting:
@@ -1536,6 +1558,13 @@ class Player:
 
     def minigame(self, k: int, move, since: float) -> None:
         """Swipe the minigame of our move that started (Get Ready!) at time `since`."""
+        try:
+            self._minigame(k, move, since)
+        finally:
+            self.names_seen = self._names_raw = None  # the names read before the move no longer hold
+            self.names_blocked_until = time.time() + 1.5  # its attack plays now, over the buttons
+
+    def _minigame(self, k: int, move, since: float) -> None:
         self.tapping = False
         start, path = swipe_for(move)
         tapped = since  # the minigame is timed from the move itself, not from the tap
@@ -1674,16 +1703,18 @@ class Player:
 
 
 def bot_version() -> tuple:
-    """(the git commit the bot runs, whether the code or data it runs on had uncommitted changes), or (None, None)."""
+    """(the git commit the bot runs, whether the code or data it runs on had uncommitted changes, an error or None).
+    Up to 30 s each: right after a commit and push on OneDrive git can be slow (2026-11-08: two league battles'
+    start rows had neither when the limit was 10 s)."""
     import subprocess
     try:
         head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True,
-                              timeout=10).stdout.strip()
+                              timeout=30).stdout.strip()
         changed = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", "pogo", "scripts", "data"],
-                                 capture_output=True, text=True, timeout=10).stdout.strip()
-        return (head, bool(changed)) if head else (None, None)
-    except Exception:  # noqa: BLE001
-        return None, None
+                                 capture_output=True, text=True, timeout=30).stdout.strip()
+        return (head, bool(changed), None) if head else (None, None, "git rev-parse gave nothing")
+    except Exception as error:  # noqa: BLE001
+        return None, None, str(error)[:200]
 
 
 def main() -> None:
@@ -1715,8 +1746,9 @@ def main() -> None:
     phone.start()
     player = Player(phone, gd, team, a.live, log, Path(a.frames) if a.frames else None)
     player.practise = set(a.practise)
-    commit, dirty = bot_version()
-    player.start_info = {"commit": commit, "dirty": dirty, "account": a.account, "team_key": a.team_key,
+    commit, dirty, version_error = bot_version()
+    player.start_info = {"commit": commit, "dirty": dirty, "version_error": version_error,
+                         "account": a.account, "team_key": a.team_key,
                          "league": a.league, "season": a.season,
                          "standing": json.loads(a.standing) if a.standing else None}
     if a.open_with:

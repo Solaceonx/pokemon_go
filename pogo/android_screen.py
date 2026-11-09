@@ -238,8 +238,10 @@ def bars_held(a: np.ndarray, t: float, keep_s: float = 3.0) -> dict:
     afresh by bars())."""
     places = bar_places(a)
     out = {}
+    fight = header_visible(a)
     for side, (share, y, x0) in places.items():
-        _HINTS[side] = (share, y, x0, t)
+        if fight:  # a place only from the fight view, not a camera pan or close-up (where bars sit elsewhere)
+            _HINTS[side] = (share, y, x0, t)
         out[side] = share
     for side in ("mine", "theirs"):
         if side in out or side not in _HINTS:

@@ -9,10 +9,15 @@ from pogo import android_screen as screen
 GREEN, RED, DARK, LIGHT = (44, 249, 188), (235, 100, 105), (40, 60, 90), (245, 245, 245)
 
 
-def frame(share: float, colour=GREEN, x0: int = 34, y: int = 780, borders: bool = True, over_empty=None):
-    """A night-blue frame with one health bar: light frame round it, the fill from x0, the dark empty part after."""
+def frame(share: float, colour=GREEN, x0: int = 34, y: int = 780, borders: bool = True, over_empty=None,
+          header: bool = True):
+    """A night-blue frame with one health bar: light frame round it, the fill from x0, the dark empty part after;
+    with the header's two light boxes (the fight view) unless header is False."""
     a = np.zeros((1200, 540, 3), np.uint8)
     a[:] = (30, 50, 110)
+    if header:
+        for x, yy in screen.HEADER_PATCHES:
+            a[yy - 6:yy + 7, x - 20:x + 21] = (235, 238, 240)
     full = int(screen.BAR_INSIDE)
     a[y - 3:y + 11, x0 - 4:x0 + full + 4] = LIGHT if borders else (30, 50, 110)
     a[y:y + 8, x0:x0 + full] = DARK
@@ -53,6 +58,10 @@ class Bars(unittest.TestCase):
         screen.bars_held(frame(1.0), 0.0)
         covered = frame(0.55, borders=False, over_empty=LIGHT)  # "GO!" over the bar
         self.assertNotIn("mine", screen.bars_held(covered, 0.5))
+
+    def test_no_place_taken_from_a_camera_pan(self):
+        screen.bars_held(frame(0.62, header=False), 1.0)  # the header down: a pan or a close-up
+        self.assertNotIn("mine", screen.bars_held(frame(0.6, borders=False), 1.5))
 
     def test_not_a_pixel_or_two(self):
         screen.bars_held(frame(0.35), 0.0)
