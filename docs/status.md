@@ -4424,3 +4424,9 @@ opponents for every team). The day's team: 55.2% and 66.0% (± 2.8). Melmetal wi
 Dynamic Punch leading in Jellicent's place: 57.1% and 73.2%, the same against the meta and 7 points better against
 off-meta teams; in Stunfisk's or Vigoroth's place it is 5 to 6 points worse against the meta. Without Double Iron
 Bash (Dynamic Punch and Rock Slide) it is worse in every place: 39 to 46% and 61 to 65%.
+With Surf on Jellicent (Hex; Shadow Ball, Surf) and Melmetal with Double Iron Bash, every three of the four with each
+lead, the same set-up: against the meta, Jellicent / Vigoroth / Stunfisk is best, 62.3% (Surf for Bubble Beam: +7);
+every team with Melmetal is 46 to 57%. Against off-meta teams, Melmetal / Jellicent / Stunfisk is best, 76.4%, against
+68.2% for Jellicent / Vigoroth / Stunfisk; every Melmetal team is 72 to 76%. Melmetal's second move: Dynamic Punch
+beats Rock Slide by 0 to 6 points and Super Power by 5 to 7. So Melmetal / Jellicent / Stunfisk while the opponents
+are off-meta, and Jellicent / Vigoroth / Stunfisk once they are not.
