@@ -5112,3 +5112,44 @@ night).**
   - our energy (read on 53% of fight looks);
   - their bar's misreads (11% of readings followed by a higher one);
   - the Pokémon-left counters' lag.
+
+**The spare account's 25 league battles of 2026-11-09, unattended (the owner: "do all of bryan's battles, including
+catching pokemon and claiming items ... refresh the app after every set of 5, and always analyze the losses").**
+Jellicent's Ice Beam is now Surf: Shadow Ball is the left button, Surf the right, as read off a training battle.
+
+- **Result: 17 won, 8 lost**, in five sets of 4-1, 3-2, 3-2, 4-1 and 3-2. The rank went from 9 to 12. Three of the
+  sets' encounters were caught, with 1, 2 and 3 Ultra Balls; set 2's tiles were all stardust.
+- **`scripts/live/set_end.py`**, the end of a set:
+  - taps through the result;
+  - collects each reward tile (by tapping the tile, not its COLLECT label);
+  - catches the encounter: the Poké Ball button, then Ultra Ball (never the shop button on the tray), then a
+    straight flick;
+  - taps OK on the catch summary, and closes the caught Pokémon's page with back (its POWER UP and EVOLVE are never
+    touched);
+  - claims the rank rewards;
+  - with `--restart`, closes and reopens the game (dismissing the news card) and returns to the Battle tab.
+
+  After five identical taps, as when CLAIM RANK REWARDS stuck after a server error, it restarts the app once. It
+  treats the league choice as a set still under way. A scratch loop ran the sets: `run_gbl.py`, then
+  `set_end.py --restart`.
+- **Faults met and fixed during the day:**
+  - `git rev-parse` timed out at battle starts on OneDrive. The commit is now read from the `.git` files.
+  - One start never turned into a battle and waited out 420 s. A battle that hasn't started 90 s after the start
+    tap now gives up.
+  - After their stat-changing charged moves (Icy Wind, Ice Punch, Acid Spray), the fight came back with the buttons
+    hidden and our bar under "ATTACK FELL!" or "SUPER EFFECTIVE!", and was taken up 3 to 7 s late. The bar's place
+    is now kept 10 s, not 3.
+  - The game crashed once, at 222 s of a battle as good as lost. The season card counts it a loss, and the app was
+    relaunched.
+- **The 8 losses, screen reading or engine** (each in `games/live/notes.json` on `task45-live-records`):
+  - **The engine alone, 5 (002744, 012927, 013310, 015615, 020914):** shield calls, Pokémon left in bad matchups,
+    and throws beaten by theirs.
+  - **Both, 2 (011134, 011515):** the fight taken up late after stat-changing moves, fixed in b264f58 from set 3
+    on, besides the engine's calls.
+  - **The engine and one switch tap the game didn't take, 1 (021318):** the switch took 9 s to go in.
+- **What the engine got wrong again and again:**
+  - **Super-effective hits taken unshielded with both shields up**, at high health: Drain Punch three times on
+    Vigoroth (87%, 51%, 13%), Grass Knot on Stunfisk, Hydro Cannon on Vigoroth.
+  - **Discharge thrown where Mud Bomb was far better:** into Toxtricity four times (29 damage against 139, a
+    knock-out, one Thunder Shock away) and into Marowak, a Ground type.
+  - **Stunfisk left in against Pokémon whose moves are super effective on it:** Serperior, Tropius, Whiscash.
