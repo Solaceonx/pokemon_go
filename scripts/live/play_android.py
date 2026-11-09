@@ -1524,7 +1524,11 @@ class Player:
         named = self.label_move(rgb, k)
         far = screen.paid_shades(rgb, k)
         # Only when the button is plainly not our move's colour: a wrong correction would do the harm it is for.
-        if named is not None and named != (self.active, k) and far is not None and far.get(move.type, 99) > 45:
+        # Never to another of ours when our header names the one believed out (2026-11-09, 124247: 0.7 s after the
+        # header showed the switch to Thievul, its lit Night Slash button was taken for Snorlax's Body Slam, a dark
+        # button lit up being near a normal one, and for 10 s Snorlax was believed out)
+        header_agrees = self.header_says() == self.active
+        if named is not None and named != (self.active, k) and far is not None and far.get(move.type, 99) > 45                 and not (header_agrees and named[0] != self.active):
             slot, j = named
             self.log("move_corrected", t, was=move.id, now=self.team[slot].charged[j].id, button=j + 1)
             self.active, k, move = slot, j, self.team[slot].charged[j]
@@ -1765,7 +1769,14 @@ class Player:
             # The engine's own rule: with one Pokémon left there is nothing to save shields for. The tracker can
             # miss that our others have fainted (the header's count lags), so it is applied from our own count.
             shield = True
-        self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None)
+        seen = None
+        if view is not None:
+            try:
+                seen = view_record(view)  # the view the engine's call was made on, to ask it again (engine_view.py)
+            except Exception as error:  # noqa: BLE001
+                seen = {"error": str(error)}
+        self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None,
+                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
         self.touch(SHIELD_YES if shield else SHIELD_NO, "shield" if shield else "no shield")

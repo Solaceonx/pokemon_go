@@ -10,7 +10,7 @@ it, N times.
 
 The owner, 2026-11-09 (docs/status.md, the spare account's 25 battles): in the simulator the engine never threw
 Discharge into Toxtricity on the same matchups, so the live throws came from the state the phone handed it, which
-was not logged. Prints, per view: who is out, health and energy on both sides, shields, and the engine's picks
+was not logged. Shield prompts carry the view too (and the tracker's top of their energy, which the call is made on). Prints, per view: who is out, health and energy on both sides, shields, and the engine's picks
 against what was done live.
 """
 from __future__ import annotations
@@ -95,7 +95,11 @@ def main() -> None:
         view = LoggedView(gd, rec)
         live = r.get("action") or f"{r['kind']}:{r.get('move')}"
         me, foe = view.me.mon, view.foe
-        picks = collections.Counter(name(view, eng.act(view)) for _ in range(n))
+        if r["kind"] == "shield_prompt":  # the shield call, on their energy as the tracker had it (its top)
+            live = f"shield:{r.get('shield')}"
+            picks = collections.Counter(f"shield:{bool(eng.shield(view, r.get('foe_hi')))}" for _ in range(n))
+        else:
+            picks = collections.Counter(name(view, eng.act(view)) for _ in range(n))
         print(f"{r['t']:7.2f} live {live:<28} {me.build.species_id} {me.hp}/{me.build.hp}hp {me.energy}e "
               f"vs {foe.build.species_id} {foe.hp}/{foe.build.hp}hp {foe.energy}e  shields {view.me.shields}-{view.foe_shields}"
               f"  engine now: {dict(picks)}")
