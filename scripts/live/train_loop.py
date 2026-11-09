@@ -31,6 +31,10 @@ def is_white(c):
     return min(c) > 235
 
 
+def is_green(c):
+    return c[1] > 180 and c[0] < 150  # the USE THIS PARTY button
+
+
 def is_teal(c):
     return c[0] < 80 and 105 < c[1] < 165 and 115 < c[2] < 175
 
@@ -149,6 +153,7 @@ def main() -> None:
     ap.add_argument("--party-key", help="the account's party to train with (default: its league party)")
     ap.add_argument("--practise", nargs="*", default=[], help="move ids thrown in place of the engine's (play_android)")
     ap.add_argument("--open-with", help="species switched in at the start (play_android)")
+    ap.add_argument("--stay", action="store_true", help="no switches but the opening one (play_android)")
     a = ap.parse_args()
     sys.path.insert(0, str(ROOT / "scripts" / "live"))
     import accounts
@@ -187,6 +192,13 @@ def main() -> None:
         tap(LEADERS[leader]); time.sleep(2.2)
         tap(LEADER_BATTLE); time.sleep(2.2)
         tap(GREAT_LEAGUE); time.sleep(2.6)
+        for _ in range(2):
+            # the league cards can come up after the tap (2026-11-09, a new account's first round: the tap was lost
+            # and the round stopped on Choose Your League): tap again while the Great League card is still there
+            im, c = pixel(*GREAT_LEAGUE)
+            if not is_white(c) or is_green(pixel(*USE_PARTY)[1]):
+                break
+            tap(GREAT_LEAGUE); time.sleep(2.6)
         for _ in range(a.party or 0):  # the parties are side by side on the party screen: the next one is to the right
             if not game_in_front(adb, a.serial):
                 raise SystemExit(1)
@@ -198,7 +210,7 @@ def main() -> None:
             print(json.dumps({"stopped": f"no party showing {expect}", "frame": str(path)}), flush=True)
             break
         im, (r, g, b) = pixel(*USE_PARTY)
-        if not (g > 180 and r < 150):  # not the party screen: stop rather than tap blind
+        if not is_green((r, g, b)):  # not the party screen: stop rather than tap blind
             path = media / f"stopped-{time.strftime('%H%M%S')}.png"
             im.save(path)
             print(json.dumps({"stopped": "the party screen was not where expected", "frame": str(path)}), flush=True)
@@ -208,7 +220,8 @@ def main() -> None:
                                "--account", a.account or accounts.current(), "--team-key",
                                f"{a.account or accounts.current()}/{chosen['key']}"]
                               + (["--practise", *a.practise] if a.practise else [])
-                              + (["--open-with", a.open_with] if a.open_with else []),
+                              + (["--open-with", a.open_with] if a.open_with else [])
+                              + (["--stay"] if a.stay else []),
                               capture_output=True, text=True, cwd=ROOT)
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), "{}")
         out = json.loads(line)

@@ -53,7 +53,9 @@ def load_team(gd: GameData, path: Path):
     team = []
     for entry in json.loads(path.read_text(encoding="utf-8"))["pokemon"]:
         sid = next(k for k, v in gd.species.items() if v["speciesName"] == entry["species"])
-        team.append(gd.build(sid, [by_name[entry["fast"]], *(by_name[m] for m in entry["charged"])]))
+        # the exact level and IVs when the team file gives them (read off the appraisals), else PvPoke's default
+        exact = {"level": entry["level"], "ivs": tuple(entry["ivs"])} if "level" in entry and "ivs" in entry else {}
+        team.append(gd.build(sid, [by_name[entry["fast"]], *(by_name[m] for m in entry["charged"])], **exact))
     return team
 
 
@@ -70,7 +72,8 @@ def swipe_for(move) -> list:
 # the zone they come up in as (centre, spread). Water's stream in from the right edge (Jellicent's body below is the
 # same blue, so looking outside the zone chased it); Normal's are grey-white, with no colour to look for.
 ICON_COLOUR = {"ground": (210, 131, 86), "electric": (245, 215, 82), "ghost": (101, 108, 188), "water": (94, 167, 218),
-               "normal": None, "ice": (117, 208, 193)}  # ice: mint discs (the iPhone file's colour was orange)
+               "normal": None, "ice": (117, 208, 193),  # ice: mint discs (the iPhone file's colour was orange)
+               "rock": (202, 193, 140)}  # rock: khaki discs, measured on Stone Edge's (2026-11-09)
 ICON_ZONE = {"ground": ((0.50, 0.70), (0.31, 0.05)), "water": ((0.86, 0.42), (0.10, 0.11)),
              "electric": ((0.49, 0.58), (0.22, 0.10)), "ghost": ((0.60, 0.71), (0.24, 0.11)),
              "normal": ((0.53, 0.60), (0.29, 0.16)), "ice": ((0.58, 0.60), (0.15, 0.09))}
@@ -100,7 +103,9 @@ def icon_zone(move_type: str):
 # icons are found by their white ring symbol (scratch normal_det.py), most of them only on the dark background.
 SWEEP_BOX = {"normal": (0.08, 0.93, 0.52, 0.90), "ground": (0.05, 0.95, 0.54, 0.90),
              "electric": (0.17, 0.83, 0.43, 0.74), "ghost": (0.08, 0.95, 0.40, 0.86),
-             "water": (0.05, 0.98, 0.27, 0.90), "ice": (0.17, 0.83, 0.42, 0.85)}  # ice: 9 minigames (2026-11-08)
+             "water": (0.05, 0.98, 0.27, 0.90), "ice": (0.17, 0.83, 0.42, 0.85),  # ice: 9 minigames (2026-11-08)
+             "rock": (0.03, 0.66, 0.22, 0.88),  # rock: 16 Stone Edge minigames (2026-11-09), the left half mostly
+             "fairy": (0.10, 0.90, 0.25, 0.90)}  # fairy: 11 Play Rough minigames (2026-11-09), low in the middle
 SWEEP_ONLY: set = set()  # types whose icons no detector finds: the predicted ones and the sweep alone
 
 
@@ -151,11 +156,35 @@ def find_icons(rgb, colour, move_type: str, zone) -> list:
         # grey rings matched Vigoroth's white fur everywhere, and ring kernels missed the icons by day (2026-11-08)
         from normal_icons import normal_icons
         return [(x, y) for x, y, v in normal_icons(rgb[::2, ::2]) if 0.15 < y < 0.95]
-    icons = [(x, y) for x, y, r in raw_circles(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, colour, 45)]
+    icons = [(x, y) for x, y, r in raw_circles(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, colour, 45)
+             and (move_type not in RING_SHARE or ring_share(rgb, x, y, r, colour) >= RING_SHARE[move_type])]
     if move_type in COLOUR_BLOBS:
         icons += [(x, y) for x, y, r in minigame.detect_colour(rgb, colour) if 0.045 <= r < 0.17
                   and abs(x - cx) < 2.5 * spx + 0.05 and abs(y - cy) < 2.5 * spy + 0.05]
     return icons
+
+
+# Types whose ring must be mostly their colour, not on average: Rock's khaki is near the yellow of the rating words
+# ("GREAT!", "NICE!") and of the popped icons' fading discs, which passed ring_matches and were chased (2026-11-09,
+# Stone Edge rated Great 11 times in 16). On 16 Stone Edge minigames real icons had 0.9 to 1.0 of their ring within 40
+# of the colour (0.55 to 0.75 half covered), the words 0.0 to 0.1, the fading discs 0.2 to 0.5.
+RING_SHARE = {"rock": 0.55}
+
+
+def ring_share(rgb, x: float, y: float, r: float, colour, tolerance: float = 40) -> float:
+    """The share of a circle's ring (between its symbol and its rim, the white left out) within `tolerance` of the
+    colour on every channel."""
+    h, w = rgb.shape[:2]
+    cx, cy, rr = int(x * w), int(y * h), max(3, int(r * w))
+    yy, xx = np.mgrid[-rr:rr + 1, -rr:rr + 1]
+    m = (xx ** 2 + yy ** 2 <= (0.8 * rr) ** 2) & (xx ** 2 + yy ** 2 >= (0.45 * rr) ** 2)
+    ys, xs = cy + yy[m], cx + xx[m]
+    ok = (ys >= 0) & (ys < h) & (xs >= 0) & (xs < w)
+    px = rgb[ys[ok], xs[ok]].astype(int)
+    px = px[px.min(1) < 200]
+    if len(px) < 15:
+        return 0.0
+    return float((np.abs(px - np.array(colour)).max(1) < tolerance).mean())
 
 
 def ring_matches(rgb, x: float, y: float, r: float, colour, tolerance: float = 60) -> bool:
@@ -493,6 +522,7 @@ class Player:
         self.practise_logged = 0.0
         self.practised: dict = {}  # move id -> times thrown: of two practised moves, the one thrown less goes next
         self.open_with = None  # training only (--open-with): the slot switched in first, whatever the engine asks for
+        self.stay = False  # training only (--stay): no switches but the opening one
         self.start_info: dict = {}  # written into the log's start row: the bot's version, account, team, league
         self.farm_logged = self.farm_checked = 0.0
         self.farm_for, self.farm_since = None, 0.0
@@ -554,6 +584,17 @@ class Player:
                     # to nothing): the runner goes on from whatever screen this is
                     self.log("no_battle", round(time.time() - start, 1))
                     return None
+                point = getattr(self, "start_point", None)
+                if point is not None and time.time() - self.start_tapped > 5.0 and self.start_retaps < 3:
+                    # the start tap lost (2026-11-09: sent as the phone's link opened, it did nothing and the party
+                    # screen stayed up for the 90 s): tap again while the green button is still under it
+                    h, w = rgb.shape[:2]
+                    r, g, b = (int(v) for v in rgb[int(point[1] * h), int(point[0] * w)])
+                    if g > 180 and r < 150:
+                        self.touch(point, "start again")
+                        self.start_retaps += 1
+                        self.log("start_retap", round(time.time() - start, 1))
+                    self.start_tapped = time.time()
                 if look.header and len(look.bars) == 2 and not look.shield_prompt and not look.replace_prompt:
                     self.t0 = when
                     # epoch lines the log up with the recording's .times; the rest is what the record needs (task 45)
@@ -1181,6 +1222,10 @@ class Player:
             # training: the opening switch is to the one asked for (2026-11-08: the engine's switch to Umbreon at 1.1 s
             # went in instead of Gengar's, in 3 battles of 6)
             self.decision = SWITCH[0] + self.open_with
+        if self.stay and self.open_with is None and self.decision in SWITCH:
+            # training only (--stay): no switch but the opening one, so the one out throws its practised move
+            # (2026-11-09: the engine switched Clodsire out at 2.9 s and Stone Edge was never thrown)
+            self.decision, self.switch_wanted = FAST, None
         if self.decision in SWITCH and self.switch_wanted is None and (t < 1.5 or self.switching is not None):
             self.switch_wanted = self.decision - SWITCH[0]
         if self.switch_wanted is not None and self.switching is None and self.decision == FAST and t >= 1.5:
@@ -1757,6 +1802,7 @@ def main() -> None:
     ap.add_argument("--max-actions", type=int, default=1500)
     ap.add_argument("--practise", nargs="*", default=[], help="training only: move ids thrown in place of the engine's")
     ap.add_argument("--open-with", help="training only: the species switched in at the start (one rarely out)")
+    ap.add_argument("--stay", action="store_true", help="training only: no switches but the opening one")
     # for the record (task 45), from train_loop.py and run_gbl.py: written into the log's start row
     ap.add_argument("--account", help="the account's key (data/accounts/), never a trainer name")
     ap.add_argument("--team-key", help="account/party, as in games/live/our_teams.json")
@@ -1776,6 +1822,7 @@ def main() -> None:
     phone.start()
     player = Player(phone, gd, team, a.live, log, Path(a.frames) if a.frames else None)
     player.practise = set(a.practise)
+    player.stay = a.stay
     commit, dirty, version_error = bot_version()
     player.start_info = {"commit": commit, "dirty": dirty, "version_error": version_error,
                          "account": a.account, "team_key": a.team_key,
@@ -1787,6 +1834,7 @@ def main() -> None:
     try:
         if a.start_tap:
             player.touch(tuple(a.start_tap), "start")
+            player.start_point, player.start_tapped, player.start_retaps = tuple(a.start_tap), time.time(), 0
         result = player.run()
         log("end", player.now(), result=result, foes=player.tracker.order)
         print(json.dumps({"result": result, "opponents": player.tracker.order, "log": str(log.path),
