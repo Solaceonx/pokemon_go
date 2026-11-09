@@ -230,30 +230,57 @@ def bar_near(a: np.ndarray, y_at: int, x_at: int, y_slack: int = 40, x_slack: in
 
 
 _HINTS: dict = {}  # side -> (share, top row, left end, time) of the last bar bars() found with all its checks
+_ACCEPTED: dict = {}  # side -> (share, time) of the last reading given out
+_DROPS: dict = {}  # side -> (readings in a row, share, time of the first): a big drop waiting to be confirmed
+DROP = 0.15  # a reading this far below the last given out waits for confirmation
+DROP_CONFIRM = 3  # readings in a row (within 0.03 of each other, 0.5 s) that confirm it
+
+
+def _confirmed(side: str, share: float, t: float) -> bool:
+    """Whether a reading can be given out: at once unless it is a big drop on the last reading of the last 2 s; a
+    big drop only once DROP_CONFIRM readings in a row show it (2026-11-08, 235420: Gastrodon at 95% read 0.013 and
+    0.027 on single frames, and Discharge was thrown to finish it; a real hit's drop stays)."""
+    last = _ACCEPTED.get(side)
+    if last is None or t - last[1] > 2.0 or t < last[1] or share >= last[0] - DROP:
+        _DROPS.pop(side, None)
+        return True
+    n, s0, t0 = _DROPS.get(side, (0, share, t))
+    if n and abs(share - s0) <= 0.03 and t - t0 <= 0.5:
+        n += 1
+    else:
+        n, s0, t0 = 1, share, t
+    _DROPS[side] = (n, s0, t0)
+    if n >= DROP_CONFIRM:
+        _DROPS.pop(side, None)
+        return True
+    return False
 
 
 def bars_held(a: np.ndarray, t: float, keep_s: float = 3.0) -> dict:
     """bars(), and for a side it misses that it found in the last keep_s seconds, bar_near() at that place, kept
     only if not higher than that last reading (health does not come back in a fight; a Pokémon coming in is read
-    afresh by bars())."""
+    afresh by bars()). A reading far below the last one given out is held back until it repeats (_confirmed)."""
     places = bar_places(a)
     out = {}
     fight = header_visible(a)
     for side, (share, y, x0) in places.items():
+        if not _confirmed(side, share, t):
+            continue  # a single frame's drop: not given out, and not a place to look again
         if fight:  # a place only from the fight view, not a camera pan or close-up (where bars sit elsewhere)
             _HINTS[side] = (share, y, x0, t)
         out[side] = share
     for side in ("mine", "theirs"):
-        if side in out or side not in _HINTS:
+        if side in out or side not in _HINTS or side in places:
             continue
         share, y, x0, at = _HINTS[side]
         if t - at > keep_s or t < at:
             continue
         near = bar_near(a, y, x0)
-        if near is not None and near <= share + 0.03:
+        if near is not None and near <= share + 0.03 and _confirmed(side, near, t):
             out[side] = near
+    for side, share in out.items():
+        _ACCEPTED[side] = (share, t)
     return out
-
 
 CUE = (0.18, 0.17, 0.82, 0.30)  # x0, y0, x1, y1: the box "Get Ready!" (our move) or "Attack incoming!" (theirs)
 

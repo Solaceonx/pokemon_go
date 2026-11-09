@@ -30,6 +30,8 @@ def frame(share: float, colour=GREEN, x0: int = 34, y: int = 780, borders: bool 
 class Bars(unittest.TestCase):
     def setUp(self):
         screen._HINTS.clear()
+        screen._ACCEPTED.clear()
+        screen._DROPS.clear()
 
     def test_a_bar_with_its_borders_is_found(self):
         got = screen.bar_places(frame(0.62))
@@ -66,6 +68,41 @@ class Bars(unittest.TestCase):
     def test_not_a_pixel_or_two(self):
         screen.bars_held(frame(0.35), 0.0)
         self.assertNotIn("mine", screen.bars_held(frame(0.007, borders=False), 0.5))
+
+
+class WholeReader(unittest.TestCase):
+    def test_read_runs_on_a_frame(self):
+        """screen.read uses every part of the reader (bars, buttons, prompts, the header's counts)."""
+        screen._HINTS.clear(); screen._ACCEPTED.clear(); screen._DROPS.clear()
+        look = screen.read(frame(0.5), 0.0)
+        self.assertTrue(look.header)
+        self.assertAlmostEqual(look.bars["mine"], 0.5, delta=0.02)
+        self.assertIsNone(screen.my_energy(frame(0.5), [40, 45]))  # no buttons drawn: no reading
+
+
+class Drops(unittest.TestCase):
+    """A big drop is given out only once it repeats; a rise (a Pokémon coming in) at once."""
+
+    def setUp(self):
+        screen._HINTS.clear()
+        screen._ACCEPTED.clear()
+        screen._DROPS.clear()
+
+    def test_a_single_frame_drop_is_held_back(self):
+        self.assertAlmostEqual(screen.bars_held(frame(0.95), 0.0)["mine"], 0.95, delta=0.01)
+        self.assertNotIn("mine", screen.bars_held(frame(0.03), 0.05))  # one frame at 3%: not given out
+        self.assertAlmostEqual(screen.bars_held(frame(0.94), 0.1)["mine"], 0.94, delta=0.01)
+
+    def test_a_drop_that_lasts_is_given_out(self):
+        screen.bars_held(frame(0.95), 0.0)
+        got = [screen.bars_held(frame(0.4), 0.05 * k).get("mine") for k in range(1, 5)]
+        self.assertEqual(got[:2], [None, None])
+        self.assertAlmostEqual(got[2], 0.4, delta=0.01)  # the third reading in a row confirms it
+        self.assertAlmostEqual(got[3], 0.4, delta=0.01)
+
+    def test_a_rise_is_given_out_at_once(self):
+        screen.bars_held(frame(0.1), 0.0)
+        self.assertAlmostEqual(screen.bars_held(frame(1.0), 0.05)["mine"], 1.0, delta=0.01)
 
 
 if __name__ == "__main__":
