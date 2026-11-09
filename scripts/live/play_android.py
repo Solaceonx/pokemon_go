@@ -1702,19 +1702,44 @@ class Player:
         return str(action)
 
 
+def git_head():
+    """The commit checked out, read from the .git files (no git process: at a battle's start, on OneDrive, `git
+    rev-parse` timed out after 30 s twice on 2026-11-09). A worktree's .git is a file naming its git directory."""
+    git = ROOT / ".git"
+    if git.is_file():
+        git = Path(git.read_text(encoding="utf-8").split("gitdir:", 1)[1].strip())
+    head = (git / "HEAD").read_text(encoding="utf-8").strip()
+    if not head.startswith("ref:"):
+        return head
+    ref = head.split(":", 1)[1].strip()
+    common = git
+    if (git / "commondir").exists():
+        common = (git / (git / "commondir").read_text(encoding="utf-8").strip()).resolve()
+    for base in (git, common):
+        if (base / ref).exists():
+            return (base / ref).read_text(encoding="utf-8").strip()
+    packed = common / "packed-refs"
+    if packed.exists():
+        for line in packed.read_text(encoding="utf-8").splitlines():
+            if line.endswith(" " + ref):
+                return line.split()[0]
+    return None
+
+
 def bot_version() -> tuple:
     """(the git commit the bot runs, whether the code or data it runs on had uncommitted changes, an error or None).
-    Up to 30 s each: right after a commit and push on OneDrive git can be slow (2026-11-08: two league battles'
-    start rows had neither when the limit was 10 s)."""
+    The commit from the .git files; the changes by `git status`, given 20 s (None if it does not answer)."""
     import subprocess
     try:
-        head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True,
-                              timeout=30).stdout.strip()
-        changed = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", "pogo", "scripts", "data"],
-                                 capture_output=True, text=True, timeout=30).stdout.strip()
-        return (head, bool(changed), None) if head else (None, None, "git rev-parse gave nothing")
+        head = git_head()
     except Exception as error:  # noqa: BLE001
-        return None, None, str(error)[:200]
+        return None, None, f"reading .git: {str(error)[:150]}"
+    try:
+        changed = subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain", "--", "pogo", "scripts", "data"],
+                                 capture_output=True, text=True, timeout=20).stdout.strip()
+        return head, bool(changed), None
+    except Exception as error:  # noqa: BLE001
+        return head, None, f"git status: {str(error)[:150]}"
 
 
 def main() -> None:
