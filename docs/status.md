@@ -5156,3 +5156,74 @@ Jellicent's Ice Beam is now Surf: Shadow Ball is the left button, Surf the right
   - **Discharge thrown where Mud Bomb was far better:** into Toxtricity four times (29 damage against 139, a
     knock-out, one Thunder Shock away) and into Marowak, a Ground type.
   - **Stunfisk left in against Pokémon whose moves are super effective on it:** Serperior, Tropius, Whiscash.
+
+**The third account, 2026-11-09 afternoon: its team learnt, then 30 league battles to the daily limit (the owner:
+"learn its team ... against the team leaders, and then do 25 or 30 battles in league ... remember to learn the swipe
+patterns"; later "try to finish all the battles on this account for today").** The account (key `third`) was at
+rank 1, so most opponents were weak: the owner notes it starts to matter at Ace rank.
+
+- **The team** (`data/team_third.json`, `data/accounts/third.json`): moves read off the Pokémon pages, IVs off the
+  appraisals, levels from CP and HP. The player now builds a team at the team file's level and IVs where given.
+
+  | Pokémon | Fast | Charged | IVs | Level |
+  |---|---|---|---|---|
+  | Clodsire | Poison Sting | Stone Edge, Earthquake | 0/14/13 | 30.5 |
+  | Thievul | Sucker Punch | Night Slash, Play Rough | 0/15/11 | 27 |
+  | Snorlax | Psywave | Body Slam, Earthquake | 1/15/14 | 17.5 |
+- **New minigame types, in 21 Team Leader battles (all won):**
+  - **Rock (Stone Edge).** The colour detector (the iPhone file's colour) rated 5 of 16 Excellent: an average ring
+    colour let in the yellow rating words and the fading discs of popped icons. A ring now has to be mostly the
+    khaki (`play_android.RING_SHARE`, 0.55 of it within 40): real icons 0.9 to 1.0, the words 0 to 0.1. Then 16 of
+    16 Excellent. Pattern `type_rock.json` (held-out sightings passed over: sweep 48%, learnt path 77%) and a sweep
+    box on the left half.
+  - **Fairy (Play Rough).** 11 of 11 Excellent on the colour detector. Pattern `type_fairy.json` (50% to 73%).
+  - Earthquake 7/7, Night Slash 9/9 and Body Slam 2/2 Excellent on the patterns there were.
+  - Training options: `--stay` (no switches but the opening one).
+- **Result: 21 won, 9 lost**, in six sets of 5-0, 4-1, 2-3, 3-2, 4-1 and 3-2. The line-up odds of 29 of them
+  (`scripts/live/odds.py`; Minior has no Great League build) gave 19.9 expected wins; 21 were won. At rank 1 the
+  opponents' Pokémon are weaker than the odds' default builds. The game stopped at 30 ("You've
+  reached the maximum number of battles for today"). Sets 2, 4 and 6's encounters were caught by the bot (1, 1 and 2
+  balls); the owner cleared the full item bag at set 1's end and claimed its rewards; sets 3 and 5 offered none.
+- **The owner's complaints, and the fixes** (each a commit on `task40-android`):
+  - "still forgetting to throw fast moves": measured as frames with the fight live and no fast tap for 0.6 s, 2.3
+    to 5.3 s a battle. Causes:
+    - the Get Ready! OCR on the loop while a throw waited (fast taps back 1.6 s after the fight); now on a thread;
+    - a fixed 1.6 s hold after every switch tap; now ended when the switch is seen;
+    - the hold for a throw the fast move under way would pay for, which ran out 12 of 17 times with Poison Sting.
+    (edd0512)
+  - Two Great Stone Edges: the stroke kept clear of the whole top-left corner for the flee button, where Stone Edge's
+    icons come up. The flee button is not drawn in minigames; a stroke now keeps 0.09 of the width from its centre.
+    (94b8c31) The day's league minigames, all 30 battles: Night Slash 43/43 Excellent, Play Rough 6/6, Stone Edge
+    40/46 (3 of the Greats in 120903, before the fix), Body Slam 40/49 (8 Great, 1 Nice: Snorlax's normal icons
+    are the weak spot now), Earthquake 18/23.
+  - "throwing earthquake on the skeledirge": throw_before_theirs threw a 20-damage Body Slam with Snorlax at 172 HP.
+    Now only if theirs would knock us out, or the move is worth its energy. (94b8c31)
+- **Throws not taken, found and fixed:** 37 of 87 throws tapped on the energy count alone were not taken, against
+  1 of 27 tapped on a reading. Each stopped the fast taps for 3 s.
+  - The count with no reading rounded the fast moves up at each look, so 1 s fast moves counted double. It now
+    counts whole moves. (a721786)
+  - A count-only tap waits 2.3 s, not 3. (a721786)
+  - No throw on the count alone unless the buttons have been unread 4 s, our health is under 35%, or the count is 40
+    or more over the cost. (77cddaf, 32cf933)
+- **Other reading fixes:**
+  - **Their charged move's countdown** with no shields left (header and bars up, 5 s) was taken for the fight:
+    `android_screen.countdown`. (303ed90)
+  - **A lit dark button was taken for a normal one** right after a switch, so Snorlax was believed out for 10 s.
+    No move correction against the header. (ed9b086)
+  - **The last-Pokémon shield rule** read the dimmed header on the prompt frame and never fired. (2136026)
+- **The engine's view is now logged** (the owner's next step from the spare account's analysis):
+  - every non-fast decision, the player's own throws and every shield prompt carry the view;
+  - `scripts/live/engine_view.py STAMP [T]` asks the live engine again on it. (615b30e, ed9b086)
+- **The 9 losses, reading or engine** (notes in `games/live/notes.json` on `task45-live-records`):
+  - **Reading or the player's rules, 6:**
+    - 120903: the Stone Edge corner, and the Body Slams into Skeledirge;
+    - 123219: the count;
+    - 123923: the last-Pokémon shield;
+    - 124247: the wrong active after a switch;
+    - 124910: the countdown;
+    - 134115: the gate holding Body Slam.
+
+    The engine had a part in 123219, 123923, 124247 and 124910 too.
+  - **The engine alone, 3 (130528, 131207, 134500):** shields. Both went on Trailblaze. None went on
+    super-effective hits taken at high health (Mud Bomb on Clodsire and Thievul). 124247 was lost with both shields
+    up after declining all 7 prompts.
