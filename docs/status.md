@@ -4567,3 +4567,36 @@ baseline could not load an old native video library, and the first system-Python
 run hit sandbox temporary-directory permissions; the installed Python with a
 workspace temporary directory passes. Scripts, reproduction and limits are in
 `docs/battle_evidence.md`; results are `runs/live-evidence-20261109.json`.
+**Is the engine going wrong? The third account's battles with logged views (2026-11-09; the owner: "check if engine
+going wrong or what").** Since ed9b086 the live player logs the engine's whole view at every shield prompt and every
+decision other than a fast move: 16 battles, 77 shield calls and 496 decisions. Each was replayed from the logged
+view (scratch `live2/shields.py` and `live2/acts.py`). Every legal option was forced in turn, and the trained bot then
+played both sides, theirs with varied habits. The dice were the same for every option. Decisions where the live
+choice looked 15 points or more worse were re-played with 160 fresh play-outs per option.
+
+- **The engine's view matches the screen.** Health in the view is within 0.5% of the bars read just before, at every
+  one of 548 views. Their energy was below the cost of the move they named at 11 of 62 prompts (37 of 72 before).
+- **Shield calls: the engine's are good.**
+  - Flipping every call would have lost about 3 more of the 16 battles: -3.0 summed over their possible moves, -3.7
+    with the move they named.
+  - Of the 11 calls where the two choices differed by 20 points or more, the engine was right at 8.
+  - Clear misses: Clodsire at full health took Stunfisk's first Mud Bomb unshielded (134500, a loss; 27 points); a
+    shield went on Azumarill's Ice Beam on Snorlax (133757, won anyway).
+  - 124247 (all 7 prompts declined) has no logged views.
+- **Throws and switches.** Repeats of a decision while a throw waits count once.
+
+  | Who chose | Episodes | Confirmed 15 points or more worse |
+  |---|---|---|
+  | The engine's throws | 161 | 18 |
+  | The engine's switches | 61 | 11 |
+  | The player's own rules | 29 | 3 |
+
+  These are the engine's settled picks, not time pressure:
+  - It finishes its 32-sample search inside the 300 ms cap.
+  - With a 20 s cap it keeps the live pick at 37 of the 47 confirmed positions.
+  - With 128 samples it keeps it at 34.
+- **The replay judge is only roughly calibrated against real results.** Decisions it gave 0-20% were in battles
+  really won 38% of the time; at 80-100%, 74% (402 decisions in 25 battles). Real opponents misplay more than the
+  bots. So its flags are leads, not proof.
+- **`engine_view.py` reuses one engine for a whole log.** Its state carries over, so a switch it repeats only 1 time in
+  6 is picked 8 times in 8 by fresh engines. A fresh engine is wanted for each view.
