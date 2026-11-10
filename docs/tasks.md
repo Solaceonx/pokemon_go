@@ -97,7 +97,7 @@ accuracy gain. Results and limits: `docs/battle_evidence.md` and
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 46. Comb the creators' footage — for Codex on the owner's PC (the owner, 2026-11-09)
+## 46. Comb the creators' footage — Codex on the owner's PC, taken 2026-11-09 (`task46-creator-footage`)
 
 **Why.** The owner wants many real games by strong players, from reis2occasion, HomeSliceHenry and ItsAXN: their
 YouTube uploads and Twitch VODs. So far only one HomeSliceHenry stream (Twitch 2894502346, 15 clips) and two official
