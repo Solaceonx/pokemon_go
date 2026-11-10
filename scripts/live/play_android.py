@@ -1063,7 +1063,19 @@ class Player:
         if my_left is not None and my_left < self.my_left_seen:
             self.my_left_seen = my_left
             alive_after = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
-            if my_left == 1 and len(alive_after) == 1 and time.time() - self.replace_tapped > 15.0:
+            named = self.header_says()
+            if my_left == 1 and named is not None and self.tracker.me.team[named].hp > 0 and named == self.active:
+                # The header names the one believed out, alive: the counter has caught up with an earlier faint,
+                # and the one that fainted is another (2026-11-09, 230719 and 230322: after Thievul fainted and the
+                # game sent Snorlax in itself, the counter fell 19 s later and Snorlax, out and alive, was put at 0
+                # HP; the engine then decided on a dead Pokémon)
+                gone = [j for j in alive_after]
+                if len(gone) == 1:
+                    self.tracker.me.team[gone[0]].hp = 0
+                    self.log("fainted_unprompted", t, was=self.team[gone[0]].name, left=my_left,
+                             now=self.team[self.active].name, by="header")
+                    self.replacements += 1
+            elif my_left == 1 and len(alive_after) == 1 and time.time() - self.replace_tapped > 15.0:
                 # One of ours fainted with no prompt answered: with one left the game sends it in itself
                 # (2026-11-08: Jellicent fainted, Stunfisk came in unasked, and the player, still taking Jellicent
                 # for out, threw "Bubble Beam" on Stunfisk's Mud Bomb button and hunted Water icons: Nice).
