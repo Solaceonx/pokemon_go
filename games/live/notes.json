@@ -1,9 +1,22 @@
 {
+ "20261107-174540": {
+  "result": "fragment",
+  "fragment_of": "20261107-174643",
+  "result_from": "its log ends 11 s in and 20261107-174643 is the same battle (docs/status.md)",
+  "went_wrong": "",
+  "fixed": ""
+ },
+ "20261108-010017": {
+  "went_wrong": "",
+  "fixed": "",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
  "20261108-012546": {
   "result": "loss",
   "went_wrong": "fast taps stalled: a text reading ran on the main loop",
   "fixed": "yes",
-  "from": "docs/live_battles_2026-11-08.md"
+  "from": "docs/live_battles_2026-11-08.md",
+  "result_from": "docs/live_battles_2026-11-08.md (the result screen was not read)"
  },
  "20261108-013604": {
   "result": "loss",
@@ -15,6 +28,17 @@
   "result": "loss",
   "went_wrong": "\"Stunfisk\" built as the regular form; its EARTHQUAKE words taken for ours; the engine imagined a fourth Pokémon",
   "fixed": "yes",
+  "from": "docs/live_battles_2026-11-08.md",
+  "their_team": "Galarian Stunfisk, Oinkologne"
+ },
+ "20261108-030643": {
+  "went_wrong": "",
+  "fixed": "",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
+ "20261108-031928": {
+  "went_wrong": "",
+  "fixed": "",
   "from": "docs/live_battles_2026-11-08.md"
  },
  "20261108-032349": {
@@ -23,11 +47,22 @@
   "fixed": "yes",
   "from": "docs/live_battles_2026-11-08.md"
  },
+ "20261108-033502": {
+  "went_wrong": "",
+  "fixed": "",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
+ "20261108-033748": {
+  "went_wrong": "",
+  "fixed": "",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
  "20261108-094103": {
   "result": "win",
   "went_wrong": "\"Darmanitan\" read as Galarian Zen (unranked): the tracker failed for the whole stretch and Discharge was thrown where Mud Bomb was super effective; three Thunder Shocks before a throw where two would do (owner)",
   "fixed": "yes",
-  "from": "docs/live_battles_2026-11-08.md"
+  "from": "docs/live_battles_2026-11-08.md",
+  "their_team": "Regice, Pidgeot, Darmanitan"
  },
  "20261108-101407": {
   "result": "win",
@@ -89,6 +124,11 @@
   "fixed": "partly",
   "from": "docs/live_battles_2026-11-08.md"
  },
+ "20261108-121556": {
+  "went_wrong": "",
+  "fixed": "",
+  "from": "docs/live_battles_2026-11-08.md"
+ },
  "20261108-122012": {
   "result": "win",
   "went_wrong": "Vigoroth threw nothing at Gengar (owner): our energy count ran 43 to 63 in a 3 s wait with the taps off; two throws tried on it, not taken; fainted",
@@ -106,6 +146,11 @@
   "went_wrong": "9 throws not taken, none of which started later: Vigoroth tried Bulldoze three times at 31% and fainted with none thrown, Jellicent the same with Shadow Ball at the end; two Dark Pulses unshielded on Stunfisk",
   "fixed": "count-only throws now need the names or a margin (untested live)",
   "from": "docs/live_battles_2026-11-08.md"
+ },
+ "20261108-132710": {
+  "went_wrong": "Mud Bomb thrown at Ninjask (15 damage) with Discharge (79 damage, cheaper) paid for: the engine chose it at any thinking time (the owner: \"why are we throwing mud bombs at a ninjask??\")",
+  "fixed": "yes: a charged move another we can pay for beats (no dearer, harder hitting) is swapped for it (play_android.py no_weaker_move)",
+  "from": "the analysis on 2026-11-08 (task40-android, play_android.py no_weaker_move)"
  },
  "20261108-170916": {
   "result": "win",
@@ -130,5 +175,129 @@
   "went_wrong": "",
   "fixed": "",
   "from": "docs/status.md (2026-11-08 evening)"
+ },
+ "20261108-200541": {
+  "went_wrong": "The owner's account's first league battle. Two shields on Mimikyu's Shadow Sneak at 84% and 69% health (13.4, 38.8 s: the rule shields a hit of a third of our health or more). Stunfisk threw Discharge into Talonflame on 5% at 115.8 s; two Thunder Shocks would have finished it (the owner: farm down). When Lickilicky came in (142 s) Stunfisk at 4% stayed in and fainted farming instead of going to Jellicent (the owner): the tracker had taken Vigoroth's faint (102 s) for a switch, the Pokemon-left counter lagging the header by 1.1 s, and believed the switch timer ran to 148 s.",
+  "fixed": "partly: farm_down and save_the_low_one added and the faint taken for a switch fixed (task40-android 9dbeb69); farm_down misfired in the next battle and was narrowed (cf042c3); the shield rule is the owner's call",
+  "from": "the owner watching, and the analysis on 2026-11-08 night"
+ },
+ "20261108-204007": {
+  "went_wrong": "Both shields on Obstagoon's Night Slash with Jellicent at 92% and 82% health (59.1, 84.6 s: 56 of 156, over the third-of-health rule). The engine switched Jellicent into Obstagoon at 53 s though Night Slash is super effective on it and Hex is resisted twice. The new farm_down rule held Surf for 17 s (94 to 111 s) at 97 to 98 energy, capped, against an Obstagoon on 1 to 5% that Hex could not finish, overrode the throw-first guard at 98 s, and Jellicent took an unshielded Night Slash at 105 s. The owner stopped play at 208 s; the battle ended untouched in a loss (the result screen, GOOD EFFORT!).",
+  "fixed": "farm_down narrowed (task40-android cf042c3); the shield rule and the engine's switch are open",
+  "result": "loss",
+  "result_from": "the phone's result screen after the bot was stopped at 208 s (GOOD EFFORT!)",
+  "from": "the owner watching, and the analysis on 2026-11-08 night"
+ },
+ "20261108-231543": {
+  "went_wrong": "nothing the owner faulted (\"nice win\"); they sacrifice-swapped into Scolipede, which there was little to do about",
+  "fixed": "",
+  "from": "the owner watching, and the analysis on 2026-11-08 late night"
+ },
+ "20261108-231958": {
+  "went_wrong": "The owner disagreed with the shield calls: the engine's own call (the 35% override withdrawn that evening) let through all four charged moves on our first two with both shields up: Jellicent's Shadow Ball on our Jellicent at 18 s (super effective, to 16%), Body Slams at 34 s (Vigoroth 92% to 57%) and 77 s (Stunfisk, about 30%), and at 59 s on Vigoroth at 10% (right); then both shields went on Stunfisk, our last, against two Surfs. Fast taps stopped after charged moves (the owner: \"we forgot to tap after charge moves\"): after our Surf and Discharge the attack's white streaks read as the move names under the hidden buttons, the low-health throw fired again on 30 and 21 energy and was not taken, 3 to 5 s without taps each; Discharge, beaten by their Surf, waited 3.9 s; the fight after their Surf was taken up 1.5 s after both buttons were back (our bar under BLOCKED!). The tracker had Stunfisk at 1% while its bar showed about 44% (a reading of Jellicent coming in credited to Stunfisk).",
+  "fixed": "the taps and readings: task40-android afd850c (names only with both buttons drawn and not just after our move, a beaten move tapped again, both buttons drawn count as the fight, no bar credited during a switch); the shield calls are the engine's (the owner)",
+  "from": "the owner watching, and the analysis on 2026-11-08 late night"
+ },
+ "20261108-235033": {
+  "went_wrong": "Fast taps came back within 0.1 to 0.7 s after every charged move (the fixes of afd850c held); no throw was lost. Lost on matchups and shields, the engine's: Jellicent led into Talonflame and was switched to Vigoroth; shields went on Flame Charge (Vigoroth at 58%, 25 s) and Rock Tomb (Jellicent, 105 s); Stunfisk ended against Whiscash, whose Scald is super effective on it.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 early morning"
+ },
+ "20261108-235420": {
+  "went_wrong": "The engine switched Jellicent out for Stunfisk at once against a Morpeko lead (Mud Bomb 86 of its 118); they switched to Gastrodon at about 6 s (Earth Power 101 of Stunfisk's 172), with our switch timer running. Stunfisk threw Discharge into Gastrodon twice (27 damage; Mud Bomb 50, costing 45 against 40) and took Earth Power unshielded with both shields (62% to 3%), fainting with Discharge in hand. Their bar read 0.013 and 0.027 on single frames at 21 and 23 s (Gastrodon at about 95%).",
+  "fixed": "the false low readings: task40-android ac7fa72 (a big drop given out only once it repeats; replayed, none); the Discharge into Gastrodon is the engine's own choice (it still made it in the replay), and so are the shields",
+  "from": "the analysis on 2026-11-09 early morning"
+ },
+ "20261109-002744": {
+  "went_wrong": "Engine: matchups and shield calls. Stunfisk took Hariyama's Dynamic Punch unshielded at 62% and Vigoroth Umbreon's Foul Play unshielded at 63%; Jellicent ended against Umbreon (Foul Play super effective on it). Reading: two switch taps not taken by the game (re-tapped 1.6 and 2.5 s later); fast taps back within 0.0 to 0.8 s of every charged move; bars read on 80% (ours) and 66% (theirs) of fight looks.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-003216": {
+  "went_wrong": "Won, but the engine threw Discharge into Toxtricity four times (29 damage; Mud Bomb 139, a knock-out, one Thunder Shock away each time); the owner: \"why are we throwing discharges at a toxtricity ... is it even worth baiting?\". The longest gap in fast taps (3.8 s at 94 s) was the game's own pause while Toxtricity fainted and Lapras came in.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-011134": {
+  "went_wrong": "Both. Reading: after their Icy Wind the fight came back with the buttons hidden under the stat words, our bar under \"ATTACK FELL!\" and theirs a 1% sliver: about 7 s without fast taps while Wigglytuff hung on (the bar's place, 6 s old, was past the fallback's 3 s). Engine: Vigoroth took three Swifts unshielded; the shields went on Drifblim's Icy Wind and Floragato's Grass Knot.",
+  "fixed": "the reading: task40-android b264f58 (the bar's place kept 10 s)",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-011515": {
+  "went_wrong": "Both. Reading: after Ice Punch (\"SUPER EFFECTIVE!\" over our bar, buttons hidden) the fight was taken up 3 s late, likewise after other charged moves (3 to 4 s). Engine: two Mud Bombs beaten by their throws; Ice Punch twice unshielded on Stunfisk.",
+  "fixed": "the reading: task40-android b264f58",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-012927": {
+  "went_wrong": "Engine: Stunfisk left in against Serperior and took Grass Knot (super effective) unshielded with both shields; Jellicent's shields went on Grass Knot and Acid Spray. Reading sound (bars 81% and 69% of fight looks); taps back about 1.3 s after the fight returned.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-013310": {
+  "went_wrong": "Engine: Sylveon's Draining Kiss (which heals it) unshielded four times on Jellicent and Stunfisk; three of our throws beaten by theirs. Reading sound; the long gaps were their move and our queued move in a row.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-015615": {
+  "went_wrong": "Engine and matchups: Stunfisk left against Tropius (Leaf Blade super effective) took it twice with no shields left; at the end our last, Vigoroth on 9%, against Tropius on 23% with one behind it. The game crashed at 222 s as Body Slam started, so no result screen; the season card (36 wins in 59 battles after it, 3 more battles than wins since set 3) counts it a loss. Reading: our Pokemon-left counter still read 3 after Jellicent fainted.",
+  "fixed": "",
+  "result": "loss",
+  "result_from": "the season card after the game's crash: battles 55 to 59 with 3 wins, the other three of the set won",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-020914": {
+  "went_wrong": "Engine and matchups: Vigoroth took Greninja's Hydro Cannon unshielded; the shields went on Night Slash and their Stunfisk's Discharge; two throws beaten by theirs. Reading sound (bars 77% and 68% of fight looks, taps back within 0.1 to 1.6 s).",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-021318": {
+  "went_wrong": "Engine: Vigoroth took Quagsire's Drain Punch (super effective) unshielded three times, at 87%, 51% and 13%, both shields up throughout; Stunfisk threw Discharge into Marowak (Ground, near immune) with Mud Bomb to hand. Tapping: the switch from Stunfisk on 22% to Jellicent took 9 s to be seen (the first tap not taken), and Marowak's Bone Club landed meanwhile.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09"
+ },
+ "20261109-120903": {
+  "went_wrong": "Minigame: all three Stone Edges rated Great; the icons were found but many come up in the top-left corner, which the stroke kept out of for the flee button. Player rule: throw_before_theirs threw Body Slam (20 damage) into Skeledirge twice, the first with Snorlax on 172 of 192 where Torch Song does 65; Earthquake would have done 122. Close call: the farm-down on Tsareena (6 HP) was refused because Triple Axel had raised its attack and two Razor Leafs could land before the second Poison Sting; the owner's line (farm, then Earthquake one-shots Skeledirge at 72%) would have worked, only one landing.",
+  "fixed": "94b8c31: the stroke keeps 0.09 of the width from the flee button only; throw_before_theirs only when theirs would knock us out or the move is worth its energy",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-123219": {
+  "went_wrong": "Reading: our energy count ran high with the buttons unread (close-ups, their throws): Snorlax's Body Slam tapped on 47 counted (25 real) and not taken, first thrown 17 s after the engine asked; Clodsire's Stone Edge on a 22 HP Ninetales tapped three times on the count and not taken, thrown 20 s late. Engine: no shields on Ninetales's throws while both were up.",
+  "fixed": "a721786 (whole fast moves only in the count; 2.3 s wait on count-only taps), 77cddaf and 32cf933 (no count-only throw unless the buttons are unread 4 s, ours is low, or the count is 40 over)",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-123923": {
+  "went_wrong": "Reading: Clodsire, our last Pokémon, one shield up, took two Aerial Aces and the final Liquidation unshielded: the last-Pokémon rule read our shields off the prompt's frame, where the header is dimmed. Also who was out flipped between Snorlax and Clodsire at 104-121 s. Engine: no shield on Dondozo's Liquidation early.",
+  "fixed": "2136026: the rule takes the header's counts as last seen",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-124247": {
+  "went_wrong": "Engine: declined all 7 shield prompts; lost with both shields up (Mantine never threw at the end). Reading: 0.7 s after the header showed the switch to Thievul its lit Night Slash button was taken for Snorlax's Body Slam (dark lit near normal), and for 10 s Snorlax was believed out, its minigame hunting normal icons.",
+  "fixed": "ed9b086: no move correction to another Pokémon against the header; shield prompts now log the engine's view",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-124910": {
+  "went_wrong": "Reading: with no shields left, Beedrill's Sludge Bomb countdown (5 s, header and bars up) was taken for the fight; our count ran 41 to 68 and a Stone Edge was tapped that could not go off. Engine: Thievul on 38 HP against a 7 HP Galarian Stunfisk did not shield Rock Slide and fainted; a shield went on Flame Charge.",
+  "fixed": "303ed90: the countdown is read and is not the fight",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-130528": {
+  "went_wrong": "Engine: a bad line-up for us (Alolan Ninetales); Snorlax took its first two charged moves unshielded, a shield went on Power Gem. No new reading fault found.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-131207": {
+  "went_wrong": "Engine: both of Clodsire's shields on Trailblaze. Reading: a count-only Stone Edge at 16% health was not taken (allowed on purpose at low health).",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-134115": {
+  "went_wrong": "Player gate (77cddaf, mine): held Snorlax's Body Slam on a count of 83 to 91 (the reading 90) for want of a fresh reading, and Lapras's Sparkling Aria went first.",
+  "fixed": "32cf933: a count 40 or more over the cost throws",
+  "from": "the analysis on 2026-11-09 (third account)"
+ },
+ "20261109-134500": {
+  "went_wrong": "Engine: no shields on Stunfisk's Mud Bombs with Clodsire and then Thievul healthy; a shield left at the end.",
+  "fixed": "",
+  "from": "the analysis on 2026-11-09 (third account)"
  }
 }

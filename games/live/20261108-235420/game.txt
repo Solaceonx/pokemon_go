@@ -1,0 +1,29 @@
+live-20261108-235420 . league . LOSS . 124 s
+What went wrong: The engine switched Jellicent out for Stunfisk at once against a Morpeko lead (Mud Bomb 86 of its 118); they switched to Gastrodon at about 6 s (Earth Power 101 of Stunfisk's 172), with our switch timer running. Stunfisk threw Discharge into Gastrodon twice (27 damage; Mud Bomb 50, costing 45 against 40) and took Earth Power unshielded with both shields (62% to 3%), fainting with Discharge in hand. Their bar read 0.013 and 0.027 on single frames at 21 and 23 s (Gastrodon at about 95%).
+Fixed: the false low readings: task40-android ac7fa72 (a big drop given out only once it repeats; replayed, none); the Discharge into Gastrodon is the engine's own choice (it still made it in the replay), and so are the shields
+
+Mine
+  Jellicent      Hex | Surf x2, Shadow Ball x0
+  Vigoroth       Scratch | Bulldoze x0, Body Slam x0
+  Stunfisk       Thunder Shock | Discharge x1, Mud Bomb x0  [fainted]
+Theirs
+  Morpeko (Full Belly) Thunder Shock* | Aura Wheel x3
+  Gastrodon      Mud Slap? | Earth Power x2
+
+Charged moves: ours 3, theirs 5; shield prompts 3, shielded 2; fast taps 243
+Player events: active_corrected 2, armed 1, armed_fired 1, throw_beaten 2, throw_fainted 1
+
+    0.0  start: Jellicent v Morpeko (Full Belly)
+    2.8  mine   switch Jellicent -> Stunfisk
+    6.3  theirs switch Morpeko (Full Belly) -> Gastrodon
+    9.6  ours   Stunfisk Discharge (cost 40; energy 33 by buttons; theirs believed [10, 10]), swipe chased icons 66
+   25.8  theirs Gastrodon Earth Power (not shielded; their energy believed [40, 40]; our health 62%)
+   36.5  mine   Stunfisk fainted -> Vigoroth
+   45.9  theirs Gastrodon Earth Power (we shielded; their energy believed [30, 40]; our health 81%)
+   55.0  ours   Jellicent Surf (cost 45; energy 50 by count; theirs believed [0, 10]), swipe chased icons 32, seen queued
+   64.6  theirs switch Gastrodon -> Morpeko (Full Belly)
+   66.8  theirs Morpeko (Full Belly) Aura Wheel (we shielded; their energy believed [45, 45]; our health 72%)
+   82.5  ours   Jellicent Surf (cost 45; energy 45 by count; theirs believed [18, 18]), swipe chased icons 38
+  100.4  theirs Morpeko (Full Belly) Aura Wheel (not shielded; their energy believed [63, 63]; our health ?)
+  116.8  theirs Morpeko (Full Belly) Aura Wheel (not shielded; their energy believed [45, 45]; our health 84%)
+  124.1  end: loss

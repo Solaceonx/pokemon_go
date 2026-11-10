@@ -1,0 +1,494 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261109-110317",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "third",
+  "team": "third/main",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261109-110317.jsonl",
+  "recording": "battle-20261109-110317.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794251006.899,
+  "started_utc": "2026-11-09T19:03:26+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "630b6469be7aa56903ce339c709cb0e908489cdb",
+   "dirty": true,
+   "version_error": null
+  },
+  "mode_from": "explicit log start.league"
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 99.373,
+ "teams": {
+  "mine": [
+   {
+    "species": "clodsire",
+    "name": "Clodsire",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "POISON_STING",
+     "name": "Poison Sting",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 5
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": 30.5,
+    "ivs": [
+     0,
+     14,
+     13
+    ],
+    "cp_on_screen": 1499
+   },
+   {
+    "species": "thievul",
+    "name": "Thievul",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "SUCKER_PUNCH",
+     "name": "Sucker Punch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "NIGHT_SLASH",
+      "name": "Night Slash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "PLAY_ROUGH",
+      "name": "Play Rough",
+      "energy": 60,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": 27.0,
+    "ivs": [
+     0,
+     15,
+     11
+    ],
+    "cp_on_screen": 1499
+   },
+   {
+    "species": "snorlax",
+    "name": "Snorlax",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": 17.5,
+    "ivs": [
+     1,
+     15,
+     14
+    ],
+    "cp_on_screen": 1500
+   }
+  ],
+  "theirs": [
+   {
+    "species": "sneasel",
+    "name": "Sneasel",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "TRIPLE_AXEL",
+      "name": "Triple Axel",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "ICE_SHARD",
+     "name": "Ice Shard",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "sealeo",
+    "name": "Sealeo",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "POWDER_SNOW",
+     "name": "Powder Snow",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "vaporeon",
+    "name": "Vaporeon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 5,
+   "theirs": 1
+  },
+  "we_shielded": 1,
+  "shield_prompts": 1,
+  "fast_taps": 203,
+  "looks": 75
+ },
+ "bot": {
+  "armed": 5,
+  "armed_expired": 4,
+  "throw_beaten": 1,
+  "waiting_for_better": 1,
+  "armed_fired": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "clodsire",
+   "theirs": "sneasel"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 10.899,
+   "pokemon": "sneasel",
+   "move": "Triple Axel",
+   "move_id": "TRIPLE_AXEL",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    36,
+    36
+   ],
+   "state": {
+    "look_t": 8.862,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.774,
+     "shields": 2,
+     "left": 3,
+     "energy": 74,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.774,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "FEINT_ATTACK"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 15.213,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.96,
+   "state": {
+    "look_t": 13.724,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": 75,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "sneasel",
+     "hp_share": 0.774,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      15,
+      15
+     ],
+     "fast_move": "ICE_SHARD"
+    }
+   },
+   "icons_chased": 98
+  },
+  {
+   "kind": "switch",
+   "t": 24.893,
+   "side": "theirs",
+   "from": "sneasel",
+   "to": "sealeo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 24.893,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 29,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 32.14,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.05,
+   "state": {
+    "look_t": 30.68,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.7,
+     "shields": 1,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": 0.939,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 96
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 49.206,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.67,
+   "state": {
+    "look_t": 47.022,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.539,
+     "shields": 1,
+     "left": 3,
+     "energy": 57,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "sealeo",
+     "hp_share": 0.202,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      96,
+      96
+     ],
+     "fast_move": "POWDER_SNOW"
+    }
+   },
+   "icons_chased": 97
+  },
+  {
+   "kind": "faint",
+   "t": 59.326,
+   "side": "theirs",
+   "pokemon": "sealeo",
+   "next": "vaporeon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 59.326,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.505,
+     "shields": 1,
+     "left": 3,
+     "energy": 22,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      3,
+      3
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 65.338,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.38,
+   "state": {
+    "look_t": 63.578,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 93
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 81.234,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.32,
+   "state": {
+    "look_t": 79.627,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.283,
+     "shields": 1,
+     "left": 3,
+     "energy": 46,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "vaporeon",
+     "hp_share": 0.256,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      69,
+      69
+     ],
+     "fast_move": "WATER_GUN"
+    }
+   },
+   "icons_chased": 93
+  },
+  {
+   "kind": "end",
+   "t": 99.373,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261109-110317.jsonl"
+ ]
+}

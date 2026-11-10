@@ -1,0 +1,37 @@
+live-20261108-231958 . league . LOSS . 190 s
+What went wrong: The owner disagreed with the shield calls: the engine's own call (the 35% override withdrawn that evening) let through all four charged moves on our first two with both shields up: Jellicent's Shadow Ball on our Jellicent at 18 s (super effective, to 16%), Body Slams at 34 s (Vigoroth 92% to 57%) and 77 s (Stunfisk, about 30%), and at 59 s on Vigoroth at 10% (right); then both shields went on Stunfisk, our last, against two Surfs. Fast taps stopped after charged moves (the owner: "we forgot to tap after charge moves"): after our Surf and Discharge the attack's white streaks read as the move names under the hidden buttons, the low-health throw fired again on 30 and 21 energy and was not taken, 3 to 5 s without taps each; Discharge, beaten by their Surf, waited 3.9 s; the fight after their Surf was taken up 1.5 s after both buttons were back (our bar under BLOCKED!). The tracker had Stunfisk at 1% while its bar showed about 44% (a reading of Jellicent coming in credited to Stunfisk).
+Fixed: the taps and readings: task40-android afd850c (names only with both buttons drawn and not just after our move, a beaten move tapped again, both buttons drawn count as the fight, no bar credited during a switch); the shield calls are the engine's (the owner)
+
+Mine
+  Jellicent      Hex | Surf x1, Shadow Ball x0
+  Vigoroth       Scratch | Bulldoze x0, Body Slam x1  [fainted]
+  Stunfisk       Thunder Shock | Discharge x3, Mud Bomb x0
+Theirs
+  Jellicent      Hex* | Shadow Ball x1, Surf x2
+  Vigoroth       Scratch? | Body Slam x2
+  Altaria        Dragon Breath? | Moonblast x1
+
+Charged moves: ours 6, theirs 7; shield prompts 6, shielded 2; fast taps 340
+Player events: active_corrected 1, armed 2, armed_fired 1, decision_dropped 1, queued_dropped 2, throw_beaten 2, throw_before_fainting 8, throw_before_theirs 1, throw_not_taken 2, waiting_for_better 1
+
+    0.0  start: Jellicent v Jellicent
+    7.5  ours   Jellicent Surf (cost 45; energy 36 by buttons; theirs believed [39, 39]), swipe chased icons 33
+   18.3  theirs Jellicent Shadow Ball (not shielded; their energy believed [65, 65]; our health ?)
+   28.2  theirs switch Jellicent -> Vigoroth
+   30.3  mine   switch Jellicent -> Vigoroth
+   33.9  theirs Vigoroth (move not named) (not shielded; their energy believed [40, 40]; our health 92%)
+   47.0  ours   Vigoroth Body Slam (cost 40; energy 44 by count; theirs believed [28, 28]), swipe chased icons 50
+   59.4  theirs Vigoroth Body Slam (not shielded; their energy believed [48, 48]; our health 10%)
+   69.1  mine   Vigoroth fainted -> Stunfisk
+   77.0  theirs Vigoroth Body Slam (not shielded; their energy believed [44, 44]; our health 86%)
+   86.0  mine   switch Stunfisk -> Jellicent
+   88.6  ours   Stunfisk Surf (cost 45; energy 51 by count; theirs believed [12, 12]), swipe chased icons 34
+  100.2  theirs switch Vigoroth -> Jellicent
+  107.4  ours   Stunfisk Discharge (cost 40; energy 60 by count; theirs believed [54, 59]), swipe chased icons 83
+  120.3  theirs Jellicent Surf (we shielded; their energy believed [93, 98]; our health 55%)
+  135.3  theirs Jellicent Surf (we shielded; their energy believed [74, 79]; our health ?)
+  146.0  ours   Stunfisk Discharge (cost 40; energy 61 by count; theirs believed [42, 47]), swipe chased icons 71
+  160.5  ours   Stunfisk Discharge (cost 40; energy 21 by count; theirs believed [55, 60]), swipe chased icons 67
+  168.1  theirs switch Jellicent -> Altaria
+  181.0  theirs Altaria Moonblast (not shielded; their energy believed [24, 24]; our health ?)
+  189.6  end: loss

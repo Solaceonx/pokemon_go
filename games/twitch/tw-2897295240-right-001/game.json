@@ -1,0 +1,492 @@
+{
+ "schema": "game-record-v1",
+ "game": "tw-2897295240-right-001",
+ "source": {
+  "kind": "public_footage",
+  "url": "https://www.twitch.tv/videos/2897295240",
+  "view": "right",
+  "match_id": "tw-2897295240-match-001",
+  "clip_seconds": [
+   0.0,
+   23.5
+  ],
+  "incomplete_start": true,
+  "incomplete_end": false,
+  "dataset_role": "exposed_regression"
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen",
+  "left": {
+   "mine": 1,
+   "theirs": 1
+  }
+ },
+ "seconds": 20.88,
+ "fighting_turns": 11,
+ "checks": {
+  "verdict": "fail",
+  "failed": [
+   "ending: result says win, tracker has us on 1 and them on 1",
+   "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+  ],
+  "notes": [
+   "fast move only guessed for sableye"
+  ],
+  "unexplained_health_changes": 2
+ },
+ "teams": {
+  "mine": [
+   {
+    "species": "clodsire",
+    "name": "Clodsire",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": false,
+    "hp_share_at_end": 0.082,
+    "fast_move": {
+     "id": "POISON_STING",
+     "name": "Poison Sting",
+     "turns": 2,
+     "energy_gain": 9,
+     "known_from": "guessed"
+    },
+    "charged_moves": [
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "guessed",
+      "times_used": 0
+     },
+     {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ]
+   }
+  ],
+  "theirs": [
+   {
+    "species": "sableye",
+    "name": "Sableye",
+    "known_from": "seen",
+    "cp": 1491,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "turns": 2,
+     "energy_gain": 8,
+     "known_from": "guessed",
+     "odds": {
+      "Shadow Claw": 0.65,
+      "Feint Attack": 0.35
+     }
+    },
+    "charged_moves": [
+     {
+      "id": "FOUL_PLAY",
+      "name": "Foul Play",
+      "energy": 40,
+      "known_from": "guessed",
+      "times_used": 0
+     },
+     {
+      "id": "POWER_GEM",
+      "name": "Power Gem",
+      "energy": 50,
+      "known_from": "guessed",
+      "times_used": 0
+     }
+    ],
+    "other_charged_moves": {
+     "Foul Play": 0.64,
+     "Power Gem": 0.39,
+     "Shadow Sneak": 0.37,
+     "Drain Punch": 0.33,
+     "Dazzling Gleam": 0.28
+    }
+   },
+   {
+    "species": "florges",
+    "name": "Florges",
+    "known_from": "seen",
+    "cp": 1496,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": false,
+    "hp_share_at_end": 0.009,
+    "fast_move": {
+     "id": "FAIRY_WIND",
+     "name": "Fairy Wind",
+     "turns": 2,
+     "energy_gain": 9,
+     "known_from": "inferred"
+    },
+    "charged_moves": [
+     {
+      "id": "CHILLING_WATER",
+      "name": "Chilling Water",
+      "energy": 45,
+      "known_from": "guessed",
+      "times_used": 0
+     },
+     {
+      "id": "MOONBLAST",
+      "name": "Moonblast",
+      "energy": 50,
+      "known_from": "guessed",
+      "times_used": 0
+     }
+    ],
+    "other_charged_moves": {
+     "Moonblast": 0.51,
+     "Disarming Voice": 0.45,
+     "Chilling Water": 0.41,
+     "Trailblaze": 0.38,
+     "Psychic": 0.17,
+     "Petal Blizzard": 0.08
+    }
+   }
+  ],
+  "theirs_unseen": 0
+ },
+ "summary": {
+  "charged": {
+   "mine": 1,
+   "theirs": 0
+  },
+  "charged_shielded": {
+   "mine": 0,
+   "theirs": 0
+  },
+  "shields_left": {
+   "mine": 2,
+   "theirs": 2
+  },
+  "switches": {
+   "mine": 0,
+   "theirs": 0
+  },
+  "faints": {
+   "mine": 0,
+   "theirs": 1
+  }
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "fighting_turn": 0,
+   "mine": "Clodsire",
+   "theirs": "Sableye",
+   "incomplete_start": true,
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 26,
+     "hp_max": 208,
+     "hp_share": 0.125,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Sableye",
+     "shields": 2,
+     "left": 2,
+     "hp": 7,
+     "hp_max": 125,
+     "hp_share": 0.056,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 8
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 0.0,
+   "until": 1.2,
+   "fighting_turn": 0,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Clodsire",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Sableye",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 21,
+     "hp_max": 208,
+     "hp_share": 0.101,
+     "energy": 9
+    },
+    "theirs": {
+     "active": "Sableye",
+     "shields": 2,
+     "left": 2,
+     "hp": 5,
+     "hp_max": 125,
+     "hp_share": 0.04,
+     "energy": [
+      8,
+      8
+     ],
+     "energy_ceiling": 16
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 1.2,
+   "fighting_turn": 2,
+   "side": "mine",
+   "pokemon": "Clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "move_known_from": "seen",
+   "cost": 55,
+   "energy_before": 9,
+   "energy_short_by": 46,
+   "target": "Sableye",
+   "shielded": false,
+   "target_hp_before": 5,
+   "target_hp_after": 5,
+   "target_hp_max": 125,
+   "target_bar_read": false,
+   "expected_damage": 50,
+   "resolved_t": 11.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 21,
+     "hp_max": 208,
+     "hp_share": 0.101,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Sableye",
+     "shields": 2,
+     "left": 1,
+     "hp": 5,
+     "hp_max": 125,
+     "hp_share": 0.04,
+     "energy": [
+      8,
+      8
+     ],
+     "energy_ceiling": 16
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 11.0,
+   "until": 12.0,
+   "fighting_turn": 2,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Clodsire",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Sableye",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 21,
+     "hp_max": 208,
+     "hp_share": 0.101,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Sableye",
+     "shields": 2,
+     "left": 1,
+     "hp": 5,
+     "hp_max": 125,
+     "hp_share": 0.04,
+     "energy": [
+      8,
+      8
+     ],
+     "energy_ceiling": 16
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 12.0,
+   "fighting_turn": 3,
+   "side": "theirs",
+   "pokemon": "Sableye",
+   "next": "Florges",
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 26,
+     "hp_max": 208,
+     "hp_share": 0.125,
+     "energy": 9
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 2,
+     "left": 1,
+     "hp": 110,
+     "hp_max": 110,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 9
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 12.0,
+   "until": 20.88,
+   "fighting_turn": 3,
+   "turns": 8,
+   "mine": {
+    "pokemon": "Clodsire",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
+   },
+   "theirs": {
+    "pokemon": "Florges",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 17,
+     "hp_max": 208,
+     "hp_share": 0.082,
+     "energy": 45
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 2,
+     "left": 1,
+     "hp": 1,
+     "hp_max": 110,
+     "hp_share": 0.009,
+     "energy": [
+      27,
+      27
+     ],
+     "energy_ceiling": 45
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 20.88,
+   "fighting_turn": 11,
+   "result": "win",
+   "result_from": "result screen",
+   "left": {
+    "mine": 1,
+    "theirs": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Clodsire",
+     "shields": 2,
+     "left": 1,
+     "hp": 17,
+     "hp_max": 208,
+     "hp_share": 0.082,
+     "energy": 45
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 2,
+     "left": 1,
+     "hp": 1,
+     "hp_max": 110,
+     "hp_share": 0.009,
+     "energy": [
+      27,
+      27
+     ],
+     "energy_ceiling": 45
+    }
+   }
+  }
+ ],
+ "deductions": [
+  {
+   "t": 14.5,
+   "side": "theirs",
+   "pokemon": "Florges",
+   "what": "fast move",
+   "value": "Fairy Wind",
+   "how": "every other fast move ruled out",
+   "ruled_out": [
+    "Razor Leaf",
+    "Tackle",
+    "Vine Whip"
+   ]
+  }
+ ],
+ "built_from": [
+  "events.jsonl.gz",
+  "source.json",
+  "state.json",
+  "states.jsonl.gz",
+  "timeline.json",
+  "track.json",
+  "verdict.json"
+ ]
+}

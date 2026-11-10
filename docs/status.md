@@ -4509,6 +4509,64 @@ where 22.5 were expected.
   / Vigoroth / Stunfisk, 1,500 paired battles a field, 62.2 ± 2.4% against the meta and 68.1 ± 2.4% off-meta with
   Scratch; 39.8 ± 2.5% and 55.4 ± 2.5% with Counter (scratch `stun/vig.py`).
 
+## More evidence from the live-game reader — Codex, 2026-11-09
+
+The owner asked to inspect the newer live reader and recover more data from the
+games. Main was read at 7c3353d; the screen-only Android reader and button dependency
+were pinned from task40 commit 615b30e. The active phone workspace, task45 records,
+strategy, recognition thresholds and reserved VOD sample were not changed. No
+phone connection, player loop or live input was used.
+
+An immutable local snapshot captured 214 ended logs, leaving six incomplete or
+invalid logs out. Requiring start/end/looks leaves 207 usable records: 110 labelled
+training, 71 league and 26 unknown context. There are 19,553 looks and 127,215
+timestamped evidence rows. Sidecars preserve source-line links, raw logged
+observations versus counted/inferred values, input attempts, moves, shields,
+delays, errors and full engine views where they actually exist. Only the two
+newest logs have full engine views (26 and 10); missing older views are not
+reconstructed. Engine IVs, levels and integer HP remain labelled assumptions.
+
+The league subset has button energy on 2,944 / 8,399 looks (35.1%); it logs 118
+throw-not-taken events, 91 throws beaten, 43 switch-not-taken events and 37 tracker
+errors. These overlap and are not confirmed counts of lost games. Across all
+records 612 same-species health increases merit review, not 612 proven misreads.
+
+Three existing videos were read offline at up to 5 Hz: 20261108-235420,
+20261109-003216 and 20261109-120903. Their 16,482 decoded frames have 16,479 saved
+arrival times; the one untimed tail frame per video is skipped, never given an
+invented timestamp. The 2,295 sampled frames add raw/filtered bar readings, type
+icons, header indicators, button levels and move-name visibility. Against the
+most recent logged look within 0.75 seconds, 85 frames have an energy estimate
+where the preceding look has none and 131 have our bar where the preceding look
+has none (890 eligible comparison frames). These are candidate observations,
+not independent ground truth or a measured accuracy increase.
+
+Three discrepancy frames were inspected. Gastrodon at 21.349s in 235420 visibly
+has a mostly full bar, inconsistent with the preceding log's 1.3%; the fresh
+estimate is 92.9%. A large jump at 99.063s in 003216 is instead Lapras entering
+after Toxtricity, explicitly shown by "Go, Lapras!". Snorlax at 169.691s in 120903
+looks about two-fifths full, against a prior 30.3% and a fresh 41.1%; it still needs
+temporal review. No automatic replacement is made. No independent accuracy
+labels or score-with-margin experiment exist for this audit; no improvement is
+claimed. Android geometry was not silently applied to the older iPhone VOD crops.
+
+`View additional battle data.cmd` opens the standalone local report. Its video,
+values table and event inspector follow battle time, and it exports one battle's
+evidence. It references 190 existing videos, copies no media, separates context
+filters and decompresses only the selected battle. Sidecars occupy 3.26 MB; the
+standalone HTML occupies 3.36 MB, with zero embedded video bytes. Large row
+packages remain local; the public 0.57 MB receipt contains per-record summaries,
+source/code hashes, pixel-read receipts and validation without trainer names,
+accounts, arbitrary OCR/error text or local paths.
+
+All 329 repository tests and 108 reference duels pass; baseline was 320 tests.
+Browser checks pass for three real-video playbacks, seeking, reading inspection,
+context filters and no JavaScript errors. All four protected file hashes for
+each of the twenty reserved VOD views remain unchanged. The bundled-runtime
+baseline could not load an old native video library, and the first system-Python
+run hit sandbox temporary-directory permissions; the installed Python with a
+workspace temporary directory passes. Scripts, reproduction and limits are in
+`docs/battle_evidence.md`; results are `runs/live-evidence-20261109.json`.
 **Is the engine going wrong? The third account's battles with logged views (2026-11-09; the owner: "check if engine
 going wrong or what").** Since ed9b086 the live player logs the engine's whole view at every shield prompt and every
 decision other than a fast move: 16 battles, 77 shield calls and 496 decisions. Each was replayed from the logged
@@ -4542,3 +4600,56 @@ choice looked 15 points or more worse were re-played with 160 fresh play-outs pe
   bots. So its flags are leads, not proof.
 - **`engine_view.py` reuses one engine for a whole log.** Its state carries over, so a switch it repeats only 1 time in
   6 is picked 8 times in 8 by fresh engines. A fresh engine is wanted for each view.
+
+## Canonical game storage and counts — Codex, 2026-11-09
+
+The owner asked how many games there are and to put the audited data into their
+GitHub format. The preferred format is `game-record-v1`, live-log variant version
+2, from task45 commit 2ac58c6. The 212 records on that branch were adopted with
+their notes, context, exact-stat placeholders, odds, builder and validators. Their
+424 existing game.json/game.txt files were preserved byte for byte in the working
+copy. Twenty-six audited IDs were missing; all are training (18 explicit log
+fields, eight dated training recording-collection entries), not league games.
+The 26 unknown-context records in the older audit can now be classified using
+that additional source evidence; its historical summaries are retained unchanged.
+
+The live library now contains 238 records: 99 completed league games (60 wins,
+39 losses), one league fragment linked to its full game, and 138 training records
+(135 logged wins and three unresolved results). The 242 available local timestamped
+logs are covered except four files with no usable battle looks; those are not
+converted into invented games. The earlier audit's 207 IDs map to exactly 207
+canonical folders, not duplicate game IDs.
+
+Every live record has game.json, readable game.txt and its referenced raw log.
+League logs sit beside their records; training logs stay under runs/live. All
+207 audited games also contain enrichment.json and hash-covered compressed
+evidence; three include the fresh pixel packages. Historical game states are
+not replaced with new pixel estimates, and missing IVs/levels/rating/results
+remain unknown. Source log and existing evidence conflicts are explicit errors.
+A repeat import adds no new records and preserves all 476 current game files.
+The index links the evidence manifest. Stored training context is respected on
+future rebuilds, instead of trusting opponent species as evidence of training.
+
+The original recording summarizer from e964c1d was also adopted, without a new
+tracker pass. It wrote game.json/game.txt beside 43 public tracked camera views
+and six personal recording segments. Worked examples and video-only untracked
+cuts are excluded. The unified games/catalog.json therefore has 287 canonical
+records: 238 live plus 49 view/segment records. The public views group under 29
+existing match IDs; neither camera views nor overlapping segments are asserted
+to be unique games. Counts and usage are in games/README.md.
+
+Raw logs and hash-covered sidecars explicitly disable Git line-ending conversion.
+Without that, this Windows checkout would preserve a source hash locally but
+silently commit a different LF-normalized file, breaking hashes on another PC.
+The stored bytes and checksums are verified against the Git index before push.
+All source/log/evidence packages stay small; no videos, frames, phone controllers
+or runtime binaries are added. A private-name scan covered 970 JSON/log files
+against the three locally known trainer names and found no matches.
+
+All 360 tests pass, with one explicit skip because some exact team levels/IVs
+have not been supplied by the owner. All 108 PvPoke reference battles still match.
+Canonical-format checks, index equality, source and evidence hashes, repeat
+import, context handling, conflict rejection and the original recording-builder
+tests pass. Battle tables remain derived from notes.json. The underlying VOD
+readings and tracker outputs are unchanged; reserved-footage recognition was
+not tuned. Receipt: runs/canonical-game-import-20261109.json.
