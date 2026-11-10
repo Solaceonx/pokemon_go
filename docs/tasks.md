@@ -35,6 +35,12 @@ and push that before starting.
 
 ## Open tasks
 
+**Canonical game-record import — Codex, 2026-11-09, `canonical-battle-records` (in progress).**
+At the owner's request, reconcile the saved evidence game's IDs against task45's
+preferred folder/schema, bring the existing canonical records forward, and import
+missing records with source logs and evidence links. Count contexts and fragments
+separately, preserve notes and provenance, and do not create duplicate records.
+
 **Additional battle-data audit — Codex, 2026-11-09, branch `battle-data-enrichment` (completed offline snapshot).**
 At the owner's request, inspect task 40's live reader and recover additional
 time-aligned observations and diagnostics from completed saved logs and selected
