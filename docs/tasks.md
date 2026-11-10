@@ -35,11 +35,18 @@ and push that before starting.
 
 ## Open tasks
 
-**Canonical game-record import — Codex, 2026-11-09, `canonical-battle-records` (in progress).**
+**Canonical game-record import — Codex, 2026-11-09, `canonical-battle-records` (completed import).**
 At the owner's request, reconcile the saved evidence game's IDs against task45's
 preferred folder/schema, bring the existing canonical records forward, and import
 missing records with source logs and evidence links. Count contexts and fragments
 separately, preserve notes and provenance, and do not create duplicate records.
+Imported task45's 212 canonical records unchanged, added the 26 audited training
+records, and attached evidence to all 207 audited IDs. The combined live index
+contains 238 records (99 completed league games, one league fragment, 138 training
+records). The older recording exporter adds 43 public POVs and six personal
+segments, for 287 canonical files in `games/catalog.json`, not 287 unique games.
+All 360 tests pass (one skip for unknown exact team stats), as do 108 reference
+duels. See `games/README.md` and `runs/canonical-game-import-20261109.json`.
 
 **Additional battle-data audit — Codex, 2026-11-09, branch `battle-data-enrichment` (completed offline snapshot).**
 At the owner's request, inspect task 40's live reader and recover additional

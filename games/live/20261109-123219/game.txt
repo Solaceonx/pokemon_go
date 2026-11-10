@@ -1,0 +1,37 @@
+live-20261109-123219 . league . LOSS . 192 s
+What went wrong: Reading: our energy count ran high with the buttons unread (close-ups, their throws): Snorlax's Body Slam tapped on 47 counted (25 real) and not taken, first thrown 17 s after the engine asked; Clodsire's Stone Edge on a 22 HP Ninetales tapped three times on the count and not taken, thrown 20 s late. Engine: no shields on Ninetales's throws while both were up.
+Fixed: a721786 (whole fast moves only in the count; 2.3 s wait on count-only taps), 77cddaf and 32cf933 (no count-only throw unless the buttons are unread 4 s, ours is low, or the count is 40 over)
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x2, Earthquake x0
+  Thievul        Sucker Punch | Night Slash x1, Play Rough x0
+  Snorlax        Psywave | Body Slam x2, Earthquake x0  [fainted]
+Theirs
+  Morpeko (Full Belly) Thunder Shock* | Aura Wheel x1
+  Ninetales (Alolan) Powder Snow* | 
+  Garchomp (Mega) Dragon Tail? | Earth Power x2
+
+Charged moves: ours 6, theirs 7; shield prompts 6, shielded 2; fast taps 505
+Player events: active_corrected 2, armed 1, armed_fired 1, move_corrected 1, queued_dropped 1, throw_beaten 1, throw_before_fainting 4, throw_cancelled 1, throw_not_taken 4, waiting_for_better 4
+
+    0.0  start: Clodsire v Morpeko (Full Belly)
+    3.7  theirs switch Morpeko (Full Belly) -> Ninetales (Alolan)
+    6.9  mine   switch Clodsire -> Snorlax
+   10.0  theirs Ninetales (Alolan) (move not named) (not shielded; their energy believed [40, 40]; our health 90%)
+   24.4  theirs Ninetales (Alolan) (move not named) (not shielded; their energy believed [69, 69]; our health 50%)
+   34.4  ours   Snorlax Body Slam (cost 40; energy 39 by count; theirs believed [64, 64]), swipe chased icons 49
+   49.2  ours   Snorlax Body Slam (cost 40; energy 30 by buttons; theirs believed [100, 100]), swipe chased icons 54
+   59.6  mine   Snorlax fainted -> Clodsire
+   64.4  theirs Ninetales (Alolan) (move not named) (not shielded; their energy believed [100, 100]; our health 92%)
+   76.4  theirs Ninetales (Alolan) (move not named) (not shielded; their energy believed [95, 95]; our health 57%)
+   86.8  ours   Clodsire Stone Edge (cost 55; energy 54 by count; theirs believed [79, 89]), swipe chased icons 95, seen queued
+   98.0  theirs switch Ninetales (Alolan) -> Garchomp (Mega)
+  100.9  mine   switch Clodsire -> Thievul
+  105.7  theirs Garchomp (Mega) Earth Power (we shielded; their energy believed [60, 60]; our health 90%)
+  119.5  ours   Thievul Night Slash (cost 35; energy 53 by buttons; theirs believed [48, 48]), swipe chased icons 37
+  130.6  theirs Garchomp (Mega) Earth Power (we shielded; their energy believed [72, 72]; our health ?)
+  141.5  ours   Thievul Body Slam (cost 40; energy 47 by count; theirs believed [34, 34]), swipe chased icons 42
+  149.1  theirs switch Garchomp (Mega) -> Morpeko (Full Belly)
+  161.3  theirs Morpeko (Full Belly) Aura Wheel (not shielded; their energy believed [18, 18]; our health 63%)
+  169.5  ours   Clodsire Stone Edge (cost 55; energy 49 by buttons; theirs believed [9, 9]), swipe chased icons 93
+  192.4  end: loss

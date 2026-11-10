@@ -1,0 +1,40 @@
+live-20261109-124247 . league . LOSS . 204 s
+What went wrong: Engine: declined all 7 shield prompts; lost with both shields up (Mantine never threw at the end). Reading: 0.7 s after the header showed the switch to Thievul its lit Night Slash button was taken for Snorlax's Body Slam (dark lit near normal), and for 10 s Snorlax was believed out, its minigame hunting normal icons.
+Fixed: ed9b086: no move correction to another Pokémon against the header; shield prompts now log the engine's view
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x1, Earthquake x1  [fainted]
+  Thievul        Sucker Punch | Night Slash x0, Play Rough x1  [fainted]
+  Snorlax        Psywave | Body Slam x2, Earthquake x0
+Theirs
+  Roserade       Poison Jab* |   [fainted]
+  Umbreon        Snarl* | Foul Play x3
+  Mantine        Bubble? | Water Pulse x2, Twister x1
+
+Charged moves: ours 6, theirs 7; shield prompts 7, shielded 0; fast taps 555
+Player events: active_corrected 3, armed 2, armed_expired 1, fainted_unprompted 1, move_corrected 1, throw_beaten 3, throw_before_fainting 3, throw_not_taken 3, waiting_for_better 69
+
+    0.0  start: Clodsire v Roserade
+   10.9  theirs Roserade (move not named) (not shielded; their energy believed [72, 72]; our health 88%)
+   23.0  ours   Clodsire Earthquake (cost 65; energy 54 by count; theirs believed [55, 55]), swipe chased icons 102
+   29.7  theirs switch Roserade -> Umbreon
+   32.9  mine   switch Clodsire -> Thievul
+   38.4  theirs Umbreon Foul Play (not shielded; their energy believed [39, 39]; our health 96%)
+   51.4  theirs Umbreon Foul Play (not shielded; their energy believed [13, 20]; our health ?)
+   62.5  ours   Thievul Play Rough (cost 60; energy 60 by count; theirs believed [0, 6]), swipe chased icons 97
+   75.5  theirs Umbreon Foul Play (not shielded; their energy believed [39, 45]; our health 51%)
+   84.3  mine   switch Thievul -> Clodsire
+   92.2  theirs switch Umbreon -> Mantine
+   94.5  ours   Clodsire Stone Edge (cost 55; energy 48 by buttons; theirs believed [0, 0]), swipe chased icons 98
+  110.3  theirs Mantine Water Pulse (not shielded; their energy believed [64, 64]; our health 14%)
+  119.8  mine   Clodsire fainted -> Snorlax
+  129.4  theirs Mantine Water Pulse (not shielded; their energy believed [100, 100]; our health 84%)
+  139.4  ours   Snorlax Body Slam (cost 40; energy 40 by count; theirs believed [50, 60]), swipe chased icons 30, seen queued
+  153.0  ours   Snorlax Body Slam (cost 40; energy 40 by count; theirs believed [72, 82]), swipe chased icons 57
+  164.3  theirs Mantine Twister (not shielded; their energy believed [83, 93]; our health ?)
+  173.8  theirs switch Mantine -> Roserade
+  175.3  mine   switch Snorlax -> Thievul
+  177.5  ours   Thievul Body Slam (cost 40; energy 35 by count; theirs believed [73, 73]), swipe chased icons 29
+  190.8  theirs Roserade fainted -> Mantine
+  195.1  mine   Thievul fainted -> Thievul
+  203.9  end: loss

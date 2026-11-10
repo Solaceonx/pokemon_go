@@ -1,0 +1,410 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261108-231029",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/main",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261108-231029.jsonl",
+  "recording": "battle-20261108-231029.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794208239.665,
+  "started_utc": "2026-11-09T07:10:39+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "d156a24d1ad0648fb1f66138a3f6a8942c1b7136",
+   "dirty": false,
+   "version_error": null
+  },
+  "mode_from": "explicit log start.league"
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 57.149,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SURF",
+      "name": "Surf",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 3
+     },
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1496
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1499
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1492
+   }
+  ],
+  "theirs": [
+   {
+    "species": "combusken",
+    "name": "Combusken",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "FLAMETHROWER",
+      "name": "Flamethrower",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "PECK",
+     "name": "Peck",
+     "known_from": "inferred"
+    },
+    "fainted": true
+   },
+   {
+    "species": "magcargo",
+    "name": "Magcargo",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 3,
+   "theirs": 1
+  },
+  "we_shielded": 0,
+  "shield_prompts": 1,
+  "fast_taps": 107,
+  "looks": 33
+ },
+ "bot": {
+  "throw_beaten": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "combusken"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 10.103,
+   "pokemon": "combusken",
+   "move": "Flamethrower",
+   "move_id": "FLAMETHROWER",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    32,
+    32
+   ],
+   "state": {
+    "look_t": 6.267,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.808,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.781,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "PECK"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 13.895,
+   "pokemon": "jellicent",
+   "move": "Surf",
+   "move_id": "SURF",
+   "cost": 45,
+   "seen_by": "queued",
+   "seconds_after_tap": 6.82,
+   "state": {
+    "look_t": 6.267,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.808,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "combusken",
+     "hp_share": 0.781,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "PECK"
+    }
+   },
+   "icons_chased": 42
+  },
+  {
+   "kind": "faint",
+   "t": 23.002,
+   "side": "theirs",
+   "pokemon": "combusken",
+   "next": "magcargo",
+   "known_from": "seen",
+   "state": {
+    "look_t": 23.002,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 44,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 27.701,
+   "pokemon": "jellicent",
+   "move": "Surf",
+   "move_id": "SURF",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.0,
+   "state": {
+    "look_t": 26.166,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.539,
+     "shields": 2,
+     "left": 3,
+     "energy": 54,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magcargo",
+     "hp_share": 0.923,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 30
+  },
+  {
+   "kind": "switch",
+   "t": 38.369,
+   "side": "theirs",
+   "from": "magcargo",
+   "to": "flareon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 38.369,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.498,
+     "shields": 2,
+     "left": 3,
+     "energy": 25,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 43.832,
+   "pokemon": "jellicent",
+   "move": "Surf",
+   "move_id": "SURF",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.03,
+   "state": {
+    "look_t": 41.429,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 63,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 34
+  },
+  {
+   "kind": "end",
+   "t": 57.149,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261108-231029.jsonl"
+ ]
+}
