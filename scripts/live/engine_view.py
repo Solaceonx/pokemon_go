@@ -87,7 +87,15 @@ def main() -> None:
     path = Path(stamp) if stamp.endswith(".jsonl") else ROOT / "runs" / "live" / f"{stamp}.jsonl"  # or a replay's log
     rows = [json.loads(l) for l in open(path, encoding="utf-8") if l.strip()]
     gd = GameData()
-    eng = engine(gd, seed=1)
+    # A fresh engine for each asking (docs/status.md, 2026-11-09: one engine reused for a whole log carried its
+    # state over, and a switch fresh engines pick 1 time in 6 came out 8 times in 8). Built once, its parts reused.
+    ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
+    q = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
+    meta = gd.meta(50)
+
+    def fresh(seed: int) -> RealTime:
+        return RealTime(Evaluator(ev.model), meta, q=q, seed=seed, **WEBSITE, turn_ms=500, cap_ms=300,
+                        clock=time.perf_counter)
     for r in rows:
         rec = r.get("view")
         if not rec or "error" in rec or (at is not None and abs(r["t"] - at) > 0.05):
@@ -97,9 +105,9 @@ def main() -> None:
         me, foe = view.me.mon, view.foe
         if r["kind"] == "shield_prompt":  # the shield call, on their energy as the tracker had it (its top)
             live = f"shield:{r.get('shield')}"
-            picks = collections.Counter(f"shield:{bool(eng.shield(view, r.get('foe_hi')))}" for _ in range(n))
+            picks = collections.Counter(f"shield:{bool(fresh(s).shield(view, r.get('foe_hi')))}" for s in range(n))
         else:
-            picks = collections.Counter(name(view, eng.act(view)) for _ in range(n))
+            picks = collections.Counter(name(view, fresh(s).act(view)) for s in range(n))
         print(f"{r['t']:7.2f} live {live:<28} {me.build.species_id} {me.hp}/{me.build.hp}hp {me.energy}e "
               f"vs {foe.build.species_id} {foe.hp}/{foe.build.hp}hp {foe.energy}e  shields {view.me.shields}-{view.foe_shields}"
               f"  engine now: {dict(picks)}")

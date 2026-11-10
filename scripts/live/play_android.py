@@ -975,6 +975,7 @@ class Player:
             if mine != self.active:
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
                          header=self.names.my_name)
+                self.corrected_from = (self.active, time.time())
                 self.active = mine
                 self.energy_read = self._energy_raw = None
             return
@@ -984,6 +985,7 @@ class Player:
             self.types_checked = (ts, self.active)
             if ts[0] != self.active:
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types")
+                self.corrected_from = (self.active, time.time())
                 self.active = ts[0]
                 self.energy_read = self._energy_raw = None
             return
@@ -1122,32 +1124,44 @@ class Player:
         self.off_time = 0.0
         if my_left is not None and my_left < self.my_left_seen:
             self.my_left_seen = my_left
-            alive_after = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
-            named = self.header_says()
-            if my_left == 1 and named is not None and self.tracker.me.team[named].hp > 0 and named == self.active:
-                # The header names the one believed out, alive: the counter has caught up with an earlier faint,
-                # and the one that fainted is another (2026-11-09, 230719 and 230322: after Thievul fainted and the
-                # game sent Snorlax in itself, the counter fell 19 s later and Snorlax, out and alive, was put at 0
-                # HP; the engine then decided on a dead Pokémon)
-                gone = [j for j in alive_after]
-                if len(gone) == 1:
-                    self.tracker.me.team[gone[0]].hp = 0
-                    self.log("fainted_unprompted", t, was=self.team[gone[0]].name, left=my_left,
-                             now=self.team[self.active].name, by="header")
-                    self.replacements += 1
-            elif my_left == 1 and len(alive_after) == 1 and time.time() - self.replace_tapped > 15.0:
+            if my_left == 1 and time.time() - self.replace_tapped > 15.0:
                 # One of ours fainted with no prompt answered: with one left the game sends it in itself
                 # (2026-11-08: Jellicent fainted, Stunfisk came in unasked, and the player, still taking Jellicent
                 # for out, threw "Bubble Beam" on Stunfisk's Mud Bomb button and hunted Water icons: Nice).
-                self.tracker.me.team[self.active].hp = 0
+                # Which one went is told by who is out now, as last seen: our header's type icons (read in the last
+                # 3 s), else its name, else a correction of who is out just made; the one out is alive and the
+                # other is the one that fainted. Only with none of those, the one believed out. (2026-11-09: in 5 of
+                # 8 battles the counter fell seconds after the game had sent our last one in, the belief already
+                # corrected to it, and the one out, alive, was put at 0 HP: the engine then decided on a dead team.)
+                ts = getattr(self, "types_seen", None)
+                prev = getattr(self, "corrected_from", None)
+                out_now, how = None, None
+                if ts is not None and t - ts[1] < 3.0:
+                    out_now, how = ts[0], "types"
+                elif self.header_says() is not None:
+                    out_now, how = self.header_says(), "header"
+                elif prev is not None and time.time() - prev[1] < 10.0 and prev[0] != self.active:
+                    out_now, how = self.active, "correction"
                 alive = [j for j in range(len(self.team)) if self.tracker.me.team[j].hp > 0]
-                self.log("fainted_unprompted", t, was=self.team[self.active].name, left=my_left,
-                         now=self.team[alive[0]].name if len(alive) == 1 else None)
-                self.replacements += 1
-                if len(alive) == 1:
-                    self.active = alive[0]
-                    self.switching = self.switch_wanted = None
-                    self.energy_read = self._energy_raw = None
+                gone = [j for j in alive if j != out_now] if out_now is not None else [self.active]
+                if out_now is None or len(gone) == 1:
+                    was = gone[0] if gone else self.active
+                    self.tracker.me.team[was].hp = 0
+                    if out_now is None:
+                        alive = [j for j in range(len(self.team)) if self.tracker.me.team[j].hp > 0]
+                        out_now = alive[0] if len(alive) == 1 else None
+                    if out_now is not None and self.tracker.me.team[out_now].hp <= 0:
+                        # out, so alive: the tracker had put it at 0 (230719: damage while who was out was unsure)
+                        share = look.bars.get("mine") if look.bars else None
+                        self.tracker.me.team[out_now].hp = max(1, round((share or 0.1) * self.team[out_now].hp))
+                        self.log("hp_restored", t, who=self.team[out_now].name, hp=self.tracker.me.team[out_now].hp)
+                    self.log("fainted_unprompted", t, was=self.team[was].name, left=my_left,
+                             now=self.team[out_now].name if out_now is not None else None, by=how)
+                    self.replacements += 1
+                    if out_now is not None and out_now != self.active:
+                        self.active = out_now
+                        self.switching = self.switch_wanted = None
+                        self.energy_read = self._energy_raw = None
         if foe_left is not None and foe_left < self.foe_left_seen:
             self.foe_left_seen = foe_left
         out_for = None
@@ -1425,6 +1439,9 @@ class Player:
             return False
         them, us = foe.mon, view.me.mon
         now = max(damage(us, mon.charged[j], them) for j in affordable)
+        if now >= them.hp:
+            return False  # the move in hand knocks them out already (docs/status.md, 2026-11-09 night: 230322 and
+            # 230719, Body Slam held on a 22 HP Ninetales and Night Slash on a 24 HP Toxicroak, waiting for more)
         hp = hp_share * us.build.hp
         if view.me.shields == 0 and any(foe.hi >= m.energy and damage(them, m, us) >= hp for m in them.build.charged):
             return False  # they can knock us out with a charged move as it stands: throw ours first
@@ -1436,6 +1453,12 @@ class Player:
             turns = more * mon.fast.turns
             hits = math.ceil(turns / them.build.fast.turns) + 1
             big = damage(us, m, them)
+            # and no charged move of theirs reached meanwhile by the energy their fast moves bring (the same entry:
+            # the check counted their fast moves' damage only; Mud Bomb, reached during the wait, took our last
+            # shield): it costs a shield, or us
+            reach = foe.hi + hits * them.build.fast.energy_gain
+            if any(reach >= c.energy for c in them.build.charged):
+                continue
             if (big >= them.hp or big >= 2.5 * now) and hits * hit < hp:
                 self.log("waiting_for_better", t, move=m.id, now=now, then=big, fast_moves=more, their_hits=hits,
                          hp=round(hp, 1))
