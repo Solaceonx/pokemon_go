@@ -4542,3 +4542,21 @@ choice looked 15 points or more worse were re-played with 160 fresh play-outs pe
   bots. So its flags are leads, not proof.
 - **`engine_view.py` reuses one engine for a whole log.** Its state carries over, so a switch it repeats only 1 time in
   6 is picked 8 times in 8 by fresh engines. A fresh engine is wanted for each view.
+
+**The third account's three losses of 2026-11-09 23:03–23:15 (the owner: "absolutely terrible ... check what's
+going on").** Rank 7, line-up odds (our exact builds, PvPoke default builds for theirs, `win_chance` 300 battles) 89%
+against Ninetales / Jumpluff / Magneton (230322), 89% against Toxicroak / Bastiodon / Umbreon (230719), 62% against
+Mimikyu / Wigglytuff / Lickilicky (231134); the fourth battle, on 6e7f3d4, was won (96%).
+- **`better_soon` (waiting_for_better) holds a move that already knocks them out.** 230322 at 185–194 s: Snorlax,
+  last one each, held Body Slam (40 damage) for Earthquake 7 fast moves away while Ninetales had about 22 HP (17.5% of
+  126); Ninetales threw twice and won. 230719 at 105 s: Thievul held Night Slash (32) for Play Rough while Toxicroak had
+  about 24 HP (18.9% of 129); Mud Bomb then took our last shield. The rule tests `big >= them.hp` but never
+  `now >= them.hp`, and its safety check counts only their fast moves, not the energy they gain during the wait.
+- **Which of ours is out was lost** (231134 most): a replacement tap at 5 s with Snorlax at 96%, and from 162 to 194 s,
+  two against one, five corrections between Clodsire and Thievul by types. 537eb1c (the prompt on two frames) and
+  6e7f3d4 (which of ours fainted) came after these battles.
+- **Shields on the wrong hits**, from guessed moves: no shield on Clodsire at 72% against Toxicroak's first charged
+  move (the engine gave Dynamic Punch 64%, Mud Bomb 30%; it was Mud Bomb, to 9%); a shield on Snorlax at full health
+  for Jumpluff's Aerial Ace; on Thievul at 95% for Bastiodon's Flamethrower; both on Clodsire at 84% and 79% for
+  Lickilicky's Shadow Ball after Snorlax took two unshielded and fainted.
+- **Throws beaten** four times (their charged move first): Clodsire's Earthquake at 38 s in 230719 never went off.
