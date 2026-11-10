@@ -62,6 +62,7 @@ accuracy gain. Results and limits: `docs/battle_evidence.md` and
 
 | # | Task | Needs |
 |---|---|---|
+| **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
@@ -95,6 +96,40 @@ accuracy gain. Results and limits: `docs/battle_evidence.md` and
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 46. Comb the creators' footage — for Codex on the owner's PC (the owner, 2026-11-09)
+
+**Why.** The owner wants many real games by strong players, from reis2occasion, HomeSliceHenry and ItsAXN: their
+YouTube uploads and Twitch VODs. So far only one HomeSliceHenry stream (Twitch 2894502346, 15 clips) and two official
+broadcasts have been read. Real players' throws, shields, switches and baits are what task 42 (opponents fitted to
+people) and checks of the engine (`scripts/real_decisions.py`) need. The 2026-11-09 branches `battle-data-enrichment`
+and `canonical-battle-records` covered the bot's own live games, not this.
+
+**What to do.**
+1. **List the sources.** For each channel, the completed videos that show GO Battle League battles (mark the league).
+   Twitch VODs expire, so take those first. Add them to `data/video_sources.csv` (role `creator_footage`). Skip videos
+   that are mostly not battles (tier lists, team talk). A YouTube upload that repeats a VOD's battles (same teams in
+   the same order) is marked as a duplicate, not counted twice.
+2. **Pilot one video per channel** with `Extract all battles.cmd` / `scripts/recording/vod.py URL --download`
+   (`docs/full_vod_extraction.md`). New layouts (face cams, overlays, cropped phones) need a phone rectangle: accept an
+   automatic proposal only after checking frames from several points in the video, and save it in
+   `data/vod_layouts.json`. Tell the owner how many battles each pilot found and how many look clean before running the
+   rest.
+3. **Then every video.** Cut every battle, track each cut (`vod_track.py`) and write game records (`game-record-v1`,
+   as in `games/twitch/`) under `games/creators/<channel>/<source>-<n>/`. Keep each record's own check verdict and do
+   not loosen the checks. So far 0 of 43 public views pass the ending check; say which parts are still reliable
+   (teams, moves, throws, shields, switches) and use only those below.
+4. **Their decisions.** Run `scripts/real_decisions.py` on the creators' battles. Per channel: throws, shields and
+   switches, how often the bot agrees, and where they differ whose choice does better. Add one table of shield and
+   bait habits (when they shield, by energy, shields and Pokémon left) for task 42.
+5. **Disk.** Videos stay out of Git. Delete each full source once its cuts are checked; keep the cuts unless the PC
+   runs short (then ask the owner). Report the space used.
+
+**Rules.** Never commit videos, frames, or anyone's in-game trainer name (opponents' names on screen, or the creators'
+own); channel names as source labels are fine. Do not touch or tune on the twenty reserved views. Tests and
+`check_pvpoke.py` (108/108) pass before pushing; branch `task46-creator-footage` with a PR; results in
+`docs/status.md`. Report per channel: videos, battles found, battles whose checks pass, wins and losses where the result
+screen shows.
 
 ## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **taken: Claude on the owner's PC, 2026-11-08 (branch `task45-live-records`)**
 
