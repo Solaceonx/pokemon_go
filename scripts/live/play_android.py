@@ -240,6 +240,32 @@ def ring_matches(rgb, x: float, y: float, r: float, colour, tolerance: float = 6
     return float(np.abs(med - np.array(colour)).mean()) < tolerance
 
 
+def icon_count(rgb, move) -> int:
+    """How many of a move's minigame icons one frame shows, by the detectors its stroke uses."""
+    zone, colour = icon_zone(move.type), icon_colour(move.type)
+    if has_template(move.id, move.type):
+        n = len(move_icons(rgb[::2, ::2], move.id, move_type=move.type))
+        if move.type in COLOUR_BLOBS:
+            n = max(n, len(find_icons(rgb, colour, move.type, zone)))
+        return n
+    return 0 if move.type in SWEEP_ONLY else len(find_icons(rgb, colour, move.type, zone))
+
+
+def strict_icon_count(rgb, move) -> int:
+    """A move's icons by the strict detectors only, to say a minigame is another move's: its cut-out template
+    (ground without its colour blobs), else round rings mostly of the type's colour. Simulated on 263 of the third
+    account's minigames (2026-11-09) with the lenient detectors, 66 would have switched, Night Slash to Earthquake on
+    Thievul's orange fur and Body Slam to Play Rough on Snorlax; with these, only the Earthquake taken for Stone Edge."""
+    if has_template(move.id, move.type):
+        return len(move_icons(rgb[::2, ::2], move.id, move_type=move.type))
+    from pogo.android_screen import TYPE_COLOURS
+    col = icon_colour(move.type) or TYPE_COLOURS.get(move.type)
+    if col is None:
+        return 0
+    return sum(1 for x, y, r in raw_circles(rgb) if 0.15 < y < 0.92 and ring_matches(rgb, x, y, r, col, 45)
+               and ring_share(rgb, x, y, r, col) >= 0.55)
+
+
 def choreography(move_id: str, move_type: str = "") -> list:
     """The icons a move's minigame is known to show, (t0, t1, x, y, share): seconds after Get Ready!, where, and in
     what share of the recorded minigames (scripts/live/learn_choreography.py). Its type's pattern first
@@ -273,7 +299,8 @@ def minigame_on(rgb, move) -> bool:
 
 def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, colour=None, zone=None,
                     move_type: str = "", trace: list | None = None, predicted: list | None = None,
-                    ready_at: float | None = None, move_id: str = "") -> int:
+                    ready_at: float | None = None, move_id: str = "", alternatives: list | None = None,
+                    switched: list | None = None) -> int:
     """The charged-move minigame as one unbroken touch: visit the icons found on the newest frame every 50 ms
     nearest first (by their round outline and the type's colour, find_icons), leaving out those the finger has just
     been over, and while none is left sweep a figure of eight over the zone the type's icons come up in (Water's at the upper
@@ -302,6 +329,13 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     predicted = list(predicted or [])
     done: set = set()
     wall0 = time.time()
+    # Which move's minigame this is, by its icons (2026-11-09, 231134: Earthquake, beaten and queued, went off after
+    # their Shadow Ball as Stone Edge was tapped, and its ground icons were swiped for rock: Nice; 123219: Thievul's
+    # Night Slash swiped for Body Slam's normal icons): over the stroke's first 1.2 s, a look that finds none of the
+    # believed type's icons also counts our other moves' types', and two or more of one switch the stroke to it.
+    seen_own = False
+    alternatives = list(alternatives or [])
+    alt_seen = None  # (move, first look time) of another type showing two icons or more, looks running
     while (now := time.perf_counter()) - start < seconds:
         if now - last_seen >= 0.05:
             last_seen = now
@@ -325,6 +359,24 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                                                          for q in icons)]
                 else:
                     icons = [] if move_type in SWEEP_ONLY else find_icons(rgb, colour, move_type, zone or ((cx, cy), (spx, spy)))
+                seen_own = seen_own or bool(icons)
+                if alternatives and not seen_own and now - start < 1.2:
+                    counts = [(strict_icon_count(rgb, m), m) for m in alternatives]
+                    n, alt = max(counts, key=lambda c: c[0])
+                    if n < 2 or (alt_seen is not None and alt_seen[0] is not alt):
+                        alt_seen = None
+                    if n >= 2 and alt_seen is None:
+                        alt_seen = (alt, now)
+                    if n >= 2 and now - alt_seen[1] >= 0.2:  # the same on looks 0.2 s apart and between
+                        if switched is not None:
+                            switched.append((alt, round(now - start, 2), n))
+                        alternatives = []
+                        move_id, move_type = alt.id, alt.type
+                        colour, zone = icon_colour(alt.type), icon_zone(alt.type)
+                        (cx, cy), (spx, spy) = zone
+                        route, leg = sweep_path(sweep_box(move_type, zone)), 0
+                        predicted, done = list(choreography(alt.id, alt.type)), set()
+                        icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
@@ -509,6 +561,7 @@ class Player:
         self.header_checked = None
         self._last_active, self.active_changed_at = 0, -1.0
         self.last_reading_t = -1.0  # battle time of the buttons' last energy reading
+        self.replace_run = 0  # frames in a row on which the replacement prompt was read
         self.replacements = 0  # replacement prompts answered: our faints
         self.prompt_shield, self.prompt_tapped = False, 0.0  # the answer to the shield prompt up now, and when tapped
         self.prompt_first = 0.0
@@ -649,6 +702,13 @@ class Player:
                 self.fight_frames = 0
                 self.fight_since = None
                 self.on_shield_prompt(t, look)
+                continue
+            # The replacement prompt only on two frames running: on a night arena, as their next Pokemon came in
+            # ("Go, Lickilicky!"), the dark ground and the white court lines passed its test on single frames, three
+            # times in a battle (2026-11-09, 231134), and "send in" was tapped beside our move buttons; the real
+            # prompt stays up a second or more
+            self.replace_run = self.replace_run + 1 if look.replace_prompt else 0
+            if look.replace_prompt and self.replace_run < 2:
                 continue
             if look.replace_prompt:
                 self.tapping = False
@@ -1764,10 +1824,21 @@ class Player:
             with self.touch_lock:  # a fast tap under way ends first; none starts during the stroke
                 trace = []
                 # to 6.6 s after Get Ready! (icons show until 6.25 s; the rating is final by 6.8 s)
+                others = {}  # our other moves' types, in case the icons say the minigame is one of theirs
+                for b in self.team:
+                    for m in b.charged:
+                        if m.type != move.type and m.type not in others:
+                            others[m.type] = m
+                switched = []
                 hunted = minigame_stroke(self.phone, seconds=path[-1][0] + 0.9, colour=icon_colour(move.type),
                                          zone=icon_zone(move.type), move_type=move.type, trace=trace,
-                                         predicted=choreography(move.id, move.type), ready_at=since, move_id=move.id)
-            self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace)
+                                         predicted=choreography(move.id, move.type), ready_at=since, move_id=move.id,
+                                         alternatives=list(others.values()), switched=switched)
+                if switched:
+                    self.log("minigame_type_corrected", self.now(), was=move.id, now=switched[0][0].id,
+                             at=switched[0][1], icons=switched[0][2])
+            self.log("minigame", self.now(), move=move.id, icons_seen=hunted, trace=trace,
+                     **({"swiped_as": switched[0][0].id} if self.live and switched else {}))
         # From Get Ready! to here the fight was off the screen: off-screen time for the turns, and the fight must
         # be seen three frames running again before it counts
         now_t = self.now()
