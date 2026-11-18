@@ -13,6 +13,7 @@ import hashlib
 import inspect
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import shutil
@@ -38,7 +39,11 @@ def rows(path):
 
 
 def profile_for(reader, meta, output):
-    base = "henry-great.json" if meta["creator"] == "homeslicehenry" else "reis-great.json"
+    base = "henry-great.json" if meta["creator"].casefold() == "homeslicehenry" else "reis-great.json"
+    calibrated = meta.get('vod_intake_fingerprint', {}).get('layout', {}).get('views', [])
+    view = next((v for v in calibrated if v['id'] == meta.get('view_id')), None)
+    if view and view.get('base_profile'):
+        base = view['base_profile']
     path = reader / "profiles" / base
     layout = json.loads(path.read_text(encoding="utf-8"))
     layout.update(id=VERSION + "-" + meta["creator"], viewport=meta["viewport"],
@@ -319,7 +324,52 @@ def publish(folder, game, verdict, reader):
     return summary
 
 
-def track_clip(folder, reader):
+def without_raw_text(value):
+    """Creator exports contain typed observations, never unrestricted OCR prose."""
+    if isinstance(value, dict):
+        return {k: without_raw_text(v) for k, v in value.items()
+                if k not in {'raw_text', 'text', 'text_observation', 'trainer', 'trainer_name', 'nickname'}}
+    if isinstance(value, list):
+        return [without_raw_text(v) for v in value]
+    return value
+
+
+def creator_export(folder, game, meta, root):
+    """Keep the creator's canonical source-N folder separate from old Twitch views."""
+    ordinal = re.search(r'match-(\d+(?:-r[0-9a-f]{8})?)$', meta['match_id'])
+    if not ordinal:
+        raise ValueError('Creator match requires a numeric battle ordinal')
+    number = ordinal.group(1)
+    name = meta['reference_id'] + '-' + number
+    if meta.get('view_id') != 'pov':
+        name += '-' + meta['view_id']
+    exported = Path(root) / name
+    exported.mkdir(parents=True, exist_ok=True)
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl',
+               'state.json', 'track.json', 'timeline.json', 'verdict.json']
+    for name in allowed:
+        path = game / name
+        packed = path.with_name(name + '.gz')
+        if not path.exists() and not packed.exists():
+            continue
+        if name.endswith('.jsonl'):
+            values = plain_rows(path)
+            data = ''.join(json.dumps(without_raw_text(v), separators=(',', ':'))+'\n' for v in values).encode()
+            (exported / (name + '.gz')).write_bytes(gzip.compress(data, mtime=0))
+        else:
+            value = load_gz(packed) if not path.exists() else json.loads(path.read_text(encoding='utf-8'))
+            write_json(exported / name, without_raw_text(value))
+    source = {k: meta.get(k) for k in ('id', 'match_id', 'view_id', 'source_url', 'source_sha256',
+              'video_sha256', 'source_start_seconds', 'source_end_seconds', 'source_viewport',
+              'incomplete_start', 'incomplete_end')}
+    source.update(channel=Path(root).name, dataset_role='creator_footage',
+                  privacy={'unrestricted_ocr_text_exported':False, 'video_or_frames_exported':False},
+                  observations_accuracy_verified=False)
+    write_json(exported / 'source.json', source)
+    return exported
+
+
+def track_clip(folder, reader, *, creator_root=None):
     sys.path.insert(0, str(ROOT))
     from pogo.gamedata import GameData
     from verdict import verdict as decide
@@ -359,6 +409,18 @@ def track_clip(folder, reader):
         result["failed"].append("coverage: only part of the saved clip was analyzed")
     write_json(game / "verdict.json", result)
     summary = publish(folder, game, result, reader)
+    if creator_root is not None:
+        exported = creator_export(folder, game, meta, creator_root)
+        summary['creator_game_folder'] = exported.relative_to(ROOT).as_posix()
+        for directory in (game, game / 'blind'):
+            for path in directory.glob('*.jsonl'):
+                data = path.read_bytes()
+                packed = path.with_name(path.name + '.gz')
+                packed.write_bytes(gzip.compress(data, mtime=0))
+                if gzip.decompress(packed.read_bytes()) != data:
+                    raise ValueError('Compressed creator log differs from input')
+                path.unlink()
+        return summary
     # Repository exports compress repetitive state logs. Local media and raw
     # OCR stay outside Git; only gzip observations and the reproducible result
     # are copied here, never the video or a runtime installation.
@@ -398,16 +460,18 @@ def main():
     parser.add_argument("--text-rate", type=float, default=3)
     parser.add_argument("--seconds", type=float)
     parser.add_argument("--stage", choices=("read", "track"), default="track")
+    parser.add_argument('--creator', choices=('reis2occasion', 'homeslicehenry', 'itsaxn'))
     args = parser.parse_args()
     if args.jobs < 1 or args.jobs > 4 or args.fps <= 0 or args.text_rate <= 0:
         parser.error("Use 1–4 workers and positive sampling rates")
     reader = reader_location(args.reader_dir)
-    folders = sorted(p.parent for p in args.library.glob("tw-*/battle.json")
+    creator_root = ROOT / 'games/creators' / args.creator if args.creator else None
+    folders = sorted(p.parent for p in args.library.glob("*/battle.json")
                      if not args.only or p.parent.name in args.only)
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
         def one(folder):
             read = read_clip(folder, reader, fps=args.fps, text_rate=args.text_rate, seconds=args.seconds)
-            return track_clip(folder, reader) if args.stage == "track" else read
+            return track_clip(folder, reader, creator_root=creator_root) if args.stage == "track" else read
         pending = {pool.submit(one, f): f for f in folders}
         report = []
         for task in as_completed(pending):
@@ -417,7 +481,7 @@ def main():
                               "states": result.get("model_states"), "verdict": result.get("tracking_verdict", {})}), flush=True)
         if args.stage == "track":
             paired = [f for f in folders if json.loads((f / "battle.json").read_text())["view_id"] in ("left", "right")]
-            second = {pool.submit(track_clip, f, reader): f for f in paired}
+            second = {pool.submit(track_clip, f, reader, creator_root=creator_root): f for f in paired}
             revised = {}
             for task in as_completed(second):
                 result = task.result()
@@ -426,7 +490,7 @@ def main():
                                   "recovered_move_names": result["tracking_verdict"].get("paired_move_names_recovered", 0)}), flush=True)
             report = [revised.get(r["id"], r) for r in report]
     if args.stage == "track":
-        path = ROOT / "games/twitch/report.json"
+        path = creator_root / 'report.json' if creator_root else ROOT / "games/twitch/report.json"
         kept = json.loads(path.read_text()) if path.exists() else []
         kept = [r for r in kept if r["id"] not in {r["id"] for r in report}]
         write_json(path, sorted(kept + report, key=lambda r: r["id"]))

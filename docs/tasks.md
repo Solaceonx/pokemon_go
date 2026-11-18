@@ -99,6 +99,9 @@ covered by `data/video_sources.csv`; task 3 (fast frame recognition for live pla
 
 ## 46. Comb the creators' footage — Codex on the owner's PC, taken 2026-11-09 (`task46-creator-footage`)
 
+**Progress 2026-11-18 (Codex):** collection resumed after interrupted jobs. Seventeen new Twitch archive candidates were found (Reis 3, Henry 6, ItsAXN 8), and one new completed VOD per creator was downloaded. The new Henry source has nine visually reviewed battle midpoints; its cuts are being exported. The earlier pilots remain 11/11/15 proposals; Henry's eleven cuts pass full-frame source verification, while the other pilots are still finishing. One creator game record is tracked with its strict failed ending verdict retained. Task 46 is **not complete**: the remaining archive queue, all-cut tracking, duplicate review and reliable decision/habit measurements remain. Full sources are retained after the owner delegated the choice: disk space is adequate and review is unfinished. Dated receipt: `runs/task46-progress-20261118.json`.
+
+
 **Why.** The owner wants many real games by strong players, from reis2occasion, HomeSliceHenry and ItsAXN: their
 YouTube uploads and Twitch VODs. So far only one HomeSliceHenry stream (Twitch 2894502346, 15 clips) and two official
 broadcasts have been read. Real players' throws, shields, switches and baits are what task 42 (opponents fitted to

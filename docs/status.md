@@ -4653,3 +4653,16 @@ import, context handling, conflict rejection and the original recording-builder
 tests pass. Battle tables remain derived from notes.json. The underlying VOD
 readings and tracker outputs are unchanged; reserved-footage recognition was
 not tuned. Receipt: runs/canonical-game-import-20261109.json.
+
+
+## Creator footage collection resumed — Codex, 2026-11-18
+
+The previous task46 jobs stopped before cut verification. Twenty-seven clip metadata files existed, but none of the three pilot sources had a completed frame-verification receipt. Two unfinished untracked helpers were zero-filled, and the previous system Python installation was missing. The screen/OCR/video runtime was rebuilt privately under .vod; the helpers were reconstructed without changing the tracker/verdict rules. A checksum audit retained one mismatched Henry derived clip in a recovery folder rather than overwriting it.
+
+The refreshed public Twitch channel listings add 17 source candidates beyond the prior catalog: three Reis2Occasion, six HomeSliceHenry and eight ItsAXN. A candidate listing does not establish battle content, league or uniqueness. Three new completed VODs were downloaded: Henry 2930047987 (3,410s), Reis 2925297675 (5,720s), ItsAXN 2930158499 (5,780s). Their original download bytes total 7,910,758,188; normalization can change container size without re-encoding. Videos, frames and arbitrary title/OCR text are excluded from Git.
+
+The Henry pilot 2904735277 now has 11 cuts whose 112,800 decoded frames all pass source/crop/time alignment, maximum error 0.0007159s. This does not prove perfect boundaries, full game-state accuracy or uniqueness. Reis recovery uses fresh receipts because the current source hash differs from the old scan; ItsAXN cutting continues. All nine new Henry candidate midpoints were visually checked and show battle footage, with the phone crop also inspected at three separate source times. New Henry cutting is running; the two other new VODs still need layout/boundary validation.
+
+The first Henry pilot cut was read in full at a documented 3 FPS and 1-Hz text rate, yielding 365 samples, 53 model states and eight charged-move events. Its unchanged verdict fails: no result screen was read, and the ending party counts remain inconsistent. The canonical game record retains that failure, unknown result and inferred move limitations. real_decisions input inspection proposes four switches, three throw choices and four shields, but those are not independently verified actions/states. No bot-vs-human advantage or task42 habit estimate is published from them. Full-cut tracking and field/action validation remain required.
+
+The 20 reserved VOD views retain all four protected original hashes. The restored runtime passes 366 repository tests (one existing skip for unavailable exact team stats) and 108 exact reference duels. Source deletion requested in task46 was rejected by automatic approval review. The owner then delegated the choice; the decision is to retain full sources while disk space is sufficient and boundary/state review remains unfinished. No original video was deleted. This does not block collection. The dated receipt separates candidate, saved, verified and tracked counts and measures retained storage. Task46 remains in progress, not an exhaustive completed collection.

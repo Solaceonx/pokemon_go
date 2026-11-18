@@ -1,0 +1,128 @@
+{
+  "schema": "task46-progress-v1",
+  "date": "2026-11-18",
+  "task_complete": false,
+  "branch": "task46-creator-footage",
+  "new_archive_candidates": 17,
+  "new_candidates_per_channel": {
+    "reis2occasion": 3,
+    "homeslicehenry": 6,
+    "itsaxn": 8
+  },
+  "new_vods_downloaded": [
+    {
+      "source_id": "2930047987",
+      "channel": "homeslicehenry",
+      "url": "https://www.twitch.tv/videos/2930047987",
+      "duration_seconds": 3410,
+      "download_bytes": 1416047584,
+      "download_complete": true,
+      "cut_status": "pending_layout_review_and_completed_scan"
+    },
+    {
+      "source_id": "2925297675",
+      "channel": "reis2occasion",
+      "url": "https://www.twitch.tv/videos/2925297675",
+      "duration_seconds": 5720,
+      "download_bytes": 2362144800,
+      "download_complete": true,
+      "cut_status": "pending_layout_review_and_completed_scan"
+    },
+    {
+      "source_id": "2930158499",
+      "channel": "itsaxn",
+      "url": "https://www.twitch.tv/videos/2930158499",
+      "duration_seconds": 5780,
+      "download_bytes": 4132565804,
+      "download_complete": true,
+      "cut_status": "pending_layout_review_and_completed_scan"
+    }
+  ],
+  "pilots": [
+    {
+      "channel": "homeslicehenry",
+      "source_id": "2904735277",
+      "url": "https://www.twitch.tv/videos/2904735277",
+      "candidate_intervals": 11,
+      "selected_cuts_saved": 11,
+      "all_cut_frames_verified": true,
+      "boundary_accuracy_independently_verified": false,
+      "decoded_frames_verified": 112800,
+      "maximum_alignment_error_seconds": 0.0007159,
+      "tracked_records": [
+        {
+          "record": "games/creators/homeslicehenry/2904735277-001/game.json",
+          "actions": 25,
+          "charged_moves": {
+            "mine": 4,
+            "theirs": 4
+          },
+          "result": {
+            "value": null,
+            "from": "unknown",
+            "left": {
+              "mine": 2,
+              "theirs": 3
+            }
+          },
+          "checks": {
+            "verdict": "fail",
+            "failed": [
+              "ending: no result screen, and the tracker has us on 2 and them on 3"
+            ],
+            "notes": [
+              "fast move only guessed for sableye, ursaluna"
+            ],
+            "unexplained_health_changes": 7
+          }
+        }
+      ],
+      "source_original_retained": true
+    },
+    {
+      "channel": "reis2occasion",
+      "source_id": "2887787713",
+      "url": "https://www.twitch.tv/videos/2887787713",
+      "candidate_intervals": 11,
+      "selected_cuts_saved": 9,
+      "all_cut_frames_verified": false,
+      "boundary_accuracy_independently_verified": false,
+      "tracked_records": [],
+      "source_original_retained": true
+    },
+    {
+      "channel": "itsaxn",
+      "source_id": "2904685033",
+      "url": "https://www.twitch.tv/videos/2904685033",
+      "candidate_intervals": 15,
+      "selected_cuts_saved": 13,
+      "all_cut_frames_verified": false,
+      "boundary_accuracy_independently_verified": false,
+      "tracked_records": [],
+      "source_original_retained": true
+    }
+  ],
+  "reserved_evaluation_views_unchanged": 20,
+  "source_deletion": "retained by decision after owner delegated the choice; sufficient disk space and boundary/state review is unfinished",
+  "decision_analysis": "Readiness only; failed/unknown state evidence is not scored as verified human decisions",
+  "storage": {
+    "originals_retained_bytes": 13560441100,
+    "cut_video_bytes_including_interrupted_files": 1734613396,
+    "new_download_video_bytes": 7910758188,
+    "runtime_bytes": 380313108
+  },
+  "validation": {
+    "repository_tests": 366,
+    "skips": 1,
+    "reference_duels_exact": 108,
+    "new_source_independent_accuracy_established": false
+  },
+  "remaining": [
+    "Finish every pilot cut and frame verification.",
+    "Review and extract new-source battle proposals.",
+    "Track every cut and retain original verdicts.",
+    "Confirm action/field evidence before scoring creator decisions or habits.",
+    "Detect repeated team sequences across Twitch/YouTube before counting unique battles.",
+    "Process the remaining source queue; source listings are not verified battle videos."
+  ]
+}

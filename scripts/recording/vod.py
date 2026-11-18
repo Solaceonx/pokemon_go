@@ -35,10 +35,13 @@ def reader_location(explicit=None):
 
 
 def bootstrap(reader):
-    paths = [reader, reader / "tools/python-libs", ROOT.parent / "pokemon-go-screen-reader/tools/python-libs"]
-    for path in reversed(paths):
-        if path.is_dir():
-            sys.path.insert(0, str(path))
+    # Prefer the running Python's installed native libraries; old bundled wheels
+    # may be incompatible with a newer Windows/runtime installation.
+    if str(reader) not in sys.path:
+        sys.path.insert(0, str(reader))
+    for path in [reader / "tools/python-libs", ROOT.parent / "pokemon-go-screen-reader/tools/python-libs"]:
+        if path.is_dir() and str(path) not in sys.path:
+            sys.path.append(str(path))
 
 
 def download(url, folder, downloader):
@@ -320,11 +323,13 @@ def reuse_existing_candidates(views, library, fingerprint, platform, identity):
             abs(boundary.get(k, -100) - candidate[k]) <= 3 for k in ['start', 'first_hud_seconds']) and abs(boundary['end'] - candidate['end']) <= end_tolerance
         at_previous_edges = {**candidate, **{k: boundary[k] for k in ['start', 'end', 'first_hud_seconds']}}
         return close and compatible_export(meta, at_previous_edges, layouts[side], fingerprint)
+    reused = set()
     for side, candidates in result.items():
         for number, candidate in enumerate(candidates):
             found = next((meta for meta in previous if reusable(meta, candidate, side)), None)
             if found:
                 candidates[number] = copy.deepcopy(found['boundary_candidate'])
+                reused.add((side, number))
             else:
                 candidate['id'] = f'{prefix}-{identity}-full-{side}-{number+1:03d}'
                 if (library/candidate['id']/'battle.json').exists():
@@ -334,13 +339,25 @@ def reuse_existing_candidates(views, library, fingerprint, platform, identity):
                         'extractor_sha256':fingerprint['reader_sha256']['extract_battles.py']},sort_keys=True).encode()
                     candidate['id'] += '-r'+hashlib.sha256(revision).hexdigest()[:8]
                 candidate['match_id'] = candidate['match_id'].replace(f'tw-{identity}-', f'{prefix}-{identity}-full-', 1)
-    # Keep a new camera of an existing battle in that battle's original group.
+    # Reusing an old ordinal after a split can collide with a newly discovered
+    # game at that ordinal. Preserve saved groups and revise only the new group.
+    groups = {}
     for side, candidates in views.items():
         for index, original in enumerate(candidates):
-            old = [result[peer][j]['match_id'] for peer, peers in views.items() for j, c in enumerate(peers)
-                   if c['match_id'] == original['match_id'] and '-full-' not in result[peer][j]['id']]
-            if old:
-                result[side][index]['match_id'] = old[0]
+            groups.setdefault(original['match_id'], []).append((side,index))
+    occupied = {result[side][index]['match_id'] for side,index in reused}
+    for members in groups.values():
+        saved = {result[side][index]['match_id'] for side,index in members if (side,index) in reused}
+        if len(saved) > 1:
+            raise ValueError('Saved cameras disagree on match identity; review before grouping')
+        group_id = next(iter(saved)) if saved else result[members[0][0]][members[0][1]]['match_id']
+        if not saved and group_id in occupied:
+            import hashlib
+            edges = sorted((side,result[side][index]['start'],result[side][index]['end']) for side,index in members)
+            group_id += '-r'+hashlib.sha256(json.dumps(edges).encode()).hexdigest()[:8]
+        occupied.add(group_id)
+        for side,index in members:
+            result[side][index]['match_id'] = group_id
     return result
 
 
