@@ -435,6 +435,34 @@ def button_rim(a: np.ndarray, k: int) -> float:
     return max(float(np.median(np.abs(ring(r + 0.006) - ring(r - 0.006)))) for r in np.arange(0.080, 0.104, 0.004))
 
 
+def my_energy_one(a: np.ndarray, costs) -> float | None:
+    """Our energy from one button alone, when both buttons are drawn but only one reads cleanly (a fill level that
+    agrees with its name) and the other's name does not contradict it; None otherwise, or when both give one (that is
+    my_energy's case). On 6,700 of Snorlax's frames with both drawn (2026-11-18) the right button alone matched the
+    two-button reading on every one where both read (median 0.3 apart); where only it read, it gave readings on 20%
+    more frames, 99.4% within 9 of a two-button reading in the next half second once the player limits it to what our
+    fast moves could have added (play_android.read_energy). Body Slam's grey button over Snorlax's white was the
+    usual unreadable one."""
+    if len(costs) != 2 or min(button_rim(a, 0), button_rim(a, 1)) < 10:
+        return None
+    labels = button_labels(a)
+    found = []
+    for k, c in enumerate(costs):
+        lv, named = button_level(a, k), labels[k]
+        if lv is None or named is None or lv == "uniform" or lv < 0.04:
+            continue
+        if named != (lv >= 0.97) and abs(lv - 1) > 0.06:
+            continue
+        found.append((k, min(100.0, lv * c)))
+    if len(found) != 1:
+        return None
+    k, e = found[0]
+    other = 1 - k
+    if labels[other] is True and e < costs[other] - 5 or labels[other] is False and e >= costs[other] + 5:
+        return None  # the other button's name says otherwise
+    return e
+
+
 def my_energy(a: np.ndarray, costs) -> float | None:
     """Our energy from the buttons' fill (costs: the two charged moves' energy, in button order), or None when the
     buttons are not both on screen and in agreement."""

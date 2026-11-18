@@ -127,3 +127,12 @@ class Countdown(unittest.TestCase):
 
     def test_sky_is_not(self):
         self.assertFalse(screen.countdown(self.frame(False)))
+
+
+class OneButtonEnergy(unittest.TestCase):
+    """my_energy_one reads nothing where no buttons are drawn (a plain frame: no rims)."""
+
+    def test_no_buttons_no_reading(self):
+        a = np.zeros((1200, 540, 3), np.uint8)
+        a[:] = (90, 140, 70)  # grass
+        self.assertIsNone(screen.my_energy_one(a, [40, 65]))

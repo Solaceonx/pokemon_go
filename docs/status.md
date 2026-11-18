@@ -5228,35 +5228,42 @@ rank 1, so most opponents were weak: the owner notes it starts to matter at Ace 
     super-effective hits taken at high health (Mud Bomb on Clodsire and Thievul). 124247 was lost with both shields
     up after declining all 7 prompts.
 
-**Where their fast move in progress lands when we throw: before our charged move, not after (measured 2026-11-14 on
-the live recordings; the owner: "if we throw in the middle of their fast move that should knock us out, we get
-knocked out immediately").** `scripts/live/throw_order.py` (data `runs/throw_order.json`).
-- **Method.** 131 of our charged moves that went off, in 35 recorded league battles whose logs carry the engine's view
-  (their fast move and its damage to us). Our bar was read frame by frame from 1.5 s before the tap to Get Ready!,
-  and on the first frames once the fight was back (within 0.4 s, before a new fast move of theirs could land). Their
-  rhythm comes from their last hit on our bar; 82 throws had it and our bar read at all three points.
-- **Their move mid-way at Get Ready! (62 throws):**
-  - by Get Ready! we had lost a median 0.85 of their fast moves more than their rhythm made due: about one in 37%,
-    none in 8%;
-  - nothing more was lost at the resume (median 0; none in 76%);
-  - it was cancelled outright in 3%.
+**Their fast move in progress when we throw, and our input delay (measured 2026-11-14, corrected 2026-11-18; the
+owner: "the engine should be right so maybe it's just input delay?").** `scripts/live/throw_order.py` (data
+`runs/throw_order.json`).
+- **The damage of their fast move in progress shows at our throw.** 131 of our charged moves that went off, in 35
+  recorded league battles with logged views, had our bar read frame by frame from 1.5 s before the tap to Get Ready!
+  and on the first frames once the fight was back. 82 had their rhythm known. With their move mid-way at Get Ready!
+  (62):
+  - by Get Ready! we had lost a median 0.85 of their fast moves more than their rhythm made due;
+  - nothing more was lost at the resume (none in 76%);
+  - it was cancelled in 3%.
+- **What that does and does not show.** The first version of this entry said this proved their move lands before our
+  charged move. It does not. PvPoke, and `pogo.battle` after it, land the move "cut short by a charged move" in the
+  same turn as the throw, so either order shows its damage by Get Ready!. The measurement agrees with the simulator:
+  the hit is neither cancelled nor deferred past our minigame. Which goes first within the turn only matters when the
+  hit is lethal. Of the clean lethal cases:
+  - fainted before throwing: Clodsire, 1.39 s into Mega Greninja's 1.5 s Water Shuriken (its natural landing);
+  - fainted before throwing: Clodsire, 0.36 s into Alolan Raichu's 2 s Volt Switch;
+  - threw: Clodsire, 0.23 s into Heliolisk's Volt Switch, and Thievul against Sableye.
 
-  So the fast move in progress lands at our throw, before our charged move. PvPoke, and `pogo.battle` after it,
-  land it just after (a fast move "cut short by a charged move" in `Battle.step`). A fast move in progress that would
-  knock us out does so before ours goes off.
-- **The lethal cases are few:** 9 in the logs, 4 of them spoiled by the wrong-faint bug (fixed in eeff165). Of the
-  clean ones:
-  - fainted before throwing: Clodsire tapping 1.39 s into Mega Greninja's 1.5 s Water Shuriken (the hit landed
-    0.03 s after the tap);
-  - fainted before throwing: Clodsire tapping 0.36 s into Alolan Raichu's 2 s Volt Switch;
-  - threw: Clodsire tapping 0.23 s into Heliolisk's Volt Switch, and Thievul against Sableye's Shadow Claw.
+  All fit PvPoke's rule with the input delay below. The engine's rule stands.
+- **Input delay: our tap to Get Ready! (826 throws on 11-08 to 11-10).**
 
-  The owner's other two points stay untested: no damage taken when our charged move knocks them out (7 cases,
-  scattered), and a throw on the n-1th turn still going off.
-- **For the engine (the owner's call):** in `Battle.step`, a fast move in progress when the other side throws would
-  land before the throw, and a knock-out there would cancel it.
-- **For the player's rules:** `throw_before_fainting` and `better_soon` should count a fast move of theirs in progress
-  as landing at our throw.
+  | Our fast move | Turns | Fastest 10% | Median |
+  |---|---|---|---|
+  | Scratch, Psywave | 1 | 0.80-0.86 s | 1.13-1.30 s |
+  | Poison Sting, Sucker Punch, Thunder Shock, Shadow Claw | 2 | 0.92-1.04 s | 1.37-1.49 s |
+  | Hex, Snarl | 3 | 0.90-0.93 s | 1.39-1.54 s |
+
+  Even with our own fast move just over, Get Ready! comes 0.8 to 0.9 s after the tap, about two turns. Part of that
+  is the game drawing Get Ready! after it has the move, so the time to the move being registered is somewhat less.
+  `pogo.realtime` allows 200 ms for "seeing the screen and the tap". Their fast moves keep landing through the
+  delay, so a throw decided at low health goes off one or two of their hits later than the engine plans, or not at
+  all.
+- **Next:**
+  - the engine's assumed delay is the owner's call;
+  - the player's low-health rules (`throw_before_fainting`, `better_soon`) should count their hits through the delay.
 
 **Why our energy goes unread (2026-11-14, three recorded battles, every 3rd fight frame).** Readings came on 25-30%
 of Clodsire's and Snorlax's fight frames, 19% of Thievul's.
@@ -5267,4 +5274,16 @@ of Clodsire's and Snorlax's fight frames, 19% of Thievul's.
     "paid, a second filling"; the name check then drops it;
   - and its name missed while the button pulses.
 
-  Misreads mostly become no reading rather than a wrong one. Not changed yet.
+  Misreads mostly become no reading rather than a wrong one.
+- **Fixed 2026-11-18: one button can stand alone.** The reader needed both buttons to read and agree, so one bad
+  button cost the reading even when the other was clean. `android_screen.my_energy_one` reads one button when both
+  are drawn, only it reads cleanly, and the other's name does not contradict it. The player takes that reading only
+  within 1.5 s of a kept one, and no further from it than our fast moves could have added.
+  - On 6,700 Snorlax frames with both buttons drawn, the right button alone matched every two-button reading (median
+    0.3 apart).
+  - With the limit it adds readings on 20% more frames, 99.4% within 9 of a two-button reading in the next half
+    second (689 of 693). Without the limit, a button flashing as it became paid read 100 from 62.
+  - In replays of 233719 and 230719, looks with our energy read rose: Snorlax 12-14% to 34-43%, Clodsire 31% to 50%,
+    Thievul 0-6% to 28-36%.
+- **better_soon counts their hits through the input delay** (two turns, `THROW_DELAY_TURNS`) in place of one hit
+  added for safety.

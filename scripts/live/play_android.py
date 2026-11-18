@@ -45,6 +45,9 @@ LOOK = 0.5  # seconds between looks given to the tracker (a turn)
 # a count of 16; believing them further from a move than they were, the engine farmed on (the owner's rule: until
 # they are about to get one) and threw late, and saw no need to shield (the owner: "you're attacking too late").
 FOE_MARGIN = 2
+# Turns from our charged tap to the game having the throw, our own fast move aside: Get Ready! comes 0.8 to 0.9 s after
+# the tap at the fastest (10th percentile of 826 throws, 2026-11-08 to 10; part of it the drawing), so about two.
+THROW_DELAY_TURNS = 2
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -1078,6 +1081,16 @@ class Player:
         read the same within 5 (single frames of a close-up can pass the buttons' own checks)."""
         costs = [m.energy for m in self.team[self.active].charged]
         e = screen.my_energy(rgb, costs)
+        if e is None and self.energy_read is not None and when - self.energy_read[1] < 1.5:
+            # one button alone (the other unreadable, Body Slam's grey over Snorlax's white most of all), only next to
+            # a recent reading and no further from it than our fast moves could have taken us: a button flashing as
+            # it becomes paid for read 100 from 62 (2026-11-18, on Snorlax's recordings)
+            one = screen.my_energy_one(rgb, costs)
+            if one is not None:
+                fast = self.team[self.active].fast
+                last, dt = self.energy_read[0], when - self.energy_read[1]
+                if last - 6 <= one <= last + fast.energy_gain * math.ceil(dt / (fast.turns * 0.5) + 1) + 6:
+                    e = one
         prev, self._energy_raw = self._energy_raw, ((e, when) if e is not None else None)
         if e is not None and prev is not None and when - prev[1] < 0.25 and abs(e - prev[0]) <= 5:
             self.energy_read = (e, when)
@@ -1451,7 +1464,10 @@ class Player:
                 continue
             more = math.ceil(max(0.0, m.energy - have) / mon.fast.energy_gain)
             turns = more * mon.fast.turns
-            hits = math.ceil(turns / them.build.fast.turns) + 1
+            # their hits until the bigger move is registered: our fast moves to pay for it, then the delay from our tap
+            # to the game having the throw (docs/status.md 2026-11-18: Get Ready! 0.8 to 0.9 s after the tap with our
+            # own fast move over, two turns), in place of the one hit added for safety
+            hits = math.ceil((turns + THROW_DELAY_TURNS) / them.build.fast.turns)
             big = damage(us, m, them)
             # and no charged move of theirs reached meanwhile by the energy their fast moves bring (the same entry:
             # the check counted their fast moves' damage only; Mud Bomb, reached during the wait, took our last
