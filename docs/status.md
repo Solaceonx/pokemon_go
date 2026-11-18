@@ -4709,3 +4709,43 @@ Current collection checkpoint: six VODs, 84 saved cuts with 751,620 decoded sour
 The reusable replay command verifies cached clip hashes, snapshots the records and pins raw-log and code hashes under .vod. It checkpoints each record, synchronizes channel summaries and the catalog, and resumes completed work without rerunning it. A full 82-record replay plus completed resume was exercised. Decision readiness reports 387 proposed switches, 331 throws and 289 shield choices; all remain unscored because field/action accuracy is unverified. No bot advantage or shield/bait habit estimate is asserted.
 
 Validation: 376 unit tests run, one existing exact-stat skip, all other tests pass; 108/108 reference duels exact. All 870 protected public-export files and 80 reserved source files across 20 views retain their hashes. Structured privacy/media checks covered 984 creator package files and found no forbidden OCR/trainer fields or media exports. Full VOD files occupy 13,309,317,724 bytes, all cuts including superseded files 3,572,149,507 bytes, and the complete 82 creator packages 6,034,961 bytes. Sources remain local and retained; no video, frame or unrestricted OCR is committed. Task 46 remains experimental and incomplete.
+
+
+## Task 46 centered impact and six-clip event reference (2026-11-18)
+
+The requested centered-target reader is implemented for creator exports in `creator_impact.py`. It measures the continuous live-colored prefix separately from delayed orange damage pixels. Live cyan, yellow and red HP remain distinct from orange; initially warm bars, missing bars, sparse reads, camera jumps and surviving live strips are rejected. A terminal inference also requires a named final attack, both active identities, an uninterrupted observed last-party-member count and aligned source PTS. The result screen is never an input to this faint detector. It moves the previously unresolved final attack to its measured impact time, supplies zero HP and remaining count in that creator observation, and records an evidence-backed terminal faint when no replacement follows. Every acceptance/rejection has typed provenance. This is still an inference from measured pixels and disappearance, not exact maximum-HP knowledge.
+
+Henry 002 live fill changes from 89 pixels to zero at 170.2167 seconds while the orange damage strip remains 89 pixels; seven consecutive zero samples confirm it at 170.3167 seconds. Its source-aligned impact frames are pinned by PTS. The 82-record replay accepted four terminal sequences, all visually checked against source frames: Henry 2904735277-002 (Mimikyu), Henry -005 (own Jumpluff), ItsAXN 2904685033-012 (Cradily), ItsAXN 2930158499-009 (own Tinkaton). All four change fail -> pass under the existing checks. Unexplained changes remain 764 -> 764 overall; none was suppressed. Shared assembler, tracker and verdict code remain unchanged.
+
+| Records | Before strict passes | After strict passes |
+|---|---:|---:|
+| Henry, 19 | 0 | 2 |
+| ItsAXN, 39 | 0 | 2 |
+| Reis, 24 | 1 | 1 |
+| All 82 | 1 | 5 |
+| Original eleven | 0 | 2 |
+| Six reference clips | 0 | 1 |
+
+The reference set was selected before changes: older Henry 002 plus first new Henry; first older/new ItsAXN; second older Reis (the first is partial) plus first new Reis. The full visible clip was reviewed on source-only storyboards sampled every 1.5 seconds, with targeted impact/ambiguous-frame inspection. The labels were fixed before scoring predictions. `data/creator_ground_truth_v1.json` stores every labeled charged release, shield decision and faint interval, source/clip hashes, representative source PTS and decoded-frame hashes. Images and OCR remain private. This is a small assistant-reviewed reference, not independently human-adjudicated or a random sample. Henry 002 is explicitly a development example; generic Weather Ball variants and unannotated species forms are not graded.
+
+There are 64 named charged releases, 23 Protect Shield uses and 21 visible faints. The newer Reis source cuts from Cetitan's ice minigame straight to the avatar before a named release or impact: that extra charge cue is explicitly censored, with no last faint invented from the win screen. Toxapex still has red HP immediately before being switched out; this is not labeled as a faint. Several BLOCKED announcements occur with a disguise message and no Protect Shield decrease, and are not labeled as shield use.
+
+Matching is maximum one-to-one, with the correct attacking side/visible species/move for charged releases, correct fainted side/species for faints, and an annotated source-time interval plus/minus three seconds. Shield use is matched separately by defending side and the associated attack window. Missing and duplicate outputs count as errors; a release hidden by an edit is unscorable only for its own side and actor. Untimed identity matches are diagnostic and never replace the primary timed score.
+
+| Event | Source events | Correct before -> after | Unmatched outputs before -> after | Missed before -> after | After precision | After recall |
+|---|---:|---:|---:|---:|---:|---:|
+| Charged release | 64 | 59 -> 60 | 5 -> 4 | 5 -> 4 | 93.8% | 93.8% |
+| Protect Shield | 23 | 22 -> 22 | 1 -> 1 | 1 -> 1 | 95.7% | 95.7% |
+| Faint | 21 | 7 -> 8 | 7 -> 7 | 14 -> 13 | 53.3% | 38.1% |
+
+| Channel (two clips each) | Charged correct / reference after | Shield correct / reference after | Faint correct / reference after |
+|---|---:|---:|---:|
+| Henry | 20 / 21 | 8 / 8 | 4 / 7 |
+| ItsAXN | 23 / 25 | 7 / 8 | 1 / 8 |
+| Reis | 17 / 18 | 7 / 7 | 3 / 6 |
+
+Pooled faint F1 is 40.0% -> 44.4%; the descriptive 95% whole-battle-bootstrap interval after is 25.8%-62.5% (before 21.6%-58.1%). Charged F1 is 92.2% -> 93.8% (after interval 90.3%-97.0%); shield F1 stays 95.7%. With two clips per channel these margins do not establish population accuracy or a statistically reliable general improvement. Excluding development clip Henry 002, all five-clip scores are unchanged: charged 49/53, shields 18/19, faints 6/17. Timing-free counts are separately exposed for diagnosing delayed replacement-triggered events.
+
+The labels reveal concrete remaining errors: new Henry 001's Dark Pulse is reported as Aqua Tail; original ItsAXN 001's second Drum Beating and new ItsAXN 001's Icy Wind are reported about 13 seconds after their reviewed impact windows; newer Reis 001's Weather Ball name is missing. Several faints are delayed until a replacement appears, Kingdra's faint is missing in Henry 002, and older Reis 002 has a Turtonator faint at about 130.9 seconds although the reviewed victim later is Victreebel. These differences explain why a consistency pass is not full game-state accuracy.
+
+Validation: 391 tests run, one existing exact-stat skip, all others pass; 108/108 reference duels exact. The twenty reserved views and their 80 protected source files retain their hashes, as do 870 protected public export files. Structured creator privacy checks cover 1,066 files, with no forbidden OCR/trainer fields. Before packages are pinned to Git d856e542895ff23a42f4922353c5f5410bf4ad9e and backed up locally; all replay packages were staged before installation. Public artifacts are typed records, frame hashes, labels, metrics and code only. Full VODs, cuts, storyboards and frame evidence remain local. Detailed results: `runs/task46-impact-audit-20261118.json` and `runs/task46-event-accuracy-20261118.json`. Task 46 remains open beyond these requested subtasks.

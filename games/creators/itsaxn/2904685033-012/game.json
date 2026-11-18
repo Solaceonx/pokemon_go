@@ -19,16 +19,14 @@
   "from": "result screen",
   "left": {
    "mine": 1,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 213.8,
- "fighting_turns": 162,
+ "fighting_turns": 151,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says win, tracker has us on 1 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "unexplained changes in 18% of looks",
    "fast move only guessed for furret, cradily"
@@ -222,8 +220,8 @@
     "cp": 1500,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.257,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "ACID",
      "name": "Acid",
@@ -281,7 +279,7 @@
   },
   "faints": {
    "mine": 2,
-   "theirs": 2
+   "theirs": 3
   }
  },
  "actions": [
@@ -2211,21 +2209,21 @@
   {
    "kind": "fighting",
    "t": 195.5,
-   "until": 198.8,
+   "until": 207.516699,
    "fighting_turn": 145,
-   "turns": 17,
+   "turns": 6,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 17,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Acid",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -2255,6 +2253,38 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 207.516699,
+   "fighting_turn": 151,
+   "side": "theirs",
+   "pokemon": "Cradily",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 0,
+     "left": 1,
+     "hp": 3,
+     "hp_max": 150,
+     "hp_share": 0.02,
+     "energy": 10
+    },
+    "theirs": {
+     "active": "Cradily",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 144,
+     "hp_share": 0.0,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 48
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 198.8,
    "fighting_turn": 151,
@@ -2264,15 +2294,15 @@
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 100,
+   "energy_before": 60,
    "target": "Cradily",
    "shielded": false,
    "target_hp_before": 37,
-   "target_hp_after": 37,
+   "target_hp_after": 0,
    "target_hp_max": 144,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 54,
-   "resolved_t": 213.8,
+   "resolved_t": 207.52,
    "cue": true,
    "state": {
     "mine": {
@@ -2282,32 +2312,32 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 50
+     "energy": 10
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
-     "left": 1,
-     "hp": 37,
+     "left": 0,
+     "hp": 0,
      "hp_max": 144,
-     "hp_share": 0.257,
+     "hp_share": 0.0,
      "energy": [
-      88,
-      88
+      40,
+      40
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "end",
    "t": 213.8,
-   "fighting_turn": 162,
+   "fighting_turn": 151,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 1,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -2317,20 +2347,20 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 50
+     "energy": 10
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
-     "left": 1,
-     "hp": 37,
+     "left": 0,
+     "hp": 0,
      "hp_max": 144,
-     "hp_share": 0.257,
+     "hp_share": 0.0,
      "energy": [
-      88,
-      88
+      40,
+      40
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 48
     }
    }
   }

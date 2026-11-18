@@ -18,17 +18,15 @@
   "value": "loss",
   "from": "result screen",
   "left": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 1
   }
  },
  "seconds": 189.1,
- "fighting_turns": 131,
+ "fighting_turns": 125,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says loss, tracker has us on 1 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "fast move only guessed for araquanid"
   ],
@@ -109,8 +107,8 @@
     "cp": 1498,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.412,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -269,7 +267,7 @@
    "theirs": 2
   },
   "faints": {
-   "mine": 2,
+   "mine": 3,
    "theirs": 2
   }
  },
@@ -2017,22 +2015,22 @@
   {
    "kind": "fighting",
    "t": 173.0,
-   "until": 176.1,
+   "until": 183.616707,
    "fighting_turn": 119,
-   "turns": 12,
+   "turns": 6,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
    },
    "state": {
     "mine": {
@@ -2060,6 +2058,38 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 183.616707,
+   "fighting_turn": 125,
+   "side": "mine",
+   "pokemon": "Jumpluff",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 153,
+     "hp_share": 0.0,
+     "energy": 63
+    },
+    "theirs": {
+     "active": "Thievul",
+     "shields": 0,
+     "left": 1,
+     "hp": 4,
+     "hp_max": 127,
+     "hp_share": 0.031,
+     "energy": [
+      12,
+      12
+     ],
+     "energy_ceiling": 19
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 176.1,
    "fighting_turn": 125,
@@ -2070,28 +2100,28 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    71,
-    71
+    57,
+    57
    ],
-   "energy_ceiling": 92,
+   "energy_ceiling": 71,
    "target": "Jumpluff",
    "shielded": false,
    "target_hp_before": 63,
-   "target_hp_after": 63,
+   "target_hp_after": 0,
    "target_hp_max": 153,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 77,
-   "resolved_t": 189.1,
+   "resolved_t": 183.62,
    "cue": true,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 0,
-     "left": 1,
-     "hp": 63,
+     "left": 0,
+     "hp": 0,
      "hp_max": 153,
-     "hp_share": 0.412,
-     "energy": 90
+     "hp_share": 0.0,
+     "energy": 63
     },
     "theirs": {
      "active": "Thievul",
@@ -2101,32 +2131,32 @@
      "hp_max": 127,
      "hp_share": 0.031,
      "energy": [
-      26,
-      26
+      12,
+      12
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 19
     }
    }
   },
   {
    "kind": "end",
    "t": 189.1,
-   "fighting_turn": 131,
+   "fighting_turn": 125,
    "result": "loss",
    "result_from": "result screen",
    "left": {
-    "mine": 1,
+    "mine": 0,
     "theirs": 1
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 0,
-     "left": 1,
-     "hp": 63,
+     "left": 0,
+     "hp": 0,
      "hp_max": 153,
-     "hp_share": 0.412,
-     "energy": 90
+     "hp_share": 0.0,
+     "energy": 63
     },
     "theirs": {
      "active": "Thievul",
@@ -2136,10 +2166,10 @@
      "hp_max": 127,
      "hp_share": 0.031,
      "energy": [
-      26,
-      26
+      12,
+      12
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 19
     }
    }
   }

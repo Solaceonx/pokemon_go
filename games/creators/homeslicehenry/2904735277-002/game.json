@@ -19,16 +19,14 @@
   "from": "result screen",
   "left": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 174.5,
- "fighting_turns": 121,
+ "fighting_turns": 102,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says win, tracker has us on 2 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "fast move only guessed for kingdra, cramorant, mimikyu"
   ],
@@ -219,8 +217,8 @@
     "cp": 1491,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.664,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -271,7 +269,7 @@
   },
   "faints": {
    "mine": 1,
-   "theirs": 1
+   "theirs": 2
   }
  },
  "actions": [
@@ -1450,21 +1448,21 @@
   {
    "kind": "fighting",
    "t": 152.5,
-   "until": 174.5,
+   "until": 162.816703,
    "fighting_turn": 97,
-   "turns": 24,
+   "turns": 5,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 2
    },
    "unexplained_health_changes": 1,
@@ -1494,25 +1492,12 @@
    }
   },
   {
-   "kind": "charged",
-   "t": 174.5,
+   "kind": "faint",
+   "t": 162.816703,
    "fighting_turn": 102,
-   "side": "mine",
-   "pokemon": "Jumpluff",
-   "move": "Acrobatics",
-   "move_id": "ACROBATICS",
-   "move_known_from": "inferred",
-   "cost": 55,
-   "energy_before": 100,
-   "target": "Mimikyu",
-   "shielded": false,
-   "target_hp_before": 71,
-   "target_hp_after": 71,
-   "target_hp_max": 107,
-   "target_bar_read": false,
-   "expected_damage": 59,
-   "resolved_t": 174.5,
-   "cue": false,
+   "side": "theirs",
+   "pokemon": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -1526,27 +1511,72 @@
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
-     "hp": 71,
+     "left": 0,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.664,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      64,
+      64
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 155.5,
+   "fighting_turn": 102,
+   "side": "mine",
+   "pokemon": "Jumpluff",
+   "move": "Acrobatics",
+   "move_id": "ACROBATICS",
+   "move_known_from": "seen",
+   "cost": 55,
+   "energy_before": 100,
+   "target": "Mimikyu",
+   "shielded": false,
+   "target_hp_before": 71,
+   "target_hp_after": 0,
+   "target_hp_max": 107,
+   "target_bar_read": true,
+   "expected_damage": 59,
+   "resolved_t": 162.82,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 2,
+     "hp": 44,
+     "hp_max": 153,
+     "hp_share": 0.288,
+     "energy": 45
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": [
+      64,
+      64
+     ],
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "end",
    "t": 174.5,
-   "fighting_turn": 121,
+   "fighting_turn": 102,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 2,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -1561,15 +1591,15 @@
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
-     "hp": 71,
+     "left": 0,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.664,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      64,
+      64
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
     }
    }
   }

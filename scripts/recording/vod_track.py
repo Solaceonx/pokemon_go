@@ -469,7 +469,7 @@ def creator_export(folder, game, meta, root):
         name += '-' + meta['view_id']
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
-    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json',
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json',
                'state.json', 'track.json', 'timeline.json', 'verdict.json']
     for name in allowed:
         path = game / name
@@ -516,10 +516,15 @@ def track_clip(folder, reader, *, creator_root=None):
         if evidence is not None:
             retain_counter_looks(game, evidence_path)
             write_json(game / 'creator-evidence.json', evidence)
+            from creator_impact import apply_impact
+            terminal = apply_impact(folder, raw, game)
         paired = reconcile(folder, game)
         prepare_team(game, GameData())
         tracked = run_step(ROOT / "scripts/track.py", game)
         (game / "track.log").write_text(tracked["output"], encoding="utf-8")
+        if evidence is not None:
+            from creator_impact import record_faint
+            record_faint(game, terminal)
         result = decide(game, GameData())
         result["paired_move_names_recovered"] = len(paired)
         blind = game / "blind"

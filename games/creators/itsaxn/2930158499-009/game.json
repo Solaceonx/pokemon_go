@@ -18,17 +18,15 @@
   "value": "loss",
   "from": "result screen",
   "left": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 3
   }
  },
  "seconds": 164.5,
- "fighting_turns": 125,
+ "fighting_turns": 119,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says loss, tracker has us on 1 and them on 3"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "fast move only guessed for ursaluna, dondozo"
   ],
@@ -109,8 +107,8 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.709,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -278,7 +276,7 @@
    "theirs": 3
   },
   "faints": {
-   "mine": 1,
+   "mine": 2,
    "theirs": 0
   }
  },
@@ -1778,22 +1776,22 @@
   {
    "kind": "fighting",
    "t": 148.5,
-   "until": 151.5,
+   "until": 159.166686,
    "fighting_turn": 113,
-   "turns": 12,
+   "turns": 6,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1821,6 +1819,38 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 159.166686,
+   "fighting_turn": 119,
+   "side": "mine",
+   "pokemon": "Tinkaton",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 141,
+     "hp_share": 0.0,
+     "energy": 51
+    },
+    "theirs": {
+     "active": "Ursaluna",
+     "shields": 1,
+     "left": 3,
+     "hp": 34,
+     "hp_max": 144,
+     "hp_share": 0.236,
+     "energy": [
+      33,
+      33
+     ],
+     "energy_ceiling": 37
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 151.5,
    "fighting_turn": 119,
@@ -1831,28 +1861,28 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    93,
-    93
+    73,
+    73
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 77,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 100,
-   "target_hp_after": 100,
+   "target_hp_after": 0,
    "target_hp_max": 141,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 56,
-   "resolved_t": 164.5,
+   "resolved_t": 159.17,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 0,
-     "left": 1,
-     "hp": 100,
+     "left": 0,
+     "hp": 0,
      "hp_max": 141,
-     "hp_share": 0.709,
-     "energy": 78
+     "hp_share": 0.0,
+     "energy": 51
     },
     "theirs": {
      "active": "Ursaluna",
@@ -1862,32 +1892,32 @@
      "hp_max": 144,
      "hp_share": 0.236,
      "energy": [
-      53,
-      53
+      33,
+      33
      ],
-     "energy_ceiling": 57
+     "energy_ceiling": 37
     }
    }
   },
   {
    "kind": "end",
    "t": 164.5,
-   "fighting_turn": 125,
+   "fighting_turn": 119,
    "result": "loss",
    "result_from": "result screen",
    "left": {
-    "mine": 1,
+    "mine": 0,
     "theirs": 3
    },
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 0,
-     "left": 1,
-     "hp": 100,
+     "left": 0,
+     "hp": 0,
      "hp_max": 141,
-     "hp_share": 0.709,
-     "energy": 78
+     "hp_share": 0.0,
+     "energy": 51
     },
     "theirs": {
      "active": "Ursaluna",
@@ -1897,10 +1927,10 @@
      "hp_max": 144,
      "hp_share": 0.236,
      "energy": [
-      53,
-      53
+      33,
+      33
      ],
-     "energy_ceiling": 57
+     "energy_ceiling": 37
     }
    }
   }

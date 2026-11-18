@@ -80,3 +80,14 @@ python scripts/recording/replay_creators.py --reader-dir ../pokemon-go-screen-re
 ```
 
 The optional `--source` and `--channel` filters can be repeated. The normal video dependencies described above are still required. The work folder must be under `.vod`; backups and diagnostics stay out of Git. Raw-log changes and changed replay code block reuse of a checkpoint. Each record retains its strict verdict, including failures. Successful processing does not mean accurate game states; an actual processing error returns a nonzero exit and preserves the previous export. Each package is built in a temporary private folder before installation; the prior package is retained locally, with rollback if installation fails. Channel summaries and `games/catalog.json` follow completed replays. The result/empty-bar adapters apply only to creator exports; result words and surrender dialogs never imply a knockout.
+
+
+## Source-reviewed creator events
+
+`data/creator_ground_truth_v1.json` contains two source-reviewed clips per channel. It keeps uncertain/censored releases explicit, separates Protect Shield use from other BLOCKED messages, and pins witness frames by source PTS and hashes without storing images. Score the current records against a baseline checkout's creator packages:
+
+```powershell
+python scripts/recording/score_creator_events.py --before PATH_TO_BASELINE/games/creators --baseline-ref d856e542895ff23a42f4922353c5f5410bf4ad9e --out runs/task46-event-accuracy-20261118.json
+```
+
+The scorer reports precision, recall, false/missed events, per-channel results and descriptive whole-battle-bootstrap margins. Primary matches require identity and an annotated video-time interval with a three-second allowance; untimed identity scores are diagnostic only. Henry 002 was used to develop the centered-impact reader and is excluded in an additional five-clip result. These six nonrandom clips are not a general game-state accuracy claim. Centered-impact evidence is creator-only; the existing strict verdicts remain in force.

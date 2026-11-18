@@ -77,6 +77,7 @@ def main():
     code = {p.relative_to(ROOT).as_posix(): sha256(p) for p in [
         Path(__file__).resolve(), ROOT / 'scripts/recording/vod_track.py',
         ROOT / 'scripts/recording/assemble.py', ROOT / 'scripts/recording/vod_markers.py',
+        ROOT / 'scripts/recording/creator_impact.py',
         ROOT / 'scripts/recording/public_transitions.py', ROOT / 'scripts/recording/game_record.py',
         ROOT / 'scripts/recording/verdict.py', ROOT / 'pogo/tracker.py']}
     receipt_path = work / 'replay.json'
