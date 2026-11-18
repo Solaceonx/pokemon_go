@@ -50,6 +50,10 @@ FOE_MARGIN = 2
 # at the fastest from the tap to the buttons going (10th percentile of 48 recorded throws; median 0.63 s with our fast
 # move finishing). Get Ready! comes a median 0.76 s after that, the fight already stopped. About two turns.
 THROW_DELAY_TURNS = 2
+# A decision at the start of each of our fast moves when a charged move is paid for (Player.at_our_hit); the
+# environment's POGO_DECIDE_ON_HIT=0 turns it off, to compare on replays
+import os as _os
+DECIDE_ON_HIT = _os.environ.get("POGO_DECIDE_ON_HIT", "1") != "0"
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -819,7 +823,7 @@ class Player:
                         self.pending_theirs = True
                         self.their_throw_at = time.time()
                         self.log("their_charged_unprompted", t, gap=round(t - self.last_fight, 2))
-                if t - self.last_look >= LOOK or (t - self.last_look >= 0.12 and self.energy_crossed()):
+                if t - self.last_look >= LOOK or (t - self.last_look >= 0.12 and (self.energy_crossed() or self.at_our_hit(t))):
                     self.give_look(t, look, rgb)
                 self.act(t, look, rgb)
                 self.last_fight = t
@@ -909,6 +913,8 @@ class Player:
         theirs = bars.get("theirs")
         if theirs is not None and foe is not None and self.my_steps.add(t, theirs * screen.BAR_INSIDE) is not None:
             self.my_hits_since_look += 1
+            self.my_hit_at = t  # our fast move landed: the next has just begun
+            self.log("my_hit", t)
         px = bars.get("mine")
         if px is None or foe is None:
             return
@@ -1130,6 +1136,22 @@ class Player:
         if self.energy_read is not None and time.time() - self.energy_read[1] < 0.35:
             return self.energy_read[0]
         return None
+
+    def at_our_hit(self, t: float) -> bool:
+        """Our fast move has just landed (seen on their bar) and a charged move is paid for: a look and decision now,
+        at the start of our next fast move, so a throw is tapped before that move ends and goes off when it does. The
+        game has a charged move only at the end of the fast move under way; a tap that comes after that end waits a
+        whole further fast move, as the fast taps have begun one (2026-11-18: with decisions every 0.5 s and 0.43 s
+        from a decision to its tap, the owner: "a lot of stuff you can figure out in advance though")."""
+        if not DECIDE_ON_HIT:
+            return False
+        at = getattr(self, "my_hit_at", None)
+        if at is None or at <= self.last_look or t - at > 0.3:
+            return False
+        have = self.energy()
+        if have is None and self.tracker.foe is not None:
+            have = self.tracker.me.mon.energy
+        return have is not None and have >= min(m.energy for m in self.team[self.active].charged)
 
     def energy_crossed(self) -> bool:
         """The buttons now read our energy at or over one of our charged moves' cost that the last look's reading was

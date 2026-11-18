@@ -5277,6 +5277,14 @@ owner: "the engine should be right so maybe it's just input delay?").** `scripts
     more after nearly all went through);
   - in two replays, decision to tap went from 0.43-0.51 s to 0.38-0.47 s, and a throw decided as its energy came went
     from 0.31 to 0.15 s (small samples).
+- **Decided at the start of our fast moves (the owner: "a lot of stuff you can figure out in advance though").** The
+  game takes our charged move only at the end of the fast move under way. A tap that comes after that end waits a
+  whole further fast move (0.5 to 1 s), because the fast taps have begun one.
+  - **The change:** when our hit lands on their bar and a charged move is paid for, the player looks and decides at
+    once (`Player.at_our_hit`; `POGO_DECIDE_ON_HIT=0` turns it off), so a throw is tapped early in the next move.
+  - **On replays of 7 recorded battles:** charged taps sent before the fast move under way ended rose from 3 of 7
+    (43%) without it to 7 of 9 (78%) with it. The samples are small, and none of it is measured live yet.
+  - Each hit is now logged as a `my_hit` row.
 - **Left:**
   - the engine's search time at the decision, and its assumed 0.2 s delay (`pogo.realtime`), are the owner's call;
   - `better_soon` counts two turns of delay (`THROW_DELAY_TURNS`).
