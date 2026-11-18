@@ -1,0 +1,269 @@
+{
+ "schema": "game-record-v1",
+ "game": "2930158499-005",
+ "source": {
+  "kind": "public_footage",
+  "url": "https://www.twitch.tv/videos/2930158499",
+  "view": "pov",
+  "match_id": "tw-2930158499-full-match-005",
+  "clip_seconds": [
+   1314.5163333333333,
+   1324.016333
+  ],
+  "incomplete_start": false,
+  "incomplete_end": false,
+  "dataset_role": "unassigned"
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen",
+  "left": {
+   "mine": 3,
+   "theirs": 3
+  }
+ },
+ "seconds": 6.5,
+ "fighting_turns": 4,
+ "checks": {
+  "verdict": "fail",
+  "failed": [
+   "ending: result says win, tracker has us on 3 and them on 3"
+  ],
+  "notes": [
+   "fast move only guessed for talonflame"
+  ],
+  "unexplained_health_changes": 0
+ },
+ "teams": {
+  "mine": [
+   {
+    "species": "fearow",
+    "name": "Fearow",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": false,
+    "hp_share_at_end": 1.0,
+    "fast_move": {
+     "id": "PECK",
+     "name": "Peck",
+     "turns": 2,
+     "energy_gain": 8,
+     "known_from": "guessed"
+    },
+    "charged_moves": [
+     {
+      "id": "DRILL_PECK",
+      "name": "Drill Peck",
+      "energy": 40,
+      "known_from": "guessed",
+      "times_used": 0
+     },
+     {
+      "id": "DRILL_RUN",
+      "name": "Drill Run",
+      "energy": 40,
+      "known_from": "guessed",
+      "times_used": 0
+     }
+    ]
+   }
+  ],
+  "theirs": [
+   {
+    "species": "talonflame",
+    "name": "Talonflame",
+    "known_from": "seen",
+    "cp": 1485,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": false,
+    "hp_share_at_end": 0.963,
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "turns": 5,
+     "energy_gain": 20,
+     "known_from": "guessed",
+     "odds": {
+      "Incinerate": 0.38,
+      "Peck": 0.31,
+      "Fire Spin": 0.23,
+      "Steel Wing": 0.08
+     }
+    },
+    "charged_moves": [
+     {
+      "id": "FLY",
+      "name": "Fly",
+      "energy": 45,
+      "known_from": "guessed",
+      "times_used": 0
+     },
+     {
+      "id": "BRAVE_BIRD",
+      "name": "Brave Bird",
+      "energy": 55,
+      "known_from": "guessed",
+      "times_used": 0
+     }
+    ],
+    "other_charged_moves": {
+     "Brave Bird": 0.69,
+     "Fly": 0.59,
+     "Flame Charge": 0.44,
+     "Hurricane": 0.18,
+     "Fire Blast": 0.1
+    }
+   }
+  ],
+  "theirs_unseen": 2
+ },
+ "summary": {
+  "charged": {
+   "mine": 0,
+   "theirs": 0
+  },
+  "charged_shielded": {
+   "mine": 0,
+   "theirs": 0
+  },
+  "shields_left": {
+   "mine": 2,
+   "theirs": 2
+  },
+  "switches": {
+   "mine": 0,
+   "theirs": 0
+  },
+  "faints": {
+   "mine": 0,
+   "theirs": 0
+  }
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "fighting_turn": 0,
+   "mine": "Fearow",
+   "theirs": "Talonflame",
+   "incomplete_start": false,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 124,
+     "hp_max": 124,
+     "hp_share": 1.0,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Talonflame",
+     "shields": 2,
+     "left": 3,
+     "hp": 135,
+     "hp_max": 135,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 20
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 0.0,
+   "until": 6.5,
+   "fighting_turn": 0,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Talonflame",
+    "fast_move": "Incinerate",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 124,
+     "hp_max": 124,
+     "hp_share": 1.0,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Talonflame",
+     "shields": 2,
+     "left": 3,
+     "hp": 130,
+     "hp_max": 135,
+     "hp_share": 0.963,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 20
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 6.5,
+   "fighting_turn": 4,
+   "result": "win",
+   "result_from": "result screen",
+   "left": {
+    "mine": 3,
+    "theirs": 3
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 124,
+     "hp_max": 124,
+     "hp_share": 1.0,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Talonflame",
+     "shields": 2,
+     "left": 3,
+     "hp": 130,
+     "hp_max": 135,
+     "hp_share": 0.963,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 20
+    }
+   }
+  }
+ ],
+ "deductions": [],
+ "built_from": [
+  "events.jsonl.gz",
+  "source.json",
+  "state.json",
+  "states.jsonl.gz",
+  "timeline.json",
+  "track.json",
+  "verdict.json"
+ ]
+}

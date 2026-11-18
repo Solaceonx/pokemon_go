@@ -68,3 +68,15 @@ health, and opponent fast moves that are still only guessed.
 Nothing per recording. `KNOWN` at the top of `assemble.py` holds the movesets we have been told
 for the owner's own Pokémon; any other Pokémon gets the usual moves until the battle shows
 otherwise. Results and open problems are in `docs/status.md`.
+
+
+## Replaying saved creator records
+
+`replay_creators.py` rebuilds existing canonical creator records from their cached readings. It does not download footage or repeat OCR. Use a fresh private work folder so the before records and checkpoints remain available:
+
+```powershell
+python scripts/recording/replay_creators.py --reader-dir ../pokemon-go-screen-reader --work .vod/creator-replay
+python scripts/recording/replay_creators.py --reader-dir ../pokemon-go-screen-reader --work .vod/creator-replay --resume
+```
+
+The optional `--source` and `--channel` filters can be repeated. The normal video dependencies described above are still required. The work folder must be under `.vod`; backups and diagnostics stay out of Git. Raw-log changes and changed replay code block reuse of a checkpoint. Each record retains its strict verdict, including failures. Successful processing does not mean accurate game states; an actual processing error returns a nonzero exit and preserves the previous export. Each package is built in a temporary private folder before installation; the prior package is retained locally, with rollback if installation fails. Channel summaries and `games/catalog.json` follow completed replays. The result/empty-bar adapters apply only to creator exports; result words and surrender dialogs never imply a knockout.

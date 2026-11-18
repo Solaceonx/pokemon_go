@@ -225,6 +225,130 @@ def switch_time_left(remaining, reading_time, state_time):
     return round(max(0, remaining - max(0, reading_time - state_time)), 1) if remaining is not None else None
 
 
+def confirmed_empty_bars(readings, rich):
+    """Require a local counter drop and a continuous, matching bar outline.
+
+    Expanded searches also find battlefield lines during animations. Neither
+    a zero candidate nor a result screen is independent faint evidence.
+    """
+    from public_transitions import counter_changes
+    intervals = [b['t'] - a['t'] for a, b in zip(readings, readings[1:]) if b['t'] > a['t']]
+    if not intervals:
+        return set()
+    step = sorted(intervals)[len(intervals) // 2]
+    detailed = {round(r['timestamp_seconds'], 6): r for r in rich}
+    accepted = set()
+    for key, side in (('m', 'mine'), ('o', 'opponent')):
+        changes = counter_changes(readings, key, 'left', 1 / step)
+        drops = [after for before, after in zip(changes, changes[1:])
+                 if after['value'] == before['value'] - 1]
+        for index, row in enumerate(readings):
+            value = row[key]
+            if value.get('hp') != 0 or value.get('seg') != [] or not value.get('w'):
+                continue
+            if not any(row['t'] - .75 <= c['first'] <= row['t'] + 2 for c in drops):
+                continue
+            current = detailed.get(round(row['t'], 6), {}).get(side, {}).get('health_bar', {}).get('value')
+            bounds = current.get('bounds_px') if current else None
+            if not bounds or index == 0:
+                continue
+            # Do not bridge a missing sample or a camera cut to a different bar.
+            previous = readings[index - 1]
+            bar = detailed.get(round(previous['t'], 6), {}).get(side, {}).get('health_bar', {}).get('value')
+            old_bounds = bar.get('bounds_px') if bar else None
+            if (row['t'] - previous['t'] <= 1.6 * step and previous[key].get('hp') is not None
+                    and 0 < previous[key]['hp'] <= .15 and old_bounds
+                    and all(abs(a - b) <= 6 for a, b in zip(bounds, old_bounds))):
+                accepted.add((round(row['t'], 6), key))
+    return accepted
+
+
+def creator_readings(raw):
+    """Adapt measured empty bars and explicit result text; retain source logs.
+
+    Only independently corroborated zero bars survive as zero-length segments.
+    A result or a surrender dialog never manufactures a knockout.
+    """
+    readings = list(rows(raw / 'readings-refined.jsonl.gz'))
+    rich_path = raw / 'screen-refined.jsonl.gz'
+    confirmed = confirmed_empty_bars(readings, list(rows(rich_path))) if rich_path.exists() else set()
+    zero, rejected_zero, results, surrenders = [], [], [], []
+    by_time = {round(r['t'], 6): r for r in readings}
+    for r in readings:
+        for side in ('m', 'o'):
+            value = r[side]
+            if value.get('hp') == 0 and value.get('seg') == [] and (value.get('w') or 0) > 0:
+                item = {'t': r['t'], 'side': side}
+                if (round(r['t'], 6), side) in confirmed:
+                    value['seg'] = [['cyan', 0]]
+                    zero.append(item)
+                else:
+                    rejected_zero.append(item)
+    for record in rows(raw / 'text.jsonl.gz'):
+        text = ' '.join(part for _, part in record['text'])
+        if re.search(r'\bsurrender\s+and\s+exit\b', text, re.I):
+            surrenders.append(record['t'])
+        matched = [value for expression, value in ((r'\byou\W*win\b', 'win'),
+                    (r'\bgood\W*effort\b', 'loss')) if re.search(expression, text, re.I)]
+        if record['t'] < 20 or len(matched) != 1:
+            continue
+        reading = by_time.get(round(record['t'], 6))
+        if reading is not None and reading.get('result') in (None, matched[0]):
+            reading['result'] = matched[0]
+            results.append({'t': record['t'], 'value': matched[0], 'method': 'explicit_result_words'})
+    target = raw / 'readings-creator.jsonl.gz'
+    data = ''.join(json.dumps(r, separators=(',', ':')) + '\n' for r in readings).encode()
+    target.write_bytes(gzip.compress(data, mtime=0))
+    audit = {'schema': 2, 'source_sha256': sha256(raw / 'readings-refined.jsonl.gz'),
+             'text_sha256': sha256(raw / 'text.jsonl.gz'), 'derived_sha256': sha256(target),
+             'rich_sha256': sha256(rich_path) if rich_path.exists() else None,
+             'empty_bar_measurements_preserved': zero,
+             'uncorroborated_empty_bars_ignored': rejected_zero, 'result_evidence': results,
+             'surrender_dialog_seconds': surrenders, 'knockouts_inferred_from_result': 0,
+             'surrender_dialog_confirms_exit': False,
+             'raw_readings_unchanged': True}
+    write_json(raw / 'creator-evidence.json', audit)
+    return target, audit
+
+
+def retain_counter_looks(game, readings_path):
+    """Keep observed counter changes even when no health/move was visible."""
+    from public_transitions import counter_changes
+    readings = list(rows(readings_path))
+    timeline = json.loads((game / 'timeline.json').read_text(encoding='utf-8'))
+    origin = timeline['clip_origin_seconds']
+    looks = plain_rows(game / 'observations.jsonl')
+    if len(readings) < 2:
+        return
+    intervals = sorted(b['t'] - a['t'] for a, b in zip(readings, readings[1:]) if b['t'] > a['t'])
+    fps = 1 / intervals[len(intervals) // 2]
+    by_time = {round(look['t'], 6): look for look in looks}
+    additions = []
+    for key, prefix in (('m', 'my'), ('o', 'foe')):
+        changes = counter_changes(readings, key, 'left', fps)
+        for change in changes[1:]:
+            at = round(change['t'] - origin, 6)
+            if at < 0 or at > timeline['end']:
+                continue
+            look = by_time.setdefault(at, {'t': at})
+            field = prefix + '_left'
+            look[field] = min(look.get(field, 3), change['value'])
+            additions.append({'t': at, 'side': key, 'value': change['value'],
+                              'first_visible': change['first'], 'confirmed': change['t']})
+    # Counters cannot revive a fainted team member on a later sparse look.
+    minimum = {}
+    ordered = sorted(by_time.values(), key=lambda row: row['t'])
+    for look in ordered:
+        for field in ('my_left', 'foe_left'):
+            if look.get(field) is not None:
+                minimum[field] = min(minimum.get(field, 3), look[field])
+                look[field] = minimum[field]
+    (game / 'observations.jsonl').write_text(''.join(json.dumps(r, separators=(',', ':')) + '\n'
+                                                   for r in ordered), encoding='utf-8')
+    write_json(game / 'counter-evidence.json', {'schema': 1, 'observed_changes': additions,
+                                              'result_based_faints': 0})
+
+
 def publish(folder, game, verdict, reader):
     bootstrap(reader)
     from build_viewer import compact
@@ -345,7 +469,7 @@ def creator_export(folder, game, meta, root):
         name += '-' + meta['view_id']
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
-    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl',
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json',
                'state.json', 'track.json', 'timeline.json', 'verdict.json']
     for name in allowed:
         path = game / name
@@ -380,13 +504,18 @@ def track_clip(folder, reader, *, creator_root=None):
     raw, game = folder / "tracking-raw", folder / "tracker"
     game.mkdir(exist_ok=True)
     try:
+        bootstrap(reader)
         refine(folder, raw, rows)
-        assembled = run_step(HERE / "assemble.py", raw / "readings-refined.jsonl.gz", raw / "text.jsonl.gz", game,
+        evidence_path, evidence = creator_readings(raw) if creator_root is not None else (raw / 'readings-refined.jsonl.gz', None)
+        assembled = run_step(HERE / "assemble.py", evidence_path, raw / "text.jsonl.gz", game,
                              "--public-footage", "--single-clip")
         (game / "assembly.log").write_text(assembled["output"], encoding="utf-8")
         if not (game / "team.json").exists():
             raise ValueError(assembled["output"])
         augment_cp(game, raw)
+        if evidence is not None:
+            retain_counter_looks(game, evidence_path)
+            write_json(game / 'creator-evidence.json', evidence)
         paired = reconcile(folder, game)
         prepare_team(game, GameData())
         tracked = run_step(ROOT / "scripts/track.py", game)
@@ -400,6 +529,13 @@ def track_clip(folder, reader, *, creator_root=None):
         run_step(ROOT / "scripts/track.py", blind, "--blind")
         result["blind_energy_check"] = json.loads((blind / "track.json").read_text())
     except Exception as error:
+        if creator_root is not None:
+            # Keep the previous complete export intact on a diagnostic failure.
+            # Publishing old states with a new error verdict creates a mixed run.
+            write_json(game / 'tracking-error.json', {'game': folder.name,
+                       'error_type': type(error).__name__, 'message': str(error),
+                       'creator_export_updated': False})
+            raise RuntimeError(f'{folder.name}: creator replay failed; previous export retained') from error
         result = {"game": folder.name, "verdict": "fail", "failed": [str(error)], "notes": []}
     result = enforce_coverage(result, meta)
     result["game"] = folder.name

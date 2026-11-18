@@ -35,3 +35,6 @@ summaries does not retrain their reader or tracker.
 Videos and frames remain outside Git. Video-only cuts without tracked game data
 are not included in this catalog. `games/played` website games use a different
 seed/action format; worked examples are also excluded from this real-footage index.
+
+
+Creator checkpoint (2026-11-18): `creators/` contains 82 canonical player-view records from six VODs. The unified catalog now has 369 records, including 125 public player views; these remain record counts rather than unique battle counts. Only one creator record passes internal consistency checks, the same record that passed before the ending-repair experiment. The original eleven reviewed records still fail. Per-record limitations and visible-versus-inferred results are in `../runs/task46-ending-audit-20261118.json`. Creator packages contain typed result/counter evidence; unrestricted OCR and media stay local. Internal consistency is not measured state accuracy.

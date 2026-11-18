@@ -34,7 +34,7 @@
   ],
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
-   "fast move only guessed for ninetales, vigoroth"
+   "fast move only guessed for ninetales"
   ],
   "unexplained_health_changes": 10
  },
@@ -203,11 +203,7 @@
      "name": "Scratch",
      "turns": 1,
      "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Counter": 0.54,
-      "Scratch": 0.46
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -656,7 +652,7 @@
    "theirs": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
@@ -733,7 +729,7 @@
    "theirs": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 11,
     "hits_seen": 1
    },
@@ -828,7 +824,7 @@
    "theirs": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 10,
     "hits_seen": 2
    },
@@ -968,7 +964,7 @@
    "theirs": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
@@ -1058,7 +1054,7 @@
    "theirs": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
@@ -1924,6 +1920,17 @@
   }
  ],
  "deductions": [
+  {
+   "t": 101.0,
+   "side": "theirs",
+   "pokemon": "Vigoroth",
+   "what": "fast move",
+   "value": "Scratch",
+   "how": "every other fast move ruled out",
+   "ruled_out": [
+    "Counter"
+   ]
+  },
   {
    "t": 117.0,
    "side": "theirs",
