@@ -45,8 +45,10 @@ LOOK = 0.5  # seconds between looks given to the tracker (a turn)
 # a count of 16; believing them further from a move than they were, the engine farmed on (the owner's rule: until
 # they are about to get one) and threw late, and saw no need to shield (the owner: "you're attacking too late").
 FOE_MARGIN = 2
-# Turns from our charged tap to the game having the throw, our own fast move aside: Get Ready! comes 0.8 to 0.9 s after
-# the tap at the fastest (10th percentile of 826 throws, 2026-11-08 to 10; part of it the drawing), so about two.
+# Turns from our decision to the game having the throw (the fight stops: both buttons gone), our own fast move aside:
+# 0.43 s median from the decision's frame to the tap on the PC (2026-11-18, 368 throws; 0.1 s less since), and 0.31 s
+# at the fastest from the tap to the buttons going (10th percentile of 48 recorded throws; median 0.63 s with our fast
+# move finishing). Get Ready! comes a median 0.76 s after that, the fight already stopped. About two turns.
 THROW_DELAY_TURNS = 2
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
@@ -629,13 +631,15 @@ class Player:
                 self.phone.tap(*point)
 
     def clear_of_fast_taps(self) -> None:
-        """Stop the fast taps and wait until 0.25 s have passed since the last began. The game drops a touch that
+        """Stop the fast taps and wait until 0.15 s have passed since the last began. The game drops a touch that
         starts just after another ends: over both days' logs, of the switch taps sent within 0.1 s of a fast tap
         about 20 in 23 were ignored, and of those sent 0.13 s or more after one nearly all went through (2026-11-08;
         charged taps "sometimes not taken" were most likely the same)."""
         self.tapping = False
         with self.touch_lock:  # a fast tap under way ends first
-            wait = 0.25 - (time.time() - self.last_fast_tap)
+            # 0.15 s, not 0.25 (2026-11-18): the taps found ignored had come within 0.1 s of a fast tap, and those 0.13 s
+            # or more after one nearly all went through; the 0.25 s was a median 0.25 s of every charged tap's delay
+            wait = 0.15 - (time.time() - self.last_fast_tap)
             if wait > 0:
                 time.sleep(wait)
 
@@ -815,7 +819,7 @@ class Player:
                         self.pending_theirs = True
                         self.their_throw_at = time.time()
                         self.log("their_charged_unprompted", t, gap=round(t - self.last_fight, 2))
-                if t - self.last_look >= LOOK:
+                if t - self.last_look >= LOOK or (t - self.last_look >= 0.12 and self.energy_crossed()):
                     self.give_look(t, look, rgb)
                 self.act(t, look, rgb)
                 self.last_fight = t
@@ -1127,7 +1131,20 @@ class Player:
             return self.energy_read[0]
         return None
 
+    def energy_crossed(self) -> bool:
+        """The buttons now read our energy at or over one of our charged moves' cost that the last look's reading was
+        under: a look (and so a decision) now, not at the next half-second (2026-11-18: decisions came only at looks,
+        0.5 s apart, so a throw waited 0.25 s on average after it was paid for, on top of 0.43 s from the decision's
+        frame to the tap)."""
+        e = self.energy()
+        if e is None:
+            return False
+        before = getattr(self, "look_energy", None)
+        costs = [m.energy for m in self.team[self.active].charged]
+        return before is not None and any(before < c <= e for c in costs)
+
     def give_look(self, t: float, look, rgb) -> None:
+        self.look_energy = self.energy()
         my_left, foe_left, my_sh, foe_sh = self.header_now(look)
         # The turns since the last look are the time the fight was on the screen, measured frame by frame: the
         # tracker takes 10 s off for each charged move, so that is given back (on this phone the fight is off for

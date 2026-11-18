@@ -5256,14 +5256,30 @@ owner: "the engine should be right so maybe it's just input delay?").** `scripts
   | Poison Sting, Sucker Punch, Thunder Shock, Shadow Claw | 2 | 0.92-1.04 s | 1.37-1.49 s |
   | Hex, Snarl | 3 | 0.90-0.93 s | 1.39-1.54 s |
 
-  Even with our own fast move just over, Get Ready! comes 0.8 to 0.9 s after the tap, about two turns. Part of that
-  is the game drawing Get Ready! after it has the move, so the time to the move being registered is somewhat less.
-  `pogo.realtime` allows 200 ms for "seeing the screen and the tap". Their fast moves keep landing through the
-  delay, so a throw decided at low health goes off one or two of their hits later than the engine plans, or not at
-  all.
-- **Next:**
-  - the engine's assumed delay is the owner's call;
-  - the player's low-health rules (`throw_before_fainting`, `better_soon`) should count their hits through the delay.
+  Even with our own fast move just over, Get Ready! comes 0.8 to 0.9 s after the tap. That is not all delay: see
+  below. `pogo.realtime` allows 200 ms for "seeing the screen and the tap". Their fast moves keep landing until the
+  game has our move, so a throw decided at low health can go off a hit later than the engine plans, or not at all.
+- **Where the delay is (2026-11-18, the owner: "why is it so long? could we improve the input delay?").** Get Ready!
+  overstates it. The game has our move once both move buttons go and the fight stops, and Get Ready! comes a median
+  0.76 s after that, the fight already stopped. From decision to the move being registered:
+  - **Waiting for a look:** decisions came only at looks, every 0.5 s, so a throw waited 0.25 s on average after it
+    was paid for.
+  - **Our PC, from the decision's frame to the tap:** median 0.43 s, 90th percentile 0.62 s (368 throws):
+    - the engine's search, median 90 ms (a quarter at its 300 ms cap);
+    - waiting 0.25 s after the last fast tap began;
+    - the loop itself.
+  - **The tap to the buttons going:** median 0.63 s, 0.31 s at the 10th percentile (48 recorded throws). That is our
+    own fast move finishing, which the game requires, plus the turn's tick, the network and our view of the screen.
+- **Changed:**
+  - a decision is now taken as soon as the buttons first read our energy at a charged move's cost, not at the next
+    look;
+  - the wait after the last fast tap is 0.15 s (switch taps ignored had come within 0.1 s of one; those 0.13 s or
+    more after nearly all went through);
+  - in two replays, decision to tap went from 0.43-0.51 s to 0.38-0.47 s, and a throw decided as its energy came went
+    from 0.31 to 0.15 s (small samples).
+- **Left:**
+  - the engine's search time at the decision, and its assumed 0.2 s delay (`pogo.realtime`), are the owner's call;
+  - `better_soon` counts two turns of delay (`THROW_DELAY_TURNS`).
 
 **Why our energy goes unread (2026-11-14, three recorded battles, every 3rd fight frame).** Readings came on 25-30%
 of Clodsire's and Snorlax's fight frames, 19% of Thievul's.
