@@ -99,6 +99,8 @@ covered by `data/video_sources.csv`; task 3 (fast frame recognition for live pla
 
 ## 46. Comb the creators' footage — Codex on the owner's PC, taken 2026-11-09 (`task46-creator-footage`)
 
+**Ending-repair follow-up, Codex, 2026-11-18:** before further tracking, audit the original 11 committed creator records, preserve a per-record baseline, repair evidence-backed missing terminal observations in `vod_track.py`, then reduce unexplained health changes and rerun the remaining creator cuts. Do not infer knockouts from a result screen or weaken strict checks. Baseline: 366 tests pass (one existing exact-stat skip with the local video runtime); 108/108 reference duels match. The background intake has finished its current creator queue; its additional uncommitted records will be retained and rerun after the pilot repair.
+
 **Progress 2026-11-18 (Codex):** collection resumed after interrupted jobs. Seventeen new Twitch archive candidates were found (Reis 3, Henry 6, ItsAXN 8), and one new completed VOD per creator was downloaded. The new Henry source has nine visually reviewed battle midpoints; its cuts are being exported. The earlier pilots now have 37 saved, full-frame-verified cuts: Henry 11, Reis 11, ItsAXN 15 (359,655 checked frames total). They are source-aligned cuts, not independently verified complete states or unique battles. One creator game record is tracked with its strict failed ending verdict retained. Task 46 is **not complete**: the remaining archive queue, all-cut tracking, duplicate review and reliable decision/habit measurements remain. Full sources are retained after the owner delegated the choice: disk space is adequate and review is unfinished. Dated receipt: `runs/task46-progress-20261118.json`.
 
 
