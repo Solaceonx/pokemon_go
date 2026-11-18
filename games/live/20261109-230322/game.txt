@@ -1,0 +1,41 @@
+live-20261109-230322 . league . LOSS . 202 s
+What went wrong: Engine: no shield on Ninetales's Scorching Sands, super effective, Clodsire 57% to 6%. Player rule: better_soon held Snorlax's Body Slam on a 22 HP Ninetales for Earthquake (docs/status.md 4ec6994). Reading: who was out lost near the end.
+Fixed: eeff165: better_soon never holds a knock-out; which of ours fainted by who is out
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x1, Earthquake x1  [fainted]
+  Thievul        Sucker Punch | Night Slash x1, Play Rough x0  [fainted]
+  Snorlax        Psywave | Body Slam x1, Earthquake x1
+Theirs
+  Ninetales      Ember* | Scorching Sands x1
+  Jumpluff       Fairy Wind? | Aerial Ace x2  [fainted]
+  Magneton       Volt Switch? | 
+
+Charged moves: ours 5, theirs 9; shield prompts 5, shielded 2; fast taps 401
+Player events: active_corrected 2, decision_dropped 1, fainted_unprompted 1, switch_not_taken 1, their_charged_unprompted 4, throw_beaten 1, throw_before_theirs 1, waiting_for_better 18
+
+    0.0  start: Clodsire v Ninetales
+    8.8  theirs Ninetales (move not named) (not shielded; their energy believed [36, 36]; our health 90%)
+   19.9  ours   Clodsire Earthquake (cost 65; energy 65 by count; theirs believed [10, 10]), swipe chased icons 97
+   33.4  theirs Ninetales Scorching Sands (not shielded; their energy believed [37, 37]; our health 57%)
+   46.4  ours   Clodsire Stone Edge (cost 55; energy 55 by count; theirs believed [20, 20]), swipe chased icons 100
+   55.7  theirs switch Ninetales -> Jumpluff
+   57.8  mine   switch Clodsire -> Snorlax
+   63.4  theirs Jumpluff Aerial Ace (we shielded; their energy believed [27, 27]; our health ?)
+   76.4  theirs Jumpluff Aerial Ace (not shielded; their energy believed [27, 36]; our health ?)
+   88.4  ours   Snorlax Body Slam (cost 40; energy 79 by buttons; theirs believed [18, 18]), swipe chased icons 58
+   98.7  theirs switch Jumpluff -> Magneton
+  102.0  ours   Snorlax Earthquake (cost 65; energy 69 by count; theirs believed [0, 0]), swipe chased icons 98
+  114.6  theirs switch Magneton -> Ninetales
+  117.9  theirs Ninetales (move not named) (we shielded; their energy believed [47, 47]; our health ?)
+  126.8  mine   switch Snorlax -> Clodsire
+  129.7  mine   Clodsire fainted -> Thievul
+  142.0  theirs Ninetales (move not named) (not shielded; their energy believed [4, 4]; our health ?)
+  153.9  theirs Ninetales (move not named) (not shielded; their energy believed [0, 5]; our health ?)
+  156.9  theirs switch Ninetales -> Jumpluff
+  158.5  ours   Thievul Night Slash (cost 35; energy 35 by count; theirs believed [27, 27]), swipe chased icons 28
+  171.1  theirs Jumpluff fainted -> Ninetales
+  178.9  theirs Ninetales (move not named) (not shielded; their energy believed [0, 0]; our health ?)
+  183.4  mine   Thievul fainted -> Thievul
+  192.9  theirs Ninetales (move not named) (not shielded; their energy believed [0, 0]; our health ?)
+  201.9  end: loss

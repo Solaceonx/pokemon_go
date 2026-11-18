@@ -1,0 +1,39 @@
+live-20261109-230719 . league . LOSS . 215 s
+What went wrong: Engine: Toxicroak's Mud Bombs on Clodsire unshielded with both shields up. Reading: after Thievul fainted and the game sent Snorlax in itself, Snorlax (alive) was put at 0 HP. Player rule: better_soon held Night Slash on a 24 HP Toxicroak.
+Fixed: eeff165
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x0, Earthquake x1  [fainted]
+  Thievul        Sucker Punch | Night Slash x4, Play Rough x0  [fainted]
+  Snorlax        Psywave | Body Slam x3, Earthquake x0
+Theirs
+  Toxicroak      Mud Shot* | Mud Bomb x3  [fainted]
+  Bastiodon      Smack Down* | Flamethrower x1
+  Umbreon        Snarl? | Psychic x1, Foul Play x1
+
+Charged moves: ours 8, theirs 6; shield prompts 4, shielded 2; fast taps 496
+Player events: active_corrected 2, armed 2, fainted_unprompted 1, queued_dropped 1, their_charged_unprompted 2, throw_beaten 2, throw_before_fainting 6, throw_not_taken 1, waiting_for_better 28
+
+    0.0  start: Clodsire v Toxicroak
+   12.0  ours   Clodsire Earthquake (cost 65; energy 75 by buttons; theirs believed [30, 30]), swipe chased icons 92
+   27.4  theirs Toxicroak Mud Bomb (not shielded; their energy believed [60, 60]; our health 65%)
+   39.5  theirs Toxicroak Mud Bomb (not shielded; their energy believed [10, 15]; our health 9%)
+   48.7  mine   Clodsire fainted -> Snorlax
+   55.5  theirs switch Toxicroak -> Bastiodon
+   57.7  mine   switch Snorlax -> Thievul
+   67.4  theirs Bastiodon Flamethrower (we shielded; their energy believed [40, 40]; our health 71%)
+   77.0  ours   Thievul Night Slash (cost 35; energy 50 by count; theirs believed [0, 1]), swipe chased icons 33
+   91.1  ours   Thievul Night Slash (cost 35; energy 46 by buttons; theirs believed [32, 33]), swipe chased icons 27
+  105.4  theirs switch Bastiodon -> Toxicroak
+  107.9  theirs Toxicroak Mud Bomb (we shielded; their energy believed [36, 36]; our health 24%)
+  119.1  ours   Thievul Night Slash (cost 35; energy 67 by count; theirs believed [9, 9]), swipe chased icons 19
+  131.4  theirs Toxicroak fainted -> Umbreon
+  135.5  ours   Thievul Night Slash (cost 35; energy 29 by buttons; theirs believed [13, 13]), swipe chased icons 31
+  148.1  ours   Snorlax Body Slam (cost 40; energy 44 by count; theirs believed [26, 26]), swipe chased icons 59
+  154.8  mine   Thievul fainted -> Thievul
+  168.0  theirs Umbreon Psychic (not shielded; their energy believed [23, 33]; our health ?)
+  173.5  ours   Snorlax Body Slam (cost 40; energy 33 by buttons; theirs believed [23, 33]), swipe chased icons 34
+  190.4  theirs Umbreon Foul Play (not shielded; their energy believed [0, 14]; our health ?)
+  196.3  theirs switch Umbreon -> Bastiodon
+  198.4  ours   Snorlax Body Slam (cost 40; energy 30 by buttons; theirs believed [56, 57]), swipe chased icons 42
+  215.2  end: loss
