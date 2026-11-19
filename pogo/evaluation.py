@@ -17,8 +17,10 @@ import numpy as np
 
 from .arena import SHIELD_WORTH
 from .battle import SHIELDS, View
-from .learner import Learner, describe
+from .learner import N_KNOWN, Learner, describe, known_foes
 from .value import ValueModel
+
+N_INPUTS = 42  # describe()'s inputs, for the narrow evaluation
 
 
 def material(view: View, shield_worth: float = SHIELD_WORTH) -> float:
@@ -37,11 +39,17 @@ class Evaluator:
     def __init__(self, model: ValueModel | None = None):
         self.model = model
         self._agent = Learner()  # only for its cached one-on-one outlooks, which describe() reads
+        # A "wide" evaluation also reads their Pokemon seen and off the field (pogo.learner.known_foes): 12 more
+        # inputs, told by the model's size (scripts/train_eval.py --wide). The 42 of describe() leave a benched
+        # Pokemon of theirs out entirely: on 2026-11-18 a position scored 0.751 whether their benched Azumarill had
+        # 165 HP or 1, where play-outs gave 0.21 and 0.81 (docs/status.md).
+        self.wide = model is not None and model.layers[0][0].shape[0] == N_INPUTS + N_KNOWN
 
     def features(self, view: View) -> list[float]:
         if len(self._agent._outlooks) > 50_000:
             self._agent._outlooks.clear()
-        return describe(self._agent, view)
+        x = describe(self._agent, view)
+        return x + known_foes(view) if self.wide else x
 
     def __call__(self, view: View) -> float:
         if self.model is None:
