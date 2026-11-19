@@ -5317,16 +5317,56 @@ owner: "the engine should be right so maybe it's just input delay?").** `scripts
     67% now (95 served, 46 missed, of 753 decisions). Decisions at the cap fell to 6%.
   - **Checked against fresh engines.** Answers served from the search ahead are now logged with their view. Four
     fresh engines asked on the real view picked the same action 85% of the time (100 answers). For ordinary live
-    throws and switches on the same replays the figure was 82% (57). The gap comes from the live engine's model of
-    this opponent, not from the search ahead: three fast moves into Azumarill at 14-15 s in 130030, where fresh
-    engines switch to Snorlax, are followed by an ordinary live Earthquake there that fresh engines also call a
-    switch.
+    throws and switches on the same replays the figure was 82% (57).
+    - *Corrected the same day:* the first version of this note blamed the gap on the live engine's model of the
+      opponent. It is mostly the fresh engines. A fresh engine takes a view as a new matchup and first asks whether
+      to swap out of it, a question the live engine asks once a matchup (`pogo.agents`, `_judged`).
+    - Asked as engines that have judged the matchup (`engine_view.py` now prints both), they agree 90% (100) and 83%
+      (57).
 - **Charged moves tapped until they go off (the owner: "spam tap it until its confirmed").** Before this, a charged
   tap was repeated only after 0.6 s with the button still drawn, and only when its energy or name read as paid. 27%
   of throws that went off needed a repeat, and those took a median 1.87 s from the first tap to start against
   1.26 s. Now the button is tapped again every 0.2 s while it is drawn (`POGO_SPAM_CHARGED=0` goes back). That is
   above the game's 0.1 s minimum between touches, and fast taps after a charged tap still replace it, so the loop
   sends none. On the 4 replays: 32 first taps, 55 repeats, no errors. Not measured live yet.
+- **The engine's choice against Azumarill, played out (2026-11-18; the owner: "Yes, check it").** The position is
+  replay 130030: Clodsire against Azumarill (Bubble, a charged move ready), shields 2-2, their other two unseen.
+  `scripts/live/play_out.py` plays a logged position to the end for each first action: the trained bot on both
+  sides after it, their style drawn round the engine's four, the same dice for every option, 1,000 battles per
+  option per style.
+
+  | Share won, the four styles alike (margin about ±1.5) | Fast | Stone Edge | Earthquake | To Snorlax | To Thievul |
+  |---|---|---|---|---|---|
+  | 14.08 s: Clodsire 178/213 HP, 50 energy; Azumarill 167/191, 88 | 30.4% | - | - | 39.1% | 13.0% |
+  | the same, against the trained bot only | 25% | - | - | 14% | 11% |
+  | 15.95 s: Clodsire 175 HP, 65 energy; Azumarill 99 | 27.0% | **49.7%** | 29.0% | 38.6% | 23.3% |
+  | the same, against the trained bot only | 14% | **33%** | 17% | 17% | 14% |
+
+  - **At 50 energy, fast-moving is right.** That is what the live engine did. The switch looks better over the four
+    styles only because PvPoke's AI loses 91% to it; against the trained bot it does worst. With Hydro Pump in place
+    of Play Rough, or their real team (Whiscash, Altaria), the order is the same, except that the switch then leads
+    by 12-21 points, again through PvPoke's AI.
+  - **At 65 energy, Stone Edge is best**: +23 points on a fast move, +11 on the switch, ahead against every style.
+    With their real team it is level with the switch. Earthquake is no better than a fast move: it costs 10 more
+    energy for 19 more damage, and Stone Edge's lower cost gets a second one in before Clodsire faints.
+  - **The engine misses it.** Asked as live (the matchup judged), it keeps fast-moving 7 times in 8 and throws
+    Earthquake 1 in 8; the replay threw Earthquake. With `judge=end` it picks Stone Edge 7 times in 8.
+  - **Why: two faults in judging the looks at 20 steps.**
+    - *Throws push the judging later.* Each charged move takes turns, so the Stone Edge line (four charged moves) is
+      judged at turn 132, after Clodsire has fainted. Earthquake's line is judged at turn 112 and the switch at 72.
+      This is the known fault behind `judge=turn`.
+    - *The evaluation does not see their Pokemon on the bench.* It reads the 42 inputs of `describe()` without
+      `known_foes`. Their Pokemon seen and on the bench count neither as unseen nor as anything else. Where the
+      switch line is judged (Snorlax against their Mandibuzz, Azumarill on the bench), the evaluation is 0.751
+      whether Azumarill has 165 HP or 1. Played out from there, 300 times each, those score 0.21 and 0.81. So any
+      line in which they swap a healthy Pokemon out looks nearly won.
+    - Look values at 15.95 s, 200-400 seeds: judged at 20 steps, fast 0.46, Stone Edge 0.44, Earthquake 0.49 and
+      the switch 0.71. Played to the end: 0.27, 0.43, 0.29 and 0.31.
+  - **The wider inputs were tried only on the trained bot's networks** (2026-10-14, above). There they predicted
+    better but chose the same, because who is winning is the same for every option at a decision. In the engine's
+    evaluation, options lead to different benches, so the blind spot can change the choice. An evaluation trained
+    with `known_foes` (54 inputs) has not been built or measured.
+  - One position, so no rule from it; the engine is unchanged.
 - **The text recogniser is rebuilt after five failures running.** In two replays run four at a time, every OCR call
   failed from the start (444 in one), so the opponent was never named and no decision was made all battle. It never
   happened live (0 of 250 battles); a failure now gives no words instead of raising.

@@ -108,9 +108,18 @@ def main() -> None:
             picks = collections.Counter(f"shield:{bool(fresh(s).shield(view, r.get('foe_hi')))}" for s in range(n))
         else:
             picks = collections.Counter(name(view, fresh(s).act(view)) for s in range(n))
+            # A fresh engine takes the view as a new matchup and asks first whether to swap out of it, a question
+            # the live engine asks once a matchup (pogo.agents, _judged). Mid-matchup it had asked already: so also
+            # ask as an engine that has judged this matchup (2026-11-18: four fresh engines switched Clodsire out
+            # of Azumarill at 65 energy; as judged, they keep fast-moving 7 times in 8, as live).
+            judged = collections.Counter()
+            for s in range(n):
+                e = fresh(s)
+                e._judged = (view.me.active, view.foe.build.uid)
+                judged[name(view, e.act(view))] += 1
         print(f"{r['t']:7.2f} live {live:<28} {me.build.species_id} {me.hp}/{me.build.hp}hp {me.energy}e "
               f"vs {foe.build.species_id} {foe.hp}/{foe.build.hp}hp {foe.energy}e  shields {view.me.shields}-{view.foe_shields}"
-              f"  engine now: {dict(picks)}")
+              f"  engine now: {dict(picks)}" + ("" if r["kind"] == "shield_prompt" else f"; matchup judged: {dict(judged)}"))
 
 
 if __name__ == "__main__":
