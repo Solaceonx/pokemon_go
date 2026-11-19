@@ -77,6 +77,24 @@ class SourceCounters(unittest.TestCase):
                   'field':{'mine':[dict(t=0,name='ObservedName')],'theirs':[]}}
         self.assertEqual(health_owners(row,timeline)['mine']['camera_species'],'ObservedName')
 
+    def test_replacement_after_release_invalidates_positive_center_camera(self):
+        row={'t':11,'health':{s:{'status':'not_visible'} for s in ['mine','theirs']}}
+        row['health']['center']={'status':'observed','bar':{'fraction':.92}}
+        timeline={'clip_origin_seconds':0,'charged':[dict(t=1,side='theirs',actor='OldOpponent',announcement_clip_seconds=[8])],
+                  'field':{'mine':[dict(t=0,name='Victim')],'theirs':[dict(t=0,name='OldOpponent'),dict(t=10,name='IncomingOpponent')]}}
+        self.assertIsNone(health_owners(row,timeline)['mine'])
+        self.assertIsNone(health_owners(row,timeline)['theirs'])
+        row['t']=9
+        self.assertIsNotNone(health_owners(row,timeline)['mine'])
+
+    def test_future_minigame_cue_does_not_own_an_earlier_camera(self):
+        row={'t':4,'health':{s:{'status':'not_visible'} for s in ['mine','theirs']}}
+        row['health']['center']={'status':'observed','bar':{'fraction':.5}}
+        timeline=dict(clip_origin_seconds=0,charged=[dict(t=1,side='mine',side_evidence='minigame',side_confirmed_clip_seconds=6,announcement_clip_seconds=[8])],field={'mine':[dict(t=0,name='ObservedName')],'theirs':[]})
+        self.assertIsNone(health_owners(row,timeline)['mine'])
+        row['t']=7
+        self.assertEqual(health_owners(row,timeline)['mine']['camera_species'],'ObservedName')
+
     def test_no_shield_requires_actual_unchanged_readback(self):
         timeline=dict(clip_origin_seconds=0,charged=[dict(t=3,side='theirs',announcement_clip_seconds=[10])])
         def sample(t,value):return dict(t=t,source_pts=round(t*120),source_time_base='1/120',headers={'mine':{'shields':{'value':value}}})

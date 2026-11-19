@@ -1,7 +1,7 @@
 {
   "t": 177.0,
-  "fighting_turns": 114,
-  "warnings": 15,
+  "fighting_turns": 113,
+  "warnings": 11,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,12 +34,12 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "BUG_BITE",
-        "name": "Bug Bite",
+        "id": "INFESTATION",
+        "name": "Infestation",
         "type": "bug",
-        "damage": 1,
-        "energy_gain": 3,
-        "turns": 1
+        "damage": 3,
+        "energy_gain": 12,
+        "turns": 3
       },
       "charged": [
         {
@@ -136,7 +136,7 @@
         "hp": 8,
         "hp_max": 145,
         "hp_share": 0.055,
-        "energy": 28,
+        "energy": 20,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -187,7 +187,7 @@
         "hp": 0,
         "hp_max": 150,
         "hp_share": 0.0,
-        "energy": 82,
+        "energy": 86,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -277,7 +277,7 @@
     "left": 1,
     "unseen": 0,
     "switch_ready_in": 2.5,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 1,
     "pokemon": [
       {
         "species": "ursaluna",
@@ -299,7 +299,7 @@
         "hp": 0,
         "hp_max": 144,
         "hp_share": 0.0,
-        "energy": 42,
+        "energy": 30,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -311,10 +311,10 @@
           "energy_gain": 4,
           "known_from": "guessed",
           "misfit": {
-            "TACKLE": 0.23,
-            "ROCK_SMASH": 0.23,
-            "SMACK_DOWN": 0.21,
-            "SCRATCH": 0.23
+            "TACKLE": 0.25,
+            "ROCK_SMASH": 0.21,
+            "SMACK_DOWN": 0.31,
+            "SCRATCH": 0.25
           }
         },
         "charged_moves": [
@@ -336,21 +336,22 @@
           }
         ],
         "energy_range": [
-          42,
-          42
+          30,
+          30
         ],
-        "energy_by_clock": 46,
+        "energy_by_clock": 34,
         "energy_odds": {
-          "34": 0.08,
-          "38": 0.12,
-          "42": 0.33,
-          "46": 0.33,
-          "50": 0.12
+          "22": 0.08,
+          "26": 0.12,
+          "30": 0.33,
+          "34": 0.33,
+          "38": 0.12
         },
         "fast_move_odds": {
-          "SCRATCH": 0.53,
-          "TACKLE": 0.25,
-          "SMACK_DOWN": 0.23
+          "SCRATCH": 0.5,
+          "TACKLE": 0.23,
+          "SMACK_DOWN": 0.17,
+          "ROCK_SMASH": 0.1
         },
         "charged_move_odds": {
           "SWIFT": 1.0,
@@ -363,13 +364,13 @@
           "PLAY_ROUGH": 0.07
         },
         "ready_odds": {
-          "SWIFT": 0.92,
+          "SWIFT": 0.12,
           "HIGH_HORSEPOWER": 0.0,
-          "ICE_PUNCH": 0.14,
-          "THUNDER_PUNCH": 0.13,
-          "TRAILBLAZE": 0.07,
-          "FIRE_PUNCH": 0.13,
-          "AERIAL_ACE": 0.04,
+          "ICE_PUNCH": 0.0,
+          "THUNDER_PUNCH": 0.0,
+          "TRAILBLAZE": 0.0,
+          "FIRE_PUNCH": 0.0,
+          "AERIAL_ACE": 0.0,
           "PLAY_ROUGH": 0.0
         }
       },
@@ -393,7 +394,7 @@
         "hp": 0,
         "hp_max": 125,
         "hp_share": 0.0,
-        "energy": 32,
+        "energy": 40,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 1,
@@ -403,9 +404,10 @@
           "type": "ghost",
           "turns": 2,
           "energy_gain": 8,
-          "known_from": "inferred",
+          "known_from": "guessed",
           "misfit": {
-            "SHADOW_CLAW": 989.0
+            "FEINT_ATTACK": 1031.0,
+            "SHADOW_CLAW": 1009.0
           }
         },
         "charged_moves": [
@@ -427,27 +429,25 @@
           }
         ],
         "energy_range": [
-          32,
-          32
+          40,
+          40
         ],
-        "energy_by_clock": 40,
+        "energy_by_clock": 48,
         "energy_odds": {
-          "16": 0.08,
-          "24": 0.12,
-          "32": 0.33,
+          "24": 0.08,
+          "32": 0.12,
           "40": 0.33,
-          "48": 0.12
+          "48": 0.33,
+          "56": 0.12
         },
-        "fast_move_odds": {
-          "SHADOW_CLAW": 1.0
-        },
+        "fast_move_odds": {},
         "charged_move_odds": {
           "FOUL_PLAY": 1.0,
           "DRAIN_PUNCH": 1.0
         },
         "ready_odds": {
-          "FOUL_PLAY": 0.46,
-          "DRAIN_PUNCH": 0.46
+          "FOUL_PLAY": 0.79,
+          "DRAIN_PUNCH": 0.79
         }
       },
       {
@@ -470,20 +470,20 @@
         "hp": 34,
         "hp_max": 136,
         "hp_share": 0.25,
-        "energy": 73,
+        "energy": 100,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "BUG_BITE",
-          "name": "Bug Bite",
+          "id": "INFESTATION",
+          "name": "Infestation",
           "type": "bug",
-          "turns": 1,
-          "energy_gain": 3,
-          "known_from": "inferred",
+          "turns": 3,
+          "energy_gain": 12,
+          "known_from": "guessed",
           "misfit": {
-            "INFESTATION": 0.38,
-            "BUG_BITE": 0.51
+            "INFESTATION": 0.3,
+            "BUG_BITE": 0.42
           }
         },
         "charged_moves": [
@@ -505,19 +505,18 @@
           }
         ],
         "energy_range": [
-          73,
-          73
+          100,
+          100
         ],
-        "energy_by_clock": 76,
+        "energy_by_clock": 100,
         "energy_odds": {
-          "67": 0.08,
-          "70": 0.12,
-          "73": 0.33,
-          "76": 0.33,
-          "79": 0.12
+          "76": 0.08,
+          "88": 0.12,
+          "100": 0.79
         },
         "fast_move_odds": {
-          "BUG_BITE": 1.0
+          "INFESTATION": 0.65,
+          "BUG_BITE": 0.35
         },
         "charged_move_odds": {
           "WATER_PULSE": 1.0,

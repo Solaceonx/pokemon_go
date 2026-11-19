@@ -69,6 +69,15 @@ class MarkerTests(unittest.TestCase):
 
 
 class LedgerTests(unittest.TestCase):
+    def test_unreadable_current_fighting_hp_cannot_remain_a_current_precise_value(self):
+        ledger=PublicState({});ledger.update(frame(0),SLIM)
+        current=frame(.2);current['native_source']=dict(pts=12,time_base='1/60')
+        current['normal_fighting_evidence']={'supported':True}
+        current['mine']['health_estimate']=unknown('Hit obscures outline')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['pokemon'][state['active']]['health']['status'],'pending')
+        self.assertEqual(state['pokemon'][state['active']]['health']['observed_at_seconds'],0)
+
     def test_fresh_cp_without_readable_species_invalidates_previous_active(self):
         ledger=PublicState({});ledger.update(frame(0),SLIM)
         current=frame(.2);current['mine']['species']=unknown('Unreadable name')
@@ -99,6 +108,52 @@ class LedgerTests(unittest.TestCase):
         self.assertEqual((health['value'],health['observed_at_seconds']),([.64,.68],.2))
         self.assertEqual(health['identity_basis'],'last_recent_confirmed_header')
 
+    def test_unreadable_native_hp_cannot_retain_recent_pre_hit_value(self):
+        ledger=PublicState({});ledger.update(frame(0,health=[.7,.75]),SLIM)
+        current=frame(.2);current['native_source']=dict(pts=12,time_base='1/60')
+        current['mine']['health_estimate']=unknown('Current outline unreadable')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        health=state['pokemon'][state['active']]['health']
+        self.assertEqual((health['status'],health['value']),('pending',[.7,.75]))
+
+    def test_unreadable_attacker_hp_still_carries_during_held_charge(self):
+        ledger=PublicState({});ledger.update(frame(0,health=[.7,.75]),SLIM)
+        current=frame(.2);current['native_source']=dict(pts=12,time_base='1/60')
+        current['phase']=evidence('my_charged_minigame',.2)
+        current['mine']['health_estimate']=unknown('Animation hides our bar')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        health=state['pokemon'][state['active']]['health']
+        self.assertEqual((health['status'],health['value']),('estimated',[.7,.75]))
+
+    def test_attributed_impact_hp_is_current_without_finishing_pending_attack(self):
+        ledger=PublicState({}); ledger.update(frame(0,health=[.7,.75]),SLIM)
+        ledger.continuity.announcement('opponent','Body Slam',35,.1,ledger.sides)
+        current=frame(.2); current['native_source']=dict(pts=12,time_base='1/60')
+        current['phase']=evidence('opponent_charged_resolution',.2)
+        current['mine']['health_estimate']=dict(status='estimated',method='native_live_pixels',
+            fraction_range=[.2,.24],identity='mine:Lanturn:1493')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        hp=state['pokemon'][state['active']]['health']
+        self.assertEqual((hp['status'],hp['value'],hp['observed_at_seconds']),('estimated',[.2,.24],.2))
+        self.assertTrue(ledger.continuity.holding)
+        self.assertEqual(ledger.continuity.attack['move'],'Body Slam')
+        current=frame(.3); current['native_source']=dict(pts=18,time_base='1/60')
+        current['phase']=evidence('opponent_charged_resolution',.3)
+        current['mine']['health_estimate']=unknown('Impact hides the next bar')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        hp=state['pokemon'][state['active']]['health']
+        self.assertEqual((hp['status'],hp['value'],hp['observed_at_seconds']),('pending',[.2,.24],.2))
+
+    def test_unreadable_resolution_cannot_retain_attacker_pre_fast_hit_hp(self):
+        ledger=PublicState({}); ledger.update(frame(0,health=[.7,.75]),SLIM)
+        ledger.continuity.announcement('mine','Surf',40,.1,ledger.sides)
+        current=frame(.2); current['native_source']=dict(pts=12,time_base='1/60')
+        current['phase']=evidence('my_charged_resolution',.2)
+        current['mine']['health_estimate']=unknown('Possible queued fast hit is hidden')
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['pokemon'][state['active']]['health']['status'],'pending')
+        self.assertTrue(ledger.continuity.holding)
+
     def test_native_hp_with_conflicting_fresh_cp_cannot_damage_previous_member(self):
         ledger=PublicState({});ledger.update(frame(0,health=[.7,.75]),SLIM)
         current=frame(.2);current['mine']['species']=unknown('Unreadable name')
@@ -107,6 +162,15 @@ class LedgerTests(unittest.TestCase):
         state=ledger.update(current,SLIM)['sides']['mine']
         self.assertEqual(state['pokemon']['Lanturn:1493']['health']['value'],[.7,.75])
         self.assertEqual(state['active_status'],'pending')
+
+    def test_stale_matching_profile_does_not_block_recent_native_identity(self):
+        ledger=PublicState({});ledger.update(frame(1,health=[.7,.75]),SLIM)
+        current=frame(1.2)
+        for name in ('species','cp'):
+            current['mine'][name]['evidence']['observed_at_seconds']=0
+        current['mine']['health_estimate']=dict(status='estimated',method='native_live_pixels',fraction_range=[.64,.68],identity=None)
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['pokemon'][state['active']]['health']['value'],[.64,.68])
 
     def test_lingering_center_bar_updates_outgoing_identity(self):
         ledger=PublicState({})

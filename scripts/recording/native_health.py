@@ -10,7 +10,7 @@ import json
 
 def acquisition_digest():
     code = '\n'.join(inspect.getsource(f) for f in
-                     (palette, rectangle, candidates, glyph_features, header_panels, scene_features, measure_frame))
+                     (palette, rectangle, dim_rectangle, candidates, glyph_features, header_panels, scene_features, measure_frame))
     return hashlib.sha256(code.replace('\r\n', '\n').encode('utf-8')).hexdigest()
 
 
@@ -22,13 +22,17 @@ def palette(rgb, bounds):
     if not area.size:
         return None
     hsv = cv2.cvtColor(area, cv2.COLOR_RGB2HSV)
-    vivid = (hsv[:, :, 1] > 90) & (hsv[:, :, 2] > 140)
+    vivid = (hsv[:, :, 1] > 50) & (hsv[:, :, 2] > 140)
     hue = hsv[:, :, 0]
     cyan = vivid & (hue >= 65) & (hue <= 105)
     yellow = vivid & (hue >= 26) & (hue <= 40)
     red = vivid & ((hue <= 9) | (hue >= 170))
     orange = vivid & (hue >= 14) & (hue <= 24)
-    live = (cyan | yellow | red).mean(axis=0) >= .5
+    # A green HP strip has one live color. Warm pixels at its trailing edge
+    # are transition/damage pixels, not another helping of live HP. Yellow
+    # and red bars still use their actual warm live colors.
+    live_color = cyan if cyan.sum() > (yellow | red).sum() else (yellow | red)
+    live = live_color.mean(axis=0) >= .5
     damage = orange.mean(axis=0) >= .5
     colored = (live | damage)
     dark = hsv[:, :, 2] < 125
@@ -78,8 +82,12 @@ def rectangle(rgb, bounds, method):
     hsv = cv2.cvtColor(rgb[y-1:bottom+1, x-1:right+1], cv2.COLOR_RGB2HSV)
     h, s, v = hsv[:, :, 0], hsv[:, :, 1], hsv[:, :, 2]
     pale = ((s < 100) & (v > 150)) | ((h <= 40) & (v > 160))
-    left = float(pale[3:-3, :4].mean(axis=0).max())
-    right_support = float(pale[3:-3, -4:].mean(axis=0).max())
+    # A saturated orange/yellow damage boundary can close a contour inside
+    # the real bar. Require pale vertical rails so that boundary cannot turn
+    # a partly depleted bar into an apparently full, shorter rectangle.
+    side_pale = (s < 100) & (v > 150)
+    left = float(side_pale[3:-3, :4].mean(axis=0).max())
+    right_support = float(side_pale[3:-3, -4:].mean(axis=0).max())
     top = float(pale[:4, 3:-3].mean(axis=1).max())
     bottom_support = float(pale[-4:, 3:-3].mean(axis=1).max())
     if min(left, right_support) < .6 or min(top, bottom_support) < .65:
@@ -91,6 +99,46 @@ def rectangle(rgb, bounds, method):
             'side_rail_support': [round(left, 4), round(right_support, 4)],
             'horizontal_rail_support': [round(top, 4), round(bottom_support, 4)],
             **measurement}
+
+
+def dim_rectangle(rgb, bounds, expected_width):
+    """Recover a positive bar with four mutually consistent, dim physical rails.
+
+    The width guard belongs to the measured UI profile. This fallback cannot
+    establish an empty bar or a faint; those still require the strict outline.
+    """
+    import numpy as np
+    x, y, right, bottom = bounds
+    if (abs((right-x)-expected_width) > 6 or x < 1 or y < 1
+            or right >= rgb.shape[1]-1 or bottom >= rgb.shape[0]-1):
+        return None
+    measurement = palette(rgb, bounds)
+    if measurement is None or measurement['live_pixels'] == 0:
+        return None
+    roi = rgb[y-1:bottom+1, x-1:right+1].astype(float)
+    if min(roi.shape[:2]) <= 6:
+        return None
+    colors = np.concatenate([np.median(roi[3:-3, :4], axis=0),
+                             np.median(roi[3:-3, -4:], axis=0),
+                             np.median(roi[:4, 3:-3], axis=1),
+                             np.median(roi[-4:, 3:-3], axis=1)])
+    choices = []
+    for color in colors:
+        if color.max() < 80 or color.max()-color.min() > 160:
+            continue
+        same = np.linalg.norm(roi-color, axis=2) < 35
+        support = [float(same[3:-3, :4].mean(axis=0).max()),
+                   float(same[3:-3, -4:].mean(axis=0).max()),
+                   float(same[:4, 3:-3].mean(axis=1).max()),
+                   float(same[-4:, 3:-3].mean(axis=1).max())]
+        if min(support) >= .65:
+            choices.append(support)
+    if not choices:
+        return None
+    support = max(choices, key=min)
+    return {'bounds': list(bounds), 'outline_method': 'four_rail_color_consensus_positive_only',
+            'side_rail_support': [round(v, 4) for v in support[:2]],
+            'horizontal_rail_support': [round(v, 4) for v in support[2:]], **measurement}
 
 
 def candidates(rgb, expected_width=144):
@@ -121,6 +169,8 @@ def candidates(rgb, expected_width=144):
     found = []
     for bounds, method in rectangles:
         r = rectangle(rgb, bounds, method)
+        if r is None:
+            r = dim_rectangle(rgb, bounds, expected_width)
         if r:
             found.append(r)
     # Multiple contours describe the outer and inner edges of the same UI bar.
@@ -187,6 +237,10 @@ def header_panels(rgb, anchors=()):
     hsv = hsv_full[45:240]
     pale = ((hsv[:, :, 1] < 105) & (hsv[:, :, 2] > 150)).astype(np.uint8)*255
     pale = cv2.morphologyEx(pale, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8))
+    # Weather icons can touch a panel after closing and extend its component
+    # above the actual rectangle. Preserve the broad panel while separating
+    # narrow icon connections; fresh five-glyph geometry still has to pass.
+    pale = cv2.morphologyEx(pale, cv2.MORPH_OPEN, np.ones((1, 31), np.uint8))
     contours, _ = cv2.findContours(pale, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     boxes = []
     for contour in contours:

@@ -1,15 +1,15 @@
 {
   "schema": "creator-live-health-input-v1",
-  "native_measurements_sha256": "64794367e4438d1174dd4fb3e4f09b0797b4de984cb02c82909433a9e41e3a42",
-  "base_readings_sha256": "9fdd2e340b90dc3497da2a0369686284c4764ee6798b42795c5de4f364bb27d2",
-  "derived_sha256": "ea269a0b89c2611a23c2d099cb0cc2c54435f880b7d7d55bc89be837e8f5f671",
+  "native_measurements_sha256": "ce603c3497c4f74d8da4c35c373af581d701811767921a50c13e0ce2bc657ff0",
+  "base_readings_sha256": "5356494b1dc289ec117e7dc95b512122fb0f223eb875286b73c403a8de1fe418",
+  "derived_sha256": "ca7daa3d8b38d4e729b9a24d025eb39d1d49a7aeb8529ab55eacc1774efd0a91",
   "measurement_acquisition": {
     "fingerprint": {
       "schema": "native-health-acquisition-v2",
       "video_sha256": "afb67cd83bf4bd135f98a97d2f718cb3c92882d46ccad6bb51af7bd46b269d5d",
       "context_sha256": "6bd0d0035ce3d6d5599d90c16bd7171fff01ce0463dfc0410f59a215d61048a3",
       "alignment_sha256": "9d9fe7d82fee9605e495509f40c64c9ab85d6ab79f2ecaff1733b3fa7c051be2",
-      "measurement_code_sha256": "5540c36cc8cfae80ef912fe74ced81dfc6856c47266fa09964b78b8f02f3a179",
+      "measurement_code_sha256": "24ea2fd0265135298ebd44be0dd19e6b79b9f314246c099c07c208cd3e33f53c",
       "sample_hz": 12,
       "sampler_code_sha256": "7320ec182d7e90b42137ef983463c9b77e1ee2573503da5f1685122ed8371cdd",
       "expected_width": 144,
@@ -22,14 +22,14 @@
       "numpy": "2.5.5",
       "PIL": "12.3.0"
     },
-    "data_sha256": "64794367e4438d1174dd4fb3e4f09b0797b4de984cb02c82909433a9e41e3a42",
+    "data_sha256": "ce603c3497c4f74d8da4c35c373af581d701811767921a50c13e0ce2bc657ff0",
     "sampled_frames": 2106,
     "raw_logs_modified": false
   },
   "sampled_frames": 527,
   "health_measurements": {
-    "mine": 208,
-    "theirs": 234
+    "mine": 225,
+    "theirs": 231
   },
   "counters": {
     "mine": {
@@ -73,10 +73,10 @@
     "theirs": {
       "party": [
         {
-          "first_visible_seconds": 0.999999864026977,
-          "confirmed_seconds": 1.1666665080314733,
+          "first_visible_seconds": 0.43333327441169006,
+          "confirmed_seconds": 0.5999999184161863,
           "value": 3,
-          "source_pts": 96620340,
+          "source_pts": 96569310,
           "source_time_base": "1/90000",
           "continuity": "consistent"
         },
@@ -99,10 +99,10 @@
       ],
       "shields": [
         {
-          "first_visible_seconds": 0.999999864026977,
-          "confirmed_seconds": 1.1666665080314733,
+          "first_visible_seconds": 0.43333327441169006,
+          "confirmed_seconds": 0.5999999184161863,
           "value": 2,
-          "source_pts": 96620340,
+          "source_pts": 96569310,
           "source_time_base": "1/90000",
           "continuity": "consistent"
         },
@@ -146,8 +146,19 @@
     },
     {
       "charge_index": 1,
-      "status": "unknown",
-      "reason": "No stable post-attack glyph reading"
+      "status": "confirmed_no_spend",
+      "shielded": false,
+      "confirmed_at_seconds": 38.69999473784401,
+      "before": 2,
+      "after": 2,
+      "before_confirmed_seconds": 0.5999999184161863,
+      "before_basis": "last_confirmed_irreversible_shield_counter",
+      "after_source_pts": [
+        99998310,
+        100004340,
+        100013340
+      ],
+      "after_source_time_base": "1/90000"
     },
     {
       "charge_index": 2,
@@ -185,15 +196,15 @@
       "charge_index": 4,
       "status": "counter_changed",
       "shielded": null,
-      "confirmed_at_seconds": 80.19998909496356,
+      "confirmed_at_seconds": 79.69998916295008,
       "before": 2,
       "after": 1,
       "before_confirmed_seconds": 69.8666571666848,
       "before_basis": "fresh_pre_attack_glyphs",
       "after_source_pts": [
-        103733310,
-        103739340,
-        103748340
+        103688310,
+        103694340,
+        103703340
       ],
       "after_source_time_base": "1/90000"
     },
@@ -217,15 +228,15 @@
       "charge_index": 6,
       "status": "counter_changed",
       "shielded": null,
-      "confirmed_at_seconds": 105.19998569563799,
+      "confirmed_at_seconds": 104.6999857636245,
       "before": 1,
       "after": 0,
       "before_confirmed_seconds": 95.03332041136372,
       "before_basis": "fresh_pre_attack_glyphs",
       "after_source_pts": [
-        105983310,
-        105989340,
-        105998340
+        105938310,
+        105944340,
+        105953340
       ],
       "after_source_time_base": "1/90000"
     },
@@ -306,14 +317,14 @@
       "video_sha256": "afb67cd83bf4bd135f98a97d2f718cb3c92882d46ccad6bb51af7bd46b269d5d",
       "alignment_sha256": "9d9fe7d82fee9605e495509f40c64c9ab85d6ab79f2ecaff1733b3fa7c051be2",
       "code_sha256": "159aefe169c01ea0898fe2de3f2693d5681a470c5c25dca5dd421d775e2eec69",
-      "geometry_sha256": "c682439b0722a2fc957ff00f1f06ac902a91b1e7e3963ef0a067ca229eabebc0",
+      "geometry_sha256": "de8f32400e9f5b36d1d1dc9e20a0c00e7b48ff80e7890be841a3d54de6bbcfb8",
       "glyphs_sha256": "7eabd77bca95860ce773fe6dda10262e92ed4ea9ae598e23290acb747ffe6a04",
       "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
       "av": "19.0.2",
       "cv2": "5.1.0",
       "numpy": "2.5.5"
     },
-    "data_sha256": "b82efce6f9a4ed57eb5e2bba19ab1cc2e11b3e2c7469d186fca460c1e471de10",
+    "data_sha256": "e0dc62dade6842c2f937e4df1b75641c16f30fe5ddc60ede9c5e26a68110b123",
     "samples": 527,
     "raw_logs_modified": false
   },

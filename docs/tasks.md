@@ -1075,3 +1075,16 @@ camera, on the same battles.
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
 
+
+**Task46 continuing, 2026-11-19 (Codex):** v10/v11 each replay18 development clips with197 releases69 shieldspends69 faints and0extras; full-state readiness remains unestablished. HP camera ownership and border/color errors are being corrected. Original frozen coarse labels remain intact; separate experimental native-coordinate reference versions transparently record post-prediction label corrections. V11 tests516/1 existing skip and108/108 exact. V12 HP pixel changes are awaiting full-battle validation; canonical82 remain v9. Task stays in progress.
+
+**Task46 continuing v13, 2026-11-19:**521tests/1existing skip,108/108 exact; all18 development source-event regressions preserved. Current native HP34/34usableof82 after uncertainty increases; coverage41.46%, not full-state readiness. Full82 replay is running and must finish before indexing/publishing. Three unused source excerpts and six local cuts are prepared for source-only labels before predictions; Henry dual-phone/friendly/embedded-replay context and ending censoring are explicit. Further HP recovery/readback prototypes remain unintegrated. See status.md; task in progress.
+
+
+**Task46 continuing v15, 2026-11-19 (Codex):** v13 canonical82 completed28strict passes (v9=29, original17); consistency is not accuracy. V14 HP recovered raw frame availability but lost one faint; retained failed run. V15 repairs confirmation and restores197charges69shieldspends69faints across18development clips,533tests/1existing skip and108/108 exact. Third source-only6 frozen before predictions:48charges18shieldspends14faints73anchors,9measurable HP fields of12potential. First v15 source test and82corpus replay are running;0full-state-ready verified. See status.md for media repair, uncertainty and source attribution/censoring limits. Task in progress.
+
+
+**Task46 third-source initial test, 2026-11-19:** original first test and two transparent source-reference corrections retained. Same v15 predictions on corrected2:45/48charges(3extras),17/18shieldspends,13/17faints(0extras),2/6all-event counts. These are not detector gains from relabeling. Five Mega identity fields remain wrong; forms/enhanced moves and source-timed missing faints need fixes after the frozen82replay. No full-state-ready certification. See status.md for intervals, unknown coverage and exact code archives; in progress.
+
+
+**Task46 completed v15 replay checkpoint, not completion:** all82processed,28strict passes;533tests/1existing skip,108exact;source full-state certification0. Header/form/enhanced-move/charged-faint fixes and another untouched source test remain.

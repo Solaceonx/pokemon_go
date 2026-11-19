@@ -23,7 +23,7 @@
   }
  },
  "seconds": 154.13,
- "fighting_turns": 78,
+ "fighting_turns": 81,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -33,10 +33,10 @@
   ],
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
-   "unexplained changes in 16% of looks",
-   "fast move only guessed for shelgon, dunsparce"
+   "unexplained changes in 19% of looks",
+   "fast move only guessed for dunsparce"
   ],
-  "unexplained_health_changes": 13
+  "unexplained_health_changes": 17
  },
  "teams": {
   "mine": [
@@ -151,15 +151,11 @@
     "fainted": false,
     "hp_share_at_end": 0.154,
     "fast_move": {
-     "id": "DRAGON_BREATH",
-     "name": "Dragon Breath",
-     "turns": 1,
-     "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Dragon Breath": 0.72,
-      "Ember": 0.28
-     }
+     "id": "EMBER",
+     "name": "Ember",
+     "turns": 2,
+     "energy_gain": 9,
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -198,12 +194,7 @@
      "name": "Bite",
      "turns": 1,
      "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Rollout": 0.42,
-      "Bite": 0.4,
-      "Astonish": 0.18
-     }
+     "known_from": "guessed"
     },
     "charged_moves": [
      {
@@ -341,12 +332,12 @@
    },
    "theirs": {
     "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 5
+    "fast_move": "Ember",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 6
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Ursaluna",
@@ -361,12 +352,12 @@
      "active": "Shelgon",
      "shields": 2,
      "left": 3,
-     "hp": 94,
+     "hp": 92,
      "hp_max": 123,
-     "hp_share": 0.764,
+     "hp_share": 0.748,
      "energy": [
-      40,
-      40
+      44,
+      44
      ],
      "energy_ceiling": 40
     }
@@ -417,8 +408,8 @@
    "energy_before": 36,
    "target": "Shelgon",
    "shielded": false,
-   "target_hp_before": 94,
-   "target_hp_after": 94,
+   "target_hp_before": 92,
+   "target_hp_after": 92,
    "target_hp_max": 123,
    "target_bar_read": false,
    "expected_damage": null,
@@ -507,18 +498,18 @@
      "active": "Blastoise",
      "shields": 2,
      "left": 3,
-     "hp": 130,
+     "hp": 76,
      "hp_max": 130,
-     "hp_share": 1.0,
+     "hp_share": 0.585,
      "energy": 0
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 85,
+     "hp": 87,
      "hp_max": 184,
-     "hp_share": 0.462,
+     "hp_share": 0.473,
      "energy": [
       48,
       48
@@ -547,7 +538,7 @@
     "fast_moves_if_no_pause": 10,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Blastoise",
@@ -562,9 +553,9 @@
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 71,
+     "hp": 73,
      "hp_max": 184,
-     "hp_share": 0.386,
+     "hp_share": 0.397,
      "energy": [
       88,
       88
@@ -611,9 +602,9 @@
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 71,
+     "hp": 73,
      "hp_max": 184,
-     "hp_share": 0.386,
+     "hp_share": 0.397,
      "energy": [
       48,
       48
@@ -722,19 +713,19 @@
    "t": 44.0,
    "until": 48.8,
    "fighting_turn": 31,
-   "turns": 8,
+   "turns": 9,
    "mine": {
     "pokemon": "Blastoise",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 9,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 9,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
@@ -746,37 +737,37 @@
      "hp": 41,
      "hp_max": 130,
      "hp_share": 0.315,
-     "energy": 76
+     "energy": 80
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 173,
+     "hp": 56,
      "hp_max": 184,
-     "hp_share": 0.94,
+     "hp_share": 0.304,
      "energy": [
-      44,
-      44
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "charged",
    "t": 48.8,
-   "fighting_turn": 39,
+   "fighting_turn": 40,
    "side": "mine",
    "pokemon": "Blastoise",
    "move": "Hydro Cannon",
    "move_id": "HYDRO_CANNON",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 76,
+   "energy_before": 80,
    "target": "Dunsparce",
    "shielded": false,
-   "target_hp_before": 173,
+   "target_hp_before": 56,
    "target_hp_after": 0,
    "target_hp_max": 184,
    "target_bar_read": true,
@@ -791,7 +782,7 @@
      "hp": 41,
      "hp_max": 130,
      "hp_share": 0.315,
-     "energy": 36
+     "energy": 40
     },
     "theirs": {
      "active": "Dunsparce",
@@ -801,17 +792,17 @@
      "hp_max": 184,
      "hp_share": 0.0,
      "energy": [
-      44,
-      44
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "faint",
    "t": 57.9,
-   "fighting_turn": 39,
+   "fighting_turn": 40,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "next": null,
@@ -823,7 +814,7 @@
      "hp": 41,
      "hp_max": 130,
      "hp_share": 0.315,
-     "energy": 36
+     "energy": 40
     },
     "theirs": {
      "active": "Dunsparce",
@@ -833,25 +824,24 @@
      "hp_max": 184,
      "hp_share": 0.0,
      "energy": [
-      44,
-      44
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "charged",
    "t": 61.8,
-   "fighting_turn": 39,
+   "fighting_turn": 40,
    "side": "mine",
    "pokemon": "Blastoise",
    "move": "Hydro Cannon",
    "move_id": "HYDRO_CANNON",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 36,
-   "energy_short_by": 4,
+   "energy_before": 40,
    "target": "Dunsparce",
    "shielded": false,
    "target_hp_before": 0,
@@ -866,21 +856,66 @@
      "active": "Blastoise",
      "shields": 2,
      "left": 3,
-     "hp": 62,
+     "hp": 65,
      "hp_max": 130,
-     "hp_share": 0.477,
+     "hp_share": 0.5,
      "energy": 0
     },
     "theirs": {
      "active": "Shelgon",
      "shields": 2,
      "left": 2,
-     "hp": 94,
+     "hp": 92,
      "hp_max": 123,
-     "hp_share": 0.764,
+     "hp_share": 0.748,
      "energy": [
-      40,
-      40
+      44,
+      44
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 70.0,
+   "until": 71.0,
+   "fighting_turn": 40,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Blastoise",
+    "fast_move": "Bite",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Shelgon",
+    "fast_move": "Ember",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Blastoise",
+     "shields": 2,
+     "left": 3,
+     "hp": 65,
+     "hp_max": 130,
+     "hp_share": 0.5,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Shelgon",
+     "shields": 2,
+     "left": 2,
+     "hp": 92,
+     "hp_max": 123,
+     "hp_share": 0.748,
+     "energy": [
+      44,
+      44
      ],
      "energy_ceiling": 40
     }
@@ -888,8 +923,8 @@
   },
   {
    "kind": "switch",
-   "t": 80.0,
-   "fighting_turn": 39,
+   "t": 71.0,
+   "fighting_turn": 42,
    "side": "mine",
    "from": "Blastoise",
    "to": "Ursaluna",
@@ -901,15 +936,15 @@
      "hp": 85,
      "hp_max": 144,
      "hp_share": 0.59,
-     "energy": 6
+     "energy": 41
     },
     "theirs": {
      "active": "Ursaluna",
-     "shields": 1,
+     "shields": 2,
      "left": 2,
-     "hp": 144,
+     "hp": 134,
      "hp_max": 144,
-     "hp_share": 1.0,
+     "hp_share": 0.931,
      "energy": [
       0,
       0
@@ -920,8 +955,8 @@
   },
   {
    "kind": "switch",
-   "t": 80.0,
-   "fighting_turn": 39,
+   "t": 71.0,
+   "fighting_turn": 42,
    "side": "theirs",
    "from": "Shelgon",
    "to": "Ursaluna",
@@ -933,15 +968,15 @@
      "hp": 85,
      "hp_max": 144,
      "hp_share": 0.59,
-     "energy": 6
+     "energy": 41
     },
     "theirs": {
      "active": "Ursaluna",
-     "shields": 1,
+     "shields": 2,
      "left": 2,
-     "hp": 144,
+     "hp": 134,
      "hp_max": 144,
-     "hp_share": 1.0,
+     "hp_share": 0.931,
      "energy": [
       0,
       0
@@ -953,20 +988,19 @@
   {
    "kind": "charged",
    "t": 71.8,
-   "fighting_turn": 39,
+   "fighting_turn": 42,
    "side": "mine",
-   "pokemon": "Blastoise",
+   "pokemon": "Ursaluna",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 0,
-   "energy_short_by": 35,
-   "target": "Shelgon",
+   "energy_before": 41,
+   "target": "Ursaluna",
    "shielded": true,
-   "target_hp_before": 94,
-   "target_hp_after": 94,
-   "target_hp_max": 123,
+   "target_hp_before": 134,
+   "target_hp_after": 134,
+   "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
    "resolved_t": 80.0,
@@ -985,9 +1019,9 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 2,
-     "hp": 144,
+     "hp": 134,
      "hp_max": 144,
-     "hp_share": 1.0,
+     "hp_share": 0.931,
      "energy": [
       0,
       0
@@ -1000,23 +1034,23 @@
    "kind": "fighting",
    "t": 80.0,
    "until": 85.8,
-   "fighting_turn": 39,
+   "fighting_turn": 42,
    "turns": 11,
    "mine": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 11,
-    "hits_seen": 4
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Tackle",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 11,
-    "hits_seen": 4
+    "hits_seen": 5
    },
-   "unexplained_health_changes": 3,
+   "unexplained_health_changes": 4,
    "state": {
     "mine": {
      "active": "Ursaluna",
@@ -1045,7 +1079,7 @@
   {
    "kind": "charged",
    "t": 85.8,
-   "fighting_turn": 50,
+   "fighting_turn": 53,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "move": "Swift",
@@ -1096,7 +1130,7 @@
    "kind": "fighting",
    "t": 94.0,
    "until": 94.63,
-   "fighting_turn": 50,
+   "fighting_turn": 53,
    "turns": 1,
    "mine": {
     "pokemon": "Ursaluna",
@@ -1140,7 +1174,7 @@
   {
    "kind": "faint",
    "t": 94.63,
-   "fighting_turn": 51,
+   "fighting_turn": 54,
    "side": "mine",
    "pokemon": "Ursaluna",
    "next": null,
@@ -1173,21 +1207,21 @@
    "kind": "fighting",
    "t": 94.63,
    "until": 102.8,
-   "fighting_turn": 51,
+   "fighting_turn": 54,
    "turns": 10,
    "mine": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 10,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Tackle",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 10,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1203,9 +1237,9 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 2,
-     "hp": 101,
+     "hp": 99,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.688,
      "energy": [
       30,
       31
@@ -1217,7 +1251,7 @@
   {
    "kind": "charged",
    "t": 102.8,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "move": "Swift",
@@ -1253,9 +1287,9 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 2,
-     "hp": 101,
+     "hp": 99,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.688,
      "energy": [
       0,
       2
@@ -1268,14 +1302,14 @@
    "kind": "fighting",
    "t": 112.0,
    "until": 115.8,
-   "fighting_turn": 61,
+   "fighting_turn": 64,
    "turns": 4,
    "mine": {
     "pokemon": "Solrock",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Ursaluna",
@@ -1298,9 +1332,9 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 2,
-     "hp": 101,
+     "hp": 53,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.368,
      "energy": [
       12,
       14
@@ -1312,7 +1346,7 @@
   {
    "kind": "charged",
    "t": 115.8,
-   "fighting_turn": 64,
+   "fighting_turn": 67,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
@@ -1322,7 +1356,7 @@
    "energy_before": 48,
    "target": "Ursaluna",
    "shielded": false,
-   "target_hp_before": 101,
+   "target_hp_before": 53,
    "target_hp_after": 0,
    "target_hp_max": 144,
    "target_bar_read": true,
@@ -1357,7 +1391,7 @@
   {
    "kind": "faint",
    "t": 123.9,
-   "fighting_turn": 65,
+   "fighting_turn": 68,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "next": null,
@@ -1390,7 +1424,7 @@
    "kind": "fighting",
    "t": 123.9,
    "until": 128.8,
-   "fighting_turn": 65,
+   "fighting_turn": 68,
    "turns": 2,
    "mine": {
     "pokemon": "Solrock",
@@ -1435,7 +1469,7 @@
   {
    "kind": "charged",
    "t": 128.8,
-   "fighting_turn": 66,
+   "fighting_turn": 69,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
@@ -1467,36 +1501,36 @@
      "active": "Shelgon",
      "shields": 0,
      "left": 1,
-     "hp": 94,
+     "hp": 92,
      "hp_max": 123,
-     "hp_share": 0.764,
+     "hp_share": 0.748,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
    "t": 138.0,
-   "until": 139.5,
-   "fighting_turn": 67,
-   "turns": 3,
+   "until": 138.5,
+   "fighting_turn": 70,
+   "turns": 1,
    "mine": {
     "pokemon": "Solrock",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "fast_move": "Ember",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
    },
    "state": {
     "mine": {
@@ -1512,21 +1546,21 @@
      "active": "Shelgon",
      "shields": 0,
      "left": 1,
-     "hp": 94,
+     "hp": 92,
      "hp_max": 123,
-     "hp_share": 0.764,
+     "hp_share": 0.748,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "switch",
-   "t": 139.5,
-   "fighting_turn": 70,
+   "t": 138.5,
+   "fighting_turn": 71,
    "side": "mine",
    "from": "Solrock",
    "to": "Blastoise",
@@ -1535,18 +1569,18 @@
      "active": "Blastoise",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 65,
      "hp_max": 130,
-     "hp_share": 0.231,
-     "energy": 0
+     "hp_share": 0.5,
+     "energy": 4
     },
     "theirs": {
      "active": "Shelgon",
      "shields": 0,
      "left": 1,
-     "hp": 28,
+     "hp": 35,
      "hp_max": 123,
-     "hp_share": 0.228,
+     "hp_share": 0.285,
      "energy": [
       52,
       52
@@ -1557,24 +1591,25 @@
   },
   {
    "kind": "fighting",
-   "t": 139.5,
+   "t": 138.5,
    "until": 154.13,
-   "fighting_turn": 70,
-   "turns": 8,
+   "fighting_turn": 71,
+   "turns": 10,
    "mine": {
     "pokemon": "Blastoise",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 10,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
+    "fast_move": "Ember",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 6
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Blastoise",
@@ -1583,7 +1618,7 @@
      "hp": 11,
      "hp_max": 130,
      "hp_share": 0.085,
-     "energy": 32
+     "energy": 44
     },
     "theirs": {
      "active": "Shelgon",
@@ -1593,17 +1628,17 @@
      "hp_max": 123,
      "hp_share": 0.154,
      "energy": [
-      84,
-      84
+      99,
+      99
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "end",
    "t": 154.13,
-   "fighting_turn": 78,
+   "fighting_turn": 81,
    "result": null,
    "result_from": "unknown",
    "left": {
@@ -1618,7 +1653,7 @@
      "hp": 11,
      "hp_max": 130,
      "hp_share": 0.085,
-     "energy": 32
+     "energy": 44
     },
     "theirs": {
      "active": "Shelgon",
@@ -1628,10 +1663,10 @@
      "hp_max": 123,
      "hp_share": 0.154,
      "energy": [
-      84,
-      84
+      99,
+      99
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 100
     }
    }
   }
@@ -1674,6 +1709,17 @@
    "ruled_out": [
     "Rock Smash",
     "Smack Down"
+   ]
+  },
+  {
+   "t": 142.0,
+   "side": "theirs",
+   "pokemon": "Shelgon",
+   "what": "fast move",
+   "value": "Ember",
+   "how": "fits its hits on our bar best of the moves not ruled out",
+   "ruled_out": [
+    "Dragon Breath"
    ]
   }
  ],

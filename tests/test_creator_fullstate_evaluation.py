@@ -8,6 +8,24 @@ from creator_identity import header_identity, IdentityEvidence
 
 
 class FullstateEvaluationTests(unittest.TestCase):
+    def test_enhanced_move_suffix_cannot_silently_match_ordinary_move(self):
+        from score_creator_events import compatible
+        truth=dict(kind='charged',side='mine',pokemon='Example',move='Dark Pulse+',window=[10,11])
+        actual=dict(kind='charged',side='mine',pokemon='Example',move='Dark Pulse',t=10)
+        self.assertFalse(compatible(truth,actual))
+        actual['move']='Dark Pulse\uff0b!'
+        self.assertTrue(compatible(truth,actual))
+        truth['move']='Dark Pulse'
+        self.assertFalse(compatible(truth,actual))
+
+    def test_generic_weather_ball_preserves_type_uncertainty_but_not_plus_variant(self):
+        from score_creator_events import compatible
+        truth=dict(kind='charged',side='mine',pokemon='Example',move='Weather Ball',window=[10,11])
+        actual=dict(kind='charged',side='mine',pokemon='Example',move='Weather Ball (Ice)',t=10)
+        self.assertTrue(compatible(truth,actual))
+        actual['move']='Weather Ball+'
+        self.assertFalse(compatible(truth,actual))
+
     def test_unknown_battle_reduces_field_coverage_even_when_usable_values_are_correct(self):
         record=lambda available:dict(anchors=[dict(fields=[dict(field='mine.species',reported=available,correct=available,usable=available)])])
         result=field_metrics([record(True),record(False)],repetitions=200)['species']

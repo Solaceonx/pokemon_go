@@ -59,6 +59,48 @@
         "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
         "confirmed_clip_seconds": 95.58335202020201,
         "timing_uncertainty_seconds": 0.1,
+        "first_zero": {
+          "t": 95.28335196155099,
+          "clip_pts": 29242460717,
+          "clip_time_base": "1/306900000",
+          "source_pts": 280376940,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              31,
+              701,
+              175,
+              715
+            ],
+            "width": 138,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "paired_outline"
+          },
+          "replacement_bar": false
+        },
+        "confirmed_zero": {
+          "t": 95.35001864125122,
+          "clip_pts": 29262920721,
+          "clip_time_base": "1/306900000",
+          "source_pts": 280382970,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              31,
+              701,
+              175,
+              715
+            ],
+            "width": 138,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "paired_outline"
+          },
+          "replacement_bar": false
+        },
         "independent_support": {
           "status": "confirmed",
           "reason": "independent_party_decrement",
@@ -261,7 +303,7 @@
   ],
   "result_based_faints": 0,
   "native_stream_faint_audit": {
-    "measurement_sha256": "4ef7834c45eebf5e73d0620129575f943de68dbaabfc3f8867616e561d4a66df",
+    "measurement_sha256": "f9e23438ec4c93dacdacea35fa80ff2222236769e5140e7b44474b2f25cb77b1",
     "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
     "candidates": [
       {
@@ -322,6 +364,48 @@
           "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
           "confirmed_clip_seconds": 95.58335202020201,
           "timing_uncertainty_seconds": 0.1,
+          "first_zero": {
+            "t": 95.28335196155099,
+            "clip_pts": 29242460717,
+            "clip_time_base": "1/306900000",
+            "source_pts": 280376940,
+            "source_time_base": "1/90000",
+            "bar": {
+              "bounds": [
+                31,
+                701,
+                175,
+                715
+              ],
+              "width": 138,
+              "live_pixels": 0,
+              "orange_pixels": 0,
+              "live_fraction": 0.0,
+              "outline_method": "paired_outline"
+            },
+            "replacement_bar": false
+          },
+          "confirmed_zero": {
+            "t": 95.35001864125122,
+            "clip_pts": 29262920721,
+            "clip_time_base": "1/306900000",
+            "source_pts": 280382970,
+            "source_time_base": "1/90000",
+            "bar": {
+              "bounds": [
+                31,
+                701,
+                175,
+                715
+              ],
+              "width": 138,
+              "live_pixels": 0,
+              "orange_pixels": 0,
+              "live_fraction": 0.0,
+              "outline_method": "paired_outline"
+            },
+            "replacement_bar": false
+          },
           "independent_support": {
             "status": "confirmed",
             "reason": "independent_party_decrement",
@@ -418,7 +502,7 @@
           "name": "Mimikyu",
           "faint": true,
           "header_seen_clip_seconds": 97.00001896383186,
-          "header_first_visible_clip_seconds": 97.00001896383186,
+          "header_first_visible_clip_seconds": 48.33334278266536,
           "transition_evidence": {
             "kind": "faint",
             "method": "local_party_counter_decrease",
@@ -439,7 +523,59 @@
       }
     ],
     "added": 1,
-    "quarantined": [],
+    "quarantined": [
+      {
+        "side": "mine",
+        "species": "Qwilfish",
+        "clip_seconds": 95.00001857282503,
+        "confirmed_clip_seconds": 97.00001896383186,
+        "timing_interval_seconds": [
+          93.50001837732161,
+          95.00001857282503
+        ],
+        "timing_uncertainty_seconds": 0.5,
+        "method": "party_zero_for_short_identified_entry_with_outgoing_survivor_return",
+        "independent_support": {
+          "status": "contradicted",
+          "reason": "different_active_physically_identified_before_proposed_faint",
+          "confirmed_seconds": 97.00001896383186
+        },
+        "entry": {
+          "t": 86.8,
+          "name": "Qwilfish",
+          "faint": false,
+          "header_seen_clip_seconds": 94.00001837732161,
+          "header_first_visible_clip_seconds": 94.00001837732161,
+          "transition_evidence": {
+            "kind": "switch",
+            "method": "header_changed_without_local_faint_evidence"
+          }
+        },
+        "outgoing_survivor_return": {
+          "t": 91.5,
+          "name": "Mimikyu",
+          "faint": true,
+          "header_seen_clip_seconds": 97.00001896383186,
+          "header_first_visible_clip_seconds": 48.33334278266536,
+          "transition_evidence": {
+            "kind": "faint",
+            "method": "local_party_counter_decrease",
+            "first_visible_seconds": 95.00001857282503,
+            "confirmed_seconds": 95.6666853698273,
+            "before": 3,
+            "after": 2
+          }
+        },
+        "counter": {
+          "first_visible_seconds": 95.00001857282503,
+          "confirmed_seconds": 95.1666852720756,
+          "value": 2,
+          "source_pts": 280351470,
+          "source_time_base": "1/90000",
+          "continuity": "consistent"
+        }
+      }
+    ],
     "result_based_faints": 0
   }
 }

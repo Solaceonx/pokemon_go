@@ -118,7 +118,20 @@ def health_owners(row, timeline):
     if not charges:
         return result
     q = charges[-1]
+    if at<q.get('side_confirmed_clip_seconds',origin+q['t']):
+        return result
     announcements = q.get('announcement_clip_seconds', [])
+    # A positive centered bar after a confirmed replacement may be the new
+    # entrant's camera, rather than the previous attack's victim. Header text
+    # alone cannot identify that camera. Keep a lingering empty victim bar
+    # attributable, but withhold positive bars until another camera cue.
+    if announcements and center['bar'].get('fraction', 0) > .03:
+        released = min(announcements)
+        replacements = [f for fields in timeline.get('field', {}).values() for f in fields
+                        if f.get('header_first_visible_clip_seconds', f.get('header_seen_clip_seconds', origin+f['t'])) > released+.75
+                        and f.get('header_seen_clip_seconds', origin+f['t']) <= at]
+        if replacements:
+            return result
     owner = None
     if announcements and max(announcements)+4 < at:
         return result

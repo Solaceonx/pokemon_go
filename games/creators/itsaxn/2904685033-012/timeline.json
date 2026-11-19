@@ -28,14 +28,18 @@
         }
       },
       {
-        "t": 48.3,
+        "t": 50.0,
         "name": "Vigoroth",
-        "faint": false,
+        "faint": true,
         "header_seen_clip_seconds": 56.00000860215054,
         "header_first_visible_clip_seconds": 56.00000860215054,
         "transition_evidence": {
-          "kind": "switch",
-          "method": "header_changed_without_local_faint_evidence"
+          "kind": "faint",
+          "method": "local_party_counter_decrease",
+          "first_visible_seconds": 55.33334183307732,
+          "confirmed_seconds": 56.00000860215054,
+          "before": 3,
+          "after": 2
         }
       },
       {
@@ -43,7 +47,7 @@
         "name": "Corviknight",
         "faint": false,
         "header_seen_clip_seconds": 89.00001367127496,
-        "header_first_visible_clip_seconds": 89.00001367127496,
+        "header_first_visible_clip_seconds": 88.66668028673836,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -130,7 +134,7 @@
         "name": "Annihilape",
         "faint": false,
         "header_seen_clip_seconds": 151.00002319508448,
-        "header_first_visible_clip_seconds": 151.00002319508448,
+        "header_first_visible_clip_seconds": 150.66668981054787,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -348,7 +352,7 @@
         3
       ],
       [
-        49.97,
+        49.3,
         2
       ],
       [
@@ -375,19 +379,11 @@
     "mine": [
       [
         3.8,
-        6
-      ],
-      [
-        4.8,
-        8
+        4
       ],
       [
         5.8,
-        4
-      ],
-      [
-        6.13,
-        4
+        16
       ],
       [
         6.8,
@@ -395,11 +391,7 @@
       ],
       [
         21.47,
-        7
-      ],
-      [
-        22.13,
-        2
+        9
       ],
       [
         22.8,
@@ -411,11 +403,11 @@
       ],
       [
         34.13,
-        5
+        7
       ],
       [
         35.13,
-        10
+        8
       ],
       [
         36.13,
@@ -431,39 +423,35 @@
       ],
       [
         53.13,
-        5
+        7
       ],
       [
-        54.47,
-        9
+        54.13,
+        6
       ],
       [
         55.13,
+        8
+      ],
+      [
+        65.47,
+        52
+      ],
+      [
+        66.8,
         5
-      ],
-      [
-        58.47,
-        2
-      ],
-      [
-        66.47,
-        57
       ],
       [
         67.47,
         8
       ],
       [
-        70.8,
-        2
-      ],
-      [
-        71.8,
-        6
+        71.47,
+        8
       ],
       [
         83.8,
-        5
+        4
       ],
       [
         92.8,
@@ -479,15 +467,19 @@
       ],
       [
         124.13,
-        4
+        3
+      ],
+      [
+        125.8,
+        2
       ],
       [
         126.8,
-        5
+        2
       ],
       [
         128.8,
-        43
+        45
       ],
       [
         129.8,
@@ -498,31 +490,23 @@
         6
       ],
       [
-        131.8,
-        2
-      ],
-      [
-        132.47,
-        2
-      ],
-      [
         132.8,
-        2
+        7
       ],
       [
         133.8,
-        3
+        2
       ],
       [
         148.13,
-        4
-      ],
-      [
-        158.8,
         5
       ],
       [
-        159.8,
+        159.13,
+        4
+      ],
+      [
+        159.47,
         1
       ],
       [
@@ -530,16 +514,16 @@
         4
       ],
       [
-        188.47,
-        2
-      ],
-      [
         194.47,
-        42
+        44
       ],
       [
         197.47,
         4
+      ],
+      [
+        206.13,
+        2
       ]
     ],
     "theirs": [
@@ -553,27 +537,43 @@
       ],
       [
         123.47,
-        4
+        3
+      ],
+      [
+        124.13,
+        2
       ],
       [
         125.47,
-        3
+        2
       ],
       [
         125.8,
         2
       ],
       [
-        145.8,
-        56
+        127.8,
+        2
+      ],
+      [
+        129.13,
+        3
+      ],
+      [
+        133.13,
+        17
+      ],
+      [
+        143.47,
+        44
       ],
       [
         158.8,
         6
       ],
       [
-        173.47,
-        7
+        174.47,
+        4
       ],
       [
         184.13,
@@ -588,6 +588,10 @@
   "own_energy_steps": {},
   "buttons_on": [],
   "waits": [
+    [
+      49.3,
+      49.5
+    ],
     [
       146.3,
       147.0

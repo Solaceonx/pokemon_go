@@ -29,9 +29,9 @@
   "failed": [],
   "notes": [
    "no result screen read; result taken from who had Pokémon left",
-   "fast move only guessed for annihilape, clodsire"
+   "fast move only guessed for annihilape"
   ],
-  "unexplained_health_changes": 7
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -109,7 +109,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.505,
+    "hp_share_at_end": 0.514,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -228,18 +228,14 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": true,
-    "hp_share_at_end": 0.0,
+    "fainted": false,
+    "hp_share_at_end": 0.005,
     "fast_move": {
-     "id": "POISON_STING",
-     "name": "Poison Sting",
+     "id": "MUD_SHOT",
+     "name": "Mud Shot",
      "turns": 2,
      "energy_gain": 9,
-     "known_from": "guessed",
-     "odds": {
-      "Poison Sting": 0.54,
-      "Mud Shot": 0.46
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -266,7 +262,7 @@
     }
    }
   ],
-  "theirs_unseen": 0
+  "theirs_unseen": -1
  },
  "summary": {
   "charged": {
@@ -341,7 +337,7 @@
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 5
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -358,9 +354,9 @@
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 125,
+     "hp": 123,
      "hp_max": 140,
-     "hp_share": 0.893,
+     "hp_share": 0.879,
      "energy": [
       40,
       40
@@ -382,8 +378,8 @@
    "energy_before": 45,
    "target": "Annihilape",
    "shielded": false,
-   "target_hp_before": 125,
-   "target_hp_after": 125,
+   "target_hp_before": 123,
+   "target_hp_after": 123,
    "target_hp_max": 140,
    "target_bar_read": false,
    "expected_damage": 76,
@@ -403,9 +399,9 @@
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 125,
+     "hp": 123,
      "hp_max": 140,
-     "hp_share": 0.893,
+     "hp_share": 0.879,
      "energy": [
       40,
       40
@@ -520,7 +516,7 @@
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Annihilape",
@@ -544,9 +540,9 @@
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 20,
+     "hp": 22,
      "hp_max": 140,
-     "hp_share": 0.143,
+     "hp_share": 0.157,
      "energy": [
       32,
       32
@@ -576,9 +572,9 @@
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 20,
+     "hp": 22,
      "hp_max": 140,
-     "hp_share": 0.143,
+     "hp_share": 0.157,
      "energy": [
       96,
       96
@@ -600,8 +596,8 @@
    "energy_before": 100,
    "target": "Annihilape",
    "shielded": true,
-   "target_hp_before": 20,
-   "target_hp_after": 20,
+   "target_hp_before": 22,
+   "target_hp_after": 22,
    "target_hp_max": 140,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -621,9 +617,9 @@
      "active": "Annihilape",
      "shields": 1,
      "left": 3,
-     "hp": 20,
+     "hp": 22,
      "hp_max": 140,
-     "hp_share": 0.143,
+     "hp_share": 0.157,
      "energy": [
       100,
       100
@@ -839,9 +835,9 @@
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 127,
+     "hp": 126,
      "hp_max": 146,
-     "hp_share": 0.87,
+     "hp_share": 0.863,
      "energy": [
       27,
       27
@@ -869,9 +865,9 @@
    "target": "Greninja",
    "shielded": true,
    "target_hp_before": 47,
-   "target_hp_after": 47,
+   "target_hp_after": 45,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 1,
    "resolved_t": 68.0,
    "cue": true,
@@ -880,18 +876,18 @@
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 47,
+     "hp": 45,
      "hp_max": 115,
-     "hp_share": 0.409,
+     "hp_share": 0.391,
      "energy": 56
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 127,
+     "hp": 126,
      "hp_max": 146,
-     "hp_share": 0.87,
+     "hp_share": 0.863,
      "energy": [
       0,
       1
@@ -918,8 +914,9 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Greninja",
@@ -938,8 +935,8 @@
      "hp_max": 146,
      "hp_share": 0.808,
      "energy": [
-      18,
-      19
+      9,
+      10
      ],
      "energy_ceiling": 19
     }
@@ -983,8 +980,8 @@
      "hp_max": 146,
      "hp_share": 0.808,
      "energy": [
-      18,
-      19
+      9,
+      10
      ],
      "energy_ceiling": 19
     }
@@ -1001,7 +998,7 @@
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Melmetal",
@@ -1028,8 +1025,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      36,
-      37
+      27,
+      28
      ],
      "energy_ceiling": 46
     }
@@ -1073,8 +1070,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      45,
-      46
+      36,
+      37
      ],
      "energy_ceiling": 46
     }
@@ -1118,8 +1115,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      45,
-      46
+      36,
+      37
      ],
      "energy_ceiling": 46
     }
@@ -1150,8 +1147,8 @@
      "hp_max": 146,
      "hp_share": 0.151,
      "energy": [
-      45,
-      46
+      36,
+      37
      ],
      "energy_ceiling": 46
     }
@@ -1182,9 +1179,9 @@
      "active": "Mimikyu",
      "shields": 1,
      "left": 2,
-     "hp": 103,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 0.963,
+     "hp_share": 0.953,
      "energy": 16
     },
     "theirs": {
@@ -1219,8 +1216,8 @@
    "energy_ceiling": 64,
    "target": "Mimikyu",
    "shielded": true,
-   "target_hp_before": 103,
-   "target_hp_after": 102,
+   "target_hp_before": 102,
+   "target_hp_after": 101,
    "target_hp_max": 107,
    "target_bar_read": true,
    "expected_damage": 1,
@@ -1231,9 +1228,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 102,
+     "hp": 101,
      "hp_max": 107,
-     "hp_share": 0.953,
+     "hp_share": 0.944,
      "energy": 16
     },
     "theirs": {
@@ -1269,7 +1266,7 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -1346,7 +1343,7 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 5
+    "hits_seen": 4
    },
    "state": {
     "mine": {
@@ -1387,9 +1384,9 @@
    "target": "Clodsire",
    "shielded": false,
    "target_hp_before": 196,
-   "target_hp_after": 196,
+   "target_hp_after": 134,
    "target_hp_max": 208,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 60,
    "resolved_t": 122.0,
    "cue": true,
@@ -1407,9 +1404,9 @@
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 196,
+     "hp": 134,
      "hp_max": 208,
-     "hp_share": 0.942,
+     "hp_share": 0.644,
      "energy": [
       36,
       36
@@ -1429,23 +1426,23 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 80,
+     "hp": 78,
      "hp_max": 107,
-     "hp_share": 0.748,
+     "hp_share": 0.729,
      "energy": 54
     },
     "theirs": {
@@ -1456,8 +1453,8 @@
      "hp_max": 208,
      "hp_share": 0.567,
      "energy": [
-      81,
-      81
+      72,
+      72
      ],
      "energy_ceiling": 81
     }
@@ -1474,14 +1471,14 @@
    "move_known_from": "seen",
    "cost": 55,
    "energy_before": [
-    81,
-    81
+    72,
+    72
    ],
    "energy_ceiling": 81,
    "target": "Mimikyu",
    "shielded": false,
-   "target_hp_before": 80,
-   "target_hp_after": 80,
+   "target_hp_before": 78,
+   "target_hp_after": 78,
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 44,
@@ -1492,9 +1489,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 80,
+     "hp": 78,
      "hp_max": 107,
-     "hp_share": 0.748,
+     "hp_share": 0.729,
      "energy": 62
     },
     "theirs": {
@@ -1505,10 +1502,10 @@
      "hp_max": 208,
      "hp_share": 0.567,
      "energy": [
-      26,
-      26
+      17,
+      17
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 26
     }
    }
   },
@@ -1523,15 +1520,16 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 6
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 9,
     "hits_seen": 7
    },
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Mimikyu",
@@ -1550,8 +1548,8 @@
      "hp_max": 208,
      "hp_share": 0.442,
      "energy": [
-      98,
-      98
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1595,8 +1593,8 @@
      "hp_max": 208,
      "hp_share": 0.442,
      "energy": [
-      98,
-      98
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1617,8 +1615,8 @@
    },
    "theirs": {
     "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
@@ -1640,8 +1638,8 @@
      "hp_max": 208,
      "hp_share": 0.442,
      "energy": [
-      98,
-      98
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1672,8 +1670,8 @@
      "hp_max": 208,
      "hp_share": 0.159,
      "energy": [
-      98,
-      98
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1690,12 +1688,12 @@
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 5,
     "hits_seen": 6
    },
@@ -1713,9 +1711,9 @@
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 17,
+     "hp": 11,
      "hp_max": 208,
-     "hp_share": 0.082,
+     "hp_share": 0.053,
      "energy": [
       100,
       100
@@ -1974,8 +1972,8 @@
    },
    "theirs": {
     "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
@@ -1984,9 +1982,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 59,
+     "hp": 58,
      "hp_max": 107,
-     "hp_share": 0.551,
+     "hp_share": 0.542,
      "energy": 58
     },
     "theirs": {
@@ -2016,9 +2014,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 59,
+     "hp": 58,
      "hp_max": 107,
-     "hp_share": 0.551,
+     "hp_share": 0.542,
      "energy": 58
     },
     "theirs": {
@@ -2051,18 +2049,18 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 54,
+     "hp": 55,
      "hp_max": 107,
-     "hp_share": 0.505,
+     "hp_share": 0.514,
      "energy": 58
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 0,
-     "hp": 0,
+     "hp": 1,
      "hp_max": 208,
-     "hp_share": 0.0,
+     "hp_share": 0.005,
      "energy": [
       54,
       54
@@ -2072,7 +2070,17 @@
    }
   }
  ],
- "deductions": [],
+ "deductions": [
+  {
+   "t": 141.0,
+   "side": "theirs",
+   "pokemon": "Clodsire",
+   "what": "fast move",
+   "value": "Mud Shot",
+   "how": "fits the size and timing of its hits on our bar",
+   "ruled_out": []
+  }
+ ],
  "built_from": [
   "events.jsonl.gz",
   "source.json",

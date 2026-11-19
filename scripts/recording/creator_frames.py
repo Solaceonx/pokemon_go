@@ -6,17 +6,18 @@ from creator_observations import interpret_measurements, health_owners
 
 
 def native_fighting_scene(assigned, control_sample, at, headers=None):
-    """Two physical side bars, corroborated by fresh controls or both headers.
+    """Physical battle camera corroborated by fresh controls and/or headers.
 
     Charged close-ups show one camera bar. Normal battle-camera geometry does
     not depend on the text reader successfully naming the scene or buttons.
+    With both header groups and controls, one briefly obscured bar is allowed.
     """
-    sidebars=all(assigned[s] and not assigned[s].get('camera_owner_basis') for s in ['mine','theirs'])
+    sidebars=[bool(assigned[s] and not assigned[s].get('camera_owner_basis')) for s in ['mine','theirs']]
     buttons=bool(control_sample and 0<=at-control_sample['t']<=.25
         and len(control_sample['controls']['discs'])==2
         and all(d['status']=='observed' for d in control_sample['controls']['discs']))
     panels=bool(headers and all(headers[s].get('panels') for s in ['mine','theirs']))
-    return bool(sidebars and (buttons or panels))
+    return bool(all(sidebars) and (buttons or panels) or any(sidebars) and buttons and panels)
 
 
 def measured_frames(raw, timeline, lifecycle=None):

@@ -32,10 +32,43 @@
   "notes": [
    "fast move only guessed for ninetales, jellicent, altaria"
   ],
-  "unexplained_health_changes": 8
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
+   {
+    "species": "fearow",
+    "name": "Fearow",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "cp_from": "screen",
+    "stats_assumed": true,
+    "fainted": false,
+    "hp_share_at_end": 0.266,
+    "fast_move": {
+     "id": "PECK",
+     "name": "Peck",
+     "turns": 2,
+     "energy_gain": 8,
+     "known_from": "guessed"
+    },
+    "charged_moves": [
+     {
+      "id": "DRILL_PECK",
+      "name": "Drill Peck",
+      "energy": 40,
+      "known_from": "seen",
+      "times_used": 2
+     },
+     {
+      "id": "DRILL_RUN",
+      "name": "Drill Run",
+      "energy": 40,
+      "known_from": "guessed",
+      "times_used": 0
+     }
+    ]
+   },
    {
     "species": "seismitoad",
     "name": "Seismitoad",
@@ -77,7 +110,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.241,
+    "hp_share_at_end": 0.17,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -101,39 +134,6 @@
       "times_used": 1
      }
     ]
-   },
-   {
-    "species": "fearow",
-    "name": "Fearow",
-    "known_from": "team_sheet",
-    "cp": 1497,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.274,
-    "fast_move": {
-     "id": "PECK",
-     "name": "Peck",
-     "turns": 2,
-     "energy_gain": 8,
-     "known_from": "guessed"
-    },
-    "charged_moves": [
-     {
-      "id": "DRILL_PECK",
-      "name": "Drill Peck",
-      "energy": 40,
-      "known_from": "seen",
-      "times_used": 2
-     },
-     {
-      "id": "DRILL_RUN",
-      "name": "Drill Run",
-      "energy": 40,
-      "known_from": "guessed",
-      "times_used": 0
-     }
-    ]
    }
   ],
   "theirs": [
@@ -145,7 +145,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.31,
+    "hp_share_at_end": 0.317,
     "fast_move": {
      "id": "EMBER",
      "name": "Ember",
@@ -153,8 +153,8 @@
      "energy_gain": 9,
      "known_from": "guessed",
      "odds": {
-      "Ember": 0.51,
-      "Fire Spin": 0.49
+      "Ember": 0.55,
+      "Fire Spin": 0.45
      }
     },
     "charged_moves": [
@@ -242,8 +242,8 @@
      "energy_gain": 4,
      "known_from": "guessed",
      "odds": {
-      "Peck": 0.51,
-      "Dragon Breath": 0.49
+      "Dragon Breath": 0.55,
+      "Peck": 0.45
      }
     },
     "charged_moves": [
@@ -287,7 +287,7 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 1,
+   "mine": 2,
    "theirs": 2
   },
   "faints": {
@@ -303,6 +303,38 @@
    "mine": "Seismitoad",
    "theirs": "Ninetales",
    "incomplete_start": false,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 2,
+     "left": 3,
+     "hp": 154,
+     "hp_max": 154,
+     "hp_share": 1.0,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Ninetales",
+     "shields": 2,
+     "left": 3,
+     "hp": 126,
+     "hp_max": 126,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 9
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 0.0,
+   "fighting_turn": 0,
+   "side": "mine",
+   "from": "Seismitoad",
+   "to": "Seismitoad",
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -346,9 +378,9 @@
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 4
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -367,8 +399,8 @@
      "hp_max": 126,
      "hp_share": 0.881,
      "energy": [
-      63,
-      63
+      54,
+      54
      ],
      "energy_ceiling": 63
     }
@@ -385,8 +417,8 @@
    "move_known_from": "seen",
    "cost": null,
    "energy_before": [
-    63,
-    63
+    54,
+    54
    ],
    "energy_ceiling": 63,
    "target": "Seismitoad",
@@ -416,10 +448,10 @@
      "hp_max": 126,
      "hp_share": 0.881,
      "energy": [
-      18,
-      28
+      9,
+      19
      ],
-     "energy_ceiling": 37
+     "energy_ceiling": 28
     }
    }
   },
@@ -461,10 +493,10 @@
      "hp_max": 126,
      "hp_share": 0.881,
      "energy": [
-      27,
-      37
+      18,
+      28
      ],
-     "energy_ceiling": 46
+     "energy_ceiling": 37
     }
    }
   },
@@ -511,32 +543,33 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Jellicent",
     "fast_move": "Hex",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 1,
      "left": 3,
-     "hp": 103,
+     "hp": 102,
      "hp_max": 154,
-     "hp_share": 0.669,
+     "hp_share": 0.662,
      "energy": 99
     },
     "theirs": {
      "active": "Jellicent",
      "shields": 2,
      "left": 3,
-     "hp": 146,
+     "hp": 147,
      "hp_max": 156,
-     "hp_share": 0.936,
+     "hp_share": 0.942,
      "energy": [
       26,
       26
@@ -558,8 +591,8 @@
    "energy_before": 99,
    "target": "Jellicent",
    "shielded": false,
-   "target_hp_before": 146,
-   "target_hp_after": 146,
+   "target_hp_before": 147,
+   "target_hp_after": 147,
    "target_hp_max": 156,
    "target_bar_read": false,
    "expected_damage": 67,
@@ -570,18 +603,18 @@
      "active": "Seismitoad",
      "shields": 1,
      "left": 3,
-     "hp": 103,
+     "hp": 102,
      "hp_max": 154,
-     "hp_share": 0.669,
+     "hp_share": 0.662,
      "energy": 49
     },
     "theirs": {
      "active": "Jellicent",
      "shields": 2,
      "left": 3,
-     "hp": 146,
+     "hp": 147,
      "hp_max": 156,
-     "hp_share": 0.936,
+     "hp_share": 0.942,
      "energy": [
       26,
       26
@@ -608,7 +641,7 @@
     "fast_move": "Hex",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 3
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -846,10 +879,10 @@
      "hp_max": 126,
      "hp_share": 0.881,
      "energy": [
-      27,
-      37
+      18,
+      28
      ],
-     "energy_ceiling": 46
+     "energy_ceiling": 37
     }
    }
   },
@@ -878,10 +911,10 @@
      "hp_max": 126,
      "hp_share": 0.881,
      "energy": [
-      27,
-      37
+      18,
+      28
      ],
-     "energy_ceiling": 46
+     "energy_ceiling": 37
     }
    }
   },
@@ -920,11 +953,11 @@
      "active": "Ninetales",
      "shields": 2,
      "left": 2,
-     "hp": 81,
+     "hp": 79,
      "hp_max": 126,
-     "hp_share": 0.643,
+     "hp_share": 0.627,
      "energy": [
-      100,
+      99,
       100
      ],
      "energy_ceiling": 100
@@ -942,14 +975,14 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    100,
+    99,
     100
    ],
    "energy_ceiling": 100,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 121,
-   "target_hp_after": 82,
+   "target_hp_after": 80,
    "target_hp_max": 141,
    "target_bar_read": true,
    "expected_damage": 27,
@@ -960,20 +993,20 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 82,
+     "hp": 80,
      "hp_max": 141,
-     "hp_share": 0.582,
+     "hp_share": 0.567,
      "energy": 72
     },
     "theirs": {
      "active": "Ninetales",
      "shields": 2,
      "left": 2,
-     "hp": 81,
+     "hp": 79,
      "hp_max": 126,
-     "hp_share": 0.643,
+     "hp_share": 0.627,
      "energy": [
-      55,
+      54,
       55
      ],
      "energy_ceiling": 64
@@ -991,7 +1024,7 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Ninetales",
@@ -1005,9 +1038,9 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 82,
+     "hp": 80,
      "hp_max": 141,
-     "hp_share": 0.582,
+     "hp_share": 0.567,
      "energy": 81
     },
     "theirs": {
@@ -1018,7 +1051,7 @@
      "hp_max": 126,
      "hp_share": 0.627,
      "energy": [
-      64,
+      63,
       64
      ],
      "energy_ceiling": 73
@@ -1050,9 +1083,9 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 82,
+     "hp": 80,
      "hp_max": 141,
-     "hp_share": 0.582,
+     "hp_share": 0.567,
      "energy": 26
     },
     "theirs": {
@@ -1063,7 +1096,7 @@
      "hp_max": 126,
      "hp_share": 0.627,
      "energy": [
-      64,
+      63,
       64
      ],
      "energy_ceiling": 73
@@ -1088,27 +1121,27 @@
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 77,
+     "hp": 76,
      "hp_max": 141,
-     "hp_share": 0.546,
+     "hp_share": 0.539,
      "energy": 44
     },
     "theirs": {
      "active": "Ninetales",
      "shields": 1,
      "left": 2,
-     "hp": 74,
+     "hp": 72,
      "hp_max": 126,
-     "hp_share": 0.587,
+     "hp_share": 0.571,
      "energy": [
-      82,
+      81,
       82
      ],
      "energy_ceiling": 91
@@ -1126,13 +1159,13 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    82,
+    81,
     82
    ],
    "energy_ceiling": 91,
    "target": "Tinkaton",
    "shielded": false,
-   "target_hp_before": 77,
+   "target_hp_before": 76,
    "target_hp_after": 34,
    "target_hp_max": 141,
    "target_bar_read": true,
@@ -1153,11 +1186,11 @@
      "active": "Ninetales",
      "shields": 1,
      "left": 2,
-     "hp": 74,
+     "hp": 72,
      "hp_max": 126,
-     "hp_share": 0.587,
+     "hp_share": 0.571,
      "energy": [
-      37,
+      36,
       37
      ],
      "energy_ceiling": 46
@@ -1175,34 +1208,34 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Ninetales",
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 34,
+     "hp": 24,
      "hp_max": 141,
-     "hp_share": 0.241,
+     "hp_share": 0.17,
      "energy": 89
     },
     "theirs": {
      "active": "Ninetales",
      "shields": 1,
      "left": 2,
-     "hp": 64,
+     "hp": 63,
      "hp_max": 126,
-     "hp_share": 0.508,
+     "hp_share": 0.5,
      "energy": [
-      73,
+      72,
       73
      ],
      "energy_ceiling": 82
@@ -1222,8 +1255,8 @@
    "energy_before": 89,
    "target": "Ninetales",
    "shielded": true,
-   "target_hp_before": 64,
-   "target_hp_after": 64,
+   "target_hp_before": 63,
+   "target_hp_after": 63,
    "target_hp_max": 126,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1234,20 +1267,20 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 34,
+     "hp": 24,
      "hp_max": 141,
-     "hp_share": 0.241,
+     "hp_share": 0.17,
      "energy": 29
     },
     "theirs": {
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 64,
+     "hp": 63,
      "hp_max": 126,
-     "hp_share": 0.508,
+     "hp_share": 0.5,
      "energy": [
-      73,
+      72,
       73
      ],
      "energy_ceiling": 82
@@ -1265,7 +1298,7 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Ninetales",
@@ -1279,20 +1312,20 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 34,
+     "hp": 24,
      "hp_max": 141,
-     "hp_share": 0.241,
+     "hp_share": 0.17,
      "energy": 29
     },
     "theirs": {
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 64,
+     "hp": 63,
      "hp_max": 126,
-     "hp_share": 0.508,
+     "hp_share": 0.5,
      "energy": [
-      73,
+      72,
       73
      ],
      "energy_ceiling": 82
@@ -1320,11 +1353,11 @@
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 60,
+     "hp": 61,
      "hp_max": 126,
-     "hp_share": 0.476,
+     "hp_share": 0.484,
      "energy": [
-      82,
+      81,
       82
      ],
      "energy_ceiling": 91
@@ -1366,11 +1399,11 @@
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 47,
+     "hp": 48,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.381,
      "energy": [
-      91,
+      90,
       91
      ],
      "energy_ceiling": 100
@@ -1388,7 +1421,7 @@
    "move_known_from": "seen",
    "cost": null,
    "energy_before": [
-    91,
+    90,
     91
    ],
    "energy_ceiling": 100,
@@ -1397,7 +1430,7 @@
    "target_hp_before": 115,
    "target_hp_after": 115,
    "target_hp_max": 124,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 1,
    "resolved_t": 124.0,
    "cue": true,
@@ -1415,11 +1448,11 @@
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 47,
+     "hp": 48,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.381,
      "energy": [
-      46,
+      45,
       56
      ],
      "energy_ceiling": 65
@@ -1444,7 +1477,7 @@
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 4
+    "hits_seen": 3
    },
    "unexplained_health_changes": 2,
    "state": {
@@ -1461,11 +1494,11 @@
      "active": "Ninetales",
      "shields": 0,
      "left": 2,
-     "hp": 39,
+     "hp": 40,
      "hp_max": 126,
-     "hp_share": 0.31,
+     "hp_share": 0.317,
      "energy": [
-      73,
+      72,
       83
      ],
      "energy_ceiling": 92
@@ -1484,9 +1517,9 @@
      "active": "Fearow",
      "shields": 0,
      "left": 2,
-     "hp": 92,
+     "hp": 89,
      "hp_max": 124,
-     "hp_share": 0.742,
+     "hp_share": 0.718,
      "energy": 40
     },
     "theirs": {
@@ -1515,7 +1548,7 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Altaria",
@@ -1542,8 +1575,8 @@
      "hp_max": 138,
      "hp_share": 0.79,
      "energy": [
-      48,
-      48
+      44,
+      44
      ],
      "energy_ceiling": 48
     }
@@ -1563,9 +1596,9 @@
    "target": "Altaria",
    "shielded": false,
    "target_hp_before": 109,
-   "target_hp_after": 109,
+   "target_hp_after": 60,
    "target_hp_max": 138,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 48,
    "resolved_t": 142.0,
    "cue": true,
@@ -1583,12 +1616,12 @@
      "active": "Altaria",
      "shields": 0,
      "left": 2,
-     "hp": 109,
+     "hp": 60,
      "hp_max": 138,
-     "hp_share": 0.79,
+     "hp_share": 0.435,
      "energy": [
-      48,
-      48
+      44,
+      44
      ],
      "energy_ceiling": 48
     }
@@ -1628,12 +1661,12 @@
      "active": "Altaria",
      "shields": 0,
      "left": 2,
-     "hp": 61,
+     "hp": 60,
      "hp_max": 138,
-     "hp_share": 0.442,
+     "hp_share": 0.435,
      "energy": [
-      60,
-      60
+      56,
+      56
      ],
      "energy_ceiling": 56
     }
@@ -1652,10 +1685,10 @@
    "energy_before": 56,
    "target": "Altaria",
    "shielded": false,
-   "target_hp_before": 61,
-   "target_hp_after": 61,
+   "target_hp_before": 60,
+   "target_hp_after": 11,
    "target_hp_max": 138,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 48,
    "resolved_t": 152.0,
    "cue": true,
@@ -1673,12 +1706,12 @@
      "active": "Altaria",
      "shields": 0,
      "left": 2,
-     "hp": 61,
+     "hp": 11,
      "hp_max": 138,
-     "hp_share": 0.442,
+     "hp_share": 0.08,
      "energy": [
-      60,
-      60
+      56,
+      56
      ],
      "energy_ceiling": 56
     }
@@ -1702,16 +1735,16 @@
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 2,
-     "hp": 34,
+     "hp": 33,
      "hp_max": 124,
-     "hp_share": 0.274,
+     "hp_share": 0.266,
      "energy": 48
     },
     "theirs": {
@@ -1722,8 +1755,8 @@
      "hp_max": 138,
      "hp_share": 0.058,
      "energy": [
-      92,
-      92
+      88,
+      88
      ],
      "energy_ceiling": 88
     }
@@ -1744,9 +1777,9 @@
      "active": "Fearow",
      "shields": 0,
      "left": 2,
-     "hp": 34,
+     "hp": 33,
      "hp_max": 124,
-     "hp_share": 0.274,
+     "hp_share": 0.266,
      "energy": 48
     },
     "theirs": {
@@ -1757,8 +1790,8 @@
      "hp_max": 138,
      "hp_share": 0.058,
      "energy": [
-      92,
-      92
+      88,
+      88
      ],
      "energy_ceiling": 88
     }

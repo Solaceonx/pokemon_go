@@ -1,9 +1,9 @@
 """Creator-only evidence adapters retain zero bars and counter-only observations."""
-import copy,gzip,json,sys,tempfile,unittest
+import copy,gzip,json,sys,tempfile,unittest,hashlib
 from unittest.mock import patch
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts/recording'))
-from vod_track import confirmed_empty_bars,creator_readings,retain_counter_looks,rows,track_clip
+from vod_track import confirmed_empty_bars,creator_readings,retain_counter_looks,rows,track_clip,read_clip,verify_clip_source
 
 def packed(path,values):
  path.write_bytes(gzip.compress(''.join(json.dumps(v)+'\n'for v in values).encode(),mtime=0))
@@ -54,12 +54,31 @@ class Evidence(unittest.TestCase):
   self.assertEqual(confirmed_empty_bars(readings,rich),set())
  def test_failed_replay_cannot_publish_stale_states_with_new_error(self):
   with tempfile.TemporaryDirectory()as tmp:
-   folder=Path(tmp)/'clip';folder.mkdir();(folder/'battle.json').write_text('{}')
+   folder=Path(tmp)/'clip';folder.mkdir();(folder/'video.mp4').write_bytes(b'source')
+   (folder/'battle.json').write_text(json.dumps(dict(video_file='video.mp4',video_sha256=hashlib.sha256(b'source').hexdigest())))
    exported=Path(tmp)/'exports';exported.mkdir();prior=exported/'game.json';prior.write_text('{"baseline":true}')
    with patch('vod_track.bootstrap'),patch('vod_markers.refine',side_effect=ValueError('bad source')),patch('vod_track.publish')as publish,patch('vod_track.creator_export')as export:
     with self.assertRaisesRegex(RuntimeError,'previous export retained'):track_clip(folder,Path(tmp),creator_root=exported)
     publish.assert_not_called();export.assert_not_called()
    self.assertEqual(prior.read_text(),'{"baseline":true}')
    self.assertFalse(json.loads((folder/'tracker/tracking-error.json').read_text())['creator_export_updated'])
+
+ def test_cached_reader_cannot_bypass_a_changed_video_hash(self):
+  with tempfile.TemporaryDirectory()as tmp:
+   folder=Path(tmp);(folder/'video.mp4').write_bytes(b'changed')
+   (folder/'battle.json').write_text(json.dumps(dict(video_file='video.mp4',video_sha256=hashlib.sha256(b'original').hexdigest())))
+   raw=folder/'tracking-raw';raw.mkdir();(raw/'read.json').write_text('{"cached":true}')
+   with patch('vod_track.bootstrap')as bootstrap:
+    with self.assertRaisesRegex(ValueError,'Clip bytes differ'):read_clip(folder,folder)
+    bootstrap.assert_not_called()
+   self.assertEqual((raw/'read.json').read_text(),'{"cached":true}')
+
+ def test_verified_media_is_rechecked_instead_of_trusting_prior_hash(self):
+  with tempfile.TemporaryDirectory()as tmp:
+   folder=Path(tmp);video=folder/'video.mp4';video.write_bytes(b'original')
+   meta=dict(video_file='video.mp4',video_sha256=hashlib.sha256(b'original').hexdigest())
+   self.assertEqual(verify_clip_source(folder,meta),video)
+   video.write_bytes(b'changed')
+   with self.assertRaisesRegex(ValueError,'Clip bytes differ'):verify_clip_source(folder,meta)
 
 if __name__=='__main__':unittest.main()

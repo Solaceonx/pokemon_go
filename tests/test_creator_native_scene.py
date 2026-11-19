@@ -22,3 +22,11 @@ class NativeSceneTests(unittest.TestCase):
         self.assertTrue(native_fighting_scene(bars,None,10,headers))
         headers['theirs']['panels']=[]
         self.assertFalse(native_fighting_scene(bars,None,10,headers))
+
+    def test_one_occluded_bar_needs_both_headers_and_both_fresh_controls(self):
+        bars={'mine':None,'theirs':{'fraction':.8}}
+        headers={s:{'panels':[{'bounds':[1,2,3,4]}]} for s in ['mine','theirs']}
+        controls=dict(t=10,controls={'discs':[{'status':'observed'},{'status':'observed'}]})
+        self.assertTrue(native_fighting_scene(bars,controls,10,headers))
+        self.assertFalse(native_fighting_scene(bars,None,10,headers))
+        self.assertFalse(native_fighting_scene(bars,controls,10))

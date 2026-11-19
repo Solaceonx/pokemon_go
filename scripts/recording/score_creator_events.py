@@ -24,6 +24,13 @@ def canon(text):
     return re.sub('[^a-z]', '', (text or '').lower())
 
 
+def move_name(text):
+    """Keep a displayed enhanced-move suffix significant when scoring labels."""
+    label = (text or '').replace('\uff0b', '+').strip().rstrip('!\uff01').strip()
+    suffix = re.search(r'\++$', label)
+    return canon(label)+(suffix.group() if suffix else '')
+
+
 def species_name(text):
     # The reference grades the visible header species, not unannotated forms.
     return canon(re.sub(r'\([^)]*\)', '', text or ''))
@@ -86,10 +93,10 @@ def compatible(truth, prediction, timed=True, tolerance=3):
     if truth['kind'] in ('charged', 'faint') and species_name(truth['pokemon']) != species_name(prediction['pokemon']):
         return False
     if truth['kind'] == 'charged':
-        expected, actual = canon(truth['move']), canon(prediction['move'])
+        expected, actual = move_name(truth['move']), move_name(prediction['move'])
         # A visible generic Weather Ball name does not establish its variant.
         if expected == 'weatherball':
-            return actual.startswith(expected)
+            return actual.startswith(expected) and not actual.endswith('+')
         return expected == actual
     return True
 

@@ -149,7 +149,9 @@ def measure_fighting_faints(folder, raw, timeline, rows):
             deaths.append({'side': side, 'species': candidate['species'], 'clip_seconds': at,
                            'method': proof.get('method', 'native_fighting_live_to_zero_and_fade'),
                            'confirmed_clip_seconds': proof['confirmed_zero']['t'],
-                           'timing_uncertainty_seconds': .1})
+                           'timing_uncertainty_seconds': .1,
+                           'first_zero': proof['first_zero'],
+                           'confirmed_zero': proof['confirmed_zero']})
     return deaths, proofs
 
 

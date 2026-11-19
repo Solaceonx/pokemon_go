@@ -47,7 +47,7 @@ def faint_support(death, timeline, native):
                     q.get('announcement_clip_seconds') and at+2 < min(q['announcement_clip_seconds']) < end
                     and q is not queued), None)
     if release:
-        return dict(status='contradicted', reason='later_named_release_before_replacement',
+        return dict(status='unconfirmed',reason='later_release_requires_queue_or_survival_review',
                     confirmed_seconds=min(release['announcement_clip_seconds']))
     before = [r for r in native if at-2 <= r['t'] <= at-.15 and
               r['headers'][side]['party'].get('value') is not None]
@@ -60,6 +60,23 @@ def faint_support(death, timeline, native):
         target=any(b.get('camera_owner_basis')=='charged_target' and b.get('camera_species')==name for b in bars)
         charge=next((q for q in reversed(timeline.get('charged',[])) if q['side']!=side and q.get('announcement_clip_seconds')
                      and min(q['announcement_clip_seconds'])+1<=at<=max(q['announcement_clip_seconds'])+4),None)
+        # The camera can return to a sidebar before the target disappears.
+        # Preserve the native zero/fade witnesses from that reader: the bar
+        # need not still be centered to belong to the just-resolved attack.
+        first, confirmed = death.get('first_zero', {}), death.get('confirmed_zero', {})
+        measured_fade = (death.get('method') in (
+            'native_empty_bar_and_fade_with_counter_or_fresh_replacement_header',
+            'native_fighting_live_to_zero_and_fade')
+            and first.get('bar', {}).get('live_pixels') == 0
+            and confirmed.get('bar', {}).get('live_pixels') == 0
+            and abs(first.get('t', -100)-at) < 1e-6
+            and .1 <= confirmed.get('t', -100)-at <= .5)
+        if measured_fade and charge:
+            cue = origin+charge['t']
+            before_cue = [f for f in fields if f.get('header_seen_clip_seconds', origin+f['t']) <= cue]
+            during = [f for f in fields if cue < f.get('header_seen_clip_seconds', origin+f['t']) <= at]
+            target = bool(before_cue and before_cue[-1]['name'] == name
+                          and all(f['name'] == name for f in during))
         if target and charge:
             # Headers can remain hidden across back-to-back charged cameras.
             # A coherent last pre-cue count plus the measured target zero and

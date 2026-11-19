@@ -68,7 +68,20 @@ def fingerprint(reader, profile, meta, fps, text_rate, seconds):
                                   for e in json.loads(profile.read_text())["templates"]}}
 
 
+def verify_clip_source(folder, meta):
+    """A cached measurement must never bypass verification of its media."""
+    folder=Path(folder).resolve()
+    video=(folder/meta['video_file']).resolve()
+    if not video.is_relative_to(folder):
+        raise ValueError('Clip media escaped its battle folder')
+    if sha256(video)!=meta['video_sha256']:
+        raise ValueError('Clip bytes differ from the verified export')
+    return video
+
+
 def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
+    meta = json.loads((folder / "battle.json").read_text(encoding="utf-8"))
+    video=verify_clip_source(folder,meta)
     bootstrap(reader)
     from adaptive_reader import AdaptiveReader
     from vod_ocr import VodOCR
@@ -78,7 +91,6 @@ def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
     import av
     import numpy as np
 
-    meta = json.loads((folder / "battle.json").read_text(encoding="utf-8"))
     raw = folder / "tracking-raw"
     raw.mkdir(exist_ok=True)
     profile = profile_for(reader, meta, raw / "profile.json")
@@ -92,9 +104,6 @@ def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
         return json.loads(receipt.read_text())
     if (raw / "screen.jsonl.gz").exists():
         raise ValueError("Raw readings differ from this reader; use a new version or archive them explicitly")
-    video = folder / meta["video_file"]
-    if sha256(video) != meta["video_sha256"]:
-        raise ValueError("Clip bytes differ from the verified export")
     ocr = VodOCR(profile)
     reader_instance, event_reader = AdaptiveReader(profile, ocr=ocr, ocr_interval=1 / text_rate), EventTracker()
     aligned = iter(rows(folder / "frame_alignment.jsonl.gz"))
@@ -369,7 +378,8 @@ def publish(folder, game, verdict, reader):
     legal_moves={}
     for pokemon in gm['pokemon']:
         legal_moves.setdefault(pokemon['speciesName'].split(' (')[0],set()).update(
-            move_names[mid] for mid in pokemon['chargedMoves'] if mid in move_names)
+            name for mid in pokemon['chargedMoves'] if mid in move_names
+            for name in [move_names[mid],move_names[mid].split(' (')[0]])
     ledger = PublicState({m["name"]: m["energy"] for m in gm["moves"] if m["energy"] > 0},
                          incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves)
     display, statuses = [], Counter()
@@ -536,6 +546,7 @@ def track_clip(folder, reader, *, creator_root=None):
     raw, game = folder / "tracking-raw", folder / "tracker"
     game.mkdir(exist_ok=True)
     try:
+        verify_clip_source(folder,meta)
         bootstrap(reader)
         refine(folder, raw, rows)
         evidence_path, evidence = creator_readings(raw) if creator_root is not None else (raw / 'readings-refined.jsonl.gz', None)
@@ -610,6 +621,7 @@ def track_clip(folder, reader, *, creator_root=None):
             shutil.copyfile(game / name, blind / name)
         run_step(ROOT / "scripts/track.py", blind, "--blind")
         result["blind_energy_check"] = json.loads((blind / "track.json").read_text())
+        verify_clip_source(folder,meta)
     except Exception as error:
         if creator_root is not None:
             # Keep the previous complete export intact on a diagnostic failure.

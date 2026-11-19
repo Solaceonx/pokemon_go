@@ -19,19 +19,20 @@
   "from": "result screen",
   "left": {
    "mine": 1,
-   "theirs": 0
+   "theirs": 1
   }
  },
  "seconds": 170.8,
- "fighting_turns": 87,
+ "fighting_turns": 91,
  "checks": {
-  "verdict": "pass",
-  "failed": [],
-  "notes": [
-   "unexplained changes in 19% of looks",
-   "fast move only guessed for nidoqueen, nidoking"
+  "verdict": "fail",
+  "failed": [
+   "ending: result says win, tracker has us on 1 and them on 1"
   ],
-  "unexplained_health_changes": 23
+  "notes": [
+   "fast move only guessed for nidoking"
+  ],
+  "unexplained_health_changes": 16
  },
  "teams": {
   "mine": [
@@ -188,13 +189,7 @@
      "name": "Mud Slap",
      "turns": 3,
      "energy_gain": 10,
-     "known_from": "guessed",
-     "odds": {
-      "Mud Slap": 0.34,
-      "Poison Jab": 0.3,
-      "Bite": 0.19,
-      "Poison Sting": 0.17
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -233,11 +228,7 @@
      "name": "Poison Sting",
      "turns": 2,
      "energy_gain": 9,
-     "known_from": "guessed",
-     "odds": {
-      "Double Kick": 0.94,
-      "Poison Sting": 0.06
-     }
+     "known_from": "guessed"
     },
     "charged_moves": [
      {
@@ -264,7 +255,7 @@
     }
    }
   ],
-  "theirs_unseen": 0
+  "theirs_unseen": 1
  },
  "summary": {
   "charged": {
@@ -332,24 +323,24 @@
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 13,
-    "hits_seen": 6
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 6
+    "hits_seen": 5
    },
-   "unexplained_health_changes": 4,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Ursaluna",
      "shields": 2,
      "left": 3,
-     "hp": 107,
+     "hp": 105,
      "hp_max": 144,
-     "hp_share": 0.743,
+     "hp_share": 0.729,
      "energy": 52
     },
     "theirs": {
@@ -384,8 +375,8 @@
    "energy_ceiling": 56,
    "target": "Ursaluna",
    "shielded": true,
-   "target_hp_before": 107,
-   "target_hp_after": 107,
+   "target_hp_before": 105,
+   "target_hp_after": 105,
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -396,9 +387,9 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 107,
+     "hp": 105,
      "hp_max": 144,
-     "hp_share": 0.743,
+     "hp_share": 0.729,
      "energy": 52
     },
     "theirs": {
@@ -421,20 +412,20 @@
    "t": 16.0,
    "until": 21.8,
    "fighting_turn": 13,
-   "turns": 9,
+   "turns": 10,
    "mine": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 5
+    "fast_moves_if_no_pause": 10,
+    "hits_seen": 8
    },
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 7
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 6
    },
    "unexplained_health_changes": 5,
    "state": {
@@ -442,10 +433,10 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 72,
+     "hp": 64,
      "hp_max": 144,
-     "hp_share": 0.5,
-     "energy": 88
+     "hp_share": 0.444,
+     "energy": 92
     },
     "theirs": {
      "active": "Cramorant",
@@ -455,24 +446,24 @@
      "hp_max": 126,
      "hp_share": 0.405,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "charged",
    "t": 21.8,
-   "fighting_turn": 22,
+   "fighting_turn": 23,
    "side": "mine",
    "pokemon": "Ursaluna",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 88,
+   "energy_before": 92,
    "target": "Cramorant",
    "shielded": true,
    "target_hp_before": 51,
@@ -487,10 +478,10 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 72,
+     "hp": 64,
      "hp_max": 144,
-     "hp_share": 0.5,
-     "energy": 53
+     "hp_share": 0.444,
+     "energy": 57
     },
     "theirs": {
      "active": "Cramorant",
@@ -503,7 +494,7 @@
       48,
       48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
@@ -511,7 +502,7 @@
    "kind": "fighting",
    "t": 30.0,
    "until": 31.8,
-   "fighting_turn": 22,
+   "fighting_turn": 23,
    "turns": 3,
    "mine": {
     "pokemon": "Ursaluna",
@@ -525,18 +516,17 @@
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 62,
+     "hp": 64,
      "hp_max": 144,
-     "hp_share": 0.431,
-     "energy": 65
+     "hp_share": 0.444,
+     "energy": 69
     },
     "theirs": {
      "active": "Cramorant",
@@ -556,7 +546,7 @@
   {
    "kind": "charged",
    "t": 31.8,
-   "fighting_turn": 25,
+   "fighting_turn": 26,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Dive",
@@ -570,8 +560,8 @@
    "energy_ceiling": 64,
    "target": "Ursaluna",
    "shielded": false,
-   "target_hp_before": 62,
-   "target_hp_after": 62,
+   "target_hp_before": 64,
+   "target_hp_after": 64,
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 77,
@@ -582,10 +572,10 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 62,
+     "hp": 64,
      "hp_max": 144,
-     "hp_share": 0.431,
-     "energy": 65
+     "hp_share": 0.444,
+     "energy": 69
     },
     "theirs": {
      "active": "Cramorant",
@@ -606,7 +596,7 @@
    "kind": "fighting",
    "t": 40.0,
    "until": 40.53,
-   "fighting_turn": 25,
+   "fighting_turn": 26,
    "turns": 1,
    "mine": {
     "pokemon": "Ursaluna",
@@ -627,10 +617,10 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 62,
+     "hp": 64,
      "hp_max": 144,
-     "hp_share": 0.431,
-     "energy": 65
+     "hp_share": 0.444,
+     "energy": 69
     },
     "theirs": {
      "active": "Cramorant",
@@ -650,7 +640,7 @@
   {
    "kind": "faint",
    "t": 40.53,
-   "fighting_turn": 26,
+   "fighting_turn": 27,
    "side": "mine",
    "pokemon": "Ursaluna",
    "next": null,
@@ -662,7 +652,7 @@
      "hp": 0,
      "hp_max": 144,
      "hp_share": 0.0,
-     "energy": 69
+     "energy": 73
     },
     "theirs": {
      "active": "Cramorant",
@@ -683,7 +673,7 @@
    "kind": "fighting",
    "t": 40.53,
    "until": 65.0,
-   "fighting_turn": 26,
+   "fighting_turn": 27,
    "turns": 10,
    "mine": {
     "pokemon": "Ursaluna",
@@ -699,15 +689,14 @@
     "fast_moves_if_no_pause": 5,
     "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Solrock",
      "shields": 1,
      "left": 2,
-     "hp": 132,
+     "hp": 130,
      "hp_max": 145,
-     "hp_share": 0.91,
+     "hp_share": 0.897,
      "energy": 32
     },
     "theirs": {
@@ -728,7 +717,7 @@
   {
    "kind": "switch",
    "t": 65.0,
-   "fighting_turn": 36,
+   "fighting_turn": 37,
    "side": "mine",
    "from": "Solrock",
    "to": "Blastoise",
@@ -760,7 +749,7 @@
   {
    "kind": "charged",
    "t": 56.8,
-   "fighting_turn": 35,
+   "fighting_turn": 36,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Dive",
@@ -774,8 +763,8 @@
    "energy_ceiling": 64,
    "target": "Solrock",
    "shielded": false,
-   "target_hp_before": 132,
-   "target_hp_after": 132,
+   "target_hp_before": 130,
+   "target_hp_after": 130,
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 70,
@@ -810,7 +799,7 @@
    "kind": "fighting",
    "t": 65.0,
    "until": 66.5,
-   "fighting_turn": 36,
+   "fighting_turn": 37,
    "turns": 3,
    "mine": {
     "pokemon": "Blastoise",
@@ -854,7 +843,7 @@
   {
    "kind": "switch",
    "t": 66.5,
-   "fighting_turn": 39,
+   "fighting_turn": 40,
    "side": "theirs",
    "from": "Cramorant",
    "to": "Nidoqueen",
@@ -863,9 +852,9 @@
      "active": "Blastoise",
      "shields": 1,
      "left": 2,
-     "hp": 97,
+     "hp": 95,
      "hp_max": 130,
-     "hp_share": 0.746,
+     "hp_share": 0.731,
      "energy": 12
     },
     "theirs": {
@@ -887,7 +876,7 @@
    "kind": "fighting",
    "t": 66.5,
    "until": 71.8,
-   "fighting_turn": 39,
+   "fighting_turn": 40,
    "turns": 10,
    "mine": {
     "pokemon": "Blastoise",
@@ -899,28 +888,27 @@
    "theirs": {
     "pokemon": "Nidoqueen",
     "fast_move": "Mud Slap",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 5
+    "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Blastoise",
      "shields": 1,
      "left": 2,
-     "hp": 70,
+     "hp": 68,
      "hp_max": 130,
-     "hp_share": 0.538,
+     "hp_share": 0.523,
      "energy": 52
     },
     "theirs": {
      "active": "Nidoqueen",
      "shields": 1,
      "left": 3,
-     "hp": 120,
+     "hp": 119,
      "hp_max": 139,
-     "hp_share": 0.863,
+     "hp_share": 0.856,
      "energy": [
       30,
       30
@@ -932,7 +920,7 @@
   {
    "kind": "charged",
    "t": 71.8,
-   "fighting_turn": 49,
+   "fighting_turn": 50,
    "side": "mine",
    "pokemon": "Blastoise",
    "move": "Hydro Cannon",
@@ -942,8 +930,8 @@
    "energy_before": 52,
    "target": "Nidoqueen",
    "shielded": true,
-   "target_hp_before": 120,
-   "target_hp_after": 120,
+   "target_hp_before": 119,
+   "target_hp_after": 119,
    "target_hp_max": 139,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -954,18 +942,18 @@
      "active": "Blastoise",
      "shields": 1,
      "left": 2,
-     "hp": 70,
+     "hp": 68,
      "hp_max": 130,
-     "hp_share": 0.538,
+     "hp_share": 0.523,
      "energy": 12
     },
     "theirs": {
      "active": "Nidoqueen",
      "shields": 0,
      "left": 3,
-     "hp": 120,
+     "hp": 119,
      "hp_max": 139,
-     "hp_share": 0.863,
+     "hp_share": 0.856,
      "energy": [
       30,
       30
@@ -978,21 +966,21 @@
    "kind": "fighting",
    "t": 81.0,
    "until": 83.8,
-   "fighting_turn": 49,
+   "fighting_turn": 50,
    "turns": 5,
    "mine": {
     "pokemon": "Blastoise",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Nidoqueen",
     "fast_move": "Mud Slap",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1000,18 +988,18 @@
      "active": "Blastoise",
      "shields": 1,
      "left": 2,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 130,
-     "hp_share": 0.408,
+     "hp_share": 0.438,
      "energy": 32
     },
     "theirs": {
      "active": "Nidoqueen",
      "shields": 0,
      "left": 3,
-     "hp": 112,
+     "hp": 114,
      "hp_max": 139,
-     "hp_share": 0.806,
+     "hp_share": 0.82,
      "energy": [
       40,
       40
@@ -1023,7 +1011,7 @@
   {
    "kind": "charged",
    "t": 83.8,
-   "fighting_turn": 54,
+   "fighting_turn": 55,
    "side": "theirs",
    "pokemon": "Nidoqueen",
    "move": "Poison Fang",
@@ -1037,8 +1025,8 @@
    "energy_ceiling": 60,
    "target": "Blastoise",
    "shielded": true,
-   "target_hp_before": 53,
-   "target_hp_after": 53,
+   "target_hp_before": 57,
+   "target_hp_after": 57,
    "target_hp_max": 130,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1049,18 +1037,18 @@
      "active": "Blastoise",
      "shields": 0,
      "left": 2,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 130,
-     "hp_share": 0.408,
+     "hp_share": 0.438,
      "energy": 32
     },
     "theirs": {
      "active": "Nidoqueen",
      "shields": 0,
      "left": 3,
-     "hp": 112,
+     "hp": 114,
      "hp_max": 139,
-     "hp_share": 0.806,
+     "hp_share": 0.82,
      "energy": [
       0,
       0
@@ -1073,7 +1061,7 @@
    "kind": "fighting",
    "t": 93.0,
    "until": 96.8,
-   "fighting_turn": 54,
+   "fighting_turn": 55,
    "turns": 6,
    "mine": {
     "pokemon": "Blastoise",
@@ -1085,11 +1073,10 @@
    "theirs": {
     "pokemon": "Nidoqueen",
     "fast_move": "Mud Slap",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Blastoise",
@@ -1108,8 +1095,8 @@
      "hp_max": 139,
      "hp_share": 0.719,
      "energy": [
-      20,
-      20
+      10,
+      10
      ],
      "energy_ceiling": 30
     }
@@ -1118,7 +1105,7 @@
   {
    "kind": "charged",
    "t": 96.8,
-   "fighting_turn": 60,
+   "fighting_turn": 61,
    "side": "mine",
    "pokemon": "Blastoise",
    "move": "Hydro Cannon",
@@ -1133,7 +1120,7 @@
    "target_hp_max": 139,
    "target_bar_read": true,
    "expected_damage": 95,
-   "resolved_t": 104.8,
+   "resolved_t": 104.9,
    "cue": true,
    "state": {
     "mine": {
@@ -1162,8 +1149,8 @@
   },
   {
    "kind": "faint",
-   "t": 104.8,
-   "fighting_turn": 60,
+   "t": 104.9,
+   "fighting_turn": 61,
    "side": "theirs",
    "pokemon": "Nidoqueen",
    "next": null,
@@ -1194,9 +1181,9 @@
   },
   {
    "kind": "fighting",
-   "t": 104.8,
+   "t": 104.9,
    "until": 119.5,
-   "fighting_turn": 60,
+   "fighting_turn": 61,
    "turns": 1,
    "mine": {
     "pokemon": "Blastoise",
@@ -1208,7 +1195,7 @@
    "theirs": {
     "pokemon": "Nidoqueen",
     "fast_move": "Mud Slap",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
     "hits_seen": 1
    },
@@ -1240,7 +1227,7 @@
   {
    "kind": "switch",
    "t": 119.5,
-   "fighting_turn": 61,
+   "fighting_turn": 62,
    "side": "mine",
    "from": "Blastoise",
    "to": "Solrock",
@@ -1273,7 +1260,7 @@
    "kind": "fighting",
    "t": 119.5,
    "until": 123.8,
-   "fighting_turn": 61,
+   "fighting_turn": 62,
    "turns": 6,
    "mine": {
     "pokemon": "Solrock",
@@ -1285,7 +1272,7 @@
    "theirs": {
     "pokemon": "Nidoqueen",
     "fast_move": "Mud Slap",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
@@ -1304,9 +1291,9 @@
      "active": "Nidoking",
      "shields": 0,
      "left": 2,
-     "hp": 123,
+     "hp": 121,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.953,
      "energy": [
       18,
       18
@@ -1318,7 +1305,7 @@
   {
    "kind": "charged",
    "t": 123.8,
-   "fighting_turn": 67,
+   "fighting_turn": 68,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
@@ -1328,8 +1315,8 @@
    "energy_before": 60,
    "target": "Nidoking",
    "shielded": false,
-   "target_hp_before": 123,
-   "target_hp_after": 123,
+   "target_hp_before": 121,
+   "target_hp_after": 121,
    "target_hp_max": 127,
    "target_bar_read": false,
    "expected_damage": 45,
@@ -1349,9 +1336,9 @@
      "active": "Nidoking",
      "shields": 0,
      "left": 2,
-     "hp": 123,
+     "hp": 121,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.953,
      "energy": [
       27,
       27
@@ -1364,7 +1351,7 @@
    "kind": "fighting",
    "t": 132.0,
    "until": 145.5,
-   "fighting_turn": 67,
+   "fighting_turn": 68,
    "turns": 7,
    "mine": {
     "pokemon": "Solrock",
@@ -1395,9 +1382,9 @@
      "active": "Nidoking",
      "shields": 0,
      "left": 2,
-     "hp": 123,
+     "hp": 41,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.323,
      "energy": [
       45,
       45
@@ -1409,7 +1396,7 @@
   {
    "kind": "switch",
    "t": 145.5,
-   "fighting_turn": 74,
+   "fighting_turn": 75,
    "side": "theirs",
    "from": "Nidoking",
    "to": "Cramorant",
@@ -1441,7 +1428,7 @@
   {
    "kind": "charged",
    "t": 135.8,
-   "fighting_turn": 72,
+   "fighting_turn": 73,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
@@ -1451,8 +1438,8 @@
    "energy_before": 49,
    "target": "Nidoking",
    "shielded": false,
-   "target_hp_before": 123,
-   "target_hp_after": 123,
+   "target_hp_before": 41,
+   "target_hp_after": 41,
    "target_hp_max": 127,
    "target_bar_read": false,
    "expected_damage": 45,
@@ -1486,84 +1473,7 @@
   {
    "kind": "fighting",
    "t": 145.5,
-   "until": 146.07,
-   "fighting_turn": 74,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Solrock",
-    "fast_move": "Psywave",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Cramorant",
-    "fast_move": "Peck",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Solrock",
-     "shields": 0,
-     "left": 2,
-     "hp": 110,
-     "hp_max": 145,
-     "hp_share": 0.759,
-     "energy": 18
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 2,
-     "hp": 12,
-     "hp_max": 126,
-     "hp_share": 0.095,
-     "energy": [
-      24,
-      24
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 146.07,
-   "fighting_turn": 75,
-   "side": "theirs",
-   "pokemon": "Cramorant",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Solrock",
-     "shields": 0,
-     "left": 2,
-     "hp": 110,
-     "hp_max": 145,
-     "hp_share": 0.759,
-     "energy": 18
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 1,
-     "hp": 0,
-     "hp_max": 126,
-     "hp_share": 0.0,
-     "energy": [
-      24,
-      24
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 146.07,
-   "until": 151.8,
+   "until": 150.0,
    "fighting_turn": 75,
    "turns": 6,
    "mine": {
@@ -1585,19 +1495,96 @@
     "mine": {
      "active": "Solrock",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 103,
      "hp_max": 145,
      "hp_share": 0.71,
-     "energy": 46
+     "energy": 34
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 1,
+     "hp": 12,
+     "hp_max": 126,
+     "hp_share": 0.095,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 56
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 150.0,
+   "fighting_turn": 81,
+   "side": "theirs",
+   "pokemon": "Cramorant",
+   "next": "Nidoking",
+   "state": {
+    "mine": {
+     "active": "Solrock",
+     "shields": 0,
+     "left": 2,
+     "hp": 103,
+     "hp_max": 145,
+     "hp_share": 0.71,
+     "energy": 42
     },
     "theirs": {
      "active": "Nidoking",
      "shields": 0,
      "left": 1,
-     "hp": 123,
+     "hp": 41,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.323,
+     "energy": [
+      54,
+      54
+     ],
+     "energy_ceiling": 63
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 150.0,
+   "until": 151.8,
+   "fighting_turn": 81,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Solrock",
+    "fast_move": "Psywave",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Nidoking",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Solrock",
+     "shields": 0,
+     "left": 1,
+     "hp": 103,
+     "hp_max": 145,
+     "hp_share": 0.71,
+     "energy": 58
+    },
+    "theirs": {
+     "active": "Nidoking",
+     "shields": 0,
+     "left": 1,
+     "hp": 41,
+     "hp_max": 127,
+     "hp_share": 0.323,
      "energy": [
       13,
       13
@@ -1609,7 +1596,7 @@
   {
    "kind": "charged",
    "t": 151.8,
-   "fighting_turn": 81,
+   "fighting_turn": 85,
    "side": "theirs",
    "pokemon": "Nidoking",
    "move": "Earth Power",
@@ -1638,15 +1625,15 @@
      "hp": 0,
      "hp_max": 145,
      "hp_share": 0.0,
-     "energy": 46
+     "energy": 58
     },
     "theirs": {
      "active": "Nidoking",
      "shields": 0,
-     "left": 1,
-     "hp": 123,
+     "left": 2,
+     "hp": 41,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.323,
      "energy": [
       13,
       13
@@ -1658,7 +1645,7 @@
   {
    "kind": "faint",
    "t": 162.0,
-   "fighting_turn": 81,
+   "fighting_turn": 85,
    "side": "mine",
    "pokemon": "Solrock",
    "next": null,
@@ -1670,15 +1657,15 @@
      "hp": 0,
      "hp_max": 145,
      "hp_share": 0.0,
-     "energy": 46
+     "energy": 58
     },
     "theirs": {
      "active": "Nidoking",
      "shields": 0,
-     "left": 1,
-     "hp": 123,
+     "left": 2,
+     "hp": 41,
      "hp_max": 127,
-     "hp_share": 0.969,
+     "hp_share": 0.323,
      "energy": [
       13,
       13
@@ -1691,7 +1678,7 @@
    "kind": "fighting",
    "t": 162.0,
    "until": 165.8,
-   "fighting_turn": 81,
+   "fighting_turn": 85,
    "turns": 6,
    "mine": {
     "pokemon": "Solrock",
@@ -1735,7 +1722,7 @@
   {
    "kind": "faint",
    "t": 165.8,
-   "fighting_turn": 87,
+   "fighting_turn": 91,
    "side": "theirs",
    "pokemon": "Nidoking",
    "next": null,
@@ -1752,7 +1739,7 @@
     "theirs": {
      "active": "Nidoking",
      "shields": 0,
-     "left": 0,
+     "left": 1,
      "hp": 0,
      "hp_max": 127,
      "hp_share": 0.0,
@@ -1767,12 +1754,12 @@
   {
    "kind": "end",
    "t": 170.8,
-   "fighting_turn": 87,
+   "fighting_turn": 91,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 1,
-    "theirs": 0
+    "theirs": 1
    },
    "state": {
     "mine": {
@@ -1787,7 +1774,7 @@
     "theirs": {
      "active": "Nidoking",
      "shields": 0,
-     "left": 0,
+     "left": 1,
      "hp": 0,
      "hp_max": 127,
      "hp_share": 0.0,

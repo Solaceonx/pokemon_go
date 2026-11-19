@@ -213,7 +213,7 @@ class PublicState:
             native = health.get('method') == 'native_live_pixels'
             identity_seen = species.get('evidence', {}).get('observed_at_seconds')
             conflicted=bool(state.get('pending_identity_candidate') or state.get('active_identity_conflict'))
-            recent_native=(native and not native_center and not conflicted and identity is None
+            recent_native=(native and not native_center and not conflicted and identity in (None,state['active'])
                 and 0<=t-state.get('active_observed_at_seconds',-100)<=.75)
             if recent_native:
                 identity=state['active']
@@ -228,7 +228,14 @@ class PublicState:
                                           method=health.get('method'), camera_owner_basis=health.get('camera_owner_basis'),
                                           camera_species=camera_species,
                                           identity_basis='last_recent_confirmed_header' if recent_native else 'current_header_or_attributed_camera')
-                self.continuity.observed(side, health_identity, "health")
+                # A fresh attributed pixel measurement is a readback even while
+                # the rest of a charged attack is still unresolved.
+                self.continuity.observed(side, health_identity, "health", changed=native)
+            if (frame.get('native_source') and health.get('status')!='estimated'
+                and (not self.continuity.holding or self.continuity.attack.get('resolution_started_at_seconds') is not None)
+                and mon['fainted'].get('value') is not True):
+                self.continuity.mark(self.sides,side,state['active'],'health',
+                    'Current active HP is unreadable outside a held attack; previous pixels may precede a hit or entry',t)
             if identity != state['active'] or conflicted:
                 continue
             if side == "mine":
