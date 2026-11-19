@@ -23,7 +23,7 @@
   }
  },
  "seconds": 174.47,
- "fighting_turns": 89,
+ "fighting_turns": 107,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -34,9 +34,9 @@
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
    "no result screen read; result taken from who had Pokémon left",
-   "fast move only guessed for magcargo"
+   "fast move only guessed for charjabug, magcargo"
   ],
-  "unexplained_health_changes": 14
+  "unexplained_health_changes": 16
  },
  "teams": {
   "mine": [
@@ -47,8 +47,8 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.122,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SUCKER_PUNCH",
      "name": "Sucker Punch",
@@ -194,7 +194,7 @@
      "name": "Volt Switch",
      "turns": 4,
      "energy_gain": 16,
-     "known_from": "inferred"
+     "known_from": "guessed"
     },
     "charged_moves": [
      {
@@ -272,11 +272,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 2,
+   "mine": 1,
    "theirs": 2
   },
   "faints": {
-   "mine": 2,
+   "mine": 3,
    "theirs": 2
   }
  },
@@ -310,12 +310,12 @@
    "t": 0.0,
    "until": 8.13,
    "fighting_turn": 0,
-   "turns": 16,
+   "turns": 13,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 4
    },
    "unexplained_health_changes": 2,
@@ -355,28 +355,28 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    63,
-    63
+    54,
+    54
    ],
-   "energy_ceiling": 72,
+   "energy_ceiling": 63,
    "target": "Victreebel",
    "shielded": false,
    "target_hp_before": 118,
-   "target_hp_after": 83,
+   "target_hp_after": 118,
    "target_hp_max": 131,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 26,
-   "resolved_t": 18.0,
+   "resolved_t": 16.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 2,
      "left": 2,
-     "hp": 83,
+     "hp": 118,
      "hp_max": 131,
-     "hp_share": 0.634,
-     "energy": 56
+     "hp_share": 0.901,
+     "energy": 49
     },
     "theirs": {
      "active": "Jumpluff",
@@ -386,31 +386,31 @@
      "hp_max": 153,
      "hp_share": 0.797,
      "energy": [
-      18,
-      18
+      9,
+      9
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 18
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 18.0,
-   "until": 18.5,
-   "fighting_turn": 16,
-   "turns": 1,
+   "t": 16.5,
+   "until": 17.5,
+   "fighting_turn": 13,
+   "turns": 2,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "state": {
@@ -418,10 +418,10 @@
      "active": "Victreebel",
      "shields": 2,
      "left": 2,
-     "hp": 83,
+     "hp": 118,
      "hp_max": 131,
-     "hp_share": 0.634,
-     "energy": 56
+     "hp_share": 0.901,
+     "energy": 49
     },
     "theirs": {
      "active": "Jumpluff",
@@ -431,17 +431,17 @@
      "hp_max": 153,
      "hp_share": 0.797,
      "energy": [
-      18,
-      18
+      9,
+      9
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 18
     }
    }
   },
   {
    "kind": "switch",
-   "t": 18.5,
-   "fighting_turn": 17,
+   "t": 17.5,
+   "fighting_turn": 15,
    "side": "theirs",
    "from": "Jumpluff",
    "to": "Charjabug",
@@ -472,23 +472,23 @@
   },
   {
    "kind": "fighting",
-   "t": 18.5,
+   "t": 17.5,
    "until": 21.5,
-   "fighting_turn": 17,
-   "turns": 6,
+   "fighting_turn": 15,
+   "turns": 8,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Charjabug",
     "fast_move": "Volt Switch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -541,10 +541,10 @@
      "hp_max": 126,
      "hp_share": 0.817,
      "energy": [
-      16,
-      16
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 48
     }
    }
   },
@@ -553,7 +553,7 @@
    "t": 21.5,
    "until": 28.13,
    "fighting_turn": 23,
-   "turns": 13,
+   "turns": 12,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
@@ -564,7 +564,7 @@
    "theirs": {
     "pokemon": "Charjabug",
     "fast_move": "Volt Switch",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 3
    },
@@ -587,10 +587,10 @@
      "hp_max": 126,
      "hp_share": 0.611,
      "energy": [
-      64,
-      64
+      80,
+      80
      ],
-     "energy_ceiling": 80
+     "energy_ceiling": 96
     }
    }
   },
@@ -605,10 +605,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    64,
-    64
+    80,
+    80
    ],
-   "energy_ceiling": 80,
+   "energy_ceiling": 96,
    "target": "Turtonator",
    "shielded": false,
    "target_hp_before": 95,
@@ -616,7 +616,7 @@
    "target_hp_max": 113,
    "target_bar_read": true,
    "expected_damage": 24,
-   "resolved_t": 38.0,
+   "resolved_t": 37.5,
    "cue": true,
    "state": {
     "mine": {
@@ -632,22 +632,22 @@
      "active": "Charjabug",
      "shields": 2,
      "left": 3,
-     "hp": 68,
+     "hp": 77,
      "hp_max": 126,
-     "hp_share": 0.54,
+     "hp_share": 0.611,
      "energy": [
-      24,
-      24
+      40,
+      40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 38.0,
+   "t": 37.5,
    "until": 39.13,
-   "fighting_turn": 36,
+   "fighting_turn": 35,
    "turns": 3,
    "mine": {
     "pokemon": "Turtonator",
@@ -659,7 +659,7 @@
    "theirs": {
     "pokemon": "Charjabug",
     "fast_move": "Volt Switch",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
@@ -681,10 +681,10 @@
      "hp_max": 126,
      "hp_share": 0.54,
      "energy": [
-      24,
-      24
+      40,
+      40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 56
     }
    }
   },
@@ -699,11 +699,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    24,
-    24
+    40,
+    40
    ],
-   "energy_ceiling": 40,
-   "energy_short_by": 16,
+   "energy_ceiling": 56,
    "target": "Turtonator",
    "shielded": false,
    "target_hp_before": 70,
@@ -711,7 +710,7 @@
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 21,
-   "resolved_t": 49.5,
+   "resolved_t": 47.5,
    "cue": true,
    "state": {
     "mine": {
@@ -727,9 +726,9 @@
      "active": "Charjabug",
      "shields": 2,
      "left": 3,
-     "hp": 66,
+     "hp": 68,
      "hp_max": 126,
-     "hp_share": 0.524,
+     "hp_share": 0.54,
      "energy": [
       0,
       0
@@ -740,22 +739,22 @@
   },
   {
    "kind": "fighting",
-   "t": 49.5,
+   "t": 47.5,
    "until": 52.13,
-   "fighting_turn": 39,
-   "turns": 5,
+   "fighting_turn": 38,
+   "turns": 9,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Charjabug",
     "fast_move": "Volt Switch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -777,17 +776,17 @@
      "hp_max": 126,
      "hp_share": 0.389,
      "energy": [
-      16,
-      16
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 52.13,
-   "fighting_turn": 44,
+   "fighting_turn": 47,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Dragon Claw",
@@ -802,7 +801,7 @@
    "target_hp_max": 126,
    "target_bar_read": false,
    "expected_damage": 53,
-   "resolved_t": 62.0,
+   "resolved_t": 61.5,
    "cue": true,
    "state": {
     "mine": {
@@ -822,33 +821,20 @@
      "hp_max": 126,
      "hp_share": 0.389,
      "energy": [
-      32,
-      32
+      48,
+      48
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 48
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 62.0,
-   "until": 65.5,
-   "fighting_turn": 44,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Turtonator",
-    "fast_move": "Incinerate",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Charjabug",
-    "fast_move": "Volt Switch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
+   "kind": "faint",
+   "t": 61.73,
+   "fighting_turn": 47,
+   "side": "theirs",
+   "pokemon": "Charjabug",
+   "next": null,
    "state": {
     "mine": {
      "active": "Turtonator",
@@ -862,68 +848,36 @@
     "theirs": {
      "active": "Charjabug",
      "shields": 2,
-     "left": 2,
-     "hp": 49,
+     "left": 3,
+     "hp": 0,
      "hp_max": 126,
-     "hp_share": 0.389,
+     "hp_share": 0.0,
      "energy": [
-      32,
-      32
+      48,
+      48
      ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 65.5,
-   "fighting_turn": 48,
-   "side": "theirs",
-   "pokemon": "Charjabug",
-   "next": "Jumpluff",
-   "state": {
-    "mine": {
-     "active": "Turtonator",
-     "shields": 2,
-     "left": 2,
-     "hp": 43,
-     "hp_max": 113,
-     "hp_share": 0.381,
-     "energy": 70
-    },
-    "theirs": {
-     "active": "Jumpluff",
-     "shields": 2,
-     "left": 2,
-     "hp": 122,
-     "hp_max": 153,
-     "hp_share": 0.797,
-     "energy": [
-      18,
-      18
-     ],
-     "energy_ceiling": 27
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 65.5,
+   "t": 61.73,
    "until": 67.5,
-   "fighting_turn": 48,
-   "turns": 4,
+   "fighting_turn": 47,
+   "turns": 6,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "pokemon": "Charjabug",
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
@@ -945,17 +899,17 @@
      "hp_max": 153,
      "hp_share": 0.797,
      "energy": [
-      27,
-      27
+      18,
+      18
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "switch",
    "t": 67.5,
-   "fighting_turn": 52,
+   "fighting_turn": 53,
    "side": "mine",
    "from": "Turtonator",
    "to": "Victreebel",
@@ -967,7 +921,7 @@
      "hp": 0,
      "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 77
+     "energy": 84
     },
     "theirs": {
      "active": "Jumpluff",
@@ -977,8 +931,8 @@
      "hp_max": 153,
      "hp_share": 0.562,
      "energy": [
-      36,
-      36
+      27,
+      27
      ],
      "energy_ceiling": 45
     }
@@ -988,7 +942,7 @@
    "kind": "fighting",
    "t": 67.5,
    "until": 68.93,
-   "fighting_turn": 52,
+   "fighting_turn": 53,
    "turns": 2,
    "mine": {
     "pokemon": "Victreebel",
@@ -1012,7 +966,7 @@
      "hp": 0,
      "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 84
+     "energy": 91
     },
     "theirs": {
      "active": "Jumpluff",
@@ -1022,8 +976,8 @@
      "hp_max": 153,
      "hp_share": 0.562,
      "energy": [
-      45,
-      45
+      36,
+      36
      ],
      "energy_ceiling": 54
     }
@@ -1032,14 +986,14 @@
   {
    "kind": "charged",
    "t": 68.93,
-   "fighting_turn": 54,
+   "fighting_turn": 55,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Sludge Bomb",
    "move_id": "SLUDGE_BOMB",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 84,
+   "energy_before": 91,
    "target": "Jumpluff",
    "shielded": true,
    "target_hp_before": 86,
@@ -1057,7 +1011,7 @@
      "hp": 0,
      "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 34
+     "energy": 41
     },
     "theirs": {
      "active": "Jumpluff",
@@ -1067,8 +1021,8 @@
      "hp_max": 153,
      "hp_share": 0.562,
      "energy": [
-      45,
-      45
+      36,
+      36
      ],
      "energy_ceiling": 54
     }
@@ -1078,7 +1032,7 @@
    "kind": "fighting",
    "t": 78.5,
    "until": 80.5,
-   "fighting_turn": 54,
+   "fighting_turn": 55,
    "turns": 4,
    "mine": {
     "pokemon": "Victreebel",
@@ -1103,7 +1057,7 @@
      "hp": 53,
      "hp_max": 131,
      "hp_share": 0.405,
-     "energy": 41
+     "energy": 48
     },
     "theirs": {
      "active": "Jumpluff",
@@ -1113,8 +1067,8 @@
      "hp_max": 153,
      "hp_share": 0.562,
      "energy": [
-      54,
-      54
+      45,
+      45
      ],
      "energy_ceiling": 63
     }
@@ -1123,7 +1077,7 @@
   {
    "kind": "switch",
    "t": 80.5,
-   "fighting_turn": 58,
+   "fighting_turn": 59,
    "side": "theirs",
    "from": "Jumpluff",
    "to": "Magcargo",
@@ -1135,52 +1089,7 @@
      "hp": 53,
      "hp_max": 131,
      "hp_share": 0.405,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Magcargo",
-     "shields": 1,
-     "left": 2,
-     "hp": 110,
-     "hp_max": 117,
-     "hp_share": 0.94,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 9
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 80.5,
-   "until": 81.13,
-   "fighting_turn": 58,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Victreebel",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Magcargo",
-    "fast_move": "Ember",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Victreebel",
-     "shields": 2,
-     "left": 2,
-     "hp": 53,
-     "hp_max": 131,
-     "hp_share": 0.405,
-     "energy": 48
+     "energy": 55
     },
     "theirs": {
      "active": "Magcargo",
@@ -1200,14 +1109,14 @@
   {
    "kind": "charged",
    "t": 81.13,
-   "fighting_turn": 58,
+   "fighting_turn": 59,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
    "move_id": "LEAF_BLADE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 48,
+   "energy_before": 55,
    "target": "Magcargo",
    "shielded": false,
    "target_hp_before": 110,
@@ -1215,7 +1124,7 @@
    "target_hp_max": 117,
    "target_bar_read": false,
    "expected_damage": 48,
-   "resolved_t": 91.5,
+   "resolved_t": 90.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1225,7 +1134,7 @@
      "hp": 53,
      "hp_max": 131,
      "hp_share": 0.405,
-     "energy": 13
+     "energy": 20
     },
     "theirs": {
      "active": "Magcargo",
@@ -1235,32 +1144,32 @@
      "hp_max": 117,
      "hp_share": 0.94,
      "energy": [
-      9,
-      9
+      0,
+      0
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 9
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 91.5,
-   "until": 94.13,
-   "fighting_turn": 60,
-   "turns": 5,
+   "t": 90.5,
+   "until": 103.2,
+   "fighting_turn": 59,
+   "turns": 25,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Magcargo",
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1271,7 +1180,7 @@
      "hp": 16,
      "hp_max": 131,
      "hp_share": 0.122,
-     "energy": 27
+     "energy": 41
     },
     "theirs": {
      "active": "Magcargo",
@@ -1289,140 +1198,94 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 103.2,
+   "fighting_turn": 84,
+   "side": "mine",
+   "pokemon": "Victreebel",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Victreebel",
+     "shields": 2,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 131,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Magcargo",
+     "shields": 1,
+     "left": 2,
+     "hp": 50,
+     "hp_max": 117,
+     "hp_share": 0.427,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 94.13,
-   "fighting_turn": 64,
+   "fighting_turn": 84,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
    "move_id": "LEAF_BLADE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 27,
-   "energy_short_by": 8,
+   "energy_before": 100,
    "target": "Magcargo",
    "shielded": true,
    "target_hp_before": 50,
-   "target_hp_after": 42,
+   "target_hp_after": 50,
    "target_hp_max": 117,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 104.0,
+   "resolved_t": 103.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 2,
      "left": 2,
-     "hp": 16,
+     "hp": 0,
      "hp_max": 131,
-     "hp_share": 0.122,
-     "energy": 0
+     "hp_share": 0.0,
+     "energy": 65
     },
     "theirs": {
      "active": "Magcargo",
      "shields": 0,
      "left": 2,
-     "hp": 42,
+     "hp": 50,
      "hp_max": 117,
-     "hp_share": 0.359,
+     "hp_share": 0.427,
      "energy": [
-      36,
-      36
+      100,
+      100
      ],
-     "energy_ceiling": 36
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 104.0,
-   "until": 107.0,
-   "fighting_turn": 65,
-   "turns": 1,
+   "t": 103.5,
+   "until": 109.13,
+   "fighting_turn": 84,
+   "turns": 5,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Magcargo",
-    "fast_move": "Ember",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Victreebel",
-     "shields": 2,
-     "left": 2,
-     "hp": 16,
-     "hp_max": 131,
-     "hp_share": 0.122,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Magcargo",
-     "shields": 0,
-     "left": 2,
-     "hp": 42,
-     "hp_max": 117,
-     "hp_share": 0.359,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 36
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 107.0,
-   "fighting_turn": 66,
-   "side": "mine",
-   "from": "Victreebel",
-   "to": "Kingdra",
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 2,
-     "hp": 118,
-     "hp_max": 118,
-     "hp_share": 1.0,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Magcargo",
-     "shields": 0,
-     "left": 2,
-     "hp": 42,
-     "hp_max": 117,
-     "hp_share": 0.359,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 107.0,
-   "until": 109.13,
-   "fighting_turn": 66,
-   "turns": 5,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Magcargo",
@@ -1449,17 +1312,17 @@
      "hp_max": 117,
      "hp_share": 0.256,
      "energy": [
-      54,
-      54
+      100,
+      100
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 109.13,
-   "fighting_turn": 70,
+   "fighting_turn": 89,
    "side": "theirs",
    "pokemon": "Magcargo",
    "move": "Rock Tomb",
@@ -1467,10 +1330,10 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    54,
-    54
+    100,
+    100
    ],
-   "energy_ceiling": 63,
+   "energy_ceiling": 100,
    "target": "Kingdra",
    "shielded": false,
    "target_hp_before": 118,
@@ -1478,7 +1341,7 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 51,
-   "resolved_t": 119.5,
+   "resolved_t": 118.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1488,41 +1351,41 @@
      "hp": 118,
      "hp_max": 118,
      "hp_share": 1.0,
-     "energy": 20
+     "energy": 16
     },
     "theirs": {
      "active": "Magcargo",
      "shields": 0,
      "left": 2,
-     "hp": 25,
+     "hp": 30,
      "hp_max": 117,
-     "hp_share": 0.214,
+     "hp_share": 0.256,
      "energy": [
-      4,
-      4
+      50,
+      50
      ],
-     "energy_ceiling": 13
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 119.5,
+   "t": 118.5,
    "until": 124.13,
-   "fighting_turn": 71,
-   "turns": 11,
+   "fighting_turn": 89,
+   "turns": 12,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Magcargo",
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
    "state": {
@@ -1543,17 +1406,17 @@
      "hp_max": 117,
      "hp_share": 0.333,
      "energy": [
-      49,
-      49
+      100,
+      100
      ],
-     "energy_ceiling": 58
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 124.13,
-   "fighting_turn": 82,
+   "fighting_turn": 101,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
@@ -1568,7 +1431,7 @@
    "target_hp_max": 117,
    "target_bar_read": false,
    "expected_damage": 14,
-   "resolved_t": 134.5,
+   "resolved_t": 133.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1588,111 +1451,65 @@
      "hp_max": 117,
      "hp_share": 0.333,
      "energy": [
-      58,
-      58
+      100,
+      100
      ],
-     "energy_ceiling": 58
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 134.5,
-   "until": 148.0,
-   "fighting_turn": 82,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Magcargo",
-    "fast_move": "Ember",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 1,
-     "hp": 42,
-     "hp_max": 118,
-     "hp_share": 0.356,
-     "energy": 33
-    },
-    "theirs": {
-     "active": "Magcargo",
-     "shields": 0,
-     "left": 1,
-     "hp": 39,
-     "hp_max": 117,
-     "hp_share": 0.333,
-     "energy": [
-      58,
-      58
-     ],
-     "energy_ceiling": 67
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "faint",
-   "t": 148.0,
-   "fighting_turn": 83,
+   "t": 134.13,
+   "fighting_turn": 101,
    "side": "theirs",
    "pokemon": "Magcargo",
-   "next": "Jumpluff",
+   "next": null,
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
      "left": 1,
-     "hp": 42,
+     "hp": 118,
      "hp_max": 118,
-     "hp_share": 0.356,
-     "energy": 0
+     "hp_share": 1.0,
+     "energy": 29
     },
     "theirs": {
-     "active": "Jumpluff",
+     "active": "Magcargo",
      "shields": 0,
-     "left": 1,
-     "hp": 86,
-     "hp_max": 153,
-     "hp_share": 0.562,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 117,
+     "hp_share": 0.0,
      "energy": [
-      54,
-      54
+      100,
+      100
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 138.13,
-   "fighting_turn": 83,
+   "fighting_turn": 101,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 33,
-   "energy_short_by": 2,
+   "energy_before": 29,
+   "energy_short_by": 6,
    "target": "Magcargo",
    "shielded": false,
-   "target_hp_before": 39,
+   "target_hp_before": 0,
    "target_hp_after": 0,
    "target_hp_max": 117,
    "target_bar_read": false,
    "expected_damage": 14,
-   "resolved_t": 148.0,
+   "resolved_t": 147.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1712,8 +1529,8 @@
      "hp_max": 153,
      "hp_share": 0.562,
      "energy": [
-      54,
-      54
+      45,
+      45
      ],
      "energy_ceiling": 72
     }
@@ -1722,7 +1539,7 @@
   {
    "kind": "charged",
    "t": 153.13,
-   "fighting_turn": 83,
+   "fighting_turn": 101,
    "side": "theirs",
    "pokemon": "Jumpluff",
    "move": "Energy Ball",
@@ -1730,27 +1547,27 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    54,
-    54
+    45,
+    45
    ],
    "energy_ceiling": 72,
    "target": "Kingdra",
    "shielded": false,
    "target_hp_before": 27,
-   "target_hp_after": 27,
+   "target_hp_after": 0,
    "target_hp_max": 118,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 48,
-   "resolved_t": 163.0,
+   "resolved_t": 162.47,
    "cue": true,
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
      "left": 1,
-     "hp": 27,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.229,
+     "hp_share": 0.0,
      "energy": 0
     },
     "theirs": {
@@ -1761,74 +1578,29 @@
      "hp_max": 153,
      "hp_share": 0.242,
      "energy": [
-      9,
-      9
+      0,
+      0
      ],
-     "energy_ceiling": 18
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 163.0,
-   "until": 164.0,
-   "fighting_turn": 83,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 1,
-     "hp": 27,
-     "hp_max": 118,
-     "hp_share": 0.229,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 1,
-     "hp": 37,
-     "hp_max": 153,
-     "hp_share": 0.242,
-     "energy": [
-      9,
-      9
-     ],
-     "energy_ceiling": 18
+     "energy_ceiling": 9
     }
    }
   },
   {
    "kind": "faint",
-   "t": 164.0,
-   "fighting_turn": 84,
+   "t": 162.47,
+   "fighting_turn": 101,
    "side": "mine",
    "pokemon": "Kingdra",
-   "next": "Turtonator",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Turtonator",
+     "active": "Kingdra",
      "shields": 2,
      "left": 1,
-     "hp": 46,
-     "hp_max": 113,
-     "hp_share": 0.407,
-     "energy": 90
+     "hp": 0,
+     "hp_max": 118,
+     "hp_share": 0.0,
+     "energy": 0
     },
     "theirs": {
      "active": "Jumpluff",
@@ -1838,31 +1610,31 @@
      "hp_max": 153,
      "hp_share": 0.242,
      "energy": [
-      9,
-      9
+      0,
+      0
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 9
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 164.0,
+   "t": 162.47,
    "until": 174.47,
-   "fighting_turn": 84,
-   "turns": 5,
+   "fighting_turn": 101,
+   "turns": 6,
    "mine": {
-    "pokemon": "Turtonator",
-    "fast_move": "Incinerate",
+    "pokemon": "Kingdra",
+    "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
@@ -1884,17 +1656,17 @@
      "hp_max": 153,
      "hp_share": 0.242,
      "energy": [
-      36,
-      36
+      27,
+      27
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "end",
    "t": 174.47,
-   "fighting_turn": 89,
+   "fighting_turn": 107,
    "result": "loss",
    "result_from": "who had Pokémon left",
    "left": {
@@ -1919,27 +1691,15 @@
      "hp_max": 153,
      "hp_share": 0.242,
      "energy": [
-      36,
-      36
+      27,
+      27
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 36
     }
    }
   }
  ],
  "deductions": [
-  {
-   "t": 49.5,
-   "side": "theirs",
-   "pokemon": "Charjabug",
-   "what": "fast move",
-   "value": "Volt Switch",
-   "how": "every other fast move ruled out",
-   "ruled_out": [
-    "Bug Bite",
-    "Spark"
-   ]
-  },
   {
    "t": 151.5,
    "side": "theirs",

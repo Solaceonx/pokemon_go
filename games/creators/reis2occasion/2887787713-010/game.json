@@ -23,7 +23,7 @@
   }
  },
  "seconds": 164.53,
- "fighting_turns": 109,
+ "fighting_turns": 107,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -31,7 +31,7 @@
    "shields: we used 1, but 0 charged move(s) were tracked as blocked"
   ],
   "notes": [],
-  "unexplained_health_changes": 5
+  "unexplained_health_changes": 8
  },
  "teams": {
   "mine": [
@@ -108,8 +108,8 @@
     "cp": 1500,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.035,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "INCINERATE",
      "name": "Incinerate",
@@ -225,12 +225,12 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 2
   },
   "faints": {
-   "mine": 2,
-   "theirs": 1
+   "mine": 3,
+   "theirs": 2
   }
  },
  "actions": [
@@ -300,7 +300,7 @@
   {
    "kind": "charged",
    "t": 22.53,
-   "fighting_turn": 24,
+   "fighting_turn": 25,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
@@ -311,32 +311,32 @@
    "target": "Cradily",
    "shielded": false,
    "target_hp_before": 122,
-   "target_hp_after": 55,
+   "target_hp_after": 122,
    "target_hp_max": 144,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 53,
-   "resolved_t": 32.5,
+   "resolved_t": 32.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 1,
      "left": 2,
-     "hp": 48,
+     "hp": 58,
      "hp_max": 131,
-     "hp_share": 0.366,
+     "hp_share": 0.443,
      "energy": 49
     },
     "theirs": {
      "active": "Cradily",
      "shields": 2,
      "left": 3,
-     "hp": 55,
+     "hp": 122,
      "hp_max": 144,
-     "hp_share": 0.382,
+     "hp_share": 0.847,
      "energy": [
-      24,
-      24
+      16,
+      16
      ],
      "energy_ceiling": 24
     }
@@ -344,7 +344,7 @@
   },
   {
    "kind": "fighting",
-   "t": 32.5,
+   "t": 32.0,
    "until": 35.53,
    "fighting_turn": 25,
    "turns": 6,
@@ -362,6 +362,7 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Victreebel",
@@ -370,7 +371,7 @@
      "hp": 38,
      "hp_max": 131,
      "hp_share": 0.29,
-     "energy": 63
+     "energy": 70
     },
     "theirs": {
      "active": "Cradily",
@@ -390,23 +391,68 @@
   {
    "kind": "charged",
    "t": 35.53,
-   "fighting_turn": 30,
+   "fighting_turn": 31,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
    "move_id": "LEAF_BLADE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 63,
+   "energy_before": 70,
    "target": "Cradily",
    "shielded": true,
    "target_hp_before": 45,
-   "target_hp_after": 42,
+   "target_hp_after": 45,
    "target_hp_max": 144,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 45.5,
+   "resolved_t": 44.0,
    "cue": true,
+   "state": {
+    "mine": {
+     "active": "Victreebel",
+     "shields": 1,
+     "left": 2,
+     "hp": 38,
+     "hp_max": 131,
+     "hp_share": 0.29,
+     "energy": 35
+    },
+    "theirs": {
+     "active": "Cradily",
+     "shields": 1,
+     "left": 3,
+     "hp": 45,
+     "hp_max": 144,
+     "hp_share": 0.312,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 48
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 44.0,
+   "until": 45.53,
+   "fighting_turn": 31,
+   "turns": 3,
+   "mine": {
+    "pokemon": "Victreebel",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Cradily",
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
    "state": {
     "mine": {
      "active": "Victreebel",
@@ -415,7 +461,7 @@
      "hp": 32,
      "hp_max": 131,
      "hp_share": 0.244,
-     "energy": 28
+     "energy": 42
     },
     "theirs": {
      "active": "Cradily",
@@ -428,14 +474,14 @@
       48,
       48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "charged",
    "t": 45.53,
-   "fighting_turn": 31,
+   "fighting_turn": 34,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -443,11 +489,11 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    39,
-    39
+    48,
+    48
    ],
-   "energy_ceiling": 52,
-   "energy_short_by": 11,
+   "energy_ceiling": 56,
+   "energy_short_by": 2,
    "target": "Victreebel",
    "shielded": false,
    "target_hp_before": 32,
@@ -455,7 +501,7 @@
    "target_hp_max": 131,
    "target_bar_read": false,
    "expected_damage": 66,
-   "resolved_t": 55.5,
+   "resolved_t": 55.0,
    "cue": true,
    "state": {
     "mine": {
@@ -465,7 +511,7 @@
      "hp": 32,
      "hp_max": 131,
      "hp_share": 0.244,
-     "energy": 28
+     "energy": 49
     },
     "theirs": {
      "active": "Cradily",
@@ -476,73 +522,28 @@
      "hp_share": 0.292,
      "energy": [
       0,
-      2
+      6
      ],
-     "energy_ceiling": 15
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 55.5,
-   "until": 57.5,
-   "fighting_turn": 31,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Victreebel",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Cradily",
-    "fast_move": "Bullet Seed",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Victreebel",
-     "shields": 1,
-     "left": 2,
-     "hp": 32,
-     "hp_max": 131,
-     "hp_share": 0.244,
-     "energy": 28
-    },
-    "theirs": {
-     "active": "Cradily",
-     "shields": 1,
-     "left": 3,
-     "hp": 42,
-     "hp_max": 144,
-     "hp_share": 0.292,
-     "energy": [
-      0,
-      2
-     ],
-     "energy_ceiling": 15
+     "energy_ceiling": 14
     }
    }
   },
   {
    "kind": "faint",
-   "t": 57.5,
-   "fighting_turn": 33,
+   "t": 55.07,
+   "fighting_turn": 34,
    "side": "mine",
    "pokemon": "Victreebel",
-   "next": "Kingdra",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Kingdra",
+     "active": "Victreebel",
      "shields": 1,
      "left": 2,
-     "hp": 118,
-     "hp_max": 118,
-     "hp_share": 1.0,
-     "energy": 0
+     "hp": 0,
+     "hp_max": 131,
+     "hp_share": 0.0,
+     "energy": 49
     },
     "theirs": {
      "active": "Cradily",
@@ -553,23 +554,23 @@
      "hp_share": 0.292,
      "energy": [
       0,
-      2
+      6
      ],
-     "energy_ceiling": 15
+     "energy_ceiling": 14
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 57.5,
+   "t": 55.07,
    "until": 63.53,
-   "fighting_turn": 33,
-   "turns": 12,
+   "fighting_turn": 34,
+   "turns": 14,
    "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
+    "pokemon": "Victreebel",
+    "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 7
    },
    "theirs": {
@@ -599,16 +600,16 @@
      "hp_share": 0.069,
      "energy": [
       52,
-      54
+      58
      ],
-     "energy_ceiling": 67
+     "energy_ceiling": 71
     }
    }
   },
   {
    "kind": "charged",
    "t": 63.53,
-   "fighting_turn": 45,
+   "fighting_turn": 48,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
@@ -623,7 +624,7 @@
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 73.5,
+   "resolved_t": 73.0,
    "cue": true,
    "state": {
     "mine": {
@@ -644,24 +645,24 @@
      "hp_share": 0.069,
      "energy": [
       65,
-      67
+      71
      ],
-     "energy_ceiling": 67
+     "energy_ceiling": 71
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 73.5,
+   "t": 73.0,
    "until": 74.53,
-   "fighting_turn": 45,
+   "fighting_turn": 48,
    "turns": 17,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 17,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Cradily",
@@ -698,7 +699,7 @@
   {
    "kind": "charged",
    "t": 74.53,
-   "fighting_turn": 62,
+   "fighting_turn": 65,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -717,7 +718,7 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 49,
-   "resolved_t": 84.5,
+   "resolved_t": 84.0,
    "cue": true,
    "state": {
     "mine": {
@@ -746,15 +747,15 @@
   },
   {
    "kind": "fighting",
-   "t": 84.5,
+   "t": 84.0,
    "until": 85.0,
-   "fighting_turn": 62,
-   "turns": 1,
+   "fighting_turn": 65,
+   "turns": 2,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
@@ -792,7 +793,7 @@
   {
    "kind": "faint",
    "t": 85.0,
-   "fighting_turn": 63,
+   "fighting_turn": 67,
    "side": "mine",
    "pokemon": "Kingdra",
    "next": "Turtonator",
@@ -824,7 +825,7 @@
   {
    "kind": "switch",
    "t": 85.0,
-   "fighting_turn": 63,
+   "fighting_turn": 67,
    "side": "theirs",
    "from": "Cradily",
    "to": "Seismitoad",
@@ -857,7 +858,7 @@
    "kind": "fighting",
    "t": 85.0,
    "until": 90.53,
-   "fighting_turn": 63,
+   "fighting_turn": 67,
    "turns": 11,
    "mine": {
     "pokemon": "Turtonator",
@@ -901,7 +902,7 @@
   {
    "kind": "charged",
    "t": 90.53,
-   "fighting_turn": 74,
+   "fighting_turn": 78,
    "side": "theirs",
    "pokemon": "Seismitoad",
    "move": "Earth Power",
@@ -921,7 +922,7 @@
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 88,
-   "resolved_t": 100.5,
+   "resolved_t": 100.0,
    "cue": true,
    "state": {
     "mine": {
@@ -950,9 +951,9 @@
   },
   {
    "kind": "fighting",
-   "t": 100.5,
+   "t": 100.0,
    "until": 101.53,
-   "fighting_turn": 74,
+   "fighting_turn": 78,
    "turns": 2,
    "mine": {
     "pokemon": "Turtonator",
@@ -986,17 +987,17 @@
      "hp_max": 154,
      "hp_share": 0.896,
      "energy": [
-      0,
-      4
+      9,
+      13
      ],
-     "energy_ceiling": 13
+     "energy_ceiling": 22
     }
    }
   },
   {
    "kind": "charged",
    "t": 101.53,
-   "fighting_turn": 75,
+   "fighting_turn": 80,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Dragon Claw",
@@ -1011,16 +1012,16 @@
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": 71,
-   "resolved_t": 111.5,
+   "resolved_t": 110.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 1,
      "left": 1,
-     "hp": 4,
+     "hp": 96,
      "hp_max": 113,
-     "hp_share": 0.035,
+     "hp_share": 0.85,
      "energy": 10
     },
     "theirs": {
@@ -1040,9 +1041,9 @@
   },
   {
    "kind": "fighting",
-   "t": 111.5,
-   "until": 113.0,
-   "fighting_turn": 76,
+   "t": 110.0,
+   "until": 111.6,
+   "fighting_turn": 80,
    "turns": 3,
    "mine": {
     "pokemon": "Turtonator",
@@ -1056,8 +1057,9 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Turtonator",
@@ -1072,9 +1074,9 @@
      "active": "Seismitoad",
      "shields": 0,
      "left": 3,
-     "hp": 62,
+     "hp": 65,
      "hp_max": 154,
-     "hp_share": 0.403,
+     "hp_share": 0.422,
      "energy": [
       18,
       22
@@ -1084,32 +1086,32 @@
    }
   },
   {
-   "kind": "switch",
-   "t": 113.0,
-   "fighting_turn": 79,
+   "kind": "faint",
+   "t": 111.6,
+   "fighting_turn": 83,
    "side": "mine",
-   "from": "Turtonator",
-   "to": "Kingdra",
+   "pokemon": "Turtonator",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Kingdra",
+     "active": "Turtonator",
      "shields": 1,
      "left": 1,
      "hp": 0,
-     "hp_max": 118,
+     "hp_max": 113,
      "hp_share": 0.0,
-     "energy": 85
+     "energy": 10
     },
     "theirs": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 3,
-     "hp": 60,
+     "hp": 65,
      "hp_max": 154,
-     "hp_share": 0.39,
+     "hp_share": 0.422,
      "energy": [
-      18,
-      22
+      27,
+      31
      ],
      "energy_ceiling": 31
     }
@@ -1117,16 +1119,16 @@
   },
   {
    "kind": "fighting",
-   "t": 113.0,
+   "t": 111.6,
    "until": 118.53,
-   "fighting_turn": 79,
-   "turns": 11,
+   "fighting_turn": 83,
+   "turns": 10,
    "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
+    "pokemon": "Turtonator",
+    "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Seismitoad",
@@ -1135,7 +1137,7 @@
     "fast_moves_if_no_pause": 5,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Kingdra",
@@ -1157,14 +1159,14 @@
       72,
       76
      ],
-     "energy_ceiling": 85
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "charged",
    "t": 118.53,
-   "fighting_turn": 90,
+   "fighting_turn": 93,
    "side": "theirs",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
@@ -1175,7 +1177,7 @@
     72,
     76
    ],
-   "energy_ceiling": 85,
+   "energy_ceiling": 76,
    "target": "Kingdra",
    "shielded": false,
    "target_hp_before": 27,
@@ -1183,7 +1185,7 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 37,
-   "resolved_t": 128.5,
+   "resolved_t": 128.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1212,16 +1214,16 @@
   },
   {
    "kind": "fighting",
-   "t": 128.5,
+   "t": 128.0,
    "until": 132.5,
-   "fighting_turn": 90,
-   "turns": 8,
+   "fighting_turn": 93,
+   "turns": 9,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Seismitoad",
@@ -1258,7 +1260,7 @@
   {
    "kind": "switch",
    "t": 132.5,
-   "fighting_turn": 98,
+   "fighting_turn": 102,
    "side": "theirs",
    "from": "Seismitoad",
    "to": "Cradily",
@@ -1291,7 +1293,7 @@
    "kind": "fighting",
    "t": 132.5,
    "until": 136.5,
-   "fighting_turn": 98,
+   "fighting_turn": 102,
    "turns": 2,
    "mine": {
     "pokemon": "Kingdra",
@@ -1328,14 +1330,14 @@
       50,
       50
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "faint",
    "t": 136.5,
-   "fighting_turn": 100,
+   "fighting_turn": 104,
    "side": "theirs",
    "pokemon": "Cradily",
    "next": "Seismitoad",
@@ -1357,8 +1359,8 @@
      "hp_max": 154,
      "hp_share": 0.149,
      "energy": [
-      54,
-      58
+      63,
+      67
      ],
      "energy_ceiling": 76
     }
@@ -1368,7 +1370,7 @@
    "kind": "fighting",
    "t": 136.5,
    "until": 137.53,
-   "fighting_turn": 100,
+   "fighting_turn": 104,
    "turns": 3,
    "mine": {
     "pokemon": "Kingdra",
@@ -1402,17 +1404,17 @@
      "hp_max": 154,
      "hp_share": 0.149,
      "energy": [
-      63,
-      67
+      72,
+      76
      ],
-     "energy_ceiling": 85
+     "energy_ceiling": 94
     }
    }
   },
   {
    "kind": "charged",
    "t": 137.53,
-   "fighting_turn": 103,
+   "fighting_turn": 107,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
@@ -1423,11 +1425,11 @@
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 23,
-   "target_hp_after": 23,
+   "target_hp_after": 0,
    "target_hp_max": 154,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 29,
-   "resolved_t": 147.5,
+   "resolved_t": 144.87,
    "cue": true,
    "state": {
     "mine": {
@@ -1443,37 +1445,24 @@
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 23,
+     "hp": 0,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.0,
      "energy": [
-      72,
-      76
+      81,
+      85
      ],
-     "energy_ceiling": 85
+     "energy_ceiling": 94
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 147.5,
-   "until": 149.53,
-   "fighting_turn": 103,
-   "turns": 5,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
+   "kind": "faint",
+   "t": 144.87,
+   "fighting_turn": 107,
+   "side": "theirs",
+   "pokemon": "Seismitoad",
+   "next": null,
    "state": {
     "mine": {
      "active": "Kingdra",
@@ -1482,42 +1471,42 @@
      "hp": 15,
      "hp_max": 118,
      "hp_share": 0.127,
-     "energy": 77
+     "energy": 65
     },
     "theirs": {
      "active": "Seismitoad",
      "shields": 0,
-     "left": 1,
-     "hp": 23,
+     "left": 2,
+     "hp": 0,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.0,
      "energy": [
       81,
       85
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 94
     }
    }
   },
   {
    "kind": "charged",
    "t": 149.53,
-   "fighting_turn": 106,
+   "fighting_turn": 107,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 81,
+   "energy_before": 65,
    "target": "Seismitoad",
    "shielded": false,
-   "target_hp_before": 23,
+   "target_hp_before": 0,
    "target_hp_after": 0,
    "target_hp_max": 154,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 29,
-   "resolved_t": 160.0,
+   "resolved_t": 159.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1527,7 +1516,7 @@
      "hp": 15,
      "hp_max": 118,
      "hp_share": 0.127,
-     "energy": 46
+     "energy": 30
     },
     "theirs": {
      "active": "Seismitoad",
@@ -1537,62 +1526,17 @@
      "hp_max": 154,
      "hp_share": 0.0,
      "energy": [
-      99,
-      100
+      81,
+      85
      ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 160.0,
-   "until": 164.53,
-   "fighting_turn": 108,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 1,
-     "left": 0,
-     "hp": 15,
-     "hp_max": 118,
-     "hp_share": 0.127,
-     "energy": 50
-    },
-    "theirs": {
-     "active": "Seismitoad",
-     "shields": 0,
-     "left": 1,
-     "hp": 23,
-     "hp_max": 154,
-     "hp_share": 0.149,
-     "energy": [
-      99,
-      100
-     ],
-     "energy_ceiling": 100
+     "energy_ceiling": 94
     }
    }
   },
   {
    "kind": "end",
    "t": 164.53,
-   "fighting_turn": 109,
+   "fighting_turn": 107,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1607,7 +1551,7 @@
      "hp": 15,
      "hp_max": 118,
      "hp_share": 0.127,
-     "energy": 50
+     "energy": 30
     },
     "theirs": {
      "active": "Seismitoad",
@@ -1617,29 +1561,26 @@
      "hp_max": 154,
      "hp_share": 0.149,
      "energy": [
-      99,
-      100
+      81,
+      85
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 94
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 55.5,
+   "t": 61.5,
    "side": "theirs",
    "pokemon": "Cradily",
    "what": "fast move",
    "value": "Bullet Seed",
-   "how": "fits its hits on our bar best of the moves not ruled out",
-   "ruled_out": [
-    "Acid",
-    "Infestation"
-   ]
+   "how": "fits the size and timing of its hits on our bar",
+   "ruled_out": []
   },
   {
-   "t": 100.5,
+   "t": 100.0,
    "side": "theirs",
    "pokemon": "Seismitoad",
    "what": "fast move",

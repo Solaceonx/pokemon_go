@@ -15,24 +15,25 @@
   "dataset_role": "unassigned"
  },
  "result": {
-  "value": null,
-  "from": "unknown",
+  "value": "win",
+  "from": "who had Pokémon left",
   "left": {
    "mine": 1,
-   "theirs": 3
+   "theirs": 0
   }
  },
  "seconds": 178.17,
- "fighting_turns": 148,
+ "fighting_turns": 109,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "ending: no result screen, and the tracker has us on 1 and them on 3"
+   "shields: we used 1, but 0 charged move(s) were tracked as blocked"
   ],
   "notes": [
+   "no result screen read; result taken from who had Pokémon left",
    "fast move only guessed for mightyena, forretress"
   ],
-  "unexplained_health_changes": 13
+  "unexplained_health_changes": 15
  },
  "teams": {
   "mine": [
@@ -144,8 +145,8 @@
     "cp": 1499,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.053,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SUCKER_PUNCH",
      "name": "Sucker Punch",
@@ -153,9 +154,9 @@
      "energy_gain": 7,
      "known_from": "guessed",
      "odds": {
-      "Sucker Punch": 0.59,
-      "Bite": 0.24,
-      "Fire Fang": 0.17
+      "Sucker Punch": 0.4,
+      "Fire Fang": 0.37,
+      "Bite": 0.23
      }
     },
     "charged_moves": [
@@ -182,8 +183,8 @@
     "cp": 1499,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.484,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "VOLT_SWITCH",
      "name": "Volt Switch",
@@ -226,8 +227,8 @@
     "cp": 1499,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.079,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "BUBBLE",
      "name": "Bubble",
@@ -266,7 +267,7 @@
   },
   "charged_shielded": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 0
   },
   "shields_left": {
    "mine": 1,
@@ -274,11 +275,11 @@
   },
   "switches": {
    "mine": 2,
-   "theirs": 3
+   "theirs": 1
   },
   "faints": {
    "mine": 2,
-   "theirs": 0
+   "theirs": 3
   }
  },
  "actions": [
@@ -374,29 +375,29 @@
    "target": "Mightyena",
    "shielded": true,
    "target_hp_before": 91,
-   "target_hp_after": 90,
+   "target_hp_after": 91,
    "target_hp_max": 133,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 16.5,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 58,
+     "hp": 69,
      "hp_max": 124,
-     "hp_share": 0.468,
+     "hp_share": 0.556,
      "energy": 8
     },
     "theirs": {
      "active": "Mightyena",
      "shields": 1,
      "left": 3,
-     "hp": 90,
+     "hp": 91,
      "hp_max": 133,
-     "hp_share": 0.677,
+     "hp_share": 0.684,
      "energy": [
       49,
       49
@@ -407,16 +408,16 @@
   },
   {
    "kind": "fighting",
-   "t": 16.5,
+   "t": 16.0,
    "until": 21.5,
    "fighting_turn": 13,
-   "turns": 11,
+   "turns": 10,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Mightyena",
@@ -425,6 +426,7 @@
     "fast_moves_if_no_pause": 5,
     "hits_seen": 4
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -433,7 +435,7 @@
      "hp": 25,
      "hp_max": 124,
      "hp_share": 0.202,
-     "energy": 40
+     "energy": 48
     },
     "theirs": {
      "active": "Mightyena",
@@ -443,8 +445,8 @@
      "hp_max": 133,
      "hp_share": 0.406,
      "energy": [
-      77,
-      77
+      84,
+      84
      ],
      "energy_ceiling": 84
     }
@@ -453,7 +455,7 @@
   {
    "kind": "charged",
    "t": 21.5,
-   "fighting_turn": 22,
+   "fighting_turn": 23,
    "side": "theirs",
    "pokemon": "Mightyena",
    "move": "Poison Fang",
@@ -464,25 +466,25 @@
     84,
     84
    ],
-   "energy_ceiling": 91,
+   "energy_ceiling": 84,
    "target": "Fearow",
-   "shielded": true,
+   "shielded": false,
    "target_hp_before": 25,
    "target_hp_after": 25,
    "target_hp_max": 124,
    "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 32.0,
+   "expected_damage": 40,
+   "resolved_t": 30.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
-     "shields": 1,
+     "shields": 2,
      "left": 3,
      "hp": 25,
      "hp_max": 124,
      "hp_share": 0.202,
-     "energy": 56
+     "energy": 48
     },
     "theirs": {
      "active": "Mightyena",
@@ -501,106 +503,16 @@
   },
   {
    "kind": "fighting",
-   "t": 32.0,
+   "t": 30.0,
    "until": 31.5,
-   "fighting_turn": 24,
-   "turns": 19,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Mightyena",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 1,
-     "left": 2,
-     "hp": 25,
-     "hp_max": 124,
-     "hp_share": 0.202,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Mightyena",
-     "shields": 1,
-     "left": 3,
-     "hp": 54,
-     "hp_max": 133,
-     "hp_share": 0.406,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 31.5,
-   "fighting_turn": 43,
-   "side": "mine",
-   "pokemon": "Fearow",
-   "move": "Drill Peck",
-   "move_id": "DRILL_PECK",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 100,
-   "target": "Mightyena",
-   "shielded": true,
-   "target_hp_before": 54,
-   "target_hp_after": 36,
-   "target_hp_max": 133,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 42.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 1,
-     "left": 2,
-     "hp": 25,
-     "hp_max": 124,
-     "hp_share": 0.202,
-     "energy": 60
-    },
-    "theirs": {
-     "active": "Mightyena",
-     "shields": 0,
-     "left": 3,
-     "hp": 36,
-     "hp_max": 133,
-     "hp_share": 0.271,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 42.0,
-   "until": 45.5,
-   "fighting_turn": 43,
+   "fighting_turn": 23,
    "turns": 2,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Mightyena",
@@ -612,78 +524,168 @@
    "state": {
     "mine": {
      "active": "Fearow",
-     "shields": 1,
-     "left": 2,
+     "shields": 2,
+     "left": 3,
      "hp": 25,
      "hp_max": 124,
      "hp_share": 0.202,
-     "energy": 60
+     "energy": 56
     },
     "theirs": {
      "active": "Mightyena",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 36,
+     "hp": 45,
      "hp_max": 133,
-     "hp_share": 0.271,
+     "hp_share": 0.338,
      "energy": [
-      100,
-      100
+      51,
+      51
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 58
     }
    }
   },
   {
-   "kind": "faint",
-   "t": 45.5,
-   "fighting_turn": 45,
+   "kind": "charged",
+   "t": 31.5,
+   "fighting_turn": 25,
    "side": "mine",
    "pokemon": "Fearow",
-   "next": "Tinkaton",
+   "move": "Drill Peck",
+   "move_id": "DRILL_PECK",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 56,
+   "target": "Mightyena",
+   "shielded": true,
+   "target_hp_before": 45,
+   "target_hp_after": 45,
+   "target_hp_max": 133,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 40.0,
+   "cue": true,
    "state": {
     "mine": {
-     "active": "Tinkaton",
+     "active": "Fearow",
      "shields": 1,
-     "left": 2,
-     "hp": 141,
-     "hp_max": 141,
-     "hp_share": 1.0,
-     "energy": 0
+     "left": 3,
+     "hp": 25,
+     "hp_max": 124,
+     "hp_share": 0.202,
+     "energy": 16
     },
     "theirs": {
      "active": "Mightyena",
      "shields": 0,
      "left": 3,
-     "hp": 36,
+     "hp": 45,
      "hp_max": 133,
-     "hp_share": 0.271,
+     "hp_share": 0.338,
      "energy": [
-      100,
-      100
+      51,
+      51
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 58
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 45.5,
-   "until": 47.5,
-   "fighting_turn": 45,
-   "turns": 4,
+   "t": 40.0,
+   "until": 40.32,
+   "fighting_turn": 25,
+   "turns": 1,
    "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mightyena",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 1,
+     "left": 3,
+     "hp": 25,
+     "hp_max": 124,
+     "hp_share": 0.202,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Mightyena",
+     "shields": 0,
+     "left": 3,
+     "hp": 45,
+     "hp_max": 133,
+     "hp_share": 0.338,
+     "energy": [
+      51,
+      51
+     ],
+     "energy_ceiling": 58
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 40.32,
+   "fighting_turn": 26,
+   "side": "mine",
+   "pokemon": "Fearow",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 124,
+     "hp_share": 0.0,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Mightyena",
+     "shields": 0,
+     "left": 3,
+     "hp": 45,
+     "hp_max": 133,
+     "hp_share": 0.338,
+     "energy": [
+      51,
+      51
+     ],
+     "energy_ceiling": 58
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 40.32,
+   "until": 47.5,
+   "fighting_turn": 26,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 4
+   },
+   "theirs": {
+    "pokemon": "Mightyena",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -704,17 +706,17 @@
      "hp_max": 133,
      "hp_share": 0.233,
      "energy": [
-      100,
-      100
+      72,
+      72
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 79
     }
    }
   },
   {
    "kind": "charged",
    "t": 47.5,
-   "fighting_turn": 49,
+   "fighting_turn": 32,
    "side": "theirs",
    "pokemon": "Mightyena",
    "move": "Crunch",
@@ -722,10 +724,10 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    100,
-    100
+    72,
+    72
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 79,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 139,
@@ -733,7 +735,7 @@
    "target_hp_max": 141,
    "target_bar_read": false,
    "expected_damage": 31,
-   "resolved_t": 57.5,
+   "resolved_t": 56.0,
    "cue": true,
    "state": {
     "mine": {
@@ -749,9 +751,87 @@
      "active": "Mightyena",
      "shields": 0,
      "left": 3,
-     "hp": 23,
+     "hp": 31,
      "hp_max": 133,
-     "hp_share": 0.173,
+     "hp_share": 0.233,
+     "energy": [
+      27,
+      27
+     ],
+     "energy_ceiling": 34
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 56.0,
+   "until": 60.32,
+   "fighting_turn": 32,
+   "turns": 9,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 5
+   },
+   "theirs": {
+    "pokemon": "Mightyena",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 85,
+     "hp_max": 141,
+     "hp_share": 0.603,
+     "energy": 54
+    },
+    "theirs": {
+     "active": "Mightyena",
+     "shields": 0,
+     "left": 3,
+     "hp": 7,
+     "hp_max": 133,
+     "hp_share": 0.053,
+     "energy": [
+      55,
+      55
+     ],
+     "energy_ceiling": 62
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 60.32,
+   "fighting_turn": 41,
+   "side": "theirs",
+   "pokemon": "Mightyena",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 85,
+     "hp_max": 141,
+     "hp_share": 0.603,
+     "energy": 54
+    },
+    "theirs": {
+     "active": "Mightyena",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 133,
+     "hp_share": 0.0,
      "energy": [
       55,
       55
@@ -762,25 +842,25 @@
   },
   {
    "kind": "fighting",
-   "t": 57.5,
-   "until": 65.5,
-   "fighting_turn": 49,
-   "turns": 16,
+   "t": 60.32,
+   "until": 66.0,
+   "fighting_turn": 41,
+   "turns": 3,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mightyena",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -789,84 +869,7 @@
      "hp": 66,
      "hp_max": 141,
      "hp_share": 0.468,
-     "energy": 81
-    },
-    "theirs": {
-     "active": "Mightyena",
-     "shields": 0,
-     "left": 3,
-     "hp": 7,
-     "hp_max": 133,
-     "hp_share": 0.053,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 65.5,
-   "fighting_turn": 65,
-   "side": "theirs",
-   "from": "Mightyena",
-   "to": "Forretress",
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 66,
-     "hp_max": 141,
-     "hp_share": 0.468,
-     "energy": 90
-    },
-    "theirs": {
-     "active": "Forretress",
-     "shields": 0,
-     "left": 3,
-     "hp": 128,
-     "hp_max": 128,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 16
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 65.5,
-   "until": 66.0,
-   "fighting_turn": 65,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Forretress",
-    "fast_move": "Volt Switch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 66,
-     "hp_max": 141,
-     "hp_share": 0.468,
-     "energy": 90
+     "energy": 72
     },
     "theirs": {
      "active": "Forretress",
@@ -886,7 +889,7 @@
   {
    "kind": "switch",
    "t": 66.0,
-   "fighting_turn": 66,
+   "fighting_turn": 44,
    "side": "mine",
    "from": "Tinkaton",
    "to": "Seismitoad",
@@ -919,7 +922,7 @@
    "kind": "fighting",
    "t": 66.0,
    "until": 68.0,
-   "fighting_turn": 66,
+   "fighting_turn": 44,
    "turns": 4,
    "mine": {
     "pokemon": "Seismitoad",
@@ -964,7 +967,7 @@
   {
    "kind": "switch",
    "t": 68.0,
-   "fighting_turn": 70,
+   "fighting_turn": 48,
    "side": "theirs",
    "from": "Forretress",
    "to": "Azumarill",
@@ -997,8 +1000,8 @@
    "kind": "fighting",
    "t": 68.0,
    "until": 75.5,
-   "fighting_turn": 70,
-   "turns": 15,
+   "fighting_turn": 48,
+   "turns": 14,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
@@ -1010,7 +1013,7 @@
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 3
    },
    "unexplained_health_changes": 2,
@@ -1042,7 +1045,7 @@
   {
    "kind": "charged",
    "t": 75.5,
-   "fighting_turn": 84,
+   "fighting_turn": 62,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Earth Power",
@@ -1053,56 +1056,56 @@
    "target": "Azumarill",
    "shielded": false,
    "target_hp_before": 167,
-   "target_hp_after": 100,
+   "target_hp_after": 167,
    "target_hp_max": 191,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 63,
-   "resolved_t": 85.5,
+   "resolved_t": 84.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 1,
      "left": 2,
-     "hp": 115,
+     "hp": 121,
      "hp_max": 154,
-     "hp_share": 0.747,
+     "hp_share": 0.786,
      "energy": 31
     },
     "theirs": {
      "active": "Azumarill",
      "shields": 0,
      "left": 3,
-     "hp": 100,
+     "hp": 167,
      "hp_max": 191,
-     "hp_share": 0.524,
+     "hp_share": 0.874,
      "energy": [
       55,
       55
      ],
-     "energy_ceiling": 66
+     "energy_ceiling": 55
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 85.5,
+   "t": 84.0,
    "until": 86.5,
-   "fighting_turn": 85,
-   "turns": 2,
+   "fighting_turn": 62,
+   "turns": 5,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1112,7 +1115,7 @@
      "hp": 115,
      "hp_max": 154,
      "hp_share": 0.747,
-     "energy": 40
+     "energy": 49
     },
     "theirs": {
      "active": "Azumarill",
@@ -1122,17 +1125,17 @@
      "hp_max": 191,
      "hp_share": 0.492,
      "energy": [
-      55,
-      55
+      66,
+      66
      ],
-     "energy_ceiling": 66
+     "energy_ceiling": 77
     }
    }
   },
   {
    "kind": "charged",
    "t": 86.5,
-   "fighting_turn": 87,
+   "fighting_turn": 67,
    "side": "theirs",
    "pokemon": "Azumarill",
    "move": "Play Rough",
@@ -1140,11 +1143,10 @@
    "move_known_from": "seen",
    "cost": 60,
    "energy_before": [
-    55,
-    55
+    66,
+    66
    ],
-   "energy_ceiling": 66,
-   "energy_short_by": 5,
+   "energy_ceiling": 77,
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 115,
@@ -1152,7 +1154,7 @@
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": 66,
-   "resolved_t": 96.5,
+   "resolved_t": 96.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1162,7 +1164,7 @@
      "hp": 115,
      "hp_max": 154,
      "hp_share": 0.747,
-     "energy": 40
+     "energy": 58
     },
     "theirs": {
      "active": "Azumarill",
@@ -1172,7 +1174,7 @@
      "hp_max": 191,
      "hp_share": 0.492,
      "energy": [
-      0,
+      6,
       6
      ],
      "energy_ceiling": 17
@@ -1181,22 +1183,22 @@
   },
   {
    "kind": "fighting",
-   "t": 96.5,
+   "t": 96.0,
    "until": 100.5,
-   "fighting_turn": 87,
-   "turns": 8,
+   "fighting_turn": 67,
+   "turns": 9,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "unexplained_health_changes": 2,
@@ -1208,7 +1210,7 @@
      "hp": 13,
      "hp_max": 154,
      "hp_share": 0.084,
-     "energy": 76
+     "energy": 94
     },
     "theirs": {
      "active": "Azumarill",
@@ -1218,32 +1220,122 @@
      "hp_max": 191,
      "hp_share": 0.45,
      "energy": [
-      22,
-      28
+      39,
+      39
      ],
-     "energy_ceiling": 39
+     "energy_ceiling": 50
     }
    }
   },
   {
    "kind": "charged",
    "t": 100.5,
-   "fighting_turn": 95,
+   "fighting_turn": 76,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Earth Power",
    "move_id": "EARTH_POWER",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 76,
+   "energy_before": 94,
    "target": "Azumarill",
    "shielded": false,
    "target_hp_before": 86,
+   "target_hp_after": 86,
+   "target_hp_max": 191,
+   "target_bar_read": false,
+   "expected_damage": 63,
+   "resolved_t": 110.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 1,
+     "left": 2,
+     "hp": 13,
+     "hp_max": 154,
+     "hp_share": 0.084,
+     "energy": 44
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 86,
+     "hp_max": 191,
+     "hp_share": 0.45,
+     "energy": [
+      50,
+      50
+     ],
+     "energy_ceiling": 50
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 110.0,
+   "until": 113.5,
+   "fighting_turn": 76,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Seismitoad",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Azumarill",
+    "fast_move": "Bubble",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 1,
+     "left": 2,
+     "hp": 13,
+     "hp_max": 154,
+     "hp_share": 0.084,
+     "energy": 71
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 15,
+     "hp_max": 191,
+     "hp_share": 0.079,
+     "energy": [
+      72,
+      72
+     ],
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 113.5,
+   "fighting_turn": 82,
+   "side": "mine",
+   "pokemon": "Seismitoad",
+   "move": "Icy Wind",
+   "move_id": "ICY_WIND",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 71,
+   "target": "Azumarill",
+   "shielded": false,
+   "target_hp_before": 15,
    "target_hp_after": 15,
    "target_hp_max": 191,
-   "target_bar_read": true,
-   "expected_damage": 63,
-   "resolved_t": 110.5,
+   "target_bar_read": false,
+   "expected_damage": 22,
+   "resolved_t": 123.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1263,33 +1355,20 @@
      "hp_max": 191,
      "hp_share": 0.079,
      "energy": [
-      33,
-      39
+      72,
+      72
      ],
-     "energy_ceiling": 39
+     "energy_ceiling": 72
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 110.5,
-   "until": 113.5,
-   "fighting_turn": 95,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
+   "kind": "faint",
+   "t": 123.17,
+   "fighting_turn": 82,
+   "side": "theirs",
+   "pokemon": "Azumarill",
+   "next": null,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -1298,62 +1377,17 @@
      "hp": 13,
      "hp_max": 154,
      "hp_share": 0.084,
-     "energy": 44
+     "energy": 26
     },
     "theirs": {
      "active": "Azumarill",
      "shields": 0,
      "left": 3,
-     "hp": 15,
+     "hp": 0,
      "hp_max": 191,
-     "hp_share": 0.079,
+     "hp_share": 0.0,
      "energy": [
-      44,
-      50
-     ],
-     "energy_ceiling": 61
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 113.5,
-   "fighting_turn": 100,
-   "side": "mine",
-   "pokemon": "Seismitoad",
-   "move": "Icy Wind",
-   "move_id": "ICY_WIND",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 62,
-   "target": "Azumarill",
-   "shielded": false,
-   "target_hp_before": 15,
-   "target_hp_after": 15,
-   "target_hp_max": 191,
-   "target_bar_read": false,
-   "expected_damage": 22,
-   "resolved_t": 125.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 2,
-     "hp": 7,
-     "hp_max": 154,
-     "hp_share": 0.045,
-     "energy": 17
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 191,
-     "hp_share": 0.079,
-     "energy": [
-      66,
+      72,
       72
      ],
      "energy_ceiling": 72
@@ -1362,99 +1396,22 @@
   },
   {
    "kind": "fighting",
-   "t": 125.0,
-   "until": 125.5,
-   "fighting_turn": 104,
-   "turns": 1,
+   "t": 123.17,
+   "until": 130.0,
+   "fighting_turn": 82,
+   "turns": 11,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 2,
-     "hp": 7,
-     "hp_max": 154,
-     "hp_share": 0.045,
-     "energy": 17
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 191,
-     "hp_share": 0.079,
-     "energy": [
-      66,
-      72
-     ],
-     "energy_ceiling": 72
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 125.5,
-   "fighting_turn": 105,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Forretress",
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 2,
-     "hp": 7,
-     "hp_max": 154,
-     "hp_share": 0.045,
-     "energy": 17
-    },
-    "theirs": {
-     "active": "Forretress",
-     "shields": 0,
-     "left": 3,
-     "hp": 128,
-     "hp_max": 128,
-     "hp_share": 1.0,
-     "energy": [
-      16,
-      16
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 125.5,
-   "until": 130.0,
-   "fighting_turn": 105,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
-   },
-   "theirs": {
-    "pokemon": "Forretress",
-    "fast_move": "Volt Switch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
@@ -1466,7 +1423,7 @@
      "hp": 65,
      "hp_max": 154,
      "hp_share": 0.422,
-     "energy": 53
+     "energy": 80
     },
     "theirs": {
      "active": "Forretress",
@@ -1486,7 +1443,7 @@
   {
    "kind": "switch",
    "t": 130.0,
-   "fighting_turn": 114,
+   "fighting_turn": 93,
    "side": "mine",
    "from": "Seismitoad",
    "to": "Tinkaton",
@@ -1498,7 +1455,7 @@
      "hp": 66,
      "hp_max": 141,
      "hp_share": 0.468,
-     "energy": 90
+     "energy": 72
     },
     "theirs": {
      "active": "Forretress",
@@ -1519,8 +1476,8 @@
    "kind": "fighting",
    "t": 130.0,
    "until": 131.5,
-   "fighting_turn": 114,
-   "turns": 3,
+   "fighting_turn": 93,
+   "turns": 2,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -1543,7 +1500,7 @@
      "hp": 66,
      "hp_max": 141,
      "hp_share": 0.468,
-     "energy": 99
+     "energy": 81
     },
     "theirs": {
      "active": "Forretress",
@@ -1563,40 +1520,40 @@
   {
    "kind": "charged",
    "t": 131.5,
-   "fighting_turn": 116,
+   "fighting_turn": 95,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
    "move_id": "BULLDOZE",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 99,
+   "energy_before": 81,
    "target": "Forretress",
    "shielded": false,
    "target_hp_before": 115,
-   "target_hp_after": 73,
+   "target_hp_after": 115,
    "target_hp_max": 128,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 38,
-   "resolved_t": 141.5,
+   "resolved_t": 140.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 59,
+     "hp": 66,
      "hp_max": 141,
-     "hp_share": 0.418,
-     "energy": 44
+     "hp_share": 0.468,
+     "energy": 26
     },
     "theirs": {
      "active": "Forretress",
      "shields": 0,
      "left": 3,
-     "hp": 73,
+     "hp": 115,
      "hp_max": 128,
-     "hp_share": 0.57,
+     "hp_share": 0.898,
      "energy": [
       64,
       64
@@ -1607,16 +1564,16 @@
   },
   {
    "kind": "fighting",
-   "t": 141.5,
+   "t": 140.0,
    "until": 141.5,
-   "fighting_turn": 117,
-   "turns": 1,
+   "fighting_turn": 95,
+   "turns": 3,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Forretress",
@@ -1633,7 +1590,7 @@
      "hp": 59,
      "hp_max": 141,
      "hp_share": 0.418,
-     "energy": 44
+     "energy": 35
     },
     "theirs": {
      "active": "Forretress",
@@ -1643,8 +1600,8 @@
      "hp_max": 128,
      "hp_share": 0.57,
      "energy": [
-      64,
-      64
+      80,
+      80
      ],
      "energy_ceiling": 80
     }
@@ -1653,7 +1610,7 @@
   {
    "kind": "charged",
    "t": 141.5,
-   "fighting_turn": 117,
+   "fighting_turn": 98,
    "side": "theirs",
    "pokemon": "Forretress",
    "move": "Sand Tomb",
@@ -1661,28 +1618,28 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    64,
-    64
+    80,
+    80
    ],
    "energy_ceiling": 80,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 59,
-   "target_hp_after": 10,
+   "target_hp_after": 59,
    "target_hp_max": 141,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 45,
-   "resolved_t": 152.0,
+   "resolved_t": 150.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 10,
+     "hp": 59,
      "hp_max": 141,
-     "hp_share": 0.071,
-     "energy": 53
+     "hp_share": 0.418,
+     "energy": 44
     },
     "theirs": {
      "active": "Forretress",
@@ -1692,41 +1649,119 @@
      "hp_max": 128,
      "hp_share": 0.57,
      "energy": [
-      19,
-      19
+      35,
+      35
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 51
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 152.0,
-   "until": 157.0,
-   "fighting_turn": 118,
-   "turns": 8,
+   "t": 150.0,
+   "until": 153.58,
+   "fighting_turn": 98,
+   "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Forretress",
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 10,
+     "hp_max": 141,
+     "hp_share": 0.071,
+     "energy": 71
+    },
+    "theirs": {
+     "active": "Forretress",
+     "shields": 0,
+     "left": 3,
+     "hp": 73,
+     "hp_max": 128,
+     "hp_share": 0.57,
+     "energy": [
+      51,
+      51
+     ],
+     "energy_ceiling": 67
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 153.58,
+   "fighting_turn": 105,
+   "side": "mine",
+   "pokemon": "Tinkaton",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 141,
+     "hp_share": 0.0,
+     "energy": 71
+    },
+    "theirs": {
+     "active": "Forretress",
+     "shields": 0,
+     "left": 3,
+     "hp": 73,
+     "hp_max": 128,
+     "hp_share": 0.57,
+     "energy": [
+      51,
+      51
+     ],
+     "energy_ceiling": 67
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 153.58,
+   "until": 157.5,
+   "fighting_turn": 105,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Forretress",
     "fast_move": "Volt Switch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
     "mine": {
-     "active": "Tinkaton",
+     "active": "Seismitoad",
      "shields": 1,
      "left": 1,
-     "hp": 10,
-     "hp_max": 141,
-     "hp_share": 0.071,
+     "hp": 65,
+     "hp_max": 154,
+     "hp_share": 0.422,
      "energy": 80
     },
     "theirs": {
@@ -1737,110 +1772,33 @@
      "hp_max": 128,
      "hp_share": 0.484,
      "energy": [
-      35,
-      35
+      67,
+      67
      ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 157.0,
-   "fighting_turn": 126,
-   "side": "mine",
-   "pokemon": "Tinkaton",
-   "next": "Seismitoad",
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 1,
-     "hp": 65,
-     "hp_max": 154,
-     "hp_share": 0.422,
-     "energy": 53
-    },
-    "theirs": {
-     "active": "Forretress",
-     "shields": 0,
-     "left": 3,
-     "hp": 62,
-     "hp_max": 128,
-     "hp_share": 0.484,
-     "energy": [
-      51,
-      51
-     ],
-     "energy_ceiling": 67
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 157.0,
-   "until": 178.17,
-   "fighting_turn": 126,
-   "turns": 22,
-   "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Forretress",
-    "fast_move": "Volt Switch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 1,
-     "hp": 65,
-     "hp_max": 154,
-     "hp_share": 0.422,
-     "energy": 53
-    },
-    "theirs": {
-     "active": "Forretress",
-     "shields": 0,
-     "left": 3,
-     "hp": 62,
-     "hp_max": 128,
-     "hp_share": 0.484,
-     "energy": [
-      51,
-      51
-     ],
-     "energy_ceiling": 67
+     "energy_ceiling": 83
     }
    }
   },
   {
    "kind": "charged",
-   "t": 178.17,
-   "fighting_turn": 127,
+   "t": 157.5,
+   "fighting_turn": 109,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Earth Power",
    "move_id": "EARTH_POWER",
-   "move_known_from": "inferred",
+   "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 100,
+   "energy_before": 80,
    "target": "Forretress",
    "shielded": false,
    "target_hp_before": 62,
-   "target_hp_after": 62,
+   "target_hp_after": 0,
    "target_hp_max": 128,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 73,
-   "resolved_t": 178.17,
-   "cue": false,
+   "resolved_t": 166.18,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -1849,32 +1807,64 @@
      "hp": 65,
      "hp_max": 154,
      "hp_share": 0.422,
-     "energy": 50
+     "energy": 30
     },
     "theirs": {
      "active": "Forretress",
      "shields": 0,
-     "left": 3,
-     "hp": 62,
+     "left": 0,
+     "hp": 0,
      "hp_max": 128,
-     "hp_share": 0.484,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      67,
+      67
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 83
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 166.18,
+   "fighting_turn": 109,
+   "side": "theirs",
+   "pokemon": "Forretress",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 1,
+     "left": 1,
+     "hp": 65,
+     "hp_max": 154,
+     "hp_share": 0.422,
+     "energy": 30
+    },
+    "theirs": {
+     "active": "Forretress",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 128,
+     "hp_share": 0.0,
+     "energy": [
+      67,
+      67
+     ],
+     "energy_ceiling": 83
     }
    }
   },
   {
    "kind": "end",
    "t": 178.17,
-   "fighting_turn": 148,
-   "result": null,
-   "result_from": "unknown",
+   "fighting_turn": 109,
+   "result": "win",
+   "result_from": "who had Pokémon left",
    "left": {
     "mine": 1,
-    "theirs": 3
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -1884,27 +1874,27 @@
      "hp": 65,
      "hp_max": 154,
      "hp_share": 0.422,
-     "energy": 50
+     "energy": 30
     },
     "theirs": {
      "active": "Forretress",
      "shields": 0,
-     "left": 3,
-     "hp": 62,
+     "left": 0,
+     "hp": 0,
      "hp_max": 128,
-     "hp_share": 0.484,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      67,
+      67
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 83
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 96.5,
+   "t": 96.0,
    "side": "theirs",
    "pokemon": "Azumarill",
    "what": "fast move",

@@ -23,7 +23,7 @@
   }
  },
  "seconds": 118.17,
- "fighting_turns": 84,
+ "fighting_turns": 85,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -35,7 +35,7 @@
    "final charged-move cue has no observed name; resolution and ending are unverified",
    "fast move only guessed for dunsparce, corsola"
   ],
-  "unexplained_health_changes": 6
+  "unexplained_health_changes": 8
  },
  "teams": {
   "mine": [
@@ -123,9 +123,9 @@
      "energy_gain": 4,
      "known_from": "guessed",
      "odds": {
-      "Astonish": 0.98,
-      "Rollout": 0.02,
-      "Bite": 0.01
+      "Astonish": 0.52,
+      "Rollout": 0.37,
+      "Bite": 0.11
      }
     },
     "charged_moves": [
@@ -165,8 +165,8 @@
      "energy_gain": 11,
      "known_from": "guessed",
      "odds": {
-      "Bubble": 0.86,
-      "Tackle": 0.14
+      "Bubble": 0.71,
+      "Tackle": 0.29
      }
     },
     "charged_moves": [
@@ -174,20 +174,20 @@
       "id": "POWER_GEM",
       "name": "Power Gem",
       "energy": 50,
-      "known_from": "seen",
-      "times_used": 1
+      "known_from": "guessed",
+      "times_used": 0
      },
      {
       "id": "ROCK_BLAST",
       "name": "Rock Blast",
       "energy": 40,
-      "known_from": "guessed",
-      "times_used": 0
+      "known_from": "seen",
+      "times_used": 1
      }
     ],
     "other_charged_moves": {
-     "Rock Blast": 0.59,
-     "Bubble Beam": 0.41
+     "Power Gem": 0.63,
+     "Bubble Beam": 0.37
     }
    }
   ],
@@ -253,7 +253,7 @@
    "t": 0.0,
    "until": 8.5,
    "fighting_turn": 0,
-   "turns": 17,
+   "turns": 16,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -265,7 +265,7 @@
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 17,
+    "fast_moves_if_no_pause": 16,
     "hits_seen": 1
    },
    "state": {
@@ -307,25 +307,25 @@
     64,
     64
    ],
-   "energy_ceiling": 72,
+   "energy_ceiling": 68,
    "target": "Fearow",
    "shielded": true,
    "target_hp_before": 122,
-   "target_hp_after": 102,
+   "target_hp_after": 122,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 18.5,
+   "resolved_t": 18.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 102,
+     "hp": 122,
      "hp_max": 124,
-     "hp_share": 0.823,
-     "energy": 72
+     "hp_share": 0.984,
+     "energy": 64
     },
     "theirs": {
      "active": "Dunsparce",
@@ -344,9 +344,9 @@
   },
   {
    "kind": "fighting",
-   "t": 18.5,
+   "t": 18.0,
    "until": 19.5,
-   "fighting_turn": 17,
+   "fighting_turn": 16,
    "turns": 2,
    "mine": {
     "pokemon": "Fearow",
@@ -362,6 +362,7 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -380,10 +381,10 @@
      "hp_max": 184,
      "hp_share": 0.696,
      "energy": [
-      28,
-      28
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 36
     }
    }
   },
@@ -405,7 +406,7 @@
    "target_hp_max": 184,
    "target_bar_read": false,
    "expected_damage": 65,
-   "resolved_t": 29.5,
+   "resolved_t": 29.0,
    "cue": true,
    "state": {
     "mine": {
@@ -434,10 +435,10 @@
   },
   {
    "kind": "fighting",
-   "t": 29.5,
+   "t": 29.0,
    "until": 30.5,
-   "fighting_turn": 19,
-   "turns": 2,
+   "fighting_turn": 18,
+   "turns": 3,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -449,8 +450,8 @@
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -569,11 +570,11 @@
    "target": "Corsola",
    "shielded": false,
    "target_hp_before": 117,
-   "target_hp_after": 72,
+   "target_hp_after": 117,
    "target_hp_max": 134,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 32,
-   "resolved_t": 43.5,
+   "resolved_t": 43.0,
    "cue": true,
    "state": {
     "mine": {
@@ -589,9 +590,9 @@
      "active": "Corsola",
      "shields": 2,
      "left": 3,
-     "hp": 72,
+     "hp": 117,
      "hp_max": 134,
-     "hp_share": 0.537,
+     "hp_share": 0.873,
      "energy": [
       22,
       22
@@ -602,16 +603,16 @@
   },
   {
    "kind": "fighting",
-   "t": 43.5,
+   "t": 43.0,
    "until": 47.0,
    "fighting_turn": 27,
-   "turns": 7,
+   "turns": 8,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Corsola",
@@ -628,7 +629,7 @@
      "hp": 79,
      "hp_max": 124,
      "hp_share": 0.637,
-     "energy": 40
+     "energy": 48
     },
     "theirs": {
      "active": "Corsola",
@@ -641,14 +642,14 @@
       44,
       44
      ],
-     "energy_ceiling": 44
+     "energy_ceiling": 55
     }
    }
   },
   {
    "kind": "switch",
    "t": 47.0,
-   "fighting_turn": 34,
+   "fighting_turn": 35,
    "side": "mine",
    "from": "Fearow",
    "to": "Tinkaton",
@@ -681,7 +682,7 @@
    "kind": "fighting",
    "t": 47.0,
    "until": 48.5,
-   "fighting_turn": 34,
+   "fighting_turn": 35,
    "turns": 3,
    "mine": {
     "pokemon": "Tinkaton",
@@ -725,13 +726,13 @@
   {
    "kind": "charged",
    "t": 48.5,
-   "fighting_turn": 37,
+   "fighting_turn": 38,
    "side": "theirs",
    "pokemon": "Corsola",
-   "move": "Power Gem",
-   "move_id": "POWER_GEM",
+   "move": "Night Shade",
+   "move_id": null,
    "move_known_from": "seen",
-   "cost": 50,
+   "cost": null,
    "energy_before": [
     55,
     55
@@ -740,20 +741,20 @@
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 141,
-   "target_hp_after": 98,
+   "target_hp_after": 141,
    "target_hp_max": 141,
-   "target_bar_read": true,
-   "expected_damage": 32,
-   "resolved_t": 58.5,
+   "target_bar_read": false,
+   "expected_damage": null,
+   "resolved_t": 58.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 3,
-     "hp": 98,
+     "hp": 141,
      "hp_max": 141,
-     "hp_share": 0.695,
+     "hp_share": 1.0,
      "energy": 18
     },
     "theirs": {
@@ -765,18 +766,18 @@
      "hp_share": 0.41,
      "energy": [
       5,
-      5
+      15
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 26
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 58.5,
+   "t": 58.0,
    "until": 62.5,
-   "fighting_turn": 37,
-   "turns": 8,
+   "fighting_turn": 38,
+   "turns": 9,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -788,10 +789,10 @@
     "pokemon": "Corsola",
     "fast_move": "Bubble",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -810,36 +811,36 @@
      "hp_max": 134,
      "hp_share": 0.321,
      "energy": [
-      27,
-      27
+      38,
+      48
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "charged",
    "t": 62.5,
-   "fighting_turn": 45,
+   "fighting_turn": 47,
    "side": "theirs",
    "pokemon": "Corsola",
-   "move": "Night Shade",
-   "move_id": null,
+   "move": "Rock Blast",
+   "move_id": "ROCK_BLAST",
    "move_known_from": "seen",
-   "cost": null,
+   "cost": 40,
    "energy_before": [
-    27,
-    27
+    38,
+    48
    ],
-   "energy_ceiling": 38,
+   "energy_ceiling": 59,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 84,
    "target_hp_after": 84,
    "target_hp_max": 141,
    "target_bar_read": false,
-   "expected_damage": null,
-   "resolved_t": 72.5,
+   "expected_damage": 19,
+   "resolved_t": 72.0,
    "cue": true,
    "state": {
     "mine": {
@@ -849,29 +850,29 @@
      "hp": 84,
      "hp_max": 141,
      "hp_share": 0.596,
-     "energy": 54
+     "energy": 63
     },
     "theirs": {
      "active": "Corsola",
      "shields": 2,
      "left": 3,
-     "hp": 39,
+     "hp": 43,
      "hp_max": 134,
-     "hp_share": 0.291,
+     "hp_share": 0.321,
      "energy": [
       0,
-      0
+      8
      ],
-     "energy_ceiling": 11
+     "energy_ceiling": 19
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 72.5,
+   "t": 72.0,
    "until": 76.5,
-   "fighting_turn": 45,
-   "turns": 8,
+   "fighting_turn": 47,
+   "turns": 9,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -883,8 +884,8 @@
     "pokemon": "Corsola",
     "fast_move": "Bubble",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 5
    },
    "unexplained_health_changes": 2,
    "state": {
@@ -895,7 +896,7 @@
      "hp": 18,
      "hp_max": 141,
      "hp_share": 0.128,
-     "energy": 90
+     "energy": 99
     },
     "theirs": {
      "active": "Corsola",
@@ -906,23 +907,23 @@
      "hp_share": 0.231,
      "energy": [
       22,
-      22
+      30
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "charged",
    "t": 76.5,
-   "fighting_turn": 53,
+   "fighting_turn": 56,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
    "move_id": "BULLDOZE",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 90,
+   "energy_before": 99,
    "target": "Corsola",
    "shielded": false,
    "target_hp_before": 31,
@@ -930,17 +931,17 @@
    "target_hp_max": 134,
    "target_bar_read": false,
    "expected_damage": 63,
-   "resolved_t": 86.5,
+   "resolved_t": 86.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
      "left": 3,
-     "hp": 9,
+     "hp": 18,
      "hp_max": 141,
-     "hp_share": 0.064,
-     "energy": 35
+     "hp_share": 0.128,
+     "energy": 44
     },
     "theirs": {
      "active": "Corsola",
@@ -951,18 +952,18 @@
      "hp_share": 0.231,
      "energy": [
       33,
-      33
+      41
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 86.5,
+   "t": 86.0,
    "until": 87.5,
-   "fighting_turn": 53,
-   "turns": 2,
+   "fighting_turn": 56,
+   "turns": 3,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -974,9 +975,10 @@
     "pokemon": "Corsola",
     "fast_move": "Bubble",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -985,7 +987,7 @@
      "hp": 9,
      "hp_max": 141,
      "hp_share": 0.064,
-     "energy": 35
+     "energy": 53
     },
     "theirs": {
      "active": "Corsola",
@@ -996,16 +998,16 @@
      "hp_share": 0.231,
      "energy": [
       33,
-      33
+      41
      ],
-     "energy_ceiling": 44
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "switch",
    "t": 87.5,
-   "fighting_turn": 55,
+   "fighting_turn": 59,
    "side": "theirs",
    "from": "Corsola",
    "to": "Dunsparce",
@@ -1017,7 +1019,7 @@
      "hp": 9,
      "hp_max": 141,
      "hp_share": 0.064,
-     "energy": 44
+     "energy": 53
     },
     "theirs": {
      "active": "Dunsparce",
@@ -1027,31 +1029,31 @@
      "hp_max": 184,
      "hp_share": 0.696,
      "energy": [
-      36,
-      36
+      40,
+      40
      ],
-     "energy_ceiling": 44
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
    "t": 87.5,
-   "until": 91.5,
-   "fighting_turn": 55,
-   "turns": 27,
+   "until": 99.65,
+   "fighting_turn": 59,
+   "turns": 24,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 13,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 27,
+    "fast_moves_if_no_pause": 24,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1059,10 +1061,42 @@
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
-     "left": 2,
+     "left": 3,
      "hp": 1,
      "hp_max": 141,
      "hp_share": 0.007,
+     "energy": 89
+    },
+    "theirs": {
+     "active": "Dunsparce",
+     "shields": 2,
+     "left": 3,
+     "hp": 41,
+     "hp_max": 184,
+     "hp_share": 0.223,
+     "energy": [
+      72,
+      72
+     ],
+     "energy_ceiling": 76
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 99.65,
+   "fighting_turn": 83,
+   "side": "mine",
+   "pokemon": "Tinkaton",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 141,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1083,7 +1117,7 @@
   {
    "kind": "charged",
    "t": 91.5,
-   "fighting_turn": 82,
+   "fighting_turn": 83,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Gigaton Hammer",
@@ -1094,29 +1128,29 @@
    "target": "Dunsparce",
    "shielded": true,
    "target_hp_before": 41,
-   "target_hp_after": 39,
+   "target_hp_after": 41,
    "target_hp_max": 184,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 101.5,
+   "resolved_t": 100.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
-     "left": 2,
-     "hp": 1,
+     "left": 3,
+     "hp": 0,
      "hp_max": 141,
-     "hp_share": 0.007,
+     "hp_share": 0.0,
      "energy": 40
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 39,
+     "hp": 41,
      "hp_max": 184,
-     "hp_share": 0.212,
+     "hp_share": 0.223,
      "energy": [
       100,
       100
@@ -1127,9 +1161,9 @@
   },
   {
    "kind": "fighting",
-   "t": 101.5,
-   "until": 104.5,
-   "fighting_turn": 82,
+   "t": 100.0,
+   "until": 118.17,
+   "fighting_turn": 83,
    "turns": 2,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1145,38 +1179,6 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 1,
-     "hp_max": 141,
-     "hp_share": 0.007,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Dunsparce",
-     "shields": 1,
-     "left": 3,
-     "hp": 39,
-     "hp_max": 184,
-     "hp_share": 0.212,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 104.5,
-   "fighting_turn": 84,
-   "side": "mine",
-   "pokemon": "Tinkaton",
-   "next": "Fearow",
    "state": {
     "mine": {
      "active": "Fearow",
@@ -1205,7 +1207,7 @@
   {
    "kind": "end",
    "t": 118.17,
-   "fighting_turn": 84,
+   "fighting_turn": 85,
    "result": null,
    "result_from": "unknown",
    "left": {

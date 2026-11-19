@@ -23,24 +23,24 @@
   }
  },
  "seconds": 158.1,
- "fighting_turns": 185,
+ "fighting_turns": 186,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "looks: 37 rejected",
+   "looks: 43 rejected",
    "moves: 10 charged moves announced, 6 tracked",
    "shields: we used 2, but 1 charged move(s) were tracked as blocked",
    "shields: they used 1, but 0 charged move(s) were tracked as blocked",
    "ending: result says loss, tracker has us on 2 and them on 1"
   ],
   "notes": [],
-  "unexplained_health_changes": 8
+  "unexplained_health_changes": 9
  },
  "teams": {
   "mine": [
    {
-    "species": "qwilfish",
-    "name": "Qwilfish",
+    "species": "qwilfish_hisuian",
+    "name": "Qwilfish (Hisuian)",
     "known_from": "team_sheet",
     "cp": 1497,
     "cp_from": "screen",
@@ -63,9 +63,9 @@
       "times_used": 1
      },
      {
-      "id": "SHADOW_BALL",
-      "name": "Shadow Ball",
-      "energy": 50,
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
       "known_from": "guessed",
       "times_used": 0
      }
@@ -245,52 +245,20 @@
  "actions": [
   {
    "kind": "start",
-   "t": 42.5,
-   "fighting_turn": 85,
-   "mine": "Greninja",
+   "t": 41.5,
+   "fighting_turn": 83,
+   "mine": "Qwilfish (Hisuian)",
    "theirs": "Corviknight",
    "incomplete_start": false,
    "state": {
     "mine": {
-     "active": "Greninja",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 48,
-     "hp_max": 115,
-     "hp_share": 0.417,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Corviknight",
-     "shields": 1,
-     "left": 3,
-     "hp": 150,
-     "hp_max": 150,
-     "hp_share": 1.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 4
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 42.5,
-   "fighting_turn": 85,
-   "side": "mine",
-   "from": "Greninja",
-   "to": "Greninja",
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 1,
-     "left": 3,
-     "hp": 48,
-     "hp_max": 115,
-     "hp_share": 0.417,
-     "energy": 0
+     "hp": 53,
+     "hp_max": 121,
+     "hp_share": 0.438,
+     "energy": 100
     },
     "theirs": {
      "active": "Corviknight",
@@ -309,22 +277,99 @@
   },
   {
    "kind": "fighting",
-   "t": 42.5,
+   "t": 41.5,
+   "until": 42.0,
+   "fighting_turn": 83,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Qwilfish (Hisuian)",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 1,
+     "left": 3,
+     "hp": 53,
+     "hp_max": 121,
+     "hp_share": 0.438,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 150,
+     "hp_max": 150,
+     "hp_share": 1.0,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 4
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 42.0,
+   "fighting_turn": 84,
+   "side": "mine",
+   "from": "Qwilfish (Hisuian)",
+   "to": "Greninja",
+   "state": {
+    "mine": {
+     "active": "Greninja",
+     "shields": 1,
+     "left": 3,
+     "hp": 51,
+     "hp_max": 115,
+     "hp_share": 0.443,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 150,
+     "hp_max": 150,
+     "hp_share": 1.0,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 8
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 42.0,
    "until": 48.1,
-   "fighting_turn": 85,
-   "turns": 11,
+   "fighting_turn": 84,
+   "turns": 12,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 5
    },
    "unexplained_health_changes": 6,
@@ -336,7 +381,7 @@
      "hp": 97,
      "hp_max": 115,
      "hp_share": 0.843,
-     "energy": 42
+     "energy": 56
     },
     "theirs": {
      "active": "Corviknight",
@@ -349,7 +394,7 @@
       100,
       100
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
@@ -367,7 +412,7 @@
     100,
     100
    ],
-   "energy_ceiling": 48,
+   "energy_ceiling": 56,
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 97,
@@ -375,7 +420,7 @@
    "target_hp_max": 115,
    "target_bar_read": true,
    "expected_damage": 50,
-   "resolved_t": 58.0,
+   "resolved_t": 57.5,
    "cue": true,
    "state": {
     "mine": {
@@ -404,7 +449,7 @@
   },
   {
    "kind": "fighting",
-   "t": 58.0,
+   "t": 57.5,
    "until": 60.1,
    "fighting_turn": 96,
    "turns": 4,
@@ -440,17 +485,17 @@
      "hp_max": 150,
      "hp_share": 0.807,
      "energy": [
-      72,
-      72
+      76,
+      76
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "charged",
    "t": 60.1,
-   "fighting_turn": 99,
+   "fighting_turn": 100,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
@@ -461,29 +506,29 @@
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 121,
-   "target_hp_after": 48,
+   "target_hp_after": 121,
    "target_hp_max": 150,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 67,
-   "resolved_t": 70.0,
+   "resolved_t": 68.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 1,
      "left": 3,
-     "hp": 34,
+     "hp": 43,
      "hp_max": 115,
-     "hp_share": 0.296,
+     "hp_share": 0.374,
      "energy": 30
     },
     "theirs": {
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 48,
+     "hp": 121,
      "hp_max": 150,
-     "hp_share": 0.32,
+     "hp_share": 0.807,
      "energy": [
       76,
       76
@@ -494,23 +539,23 @@
   },
   {
    "kind": "fighting",
-   "t": 70.0,
+   "t": 68.5,
    "until": 72.1,
    "fighting_turn": 100,
-   "turns": 4,
+   "turns": 7,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 7
    },
    "state": {
     "mine": {
@@ -520,7 +565,7 @@
      "hp": 27,
      "hp_max": 115,
      "hp_share": 0.235,
-     "energy": 44
+     "energy": 58
     },
     "theirs": {
      "active": "Corviknight",
@@ -530,17 +575,17 @@
      "hp_max": 150,
      "hp_share": 0.273,
      "energy": [
-      92,
-      92
+      100,
+      100
      ],
-     "energy_ceiling": 96
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 72.1,
-   "fighting_turn": 104,
+   "fighting_turn": 107,
    "side": "theirs",
    "pokemon": "Corviknight",
    "move": "Air Cutter",
@@ -548,73 +593,28 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    92,
-    92
+    100,
+    100
    ],
-   "energy_ceiling": 96,
+   "energy_ceiling": 100,
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 27,
-   "target_hp_after": 27,
+   "target_hp_after": 0,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 50,
-   "resolved_t": 82.0,
+   "resolved_t": 80.18,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 1,
      "left": 3,
-     "hp": 27,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.235,
-     "energy": 58
-    },
-    "theirs": {
-     "active": "Corviknight",
-     "shields": 1,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 150,
-     "hp_share": 0.273,
-     "energy": [
-      52,
-      52
-     ],
-     "energy_ceiling": 56
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 82.0,
-   "until": 85.0,
-   "fighting_turn": 104,
-   "turns": 5,
-   "mine": {
-    "pokemon": "Greninja",
-    "fast_move": "Water Shuriken",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 1,
-     "left": 2,
-     "hp": 27,
-     "hp_max": 115,
-     "hp_share": 0.235,
-     "energy": 58
+     "hp_share": 0.0,
+     "energy": 72
     },
     "theirs": {
      "active": "Corviknight",
@@ -633,20 +633,20 @@
   },
   {
    "kind": "faint",
-   "t": 85.0,
-   "fighting_turn": 109,
+   "t": 80.18,
+   "fighting_turn": 107,
    "side": "mine",
    "pokemon": "Greninja",
-   "next": "Qwilfish",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Greninja",
      "shields": 1,
-     "left": 2,
-     "hp": 42,
-     "hp_max": 123,
-     "hp_share": 0.341,
-     "energy": 100
+     "left": 3,
+     "hp": 0,
+     "hp_max": 115,
+     "hp_share": 0.0,
+     "energy": 72
     },
     "theirs": {
      "active": "Corviknight",
@@ -656,24 +656,24 @@
      "hp_max": 150,
      "hp_share": 0.273,
      "energy": [
-      72,
-      72
+      60,
+      60
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 85.0,
+   "t": 80.18,
    "until": 109.1,
-   "fighting_turn": 109,
+   "fighting_turn": 107,
    "turns": 48,
    "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
+    "pokemon": "Greninja",
+    "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 24,
+    "fast_moves_if_no_pause": 16,
     "hits_seen": 1
    },
    "theirs": {
@@ -685,11 +685,11 @@
    },
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
      "hp": 1,
-     "hp_max": 123,
+     "hp_max": 121,
      "hp_share": 0.008,
      "energy": 100
     },
@@ -711,9 +711,9 @@
   {
    "kind": "charged",
    "t": 109.1,
-   "fighting_turn": 157,
+   "fighting_turn": 155,
    "side": "mine",
-   "pokemon": "Qwilfish",
+   "pokemon": "Qwilfish (Hisuian)",
    "move": "Aqua Tail",
    "move_id": "AQUA_TAIL",
    "move_known_from": "seen",
@@ -722,19 +722,19 @@
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 38,
-   "target_hp_after": 38,
+   "target_hp_after": 0,
    "target_hp_max": 150,
-   "target_bar_read": false,
-   "expected_damage": 44,
-   "resolved_t": 119.0,
+   "target_bar_read": true,
+   "expected_damage": 36,
+   "resolved_t": 117.17,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
      "hp": 1,
-     "hp_max": 123,
+     "hp_max": 121,
      "hp_share": 0.008,
      "energy": 65
     },
@@ -742,54 +742,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 38,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 0.253,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 119.0,
-   "until": 119.5,
-   "fighting_turn": 157,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 1,
-     "left": 2,
-     "hp": 1,
-     "hp_max": 123,
-     "hp_share": 0.008,
-     "energy": 65
-    },
-    "theirs": {
-     "active": "Corviknight",
-     "shields": 1,
-     "left": 2,
-     "hp": 38,
-     "hp_max": 150,
-     "hp_share": 0.253,
+     "hp_share": 0.0,
      "energy": [
       100,
       100
@@ -800,63 +755,63 @@
   },
   {
    "kind": "faint",
-   "t": 119.5,
-   "fighting_turn": 158,
+   "t": 117.17,
+   "fighting_turn": 155,
    "side": "theirs",
    "pokemon": "Corviknight",
-   "next": "Fearow",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
      "hp": 1,
-     "hp_max": 123,
+     "hp_max": 121,
      "hp_share": 0.008,
-     "energy": 74
+     "energy": 65
     },
     "theirs": {
-     "active": "Fearow",
+     "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 124,
-     "hp_max": 124,
-     "hp_share": 1.0,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
      "energy": [
-      0,
-      0
+      100,
+      100
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 119.5,
+   "t": 117.17,
    "until": 122.5,
-   "fighting_turn": 158,
-   "turns": 6,
+   "fighting_turn": 155,
+   "turns": 7,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 0
    },
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
      "hp": 1,
-     "hp_max": 123,
+     "hp_max": 121,
      "hp_share": 0.008,
      "energy": 83
     },
@@ -878,9 +833,9 @@
   {
    "kind": "switch",
    "t": 122.5,
-   "fighting_turn": 164,
+   "fighting_turn": 162,
    "side": "mine",
-   "from": "Qwilfish",
+   "from": "Qwilfish (Hisuian)",
    "to": "Mimikyu",
    "state": {
     "mine": {
@@ -911,7 +866,7 @@
    "kind": "fighting",
    "t": 122.5,
    "until": 126.1,
-   "fighting_turn": 164,
+   "fighting_turn": 162,
    "turns": 7,
    "mine": {
     "pokemon": "Mimikyu",
@@ -956,7 +911,7 @@
   {
    "kind": "charged",
    "t": 126.1,
-   "fighting_turn": 171,
+   "fighting_turn": 169,
    "side": "theirs",
    "pokemon": "Fearow",
    "move": "Drill Peck",
@@ -1006,7 +961,7 @@
    "kind": "fighting",
    "t": 136.0,
    "until": 142.1,
-   "fighting_turn": 171,
+   "fighting_turn": 169,
    "turns": 12,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1051,7 +1006,7 @@
   {
    "kind": "charged",
    "t": 142.1,
-   "fighting_turn": 183,
+   "fighting_turn": 181,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -1062,11 +1017,11 @@
    "target": "Fearow",
    "shielded": false,
    "target_hp_before": 93,
-   "target_hp_after": 64,
+   "target_hp_after": 93,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 27,
-   "resolved_t": 152.0,
+   "resolved_t": 150.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1082,9 +1037,9 @@
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 64,
+     "hp": 93,
      "hp_max": 124,
-     "hp_share": 0.516,
+     "hp_share": 0.75,
      "energy": [
       56,
       56
@@ -1095,22 +1050,22 @@
   },
   {
    "kind": "fighting",
-   "t": 152.0,
+   "t": 150.5,
    "until": 158.1,
-   "fighting_turn": 183,
-   "turns": 2,
+   "fighting_turn": 181,
+   "turns": 5,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1121,7 +1076,7 @@
      "hp": 54,
      "hp_max": 107,
      "hp_share": 0.505,
-     "energy": 38
+     "energy": 46
     },
     "theirs": {
      "active": "Fearow",
@@ -1131,17 +1086,17 @@
      "hp_max": 124,
      "hp_share": 0.516,
      "energy": [
-      64,
-      64
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "end",
    "t": 158.1,
-   "fighting_turn": 185,
+   "fighting_turn": 186,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1156,7 +1111,7 @@
      "hp": 54,
      "hp_max": 107,
      "hp_share": 0.505,
-     "energy": 38
+     "energy": 46
     },
     "theirs": {
      "active": "Fearow",
@@ -1166,17 +1121,17 @@
      "hp_max": 124,
      "hp_share": 0.516,
      "energy": [
-      64,
-      64
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 80
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 58.0,
+   "t": 107.5,
    "side": "theirs",
    "pokemon": "Corviknight",
    "what": "fast move",

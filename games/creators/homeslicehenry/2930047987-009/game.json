@@ -23,7 +23,7 @@
   }
  },
  "seconds": 146.1,
- "fighting_turns": 95,
+ "fighting_turns": 99,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -36,19 +36,19 @@
    "final charged-move cue has no observed name; resolution and ending are unverified",
    "fast move only guessed for empoleon"
   ],
-  "unexplained_health_changes": 6
+  "unexplained_health_changes": 7
  },
  "teams": {
   "mine": [
    {
-    "species": "qwilfish",
-    "name": "Qwilfish",
+    "species": "qwilfish_hisuian",
+    "name": "Qwilfish (Hisuian)",
     "known_from": "team_sheet",
     "cp": 1497,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.415,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "POISON_STING",
      "name": "Poison Sting",
@@ -61,15 +61,15 @@
       "id": "AQUA_TAIL",
       "name": "Aqua Tail",
       "energy": 35,
-      "known_from": "seen",
-      "times_used": 2
-     },
-     {
-      "id": "SHADOW_BALL",
-      "name": "Shadow Ball",
-      "energy": 50,
       "known_from": "guessed",
       "times_used": 0
+     },
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 2
      }
     ]
    },
@@ -191,9 +191,9 @@
      "known_from": "guessed",
      "odds": {
       "Metal Sound": 0.39,
+      "Waterfall": 0.29,
       "Metal Claw": 0.27,
-      "Waterfall": 0.26,
-      "Steel Wing": 0.08
+      "Steel Wing": 0.05
      }
     },
     "charged_moves": [
@@ -276,11 +276,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 2,
+   "mine": 1,
    "theirs": 2
   },
   "faints": {
-   "mine": 1,
+   "mine": 2,
    "theirs": 1
   }
  },
@@ -289,16 +289,16 @@
    "kind": "start",
    "t": 0.0,
    "fighting_turn": 0,
-   "mine": "Qwilfish",
+   "mine": "Qwilfish (Hisuian)",
    "theirs": "Rillaboom",
    "incomplete_start": false,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 123,
-     "hp_max": 123,
+     "hp": 121,
+     "hp_max": 121,
      "hp_share": 1.0,
      "energy": 0
     },
@@ -324,7 +324,7 @@
    "fighting_turn": 0,
    "turns": 3,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
@@ -339,12 +339,12 @@
    },
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 121,
-     "hp_max": 123,
-     "hp_share": 0.984,
+     "hp": 119,
+     "hp_max": 121,
+     "hp_share": 0.983,
      "energy": 9
     },
     "theirs": {
@@ -371,12 +371,12 @@
    "to": "Empoleon",
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 121,
-     "hp_max": 123,
-     "hp_share": 0.984,
+     "hp": 119,
+     "hp_max": 121,
+     "hp_share": 0.983,
      "energy": 9
     },
     "theirs": {
@@ -399,9 +399,9 @@
    "t": 1.5,
    "until": 7.1,
    "fighting_turn": 3,
-   "turns": 11,
+   "turns": 10,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
@@ -417,12 +417,12 @@
    "unexplained_health_changes": 1,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 111,
-     "hp_max": 123,
-     "hp_share": 0.902,
+     "hp": 109,
+     "hp_max": 121,
+     "hp_share": 0.901,
      "energy": 54
     },
     "theirs": {
@@ -445,41 +445,41 @@
    "t": 7.1,
    "fighting_turn": 13,
    "side": "mine",
-   "pokemon": "Qwilfish",
-   "move": "Aqua Tail",
-   "move_id": "AQUA_TAIL",
+   "pokemon": "Qwilfish (Hisuian)",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
    "move_known_from": "seen",
-   "cost": 35,
+   "cost": 45,
    "energy_before": 54,
    "target": "Empoleon",
    "shielded": false,
    "target_hp_before": 114,
-   "target_hp_after": 42,
+   "target_hp_after": 114,
    "target_hp_max": 122,
-   "target_bar_read": true,
-   "expected_damage": 31,
-   "resolved_t": 17.0,
+   "target_bar_read": false,
+   "expected_damage": 69,
+   "resolved_t": 15.5,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 111,
-     "hp_max": 123,
-     "hp_share": 0.902,
-     "energy": 19
+     "hp": 109,
+     "hp_max": 121,
+     "hp_share": 0.901,
+     "energy": 9
     },
     "theirs": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 42,
+     "hp": 114,
      "hp_max": 122,
-     "hp_share": 0.344,
+     "hp_share": 0.934,
      "energy": [
-      48,
-      48
+      40,
+      40
      ],
      "energy_ceiling": 48
     }
@@ -487,44 +487,44 @@
   },
   {
    "kind": "fighting",
-   "t": 17.0,
-   "until": 17.5,
-   "fighting_turn": 14,
-   "turns": 1,
+   "t": 15.5,
+   "until": 16.5,
+   "fighting_turn": 13,
+   "turns": 2,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
    },
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 111,
-     "hp_max": 123,
-     "hp_share": 0.902,
-     "energy": 19
+     "hp": 109,
+     "hp_max": 121,
+     "hp_share": 0.901,
+     "energy": 9
     },
     "theirs": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 42,
+     "hp": 114,
      "hp_max": 122,
-     "hp_share": 0.344,
+     "hp_share": 0.934,
      "energy": [
-      48,
-      48
+      40,
+      40
      ],
      "energy_ceiling": 48
     }
@@ -532,19 +532,19 @@
   },
   {
    "kind": "switch",
-   "t": 17.5,
+   "t": 16.5,
    "fighting_turn": 15,
    "side": "mine",
-   "from": "Qwilfish",
+   "from": "Qwilfish (Hisuian)",
    "to": "Greninja",
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 2,
      "left": 3,
-     "hp": 113,
+     "hp": 115,
      "hp_max": 115,
-     "hp_share": 0.983,
+     "hp_share": 1.0,
      "energy": 0
     },
     "theirs": {
@@ -564,10 +564,10 @@
   },
   {
    "kind": "fighting",
-   "t": 17.5,
+   "t": 16.5,
    "until": 21.1,
    "fighting_turn": 15,
-   "turns": 7,
+   "turns": 8,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
@@ -579,8 +579,8 @@
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -603,14 +603,14 @@
       72,
       72
      ],
-     "energy_ceiling": 80
+     "energy_ceiling": 88
     }
    }
   },
   {
    "kind": "charged",
    "t": 21.1,
-   "fighting_turn": 21,
+   "fighting_turn": 23,
    "side": "theirs",
    "pokemon": "Empoleon",
    "move": "Drill Peck",
@@ -621,126 +621,36 @@
     72,
     72
    ],
-   "energy_ceiling": 80,
+   "energy_ceiling": 88,
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 107,
-   "target_hp_after": 46,
+   "target_hp_after": 107,
    "target_hp_max": 115,
-   "target_bar_read": true,
-   "expected_damage": 57,
-   "resolved_t": 31.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 2,
-     "left": 3,
-     "hp": 46,
-     "hp_max": 115,
-     "hp_share": 0.4,
-     "energy": 42
-    },
-    "theirs": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 2,
-     "hp_max": 122,
-     "hp_share": 0.016,
-     "energy": [
-      32,
-      32
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 31.0,
-   "until": 31.1,
-   "fighting_turn": 22,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Greninja",
-    "fast_move": "Water Shuriken",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Empoleon",
-    "fast_move": "Metal Sound",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 2,
-     "left": 3,
-     "hp": 46,
-     "hp_max": 115,
-     "hp_share": 0.4,
-     "energy": 42
-    },
-    "theirs": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 2,
-     "hp_max": 122,
-     "hp_share": 0.016,
-     "energy": [
-      32,
-      32
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 31.1,
-   "fighting_turn": 22,
-   "side": "mine",
-   "pokemon": "Greninja",
-   "move": "Brutal Swing",
-   "move_id": "BRUTAL_SWING",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": 42,
-   "target": "Empoleon",
-   "shielded": false,
-   "target_hp_before": 2,
-   "target_hp_after": 2,
-   "target_hp_max": 122,
    "target_bar_read": false,
-   "expected_damage": 52,
-   "resolved_t": 41.5,
+   "expected_damage": 57,
+   "resolved_t": 29.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 2,
      "left": 3,
-     "hp": 46,
+     "hp": 107,
      "hp_max": 115,
-     "hp_share": 0.4,
-     "energy": 7
+     "hp_share": 0.93,
+     "energy": 42
     },
     "theirs": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 2,
+     "hp": 35,
      "hp_max": 122,
-     "hp_share": 0.016,
+     "hp_share": 0.287,
      "energy": [
-      40,
-      40
+      32,
+      32
      ],
      "energy_ceiling": 40
     }
@@ -748,24 +658,25 @@
   },
   {
    "kind": "fighting",
-   "t": 41.5,
-   "until": 42.5,
+   "t": 29.5,
+   "until": 31.1,
    "fighting_turn": 23,
-   "turns": 2,
+   "turns": 3,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Greninja",
@@ -774,12 +685,12 @@
      "hp": 46,
      "hp_max": 115,
      "hp_share": 0.4,
-     "energy": 7
+     "energy": 56
     },
     "theirs": {
      "active": "Empoleon",
      "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 2,
      "hp_max": 122,
      "hp_share": 0.016,
@@ -792,12 +703,25 @@
    }
   },
   {
-   "kind": "faint",
-   "t": 42.5,
-   "fighting_turn": 25,
-   "side": "theirs",
-   "pokemon": "Empoleon",
-   "next": "Rillaboom",
+   "kind": "charged",
+   "t": 31.1,
+   "fighting_turn": 26,
+   "side": "mine",
+   "pokemon": "Greninja",
+   "move": "Brutal Swing",
+   "move_id": "BRUTAL_SWING",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": 56,
+   "target": "Empoleon",
+   "shielded": false,
+   "target_hp_before": 2,
+   "target_hp_after": 2,
+   "target_hp_max": 122,
+   "target_bar_read": false,
+   "expected_damage": 52,
+   "resolved_t": 40.5,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
@@ -809,25 +733,57 @@
      "energy": 21
     },
     "theirs": {
-     "active": "Rillaboom",
+     "active": "Empoleon",
      "shields": 2,
-     "left": 2,
-     "hp": 129,
-     "hp_max": 129,
-     "hp_share": 1.0,
+     "left": 3,
+     "hp": 2,
+     "hp_max": 122,
+     "hp_share": 0.016,
      "energy": [
-      8,
-      8
+      48,
+      48
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 48
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 40.58,
+   "fighting_turn": 26,
+   "side": "theirs",
+   "pokemon": "Empoleon",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Greninja",
+     "shields": 2,
+     "left": 3,
+     "hp": 46,
+     "hp_max": 115,
+     "hp_share": 0.4,
+     "energy": 21
+    },
+    "theirs": {
+     "active": "Empoleon",
+     "shields": 2,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 122,
+     "hp_share": 0.0,
+     "energy": [
+      48,
+      48
+     ],
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 42.5,
+   "t": 40.58,
    "until": 47.1,
-   "fighting_turn": 25,
+   "fighting_turn": 26,
    "turns": 9,
    "mine": {
     "pokemon": "Greninja",
@@ -837,10 +793,10 @@
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Rillaboom",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
+    "pokemon": "Empoleon",
+    "fast_move": "Metal Sound",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 2
    },
    "unexplained_health_changes": 2,
@@ -852,7 +808,7 @@
      "hp": 30,
      "hp_max": 115,
      "hp_share": 0.261,
-     "energy": 63
+     "energy": 77
     },
     "theirs": {
      "active": "Rillaboom",
@@ -872,155 +828,155 @@
   {
    "kind": "charged",
    "t": 47.1,
-   "fighting_turn": 33,
+   "fighting_turn": 35,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Brutal Swing",
    "move_id": "BRUTAL_SWING",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 63,
+   "energy_before": 77,
    "target": "Rillaboom",
    "shielded": true,
    "target_hp_before": 121,
-   "target_hp_after": 119,
+   "target_hp_after": 121,
    "target_hp_max": 129,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 57.0,
+   "resolved_t": 56.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 2,
      "left": 3,
-     "hp": 23,
+     "hp": 24,
      "hp_max": 115,
-     "hp_share": 0.2,
-     "energy": 28
+     "hp_share": 0.209,
+     "energy": 42
     },
     "theirs": {
      "active": "Rillaboom",
      "shields": 1,
      "left": 2,
-     "hp": 119,
+     "hp": 121,
      "hp_max": 129,
-     "hp_share": 0.922,
+     "hp_share": 0.938,
      "energy": [
-      48,
-      48
+      40,
+      40
      ],
-     "energy_ceiling": 52
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 57.0,
-   "until": 64.0,
-   "fighting_turn": 34,
-   "turns": 9,
+   "t": 56.5,
+   "until": 60.18,
+   "fighting_turn": 35,
+   "turns": 7,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 5
    },
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 3,
      "hp_max": 115,
      "hp_share": 0.026,
-     "energy": 56
+     "energy": 70
     },
     "theirs": {
      "active": "Rillaboom",
      "shields": 1,
      "left": 2,
-     "hp": 107,
+     "hp": 109,
      "hp_max": 129,
-     "hp_share": 0.829,
+     "hp_share": 0.845,
      "energy": [
-      84,
-      84
+      68,
+      68
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "faint",
-   "t": 64.0,
-   "fighting_turn": 43,
+   "t": 60.18,
+   "fighting_turn": 42,
    "side": "mine",
    "pokemon": "Greninja",
-   "next": "Qwilfish",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Greninja",
      "shields": 2,
-     "left": 2,
-     "hp": 111,
-     "hp_max": 123,
-     "hp_share": 0.902,
-     "energy": 19
+     "left": 3,
+     "hp": 0,
+     "hp_max": 115,
+     "hp_share": 0.0,
+     "energy": 70
     },
     "theirs": {
      "active": "Rillaboom",
      "shields": 1,
      "left": 2,
-     "hp": 102,
+     "hp": 109,
      "hp_max": 129,
-     "hp_share": 0.791,
+     "hp_share": 0.845,
      "energy": [
-      88,
-      88
+      72,
+      72
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 64.0,
+   "t": 60.18,
    "until": 67.1,
-   "fighting_turn": 43,
-   "turns": 6,
+   "fighting_turn": 42,
+   "turns": 7,
    "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
+    "pokemon": "Greninja",
+    "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 2,
-     "hp": 76,
-     "hp_max": 123,
-     "hp_share": 0.618,
-     "energy": 46
+     "hp": 75,
+     "hp_max": 121,
+     "hp_share": 0.62,
+     "energy": 36
     },
     "theirs": {
      "active": "Rillaboom",
@@ -1052,32 +1008,32 @@
     100
    ],
    "energy_ceiling": 100,
-   "target": "Qwilfish",
+   "target": "Qwilfish (Hisuian)",
    "shielded": true,
-   "target_hp_before": 76,
-   "target_hp_after": 76,
-   "target_hp_max": 123,
+   "target_hp_before": 75,
+   "target_hp_after": 75,
+   "target_hp_max": 121,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 77.0,
+   "resolved_t": 75.5,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
-     "hp": 76,
-     "hp_max": 123,
-     "hp_share": 0.618,
-     "energy": 46
+     "hp": 75,
+     "hp_max": 121,
+     "hp_share": 0.62,
+     "energy": 36
     },
     "theirs": {
      "active": "Rillaboom",
      "shields": 1,
      "left": 2,
-     "hp": 80,
+     "hp": 89,
      "hp_max": 129,
-     "hp_share": 0.62,
+     "hp_share": 0.69,
      "energy": [
       50,
       50
@@ -1088,102 +1044,12 @@
   },
   {
    "kind": "fighting",
-   "t": 77.0,
+   "t": 75.5,
    "until": 78.1,
    "fighting_turn": 49,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Rillaboom",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 1,
-     "left": 2,
-     "hp": 70,
-     "hp_max": 123,
-     "hp_share": 0.569,
-     "energy": 46
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 1,
-     "left": 2,
-     "hp": 72,
-     "hp_max": 129,
-     "hp_share": 0.558,
-     "energy": [
-      58,
-      58
-     ],
-     "energy_ceiling": 58
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 78.1,
-   "fighting_turn": 50,
-   "side": "mine",
-   "pokemon": "Qwilfish",
-   "move": "Aqua Tail",
-   "move_id": "AQUA_TAIL",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": 46,
-   "target": "Rillaboom",
-   "shielded": true,
-   "target_hp_before": 72,
-   "target_hp_after": 71,
-   "target_hp_max": 129,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 88.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 1,
-     "left": 2,
-     "hp": 70,
-     "hp_max": 123,
-     "hp_share": 0.569,
-     "energy": 11
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 0,
-     "left": 2,
-     "hp": 71,
-     "hp_max": 129,
-     "hp_share": 0.55,
-     "energy": [
-      62,
-      62
-     ],
-     "energy_ceiling": 62
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 88.0,
-   "until": 90.1,
-   "fighting_turn": 51,
    "turns": 4,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
@@ -1196,16 +1062,105 @@
     "fast_moves_if_no_pause": 4,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
-     "hp": 51,
-     "hp_max": 123,
-     "hp_share": 0.415,
-     "energy": 29
+     "hp": 68,
+     "hp_max": 121,
+     "hp_share": 0.562,
+     "energy": 54
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 1,
+     "left": 2,
+     "hp": 72,
+     "hp_max": 129,
+     "hp_share": 0.558,
+     "energy": [
+      66,
+      66
+     ],
+     "energy_ceiling": 70
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 78.1,
+   "fighting_turn": 53,
+   "side": "mine",
+   "pokemon": "Qwilfish (Hisuian)",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 54,
+   "target": "Rillaboom",
+   "shielded": true,
+   "target_hp_before": 72,
+   "target_hp_after": 72,
+   "target_hp_max": 129,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 86.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 1,
+     "left": 2,
+     "hp": 68,
+     "hp_max": 121,
+     "hp_share": 0.562,
+     "energy": 9
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 72,
+     "hp_max": 129,
+     "hp_share": 0.558,
+     "energy": [
+      66,
+      66
+     ],
+     "energy_ceiling": 70
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 86.5,
+   "until": 90.1,
+   "fighting_turn": 53,
+   "turns": 7,
+   "mine": {
+    "pokemon": "Qwilfish (Hisuian)",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 3
+   },
+   "theirs": {
+    "pokemon": "Rillaboom",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 1,
+     "left": 2,
+     "hp": 50,
+     "hp_max": 121,
+     "hp_share": 0.413,
+     "energy": 36
     },
     "theirs": {
      "active": "Rillaboom",
@@ -1215,17 +1170,17 @@
      "hp_max": 129,
      "hp_share": 0.496,
      "energy": [
-      78,
-      78
+      94,
+      94
      ],
-     "energy_ceiling": 78
+     "energy_ceiling": 98
     }
    }
   },
   {
    "kind": "charged",
    "t": 90.1,
-   "fighting_turn": 55,
+   "fighting_turn": 60,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "move": "Drum Beating",
@@ -1233,81 +1188,36 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    78,
-    78
+    94,
+    94
    ],
-   "energy_ceiling": 78,
-   "target": "Qwilfish",
+   "energy_ceiling": 98,
+   "target": "Qwilfish (Hisuian)",
    "shielded": false,
-   "target_hp_before": 51,
-   "target_hp_after": 51,
-   "target_hp_max": 123,
-   "target_bar_read": false,
-   "expected_damage": 59,
-   "resolved_t": 100.0,
+   "target_hp_before": 50,
+   "target_hp_after": 15,
+   "target_hp_max": 121,
+   "target_bar_read": true,
+   "expected_damage": 35,
+   "resolved_t": 99.5,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 2,
-     "hp": 51,
-     "hp_max": 123,
-     "hp_share": 0.415,
-     "energy": 29
+     "hp": 15,
+     "hp_max": 121,
+     "hp_share": 0.124,
+     "energy": 45
     },
     "theirs": {
      "active": "Rillaboom",
      "shields": 0,
      "left": 2,
-     "hp": 51,
+     "hp": 64,
      "hp_max": 129,
-     "hp_share": 0.395,
-     "energy": [
-      43,
-      43
-     ],
-     "energy_ceiling": 47
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 100.0,
-   "until": 102.1,
-   "fighting_turn": 55,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
-   },
-   "theirs": {
-    "pokemon": "Rillaboom",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 0,
-     "left": 2,
-     "hp": 51,
-     "hp_max": 123,
-     "hp_share": 0.415,
-     "energy": 47
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 0,
-     "left": 2,
-     "hp": 45,
-     "hp_max": 129,
-     "hp_share": 0.349,
+     "hp_share": 0.496,
      "energy": [
       59,
       59
@@ -1317,9 +1227,54 @@
    }
   },
   {
+   "kind": "fighting",
+   "t": 99.5,
+   "until": 102.1,
+   "fighting_turn": 60,
+   "turns": 5,
+   "mine": {
+    "pokemon": "Qwilfish (Hisuian)",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
+   },
+   "theirs": {
+    "pokemon": "Rillaboom",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 0,
+     "left": 2,
+     "hp": 15,
+     "hp_max": 121,
+     "hp_share": 0.124,
+     "energy": 63
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 45,
+     "hp_max": 129,
+     "hp_share": 0.349,
+     "energy": [
+      79,
+      79
+     ],
+     "energy_ceiling": 83
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 102.1,
-   "fighting_turn": 59,
+   "fighting_turn": 65,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "move": "Earth Power",
@@ -1327,28 +1282,28 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    59,
-    59
+    79,
+    79
    ],
-   "energy_ceiling": 63,
-   "target": "Qwilfish",
+   "energy_ceiling": 83,
+   "target": "Qwilfish (Hisuian)",
    "shielded": false,
-   "target_hp_before": 51,
-   "target_hp_after": 51,
-   "target_hp_max": 123,
-   "target_bar_read": false,
-   "expected_damage": 118,
-   "resolved_t": 112.0,
+   "target_hp_before": 15,
+   "target_hp_after": 0,
+   "target_hp_max": 121,
+   "target_bar_read": true,
+   "expected_damage": 111,
+   "resolved_t": 111.45,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 0,
      "left": 2,
-     "hp": 51,
-     "hp_max": 123,
-     "hp_share": 0.415,
-     "energy": 47
+     "hp": 0,
+     "hp_max": 121,
+     "hp_share": 0.0,
+     "energy": 72
     },
     "theirs": {
      "active": "Rillaboom",
@@ -1358,108 +1313,63 @@
      "hp_max": 129,
      "hp_share": 0.349,
      "energy": [
-      9,
-      9
+      29,
+      29
      ],
-     "energy_ceiling": 13
+     "energy_ceiling": 33
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 111.45,
+   "fighting_turn": 65,
+   "side": "mine",
+   "pokemon": "Qwilfish (Hisuian)",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 121,
+     "hp_share": 0.0,
+     "energy": 72
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 45,
+     "hp_max": 129,
+     "hp_share": 0.349,
+     "energy": [
+      29,
+      29
+     ],
+     "energy_ceiling": 33
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 112.0,
-   "until": 112.5,
-   "fighting_turn": 59,
-   "turns": 1,
+   "t": 111.45,
+   "until": 119.1,
+   "fighting_turn": 65,
+   "turns": 13,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Rillaboom",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 0,
-     "left": 2,
-     "hp": 51,
-     "hp_max": 123,
-     "hp_share": 0.415,
-     "energy": 47
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 0,
-     "left": 2,
-     "hp": 45,
-     "hp_max": 129,
-     "hp_share": 0.349,
-     "energy": [
-      9,
-      9
-     ],
-     "energy_ceiling": 13
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 112.5,
-   "fighting_turn": 60,
-   "side": "mine",
-   "from": "Qwilfish",
-   "to": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 0,
-     "left": 2,
-     "hp": 38,
-     "hp_max": 129,
-     "hp_share": 0.295,
-     "energy": [
-      13,
-      13
-     ],
-     "energy_ceiling": 17
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 112.5,
-   "until": 119.1,
-   "fighting_turn": 60,
-   "turns": 19,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 19,
+    "fast_moves_if_no_pause": 13,
     "hits_seen": 2
    },
    "unexplained_health_changes": 1,
@@ -1481,17 +1391,17 @@
      "hp_max": 129,
      "hp_share": 0.116,
      "energy": [
-      69,
-      69
+      81,
+      81
      ],
-     "energy_ceiling": 69
+     "energy_ceiling": 81
     }
    }
   },
   {
    "kind": "charged",
    "t": 119.1,
-   "fighting_turn": 73,
+   "fighting_turn": 77,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "move": "Drum Beating",
@@ -1499,10 +1409,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    89,
-    89
+    81,
+    81
    ],
-   "energy_ceiling": 93,
+   "energy_ceiling": 85,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 98,
@@ -1510,7 +1420,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 44,
-   "resolved_t": 132.0,
+   "resolved_t": 129.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1520,7 +1430,7 @@
      "hp": 98,
      "hp_max": 107,
      "hp_share": 0.916,
-     "energy": 80
+     "energy": 56
     },
     "theirs": {
      "active": "Rillaboom",
@@ -1530,31 +1440,31 @@
      "hp_max": 129,
      "hp_share": 0.116,
      "energy": [
-      54,
-      54
+      46,
+      46
      ],
-     "energy_ceiling": 58
+     "energy_ceiling": 50
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 132.0,
+   "t": 129.5,
    "until": 135.0,
-   "fighting_turn": 79,
-   "turns": 6,
+   "fighting_turn": 78,
+   "turns": 11,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 11,
     "hits_seen": 2
    },
    "state": {
@@ -1575,17 +1485,17 @@
      "hp_max": 129,
      "hp_share": 0.062,
      "energy": [
-      78,
-      78
+      86,
+      86
      ],
-     "energy_ceiling": 78
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "switch",
    "t": 135.0,
-   "fighting_turn": 85,
+   "fighting_turn": 89,
    "side": "theirs",
    "from": "Rillaboom",
    "to": "Altaria",
@@ -1597,7 +1507,7 @@
      "hp": 94,
      "hp_max": 107,
      "hp_share": 0.879,
-     "energy": 100
+     "energy": 96
     },
     "theirs": {
      "active": "Altaria",
@@ -1618,7 +1528,7 @@
    "kind": "fighting",
    "t": 135.0,
    "until": 146.1,
-   "fighting_turn": 85,
+   "fighting_turn": 89,
    "turns": 10,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1662,7 +1572,7 @@
   {
    "kind": "end",
    "t": 146.1,
-   "fighting_turn": 95,
+   "fighting_turn": 99,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -1697,7 +1607,7 @@
  ],
  "deductions": [
   {
-   "t": 115.5,
+   "t": 63.5,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "what": "fast move",

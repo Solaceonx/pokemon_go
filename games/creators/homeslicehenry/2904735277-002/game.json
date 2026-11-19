@@ -23,14 +23,14 @@
   }
  },
  "seconds": 174.5,
- "fighting_turns": 102,
+ "fighting_turns": 101,
  "checks": {
   "verdict": "pass",
   "failed": [],
   "notes": [
    "fast move only guessed for kingdra, cramorant, mimikyu"
   ],
-  "unexplained_health_changes": 9
+  "unexplained_health_changes": 14
  },
  "teams": {
   "mine": [
@@ -142,8 +142,8 @@
     "cp": 1498,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.534,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "DRAGON_BREATH",
      "name": "Dragon Breath",
@@ -189,8 +189,8 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Peck": 0.92,
-      "Water Gun": 0.08
+      "Peck": 0.9,
+      "Water Gun": 0.1
      }
     },
     "charged_moves": [
@@ -248,7 +248,7 @@
     }
    }
   ],
-  "theirs_unseen": -1
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -265,11 +265,11 @@
   },
   "switches": {
    "mine": 1,
-   "theirs": 1
+   "theirs": 0
   },
   "faints": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 3
   }
  },
  "actions": [
@@ -368,20 +368,20 @@
    "target": "Sableye",
    "shielded": true,
    "target_hp_before": 87,
-   "target_hp_after": 81,
+   "target_hp_after": 87,
    "target_hp_max": 125,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 17.5,
+   "resolved_t": 17.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 81,
+     "hp": 87,
      "hp_max": 125,
-     "hp_share": 0.648,
+     "hp_share": 0.696,
      "energy": 64
     },
     "theirs": {
@@ -401,7 +401,7 @@
   },
   {
    "kind": "fighting",
-   "t": 17.5,
+   "t": 17.0,
    "until": 21.5,
    "fighting_turn": 15,
    "turns": 8,
@@ -410,14 +410,14 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "state": {
     "mine": {
@@ -427,7 +427,7 @@
      "hp": 65,
      "hp_max": 125,
      "hp_share": 0.52,
-     "energy": 88
+     "energy": 96
     },
     "theirs": {
      "active": "Kingdra",
@@ -437,24 +437,24 @@
      "hp_max": 118,
      "hp_share": 0.534,
      "energy": [
-      53,
-      53
+      61,
+      61
      ],
-     "energy_ceiling": 57
+     "energy_ceiling": 61
     }
    }
   },
   {
    "kind": "charged",
    "t": 21.5,
-   "fighting_turn": 22,
+   "fighting_turn": 23,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Foul Play",
    "move_id": "FOUL_PLAY",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 88,
+   "energy_before": 96,
    "target": "Kingdra",
    "shielded": true,
    "target_hp_before": 63,
@@ -462,7 +462,7 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 31.5,
+   "resolved_t": 31.0,
    "cue": true,
    "state": {
     "mine": {
@@ -472,7 +472,7 @@
      "hp": 62,
      "hp_max": 125,
      "hp_share": 0.496,
-     "energy": 48
+     "energy": 56
     },
     "theirs": {
      "active": "Kingdra",
@@ -482,8 +482,8 @@
      "hp_max": 118,
      "hp_share": 0.534,
      "energy": [
-      57,
-      57
+      61,
+      61
      ],
      "energy_ceiling": 61
     }
@@ -491,22 +491,22 @@
   },
   {
    "kind": "fighting",
-   "t": 31.5,
+   "t": 31.0,
    "until": 31.5,
    "fighting_turn": 23,
-   "turns": 3,
+   "turns": 1,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -517,7 +517,7 @@
      "hp": 62,
      "hp_max": 125,
      "hp_share": 0.496,
-     "energy": 48
+     "energy": 56
     },
     "theirs": {
      "active": "Kingdra",
@@ -527,17 +527,17 @@
      "hp_max": 118,
      "hp_share": 0.534,
      "energy": [
-      57,
-      57
+      65,
+      65
      ],
-     "energy_ceiling": 61
+     "energy_ceiling": 65
     }
    }
   },
   {
    "kind": "charged",
    "t": 31.5,
-   "fighting_turn": 23,
+   "fighting_turn": 24,
    "side": "theirs",
    "pokemon": "Kingdra",
    "move": "Surf",
@@ -548,7 +548,7 @@
     65,
     65
    ],
-   "energy_ceiling": 73,
+   "energy_ceiling": 65,
    "target": "Sableye",
    "shielded": true,
    "target_hp_before": 62,
@@ -556,7 +556,7 @@
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 43.0,
+   "resolved_t": 41.0,
    "cue": true,
    "state": {
     "mine": {
@@ -586,7 +586,7 @@
   {
    "kind": "charged",
    "t": 42.5,
-   "fighting_turn": 26,
+   "fighting_turn": 24,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Foul Play",
@@ -601,16 +601,16 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 48,
-   "resolved_t": 52.5,
+   "resolved_t": 51.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 0,
      "left": 3,
-     "hp": 60,
+     "hp": 62,
      "hp_max": 125,
-     "hp_share": 0.48,
+     "hp_share": 0.496,
      "energy": 24
     },
     "theirs": {
@@ -621,8 +621,40 @@
      "hp_max": 118,
      "hp_share": 0.534,
      "energy": [
-      24,
-      24
+      20,
+      20
+     ],
+     "energy_ceiling": 24
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 51.23,
+   "fighting_turn": 24,
+   "side": "theirs",
+   "pokemon": "Kingdra",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Sableye",
+     "shields": 0,
+     "left": 3,
+     "hp": 62,
+     "hp_max": 125,
+     "hp_share": 0.496,
+     "energy": 24
+    },
+    "theirs": {
+     "active": "Kingdra",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 118,
+     "hp_share": 0.0,
+     "energy": [
+      20,
+      20
      ],
      "energy_ceiling": 24
     }
@@ -630,100 +662,23 @@
   },
   {
    "kind": "fighting",
-   "t": 52.5,
-   "until": 53.0,
-   "fighting_turn": 26,
-   "turns": 1,
+   "t": 51.23,
+   "until": 60.5,
+   "fighting_turn": 24,
+   "turns": 15,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Sableye",
-     "shields": 0,
-     "left": 3,
-     "hp": 60,
-     "hp_max": 125,
-     "hp_share": 0.48,
-     "energy": 24
-    },
-    "theirs": {
-     "active": "Kingdra",
-     "shields": 1,
-     "left": 3,
-     "hp": 63,
-     "hp_max": 118,
-     "hp_share": 0.534,
-     "energy": [
-      24,
-      24
-     ],
-     "energy_ceiling": 24
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 53.0,
-   "fighting_turn": 27,
-   "side": "theirs",
-   "from": "Kingdra",
-   "to": "Cramorant",
-   "state": {
-    "mine": {
-     "active": "Sableye",
-     "shields": 0,
-     "left": 3,
-     "hp": 60,
-     "hp_max": 125,
-     "hp_share": 0.48,
-     "energy": 24
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 1,
-     "left": 3,
-     "hp": 126,
-     "hp_max": 126,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 8
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 53.0,
-   "until": 60.5,
-   "fighting_turn": 27,
-   "turns": 16,
-   "mine": {
-    "pokemon": "Sableye",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 3
-   },
-   "theirs": {
-    "pokemon": "Cramorant",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 5
+    "fast_moves_if_no_pause": 15,
+    "hits_seen": 6
    },
    "unexplained_health_changes": 3,
    "state": {
@@ -734,7 +689,7 @@
      "hp": 32,
      "hp_max": 125,
      "hp_share": 0.256,
-     "energy": 80
+     "energy": 88
     },
     "theirs": {
      "active": "Cramorant",
@@ -754,7 +709,7 @@
   {
    "kind": "charged",
    "t": 60.5,
-   "fighting_turn": 41,
+   "fighting_turn": 39,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Foul Play",
@@ -765,12 +720,58 @@
    "target": "Cramorant",
    "shielded": true,
    "target_hp_before": 91,
-   "target_hp_after": 77,
+   "target_hp_after": 91,
    "target_hp_max": 126,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 71.0,
+   "resolved_t": 69.0,
    "cue": true,
+   "state": {
+    "mine": {
+     "active": "Sableye",
+     "shields": 0,
+     "left": 3,
+     "hp": 32,
+     "hp_max": 125,
+     "hp_share": 0.256,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 2,
+     "hp": 91,
+     "hp_max": 126,
+     "hp_share": 0.722,
+     "energy": [
+      64,
+      64
+     ],
+     "energy_ceiling": 64
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 69.0,
+   "until": 71.45,
+   "fighting_turn": 39,
+   "turns": 5,
+   "mine": {
+    "pokemon": "Sableye",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
+   },
+   "theirs": {
+    "pokemon": "Cramorant",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
+   },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Sableye",
@@ -779,7 +780,7 @@
      "hp": 16,
      "hp_max": 125,
      "hp_share": 0.128,
-     "energy": 48
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
@@ -789,53 +790,8 @@
      "hp_max": 126,
      "hp_share": 0.611,
      "energy": [
-      72,
-      72
-     ],
-     "energy_ceiling": 72
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 71.0,
-   "until": 77.5,
-   "fighting_turn": 43,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Sableye",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
-   },
-   "theirs": {
-    "pokemon": "Cramorant",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
-   "state": {
-    "mine": {
-     "active": "Sableye",
-     "shields": 0,
-     "left": 2,
-     "hp": 8,
-     "hp_max": 125,
-     "hp_share": 0.064,
-     "energy": 56
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 2,
-     "hp": 68,
-     "hp_max": 126,
-     "hp_share": 0.54,
-     "energy": [
-      88,
-      88
+      80,
+      80
      ],
      "energy_ceiling": 80
     }
@@ -843,56 +799,57 @@
   },
   {
    "kind": "faint",
-   "t": 77.5,
-   "fighting_turn": 47,
+   "t": 71.45,
+   "fighting_turn": 44,
    "side": "mine",
    "pokemon": "Sableye",
-   "next": "Empoleon",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Empoleon",
+     "active": "Sableye",
      "shields": 0,
-     "left": 2,
-     "hp": 122,
-     "hp_max": 122,
-     "hp_share": 1.0,
-     "energy": 0
+     "left": 3,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 0,
      "left": 2,
-     "hp": 68,
+     "hp": 77,
      "hp_max": 126,
-     "hp_share": 0.54,
+     "hp_share": 0.611,
      "energy": [
-      88,
-      88
+      80,
+      80
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 77.5,
+   "t": 71.45,
    "until": 80.5,
-   "fighting_turn": 47,
-   "turns": 7,
+   "fighting_turn": 44,
+   "turns": 8,
    "mine": {
-    "pokemon": "Empoleon",
-    "fast_move": "Metal Sound",
+    "pokemon": "Sableye",
+    "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 1
    },
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Empoleon",
@@ -921,7 +878,7 @@
   {
    "kind": "charged",
    "t": 80.5,
-   "fighting_turn": 53,
+   "fighting_turn": 52,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Surf",
@@ -936,29 +893,29 @@
    "target": "Empoleon",
    "shielded": false,
    "target_hp_before": 115,
-   "target_hp_after": 70,
+   "target_hp_after": 115,
    "target_hp_max": 122,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": null,
-   "resolved_t": 91.0,
+   "resolved_t": 89.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 0,
      "left": 2,
-     "hp": 70,
+     "hp": 115,
      "hp_max": 122,
-     "hp_share": 0.574,
-     "energy": 32
+     "hp_share": 0.943,
+     "energy": 24
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 0,
      "left": 2,
-     "hp": 58,
+     "hp": 66,
      "hp_max": 126,
-     "hp_share": 0.46,
+     "hp_share": 0.524,
      "energy": [
       55,
       55
@@ -969,10 +926,105 @@
   },
   {
    "kind": "fighting",
-   "t": 91.0,
+   "t": 89.0,
    "until": 92.5,
-   "fighting_turn": 54,
-   "turns": 3,
+   "fighting_turn": 52,
+   "turns": 7,
+   "mine": {
+    "pokemon": "Empoleon",
+    "fast_move": "Metal Sound",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Cramorant",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 3
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 67,
+     "hp_max": 122,
+     "hp_share": 0.549,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 2,
+     "hp": 51,
+     "hp_max": 126,
+     "hp_share": 0.405,
+     "energy": [
+      79,
+      79
+     ],
+     "energy_ceiling": 87
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 92.5,
+   "fighting_turn": 59,
+   "side": "theirs",
+   "pokemon": "Cramorant",
+   "move": "Fly",
+   "move_id": "FLY",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": [
+    79,
+    79
+   ],
+   "energy_ceiling": 87,
+   "target": "Empoleon",
+   "shielded": false,
+   "target_hp_before": 67,
+   "target_hp_after": 22,
+   "target_hp_max": 122,
+   "target_bar_read": true,
+   "expected_damage": null,
+   "resolved_t": 102.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 22,
+     "hp_max": 122,
+     "hp_share": 0.18,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 2,
+     "hp": 51,
+     "hp_max": 126,
+     "hp_share": 0.405,
+     "energy": [
+      34,
+      34
+     ],
+     "energy_ceiling": 42
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 102.0,
+   "until": 103.5,
+   "fighting_turn": 59,
+   "turns": 2,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
@@ -992,149 +1044,10 @@
      "active": "Empoleon",
      "shields": 0,
      "left": 2,
-     "hp": 67,
-     "hp_max": 122,
-     "hp_share": 0.549,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 2,
-     "hp": 51,
-     "hp_max": 126,
-     "hp_share": 0.405,
-     "energy": [
-      63,
-      63
-     ],
-     "energy_ceiling": 71
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 92.5,
-   "fighting_turn": 57,
-   "side": "theirs",
-   "pokemon": "Cramorant",
-   "move": "Fly",
-   "move_id": "FLY",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": [
-    63,
-    63
-   ],
-   "energy_ceiling": 71,
-   "target": "Empoleon",
-   "shielded": false,
-   "target_hp_before": 67,
-   "target_hp_after": 22,
-   "target_hp_max": 122,
-   "target_bar_read": true,
-   "expected_damage": null,
-   "resolved_t": 102.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 0,
-     "left": 2,
      "hp": 22,
      "hp_max": 122,
      "hp_share": 0.18,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 2,
-     "hp": 51,
-     "hp_max": 126,
-     "hp_share": 0.405,
-     "energy": [
-      18,
-      18
-     ],
-     "energy_ceiling": 26
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 102.5,
-   "until": 103.5,
-   "fighting_turn": 57,
-   "turns": 6,
-   "mine": {
-    "pokemon": "Empoleon",
-    "fast_move": "Metal Sound",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Cramorant",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 0,
-     "left": 2,
-     "hp": 22,
-     "hp_max": 122,
-     "hp_share": 0.18,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 0,
-     "left": 2,
-     "hp": 48,
-     "hp_max": 126,
-     "hp_share": 0.381,
-     "energy": [
-      18,
-      18
-     ],
-     "energy_ceiling": 26
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 103.5,
-   "fighting_turn": 58,
-   "side": "mine",
-   "pokemon": "Empoleon",
-   "move": "Drill Peck",
-   "move_id": "DRILL_PECK",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 64,
-   "target": "Cramorant",
-   "shielded": false,
-   "target_hp_before": 48,
-   "target_hp_after": 48,
-   "target_hp_max": 126,
-   "target_bar_read": false,
-   "expected_damage": 47,
-   "resolved_t": 115.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 0,
-     "left": 2,
-     "hp": 22,
-     "hp_max": 122,
-     "hp_share": 0.18,
-     "energy": 24
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
@@ -1152,10 +1065,87 @@
    }
   },
   {
+   "kind": "charged",
+   "t": 103.5,
+   "fighting_turn": 61,
+   "side": "mine",
+   "pokemon": "Empoleon",
+   "move": "Drill Peck",
+   "move_id": "DRILL_PECK",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 64,
+   "target": "Cramorant",
+   "shielded": false,
+   "target_hp_before": 48,
+   "target_hp_after": 0,
+   "target_hp_max": 126,
+   "target_bar_read": true,
+   "expected_damage": 47,
+   "resolved_t": 110.77,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 22,
+     "hp_max": 122,
+     "hp_share": 0.18,
+     "energy": 24
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 126,
+     "hp_share": 0.0,
+     "energy": [
+      42,
+      42
+     ],
+     "energy_ceiling": 50
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 110.77,
+   "fighting_turn": 61,
+   "side": "theirs",
+   "pokemon": "Cramorant",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 22,
+     "hp_max": 122,
+     "hp_share": 0.18,
+     "energy": 24
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 126,
+     "hp_share": 0.0,
+     "energy": [
+      42,
+      42
+     ],
+     "energy_ceiling": 50
+    }
+   }
+  },
+  {
    "kind": "fighting",
-   "t": 115.5,
+   "t": 110.77,
    "until": 116.0,
-   "fighting_turn": 63,
+   "fighting_turn": 61,
    "turns": 1,
    "mine": {
     "pokemon": "Empoleon",
@@ -1169,7 +1159,7 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1185,9 +1175,9 @@
      "active": "Cramorant",
      "shields": 0,
      "left": 2,
-     "hp": 48,
+     "hp": 0,
      "hp_max": 126,
-     "hp_share": 0.381,
+     "hp_share": 0.0,
      "energy": [
       42,
       42
@@ -1199,7 +1189,7 @@
   {
    "kind": "switch",
    "t": 116.0,
-   "fighting_turn": 64,
+   "fighting_turn": 62,
    "side": "mine",
    "from": "Empoleon",
    "to": "Jumpluff",
@@ -1229,55 +1219,23 @@
    }
   },
   {
-   "kind": "faint",
-   "t": 116.0,
-   "fighting_turn": 64,
-   "side": "theirs",
-   "pokemon": "Cramorant",
-   "next": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 2,
-     "hp": 4,
-     "hp_max": 153,
-     "hp_share": 0.026,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 8
-    }
-   }
-  },
-  {
    "kind": "fighting",
    "t": 116.0,
    "until": 122.5,
-   "fighting_turn": 64,
-   "turns": 20,
+   "fighting_turn": 62,
+   "turns": 14,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 4
    },
    "unexplained_health_changes": 5,
@@ -1309,22 +1267,22 @@
   {
    "kind": "charged",
    "t": 122.5,
-   "fighting_turn": 77,
+   "fighting_turn": 75,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Energy Ball",
    "move_id": "ENERGY_BALL",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 81,
+   "energy_before": 54,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 98,
-   "target_hp_after": 55,
+   "target_hp_after": 98,
    "target_hp_max": 107,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 43,
-   "resolved_t": 136.0,
+   "resolved_t": 133.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1334,41 +1292,41 @@
      "hp": 131,
      "hp_max": 153,
      "hp_share": 0.856,
-     "energy": 36
+     "energy": 9
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 55,
+     "hp": 98,
      "hp_max": 107,
-     "hp_share": 0.514,
+     "hp_share": 0.916,
      "energy": [
-      80,
-      80
+      56,
+      56
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 136.0,
+   "t": 133.0,
    "until": 142.5,
-   "fighting_turn": 84,
-   "turns": 13,
+   "fighting_turn": 76,
+   "turns": 19,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 6
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 9,
     "hits_seen": 4
    },
    "state": {
@@ -1399,7 +1357,7 @@
   {
    "kind": "charged",
    "t": 142.5,
-   "fighting_turn": 97,
+   "fighting_turn": 95,
    "side": "theirs",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
@@ -1418,7 +1376,7 @@
    "target_hp_max": 153,
    "target_bar_read": false,
    "expected_damage": 55,
-   "resolved_t": 152.5,
+   "resolved_t": 152.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1447,22 +1405,22 @@
   },
   {
    "kind": "fighting",
-   "t": 152.5,
-   "until": 162.816703,
-   "fighting_turn": 97,
-   "turns": 5,
+   "t": 152.0,
+   "until": 155.5,
+   "fighting_turn": 95,
+   "turns": 6,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 2
    },
    "unexplained_health_changes": 1,
@@ -1474,27 +1432,72 @@
      "hp": 44,
      "hp_max": 153,
      "hp_share": 0.288,
-     "energy": 100
+     "energy": 45
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
-     "hp": 71,
+     "left": 0,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.664,
+     "hp_share": 0.0,
      "energy": [
-      56,
-      56
+      72,
+      72
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 155.5,
+   "fighting_turn": 101,
+   "side": "mine",
+   "pokemon": "Jumpluff",
+   "move": "Acrobatics",
+   "move_id": "ACROBATICS",
+   "move_known_from": "seen",
+   "cost": 55,
+   "energy_before": 100,
+   "target": "Mimikyu",
+   "shielded": false,
+   "target_hp_before": 0,
+   "target_hp_after": 0,
+   "target_hp_max": 107,
+   "target_bar_read": true,
+   "expected_damage": 59,
+   "resolved_t": 163.02,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 2,
+     "hp": 44,
+     "hp_max": 153,
+     "hp_share": 0.288,
+     "energy": 45
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": [
+      72,
+      72
+     ],
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "faint",
-   "t": 162.816703,
-   "fighting_turn": 102,
+   "t": 163.03,
+   "fighting_turn": 101,
    "side": "theirs",
    "pokemon": "Mimikyu",
    "next": null,
@@ -1516,62 +1519,17 @@
      "hp_max": 107,
      "hp_share": 0.0,
      "energy": [
-      64,
-      64
+      72,
+      72
      ],
-     "energy_ceiling": 64
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 155.5,
-   "fighting_turn": 102,
-   "side": "mine",
-   "pokemon": "Jumpluff",
-   "move": "Acrobatics",
-   "move_id": "ACROBATICS",
-   "move_known_from": "seen",
-   "cost": 55,
-   "energy_before": 100,
-   "target": "Mimikyu",
-   "shielded": false,
-   "target_hp_before": 71,
-   "target_hp_after": 0,
-   "target_hp_max": 107,
-   "target_bar_read": true,
-   "expected_damage": 59,
-   "resolved_t": 162.82,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 2,
-     "hp": 44,
-     "hp_max": 153,
-     "hp_share": 0.288,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 0,
-     "hp": 0,
-     "hp_max": 107,
-     "hp_share": 0.0,
-     "energy": [
-      64,
-      64
-     ],
-     "energy_ceiling": 64
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "end",
    "t": 174.5,
-   "fighting_turn": 102,
+   "fighting_turn": 101,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -1596,17 +1554,17 @@
      "hp_max": 107,
      "hp_share": 0.0,
      "energy": [
-      64,
-      64
+      72,
+      72
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 72
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 91.0,
+   "t": 89.0,
    "side": "theirs",
    "pokemon": "Cramorant",
    "what": "charged move",
@@ -1615,7 +1573,7 @@
    "ruled_out": []
   },
   {
-   "t": 102.5,
+   "t": 102.0,
    "side": "theirs",
    "pokemon": "Cramorant",
    "what": "charged move",

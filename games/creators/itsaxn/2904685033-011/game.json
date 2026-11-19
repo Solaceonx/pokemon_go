@@ -19,18 +19,18 @@
   "from": "result screen",
   "left": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 186.8,
- "fighting_turns": 127,
+ "fighting_turns": 117,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says win, tracker has us on 2 and them on 1"
+  "verdict": "pass",
+  "failed": [],
+  "notes": [
+   "fast move only guessed for pangoro, mimikyu"
   ],
-  "notes": [],
-  "unexplained_health_changes": 9
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -142,14 +142,14 @@
     "cp": 1493,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.835,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "BULLET_PUNCH",
-     "name": "Bullet Punch",
+     "id": "KARATE_CHOP",
+     "name": "Karate Chop",
      "turns": 2,
-     "energy_gain": 7,
-     "known_from": "inferred"
+     "energy_gain": 9,
+     "known_from": "guessed"
     },
     "charged_moves": [
      {
@@ -224,11 +224,15 @@
     "fainted": true,
     "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "HEX",
-     "name": "Hex",
-     "turns": 3,
-     "energy_gain": 13,
-     "known_from": "inferred"
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "turns": 2,
+     "energy_gain": 8,
+     "known_from": "guessed",
+     "odds": {
+      "Shadow Claw": 0.52,
+      "Hex": 0.48
+     }
     },
     "charged_moves": [
      {
@@ -273,7 +277,7 @@
   },
   "faints": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 3
   }
  },
  "actions": [
@@ -314,19 +318,19 @@
    "t": 0.0,
    "until": 5.8,
    "fighting_turn": 0,
-   "turns": 13,
+   "turns": 11,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 13,
+    "fast_moves_if_no_pause": 11,
     "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -366,10 +370,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    54,
-    54
+    45,
+    45
    ],
-   "energy_ceiling": 63,
+   "energy_ceiling": 54,
    "target": "Vigoroth",
    "shielded": false,
    "target_hp_before": 98,
@@ -377,7 +381,7 @@
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 46,
-   "resolved_t": 16.5,
+   "resolved_t": 15.0,
    "cue": true,
    "state": {
     "mine": {
@@ -387,7 +391,7 @@
      "hp": 98,
      "hp_max": 145,
      "hp_share": 0.676,
-     "energy": 52
+     "energy": 44
     },
     "theirs": {
      "active": "Pangoro",
@@ -397,24 +401,69 @@
      "hp_max": 133,
      "hp_share": 0.692,
      "energy": [
-      19,
-      19
+      10,
+      10
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 19
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 15.0,
+   "until": 16.8,
+   "fighting_turn": 11,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Pangoro",
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 2,
+     "left": 3,
+     "hp": 98,
+     "hp_max": 145,
+     "hp_share": 0.676,
+     "energy": 44
+    },
+    "theirs": {
+     "active": "Pangoro",
+     "shields": 2,
+     "left": 3,
+     "hp": 92,
+     "hp_max": 133,
+     "hp_share": 0.692,
+     "energy": [
+      10,
+      10
+     ],
+     "energy_ceiling": 19
     }
    }
   },
   {
    "kind": "charged",
    "t": 16.8,
-   "fighting_turn": 13,
+   "fighting_turn": 11,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Body Slam",
    "move_id": "BODY_SLAM",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 52,
+   "energy_before": 48,
    "target": "Pangoro",
    "shielded": true,
    "target_hp_before": 92,
@@ -422,17 +471,17 @@
    "target_hp_max": 133,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 26.5,
+   "resolved_t": 26.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 30,
+     "hp": 98,
      "hp_max": 145,
-     "hp_share": 0.207,
-     "energy": 12
+     "hp_share": 0.676,
+     "energy": 8
     },
     "theirs": {
      "active": "Pangoro",
@@ -451,24 +500,25 @@
   },
   {
    "kind": "fighting",
-   "t": 26.5,
+   "t": 26.0,
    "until": 27.0,
    "fighting_turn": 13,
-   "turns": 1,
+   "turns": 2,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Vigoroth",
@@ -497,7 +547,7 @@
   {
    "kind": "switch",
    "t": 27.0,
-   "fighting_turn": 14,
+   "fighting_turn": 15,
    "side": "mine",
    "from": "Vigoroth",
    "to": "Mimikyu",
@@ -519,10 +569,10 @@
      "hp_max": 133,
      "hp_share": 0.692,
      "energy": [
-      19,
-      19
+      28,
+      28
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 37
     }
    }
   },
@@ -530,7 +580,7 @@
    "kind": "fighting",
    "t": 27.0,
    "until": 30.5,
-   "fighting_turn": 14,
+   "fighting_turn": 15,
    "turns": 7,
    "mine": {
     "pokemon": "Mimikyu",
@@ -541,8 +591,8 @@
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
@@ -565,17 +615,17 @@
      "hp_max": 133,
      "hp_share": 0.496,
      "energy": [
-      46,
-      46
+      55,
+      55
      ],
-     "energy_ceiling": 55
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "switch",
    "t": 30.5,
-   "fighting_turn": 21,
+   "fighting_turn": 22,
    "side": "theirs",
    "from": "Pangoro",
    "to": "Melmetal",
@@ -608,20 +658,20 @@
    "kind": "fighting",
    "t": 30.5,
    "until": 35.6,
-   "fighting_turn": 21,
-   "turns": 10,
+   "fighting_turn": 22,
+   "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 3
    },
    "unexplained_health_changes": 1,
@@ -653,7 +703,7 @@
   {
    "kind": "charged",
    "t": 35.6,
-   "fighting_turn": 29,
+   "fighting_turn": 30,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -664,33 +714,33 @@
     36,
     36
    ],
-   "energy_ceiling": 54,
+   "energy_ceiling": 45,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 88,
-   "target_hp_after": 85,
+   "target_hp_after": 88,
    "target_hp_max": 107,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 75,
-   "resolved_t": 45.5,
+   "resolved_t": 45.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 2,
      "left": 3,
-     "hp": 85,
+     "hp": 88,
      "hp_max": 107,
-     "hp_share": 0.794,
-     "energy": 72
+     "hp_share": 0.822,
+     "energy": 64
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 42,
+     "hp": 122,
      "hp_max": 146,
-     "hp_share": 0.288,
+     "hp_share": 0.836,
      "energy": [
       1,
       1
@@ -701,28 +751,77 @@
   },
   {
    "kind": "fighting",
-   "t": 45.5,
+   "t": 45.0,
    "until": 49.8,
    "fighting_turn": 31,
-   "turns": 12,
+   "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 2,
+     "left": 3,
+     "hp": 74,
+     "hp_max": 107,
+     "hp_share": 0.692,
+     "energy": 96
+    },
+    "theirs": {
+     "active": "Melmetal",
+     "shields": 1,
+     "left": 3,
+     "hp": 30,
+     "hp_max": 146,
+     "hp_share": 0.205,
+     "energy": [
+      55,
+      55
+     ],
+     "energy_ceiling": 46
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 49.8,
+   "fighting_turn": 40,
+   "side": "theirs",
+   "pokemon": "Melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": [
+    55,
+    55
+   ],
+   "energy_ceiling": 46,
+   "target": "Mimikyu",
+   "shielded": true,
+   "target_hp_before": 74,
+   "target_hp_after": 74,
+   "target_hp_max": 107,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 58.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 1,
      "left": 3,
      "hp": 74,
      "hp_max": 107,
@@ -737,80 +836,31 @@
      "hp_max": 146,
      "hp_share": 0.205,
      "energy": [
-      46,
-      46
+      20,
+      20
      ],
-     "energy_ceiling": 46
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 49.8,
-   "fighting_turn": 39,
-   "side": "theirs",
-   "pokemon": "Melmetal",
-   "move": "Double Iron Bash",
-   "move_id": "DOUBLE_IRON_BASH",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": [
-    64,
-    64
-   ],
-   "energy_ceiling": 64,
-   "target": "Mimikyu",
-   "shielded": true,
-   "target_hp_before": 74,
-   "target_hp_after": 73,
-   "target_hp_max": 107,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 61.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 73,
-     "hp_max": 107,
-     "hp_share": 0.682,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Melmetal",
-     "shields": 1,
-     "left": 3,
-     "hp": 30,
-     "hp_max": 146,
-     "hp_share": 0.205,
-     "energy": [
-      29,
-      29
-     ],
-     "energy_ceiling": 38
+     "energy_ceiling": 29
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 61.5,
+   "t": 58.0,
    "until": 63.8,
-   "fighting_turn": 43,
-   "turns": 5,
+   "fighting_turn": 40,
+   "turns": 11,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 0
    },
    "state": {
@@ -831,17 +881,17 @@
      "hp_max": 146,
      "hp_share": 0.11,
      "energy": [
-      47,
-      47
+      65,
+      65
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 74
     }
    }
   },
   {
    "kind": "charged",
    "t": 63.8,
-   "fighting_turn": 47,
+   "fighting_turn": 51,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -849,49 +899,49 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    47,
-    47
+    65,
+    65
    ],
-   "energy_ceiling": 56,
+   "energy_ceiling": 74,
    "target": "Mimikyu",
    "shielded": true,
    "target_hp_before": 74,
-   "target_hp_after": 70,
+   "target_hp_after": 74,
    "target_hp_max": 107,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 74.0,
+   "resolved_t": 72.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 3,
-     "hp": 70,
+     "hp": 74,
      "hp_max": 107,
-     "hp_share": 0.654,
+     "hp_share": 0.692,
      "energy": 100
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 11,
+     "hp": 16,
      "hp_max": 146,
-     "hp_share": 0.075,
+     "hp_share": 0.11,
      "energy": [
-      12,
-      12
+      30,
+      30
      ],
-     "energy_ceiling": 21
+     "energy_ceiling": 39
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 74.0,
-   "until": 79.5,
-   "fighting_turn": 48,
+   "t": 72.0,
+   "until": 74.75,
+   "fighting_turn": 51,
    "turns": 6,
    "mine": {
     "pokemon": "Mimikyu",
@@ -905,81 +955,81 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 3,
-     "hp": 63,
+     "hp": 67,
      "hp_max": 107,
-     "hp_share": 0.589,
+     "hp_share": 0.626,
      "energy": 100
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
-     "left": 2,
+     "left": 3,
      "hp": 4,
      "hp_max": 146,
      "hp_share": 0.027,
      "energy": [
-      30,
-      30
+      48,
+      48
      ],
-     "energy_ceiling": 39
+     "energy_ceiling": 57
     }
    }
   },
   {
    "kind": "faint",
-   "t": 79.5,
-   "fighting_turn": 54,
+   "t": 74.75,
+   "fighting_turn": 57,
    "side": "theirs",
    "pokemon": "Melmetal",
-   "next": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 3,
-     "hp": 63,
+     "hp": 67,
      "hp_max": 107,
-     "hp_share": 0.589,
+     "hp_share": 0.626,
      "energy": 100
     },
     "theirs": {
-     "active": "Mimikyu",
+     "active": "Melmetal",
      "shields": 1,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 146,
+     "hp_share": 0.0,
      "energy": [
-      0,
-      0
+      48,
+      48
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 66
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 79.5,
+   "t": 74.75,
    "until": 79.8,
-   "fighting_turn": 54,
-   "turns": 5,
+   "fighting_turn": 57,
+   "turns": 3,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Hex",
+    "pokemon": "Melmetal",
+    "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
@@ -1012,7 +1062,7 @@
   {
    "kind": "charged",
    "t": 79.8,
-   "fighting_turn": 54,
+   "fighting_turn": 60,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -1027,7 +1077,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 92.0,
+   "resolved_t": 88.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1047,32 +1097,32 @@
      "hp_max": 107,
      "hp_share": 1.0,
      "energy": [
-      24,
-      24
+      0,
+      0
      ],
-     "energy_ceiling": 24
+     "energy_ceiling": 8
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 92.0,
+   "t": 88.0,
    "until": 92.5,
-   "fighting_turn": 59,
-   "turns": 1,
+   "fighting_turn": 60,
+   "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
-    "fast_move": "Hex",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1092,17 +1142,17 @@
      "hp_max": 107,
      "hp_share": 1.0,
      "energy": [
-      24,
-      24
+      0,
+      0
      ],
-     "energy_ceiling": 24
+     "energy_ceiling": 8
     }
    }
   },
   {
    "kind": "switch",
    "t": 92.5,
-   "fighting_turn": 60,
+   "fighting_turn": 69,
    "side": "theirs",
    "from": "Mimikyu",
    "to": "Pangoro",
@@ -1114,7 +1164,7 @@
      "hp": 54,
      "hp_max": 107,
      "hp_share": 0.505,
-     "energy": 50
+     "energy": 82
     },
     "theirs": {
      "active": "Pangoro",
@@ -1124,8 +1174,8 @@
      "hp_max": 133,
      "hp_share": 0.496,
      "energy": [
-      46,
-      46
+      55,
+      55
      ],
      "energy_ceiling": 64
     }
@@ -1135,7 +1185,7 @@
    "kind": "fighting",
    "t": 92.5,
    "until": 95.5,
-   "fighting_turn": 60,
+   "fighting_turn": 69,
    "turns": 6,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1146,8 +1196,8 @@
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
@@ -1159,7 +1209,7 @@
      "hp": 54,
      "hp_max": 107,
      "hp_share": 0.505,
-     "energy": 58
+     "energy": 90
     },
     "theirs": {
      "active": "Pangoro",
@@ -1169,17 +1219,17 @@
      "hp_max": 133,
      "hp_share": 0.496,
      "energy": [
-      46,
-      46
+      55,
+      55
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 73
     }
    }
   },
   {
    "kind": "switch",
    "t": 95.5,
-   "fighting_turn": 66,
+   "fighting_turn": 75,
    "side": "mine",
    "from": "Mimikyu",
    "to": "Corviknight",
@@ -1201,8 +1251,8 @@
      "hp_max": 133,
      "hp_share": 0.414,
      "energy": [
-      73,
-      73
+      82,
+      82
      ],
      "energy_ceiling": 91
     }
@@ -1212,19 +1262,19 @@
    "kind": "fighting",
    "t": 95.5,
    "until": 97.8,
-   "fighting_turn": 66,
-   "turns": 5,
+   "fighting_turn": 75,
+   "turns": 4,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
@@ -1247,8 +1297,8 @@
      "hp_max": 133,
      "hp_share": 0.414,
      "energy": [
-      91,
-      91
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1257,7 +1307,7 @@
   {
    "kind": "charged",
    "t": 97.8,
-   "fighting_turn": 70,
+   "fighting_turn": 79,
    "side": "theirs",
    "pokemon": "Pangoro",
    "move": "Night Slash",
@@ -1265,64 +1315,65 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    91,
-    91
+    100,
+    100
    ],
    "energy_ceiling": 100,
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 150,
-   "target_hp_after": 92,
+   "target_hp_after": 150,
    "target_hp_max": 150,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 40,
-   "resolved_t": 108.0,
+   "resolved_t": 107.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 3,
-     "hp": 92,
+     "hp": 150,
      "hp_max": 150,
-     "hp_share": 0.613,
-     "energy": 20
+     "hp_share": 1.0,
+     "energy": 16
     },
     "theirs": {
      "active": "Pangoro",
      "shields": 0,
      "left": 2,
-     "hp": 43,
+     "hp": 55,
      "hp_max": 133,
-     "hp_share": 0.323,
+     "hp_share": 0.414,
      "energy": [
-      56,
-      56
+      65,
+      65
      ],
-     "energy_ceiling": 65
+     "energy_ceiling": 74
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 108.0,
+   "t": 107.0,
    "until": 109.8,
-   "fighting_turn": 71,
-   "turns": 3,
+   "fighting_turn": 79,
+   "turns": 5,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
@@ -1331,7 +1382,7 @@
      "hp": 84,
      "hp_max": 150,
      "hp_share": 0.56,
-     "energy": 32
+     "energy": 36
     },
     "theirs": {
      "active": "Pangoro",
@@ -1341,17 +1392,17 @@
      "hp_max": 133,
      "hp_share": 0.308,
      "energy": [
-      74,
-      74
+      83,
+      83
      ],
-     "energy_ceiling": 74
+     "energy_ceiling": 92
     }
    }
   },
   {
    "kind": "charged",
    "t": 109.8,
-   "fighting_turn": 74,
+   "fighting_turn": 84,
    "side": "theirs",
    "pokemon": "Pangoro",
    "move": "Night Slash",
@@ -1359,10 +1410,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    74,
-    74
+    83,
+    83
    ],
-   "energy_ceiling": 74,
+   "energy_ceiling": 92,
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 84,
@@ -1370,7 +1421,7 @@
    "target_hp_max": 150,
    "target_bar_read": false,
    "expected_damage": 40,
-   "resolved_t": 119.5,
+   "resolved_t": 119.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1380,7 +1431,7 @@
      "hp": 84,
      "hp_max": 150,
      "hp_share": 0.56,
-     "energy": 32
+     "energy": 36
     },
     "theirs": {
      "active": "Pangoro",
@@ -1390,43 +1441,43 @@
      "hp_max": 133,
      "hp_share": 0.308,
      "energy": [
-      39,
-      39
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 57
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 119.5,
+   "t": 119.0,
    "until": 122.8,
-   "fighting_turn": 74,
-   "turns": 26,
+   "fighting_turn": 84,
+   "turns": 7,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 26,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 13,
-    "hits_seen": 1
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
    },
    "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
-     "left": 2,
+     "left": 3,
      "hp": 26,
      "hp_max": 150,
      "hp_share": 0.173,
-     "energy": 100
+     "energy": 64
     },
     "theirs": {
      "active": "Pangoro",
@@ -1436,17 +1487,17 @@
      "hp_max": 133,
      "hp_share": 0.226,
      "energy": [
-      100,
-      100
+      75,
+      75
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 84
     }
    }
   },
   {
    "kind": "charged",
    "t": 122.8,
-   "fighting_turn": 100,
+   "fighting_turn": 91,
    "side": "theirs",
    "pokemon": "Pangoro",
    "move": "Night Slash",
@@ -1454,28 +1505,28 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    100,
-    100
+    75,
+    75
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 84,
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 26,
-   "target_hp_after": 26,
+   "target_hp_after": 0,
    "target_hp_max": 150,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 40,
-   "resolved_t": 132.5,
+   "resolved_t": 129.93,
    "cue": true,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
-     "left": 2,
-     "hp": 26,
+     "left": 3,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 0.173,
-     "energy": 100
+     "hp_share": 0.0,
+     "energy": 64
     },
     "theirs": {
      "active": "Pangoro",
@@ -1485,41 +1536,73 @@
      "hp_max": 133,
      "hp_share": 0.226,
      "energy": [
-      65,
-      65
+      40,
+      40
      ],
-     "energy_ceiling": 74
+     "energy_ceiling": 49
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 129.93,
+   "fighting_turn": 91,
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
+     "energy": 64
+    },
+    "theirs": {
+     "active": "Pangoro",
+     "shields": 0,
+     "left": 2,
+     "hp": 30,
+     "hp_max": 133,
+     "hp_share": 0.226,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 49
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 132.5,
-   "until": 144.0,
-   "fighting_turn": 100,
-   "turns": 10,
+   "t": 129.93,
+   "until": 144.8,
+   "fighting_turn": 91,
+   "turns": 11,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 11,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
     "hits_seen": 0
    },
    "state": {
     "mine": {
-     "active": "Corviknight",
+     "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 26,
-     "hp_max": 150,
-     "hp_share": 0.173,
+     "hp": 40,
+     "hp_max": 107,
+     "hp_share": 0.374,
      "energy": 100
     },
     "theirs": {
@@ -1530,94 +1613,17 @@
      "hp_max": 133,
      "hp_share": 0.835,
      "energy": [
-      65,
-      65
+      85,
+      85
      ],
-     "energy_ceiling": 74
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 144.0,
-   "fighting_turn": 110,
-   "side": "mine",
-   "pokemon": "Corviknight",
-   "next": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 40,
-     "hp_max": 107,
-     "hp_share": 0.374,
-     "energy": 74
-    },
-    "theirs": {
-     "active": "Pangoro",
-     "shields": 0,
-     "left": 2,
-     "hp": 111,
-     "hp_max": 133,
-     "hp_share": 0.835,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 144.0,
-   "until": 144.8,
-   "fighting_turn": 110,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 40,
-     "hp_max": 107,
-     "hp_share": 0.374,
-     "energy": 74
-    },
-    "theirs": {
-     "active": "Pangoro",
-     "shields": 0,
-     "left": 2,
-     "hp": 111,
-     "hp_max": 133,
-     "hp_share": 0.835,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
+     "energy_ceiling": 94
     }
    }
   },
   {
    "kind": "charged",
    "t": 144.8,
-   "fighting_turn": 111,
+   "fighting_turn": 102,
    "side": "theirs",
    "pokemon": "Pangoro",
    "move": "Night Slash",
@@ -1625,28 +1631,28 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    100,
-    100
+    85,
+    85
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 94,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 40,
-   "target_hp_after": 3,
+   "target_hp_after": 40,
    "target_hp_max": 107,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 37,
-   "resolved_t": 154.5,
+   "resolved_t": 153.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 3,
+     "hp": 40,
      "hp_max": 107,
-     "hp_share": 0.028,
-     "energy": 82
+     "hp_share": 0.374,
+     "energy": 100
     },
     "theirs": {
      "active": "Pangoro",
@@ -1656,31 +1662,31 @@
      "hp_max": 133,
      "hp_share": 0.835,
      "energy": [
-      65,
-      65
+      50,
+      50
      ],
-     "energy_ceiling": 74
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 154.5,
-   "until": 155.0,
-   "fighting_turn": 111,
-   "turns": 1,
+   "t": 153.0,
+   "until": 154.5,
+   "fighting_turn": 102,
+   "turns": 3,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
+    "fast_move": "Karate Chop",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "state": {
@@ -1688,10 +1694,10 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 3,
+     "hp": 40,
      "hp_max": 107,
-     "hp_share": 0.028,
-     "energy": 82
+     "hp_share": 0.374,
+     "energy": 100
     },
     "theirs": {
      "active": "Pangoro",
@@ -1701,17 +1707,17 @@
      "hp_max": 133,
      "hp_share": 0.835,
      "energy": [
-      65,
-      65
+      50,
+      50
      ],
-     "energy_ceiling": 74
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "switch",
-   "t": 155.0,
-   "fighting_turn": 112,
+   "t": 154.5,
+   "fighting_turn": 105,
    "side": "theirs",
    "from": "Pangoro",
    "to": "Mimikyu",
@@ -1723,52 +1729,7 @@
      "hp": 38,
      "hp_max": 107,
      "hp_share": 0.355,
-     "energy": 82
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
-     "energy": [
-      24,
-      24
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 155.0,
-   "until": 155.8,
-   "fighting_turn": 112,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Hex",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 29,
-     "hp_max": 107,
-     "hp_share": 0.271,
-     "energy": 90
+     "energy": 100
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1781,60 +1742,105 @@
       32,
       32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 154.5,
+   "until": 155.8,
+   "fighting_turn": 105,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 2,
+     "hp": 29,
+     "hp_max": 107,
+     "hp_share": 0.271,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 2,
+     "hp": 107,
+     "hp_max": 107,
+     "hp_share": 1.0,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 155.8,
-   "fighting_turn": 113,
+   "fighting_turn": 107,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
    "move_id": "SHADOW_SNEAK",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 90,
+   "energy_before": 100,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 107,
-   "target_hp_after": 27,
+   "target_hp_after": 107,
    "target_hp_max": 107,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 80,
-   "resolved_t": 165.5,
+   "resolved_t": 165.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 20,
+     "hp": 29,
      "hp_max": 107,
-     "hp_share": 0.187,
-     "energy": 40
+     "hp_share": 0.271,
+     "energy": 50
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 27,
+     "hp": 107,
      "hp_max": 107,
-     "hp_share": 0.252,
+     "hp_share": 1.0,
      "energy": [
       40,
       40
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 165.5,
+   "t": 165.0,
    "until": 166.6,
-   "fighting_turn": 113,
+   "fighting_turn": 107,
    "turns": 3,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1845,8 +1851,8 @@
    },
    "theirs": {
     "pokemon": "Mimikyu",
-    "fast_move": "Hex",
-    "fast_move_known_from": "inferred",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
@@ -1858,7 +1864,7 @@
      "hp": 20,
      "hp_max": 107,
      "hp_share": 0.187,
-     "energy": 48
+     "energy": 58
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1868,17 +1874,17 @@
      "hp_max": 107,
      "hp_share": 0.832,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 166.6,
-   "fighting_turn": 115,
+   "fighting_turn": 110,
    "side": "theirs",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -1886,11 +1892,10 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    39,
-    39
+    56,
+    56
    ],
-   "energy_ceiling": 52,
-   "energy_short_by": 11,
+   "energy_ceiling": 64,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 20,
@@ -1898,7 +1903,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 80,
-   "resolved_t": 177.0,
+   "resolved_t": 176.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1908,7 +1913,7 @@
      "hp": 20,
      "hp_max": 107,
      "hp_share": 0.187,
-     "energy": 56
+     "energy": 66
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1918,65 +1923,110 @@
      "hp_max": 107,
      "hp_share": 0.832,
      "energy": [
-      0,
-      2
+      6,
+      6
      ],
-     "energy_ceiling": 15
+     "energy_ceiling": 14
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 177.0,
-   "until": 178.5,
-   "fighting_turn": 116,
-   "turns": 3,
+   "t": 176.0,
+   "until": 176.55,
+   "fighting_turn": 110,
+   "turns": 1,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
-    "fast_move": "Hex",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 13,
+     "hp": 20,
      "hp_max": 107,
-     "hp_share": 0.121,
-     "energy": 64
+     "hp_share": 0.187,
+     "energy": 66
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 89,
      "hp_max": 107,
      "hp_share": 0.832,
      "energy": [
-      13,
-      15
+      6,
+      6
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 14
     }
    }
   },
   {
    "kind": "faint",
-   "t": 178.5,
-   "fighting_turn": 119,
+   "t": 176.55,
+   "fighting_turn": 111,
    "side": "theirs",
    "pokemon": "Mimikyu",
-   "next": "Pangoro",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 2,
+     "hp": 20,
+     "hp_max": 107,
+     "hp_share": 0.187,
+     "energy": 66
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": [
+      6,
+      6
+     ],
+     "energy_ceiling": 14
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 176.55,
+   "until": 181.15,
+   "fighting_turn": 111,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
+   },
    "state": {
     "mine": {
      "active": "Mimikyu",
@@ -1985,7 +2035,7 @@
      "hp": 12,
      "hp_max": 107,
      "hp_share": 0.112,
-     "energy": 72
+     "energy": 98
     },
     "theirs": {
      "active": "Pangoro",
@@ -1995,67 +2045,54 @@
      "hp_max": 133,
      "hp_share": 0.835,
      "energy": [
-      65,
-      65
+      77,
+      77
      ],
-     "energy_ceiling": 74
+     "energy_ceiling": 95
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 178.5,
-   "until": 186.8,
-   "fighting_turn": 119,
-   "turns": 8,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Pangoro",
-    "fast_move": "Bullet Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
-   },
+   "kind": "faint",
+   "t": 181.15,
+   "fighting_turn": 117,
+   "side": "theirs",
+   "pokemon": "Pangoro",
+   "next": null,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 7,
+     "hp": 12,
      "hp_max": 107,
-     "hp_share": 0.065,
-     "energy": 100
+     "hp_share": 0.112,
+     "energy": 98
     },
     "theirs": {
      "active": "Pangoro",
      "shields": 0,
-     "left": 1,
-     "hp": 111,
+     "left": 0,
+     "hp": 0,
      "hp_max": 133,
-     "hp_share": 0.835,
+     "hp_share": 0.0,
      "energy": [
-      93,
-      93
+      77,
+      77
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 95
     }
    }
   },
   {
    "kind": "end",
    "t": 186.8,
-   "fighting_turn": 127,
+   "fighting_turn": 117,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 2,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -2065,50 +2102,25 @@
      "hp": 7,
      "hp_max": 107,
      "hp_share": 0.065,
-     "energy": 100
+     "energy": 98
     },
     "theirs": {
      "active": "Pangoro",
      "shields": 0,
-     "left": 1,
-     "hp": 111,
+     "left": 0,
+     "hp": 0,
      "hp_max": 133,
-     "hp_share": 0.835,
+     "hp_share": 0.0,
      "energy": [
-      93,
-      93
+      77,
+      77
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 95
     }
    }
   }
  ],
- "deductions": [
-  {
-   "t": 177.0,
-   "side": "theirs",
-   "pokemon": "Mimikyu",
-   "what": "fast move",
-   "value": "Hex",
-   "how": "every other fast move ruled out by effectiveness words or energy",
-   "ruled_out": [
-    "Shadow Claw"
-   ]
-  },
-  {
-   "t": 182.0,
-   "side": "theirs",
-   "pokemon": "Pangoro",
-   "what": "fast move",
-   "value": "Bullet Punch",
-   "how": "fits its hits on our bar best of the moves not ruled out",
-   "ruled_out": [
-    "Karate Chop",
-    "Low Kick",
-    "Snarl"
-   ]
-  }
- ],
+ "deductions": [],
  "built_from": [
   "events.jsonl.gz",
   "source.json",

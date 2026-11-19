@@ -91,3 +91,19 @@ python scripts/recording/score_creator_events.py --before PATH_TO_BASELINE/games
 ```
 
 The scorer reports precision, recall, false/missed events, per-channel results and descriptive whole-battle-bootstrap margins. Primary matches require identity and an annotated video-time interval with a three-second allowance; untimed identity scores are diagnostic only. Henry 002 was used to develop the centered-impact reader and is excluded in an additional five-clip result. These six nonrandom clips are not a general game-state accuracy claim. Centered-impact evidence is creator-only; the existing strict verdicts remain in force.
+
+
+## Source-timed creator faints
+
+Creator replays now publish `creator-lifecycle.json` beside the model states. It contains typed source-frame measurements, the victim identity, first measured zero time, confirmation time, palette/outline evidence, form resolution and contradicted counters withheld from model input. It never contains frames or unrestricted OCR. Faints can be recorded before a replacement is visible; the tracker does not log them again on replacement.
+
+The reader separates live red/yellow/cyan pixels from the orange damage trail and measures complete HP outlines across broadcast scaling. A guessed bar width can crop off the last live pixels. Full contours or validated physical side rails supply the width; measured widths can bridge brief border occlusions. Ordinary bars may move vertically with the Pokémon. A normal faint needs measured empty pixels and fade, with continuous live-to-zero evidence or independent local counter/replacement confirmation. A last target already empty when the charged camera arrives needs complete physical zero outlines after the named release and fade. Result screens and absent bars alone do not imply faints.
+
+The six reference clips are all now development/regression clips. The original Henry-only flag is retained for historical comparisons; excluding it no longer produces a heldout test set. Frozen source annotations and one-to-one matching rules are unchanged.
+
+For independent channel workers, `replay_creators.py --skip-index` defers catalog rebuilding. Workers must have disjoint channel/record sets and separate work folders. After every worker finishes, run `python scripts/index_games.py` once. This avoids concurrent catalog writes. Keep backups, measurements and source footage under the ignored local `.vod` workspace.
+
+
+`creator-state-reconciliation.json` records incoming-charge/faint merges, corrected waiting intervals and source-only terminal counts. It preserves one unattributed zero as a diagnostic rather than applying it to an assumed active. Complete cached native zeros can be confirmed by a later replacement header, or by an independently observed last-party-member counter; isolated fade speckles remain in the evidence while sustained live returns refute the candidate. Its canonical JSON/JSONL digests are stable across Windows/Unix line endings and gzip formatting.
+
+These are retrospective VOD events. Their timestamps are the measured zero, while confirmation can depend on later fade/header frames. Instant live recognition latency and knowledge available at decision time have not been validated. Unique-form resolution currently uses moves observed over the recording, so it also needs a visibility audit before decision/habit training.

@@ -1,6 +1,6 @@
 {
   "t": 172.0,
-  "fighting_turns": 115,
+  "fighting_turns": 120,
   "warnings": 5,
   "matchup": {
     "ours": {
@@ -8,7 +8,7 @@
         "id": "MUD_SHOT",
         "name": "Mud Shot",
         "type": "ground",
-        "damage": 3,
+        "damage": 4,
         "energy_gain": 9,
         "turns": 2
       },
@@ -17,7 +17,7 @@
           "id": "EARTH_POWER",
           "name": "Earth Power",
           "type": "ground",
-          "damage": 64,
+          "damage": 96,
           "energy": 50,
           "ready": true
         },
@@ -25,7 +25,7 @@
           "id": "ICY_WIND",
           "name": "Icy Wind",
           "type": "ice",
-          "damage": 14,
+          "damage": 21,
           "energy": 45,
           "ready": true
         }
@@ -108,7 +108,7 @@
     "active": 2,
     "shields": 1,
     "left": 1,
-    "switch_ready_in": 16.5,
+    "switch_ready_in": 11.8,
     "pokemon": [
       {
         "species": "fearow",
@@ -127,11 +127,11 @@
           15,
           13
         ],
-        "hp": 84,
+        "hp": 0,
         "hp_max": 124,
-        "hp_share": 0.677,
-        "energy": 40,
-        "fainted": false,
+        "hp_share": 0.0,
+        "energy": 48,
+        "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
@@ -181,7 +181,7 @@
         "hp": 0,
         "hp_max": 141,
         "hp_share": 0.0,
-        "energy": 21,
+        "energy": 42,
         "fainted": true,
         "attack_stage": -1,
         "defense_stage": 0,
@@ -232,9 +232,9 @@
         "hp": 60,
         "hp_max": 154,
         "hp_share": 0.39,
-        "energy": 73,
+        "energy": 91,
         "fainted": false,
-        "attack_stage": -2,
+        "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
           "id": "MUD_SHOT",
@@ -269,8 +269,8 @@
     "active": 1,
     "shields": 1,
     "left": 3,
-    "unseen": 0,
-    "switch_ready_in": 40.0,
+    "unseen": 2,
+    "switch_ready_in": 16.5,
     "fast_move_turns_left": 2,
     "pokemon": [
       {
@@ -289,12 +289,12 @@
           13,
           14
         ],
-        "hp": 46,
+        "hp": 0,
         "hp_max": 110,
-        "hp_share": 0.418,
-        "energy": 100,
-        "fainted": false,
-        "attack_stage": 0,
+        "hp_share": 0.0,
+        "energy": 55,
+        "fainted": true,
+        "attack_stage": -1,
         "defense_stage": 0,
         "fast_move": {
           "id": "FAIRY_WIND",
@@ -304,8 +304,9 @@
           "energy_gain": 9,
           "known_from": "guessed",
           "misfit": {
-            "VINE_WHIP": 1.25,
-            "FAIRY_WIND": 0.31
+            "VINE_WHIP": 0.52,
+            "TACKLE": 0.71,
+            "FAIRY_WIND": 0.7
           }
         },
         "charged_moves": [
@@ -327,26 +328,29 @@
           }
         ],
         "energy_range": [
-          100,
-          100
+          55,
+          55
         ],
-        "energy_by_clock": 100,
+        "energy_by_clock": 64,
         "energy_odds": {
-          "82": 0.08,
-          "91": 0.12,
-          "100": 0.79
+          "37": 0.08,
+          "46": 0.12,
+          "55": 0.33,
+          "64": 0.33,
+          "73": 0.12
         },
         "fast_move_odds": {
-          "FAIRY_WIND": 0.96,
-          "VINE_WHIP": 0.04
+          "VINE_WHIP": 0.46,
+          "FAIRY_WIND": 0.38,
+          "TACKLE": 0.16
         },
         "charged_move_odds": {
           "MOONBLAST": 1.0,
           "CHILLING_WATER": 1.0
         },
         "ready_odds": {
-          "MOONBLAST": 1.0,
-          "CHILLING_WATER": 1.0
+          "MOONBLAST": 0.79,
+          "CHILLING_WATER": 0.92
         }
       },
       {
@@ -369,7 +373,7 @@
         "hp": 57,
         "hp_max": 134,
         "hp_share": 0.425,
-        "energy": 53,
+        "energy": 100,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -381,7 +385,8 @@
           "energy_gain": 11,
           "known_from": "inferred",
           "misfit": {
-            "BUBBLE": 1.01
+            "BUBBLE": 1.01,
+            "TACKLE": 1.88
           }
         },
         "charged_moves": [
@@ -398,32 +403,32 @@
             "name": "Rock Blast",
             "type": "rock",
             "energy": 40,
-            "known_from": "seen",
-            "times_used": 1
+            "known_from": "guessed",
+            "times_used": 0
           }
         ],
         "energy_range": [
-          53,
-          53
+          100,
+          100
         ],
-        "energy_by_clock": 53,
+        "energy_by_clock": 100,
         "energy_odds": {
-          "31": 0.08,
-          "42": 0.12,
-          "53": 0.33,
-          "64": 0.33,
-          "75": 0.12
+          "78": 0.08,
+          "89": 0.12,
+          "100": 0.79
         },
         "fast_move_odds": {
           "BUBBLE": 1.0
         },
         "charged_move_odds": {
           "POWER_GEM": 1.0,
-          "ROCK_BLAST": 1.0
+          "ROCK_BLAST": 0.59,
+          "BUBBLE_BEAM": 0.41
         },
         "ready_odds": {
-          "POWER_GEM": 0.79,
-          "ROCK_BLAST": 0.92
+          "POWER_GEM": 1.0,
+          "ROCK_BLAST": 0.59,
+          "BUBBLE_BEAM": 0.41
         }
       },
       {
@@ -442,12 +447,12 @@
           9,
           15
         ],
-        "hp": 48,
+        "hp": 0,
         "hp_max": 118,
-        "hp_share": 0.407,
+        "hp_share": 0.0,
         "energy": 32,
-        "fainted": false,
-        "attack_stage": 0,
+        "fainted": true,
+        "attack_stage": -2,
         "defense_stage": 0,
         "fast_move": {
           "id": "VOLT_SWITCH",

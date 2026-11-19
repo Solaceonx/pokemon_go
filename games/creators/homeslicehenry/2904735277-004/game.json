@@ -23,11 +23,11 @@
   }
  },
  "seconds": 97.5,
- "fighting_turns": 293,
+ "fighting_turns": 245,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "looks: 26 rejected",
+   "looks: 27 rejected",
    "moves: 1 charged move(s) without an observed name",
    "moves: 6 charged moves announced, 3 tracked",
    "ending: result says win, tracker has us on 2 and them on 2"
@@ -157,8 +157,8 @@
      "energy_gain": 9,
      "known_from": "guessed",
      "odds": {
-      "Poison Sting": 0.52,
-      "Infestation": 0.48
+      "Poison Sting": 0.99,
+      "Infestation": 0.01
      }
     },
     "charged_moves": [
@@ -247,7 +247,7 @@
   },
   "faints": {
    "mine": 1,
-   "theirs": 24
+   "theirs": 1
   }
  },
  "actions": [
@@ -304,7 +304,7 @@
    "t": 0.0,
    "until": 7.5,
    "fighting_turn": 0,
-   "turns": 21,
+   "turns": 20,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
@@ -359,7 +359,7 @@
    "target_hp_max": 122,
    "target_bar_read": true,
    "expected_damage": 55,
-   "resolved_t": 17.5,
+   "resolved_t": 17.0,
    "cue": true,
    "state": {
     "mine": {
@@ -369,15 +369,15 @@
      "hp": 48,
      "hp_max": 122,
      "hp_share": 0.393,
-     "energy": 88
+     "energy": 80
     },
     "theirs": {
      "active": "Drapion",
      "shields": 2,
      "left": 3,
-     "hp": 91,
+     "hp": 89,
      "hp_max": 118,
-     "hp_share": 0.771,
+     "hp_share": 0.754,
      "energy": [
       0,
       0
@@ -388,10 +388,10 @@
   },
   {
    "kind": "fighting",
-   "t": 17.5,
+   "t": 17.0,
    "until": 21.5,
-   "fighting_turn": 21,
-   "turns": 8,
+   "fighting_turn": 20,
+   "turns": 9,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
@@ -425,10 +425,10 @@
      "hp_max": 118,
      "hp_share": 0.678,
      "energy": [
-      18,
-      18
+      27,
+      27
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 36
     }
    }
   },
@@ -447,11 +447,11 @@
    "target": "Drapion",
    "shielded": false,
    "target_hp_before": 80,
-   "target_hp_after": 80,
+   "target_hp_after": 0,
    "target_hp_max": 118,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 58,
-   "resolved_t": 32.0,
+   "resolved_t": 31.65,
    "cue": true,
    "state": {
     "mine": {
@@ -467,12 +467,12 @@
      "active": "Drapion",
      "shields": 2,
      "left": 3,
-     "hp": 80,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.678,
+     "hp_share": 0.0,
      "energy": [
-      36,
-      36
+      45,
+      45
      ],
      "energy_ceiling": 45
     }
@@ -480,447 +480,31 @@
   },
   {
    "kind": "faint",
-   "t": 39.0,
+   "t": 31.65,
    "fighting_turn": 29,
    "side": "theirs",
    "pokemon": "Drapion",
-   "next": "Deoxys",
+   "next": null,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 41,
+     "hp": 48,
      "hp_max": 122,
-     "hp_share": 0.336,
+     "hp_share": 0.393,
      "energy": 0
     },
     "theirs": {
      "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 39.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.678,
+     "hp_share": 0.0,
      "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 40.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 40.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 41.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 41.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 42.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 42.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 43.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 43.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 44.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 44.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 54.5,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 55.0,
-   "fighting_turn": 29,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 3,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 80,
-     "hp_max": 118,
-     "hp_share": 0.678,
-     "energy": [
-      36,
-      36
+      45,
+      45
      ],
      "energy_ceiling": 45
     }
@@ -928,24 +512,25 @@
   },
   {
    "kind": "fighting",
-   "t": 38.0,
-   "until": 55.5,
+   "t": 31.65,
+   "until": 53.85,
    "fighting_turn": 29,
-   "turns": 167,
+   "turns": 119,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 83,
-    "hits_seen": 5
+    "fast_moves_if_no_pause": 59,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Drapion",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 83,
-    "hits_seen": 10
+    "fast_moves_if_no_pause": 59,
+    "hits_seen": 12
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Empoleon",
@@ -960,12 +545,12 @@
      "active": "Drapion",
      "shields": 2,
      "left": 2,
-     "hp": 80,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.678,
+     "hp_share": 0.0,
      "energy": [
-      36,
-      36
+      45,
+      45
      ],
      "energy_ceiling": 45
     }
@@ -973,307 +558,19 @@
   },
   {
    "kind": "faint",
-   "t": 55.5,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 56.0,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 56.5,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 57.0,
-   "fighting_turn": 196,
+   "t": 53.85,
+   "fighting_turn": 148,
    "side": "mine",
    "pokemon": "Empoleon",
-   "next": "Sableye",
+   "next": null,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 57.0,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
      "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
      "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 58.0,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 58.5,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 59.0,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 59.5,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 69.5,
-   "fighting_turn": 196,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Empoleon",
-     "shields": 2,
-     "left": 2,
-     "hp": 41,
-     "hp_max": 122,
-     "hp_share": 0.336,
      "energy": 100
     },
     "theirs": {
@@ -1293,22 +590,22 @@
   },
   {
    "kind": "fighting",
-   "t": 55.17,
-   "until": 70.0,
-   "fighting_turn": 196,
-   "turns": 76,
+   "t": 53.85,
+   "until": 69.5,
+   "fighting_turn": 148,
+   "turns": 75,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 38,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 37,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Drapion",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 38,
+    "fast_moves_if_no_pause": 37,
     "hits_seen": 0
    },
    "state": {
@@ -1316,9 +613,9 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 2,
-     "hp": 41,
+     "hp": 0,
      "hp_max": 122,
-     "hp_share": 0.336,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1338,8 +635,8 @@
   },
   {
    "kind": "switch",
-   "t": 70.0,
-   "fighting_turn": 272,
+   "t": 69.5,
+   "fighting_turn": 223,
    "side": "mine",
    "from": "Empoleon",
    "to": "Jumpluff",
@@ -1357,41 +654,9 @@
      "active": "Azumarill",
      "shields": 2,
      "left": 2,
-     "hp": 188,
+     "hp": 191,
      "hp_max": 191,
-     "hp_share": 0.984,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 11
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 70.0,
-   "fighting_turn": 272,
-   "side": "theirs",
-   "pokemon": "Drapion",
-   "next": "Azumarill",
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 2,
-     "left": 2,
-     "hp": 150,
-     "hp_max": 153,
-     "hp_share": 0.98,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 2,
-     "hp": 188,
-     "hp_max": 191,
-     "hp_share": 0.984,
+     "hp_share": 1.0,
      "energy": [
       0,
       0
@@ -1402,9 +667,9 @@
   },
   {
    "kind": "fighting",
-   "t": 70.0,
+   "t": 69.5,
    "until": 76.5,
-   "fighting_turn": 272,
+   "fighting_turn": 223,
    "turns": 13,
    "mine": {
     "pokemon": "Jumpluff",
@@ -1448,7 +713,7 @@
   {
    "kind": "charged",
    "t": 76.5,
-   "fighting_turn": 284,
+   "fighting_turn": 236,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Energy Ball",
@@ -1463,7 +728,7 @@
    "target_hp_max": 191,
    "target_bar_read": true,
    "expected_damage": 72,
-   "resolved_t": 86.5,
+   "resolved_t": 86.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1492,10 +757,10 @@
   },
   {
    "kind": "fighting",
-   "t": 86.5,
+   "t": 86.0,
    "until": 97.5,
-   "fighting_turn": 285,
-   "turns": 8,
+   "fighting_turn": 236,
+   "turns": 9,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
@@ -1507,7 +772,7 @@
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "state": {
@@ -1538,7 +803,7 @@
   {
    "kind": "end",
    "t": 97.5,
-   "fighting_turn": 293,
+   "fighting_turn": 245,
    "result": "win",
    "result_from": "result screen",
    "left": {

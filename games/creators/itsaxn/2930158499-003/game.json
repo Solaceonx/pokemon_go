@@ -15,24 +15,23 @@
   "dataset_role": "unassigned"
  },
  "result": {
-  "value": null,
-  "from": "unknown",
+  "value": "win",
+  "from": "who had Pokémon left",
   "left": {
    "mine": 2,
-   "theirs": 3
+   "theirs": 0
   }
  },
  "seconds": 169.13,
- "fighting_turns": 136,
+ "fighting_turns": 111,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: no result screen, and the tracker has us on 2 and them on 3"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
+   "no result screen read; result taken from who had Pokémon left",
    "fast move only guessed for greninja, mimikyu"
   ],
-  "unexplained_health_changes": 6
+  "unexplained_health_changes": 9
  },
  "teams": {
   "mine": [
@@ -144,8 +143,8 @@
     "cp": 1494,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.904,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "WATER_SHURIKEN",
      "name": "Water Shuriken",
@@ -153,9 +152,9 @@
      "energy_gain": 14,
      "known_from": "guessed",
      "odds": {
-      "Water Shuriken": 0.45,
-      "Bubble": 0.33,
-      "Feint Attack": 0.22
+      "Water Shuriken": 0.46,
+      "Bubble": 0.34,
+      "Feint Attack": 0.2
      }
     },
     "charged_moves": [
@@ -189,8 +188,8 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.056,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -198,8 +197,8 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Hex": 0.61,
-      "Shadow Claw": 0.39
+      "Shadow Claw": 0.52,
+      "Hex": 0.48
      }
     },
     "charged_moves": [
@@ -230,8 +229,8 @@
     "cp": 1494,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.597,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SMACK_DOWN",
      "name": "Smack Down",
@@ -281,11 +280,11 @@
   },
   "switches": {
    "mine": 1,
-   "theirs": 4
+   "theirs": 2
   },
   "faints": {
    "mine": 1,
-   "theirs": 0
+   "theirs": 3
   }
  },
  "actions": [
@@ -369,20 +368,20 @@
    "target": "Fearow",
    "shielded": true,
    "target_hp_before": 116,
-   "target_hp_after": 97,
+   "target_hp_after": 116,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 16.5,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 97,
+     "hp": 116,
      "hp_max": 124,
-     "hp_share": 0.782,
+     "hp_share": 0.935,
      "energy": 56
     },
     "theirs": {
@@ -402,10 +401,10 @@
   },
   {
    "kind": "fighting",
-   "t": 16.5,
+   "t": 16.0,
    "until": 17.8,
    "fighting_turn": 13,
-   "turns": 2,
+   "turns": 3,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -417,9 +416,10 @@
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -438,17 +438,17 @@
      "hp_max": 115,
      "hp_share": 0.626,
      "energy": [
-      16,
-      16
+      30,
+      30
      ],
-     "energy_ceiling": 30
+     "energy_ceiling": 44
     }
    }
   },
   {
    "kind": "charged",
    "t": 17.8,
-   "fighting_turn": 15,
+   "fighting_turn": 16,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
@@ -463,7 +463,7 @@
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 27.5,
+   "resolved_t": 27.0,
    "cue": true,
    "state": {
     "mine": {
@@ -486,29 +486,29 @@
       30,
       30
      ],
-     "energy_ceiling": 30
+     "energy_ceiling": 44
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 27.5,
+   "t": 27.0,
    "until": 31.8,
-   "fighting_turn": 15,
-   "turns": 8,
+   "fighting_turn": 16,
+   "turns": 9,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -531,14 +531,14 @@
       72,
       72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 86
     }
    }
   },
   {
    "kind": "charged",
    "t": 31.8,
-   "fighting_turn": 23,
+   "fighting_turn": 25,
    "side": "theirs",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
@@ -549,25 +549,25 @@
     72,
     72
    ],
-   "energy_ceiling": 72,
+   "energy_ceiling": 86,
    "target": "Fearow",
    "shielded": true,
    "target_hp_before": 71,
-   "target_hp_after": 66,
+   "target_hp_after": 71,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 41.5,
+   "resolved_t": 40.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 3,
-     "hp": 66,
+     "hp": 71,
      "hp_max": 124,
-     "hp_share": 0.532,
-     "energy": 56
+     "hp_share": 0.573,
+     "energy": 64
     },
     "theirs": {
      "active": "Greninja",
@@ -586,9 +586,9 @@
   },
   {
    "kind": "fighting",
-   "t": 41.5,
-   "until": 43.0,
-   "fighting_turn": 23,
+   "t": 40.0,
+   "until": 41.5,
+   "fighting_turn": 25,
    "turns": 3,
    "mine": {
     "pokemon": "Fearow",
@@ -602,17 +602,17 @@
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 3,
-     "hp": 66,
+     "hp": 71,
      "hp_max": 124,
-     "hp_share": 0.532,
-     "energy": 56
+     "hp_share": 0.573,
+     "energy": 64
     },
     "theirs": {
      "active": "Greninja",
@@ -631,56 +631,11 @@
   },
   {
    "kind": "switch",
-   "t": 43.0,
-   "fighting_turn": 26,
+   "t": 41.5,
+   "fighting_turn": 28,
    "side": "theirs",
    "from": "Greninja",
    "to": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 0,
-     "left": 3,
-     "hp": 66,
-     "hp_max": 124,
-     "hp_share": 0.532,
-     "energy": 64
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 103,
-     "hp_max": 107,
-     "hp_share": 0.963,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 8
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 43.0,
-   "until": 43.8,
-   "fighting_turn": 26,
-   "turns": 7,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
    "state": {
     "mine": {
      "active": "Fearow",
@@ -695,21 +650,66 @@
      "active": "Mimikyu",
      "shields": 1,
      "left": 3,
-     "hp": 103,
+     "hp": 107,
      "hp_max": 107,
-     "hp_share": 0.963,
+     "hp_share": 1.0,
      "energy": [
-      0,
-      0
+      16,
+      16
      ],
      "energy_ceiling": 8
     }
    }
   },
   {
+   "kind": "fighting",
+   "t": 41.5,
+   "until": 43.8,
+   "fighting_turn": 28,
+   "turns": 5,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 0,
+     "left": 3,
+     "hp": 66,
+     "hp_max": 124,
+     "hp_share": 0.532,
+     "energy": 88
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 1,
+     "left": 3,
+     "hp": 103,
+     "hp_max": 107,
+     "hp_share": 0.963,
+     "energy": [
+      32,
+      32
+     ],
+     "energy_ceiling": 24
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 43.8,
-   "fighting_turn": 27,
+   "fighting_turn": 32,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
@@ -724,7 +724,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 56.5,
+   "resolved_t": 54.0,
    "cue": true,
    "state": {
     "mine": {
@@ -744,34 +744,123 @@
      "hp_max": 107,
      "hp_share": 0.963,
      "energy": [
-      32,
-      32
+      40,
+      40
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 24
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 56.5,
+   "t": 54.0,
    "until": 61.8,
    "fighting_turn": 33,
-   "turns": 10,
+   "turns": 12,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 0,
+     "left": 3,
+     "hp": 58,
+     "hp_max": 124,
+     "hp_share": 0.468,
+     "energy": 96
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 3,
+     "hp": 84,
+     "hp_max": 107,
+     "hp_share": 0.785,
+     "energy": [
+      88,
+      88
+     ],
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 61.8,
+   "fighting_turn": 45,
+   "side": "mine",
+   "pokemon": "Fearow",
+   "move": "Drill Peck",
+   "move_id": "DRILL_PECK",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 96,
+   "target": "Mimikyu",
+   "shielded": false,
+   "target_hp_before": 84,
+   "target_hp_after": 84,
+   "target_hp_max": 107,
+   "target_bar_read": false,
+   "expected_damage": 51,
+   "resolved_t": 70.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 0,
+     "left": 3,
+     "hp": 58,
+     "hp_max": 124,
+     "hp_share": 0.468,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 3,
+     "hp": 84,
+     "hp_max": 107,
+     "hp_share": 0.785,
+     "energy": [
+      88,
+      88
+     ],
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 70.0,
+   "until": 72.8,
+   "fighting_turn": 45,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -786,96 +875,6 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 3,
-     "hp": 84,
-     "hp_max": 107,
-     "hp_share": 0.785,
-     "energy": [
-      56,
-      56
-     ],
-     "energy_ceiling": 64
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 61.8,
-   "fighting_turn": 40,
-   "side": "mine",
-   "pokemon": "Fearow",
-   "move": "Drill Peck",
-   "move_id": "DRILL_PECK",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 80,
-   "target": "Mimikyu",
-   "shielded": false,
-   "target_hp_before": 84,
-   "target_hp_after": 6,
-   "target_hp_max": 107,
-   "target_bar_read": true,
-   "expected_damage": 51,
-   "resolved_t": 71.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 0,
-     "left": 3,
-     "hp": 58,
-     "hp_max": 124,
-     "hp_share": 0.468,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 3,
-     "hp": 6,
-     "hp_max": 107,
-     "hp_share": 0.056,
-     "energy": [
-      72,
-      72
-     ],
-     "energy_ceiling": 72
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 71.5,
-   "until": 72.8,
-   "fighting_turn": 43,
-   "turns": 24,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 12,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 0,
-     "left": 2,
-     "hp": 58,
-     "hp_max": 124,
-     "hp_share": 0.468,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 3,
      "hp": 6,
      "hp_max": 107,
      "hp_share": 0.056,
@@ -883,14 +882,14 @@
       100,
       100
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 88
     }
    }
   },
   {
    "kind": "charged",
    "t": 72.8,
-   "fighting_turn": 67,
+   "fighting_turn": 49,
    "side": "theirs",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
@@ -901,25 +900,25 @@
     100,
     100
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 88,
    "target": "Fearow",
    "shielded": false,
    "target_hp_before": 58,
-   "target_hp_after": 0,
+   "target_hp_after": 58,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 82,
-   "resolved_t": 84.5,
+   "resolved_t": 81.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
-     "left": 2,
-     "hp": 0,
+     "left": 3,
+     "hp": 58,
      "hp_max": 124,
-     "hp_share": 0.0,
-     "energy": 100
+     "hp_share": 0.468,
+     "energy": 72
     },
     "theirs": {
      "active": "Mimikyu",
@@ -938,9 +937,9 @@
   },
   {
    "kind": "fighting",
-   "t": 84.5,
-   "until": 85.0,
-   "fighting_turn": 67,
+   "t": 81.0,
+   "until": 81.68,
+   "fighting_turn": 49,
    "turns": 1,
    "mine": {
     "pokemon": "Fearow",
@@ -960,11 +959,11 @@
     "mine": {
      "active": "Fearow",
      "shields": 0,
-     "left": 2,
-     "hp": 0,
+     "left": 3,
+     "hp": 58,
      "hp_max": 124,
-     "hp_share": 0.0,
-     "energy": 100
+     "hp_share": 0.468,
+     "energy": 72
     },
     "theirs": {
      "active": "Mimikyu",
@@ -983,20 +982,20 @@
   },
   {
    "kind": "faint",
-   "t": 85.0,
-   "fighting_turn": 68,
+   "t": 81.68,
+   "fighting_turn": 50,
    "side": "mine",
    "pokemon": "Fearow",
-   "next": "Seismitoad",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Seismitoad",
+     "active": "Fearow",
      "shields": 0,
-     "left": 2,
-     "hp": 154,
-     "hp_max": 154,
-     "hp_share": 1.0,
-     "energy": 0
+     "left": 3,
+     "hp": 0,
+     "hp_max": 124,
+     "hp_share": 0.0,
+     "energy": 72
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1015,34 +1014,34 @@
   },
   {
    "kind": "fighting",
-   "t": 85.0,
-   "until": 92.0,
-   "fighting_turn": 68,
-   "turns": 14,
+   "t": 81.68,
+   "until": 86.62,
+   "fighting_turn": 50,
+   "turns": 5,
    "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 154,
+     "hp": 152,
      "hp_max": 154,
-     "hp_share": 1.0,
-     "energy": 27
+     "hp_share": 0.987,
+     "energy": 9
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1060,57 +1059,58 @@
    }
   },
   {
-   "kind": "switch",
-   "t": 92.0,
-   "fighting_turn": 82,
+   "kind": "faint",
+   "t": 86.62,
+   "fighting_turn": 55,
    "side": "theirs",
-   "from": "Mimikyu",
-   "to": "Chesnaught",
+   "pokemon": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 136,
+     "hp": 152,
      "hp_max": 154,
-     "hp_share": 0.883,
-     "energy": 63
+     "hp_share": 0.987,
+     "energy": 9
     },
     "theirs": {
-     "active": "Chesnaught",
+     "active": "Mimikyu",
      "shields": 0,
      "left": 3,
-     "hp": 124,
-     "hp_max": 124,
-     "hp_share": 1.0,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
      "energy": [
-      0,
-      0
+      64,
+      64
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 92.0,
+   "t": 86.62,
    "until": 104.5,
-   "fighting_turn": 82,
-   "turns": 5,
+   "fighting_turn": 55,
+   "turns": 7,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Chesnaught",
-    "fast_move": "Smack Down",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -1119,7 +1119,7 @@
      "hp": 136,
      "hp_max": 154,
      "hp_share": 0.883,
-     "energy": 63
+     "energy": 27
     },
     "theirs": {
      "active": "Chesnaught",
@@ -1139,7 +1139,7 @@
   {
    "kind": "switch",
    "t": 104.5,
-   "fighting_turn": 87,
+   "fighting_turn": 62,
    "side": "theirs",
    "from": "Chesnaught",
    "to": "Greninja",
@@ -1151,7 +1151,7 @@
      "hp": 136,
      "hp_max": 154,
      "hp_share": 0.883,
-     "energy": 36
+     "energy": 0
     },
     "theirs": {
      "active": "Greninja",
@@ -1171,14 +1171,15 @@
   {
    "kind": "charged",
    "t": 94.8,
-   "fighting_turn": 82,
+   "fighting_turn": 57,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
    "move_id": "ICY_WIND",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 81,
+   "energy_before": 27,
+   "energy_short_by": 18,
    "target": "Chesnaught",
    "shielded": false,
    "target_hp_before": 124,
@@ -1196,7 +1197,7 @@
      "hp": 136,
      "hp_max": 154,
      "hp_share": 0.883,
-     "energy": 36
+     "energy": 0
     },
     "theirs": {
      "active": "Greninja",
@@ -1216,21 +1217,21 @@
   {
    "kind": "fighting",
    "t": 104.5,
-   "until": 109.8,
-   "fighting_turn": 87,
-   "turns": 12,
+   "until": 118.88,
+   "fighting_turn": 62,
+   "turns": 29,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 14,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 9,
     "hits_seen": 2
    },
    "unexplained_health_changes": 1,
@@ -1242,7 +1243,7 @@
      "hp": 107,
      "hp_max": 154,
      "hp_share": 0.695,
-     "energy": 72
+     "energy": 36
     },
     "theirs": {
      "active": "Greninja",
@@ -1260,9 +1261,41 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 118.88,
+   "fighting_turn": 91,
+   "side": "theirs",
+   "pokemon": "Greninja",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 0,
+     "left": 2,
+     "hp": 107,
+     "hp_max": 154,
+     "hp_share": 0.695,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Greninja",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 115,
+     "hp_share": 0.0,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 109.8,
-   "fighting_turn": 95,
+   "fighting_turn": 91,
    "side": "theirs",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
@@ -1270,140 +1303,63 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    74,
-    74
+    100,
+    100
    ],
    "energy_ceiling": 100,
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 107,
-   "target_hp_after": 8,
+   "target_hp_after": 107,
    "target_hp_max": 154,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 70,
-   "resolved_t": 120.5,
+   "resolved_t": 119.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 8,
+     "hp": 107,
      "hp_max": 154,
-     "hp_share": 0.052,
-     "energy": 90
+     "hp_share": 0.695,
+     "energy": 100
     },
     "theirs": {
      "active": "Greninja",
      "shields": 0,
      "left": 3,
-     "hp": 104,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.904,
+     "hp_share": 0.0,
      "energy": [
-      34,
-      34
+      60,
+      60
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 74
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 120.5,
-   "until": 121.0,
-   "fighting_turn": 99,
-   "turns": 1,
+   "t": 119.0,
+   "until": 122.8,
+   "fighting_turn": 91,
+   "turns": 4,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 0,
-     "left": 2,
-     "hp": 8,
-     "hp_max": 154,
-     "hp_share": 0.052,
-     "energy": 90
-    },
-    "theirs": {
-     "active": "Greninja",
-     "shields": 0,
-     "left": 3,
-     "hp": 104,
-     "hp_max": 115,
-     "hp_share": 0.904,
-     "energy": [
-      34,
-      34
-     ],
-     "energy_ceiling": 48
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 121.0,
-   "fighting_turn": 100,
-   "side": "theirs",
-   "from": "Greninja",
-   "to": "Chesnaught",
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 0,
-     "left": 2,
-     "hp": 8,
-     "hp_max": 154,
-     "hp_share": 0.052,
-     "energy": 90
-    },
-    "theirs": {
-     "active": "Chesnaught",
-     "shields": 0,
-     "left": 3,
-     "hp": 124,
-     "hp_max": 124,
-     "hp_share": 1.0,
-     "energy": [
-      16,
-      16
-     ],
-     "energy_ceiling": 24
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 121.0,
-   "until": 122.8,
-   "fighting_turn": 100,
-   "turns": 3,
-   "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Chesnaught",
-    "fast_move": "Smack Down",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1413,7 +1369,7 @@
      "hp": 8,
      "hp_max": 154,
      "hp_share": 0.052,
-     "energy": 99
+     "energy": 100
     },
     "theirs": {
      "active": "Chesnaught",
@@ -1426,29 +1382,29 @@
       24,
       24
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "charged",
    "t": 122.8,
-   "fighting_turn": 102,
+   "fighting_turn": 95,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
    "move_id": "ICY_WIND",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 99,
+   "energy_before": 100,
    "target": "Chesnaught",
    "shielded": false,
    "target_hp_before": 124,
-   "target_hp_after": 64,
+   "target_hp_after": 124,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 60,
-   "resolved_t": 132.5,
+   "resolved_t": 131.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1458,15 +1414,15 @@
      "hp": 8,
      "hp_max": 154,
      "hp_share": 0.052,
-     "energy": 54
+     "energy": 55
     },
     "theirs": {
      "active": "Chesnaught",
      "shields": 0,
      "left": 3,
-     "hp": 64,
+     "hp": 124,
      "hp_max": 124,
-     "hp_share": 0.516,
+     "hp_share": 1.0,
      "energy": [
       32,
       32
@@ -1477,15 +1433,15 @@
   },
   {
    "kind": "fighting",
-   "t": 132.5,
-   "until": 133.0,
-   "fighting_turn": 103,
-   "turns": 1,
+   "t": 131.0,
+   "until": 132.0,
+   "fighting_turn": 95,
+   "turns": 2,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
@@ -1493,7 +1449,7 @@
     "fast_move": "Smack Down",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "state": {
     "mine": {
@@ -1503,15 +1459,15 @@
      "hp": 8,
      "hp_max": 154,
      "hp_share": 0.052,
-     "energy": 54
+     "energy": 55
     },
     "theirs": {
      "active": "Chesnaught",
      "shields": 0,
      "left": 3,
-     "hp": 64,
+     "hp": 124,
      "hp_max": 124,
-     "hp_share": 0.516,
+     "hp_share": 1.0,
      "energy": [
       32,
       32
@@ -1522,8 +1478,8 @@
   },
   {
    "kind": "switch",
-   "t": 133.0,
-   "fighting_turn": 104,
+   "t": 132.0,
+   "fighting_turn": 97,
    "side": "mine",
    "from": "Seismitoad",
    "to": "Tinkaton",
@@ -1541,36 +1497,36 @@
      "active": "Chesnaught",
      "shields": 0,
      "left": 3,
-     "hp": 64,
+     "hp": 112,
      "hp_max": 124,
-     "hp_share": 0.516,
+     "hp_share": 0.903,
      "energy": [
       40,
       40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 133.0,
+   "t": 132.0,
    "until": 138.8,
-   "fighting_turn": 104,
-   "turns": 11,
+   "fighting_turn": 97,
+   "turns": 13,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 6
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Chesnaught",
     "fast_move": "Smack Down",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 4
    },
    "unexplained_health_changes": 2,
    "state": {
@@ -1581,7 +1537,7 @@
      "hp": 110,
      "hp_max": 141,
      "hp_share": 0.78,
-     "energy": 45
+     "energy": 54
     },
     "theirs": {
      "active": "Chesnaught",
@@ -1591,17 +1547,17 @@
      "hp_max": 124,
      "hp_share": 0.597,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 138.8,
-   "fighting_turn": 115,
+   "fighting_turn": 110,
    "side": "theirs",
    "pokemon": "Chesnaught",
    "move": "Superpower",
@@ -1609,18 +1565,109 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    48,
-    48
+    56,
+    56
    ],
-   "energy_ceiling": 56,
+   "energy_ceiling": 64,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 110,
-   "target_hp_after": 51,
+   "target_hp_after": 110,
    "target_hp_max": 141,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 45,
-   "resolved_t": 148.5,
+   "resolved_t": 148.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 0,
+     "left": 2,
+     "hp": 110,
+     "hp_max": 141,
+     "hp_share": 0.78,
+     "energy": 63
+    },
+    "theirs": {
+     "active": "Chesnaught",
+     "shields": 0,
+     "left": 3,
+     "hp": 74,
+     "hp_max": 124,
+     "hp_share": 0.597,
+     "energy": [
+      16,
+      16
+     ],
+     "energy_ceiling": 24
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 148.0,
+   "until": 148.8,
+   "fighting_turn": 110,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Chesnaught",
+    "fast_move": "Smack Down",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 0,
+     "left": 2,
+     "hp": 51,
+     "hp_max": 141,
+     "hp_share": 0.362,
+     "energy": 63
+    },
+    "theirs": {
+     "active": "Chesnaught",
+     "shields": 0,
+     "left": 3,
+     "hp": 74,
+     "hp_max": 124,
+     "hp_share": 0.597,
+     "energy": [
+      16,
+      16
+     ],
+     "energy_ceiling": 24
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 148.8,
+   "fighting_turn": 111,
+   "side": "mine",
+   "pokemon": "Tinkaton",
+   "move": "Gigaton Hammer",
+   "move_id": "GIGATON_HAMMER",
+   "move_known_from": "seen",
+   "cost": 60,
+   "energy_before": 63,
+   "target": "Chesnaught",
+   "shielded": false,
+   "target_hp_before": 74,
+   "target_hp_after": 0,
+   "target_hp_max": 124,
+   "target_bar_read": true,
+   "expected_damage": 107,
+   "resolved_t": 156.42,
    "cue": true,
    "state": {
     "mine": {
@@ -1630,43 +1677,30 @@
      "hp": 51,
      "hp_max": 141,
      "hp_share": 0.362,
-     "energy": 54
+     "energy": 3
     },
     "theirs": {
      "active": "Chesnaught",
      "shields": 0,
-     "left": 3,
-     "hp": 74,
+     "left": 0,
+     "hp": 0,
      "hp_max": 124,
-     "hp_share": 0.597,
+     "hp_share": 0.0,
      "energy": [
-      8,
-      8
+      24,
+      24
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 24
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 148.5,
-   "until": 169.13,
-   "fighting_turn": 115,
-   "turns": 21,
-   "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Chesnaught",
-    "fast_move": "Smack Down",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 0
-   },
+   "kind": "faint",
+   "t": 156.42,
+   "fighting_turn": 111,
+   "side": "theirs",
+   "pokemon": "Chesnaught",
+   "next": null,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -1675,77 +1709,32 @@
      "hp": 51,
      "hp_max": 141,
      "hp_share": 0.362,
-     "energy": 54
+     "energy": 3
     },
     "theirs": {
      "active": "Chesnaught",
      "shields": 0,
-     "left": 3,
-     "hp": 74,
+     "left": 0,
+     "hp": 0,
      "hp_max": 124,
-     "hp_share": 0.597,
+     "hp_share": 0.0,
      "energy": [
-      8,
-      8
+      24,
+      24
      ],
-     "energy_ceiling": 16
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 169.13,
-   "fighting_turn": 115,
-   "side": "mine",
-   "pokemon": "Tinkaton",
-   "move": "Gigaton Hammer",
-   "move_id": "GIGATON_HAMMER",
-   "move_known_from": "inferred",
-   "cost": 60,
-   "energy_before": 100,
-   "target": "Chesnaught",
-   "shielded": false,
-   "target_hp_before": 74,
-   "target_hp_after": 74,
-   "target_hp_max": 124,
-   "target_bar_read": false,
-   "expected_damage": 107,
-   "resolved_t": 169.13,
-   "cue": false,
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 0,
-     "left": 2,
-     "hp": 51,
-     "hp_max": 141,
-     "hp_share": 0.362,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Chesnaught",
-     "shields": 0,
-     "left": 3,
-     "hp": 74,
-     "hp_max": 124,
-     "hp_share": 0.597,
-     "energy": [
-      64,
-      64
-     ],
-     "energy_ceiling": 72
+     "energy_ceiling": 24
     }
    }
   },
   {
    "kind": "end",
    "t": 169.13,
-   "fighting_turn": 136,
-   "result": null,
-   "result_from": "unknown",
+   "fighting_turn": 111,
+   "result": "win",
+   "result_from": "who had Pokémon left",
    "left": {
     "mine": 2,
-    "theirs": 3
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -1755,32 +1744,32 @@
      "hp": 51,
      "hp_max": 141,
      "hp_share": 0.362,
-     "energy": 40
+     "energy": 3
     },
     "theirs": {
      "active": "Chesnaught",
      "shields": 0,
-     "left": 3,
-     "hp": 74,
+     "left": 0,
+     "hp": 0,
      "hp_max": 124,
-     "hp_share": 0.597,
+     "hp_share": 0.0,
      "energy": [
-      64,
-      64
+      24,
+      24
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 24
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 136.0,
+   "t": 135.0,
    "side": "theirs",
    "pokemon": "Chesnaught",
    "what": "fast move",
    "value": "Smack Down",
-   "how": "fits its hits on our bar best of the moves not ruled out",
+   "how": "every other fast move ruled out by effectiveness words or energy",
    "ruled_out": [
     "Low Kick"
    ]

@@ -1,8 +1,8 @@
-"""Read a terminal charged impact, including its centered target HP bar.
+"""Read charged impacts, including the centered target HP bar.
 
 Live yellow/red HP and the delayed orange damage strip are distinct. A missing
-bar alone never establishes zero. This adapter is limited to an observed last
-party member, a named attack, and a continuous live-to-zero impact sequence.
+bar alone never establishes zero. A camera cut to zero needs a complete
+physical outline and independent target/counter evidence, followed by fade.
 """
 import gzip
 import json
@@ -16,16 +16,55 @@ def same_bar(a, b):
     return len(a) == len(b) == 4 and all(abs(x-y) <= 6 for x, y in zip(a, b))
 
 
-def measure_center(rgb, expected_width):
+def measure_center(rgb, expected_width, calibrated_width=None):
     import cv2
     import numpy as np
-    from health_reader import read_health_bar
-    bar = read_health_bar(rgb, [150, 200, 370, 900], expected_width)
+    bar = measured_outline(rgb, [150, 200, 370, 900], expected_width, calibrated_width)
     if not bar:
         return None
     x, y, right, bottom = bar['bounds']
     if abs((x+right)/2 - 254) > 28 or not 10 <= bottom-y <= 19:
         return None
+    return measure_palette(rgb, bar)
+
+
+def measured_outline(rgb, region, expected_width, calibrated_width=None):
+    """Prefer a complete measured rectangle over a right-anchored width guess.
+
+    Broadcast scaling changes true width. A guessed left edge can crop away
+    the last live pixels and manufacture a zero, even with a perfect palette.
+    """
+    from health_reader import read_health_bar
+    import cv2
+    import numpy as np
+    widths = list(dict.fromkeys([expected_width, expected_width+10, expected_width-10] +
+                               ([calibrated_width] if calibrated_width else [])))
+    candidates = [b for width in widths
+                  if (b := read_health_bar(rgb, region, width))]
+    edges = [b for b in candidates if b['outline_method'] == 'edge_contour']
+    if edges:
+        return min(edges, key=lambda b: abs((b['bounds'][2]-b['bounds'][0])-expected_width))
+    if calibrated_width:
+        matched = [b for b in candidates if abs(b['bounds'][2]-b['bounds'][0]-calibrated_width) <= 1]
+        if matched:
+            return matched[0]
+    for bar in candidates:
+        x, y, right, bottom = bar['bounds']
+        hsv = cv2.cvtColor(rgb[max(0, y-1):bottom+1, max(0, x-1):right+1], cv2.COLOR_RGB2HSV)
+        pale = ((hsv[:, :, 1] < 100) & (hsv[:, :, 2] > 150)) | (
+            (hsv[:, :, 0] >= 15) & (hsv[:, :, 0] <= 40) & (hsv[:, :, 2] > 160))
+        # Both physical side rails must exist at the inferred positions. A
+        # right-anchored rail through a live red strip fails the left-rail test.
+        if pale[3:-3, :3].mean(axis=0).max() >= .65 and pale[3:-3, -3:].mean(axis=0).max() >= .65:
+            return bar
+    # Unvalidated fixed-width rails must not establish a faint.
+    return None
+
+
+def measure_palette(rgb, bar):
+    import cv2
+    import numpy as np
+    x, y, right, bottom = bar['bounds']
     hsv = cv2.cvtColor(rgb[y+3:bottom-3, x+3:right-3], cv2.COLOR_RGB2HSV)
     vivid = (hsv[:, :, 1] > 90) & (hsv[:, :, 2] > 150)
     live = vivid & (((hsv[:, :, 0] >= 65) & (hsv[:, :, 0] <= 105)) |
@@ -36,11 +75,14 @@ def measure_center(rgb, expected_width):
     # Live HP must begin at the left end; particles farther right are not HP.
     stop = 0
     if live_columns[:3].any():
+        leading = int(np.flatnonzero(live_columns)[0])
         stop = len(live_columns)
-        for i in range(len(live_columns)-1):
+        for i in range(leading, len(live_columns)-1):
             if not live_columns[i] and not live_columns[i+1]:
                 stop = i
                 break
+    elif live_columns.any():
+        return None  # an offset live sliver cannot be called an empty bar
     if live_columns[stop+2:].sum() > 2:
         return None
     return {'bounds': bar['bounds'], 'width': len(live_columns), 'live_pixels': stop,
@@ -49,7 +91,8 @@ def measure_center(rgb, expected_width):
             'outline_method': bar['outline_method']}
 
 
-def zero_transition(samples):
+def zero_transition(samples, *, require_orange=True, minimum_positive_pixels=3,
+                    geometry=same_bar, positive_gap=.12, zero_gap=.12, follow_motion=False):
     """A stable positive bar must become outlined orange-only, then leave view.
 
     The orange-only measurement is not reused when live HP returns. Sparse
@@ -60,21 +103,22 @@ def zero_transition(samples):
         bar, t = sample.get('bar'), sample['t']
         if not bar:
             continue
-        if bar['live_pixels'] > 2:
-            if (not positives or t-positives[-1]['t'] > .12 or
-                    not same_bar(bar['bounds'], positives[-1]['bar']['bounds'])):
+        if bar['live_pixels'] >= minimum_positive_pixels:
+            if (not positives or t-positives[-1]['t'] > positive_gap or
+                    not geometry(bar['bounds'], positives[-1]['bar']['bounds'])):
                 positives = []
             positives.append(sample)
             zeros, anchor = [], None
             continue
-        if bar['live_pixels'] != 0 or bar['orange_pixels'] < 5:
+        if bar['live_pixels'] != 0 or (require_orange and bar['orange_pixels'] < 5):
             continue
         if anchor is None:
             if (len(positives) < 2 or t-positives[-1]['t'] > .25 or
-                    not same_bar(bar['bounds'], positives[-1]['bar']['bounds'])):
+                    not geometry(bar['bounds'], positives[-1]['bar']['bounds'])):
                 continue
             anchor = positives[-1]
-        if (zeros and t-zeros[-1]['t'] > .12) or not same_bar(bar['bounds'], anchor['bar']['bounds']):
+        reference = zeros[-1] if follow_motion and zeros else anchor
+        if (zeros and t-zeros[-1]['t'] > zero_gap) or not geometry(bar['bounds'], reference['bar']['bounds']):
             zeros, anchor = [], None
             continue
         zeros.append(sample)
@@ -102,7 +146,59 @@ def _rows(path):
         return [json.loads(line) for line in stream if line.strip()]
 
 
-def sample_impact(folder, raw, timeline):
+def corroborated_empty_transition(samples, decreases):
+    """A camera can cut directly to an already empty target bar.
+
+    Require multiple real outlined empty measurements followed by fade AND an
+    independently stable party decrement local to that impact. The decrement
+    confirms death; the first outlined zero dates it. No result screen input.
+    """
+    for i, sample in enumerate(samples):
+        bar, t = sample.get('bar'), sample['t']
+        if not bar or bar['live_pixels'] != 0:
+            continue
+        same = [s for s in samples[i+1:] if 0 < s['t']-t <= .25 and s.get('bar')
+                and s['bar']['live_pixels'] == 0 and abs(s['bar']['width']-bar['width']) <= 6]
+        if not same or not any(t-1 <= c['first'] <= t+3 for c in decreases):
+            continue
+        tail = [s for s in samples[i+1:] if t+.5 <= s['t'] <= t+1.5]
+        if len(tail) < 3 or any(s.get('bar') and s['bar']['live_pixels'] > 0 for s in tail):
+            continue
+        if sum(s.get('bar') is None for s in tail) < 3:
+            continue
+        return {'first_zero': sample, 'confirmed_zero': same[0],
+                'method': 'outlined_empty_target_and_independent_party_decrement',
+                'zero_samples': len(same)+1}
+    return None
+
+
+def complete_empty_target(samples, after):
+    """An independently known last target can already be empty at camera cut.
+
+    Only complete physical outlines qualify, after the release announcement.
+    Multiple zero frames and subsequent fade are required. No width-guessed
+    rail or result screen can supply the missing zero observation.
+    """
+    for i, sample in enumerate(samples):
+        bar, t = sample.get('bar'), sample['t']
+        if t < after or not bar or bar['outline_method'] != 'edge_contour' or bar['live_pixels']:
+            continue
+        zeros = [s for s in samples[i+1:] if 0 < s['t']-t <= .3 and s.get('bar')
+                 and s['bar']['outline_method'] == 'edge_contour' and s['bar']['live_pixels'] == 0
+                 and same_bar(bar['bounds'], s['bar']['bounds'])]
+        if len(zeros) < 2 or zeros[-1]['t']-t < .1:
+            continue
+        tail = [s for s in samples[i+1:] if t+.5 <= s['t'] <= t+2]
+        if not tail or tail[-1]['t'] < t+1.5 or any(s.get('bar') and s['bar']['live_pixels'] > 0 for s in tail):
+            continue
+        missing = [s for s in tail if s.get('bar') is None]
+        if len(missing) >= 3 and missing[-1]['t']-missing[0]['t'] >= .2:
+            return {'first_zero': sample, 'confirmed_zero': zeros[1],
+                    'method': 'complete_empty_centered_target_and_fade_after_named_attack'}
+    return None
+
+
+def sample_impact(folder, raw, timeline, charge_index=-1, terminal_only=True):
     import av
     import numpy as np
     import health_reader
@@ -112,9 +208,9 @@ def sample_impact(folder, raw, timeline):
              'video_sha256': meta['video_sha256'], 'result_based_faints': 0,
              'code_sha256': sha256(__file__)}
     charges = timeline['charged']
-    if not charges or not charges[-1]['move']:
+    if not charges or not charges[charge_index]['move']:
         return {**trace, 'reason': 'No final named charged attack'}
-    q = charges[-1]
+    q = charges[charge_index]
     origin = timeline['clip_origin_seconds']
     start = origin + q['t']
     victim = 'theirs' if q['side'] == 'mine' else 'mine'
@@ -137,13 +233,13 @@ def sample_impact(folder, raw, timeline):
     key = 'o' if victim == 'theirs' else 'm'
     changes = counter_changes(readings, key, 'left', 1/intervals[len(intervals)//2])
     before = [c for c in changes if c['t'] <= announced]
-    if not before or before[-1]['value'] != 1:
+    if terminal_only and (not before or before[-1]['value'] != 1):
         return {**trace, 'reason': 'Victim not independently observed as last party member'}
-    if any(c['value'] == 0 for c in changes if c['t'] > announced):
+    if terminal_only and any(c['value'] == 0 for c in changes if c['t'] > announced):
         return {**trace, 'reason': 'Terminal party decrease already observed'}
     profile = json.loads((raw/'profile.json').read_text(encoding='utf-8'))
     alignment = {round(r['clip_seconds'], 6): r for r in _rows(folder/'frame_alignment.jsonl.gz')}
-    cache = raw/'center-impact.json'
+    cache = raw/('center-impact.json' if terminal_only else f'center-impact-{charge_index:03d}.json')
     fingerprint = {'code': trace['code_sha256'], 'video': meta['video_sha256'],
                    'alignment': sha256(folder/'frame_alignment.jsonl.gz'),
                    'health_reader': sha256(health_reader.__file__), 'av_version': av.__version__,
@@ -152,6 +248,8 @@ def sample_impact(folder, raw, timeline):
     samples = saved.get('samples') if saved.get('fingerprint') == fingerprint else None
     if samples is None:
         samples = []
+        last_sample = -1.0
+        calibrated_width = None
         with av.open(str(folder/meta['video_file'])) as media:
             stream = media.streams.video[0]
             stream.codec_context.thread_count = 2
@@ -161,19 +259,31 @@ def sample_impact(folder, raw, timeline):
                     continue
                 if frame.time > announced+5:
                     break
+                if not terminal_only and frame.time-last_sample < 1/15-.001:
+                    continue
+                last_sample = frame.time
                 point = alignment.get(round(frame.time, 6))
                 if point is None:
                     raise ValueError('Centered impact frame has no source PTS alignment')
+                bar = measure_center(np.asarray(frame.to_image().resize((508, 1080))),
+                                     profile['hp_width'], calibrated_width)
+                if bar and bar['outline_method'] == 'edge_contour':
+                    calibrated_width = bar['bounds'][2]-bar['bounds'][0]
                 samples.append({'t': frame.time, 'clip_pts': frame.pts,
                                 'clip_time_base': str(frame.time_base),
                                 'source_pts': point['source_pts'], 'source_time_base': point['source_time_base'],
-                                'bar': measure_center(np.asarray(frame.to_image().resize((508, 1080))),
-                                                      profile['hp_width'])})
+                                'bar': bar})
         write_json(cache, {'fingerprint': fingerprint, 'samples': samples})
     proof = zero_transition(samples)
+    if not proof and before and before[-1]['value'] == 1:
+        proof = complete_empty_target(samples, announced+1)
+    if not proof and not terminal_only:
+        local = [b for a, b in zip(changes, changes[1:])
+                 if b['value'] < a['value'] and start <= b['first'] <= announced+5]
+        proof = corroborated_empty_transition(samples, local)
     trace.update(side=victim, species=targets[-1], move=q['move'], attack_side=q['side'],
                  announced_clip_seconds=announced, attack_start_clip_seconds=start,
-                 sample_count=len(samples), target_counter_before=1)
+                 sample_count=len(samples), target_counter_before=before[-1]['value'] if before else None)
     if not proof:
         return {**trace, 'reason': 'No continuous positive-to-zero live strip with disappearing tail'}
     # A camera return showing the same target alive contradicts the proposed KO.
@@ -181,9 +291,9 @@ def sample_impact(folder, raw, timeline):
     if any(zero+.5 <= r['t'] <= zero+3 and r[key].get('sp') == targets[-1] and
            r[key].get('hp') is not None and r[key]['hp'] > .03 for r in readings):
         return {**trace, 'reason': 'Subsequent same-target health contradicts terminal zero'}
-    return {**trace, 'accepted': True, 'reason': 'Live strip drains to zero during named centered impact',
+    return {**trace, 'accepted': True, 'reason': proof.get('method', 'Live strip drains to zero during named centered impact'),
             'measurement': proof, 'live_hp_pixel_tolerance': 2,
-            'faint_inference': 'sustained_zero_live_strip_and_bar_fade_without_surviving_target'}
+            'faint_inference': proof.get('method', 'sustained_zero_live_strip_and_bar_fade_without_surviving_target')}
 
 
 def apply_impact(folder, raw, game):
@@ -193,7 +303,7 @@ def apply_impact(folder, raw, game):
     if not trace['accepted']:
         return trace
     origin = timeline['clip_origin_seconds']
-    at = round(trace['measurement']['confirmed_zero']['t']-origin, 6)
+    at = round(trace['measurement']['first_zero']['t']-origin, 6)
     looks = _rows(game/'observations.jsonl')
     attack_field = 'my_charged' if trace['attack_side'] == 'mine' else 'foe_charged'
     attacks = [r for r in looks if r.get(attack_field) and

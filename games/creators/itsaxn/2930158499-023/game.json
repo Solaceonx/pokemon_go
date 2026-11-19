@@ -23,16 +23,17 @@
   }
  },
  "seconds": 169.1,
- "fighting_turns": 135,
+ "fighting_turns": 122,
  "checks": {
   "verdict": "fail",
   "failed": [
+   "shields: we used 2, but 0 charged move(s) were tracked as blocked",
    "ending: result says win, tracker has us on 1 and them on 3"
   ],
   "notes": [
    "fast move only guessed for pidgeot, gastrodon"
   ],
-  "unexplained_health_changes": 11
+  "unexplained_health_changes": 13
  },
  "teams": {
   "mine": [
@@ -153,9 +154,9 @@
      "energy_gain": 14,
      "known_from": "guessed",
      "odds": {
-      "Gust": 0.63,
-      "Air Slash": 0.2,
-      "Wing Attack": 0.17
+      "Gust": 0.51,
+      "Wing Attack": 0.27,
+      "Air Slash": 0.22
      }
     },
     "charged_moves": [
@@ -281,7 +282,7 @@
   },
   "charged_shielded": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 0
   },
   "shields_left": {
    "mine": 0,
@@ -334,12 +335,12 @@
    "t": 0.0,
    "until": 7.1,
    "fighting_turn": 0,
-   "turns": 14,
+   "turns": 13,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 5
    },
    "theirs": {
@@ -388,11 +389,11 @@
    "target": "Pidgeot",
    "shielded": false,
    "target_hp_before": 111,
-   "target_hp_after": 48,
+   "target_hp_after": 111,
    "target_hp_max": 142,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 63,
-   "resolved_t": 17.0,
+   "resolved_t": 15.5,
    "cue": true,
    "state": {
     "mine": {
@@ -408,9 +409,9 @@
      "active": "Pidgeot",
      "shields": 2,
      "left": 3,
-     "hp": 48,
+     "hp": 111,
      "hp_max": 142,
-     "hp_share": 0.338,
+     "hp_share": 0.782,
      "energy": [
       42,
       42
@@ -421,23 +422,23 @@
   },
   {
    "kind": "fighting",
-   "t": 17.0,
+   "t": 15.5,
    "until": 19.1,
-   "fighting_turn": 14,
-   "turns": 4,
+   "fighting_turn": 13,
+   "turns": 7,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "state": {
     "mine": {
@@ -447,7 +448,7 @@
      "hp": 62,
      "hp_max": 124,
      "hp_share": 0.5,
-     "energy": 24
+     "energy": 32
     },
     "theirs": {
      "active": "Pidgeot",
@@ -460,14 +461,14 @@
       70,
       70
      ],
-     "energy_ceiling": 70
+     "energy_ceiling": 84
     }
    }
   },
   {
    "kind": "charged",
    "t": 19.1,
-   "fighting_turn": 18,
+   "fighting_turn": 20,
    "side": "theirs",
    "pokemon": "Pidgeot",
    "move": "Feather Dance",
@@ -478,33 +479,33 @@
     70,
     70
    ],
-   "energy_ceiling": 70,
+   "energy_ceiling": 84,
    "target": "Fearow",
-   "shielded": true,
+   "shielded": false,
    "target_hp_before": 62,
    "target_hp_after": 62,
    "target_hp_max": 124,
    "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 29.0,
+   "expected_damage": null,
+   "resolved_t": 27.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
-     "shields": 1,
+     "shields": 2,
      "left": 3,
      "hp": 62,
      "hp_max": 124,
      "hp_share": 0.5,
-     "energy": 24
+     "energy": 40
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 2,
      "left": 3,
-     "hp": 93,
+     "hp": 98,
      "hp_max": 142,
-     "hp_share": 0.655,
+     "hp_share": 0.69,
      "energy": [
       20,
       20
@@ -515,22 +516,22 @@
   },
   {
    "kind": "fighting",
-   "t": 29.0,
+   "t": 27.5,
    "until": 31.5,
-   "fighting_turn": 18,
-   "turns": 5,
+   "fighting_turn": 20,
+   "turns": 8,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
    "state": {
@@ -541,7 +542,7 @@
      "hp": 47,
      "hp_max": 124,
      "hp_share": 0.379,
-     "energy": 40
+     "energy": 64
     },
     "theirs": {
      "active": "Pidgeot",
@@ -561,7 +562,7 @@
   {
    "kind": "switch",
    "t": 31.5,
-   "fighting_turn": 23,
+   "fighting_turn": 28,
    "side": "mine",
    "from": "Fearow",
    "to": "Tinkaton",
@@ -583,10 +584,10 @@
      "hp_max": 142,
      "hp_share": 0.57,
      "energy": [
-      34,
-      34
+      48,
+      48
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 62
     }
    }
   },
@@ -594,7 +595,7 @@
    "kind": "fighting",
    "t": 31.5,
    "until": 35.0,
-   "fighting_turn": 23,
+   "fighting_turn": 28,
    "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
@@ -632,14 +633,14 @@
       62,
       62
      ],
-     "energy_ceiling": 62
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "switch",
    "t": 35.0,
-   "fighting_turn": 30,
+   "fighting_turn": 35,
    "side": "theirs",
    "from": "Pidgeot",
    "to": "Mawile",
@@ -672,7 +673,7 @@
    "kind": "fighting",
    "t": 35.0,
    "until": 40.1,
-   "fighting_turn": 30,
+   "fighting_turn": 35,
    "turns": 10,
    "mine": {
     "pokemon": "Tinkaton",
@@ -717,7 +718,7 @@
   {
    "kind": "charged",
    "t": 40.1,
-   "fighting_turn": 40,
+   "fighting_turn": 45,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
@@ -728,11 +729,11 @@
    "target": "Mawile",
    "shielded": false,
    "target_hp_before": 119,
-   "target_hp_after": 4,
+   "target_hp_after": 119,
    "target_hp_max": 119,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 74,
-   "resolved_t": 50.0,
+   "resolved_t": 49.5,
    "cue": true,
    "state": {
     "mine": {
@@ -748,9 +749,9 @@
      "active": "Mawile",
      "shields": 2,
      "left": 3,
-     "hp": 4,
+     "hp": 119,
      "hp_max": 119,
-     "hp_share": 0.034,
+     "hp_share": 1.0,
      "energy": [
       45,
       45
@@ -761,9 +762,9 @@
   },
   {
    "kind": "fighting",
-   "t": 50.0,
+   "t": 49.5,
    "until": 54.1,
-   "fighting_turn": 40,
+   "fighting_turn": 45,
    "turns": 8,
    "mine": {
     "pokemon": "Tinkaton",
@@ -779,7 +780,7 @@
     "fast_moves_if_no_pause": 4,
     "hits_seen": 4
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -788,56 +789,6 @@
      "hp": 46,
      "hp_max": 141,
      "hp_share": 0.326,
-     "energy": 44
-    },
-    "theirs": {
-     "active": "Mawile",
-     "shields": 2,
-     "left": 3,
-     "hp": 4,
-     "hp_max": 119,
-     "hp_share": 0.034,
-     "energy": [
-      48,
-      48
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 54.1,
-   "fighting_turn": 47,
-   "side": "theirs",
-   "pokemon": "Mawile",
-   "move": "Iron Head",
-   "move_id": "IRON_HEAD",
-   "move_known_from": "seen",
-   "cost": 50,
-   "energy_before": [
-    48,
-    48
-   ],
-   "energy_ceiling": 60,
-   "energy_short_by": 2,
-   "target": "Tinkaton",
-   "shielded": true,
-   "target_hp_before": 46,
-   "target_hp_after": 44,
-   "target_hp_max": 141,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 64.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 0,
-     "left": 3,
-     "hp": 44,
-     "hp_max": 141,
-     "hp_share": 0.312,
      "energy": 53
     },
     "theirs": {
@@ -848,42 +799,46 @@
      "hp_max": 119,
      "hp_share": 0.034,
      "energy": [
-      0,
-      10
+      54,
+      54
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 60
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 64.0,
-   "until": 66.0,
-   "fighting_turn": 48,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Mawile",
-    "fast_move": "Fire Fang",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
+   "kind": "charged",
+   "t": 54.1,
+   "fighting_turn": 53,
+   "side": "theirs",
+   "pokemon": "Mawile",
+   "move": "Iron Head",
+   "move_id": "IRON_HEAD",
+   "move_known_from": "seen",
+   "cost": 50,
+   "energy_before": [
+    54,
+    54
+   ],
+   "energy_ceiling": 60,
+   "target": "Tinkaton",
+   "shielded": false,
+   "target_hp_before": 46,
+   "target_hp_after": 46,
+   "target_hp_max": 141,
+   "target_bar_read": false,
+   "expected_damage": 59,
+   "resolved_t": 62.5,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 44,
+     "hp": 46,
      "hp_max": 141,
-     "hp_share": 0.312,
-     "energy": 62
+     "hp_share": 0.326,
+     "energy": 53
     },
     "theirs": {
      "active": "Mawile",
@@ -893,17 +848,62 @@
      "hp_max": 119,
      "hp_share": 0.034,
      "energy": [
-      6,
-      16
+      4,
+      4
      ],
-     "energy_ceiling": 22
+     "energy_ceiling": 10
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 62.5,
+   "until": 66.0,
+   "fighting_turn": 53,
+   "turns": 7,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Mawile",
+    "fast_move": "Fire Fang",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
+   },
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 0,
+     "left": 3,
+     "hp": 44,
+     "hp_max": 141,
+     "hp_share": 0.312,
+     "energy": 80
+    },
+    "theirs": {
+     "active": "Mawile",
+     "shields": 2,
+     "left": 3,
+     "hp": 4,
+     "hp_max": 119,
+     "hp_share": 0.034,
+     "energy": [
+      22,
+      22
+     ],
+     "energy_ceiling": 28
     }
    }
   },
   {
    "kind": "switch",
    "t": 66.0,
-   "fighting_turn": 52,
+   "fighting_turn": 60,
    "side": "theirs",
    "from": "Mawile",
    "to": "Gastrodon",
@@ -915,7 +915,7 @@
      "hp": 42,
      "hp_max": 141,
      "hp_share": 0.298,
-     "energy": 71
+     "energy": 80
     },
     "theirs": {
      "active": "Gastrodon",
@@ -936,8 +936,8 @@
    "kind": "fighting",
    "t": 66.0,
    "until": 70.1,
-   "fighting_turn": 52,
-   "turns": 9,
+   "fighting_turn": 60,
+   "turns": 8,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -949,7 +949,7 @@
     "pokemon": "Gastrodon",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 3
    },
    "state": {
@@ -980,7 +980,7 @@
   {
    "kind": "charged",
    "t": 70.1,
-   "fighting_turn": 60,
+   "fighting_turn": 68,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
@@ -995,7 +995,7 @@
    "target_hp_max": 168,
    "target_bar_read": false,
    "expected_damage": 54,
-   "resolved_t": 80.5,
+   "resolved_t": 79.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1018,28 +1018,28 @@
       30,
       30
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 30
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 80.5,
+   "t": 79.5,
    "until": 81.0,
-   "fighting_turn": 61,
-   "turns": 1,
+   "fighting_turn": 68,
+   "turns": 3,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Gastrodon",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -1063,14 +1063,14 @@
       30,
       30
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 30
     }
    }
   },
   {
    "kind": "switch",
    "t": 81.0,
-   "fighting_turn": 62,
+   "fighting_turn": 71,
    "side": "mine",
    "from": "Tinkaton",
    "to": "Fearow",
@@ -1082,7 +1082,7 @@
      "hp": 47,
      "hp_max": 124,
      "hp_share": 0.379,
-     "energy": 40
+     "energy": 64
     },
     "theirs": {
      "active": "Gastrodon",
@@ -1092,8 +1092,8 @@
      "hp_max": 168,
      "hp_share": 0.5,
      "energy": [
-      30,
-      30
+      40,
+      40
      ],
      "energy_ceiling": 40
     }
@@ -1103,8 +1103,8 @@
    "kind": "fighting",
    "t": 81.0,
    "until": 82.1,
-   "fighting_turn": 62,
-   "turns": 3,
+   "fighting_turn": 71,
+   "turns": 2,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -1116,7 +1116,7 @@
     "pokemon": "Gastrodon",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "unexplained_health_changes": 1,
@@ -1128,7 +1128,7 @@
      "hp": 31,
      "hp_max": 124,
      "hp_share": 0.25,
-     "energy": 48
+     "energy": 72
     },
     "theirs": {
      "active": "Gastrodon",
@@ -1148,14 +1148,14 @@
   {
    "kind": "charged",
    "t": 82.1,
-   "fighting_turn": 64,
+   "fighting_turn": 73,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
    "move_id": "DRILL_PECK",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 48,
+   "energy_before": 72,
    "target": "Gastrodon",
    "shielded": false,
    "target_hp_before": 84,
@@ -1163,17 +1163,17 @@
    "target_hp_max": 168,
    "target_bar_read": false,
    "expected_damage": 87,
-   "resolved_t": 92.5,
+   "resolved_t": 91.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 3,
-     "hp": 27,
+     "hp": 31,
      "hp_max": 124,
-     "hp_share": 0.218,
-     "energy": 8
+     "hp_share": 0.25,
+     "energy": 32
     },
     "theirs": {
      "active": "Gastrodon",
@@ -1192,15 +1192,15 @@
   },
   {
    "kind": "fighting",
-   "t": 92.5,
-   "until": 103.0,
-   "fighting_turn": 65,
-   "turns": 1,
+   "t": 91.5,
+   "until": 92.5,
+   "fighting_turn": 73,
+   "turns": 2,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
@@ -1208,17 +1208,17 @@
     "fast_move": "Mud Slap",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 3,
-     "hp": 27,
+     "hp": 31,
      "hp_max": 124,
-     "hp_share": 0.218,
-     "energy": 8
+     "hp_share": 0.25,
+     "energy": 32
     },
     "theirs": {
      "active": "Gastrodon",
@@ -1237,8 +1237,8 @@
   },
   {
    "kind": "switch",
-   "t": 103.0,
-   "fighting_turn": 66,
+   "t": 92.5,
+   "fighting_turn": 75,
    "side": "theirs",
    "from": "Gastrodon",
    "to": "Pidgeot",
@@ -1250,29 +1250,29 @@
      "hp": 27,
      "hp_max": 124,
      "hp_share": 0.218,
-     "energy": 16
+     "energy": 40
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 2,
      "left": 3,
-     "hp": 74,
+     "hp": 73,
      "hp_max": 142,
-     "hp_share": 0.521,
+     "hp_share": 0.514,
      "energy": [
-      22,
-      22
+      62,
+      62
      ],
-     "energy_ceiling": 36
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "charged",
    "t": 93.1,
-   "fighting_turn": 65,
+   "fighting_turn": 75,
    "side": "theirs",
-   "pokemon": "Gastrodon",
+   "pokemon": "Pidgeot",
    "move": "Twister",
    "move_id": "TWISTER",
    "move_known_from": "seen",
@@ -1285,74 +1285,29 @@
    "target": "Fearow",
    "shielded": false,
    "target_hp_before": 27,
-   "target_hp_after": 27,
+   "target_hp_after": 0,
    "target_hp_max": 124,
-   "target_bar_read": false,
-   "expected_damage": null,
-   "resolved_t": 103.0,
+   "target_bar_read": true,
+   "expected_damage": 51,
+   "resolved_t": 100.65,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 0,
      "left": 3,
-     "hp": 27,
+     "hp": 0,
      "hp_max": 124,
-     "hp_share": 0.218,
-     "energy": 16
+     "hp_share": 0.0,
+     "energy": 40
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 2,
      "left": 3,
-     "hp": 74,
+     "hp": 73,
      "hp_max": 142,
-     "hp_share": 0.521,
-     "energy": [
-      22,
-      22
-     ],
-     "energy_ceiling": 36
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 103.0,
-   "until": 105.5,
-   "fighting_turn": 66,
-   "turns": 3,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Pidgeot",
-    "fast_move": "Gust",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 0,
-     "left": 2,
-     "hp": 27,
-     "hp_max": 124,
-     "hp_share": 0.218,
-     "energy": 24
-    },
-    "theirs": {
-     "active": "Pidgeot",
-     "shields": 2,
-     "left": 3,
-     "hp": 74,
-     "hp_max": 142,
-     "hp_share": 0.521,
+     "hp_share": 0.514,
      "energy": [
       22,
       22
@@ -1363,28 +1318,28 @@
   },
   {
    "kind": "faint",
-   "t": 105.5,
-   "fighting_turn": 69,
+   "t": 100.65,
+   "fighting_turn": 75,
    "side": "mine",
    "pokemon": "Fearow",
-   "next": "Tinkaton",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Tinkaton",
+     "active": "Fearow",
      "shields": 0,
-     "left": 2,
-     "hp": 21,
-     "hp_max": 141,
-     "hp_share": 0.149,
-     "energy": 45
+     "left": 3,
+     "hp": 0,
+     "hp_max": 124,
+     "hp_share": 0.0,
+     "energy": 40
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 2,
      "left": 3,
-     "hp": 74,
+     "hp": 73,
      "hp_max": 142,
-     "hp_share": 0.521,
+     "hp_share": 0.514,
      "energy": [
       22,
       22
@@ -1395,29 +1350,29 @@
   },
   {
    "kind": "fighting",
-   "t": 105.5,
+   "t": 100.65,
    "until": 112.1,
-   "fighting_turn": 69,
-   "turns": 33,
+   "fighting_turn": 75,
+   "turns": 14,
    "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 16,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 5,
      "hp_max": 141,
      "hp_share": 0.035,
@@ -1431,17 +1386,17 @@
      "hp_max": 142,
      "hp_share": 0.401,
      "energy": [
-      100,
-      100
+      78,
+      78
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "charged",
    "t": 112.1,
-   "fighting_turn": 102,
+   "fighting_turn": 89,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Gigaton Hammer",
@@ -1452,17 +1407,17 @@
    "target": "Pidgeot",
    "shielded": true,
    "target_hp_before": 57,
-   "target_hp_after": 56,
+   "target_hp_after": 57,
    "target_hp_max": 142,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 122.5,
+   "resolved_t": 120.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 5,
      "hp_max": 141,
      "hp_share": 0.035,
@@ -1472,35 +1427,35 @@
      "active": "Pidgeot",
      "shields": 1,
      "left": 3,
-     "hp": 56,
+     "hp": 57,
      "hp_max": 142,
-     "hp_share": 0.394,
+     "hp_share": 0.401,
      "energy": [
-      100,
-      100
+      92,
+      92
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 122.5,
-   "until": 123.0,
-   "fighting_turn": 102,
-   "turns": 1,
+   "t": 120.5,
+   "until": 122.5,
+   "fighting_turn": 89,
+   "turns": 4,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -1511,27 +1466,27 @@
      "hp": 5,
      "hp_max": 141,
      "hp_share": 0.035,
-     "energy": 40
+     "energy": 49
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 1,
      "left": 3,
-     "hp": 56,
+     "hp": 57,
      "hp_max": 142,
-     "hp_share": 0.394,
+     "hp_share": 0.401,
      "energy": [
-      100,
-      100
+      92,
+      92
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 92
     }
    }
   },
   {
    "kind": "faint",
-   "t": 123.0,
-   "fighting_turn": 103,
+   "t": 122.5,
+   "fighting_turn": 93,
    "side": "mine",
    "pokemon": "Tinkaton",
    "next": "Seismitoad",
@@ -1556,16 +1511,16 @@
       100,
       100
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 92
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 123.0,
+   "t": 122.5,
    "until": 126.1,
-   "fighting_turn": 103,
-   "turns": 6,
+   "fighting_turn": 93,
+   "turns": 7,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
@@ -1608,7 +1563,7 @@
   {
    "kind": "charged",
    "t": 126.1,
-   "fighting_turn": 109,
+   "fighting_turn": 100,
    "side": "theirs",
    "pokemon": "Pidgeot",
    "move": "Feather Dance",
@@ -1623,29 +1578,29 @@
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 138,
-   "target_hp_after": 105,
+   "target_hp_after": 138,
    "target_hp_max": 154,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 32,
-   "resolved_t": 136.0,
+   "resolved_t": 134.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 1,
-     "hp": 105,
+     "hp": 138,
      "hp_max": 154,
-     "hp_share": 0.682,
-     "energy": 27
+     "hp_share": 0.896,
+     "energy": 36
     },
     "theirs": {
      "active": "Pidgeot",
      "shields": 1,
      "left": 3,
-     "hp": 54,
+     "hp": 57,
      "hp_max": 142,
-     "hp_share": 0.38,
+     "hp_share": 0.401,
      "energy": [
       50,
       50
@@ -1656,24 +1611,25 @@
   },
   {
    "kind": "fighting",
-   "t": 136.0,
+   "t": 134.5,
    "until": 139.1,
-   "fighting_turn": 109,
-   "turns": 6,
+   "fighting_turn": 100,
+   "turns": 8,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -1682,52 +1638,7 @@
      "hp": 89,
      "hp_max": 154,
      "hp_share": 0.578,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Pidgeot",
-     "shields": 1,
-     "left": 3,
-     "hp": 54,
-     "hp_max": 142,
-     "hp_share": 0.38,
-     "energy": [
-      64,
-      64
-     ],
-     "energy_ceiling": 78
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 139.1,
-   "fighting_turn": 114,
-   "side": "mine",
-   "pokemon": "Seismitoad",
-   "move": "Icy Wind",
-   "move_id": "ICY_WIND",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 45,
-   "target": "Pidgeot",
-   "shielded": false,
-   "target_hp_before": 54,
-   "target_hp_after": 54,
-   "target_hp_max": 142,
-   "target_bar_read": false,
-   "expected_damage": 44,
-   "resolved_t": 149.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 0,
-     "left": 1,
-     "hp": 89,
-     "hp_max": 154,
-     "hp_share": 0.578,
-     "energy": 0
+     "energy": 72
     },
     "theirs": {
      "active": "Pidgeot",
@@ -1740,29 +1651,74 @@
       78,
       78
      ],
-     "energy_ceiling": 78
+     "energy_ceiling": 92
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 139.1,
+   "fighting_turn": 108,
+   "side": "mine",
+   "pokemon": "Seismitoad",
+   "move": "Icy Wind",
+   "move_id": "ICY_WIND",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 72,
+   "target": "Pidgeot",
+   "shielded": false,
+   "target_hp_before": 54,
+   "target_hp_after": 54,
+   "target_hp_max": 142,
+   "target_bar_read": false,
+   "expected_damage": 44,
+   "resolved_t": 147.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 0,
+     "left": 1,
+     "hp": 89,
+     "hp_max": 154,
+     "hp_share": 0.578,
+     "energy": 27
+    },
+    "theirs": {
+     "active": "Pidgeot",
+     "shields": 1,
+     "left": 3,
+     "hp": 54,
+     "hp_max": 142,
+     "hp_share": 0.38,
+     "energy": [
+      78,
+      78
+     ],
+     "energy_ceiling": 92
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 149.0,
+   "t": 147.5,
    "until": 156.1,
-   "fighting_turn": 115,
-   "turns": 20,
+   "fighting_turn": 108,
+   "turns": 14,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Pidgeot",
     "fast_move": "Gust",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1773,7 +1729,7 @@
      "hp": 59,
      "hp_max": 154,
      "hp_share": 0.383,
-     "energy": 45
+     "energy": 90
     },
     "theirs": {
      "active": "Pidgeot",
@@ -1793,14 +1749,14 @@
   {
    "kind": "charged",
    "t": 156.1,
-   "fighting_turn": 126,
+   "fighting_turn": 122,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
    "move_id": "ICY_WIND",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 81,
+   "energy_before": 90,
    "target": "Pidgeot",
    "shielded": false,
    "target_hp_before": 54,
@@ -1808,7 +1764,7 @@
    "target_hp_max": 142,
    "target_bar_read": false,
    "expected_damage": 44,
-   "resolved_t": 169.1,
+   "resolved_t": 164.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1818,7 +1774,7 @@
      "hp": 59,
      "hp_max": 154,
      "hp_share": 0.383,
-     "energy": 36
+     "energy": 45
     },
     "theirs": {
      "active": "Pidgeot",
@@ -1838,7 +1794,7 @@
   {
    "kind": "end",
    "t": 169.1,
-   "fighting_turn": 135,
+   "fighting_turn": 122,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -1853,7 +1809,7 @@
      "hp": 59,
      "hp_max": 154,
      "hp_share": 0.383,
-     "energy": 36
+     "energy": 45
     },
     "theirs": {
      "active": "Pidgeot",
@@ -1873,7 +1829,7 @@
  ],
  "deductions": [
   {
-   "t": 29.0,
+   "t": 27.5,
    "side": "theirs",
    "pokemon": "Pidgeot",
    "what": "charged move",
@@ -1882,13 +1838,18 @@
    "ruled_out": []
   },
   {
-   "t": 51.5,
+   "t": 52.5,
    "side": "theirs",
    "pokemon": "Mawile",
    "what": "fast move",
    "value": "Fire Fang",
-   "how": "fits the size and timing of its hits on our bar",
-   "ruled_out": []
+   "how": "fits its hits on our bar best of the moves not ruled out",
+   "ruled_out": [
+    "Astonish",
+    "Bite",
+    "Fairy Wind",
+    "Ice Fang"
+   ]
   }
  ],
  "built_from": [

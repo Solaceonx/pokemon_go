@@ -19,20 +19,18 @@
   "from": "result screen",
   "left": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 224.5,
- "fighting_turns": 165,
+ "fighting_turns": 151,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says win, tracker has us on 2 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "fast move only guessed for mimikyu"
   ],
-  "unexplained_health_changes": 12
+  "unexplained_health_changes": 13
  },
  "teams": {
   "mine": [
@@ -44,7 +42,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.407,
+    "hp_share_at_end": 0.248,
     "fast_move": {
      "id": "SCRATCH",
      "name": "Scratch",
@@ -216,8 +214,8 @@
     "cp": 1481,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.009,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -273,7 +271,7 @@
   },
   "faints": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 3
   }
  },
  "actions": [
@@ -314,19 +312,19 @@
    "t": 0.0,
    "until": 6.5,
    "fighting_turn": 0,
-   "turns": 14,
+   "turns": 12,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 14,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 14,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 0
    },
    "state": {
@@ -365,10 +363,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    52,
-    52
+    44,
+    44
    ],
-   "energy_ceiling": 60,
+   "energy_ceiling": 52,
    "target": "Vigoroth",
    "shielded": false,
    "target_hp_before": 145,
@@ -376,7 +374,7 @@
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 55,
-   "resolved_t": 17.0,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
@@ -386,7 +384,7 @@
      "hp": 145,
      "hp_max": 145,
      "hp_share": 1.0,
-     "energy": 56
+     "energy": 48
     },
     "theirs": {
      "active": "Rillaboom",
@@ -396,24 +394,24 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      17,
-      17
+      9,
+      9
      ],
-     "energy_ceiling": 21
+     "energy_ceiling": 13
     }
    }
   },
   {
    "kind": "charged",
    "t": 16.5,
-   "fighting_turn": 14,
+   "fighting_turn": 12,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Body Slam",
    "move_id": "BODY_SLAM",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 56,
+   "energy_before": 48,
    "target": "Rillaboom",
    "shielded": false,
    "target_hp_before": 122,
@@ -421,7 +419,7 @@
    "target_hp_max": 129,
    "target_bar_read": false,
    "expected_damage": 48,
-   "resolved_t": 27.0,
+   "resolved_t": 26.0,
    "cue": true,
    "state": {
     "mine": {
@@ -431,7 +429,7 @@
      "hp": 145,
      "hp_max": 145,
      "hp_share": 1.0,
-     "energy": 16
+     "energy": 8
     },
     "theirs": {
      "active": "Rillaboom",
@@ -441,31 +439,31 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      17,
-      17
+      9,
+      9
      ],
-     "energy_ceiling": 21
+     "energy_ceiling": 13
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 27.0,
+   "t": 26.0,
    "until": 27.5,
-   "fighting_turn": 14,
-   "turns": 1,
+   "fighting_turn": 12,
+   "turns": 3,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -476,7 +474,7 @@
      "hp": 145,
      "hp_max": 145,
      "hp_share": 1.0,
-     "energy": 16
+     "energy": 8
     },
     "theirs": {
      "active": "Rillaboom",
@@ -486,10 +484,10 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      17,
-      17
+      9,
+      9
      ],
-     "energy_ceiling": 21
+     "energy_ceiling": 13
     }
    }
   },
@@ -518,8 +516,8 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      25,
-      25
+      21,
+      21
      ],
      "energy_ceiling": 25
     }
@@ -563,8 +561,8 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      33,
-      33
+      29,
+      29
      ],
      "energy_ceiling": 33
     }
@@ -607,19 +605,19 @@
    "t": 29.0,
    "until": 36.5,
    "fighting_turn": 18,
-   "turns": 18,
+   "turns": 15,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 4
    },
    "unexplained_health_changes": 1,
@@ -659,10 +657,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    63,
-    63
+    56,
+    56
    ],
-   "energy_ceiling": 70,
+   "energy_ceiling": 56,
    "target": "Mimikyu",
    "shielded": true,
    "target_hp_before": 69,
@@ -670,7 +668,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 48.0,
+   "resolved_t": 44.0,
    "cue": true,
    "state": {
     "mine": {
@@ -680,7 +678,7 @@
      "hp": 69,
      "hp_max": 107,
      "hp_share": 0.645,
-     "energy": 88
+     "energy": 72
     },
     "theirs": {
      "active": "Thievul",
@@ -690,31 +688,31 @@
      "hp_max": 127,
      "hp_share": 0.858,
      "energy": [
-      28,
-      28
+      21,
+      21
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 28
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 48.0,
+   "t": 44.0,
    "until": 52.5,
-   "fighting_turn": 36,
-   "turns": 9,
+   "fighting_turn": 33,
+   "turns": 16,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -736,17 +734,17 @@
      "hp_max": 127,
      "hp_share": 0.732,
      "energy": [
-      56,
-      56
+      77,
+      77
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 84
     }
    }
   },
   {
    "kind": "charged",
    "t": 52.5,
-   "fighting_turn": 44,
+   "fighting_turn": 49,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
@@ -757,11 +755,11 @@
    "target": "Thievul",
    "shielded": true,
    "target_hp_before": 93,
-   "target_hp_after": 92,
+   "target_hp_after": 93,
    "target_hp_max": 127,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 62.5,
+   "resolved_t": 61.0,
    "cue": true,
    "state": {
     "mine": {
@@ -777,55 +775,9 @@
      "active": "Thievul",
      "shields": 1,
      "left": 3,
-     "hp": 92,
+     "hp": 93,
      "hp_max": 127,
-     "hp_share": 0.724,
-     "energy": [
-      63,
-      63
-     ],
-     "energy_ceiling": 63
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 62.5,
-   "until": 65.5,
-   "fighting_turn": 45,
-   "turns": 7,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Thievul",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
-   },
-   "unexplained_health_changes": 2,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 24,
-     "hp_max": 107,
-     "hp_share": 0.224,
-     "energy": 56
-    },
-    "theirs": {
-     "active": "Thievul",
-     "shields": 1,
-     "left": 3,
-     "hp": 91,
-     "hp_max": 127,
-     "hp_share": 0.717,
+     "hp_share": 0.732,
      "energy": [
       77,
       77
@@ -835,16 +787,62 @@
    }
   },
   {
+   "kind": "fighting",
+   "t": 61.0,
+   "until": 65.5,
+   "fighting_turn": 49,
+   "turns": 8,
+   "mine": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Thievul",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 4
+   },
+   "unexplained_health_changes": 3,
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 1,
+     "left": 3,
+     "hp": 24,
+     "hp_max": 107,
+     "hp_share": 0.224,
+     "energy": 72
+    },
+    "theirs": {
+     "active": "Thievul",
+     "shields": 1,
+     "left": 3,
+     "hp": 91,
+     "hp_max": 127,
+     "hp_share": 0.717,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
    "kind": "charged",
    "t": 65.5,
-   "fighting_turn": 50,
+   "fighting_turn": 57,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
    "move_id": "SHADOW_SNEAK",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 64,
+   "energy_before": 72,
    "target": "Thievul",
    "shielded": true,
    "target_hp_before": 91,
@@ -852,7 +850,7 @@
    "target_hp_max": 127,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 76.0,
+   "resolved_t": 75.0,
    "cue": true,
    "state": {
     "mine": {
@@ -862,7 +860,7 @@
      "hp": 24,
      "hp_max": 107,
      "hp_share": 0.224,
-     "energy": 14
+     "energy": 22
     },
     "theirs": {
      "active": "Thievul",
@@ -872,17 +870,17 @@
      "hp_max": 127,
      "hp_share": 0.717,
      "energy": [
-      91,
-      91
+      100,
+      100
      ],
-     "energy_ceiling": 91
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 75.5,
-   "fighting_turn": 52,
+   "fighting_turn": 57,
    "side": "theirs",
    "pokemon": "Thievul",
    "move": "Night Slash",
@@ -890,28 +888,28 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    91,
-    91
+    100,
+    100
    ],
-   "energy_ceiling": 91,
+   "energy_ceiling": 100,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 24,
-   "target_hp_after": 24,
+   "target_hp_after": 0,
    "target_hp_max": 107,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 33,
-   "resolved_t": 85.5,
+   "resolved_t": 84.92,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 1,
      "left": 3,
-     "hp": 24,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.224,
-     "energy": 14
+     "hp_share": 0.0,
+     "energy": 22
     },
     "theirs": {
      "active": "Thievul",
@@ -921,108 +919,63 @@
      "hp_max": 127,
      "hp_share": 0.717,
      "energy": [
-      56,
-      56
+      65,
+      65
      ],
-     "energy_ceiling": 63
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 85.5,
-   "until": 91.0,
-   "fighting_turn": 52,
-   "turns": 3,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Thievul",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 2,
-     "hp": 24,
-     "hp_max": 107,
-     "hp_share": 0.224,
-     "energy": 14
-    },
-    "theirs": {
-     "active": "Thievul",
-     "shields": 0,
-     "left": 3,
-     "hp": 87,
-     "hp_max": 127,
-     "hp_share": 0.685,
-     "energy": [
-      56,
-      56
-     ],
-     "energy_ceiling": 63
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "faint",
-   "t": 91.0,
-   "fighting_turn": 55,
+   "t": 84.92,
+   "fighting_turn": 57,
    "side": "mine",
    "pokemon": "Mimikyu",
-   "next": "Corviknight",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Corviknight",
+     "active": "Mimikyu",
      "shields": 1,
-     "left": 2,
-     "hp": 147,
-     "hp_max": 150,
-     "hp_share": 0.98,
-     "energy": 0
+     "left": 3,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": 22
     },
     "theirs": {
      "active": "Thievul",
      "shields": 0,
      "left": 3,
-     "hp": 87,
+     "hp": 91,
      "hp_max": 127,
-     "hp_share": 0.685,
+     "hp_share": 0.717,
      "energy": [
-      63,
-      63
+      65,
+      65
      ],
-     "energy_ceiling": 70
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 91.0,
+   "t": 84.92,
    "until": 95.5,
-   "fighting_turn": 55,
-   "turns": 9,
+   "fighting_turn": 57,
+   "turns": 12,
    "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 7
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 8
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 2
    },
    "unexplained_health_changes": 2,
@@ -1044,8 +997,8 @@
      "hp_max": 127,
      "hp_share": 0.512,
      "energy": [
-      98,
-      98
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -1054,7 +1007,7 @@
   {
    "kind": "charged",
    "t": 95.5,
-   "fighting_turn": 64,
+   "fighting_turn": 69,
    "side": "theirs",
    "pokemon": "Thievul",
    "move": "Icy Wind",
@@ -1062,8 +1015,8 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    98,
-    98
+    100,
+    100
    ],
    "energy_ceiling": 100,
    "target": "Corviknight",
@@ -1073,7 +1026,7 @@
    "target_hp_max": 150,
    "target_bar_read": false,
    "expected_damage": 36,
-   "resolved_t": 105.5,
+   "resolved_t": 105.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1093,32 +1046,32 @@
      "hp_max": 127,
      "hp_share": 0.512,
      "energy": [
-      53,
-      53
+      55,
+      55
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 62
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 105.5,
+   "t": 105.0,
    "until": 109.5,
-   "fighting_turn": 64,
-   "turns": 8,
+   "fighting_turn": 69,
+   "turns": 9,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1129,7 +1082,7 @@
      "hp": 60,
      "hp_max": 150,
      "hp_share": 0.4,
-     "energy": 68
+     "energy": 72
     },
     "theirs": {
      "active": "Thievul",
@@ -1139,24 +1092,24 @@
      "hp_max": 127,
      "hp_share": 0.457,
      "energy": [
-      81,
-      81
+      83,
+      83
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "charged",
    "t": 109.5,
-   "fighting_turn": 72,
+   "fighting_turn": 78,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Iron Head",
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 68,
+   "energy_before": 72,
    "target": "Thievul",
    "shielded": false,
    "target_hp_before": 58,
@@ -1164,7 +1117,7 @@
    "target_hp_max": 127,
    "target_bar_read": false,
    "expected_damage": 47,
-   "resolved_t": 119.5,
+   "resolved_t": 119.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1174,7 +1127,7 @@
      "hp": 60,
      "hp_max": 150,
      "hp_share": 0.4,
-     "energy": 18
+     "energy": 22
     },
     "theirs": {
      "active": "Thievul",
@@ -1184,32 +1137,32 @@
      "hp_max": 127,
      "hp_share": 0.457,
      "energy": [
-      81,
-      81
+      90,
+      90
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 119.5,
+   "t": 119.0,
    "until": 123.5,
-   "fighting_turn": 72,
-   "turns": 8,
+   "fighting_turn": 78,
+   "turns": 9,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Thievul",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "state": {
     "mine": {
@@ -1219,7 +1172,7 @@
      "hp": 40,
      "hp_max": 150,
      "hp_share": 0.267,
-     "energy": 50
+     "energy": 58
     },
     "theirs": {
      "active": "Thievul",
@@ -1239,7 +1192,7 @@
   {
    "kind": "charged",
    "t": 123.5,
-   "fighting_turn": 80,
+   "fighting_turn": 87,
    "side": "theirs",
    "pokemon": "Thievul",
    "move": "Icy Wind",
@@ -1254,21 +1207,21 @@
    "target": "Corviknight",
    "shielded": true,
    "target_hp_before": 40,
-   "target_hp_after": 38,
+   "target_hp_after": 40,
    "target_hp_max": 150,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 133.5,
+   "resolved_t": 132.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 2,
-     "hp": 38,
+     "hp": 40,
      "hp_max": 150,
-     "hp_share": 0.253,
-     "energy": 50
+     "hp_share": 0.267,
+     "energy": 58
     },
     "theirs": {
      "active": "Thievul",
@@ -1287,15 +1240,15 @@
   },
   {
    "kind": "fighting",
-   "t": 133.5,
-   "until": 141.0,
-   "fighting_turn": 80,
-   "turns": 9,
+   "t": 132.0,
+   "until": 135.78,
+   "fighting_turn": 87,
+   "turns": 8,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 0
    },
    "theirs": {
@@ -1303,26 +1256,26 @@
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "hits_seen": 6
    },
-   "unexplained_health_changes": 3,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 2,
-     "hp": 14,
+     "hp": 25,
      "hp_max": 150,
-     "hp_share": 0.093,
-     "energy": 78
+     "hp_share": 0.167,
+     "energy": 86
     },
     "theirs": {
      "active": "Thievul",
      "shields": 0,
-     "left": 2,
-     "hp": 4,
+     "left": 3,
+     "hp": 1,
      "hp_max": 127,
-     "hp_share": 0.031,
+     "hp_share": 0.008,
      "energy": [
       76,
       76
@@ -1333,56 +1286,57 @@
   },
   {
    "kind": "faint",
-   "t": 141.0,
-   "fighting_turn": 89,
+   "t": 135.78,
+   "fighting_turn": 95,
    "side": "theirs",
    "pokemon": "Thievul",
-   "next": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 2,
-     "hp": 14,
+     "hp": 25,
      "hp_max": 150,
-     "hp_share": 0.093,
+     "hp_share": 0.167,
      "energy": 90
     },
     "theirs": {
-     "active": "Mimikyu",
+     "active": "Thievul",
      "shields": 0,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 127,
+     "hp_share": 0.0,
      "energy": [
-      0,
-      0
+      83,
+      83
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 141.0,
+   "t": 135.78,
    "until": 141.5,
-   "fighting_turn": 89,
-   "turns": 7,
+   "fighting_turn": 95,
+   "turns": 5,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "pokemon": "Thievul",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
@@ -1391,7 +1345,7 @@
      "hp": 14,
      "hp_max": 150,
      "hp_share": 0.093,
-     "energy": 90
+     "energy": 100
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1411,7 +1365,7 @@
   {
    "kind": "charged",
    "t": 141.5,
-   "fighting_turn": 89,
+   "fighting_turn": 98,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Air Cutter",
@@ -1426,7 +1380,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 24,
-   "resolved_t": 154.5,
+   "resolved_t": 152.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1446,32 +1400,32 @@
      "hp_max": 107,
      "hp_share": 1.0,
      "energy": [
-      32,
-      32
+      8,
+      8
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 154.5,
+   "t": 152.0,
    "until": 155.0,
-   "fighting_turn": 96,
-   "turns": 1,
+   "fighting_turn": 100,
+   "turns": 6,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -1491,17 +1445,17 @@
      "hp_max": 107,
      "hp_share": 1.0,
      "energy": [
-      32,
-      32
+      8,
+      8
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "switch",
    "t": 155.0,
-   "fighting_turn": 97,
+   "fighting_turn": 106,
    "side": "mine",
    "from": "Corviknight",
    "to": "Vigoroth",
@@ -1534,7 +1488,7 @@
    "kind": "fighting",
    "t": 155.0,
    "until": 158.0,
-   "fighting_turn": 97,
+   "fighting_turn": 106,
    "turns": 6,
    "mine": {
     "pokemon": "Vigoroth",
@@ -1569,8 +1523,8 @@
      "hp_max": 107,
      "hp_share": 1.0,
      "energy": [
-      56,
-      56
+      48,
+      48
      ],
      "energy_ceiling": 56
     }
@@ -1579,7 +1533,7 @@
   {
    "kind": "switch",
    "t": 158.0,
-   "fighting_turn": 103,
+   "fighting_turn": 112,
    "side": "theirs",
    "from": "Mimikyu",
    "to": "Rillaboom",
@@ -1601,8 +1555,8 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      33,
-      33
+      29,
+      29
      ],
      "energy_ceiling": 37
     }
@@ -1612,20 +1566,20 @@
    "kind": "fighting",
    "t": 158.0,
    "until": 162.5,
-   "fighting_turn": 103,
-   "turns": 9,
+   "fighting_turn": 112,
+   "turns": 4,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 1
    },
    "state": {
@@ -1646,8 +1600,8 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      37,
-      37
+      33,
+      33
      ],
      "energy_ceiling": 41
     }
@@ -1656,7 +1610,7 @@
   {
    "kind": "charged",
    "t": 162.5,
-   "fighting_turn": 104,
+   "fighting_turn": 113,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "move": "Drum Beating",
@@ -1664,10 +1618,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    65,
-    65
+    41,
+    41
    ],
-   "energy_ceiling": 73,
+   "energy_ceiling": 53,
    "target": "Vigoroth",
    "shielded": false,
    "target_hp_before": 59,
@@ -1675,7 +1629,7 @@
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 55,
-   "resolved_t": 172.5,
+   "resolved_t": 170.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1685,7 +1639,7 @@
      "hp": 59,
      "hp_max": 145,
      "hp_share": 0.407,
-     "energy": 76
+     "energy": 56
     },
     "theirs": {
      "active": "Rillaboom",
@@ -1695,31 +1649,126 @@
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      30,
-      30
+      6,
+      6
      ],
-     "energy_ceiling": 34
+     "energy_ceiling": 10
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 172.5,
-   "until": 199.5,
-   "fighting_turn": 112,
-   "turns": 50,
+   "t": 170.0,
+   "until": 175.5,
+   "fighting_turn": 116,
+   "turns": 12,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 50,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Rillaboom",
     "fast_move": "Scratch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 50,
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 0,
+     "left": 2,
+     "hp": 36,
+     "hp_max": 145,
+     "hp_share": 0.248,
+     "energy": 72
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 122,
+     "hp_max": 129,
+     "hp_share": 0.946,
+     "energy": [
+      22,
+      22
+     ],
+     "energy_ceiling": 26
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 175.5,
+   "fighting_turn": 120,
+   "side": "theirs",
+   "pokemon": "Rillaboom",
+   "move": "Drum Beating",
+   "move_id": "DRUM_BEATING",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": [
+    50,
+    50
+   ],
+   "energy_ceiling": 58,
+   "target": "Vigoroth",
+   "shielded": false,
+   "target_hp_before": 36,
+   "target_hp_after": 36,
+   "target_hp_max": 145,
+   "target_bar_read": false,
+   "expected_damage": 55,
+   "resolved_t": 186.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 0,
+     "left": 2,
+     "hp": 36,
+     "hp_max": 145,
+     "hp_share": 0.248,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 122,
+     "hp_max": 129,
+     "hp_share": 0.946,
+     "energy": [
+      15,
+      15
+     ],
+     "energy_ceiling": 19
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 186.0,
+   "until": 195.45,
+   "fighting_turn": 128,
+   "turns": 19,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 19,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Rillaboom",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 19,
     "hits_seen": 0
    },
    "state": {
@@ -1727,111 +1776,107 @@
      "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 59,
+     "hp": 36,
      "hp_max": 145,
-     "hp_share": 0.407,
+     "hp_share": 0.248,
      "energy": 100
     },
     "theirs": {
      "active": "Rillaboom",
-     "shields": 0,
-     "left": 1,
-     "hp": 122,
-     "hp_max": 129,
-     "hp_share": 0.946,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 199.5,
-   "fighting_turn": 162,
-   "side": "theirs",
-   "pokemon": "Rillaboom",
-   "move": "Drum Beating",
-   "move_id": "DRUM_BEATING",
-   "move_known_from": "inferred",
-   "cost": 35,
-   "energy_before": [
-    100,
-    100
-   ],
-   "energy_ceiling": 100,
-   "target": "Vigoroth",
-   "shielded": false,
-   "target_hp_before": 59,
-   "target_hp_after": 59,
-   "target_hp_max": 145,
-   "target_bar_read": false,
-   "expected_damage": 55,
-   "resolved_t": 199.5,
-   "cue": false,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 59,
-     "hp_max": 145,
-     "hp_share": 0.407,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Rillaboom",
-     "shields": 0,
-     "left": 1,
      "hp": 122,
      "hp_max": 129,
      "hp_share": 0.946,
      "energy": [
-      65,
-      65
+      15,
+      15
      ],
-     "energy_ceiling": 69
+     "energy_ceiling": 19
     }
    }
   },
   {
    "kind": "faint",
-   "t": 209.5,
-   "fighting_turn": 162,
+   "t": 195.45,
+   "fighting_turn": 147,
    "side": "theirs",
    "pokemon": "Rillaboom",
-   "next": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 59,
+     "hp": 36,
      "hp_max": 145,
-     "hp_share": 0.407,
-     "energy": 45
+     "hp_share": 0.248,
+     "energy": 100
     },
     "theirs": {
-     "active": "Mimikyu",
+     "active": "Rillaboom",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 129,
+     "hp_share": 0.0,
+     "energy": [
+      91,
+      91
+     ],
+     "energy_ceiling": 95
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 195.45,
+   "until": 199.5,
+   "fighting_turn": 147,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Rillaboom",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 0,
+     "left": 2,
+     "hp": 36,
+     "hp_max": 145,
+     "hp_share": 0.248,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Rillaboom",
      "shields": 0,
      "left": 1,
-     "hp": 1,
-     "hp_max": 107,
-     "hp_share": 0.009,
+     "hp": 0,
+     "hp_max": 129,
+     "hp_share": 0.0,
      "energy": [
-      56,
-      56
+      91,
+      91
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 95
     }
    }
   },
   {
    "kind": "charged",
    "t": 199.5,
-   "fighting_turn": 162,
+   "fighting_turn": 147,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Bulldoze",
@@ -1841,33 +1886,33 @@
    "energy_before": 100,
    "target": "Rillaboom",
    "shielded": false,
-   "target_hp_before": 122,
+   "target_hp_before": 0,
    "target_hp_after": 0,
    "target_hp_max": 129,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 26,
-   "resolved_t": 209.5,
+   "resolved_t": 209.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 59,
+     "hp": 36,
      "hp_max": 145,
-     "hp_share": 0.407,
+     "hp_share": 0.248,
      "energy": 45
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 107,
      "hp_max": 107,
-     "hp_share": 0.009,
+     "hp_share": 1.0,
      "energy": [
-      56,
-      56
+      48,
+      48
      ],
      "energy_ceiling": 64
     }
@@ -1875,9 +1920,9 @@
   },
   {
    "kind": "fighting",
-   "t": 209.5,
-   "until": 210.0,
-   "fighting_turn": 162,
+   "t": 209.0,
+   "until": 209.5,
+   "fighting_turn": 149,
    "turns": 1,
    "mine": {
     "pokemon": "Vigoroth",
@@ -1898,21 +1943,21 @@
      "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 59,
+     "hp": 36,
      "hp_max": 145,
-     "hp_share": 0.407,
+     "hp_share": 0.248,
      "energy": 45
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 107,
      "hp_max": 107,
-     "hp_share": 0.009,
+     "hp_share": 1.0,
      "energy": [
-      56,
-      56
+      48,
+      48
      ],
      "energy_ceiling": 64
     }
@@ -1920,8 +1965,8 @@
   },
   {
    "kind": "switch",
-   "t": 210.0,
-   "fighting_turn": 163,
+   "t": 209.5,
+   "fighting_turn": 150,
    "side": "mine",
    "from": "Vigoroth",
    "to": "Corviknight",
@@ -1933,7 +1978,7 @@
      "hp": 14,
      "hp_max": 150,
      "hp_share": 0.093,
-     "energy": 60
+     "energy": 80
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1943,8 +1988,8 @@
      "hp_max": 107,
      "hp_share": 0.009,
      "energy": [
-      56,
-      56
+      48,
+      48
      ],
      "energy_ceiling": 64
     }
@@ -1952,22 +1997,22 @@
   },
   {
    "kind": "fighting",
-   "t": 210.0,
+   "t": 209.5,
    "until": 210.5,
-   "fighting_turn": 163,
-   "turns": 2,
+   "fighting_turn": 150,
+   "turns": 1,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1978,7 +2023,7 @@
      "hp": 14,
      "hp_max": 150,
      "hp_share": 0.093,
-     "energy": 60
+     "energy": 84
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1991,29 +2036,29 @@
       56,
       56
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 210.5,
-   "fighting_turn": 163,
+   "fighting_turn": 151,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Iron Head",
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 64,
+   "energy_before": 84,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 1,
-   "target_hp_after": 1,
+   "target_hp_after": 0,
    "target_hp_max": 107,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 100,
-   "resolved_t": 221.0,
+   "resolved_t": 219.5,
    "cue": true,
    "state": {
     "mine": {
@@ -2023,18 +2068,50 @@
      "hp": 14,
      "hp_max": 150,
      "hp_share": 0.093,
-     "energy": 14
+     "energy": 34
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
-     "hp": 1,
+     "left": 0,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.009,
+     "hp_share": 0.0,
      "energy": [
-      72,
-      72
+      56,
+      56
+     ],
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 219.52,
+   "fighting_turn": 151,
+   "side": "theirs",
+   "pokemon": "Mimikyu",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 0,
+     "left": 2,
+     "hp": 14,
+     "hp_max": 150,
+     "hp_share": 0.093,
+     "energy": 34
+    },
+    "theirs": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": [
+      56,
+      56
      ],
      "energy_ceiling": 72
     }
@@ -2043,12 +2120,12 @@
   {
    "kind": "end",
    "t": 224.5,
-   "fighting_turn": 165,
+   "fighting_turn": 151,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 2,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
@@ -2058,18 +2135,18 @@
      "hp": 14,
      "hp_max": 150,
      "hp_share": 0.093,
-     "energy": 14
+     "energy": 34
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 1,
-     "hp": 1,
+     "left": 0,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.009,
+     "hp_share": 0.0,
      "energy": [
-      72,
-      72
+      56,
+      56
      ],
      "energy_ceiling": 72
     }
@@ -2078,7 +2155,7 @@
  ],
  "deductions": [
   {
-   "t": 17.0,
+   "t": 16.0,
    "side": "theirs",
    "pokemon": "Rillaboom",
    "what": "fast move",

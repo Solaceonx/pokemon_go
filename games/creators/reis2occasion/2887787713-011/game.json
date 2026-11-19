@@ -23,14 +23,14 @@
   }
  },
  "seconds": 183.13,
- "fighting_turns": 96,
+ "fighting_turns": 88,
  "checks": {
   "verdict": "pass",
   "failed": [],
   "notes": [
    "fast move only guessed for ferrothorn, walrein"
   ],
-  "unexplained_health_changes": 3
+  "unexplained_health_changes": 4
  },
  "teams": {
   "mine": [
@@ -41,8 +41,8 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 1.0,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SUCKER_PUNCH",
      "name": "Sucker Punch",
@@ -272,11 +272,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 3,
+   "mine": 2,
    "theirs": 2
   },
   "faints": {
-   "mine": 2,
+   "mine": 3,
    "theirs": 1
   }
  },
@@ -453,20 +453,20 @@
    "target": "Kingdra",
    "shielded": true,
    "target_hp_before": 91,
-   "target_hp_after": 89,
+   "target_hp_after": 91,
    "target_hp_max": 118,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 16.0,
+   "resolved_t": 15.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 1,
      "left": 2,
-     "hp": 89,
+     "hp": 91,
      "hp_max": 118,
-     "hp_share": 0.754,
+     "hp_share": 0.771,
      "energy": 44
     },
     "theirs": {
@@ -486,15 +486,15 @@
   },
   {
    "kind": "fighting",
-   "t": 16.0,
+   "t": 15.5,
    "until": 16.5,
    "fighting_turn": 12,
-   "turns": 1,
+   "turns": 2,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
@@ -512,7 +512,7 @@
      "hp": 89,
      "hp_max": 118,
      "hp_share": 0.754,
-     "energy": 44
+     "energy": 48
     },
     "theirs": {
      "active": "Marowak",
@@ -532,7 +532,7 @@
   {
    "kind": "switch",
    "t": 16.5,
-   "fighting_turn": 13,
+   "fighting_turn": 14,
    "side": "theirs",
    "from": "Marowak",
    "to": "Ferrothorn",
@@ -544,7 +544,7 @@
      "hp": 89,
      "hp_max": 118,
      "hp_share": 0.754,
-     "energy": 48
+     "energy": 52
     },
     "theirs": {
      "active": "Ferrothorn",
@@ -565,13 +565,13 @@
    "kind": "fighting",
    "t": 16.5,
    "until": 22.13,
-   "fighting_turn": 13,
-   "turns": 11,
+   "fighting_turn": 14,
+   "turns": 10,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 10,
     "hits_seen": 2
    },
    "theirs": {
@@ -589,7 +589,7 @@
      "hp": 78,
      "hp_max": 118,
      "hp_share": 0.661,
-     "energy": 88
+     "energy": 92
     },
     "theirs": {
      "active": "Ferrothorn",
@@ -609,14 +609,14 @@
   {
    "kind": "charged",
    "t": 22.13,
-   "fighting_turn": 23,
+   "fighting_turn": 24,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Surf",
    "move_id": "SURF",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 88,
+   "energy_before": 92,
    "target": "Ferrothorn",
    "shielded": false,
    "target_hp_before": 109,
@@ -624,17 +624,17 @@
    "target_hp_max": 128,
    "target_bar_read": true,
    "expected_damage": 30,
-   "resolved_t": 32.0,
+   "resolved_t": 31.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 1,
      "left": 2,
-     "hp": 74,
+     "hp": 78,
      "hp_max": 118,
-     "hp_share": 0.627,
-     "energy": 43
+     "hp_share": 0.661,
+     "energy": 47
     },
     "theirs": {
      "active": "Ferrothorn",
@@ -653,7 +653,7 @@
   },
   {
    "kind": "fighting",
-   "t": 32.0,
+   "t": 31.5,
    "until": 37.13,
    "fighting_turn": 24,
    "turns": 10,
@@ -679,7 +679,7 @@
      "hp": 66,
      "hp_max": 118,
      "hp_share": 0.559,
-     "energy": 75
+     "energy": 83
     },
     "theirs": {
      "active": "Ferrothorn",
@@ -689,8 +689,8 @@
      "hp_max": 128,
      "hp_share": 0.008,
      "energy": [
-      78,
-      78
+      91,
+      91
      ],
      "energy_ceiling": 91
     }
@@ -699,7 +699,7 @@
   {
    "kind": "charged",
    "t": 37.13,
-   "fighting_turn": 32,
+   "fighting_turn": 33,
    "side": "theirs",
    "pokemon": "Ferrothorn",
    "move": "Power Whip",
@@ -707,10 +707,10 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    78,
-    78
+    91,
+    91
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 91,
    "target": "Kingdra",
    "shielded": true,
    "target_hp_before": 66,
@@ -718,7 +718,7 @@
    "target_hp_max": 118,
    "target_bar_read": true,
    "expected_damage": 1,
-   "resolved_t": 47.0,
+   "resolved_t": 46.5,
    "cue": true,
    "state": {
     "mine": {
@@ -728,34 +728,34 @@
      "hp": 62,
      "hp_max": 118,
      "hp_share": 0.525,
-     "energy": 83
+     "energy": 87
     },
     "theirs": {
      "active": "Ferrothorn",
      "shields": 2,
      "left": 3,
-     "hp": 45,
+     "hp": 1,
      "hp_max": 128,
-     "hp_share": 0.352,
+     "hp_share": 0.008,
      "energy": [
-      28,
-      28
+      41,
+      41
      ],
-     "energy_ceiling": 41
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 47.0,
+   "t": 46.5,
    "until": 47.5,
    "fighting_turn": 34,
-   "turns": 1,
+   "turns": 2,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
@@ -773,7 +773,7 @@
      "hp": 62,
      "hp_max": 118,
      "hp_share": 0.525,
-     "energy": 83
+     "energy": 91
     },
     "theirs": {
      "active": "Ferrothorn",
@@ -783,17 +783,17 @@
      "hp_max": 128,
      "hp_share": 0.352,
      "energy": [
-      28,
-      28
+      41,
+      41
      ],
-     "energy_ceiling": 41
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "faint",
    "t": 47.5,
-   "fighting_turn": 35,
+   "fighting_turn": 36,
    "side": "mine",
    "pokemon": "Kingdra",
    "next": "Turtonator",
@@ -815,10 +815,10 @@
      "hp_max": 128,
      "hp_share": 0.352,
      "energy": [
-      28,
-      28
+      41,
+      41
      ],
-     "energy_ceiling": 41
+     "energy_ceiling": 54
     }
    }
   },
@@ -826,7 +826,7 @@
    "kind": "fighting",
    "t": 47.5,
    "until": 50.13,
-   "fighting_turn": 35,
+   "fighting_turn": 36,
    "turns": 5,
    "mine": {
     "pokemon": "Turtonator",
@@ -861,17 +861,17 @@
      "hp_max": 128,
      "hp_share": 0.352,
      "energy": [
-      54,
-      54
+      67,
+      67
      ],
-     "energy_ceiling": 67
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "charged",
    "t": 50.13,
-   "fighting_turn": 40,
+   "fighting_turn": 41,
    "side": "theirs",
    "pokemon": "Ferrothorn",
    "move": "Power Whip",
@@ -879,10 +879,10 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    54,
-    54
+    67,
+    67
    ],
-   "energy_ceiling": 67,
+   "energy_ceiling": 80,
    "target": "Turtonator",
    "shielded": false,
    "target_hp_before": 111,
@@ -890,7 +890,7 @@
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 20,
-   "resolved_t": 60.0,
+   "resolved_t": 59.5,
    "cue": true,
    "state": {
     "mine": {
@@ -910,19 +910,19 @@
      "hp_max": 128,
      "hp_share": 0.352,
      "energy": [
-      4,
-      4
+      17,
+      17
      ],
-     "energy_ceiling": 17
+     "energy_ceiling": 30
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 60.0,
+   "t": 59.5,
    "until": 63.0,
-   "fighting_turn": 40,
-   "turns": 6,
+   "fighting_turn": 41,
+   "turns": 7,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
@@ -956,17 +956,17 @@
      "hp_max": 128,
      "hp_share": 0.008,
      "energy": [
-      17,
-      17
+      43,
+      43
      ],
-     "energy_ceiling": 30
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "switch",
    "t": 63.0,
-   "fighting_turn": 46,
+   "fighting_turn": 48,
    "side": "theirs",
    "from": "Ferrothorn",
    "to": "Marowak",
@@ -999,7 +999,7 @@
    "kind": "fighting",
    "t": 63.0,
    "until": 67.13,
-   "fighting_turn": 46,
+   "fighting_turn": 48,
    "turns": 8,
    "mine": {
     "pokemon": "Turtonator",
@@ -1023,7 +1023,7 @@
      "hp": 78,
      "hp_max": 113,
      "hp_share": 0.69,
-     "energy": 60
+     "energy": 80
     },
     "theirs": {
      "active": "Marowak",
@@ -1043,7 +1043,7 @@
   {
    "kind": "charged",
    "t": 67.13,
-   "fighting_turn": 54,
+   "fighting_turn": 56,
    "side": "theirs",
    "pokemon": "Marowak",
    "move": "Bone Club",
@@ -1063,7 +1063,7 @@
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 49,
-   "resolved_t": 77.0,
+   "resolved_t": 76.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1092,9 +1092,9 @@
   },
   {
    "kind": "fighting",
-   "t": 77.0,
+   "t": 76.5,
    "until": 79.13,
-   "fighting_turn": 54,
+   "fighting_turn": 56,
    "turns": 4,
    "mine": {
     "pokemon": "Turtonator",
@@ -1108,7 +1108,7 @@
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1139,7 +1139,7 @@
   {
    "kind": "charged",
    "t": 79.13,
-   "fighting_turn": 57,
+   "fighting_turn": 60,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Brutal Swing",
@@ -1154,7 +1154,7 @@
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 28,
-   "resolved_t": 89.0,
+   "resolved_t": 88.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1183,10 +1183,10 @@
   },
   {
    "kind": "fighting",
-   "t": 89.0,
+   "t": 88.5,
    "until": 90.13,
-   "fighting_turn": 58,
-   "turns": 3,
+   "fighting_turn": 60,
+   "turns": 2,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
@@ -1198,7 +1198,7 @@
     "pokemon": "Marowak",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1222,14 +1222,14 @@
       20,
       30
      ],
-     "energy_ceiling": 30
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "charged",
    "t": 90.13,
-   "fighting_turn": 59,
+   "fighting_turn": 62,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Brutal Swing",
@@ -1244,7 +1244,7 @@
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 28,
-   "resolved_t": 100.5,
+   "resolved_t": 99.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1273,10 +1273,10 @@
   },
   {
    "kind": "fighting",
-   "t": 100.5,
-   "until": 103.0,
-   "fighting_turn": 61,
-   "turns": 4,
+   "t": 99.5,
+   "until": 100.0,
+   "fighting_turn": 62,
+   "turns": 1,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
@@ -1288,7 +1288,7 @@
     "pokemon": "Marowak",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1304,25 +1304,25 @@
     "theirs": {
      "active": "Marowak",
      "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 79,
      "hp_max": 125,
      "hp_share": 0.632,
      "energy": [
-      40,
-      50
+      30,
+      40
      ],
-     "energy_ceiling": 50
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "faint",
-   "t": 103.0,
-   "fighting_turn": 65,
+   "t": 100.0,
+   "fighting_turn": 63,
    "side": "theirs",
    "pokemon": "Marowak",
-   "next": "Walrein",
+   "next": null,
    "state": {
     "mine": {
      "active": "Turtonator",
@@ -1331,28 +1331,28 @@
      "hp": 16,
      "hp_max": 113,
      "hp_share": 0.142,
-     "energy": 30
+     "energy": 10
     },
     "theirs": {
-     "active": "Walrein",
+     "active": "Marowak",
      "shields": 2,
-     "left": 2,
-     "hp": 154,
-     "hp_max": 154,
-     "hp_share": 1.0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
      "energy": [
-      0,
-      0
+      30,
+      40
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 103.0,
+   "t": 100.0,
    "until": 107.13,
-   "fighting_turn": 65,
+   "fighting_turn": 63,
    "turns": 8,
    "mine": {
     "pokemon": "Turtonator",
@@ -1362,10 +1362,10 @@
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Walrein",
-    "fast_move": "Powder Snow",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "pokemon": "Marowak",
+    "fast_move": "Mud Slap",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
    "state": {
@@ -1376,7 +1376,7 @@
      "hp": 12,
      "hp_max": 113,
      "hp_share": 0.106,
-     "energy": 70
+     "energy": 50
     },
     "theirs": {
      "active": "Walrein",
@@ -1396,22 +1396,22 @@
   {
    "kind": "charged",
    "t": 107.13,
-   "fighting_turn": 72,
+   "fighting_turn": 71,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Dragon Claw",
    "move_id": "DRAGON_CLAW",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 70,
+   "energy_before": 50,
    "target": "Walrein",
    "shielded": false,
    "target_hp_before": 144,
-   "target_hp_after": 81,
+   "target_hp_after": 144,
    "target_hp_max": 154,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 62,
-   "resolved_t": 117.0,
+   "resolved_t": 115.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1421,41 +1421,41 @@
      "hp": 12,
      "hp_max": 113,
      "hp_share": 0.106,
-     "energy": 20
+     "energy": 0
     },
     "theirs": {
      "active": "Walrein",
      "shields": 2,
      "left": 2,
-     "hp": 81,
+     "hp": 144,
      "hp_max": 154,
-     "hp_share": 0.526,
+     "hp_share": 0.935,
      "energy": [
       32,
       32
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 32
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 117.0,
+   "t": 115.5,
    "until": 120.0,
-   "fighting_turn": 73,
-   "turns": 1,
+   "fighting_turn": 71,
+   "turns": 4,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Walrein",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1466,84 +1466,7 @@
      "hp": 12,
      "hp_max": 113,
      "hp_share": 0.106,
-     "energy": 20
-    },
-    "theirs": {
-     "active": "Walrein",
-     "shields": 2,
-     "left": 2,
-     "hp": 79,
-     "hp_max": 154,
-     "hp_share": 0.513,
-     "energy": [
-      32,
-      32
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 120.0,
-   "fighting_turn": 74,
-   "side": "mine",
-   "from": "Turtonator",
-   "to": "Kingdra",
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 0,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": 87
-    },
-    "theirs": {
-     "active": "Walrein",
-     "shields": 2,
-     "left": 2,
-     "hp": 79,
-     "hp_max": 154,
-     "hp_share": 0.513,
-     "energy": [
-      32,
-      32
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 120.0,
-   "until": 121.13,
-   "fighting_turn": 74,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Walrein",
-    "fast_move": "Powder Snow",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 0,
-     "left": 1,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": 95
+     "energy": 0
     },
     "theirs": {
      "active": "Walrein",
@@ -1561,38 +1484,25 @@
    }
   },
   {
-   "kind": "charged",
-   "t": 121.13,
-   "fighting_turn": 76,
+   "kind": "switch",
+   "t": 120.0,
+   "fighting_turn": 75,
    "side": "mine",
-   "pokemon": "Kingdra",
-   "move": "Swift",
-   "move_id": "SWIFT",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": 95,
-   "target": "Walrein",
-   "shielded": true,
-   "target_hp_before": 79,
-   "target_hp_after": 79,
-   "target_hp_max": 154,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 131.5,
-   "cue": true,
+   "from": "Turtonator",
+   "to": "Kingdra",
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 60
+     "energy": 95
     },
     "theirs": {
      "active": "Walrein",
-     "shields": 1,
+     "shields": 2,
      "left": 2,
      "hp": 79,
      "hp_max": 154,
@@ -1606,8 +1516,53 @@
    }
   },
   {
+   "kind": "fighting",
+   "t": 120.0,
+   "until": 121.13,
+   "fighting_turn": 75,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Kingdra",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Walrein",
+    "fast_move": "Powder Snow",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 0,
+     "left": 1,
+     "hp": 0,
+     "hp_max": 118,
+     "hp_share": 0.0,
+     "energy": 99
+    },
+    "theirs": {
+     "active": "Walrein",
+     "shields": 2,
+     "left": 2,
+     "hp": 79,
+     "hp_max": 154,
+     "hp_share": 0.513,
+     "energy": [
+      48,
+      48
+     ],
+     "energy_ceiling": 56
+    }
+   }
+  },
+  {
    "kind": "charged",
-   "t": 131.13,
+   "t": 121.13,
    "fighting_turn": 76,
    "side": "mine",
    "pokemon": "Kingdra",
@@ -1615,15 +1570,15 @@
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 60,
+   "energy_before": 99,
    "target": "Walrein",
    "shielded": true,
    "target_hp_before": 79,
-   "target_hp_after": 76,
+   "target_hp_after": 79,
    "target_hp_max": 154,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 141.5,
+   "resolved_t": 129.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1633,7 +1588,52 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 25
+     "energy": 64
+    },
+    "theirs": {
+     "active": "Walrein",
+     "shields": 1,
+     "left": 2,
+     "hp": 79,
+     "hp_max": 154,
+     "hp_share": 0.513,
+     "energy": [
+      56,
+      56
+     ],
+     "energy_ceiling": 56
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 131.13,
+   "fighting_turn": 76,
+   "side": "mine",
+   "pokemon": "Kingdra",
+   "move": "Swift",
+   "move_id": "SWIFT",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": 64,
+   "target": "Walrein",
+   "shielded": true,
+   "target_hp_before": 79,
+   "target_hp_after": 76,
+   "target_hp_max": 154,
+   "target_bar_read": true,
+   "expected_damage": 1,
+   "resolved_t": 140.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 0,
+     "left": 1,
+     "hp": 0,
+     "hp_max": 118,
+     "hp_share": 0.0,
+     "energy": 29
     },
     "theirs": {
      "active": "Walrein",
@@ -1643,16 +1643,16 @@
      "hp_max": 154,
      "hp_share": 0.494,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 141.5,
+   "t": 140.5,
    "until": 144.0,
    "fighting_turn": 76,
    "turns": 2,
@@ -1661,7 +1661,7 @@
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Walrein",
@@ -1678,7 +1678,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 25
+     "energy": 29
     },
     "theirs": {
      "active": "Walrein",
@@ -1688,10 +1688,10 @@
      "hp_max": 154,
      "hp_share": 0.442,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 56
     }
    }
   },
@@ -1720,10 +1720,10 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      56,
-      56
+      64,
+      64
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 64
     }
    }
   },
@@ -1765,10 +1765,10 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      64,
-      64
+      72,
+      72
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 72
     }
    }
   },
@@ -1783,10 +1783,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    64,
-    64
+    72,
+    72
    ],
-   "energy_ceiling": 64,
+   "energy_ceiling": 72,
    "target": "Victreebel",
    "shielded": false,
    "target_hp_before": 131,
@@ -1794,7 +1794,7 @@
    "target_hp_max": 131,
    "target_bar_read": false,
    "expected_damage": 106,
-   "resolved_t": 155.0,
+   "resolved_t": 153.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1814,17 +1814,17 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      24,
-      24
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 155.0,
-   "until": 155.5,
+   "t": 153.5,
+   "until": 153.8,
    "fighting_turn": 80,
    "turns": 1,
    "mine": {
@@ -1859,29 +1859,29 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      24,
-      24
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 40
     }
    }
   },
   {
-   "kind": "switch",
-   "t": 155.5,
+   "kind": "faint",
+   "t": 153.8,
    "fighting_turn": 81,
    "side": "mine",
-   "from": "Victreebel",
-   "to": "Kingdra",
+   "pokemon": "Victreebel",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Kingdra",
+     "active": "Victreebel",
      "shields": 0,
      "left": 1,
      "hp": 0,
-     "hp_max": 118,
+     "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 33
+     "energy": 7
     },
     "theirs": {
      "active": "Walrein",
@@ -1891,31 +1891,31 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      24,
-      24
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 155.5,
+   "t": 153.8,
    "until": 158.13,
    "fighting_turn": 81,
-   "turns": 5,
+   "turns": 6,
    "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
+    "pokemon": "Victreebel",
+    "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Walrein",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -1926,7 +1926,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 53
+     "energy": 61
     },
     "theirs": {
      "active": "Walrein",
@@ -1936,24 +1936,24 @@
      "hp_max": 154,
      "hp_share": 0.396,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 158.13,
-   "fighting_turn": 86,
+   "fighting_turn": 87,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 53,
+   "energy_before": 61,
    "target": "Walrein",
    "shielded": false,
    "target_hp_before": 61,
@@ -1961,7 +1961,7 @@
    "target_hp_max": 154,
    "target_bar_read": true,
    "expected_damage": 38,
-   "resolved_t": 168.0,
+   "resolved_t": 167.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1971,7 +1971,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 18
+     "energy": 26
     },
     "theirs": {
      "active": "Walrein",
@@ -1981,31 +1981,31 @@
      "hp_max": 154,
      "hp_share": 0.071,
      "energy": [
-      48,
-      48
+      64,
+      64
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 168.0,
+   "t": 167.5,
    "until": 168.13,
-   "fighting_turn": 86,
-   "turns": 10,
+   "fighting_turn": 87,
+   "turns": 1,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Walrein",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -2016,7 +2016,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 18
+     "energy": 30
     },
     "theirs": {
      "active": "Walrein",
@@ -2026,17 +2026,17 @@
      "hp_max": 154,
      "hp_share": 0.071,
      "energy": [
-      48,
-      48
+      64,
+      64
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 168.13,
-   "fighting_turn": 86,
+   "fighting_turn": 88,
    "side": "theirs",
    "pokemon": "Walrein",
    "move": "Icicle Spear",
@@ -2044,10 +2044,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    80,
-    80
+    64,
+    64
    ],
-   "energy_ceiling": 96,
+   "energy_ceiling": 72,
    "target": "Kingdra",
    "shielded": false,
    "target_hp_before": 0,
@@ -2055,7 +2055,7 @@
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 49,
-   "resolved_t": 183.13,
+   "resolved_t": 177.5,
    "cue": true,
    "state": {
     "mine": {
@@ -2065,7 +2065,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 58
+     "energy": 30
     },
     "theirs": {
      "active": "Walrein",
@@ -2075,17 +2075,17 @@
      "hp_max": 154,
      "hp_share": 0.071,
      "energy": [
-      40,
-      40
+      24,
+      24
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 32
     }
    }
   },
   {
    "kind": "end",
    "t": 183.13,
-   "fighting_turn": 96,
+   "fighting_turn": 88,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -2100,7 +2100,7 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 58
+     "energy": 30
     },
     "theirs": {
      "active": "Walrein",
@@ -2110,10 +2110,10 @@
      "hp_max": 154,
      "hp_share": 0.071,
      "energy": [
-      40,
-      40
+      24,
+      24
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 32
     }
    }
   }

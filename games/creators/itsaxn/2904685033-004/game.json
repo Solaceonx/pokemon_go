@@ -23,11 +23,11 @@
   }
  },
  "seconds": 186.5,
- "fighting_turns": 1179,
+ "fighting_turns": 1275,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "looks: 39 rejected",
+   "looks: 47 rejected",
    "moves: 1 charged move(s) without an observed name",
    "moves: 12 charged moves announced, 6 tracked",
    "shields: we used 2, but 1 charged move(s) were tracked as blocked",
@@ -36,9 +36,10 @@
   ],
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
+   "unexplained changes in 16% of looks",
    "fast move only guessed for drapion"
   ],
-  "unexplained_health_changes": 7
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -112,8 +113,8 @@
     "species": "corviknight",
     "name": "Corviknight",
     "known_from": "team_sheet",
-    "cp": 1500,
-    "cp_from": "assumed",
+    "cp": 1493,
+    "cp_from": "screen",
     "stats_assumed": true,
     "fainted": true,
     "hp_share_at_end": 0.0,
@@ -196,9 +197,8 @@
      "energy_gain": 9,
      "known_from": "guessed",
      "odds": {
-      "Poison Sting": 0.35,
-      "Infestation": 0.33,
-      "Bite": 0.32
+      "Poison Sting": 0.52,
+      "Infestation": 0.48
      }
     },
     "charged_moves": [
@@ -241,7 +241,7 @@
   },
   "switches": {
    "mine": 2,
-   "theirs": 36
+   "theirs": 44
   },
   "faints": {
    "mine": 1,
@@ -318,7 +318,7 @@
    "t": 2.0,
    "until": 11.5,
    "fighting_turn": 9,
-   "turns": 19,
+   "turns": 18,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
@@ -373,32 +373,32 @@
    "target": "Azumarill",
    "shielded": false,
    "target_hp_before": 143,
-   "target_hp_after": 76,
+   "target_hp_after": 143,
    "target_hp_max": 191,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 64,
-   "resolved_t": 21.5,
+   "resolved_t": 21.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 2,
      "left": 3,
-     "hp": 72,
+     "hp": 83,
      "hp_max": 107,
-     "hp_share": 0.673,
+     "hp_share": 0.776,
      "energy": 40
     },
     "theirs": {
      "active": "Azumarill",
      "shields": 2,
      "left": 3,
-     "hp": 76,
+     "hp": 143,
      "hp_max": 191,
-     "hp_share": 0.398,
+     "hp_share": 0.749,
      "energy": [
-      88,
-      88
+      77,
+      77
      ],
      "energy_ceiling": 77
     }
@@ -406,24 +406,25 @@
   },
   {
    "kind": "fighting",
-   "t": 21.5,
+   "t": 21.0,
    "until": 23.5,
-   "fighting_turn": 28,
-   "turns": 9,
+   "fighting_turn": 27,
+   "turns": 6,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Mimikyu",
@@ -432,7 +433,7 @@
      "hp": 67,
      "hp_max": 107,
      "hp_share": 0.626,
-     "energy": 48
+     "energy": 56
     },
     "theirs": {
      "active": "Azumarill",
@@ -442,8 +443,8 @@
      "hp_max": 191,
      "hp_share": 0.382,
      "energy": [
-      99,
-      99
+      88,
+      88
      ],
      "energy_ceiling": 88
     }
@@ -460,10 +461,10 @@
    "move_known_from": "seen",
    "cost": 60,
    "energy_before": [
-    100,
-    100
+    88,
+    88
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 99,
    "target": "Mimikyu",
    "shielded": true,
    "target_hp_before": 67,
@@ -471,7 +472,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 36.0,
+   "resolved_t": 34.0,
    "cue": true,
    "state": {
     "mine": {
@@ -481,7 +482,7 @@
      "hp": 67,
      "hp_max": 107,
      "hp_share": 0.626,
-     "energy": 80
+     "energy": 64
     },
     "theirs": {
      "active": "Azumarill",
@@ -491,32 +492,32 @@
      "hp_max": 191,
      "hp_share": 0.382,
      "energy": [
-      40,
-      40
+      28,
+      28
      ],
-     "energy_ceiling": 51
+     "energy_ceiling": 39
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 36.0,
+   "t": 34.0,
    "until": 43.5,
-   "fighting_turn": 37,
-   "turns": 15,
+   "fighting_turn": 33,
+   "turns": 19,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 9,
     "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 5
    },
    "unexplained_health_changes": 3,
    "state": {
@@ -537,8 +538,8 @@
      "hp_max": 191,
      "hp_share": 0.22,
      "energy": [
-      95,
-      95
+      94,
+      94
      ],
      "energy_ceiling": 100
     }
@@ -562,7 +563,7 @@
    "target_hp_max": 191,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 53.5,
+   "resolved_t": 53.0,
    "cue": true,
    "state": {
     "mine": {
@@ -582,8 +583,8 @@
      "hp_max": 191,
      "hp_share": 0.22,
      "energy": [
-      95,
-      95
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -591,23 +592,23 @@
   },
   {
    "kind": "fighting",
-   "t": 53.5,
+   "t": 53.0,
    "until": 57.5,
    "fighting_turn": 52,
-   "turns": 8,
+   "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -638,7 +639,7 @@
   {
    "kind": "charged",
    "t": 57.5,
-   "fighting_turn": 60,
+   "fighting_turn": 61,
    "side": "theirs",
    "pokemon": "Azumarill",
    "move": "Play Rough",
@@ -657,7 +658,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 47,
-   "resolved_t": 67.5,
+   "resolved_t": 65.0,
    "cue": true,
    "state": {
     "mine": {
@@ -667,7 +668,52 @@
      "hp": 33,
      "hp_max": 107,
      "hp_share": 0.308,
-     "energy": 82
+     "energy": 90
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 65.0,
+   "until": 66.0,
+   "fighting_turn": 61,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Azumarill",
+    "fast_move": "Bubble",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 1,
+     "left": 3,
+     "hp": 33,
+     "hp_max": 107,
+     "hp_share": 0.308,
+     "energy": 90
     },
     "theirs": {
      "active": "Azumarill",
@@ -686,20 +732,84 @@
   },
   {
    "kind": "switch",
-   "t": 68.0,
-   "fighting_turn": 60,
+   "t": 66.0,
+   "fighting_turn": 63,
    "side": "mine",
    "from": "Mimikyu",
    "to": "Corviknight",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 67.0,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 67.5,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -719,19 +829,19 @@
   {
    "kind": "switch",
    "t": 68.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -751,19 +861,19 @@
   {
    "kind": "switch",
    "t": 68.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -783,19 +893,19 @@
   {
    "kind": "switch",
    "t": 69.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -815,19 +925,19 @@
   {
    "kind": "switch",
    "t": 69.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -847,19 +957,19 @@
   {
    "kind": "switch",
    "t": 70.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -879,19 +989,19 @@
   {
    "kind": "switch",
    "t": 70.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -911,19 +1021,19 @@
   {
    "kind": "switch",
    "t": 71.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -943,19 +1053,19 @@
   {
    "kind": "switch",
    "t": 71.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -975,19 +1085,19 @@
   {
    "kind": "switch",
    "t": 72.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1007,19 +1117,19 @@
   {
    "kind": "switch",
    "t": 72.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1039,19 +1149,19 @@
   {
    "kind": "switch",
    "t": 73.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1071,19 +1181,19 @@
   {
    "kind": "switch",
    "t": 73.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1103,19 +1213,19 @@
   {
    "kind": "switch",
    "t": 74.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1135,19 +1245,115 @@
   {
    "kind": "switch",
    "t": 74.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 83.0,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 83.5,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 84.0,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1167,19 +1373,19 @@
   {
    "kind": "switch",
    "t": 84.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1199,19 +1405,51 @@
   {
    "kind": "switch",
    "t": 85.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 95.0,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1231,19 +1469,19 @@
   {
    "kind": "switch",
    "t": 95.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1263,19 +1501,19 @@
   {
    "kind": "switch",
    "t": 96.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1295,19 +1533,19 @@
   {
    "kind": "switch",
    "t": 96.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1327,19 +1565,19 @@
   {
    "kind": "switch",
    "t": 97.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1359,19 +1597,19 @@
   {
    "kind": "switch",
    "t": 97.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1391,19 +1629,19 @@
   {
    "kind": "switch",
    "t": 98.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1423,19 +1661,51 @@
   {
    "kind": "switch",
    "t": 98.5,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 1,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 51
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 109.0,
+   "fighting_turn": 63,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1455,83 +1725,19 @@
   {
    "kind": "switch",
    "t": 110.0,
-   "fighting_turn": 60,
+   "fighting_turn": 63,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 29,
-     "hp_max": 191,
-     "hp_share": 0.152,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 110.5,
-   "fighting_turn": 60,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 29,
-     "hp_max": 191,
-     "hp_share": 0.152,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 111.0,
-   "fighting_turn": 60,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1550,33 +1756,33 @@
   },
   {
    "kind": "fighting",
-   "t": 67.5,
-   "until": 111.5,
-   "fighting_turn": 60,
-   "turns": 960,
+   "t": 66.0,
+   "until": 110.12,
+   "fighting_turn": 63,
+   "turns": 1026,
    "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 480,
-    "hits_seen": 12
+    "fast_moves_if_no_pause": 1026,
+    "hits_seen": 11
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 320,
-    "hits_seen": 9
+    "fast_moves_if_no_pause": 342,
+    "hits_seen": 11
    },
    "state": {
     "mine": {
-     "active": "Mimikyu",
+     "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 33,
-     "hp_max": 107,
-     "hp_share": 0.308,
-     "energy": 82
+     "hp": 118,
+     "hp_max": 150,
+     "hp_share": 0.787,
+     "energy": 0
     },
     "theirs": {
      "active": "Azumarill",
@@ -1594,9 +1800,150 @@
    }
   },
   {
+   "kind": "faint",
+   "t": 110.12,
+   "fighting_turn": 1089,
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 110.5,
+   "fighting_turn": 1089,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 111.0,
+   "fighting_turn": 1089,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 110.12,
+   "until": 111.5,
+   "fighting_turn": 1089,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Azumarill",
+    "fast_move": "Bubble",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 150,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Azumarill",
+     "shields": 0,
+     "left": 3,
+     "hp": 29,
+     "hp_max": 191,
+     "hp_share": 0.152,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
    "kind": "switch",
    "t": 111.5,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1605,9 +1952,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1628,7 +1975,7 @@
   {
    "kind": "switch",
    "t": 112.0,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1637,9 +1984,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1660,7 +2007,7 @@
   {
    "kind": "switch",
    "t": 112.5,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1669,9 +2016,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1692,7 +2039,7 @@
   {
    "kind": "switch",
    "t": 113.0,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1701,9 +2048,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1724,7 +2071,7 @@
   {
    "kind": "switch",
    "t": 113.5,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1733,9 +2080,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1756,7 +2103,7 @@
   {
    "kind": "switch",
    "t": 114.0,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1765,9 +2112,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1786,20 +2133,20 @@
    }
   },
   {
-   "kind": "faint",
-   "t": 127.0,
-   "fighting_turn": 1020,
-   "side": "mine",
-   "pokemon": "Mimikyu",
-   "next": "Vigoroth",
+   "kind": "switch",
+   "t": 125.0,
+   "fighting_turn": 1095,
+   "side": "theirs",
+   "from": "Azumarill",
+   "to": "Deoxys",
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1820,7 +2167,7 @@
   {
    "kind": "switch",
    "t": 127.0,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1829,9 +2176,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1852,7 +2199,7 @@
   {
    "kind": "switch",
    "t": 127.5,
-   "fighting_turn": 1020,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1861,9 +2208,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1883,8 +2230,8 @@
   },
   {
    "kind": "switch",
-   "t": 137.5,
-   "fighting_turn": 1020,
+   "t": 135.0,
+   "fighting_turn": 1095,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Deoxys",
@@ -1893,9 +2240,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1916,21 +2263,21 @@
   {
    "kind": "fighting",
    "t": 111.5,
-   "until": 138.0,
-   "fighting_turn": 1020,
-   "turns": 139,
+   "until": 137.5,
+   "fighting_turn": 1095,
+   "turns": 160,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 139,
+    "fast_moves_if_no_pause": 160,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Azumarill",
     "fast_move": "Bubble",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 46,
+    "fast_moves_if_no_pause": 53,
     "hits_seen": 0
    },
    "state": {
@@ -1938,9 +2285,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 150,
+     "hp": 0,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
@@ -1960,8 +2307,8 @@
   },
   {
    "kind": "switch",
-   "t": 138.0,
-   "fighting_turn": 1159,
+   "t": 137.5,
+   "fighting_turn": 1255,
    "side": "theirs",
    "from": "Azumarill",
    "to": "Drapion",
@@ -1992,22 +2339,22 @@
   },
   {
    "kind": "fighting",
-   "t": 138.0,
+   "t": 137.5,
    "until": 141.5,
-   "fighting_turn": 1159,
-   "turns": 8,
+   "fighting_turn": 1255,
+   "turns": 7,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Drapion",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -2039,7 +2386,7 @@
   {
    "kind": "charged",
    "t": 141.5,
-   "fighting_turn": 1165,
+   "fighting_turn": 1262,
    "side": "theirs",
    "pokemon": "Drapion",
    "move": "Aqua Tail",
@@ -2050,7 +2397,7 @@
     27,
     27
    ],
-   "energy_ceiling": 45,
+   "energy_ceiling": 36,
    "energy_short_by": 8,
    "target": "Vigoroth",
    "shielded": false,
@@ -2059,7 +2406,7 @@
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 37,
-   "resolved_t": 152.0,
+   "resolved_t": 151.0,
    "cue": true,
    "state": {
     "mine": {
@@ -2075,35 +2422,35 @@
      "active": "Drapion",
      "shields": 0,
      "left": 3,
-     "hp": 76,
+     "hp": 89,
      "hp_max": 118,
-     "hp_share": 0.644,
+     "hp_share": 0.754,
      "energy": [
       0,
-      10
+      1
      ],
-     "energy_ceiling": 19
+     "energy_ceiling": 10
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 152.0,
+   "t": 151.0,
    "until": 154.5,
-   "fighting_turn": 1167,
-   "turns": 5,
+   "fighting_turn": 1262,
+   "turns": 6,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Drapion",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -2124,7 +2471,7 @@
      "hp_max": 118,
      "hp_share": 0.593,
      "energy": [
-      18,
+      27,
       28
      ],
      "energy_ceiling": 37
@@ -2134,7 +2481,7 @@
   {
    "kind": "charged",
    "t": 154.5,
-   "fighting_turn": 1171,
+   "fighting_turn": 1268,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Bulldoze",
@@ -2145,11 +2492,11 @@
    "target": "Drapion",
    "shielded": false,
    "target_hp_before": 70,
-   "target_hp_after": 70,
+   "target_hp_after": 0,
    "target_hp_max": 118,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 71,
-   "resolved_t": 165.0,
+   "resolved_t": 163.98,
    "cue": true,
    "state": {
     "mine": {
@@ -2165,12 +2512,12 @@
      "active": "Drapion",
      "shields": 0,
      "left": 3,
-     "hp": 70,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.593,
+     "hp_share": 0.0,
      "energy": [
       27,
-      37
+      28
      ],
      "energy_ceiling": 37
     }
@@ -2178,31 +2525,31 @@
   },
   {
    "kind": "faint",
-   "t": 180.0,
-   "fighting_turn": 1172,
+   "t": 163.98,
+   "fighting_turn": 1268,
    "side": "theirs",
    "pokemon": "Drapion",
-   "next": "Deoxys",
+   "next": null,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 0,
      "left": 2,
-     "hp": 69,
+     "hp": 80,
      "hp_max": 145,
-     "hp_share": 0.476,
+     "hp_share": 0.552,
      "energy": 45
     },
     "theirs": {
      "active": "Drapion",
      "shields": 0,
-     "left": 2,
-     "hp": 70,
+     "left": 3,
+     "hp": 0,
      "hp_max": 118,
-     "hp_share": 0.593,
+     "hp_share": 0.0,
      "energy": [
       27,
-      37
+      28
      ],
      "energy_ceiling": 37
     }
@@ -2211,7 +2558,7 @@
   {
    "kind": "end",
    "t": 186.5,
-   "fighting_turn": 1179,
+   "fighting_turn": 1275,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -2237,9 +2584,9 @@
      "hp_share": 0.0,
      "energy": [
       27,
-      37
+      28
      ],
-     "energy_ceiling": 73
+     "energy_ceiling": 64
     }
    }
   }

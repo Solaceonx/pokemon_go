@@ -1,10 +1,10 @@
-2930158499-008 . public footage, pov view . WIN (result screen) . 3:04.8, 129 fighting turns
+2930158499-008 . public footage, pov view . WIN (result screen) . 3:04.8, 107 fighting turns
 Source: https://www.twitch.tv/videos/2930158499, 1841.0163333333333-2040.016333 s
 Checks: fail
-  failed: energy: dynamic_punch at 77.5s had 27 of 45; acrobatics at 143.0s had 45 of 55
+  failed: moves: 3 charged move(s) without an observed name
+  failed: energy: energy_ball at 35.02s had 28 of 45
   failed: ending: result says win, tracker has us on 2 and them on 3
-  note: unexplained changes in 16% of looks
-  note: fast move only guessed for ninetales, poliwrath, jumpluff
+  note: fast move only guessed for jumpluff
 Mine = the player whose screen this is.
 
 Mine
@@ -12,43 +12,45 @@ Mine
   Seismitoad   CP 1499   Mud Shot? | Earth Power, Icy Wind?
   Tinkaton     CP 1496   Fairy Wind? | Gigaton Hammer, Bulldoze?
 
-Theirs
-  Ninetales    CP 1494   Ember? | Weather Ball (Fire)?, Energy Ball?
-  Poliwrath    CP 1500   Mud Shot? | Icy Wind?, Dynamic Punch
-  Jumpluff     CP 1500   Fairy Wind? | Energy Ball?, Acrobatics
+Theirs (2 not seen)
+  Ninetales    CP 1494   Ember* | Weather Ball (Fire)?, Energy Ball
+  Poliwrath    CP 1500   Mud Shot* | Icy Wind?, Dynamic Punch  [fainted]
+  Jumpluff     CP 1500   Fairy Wind? | Energy Ball?, Acrobatics  [fainted]
   plain = seen or told   * = worked out from the screen   ? = assumed, not confirmed
 
    0:00.0  Start: Fearow vs Ninetales
-   0:00.0  fight to 0:02.8, 6 turns: Fearow ~3 Peck? (0 seen); Ninetales ~3 Ember? (1 seen)  [1 unexplained health change(s)]
+   0:00.0  fight to 0:02.8, 4 turns: Fearow ~2 Peck? (0 seen); Ninetales ~2 Ember* (1 seen)  [1 unexplained health change(s)]
    0:02.8  We throw Drill Run (Fearow, 8 of 40 energy) -> Ninetales shielded  [short by 32 energy by our count]
-   0:13.0  fight to 0:14.6, 3 turns: Fearow ~1 Peck? (0 seen); Ninetales ~1 Ember? (1 seen)  [1 unexplained health change(s)]
-   0:14.6  They throw Weather Ball (Ice) (Ninetales, 54 energy, clock allows 45) -> Fearow 69% -> ? (bar not read)
-   0:24.5  fight to 0:27.8, 24 turns: Fearow ~12 Peck? (0 seen); Ninetales ~12 Ember? (0 seen)  [1 unexplained health change(s)]
-   0:27.8  They throw Weather Ball (Ice) (Ninetales, 100 energy) -> Fearow 14% -> ? (bar not read)
-   0:38.0  Our Fearow faints; Seismitoad comes in
-   0:38.0  fight to 0:43.8, 12 turns: Seismitoad ~6 Mud Shot? (3 seen); Ninetales ~6 Ember? (1 seen)  [1 unexplained health change(s)]
-   0:43.8  They throw Weather Ball (Ice) (Ninetales, 100 energy) -> Seismitoad shielded
+   0:12.0  fight to 0:14.6, 5 turns: Fearow ~2 Peck? (0 seen); Ninetales ~2 Ember* (2 seen)  [2 unexplained health change(s)]
+   0:14.6  They throw an unnamed charged move (Ninetales, 54 energy, clock allows 45) -> Fearow 69% -> ? (bar not read)
+   0:24.5  fight to 0:27.8, 3 turns: Fearow ~1 Peck? (0 seen); Ninetales ~1 Ember* (0 seen)  [1 unexplained health change(s)]
+   0:27.8  They throw Energy Ball* (Ninetales, 18-28 of 45 energy, clock allows 37) -> Fearow 14% -> 0%  [short by 17 energy by our count]
+   0:35.0  Our Fearow faints; None comes in
+   0:35.0  fight to 0:43.8, 14 turns: Fearow ~7 Peck? (4 seen); Ninetales ~7 Ember* (1 seen)  [1 unexplained health change(s)]
+   0:43.8  They throw an unnamed charged move (Ninetales, 54 energy, clock allows 72) -> Seismitoad shielded
    0:54.5  They switch Ninetales -> Poliwrath
-   0:54.5  fight to 0:57.8, 6 turns: Seismitoad ~3 Mud Shot? (1 seen); Poliwrath ~3 Mud Shot? (1 seen)
-   0:57.8  We throw Earth Power (Seismitoad, 81 of 50 energy) -> Poliwrath 99% -> 36%
-   1:07.8  They throw Dynamic Punch (Poliwrath, 27 of 45 energy, clock allows 36) -> Seismitoad 79% -> ? (bar not read; the move does ~53%)  [short by 18 energy by our count]
-   1:17.5  fight to 1:21.8, 8 turns: Seismitoad ~4 Mud Shot? (3 seen); Poliwrath ~4 Mud Shot? (2 seen)  [1 unexplained health change(s)]
-   1:21.8  We throw Earth Power (Seismitoad, 58 of 50 energy) -> Poliwrath shielded
-   1:31.5  fight to 1:32.0, 1 turn: Seismitoad ~0 Mud Shot? (1 seen); Poliwrath ~0 Mud Shot? (0 seen)
-   1:32.0  We switch Seismitoad -> Tinkaton
-   1:32.0  fight to 1:36.8, 10 turns: Tinkaton ~5 Fairy Wind? (5 seen); Poliwrath ~5 Mud Shot? (4 seen)  [2 unexplained health change(s)]
-   1:36.8  They throw Dynamic Punch (Poliwrath, 81 of 45 energy, clock allows 90) -> Tinkaton 89% -> ? (bar not read; the move does ~41%)
-   1:46.8  They throw Dynamic Punch (Poliwrath, 36 of 45 energy, clock allows 45) -> Tinkaton shielded  [short by 9 energy by our count]
-   1:57.5  They switch Poliwrath -> Jumpluff
-   1:57.5  fight to 1:59.8, 5 turns: Tinkaton ~2 Fairy Wind? (0 seen); Jumpluff ~2 Fairy Wind? (0 seen)
-   1:59.8  We throw Gigaton Hammer (Tinkaton, 63 of 60 energy) -> Jumpluff 99% -> 46%
-   2:10.0  fight to 2:12.8, 6 turns: Tinkaton ~3 Fairy Wind? (3 seen); Jumpluff ~3 Fairy Wind? (2 seen)  [1 unexplained health change(s)]
-   2:12.8  They throw Acrobatics (Jumpluff, 45 of 55 energy, clock allows 54) -> Tinkaton 34% -> ? (bar not read; the move does ~26%)  [short by 10 energy by our count]
-   2:22.8  We throw Gigaton Hammer (Tinkaton, 30 of 60 energy) -> Jumpluff 41% -> ? (bar not read; the move does ~45%)  [short by 30 energy by our count]
-   2:32.5  fight to 2:43.5, 22 turns: Tinkaton ~11 Fairy Wind? (0 seen); Jumpluff ~11 Fairy Wind? (0 seen)
+   0:54.5  fight to 0:57.8, 6 turns: Seismitoad ~3 Mud Shot? (1 seen); Poliwrath ~3 Mud Shot* (1 seen)
+   0:57.8  We throw Earth Power (Seismitoad, 81 of 50 energy) -> Poliwrath 99% -> ? (bar not read; the move does ~51%)
+   1:06.0  fight to 1:07.8, 3 turns: Seismitoad ~1 Mud Shot? (1 seen); Poliwrath ~1 Mud Shot* (1 seen)
+   1:07.8  They throw Dynamic Punch (Poliwrath, 45 of 45 energy) -> Seismitoad 79% -> ? (bar not read; the move does ~53%)
+   1:16.0  fight to 1:21.8, 9 turns: Seismitoad ~4 Mud Shot? (4 seen); Poliwrath ~4 Mud Shot* (3 seen)  [1 unexplained health change(s)]
+   1:16.0  . worked out: their Poliwrath has Mud Shot (every other fast move ruled out; ruled out Bubble, Counter, Rock Smash)
+   1:21.8  We throw Earth Power (Seismitoad, 85 of 50 energy) -> Poliwrath shielded
+   1:30.0  fight to 1:31.5, 3 turns: Seismitoad ~1 Mud Shot? (1 seen); Poliwrath ~1 Mud Shot* (0 seen)
+   1:31.5  We switch Seismitoad -> Tinkaton
+   1:31.5  fight to 1:36.8, 10 turns: Tinkaton ~5 Fairy Wind? (6 seen); Poliwrath ~5 Mud Shot* (4 seen)  [2 unexplained health change(s)]
+   1:36.8  They throw Dynamic Punch (Poliwrath, 99 of 45 energy, clock allows 100) -> Tinkaton 89% -> ? (bar not read; the move does ~41%)
+   1:45.0  fight to 1:53.8, 18 turns: Tinkaton ~9 Fairy Wind? (1 seen); Poliwrath ~9 Mud Shot* (1 seen)
+   1:53.8  Their Poliwrath faints; None comes in
+   1:46.8  They throw Dynamic Punch (Poliwrath, 100 of 45 energy) -> Tinkaton shielded
+   1:55.0  fight to 1:59.8, 7 turns: Tinkaton ~3 Fairy Wind? (0 seen); Poliwrath ~3 Mud Shot* (0 seen)
+   1:59.8  We throw Gigaton Hammer (Tinkaton, 100 of 60 energy) -> Jumpluff 99% -> ? (bar not read; the move does ~45%)
+   2:08.0  fight to 2:12.8, 9 turns: Tinkaton ~4 Fairy Wind? (5 seen); Jumpluff ~4 Fairy Wind? (3 seen)  [1 unexplained health change(s)]
+   2:12.8  They throw Acrobatics (Jumpluff, 63 of 55 energy, clock allows 72) -> Tinkaton 34% -> ? (bar not read; the move does ~26%)
+   2:21.0  fight to 2:22.8, 3 turns: Tinkaton ~1 Fairy Wind? (1 seen); Jumpluff ~1 Fairy Wind? (1 seen)  [1 unexplained health change(s)]
+   2:22.8  We throw Gigaton Hammer (Tinkaton, 94 of 60 energy) -> Jumpluff 38% -> 0%
+   2:30.3  Their Jumpluff faints; None comes in
    2:43.5  We switch Tinkaton -> Seismitoad
-   2:43.5  fight to 2:47.0, 7 turns: Seismitoad ~3 Mud Shot? (0 seen); Jumpluff ~3 Fairy Wind? (0 seen)
-   2:47.0  They switch Jumpluff -> Ninetales
-   2:47.0  fight to 2:51.8, 16 turns: Seismitoad ~8 Mud Shot? (0 seen); Ninetales ~8 Ember? (1 seen)
-   2:51.8  We throw Earth Power (Seismitoad, 100 of 50 energy) -> Ninetales 39% -> ? (bar not read; the move does ~79%)
+   2:43.5  fight to 2:51.8, 12 turns: Seismitoad ~6 Mud Shot? (0 seen); Jumpluff ~6 Fairy Wind? (1 seen)
+   2:51.8  We throw Earth Power (Seismitoad, 98 of 50 energy) -> Ninetales 39% -> ? (bar not read; the move does ~79%)
    3:04.8  End: WIN (result screen); Pokémon left: us 2, them 3

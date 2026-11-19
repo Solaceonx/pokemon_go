@@ -23,7 +23,7 @@
   }
  },
  "seconds": 133.8,
- "fighting_turns": 74,
+ "fighting_turns": 77,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -37,8 +37,8 @@
  "teams": {
   "mine": [
    {
-    "species": "qwilfish",
-    "name": "Qwilfish",
+    "species": "qwilfish_hisuian",
+    "name": "Qwilfish (Hisuian)",
     "known_from": "team_sheet",
     "cp": 1497,
     "cp_from": "screen",
@@ -57,15 +57,15 @@
       "id": "AQUA_TAIL",
       "name": "Aqua Tail",
       "energy": 35,
-      "known_from": "seen",
-      "times_used": 1
-     },
-     {
-      "id": "SHADOW_BALL",
-      "name": "Shadow Ball",
-      "energy": 50,
       "known_from": "guessed",
       "times_used": 0
+     },
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
      }
     ]
    },
@@ -76,8 +76,8 @@
     "cp": 1499,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.304,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "WATER_SHURIKEN",
      "name": "Water Shuriken",
@@ -270,11 +270,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 2
   },
   "faints": {
-   "mine": 1,
+   "mine": 2,
    "theirs": 1
   }
  },
@@ -283,16 +283,16 @@
    "kind": "start",
    "t": 0.0,
    "fighting_turn": 0,
-   "mine": "Qwilfish",
+   "mine": "Qwilfish (Hisuian)",
    "theirs": "Hydreigon",
    "incomplete_start": false,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 123,
-     "hp_max": 123,
+     "hp": 121,
+     "hp_max": 121,
      "hp_share": 1.0,
      "energy": 0
     },
@@ -310,20 +310,21 @@
    "fighting_turn": 0,
    "turns": 13,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
     "hits_seen": 6
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 92,
-     "hp_max": 123,
-     "hp_share": 0.748,
+     "hp": 90,
+     "hp_max": 121,
+     "hp_share": 0.744,
      "energy": 54
     },
     "theirs": {
@@ -334,8 +335,8 @@
      "hp_max": 116,
      "hp_share": 0.793,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
      "energy_ceiling": 52
     }
@@ -346,41 +347,41 @@
    "t": 6.8,
    "fighting_turn": 13,
    "side": "mine",
-   "pokemon": "Qwilfish",
-   "move": "Aqua Tail",
-   "move_id": "AQUA_TAIL",
+   "pokemon": "Qwilfish (Hisuian)",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
    "move_known_from": "seen",
-   "cost": 35,
+   "cost": 45,
    "energy_before": 54,
    "target": "Hydreigon",
    "shielded": true,
    "target_hp_before": 92,
-   "target_hp_after": 87,
+   "target_hp_after": 92,
    "target_hp_max": 116,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 16.5,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 92,
-     "hp_max": 123,
-     "hp_share": 0.748,
-     "energy": 19
+     "hp": 90,
+     "hp_max": 121,
+     "hp_share": 0.744,
+     "energy": 9
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 1,
      "left": 3,
-     "hp": 87,
+     "hp": 92,
      "hp_max": 116,
-     "hp_share": 0.75,
+     "hp_share": 0.793,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
      "energy_ceiling": 52
     }
@@ -388,34 +389,34 @@
   },
   {
    "kind": "fighting",
-   "t": 16.5,
+   "t": 16.0,
    "until": 19.8,
    "fighting_turn": 13,
-   "turns": 6,
+   "turns": 7,
    "mine": {
-    "pokemon": "Qwilfish",
+    "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Hydreigon",
     "fast_move": "Bite",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 3
    },
    "unexplained_health_changes": 2,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 58,
-     "hp_max": 123,
-     "hp_share": 0.472,
-     "energy": 46
+     "hp": 57,
+     "hp_max": 121,
+     "hp_share": 0.471,
+     "energy": 36
     },
     "theirs": {
      "active": "Hydreigon",
@@ -425,17 +426,17 @@
      "hp_max": 116,
      "hp_share": 0.655,
      "energy": [
-      72,
-      72
+      84,
+      84
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "charged",
    "t": 19.8,
-   "fighting_turn": 19,
+   "fighting_turn": 20,
    "side": "theirs",
    "pokemon": "Hydreigon",
    "move": "Fly",
@@ -443,81 +444,36 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    72,
-    72
+    84,
+    84
    ],
-   "energy_ceiling": 76,
-   "target": "Qwilfish",
+   "energy_ceiling": 80,
+   "target": "Qwilfish (Hisuian)",
    "shielded": false,
-   "target_hp_before": 58,
-   "target_hp_after": 58,
-   "target_hp_max": 123,
-   "target_bar_read": false,
-   "expected_damage": 68,
-   "resolved_t": 29.5,
+   "target_hp_before": 57,
+   "target_hp_after": 0,
+   "target_hp_max": 121,
+   "target_bar_read": true,
+   "expected_damage": 63,
+   "resolved_t": 27.4,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Qwilfish",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 58,
-     "hp_max": 123,
-     "hp_share": 0.472,
-     "energy": 46
+     "hp": 0,
+     "hp_max": 121,
+     "hp_share": 0.0,
+     "energy": 45
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 1,
      "left": 3,
-     "hp": 81,
+     "hp": 76,
      "hp_max": 116,
-     "hp_share": 0.698,
-     "energy": [
-      27,
-      27
-     ],
-     "energy_ceiling": 31
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 29.5,
-   "until": 32.0,
-   "fighting_turn": 19,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Qwilfish",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Hydreigon",
-    "fast_move": "Bite",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Qwilfish",
-     "shields": 2,
-     "left": 2,
-     "hp": 58,
-     "hp_max": 123,
-     "hp_share": 0.472,
-     "energy": 55
-    },
-    "theirs": {
-     "active": "Hydreigon",
-     "shields": 1,
-     "left": 3,
-     "hp": 81,
-     "hp_max": 116,
-     "hp_share": 0.698,
+     "hp_share": 0.655,
      "energy": [
       39,
       39
@@ -528,54 +484,54 @@
   },
   {
    "kind": "faint",
-   "t": 32.0,
-   "fighting_turn": 23,
+   "t": 27.4,
+   "fighting_turn": 20,
    "side": "mine",
-   "pokemon": "Qwilfish",
-   "next": "Greninja",
+   "pokemon": "Qwilfish (Hisuian)",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Greninja",
+     "active": "Qwilfish (Hisuian)",
      "shields": 2,
-     "left": 2,
-     "hp": 115,
-     "hp_max": 115,
-     "hp_share": 1.0,
-     "energy": 0
+     "left": 3,
+     "hp": 0,
+     "hp_max": 121,
+     "hp_share": 0.0,
+     "energy": 45
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 1,
      "left": 3,
-     "hp": 81,
+     "hp": 76,
      "hp_max": 116,
-     "hp_share": 0.698,
+     "hp_share": 0.655,
      "energy": [
-      43,
-      43
+      39,
+      39
      ],
-     "energy_ceiling": 47
+     "energy_ceiling": 43
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 32.0,
+   "t": 27.4,
    "until": 35.8,
-   "fighting_turn": 23,
-   "turns": 7,
+   "fighting_turn": 20,
+   "turns": 8,
    "mine": {
-    "pokemon": "Greninja",
-    "fast_move": "Water Shuriken",
+    "pokemon": "Qwilfish (Hisuian)",
+    "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Hydreigon",
     "fast_move": "Bite",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -597,17 +553,17 @@
      "hp_max": 116,
      "hp_share": 0.655,
      "energy": [
-      63,
-      63
+      67,
+      67
      ],
-     "energy_ceiling": 67
+     "energy_ceiling": 71
     }
    }
   },
   {
    "kind": "charged",
    "t": 35.8,
-   "fighting_turn": 28,
+   "fighting_turn": 27,
    "side": "theirs",
    "pokemon": "Hydreigon",
    "move": "Brutal Swing",
@@ -626,7 +582,7 @@
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 45.5,
+   "resolved_t": 45.0,
    "cue": true,
    "state": {
     "mine": {
@@ -636,60 +592,15 @@
      "hp": 88,
      "hp_max": 115,
      "hp_share": 0.765,
-     "energy": 42
+     "energy": 28
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 1,
      "left": 3,
-     "hp": 64,
+     "hp": 76,
      "hp_max": 116,
-     "hp_share": 0.552,
-     "energy": [
-      32,
-      32
-     ],
-     "energy_ceiling": 36
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 45.8,
-   "fighting_turn": 30,
-   "side": "mine",
-   "pokemon": "Greninja",
-   "move": "Hydro Cannon",
-   "move_id": "HYDRO_CANNON",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 42,
-   "target": "Hydreigon",
-   "shielded": true,
-   "target_hp_before": 64,
-   "target_hp_after": 63,
-   "target_hp_max": 116,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 55.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 1,
-     "left": 2,
-     "hp": 73,
-     "hp_max": 115,
-     "hp_share": 0.635,
-     "energy": 2
-    },
-    "theirs": {
-     "active": "Hydreigon",
-     "shields": 0,
-     "left": 3,
-     "hp": 63,
-     "hp_max": 116,
-     "hp_share": 0.543,
+     "hp_share": 0.655,
      "energy": [
       32,
       32
@@ -700,10 +611,101 @@
   },
   {
    "kind": "fighting",
-   "t": 55.5,
+   "t": 45.0,
+   "until": 45.8,
+   "fighting_turn": 28,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Greninja",
+    "fast_move": "Water Shuriken",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Hydreigon",
+    "fast_move": "Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Greninja",
+     "shields": 1,
+     "left": 2,
+     "hp": 88,
+     "hp_max": 115,
+     "hp_share": 0.765,
+     "energy": 28
+    },
+    "theirs": {
+     "active": "Hydreigon",
+     "shields": 1,
+     "left": 3,
+     "hp": 64,
+     "hp_max": 116,
+     "hp_share": 0.552,
+     "energy": [
+      36,
+      36
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 45.8,
+   "fighting_turn": 29,
+   "side": "mine",
+   "pokemon": "Greninja",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 28,
+   "energy_short_by": 12,
+   "target": "Hydreigon",
+   "shielded": true,
+   "target_hp_before": 64,
+   "target_hp_after": 64,
+   "target_hp_max": 116,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 55.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Greninja",
+     "shields": 1,
+     "left": 2,
+     "hp": 88,
+     "hp_max": 115,
+     "hp_share": 0.765,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Hydreigon",
+     "shields": 0,
+     "left": 3,
+     "hp": 64,
+     "hp_max": 116,
+     "hp_share": 0.552,
+     "energy": [
+      36,
+      36
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 55.0,
    "until": 58.8,
-   "fighting_turn": 30,
-   "turns": 6,
+   "fighting_turn": 29,
+   "turns": 7,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
@@ -715,10 +717,10 @@
     "pokemon": "Hydreigon",
     "fast_move": "Bite",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 5
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Greninja",
@@ -727,7 +729,7 @@
      "hp": 58,
      "hp_max": 115,
      "hp_share": 0.504,
-     "energy": 30
+     "energy": 28
     },
     "theirs": {
      "active": "Hydreigon",
@@ -737,10 +739,10 @@
      "hp_max": 116,
      "hp_share": 0.5,
      "energy": [
-      56,
-      56
+      64,
+      64
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 68
     }
    }
   },
@@ -755,10 +757,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    56,
-    56
+    64,
+    64
    ],
-   "energy_ceiling": 60,
+   "energy_ceiling": 68,
    "target": "Greninja",
    "shielded": true,
    "target_hp_before": 58,
@@ -766,7 +768,7 @@
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 68.5,
+   "resolved_t": 68.0,
    "cue": true,
    "state": {
     "mine": {
@@ -776,7 +778,7 @@
      "hp": 58,
      "hp_max": 115,
      "hp_share": 0.504,
-     "energy": 30
+     "energy": 42
     },
     "theirs": {
      "active": "Hydreigon",
@@ -786,34 +788,33 @@
      "hp_max": 116,
      "hp_share": 0.5,
      "energy": [
-      21,
-      21
+      29,
+      29
      ],
-     "energy_ceiling": 25
+     "energy_ceiling": 33
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 68.5,
+   "t": 68.0,
    "until": 69.5,
    "fighting_turn": 36,
-   "turns": 2,
+   "turns": 3,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Hydreigon",
     "fast_move": "Bite",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Greninja",
@@ -822,7 +823,7 @@
      "hp": 51,
      "hp_max": 115,
      "hp_share": 0.443,
-     "energy": 30
+     "energy": 42
     },
     "theirs": {
      "active": "Hydreigon",
@@ -832,17 +833,17 @@
      "hp_max": 116,
      "hp_share": 0.5,
      "energy": [
-      25,
-      25
+      41,
+      41
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 41
     }
    }
   },
   {
    "kind": "switch",
    "t": 69.5,
-   "fighting_turn": 38,
+   "fighting_turn": 39,
    "side": "theirs",
    "from": "Hydreigon",
    "to": "Melmetal",
@@ -854,7 +855,7 @@
      "hp": 51,
      "hp_max": 115,
      "hp_share": 0.443,
-     "energy": 30
+     "energy": 56
     },
     "theirs": {
      "active": "Melmetal",
@@ -875,7 +876,7 @@
    "kind": "fighting",
    "t": 69.5,
    "until": 70.8,
-   "fighting_turn": 38,
+   "fighting_turn": 39,
    "turns": 2,
    "mine": {
     "pokemon": "Greninja",
@@ -900,7 +901,7 @@
      "hp": 47,
      "hp_max": 115,
      "hp_share": 0.409,
-     "energy": 44
+     "energy": 56
     },
     "theirs": {
      "active": "Melmetal",
@@ -920,40 +921,40 @@
   {
    "kind": "charged",
    "t": 70.8,
-   "fighting_turn": 40,
+   "fighting_turn": 41,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
    "move_id": "HYDRO_CANNON",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 44,
+   "energy_before": 56,
    "target": "Melmetal",
    "shielded": false,
    "target_hp_before": 146,
-   "target_hp_after": 55,
+   "target_hp_after": 146,
    "target_hp_max": 146,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 83,
-   "resolved_t": 80.5,
+   "resolved_t": 80.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 0,
      "left": 2,
-     "hp": 40,
+     "hp": 47,
      "hp_max": 115,
-     "hp_share": 0.348,
-     "energy": 4
+     "hp_share": 0.409,
+     "energy": 16
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 55,
+     "hp": 146,
      "hp_max": 146,
-     "hp_share": 0.377,
+     "hp_share": 1.0,
      "energy": [
       9,
       9
@@ -964,10 +965,10 @@
   },
   {
    "kind": "fighting",
-   "t": 80.5,
+   "t": 80.0,
    "until": 82.8,
-   "fighting_turn": 40,
-   "turns": 4,
+   "fighting_turn": 41,
+   "turns": 5,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
@@ -990,7 +991,7 @@
      "hp": 35,
      "hp_max": 115,
      "hp_share": 0.304,
-     "energy": 18
+     "energy": 30
     },
     "theirs": {
      "active": "Melmetal",
@@ -1000,8 +1001,8 @@
      "hp_max": 146,
      "hp_share": 0.336,
      "energy": [
-      27,
-      27
+      36,
+      36
      ],
      "energy_ceiling": 36
     }
@@ -1010,7 +1011,7 @@
   {
    "kind": "charged",
    "t": 82.8,
-   "fighting_turn": 44,
+   "fighting_turn": 46,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -1018,39 +1019,38 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    27,
-    27
+    36,
+    36
    ],
    "energy_ceiling": 36,
-   "energy_short_by": 8,
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 35,
-   "target_hp_after": 35,
+   "target_hp_after": 0,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 42,
-   "resolved_t": 92.5,
+   "resolved_t": 91.95,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 0,
      "left": 2,
-     "hp": 35,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.304,
-     "energy": 32
+     "hp_share": 0.0,
+     "energy": 44
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 45,
+     "hp": 49,
      "hp_max": 146,
-     "hp_share": 0.308,
+     "hp_share": 0.336,
      "energy": [
-      0,
+      1,
       1
      ],
      "energy_ceiling": 10
@@ -1058,76 +1058,31 @@
    }
   },
   {
-   "kind": "fighting",
-   "t": 92.5,
-   "until": 93.0,
-   "fighting_turn": 44,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Greninja",
-    "fast_move": "Water Shuriken",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Melmetal",
-    "fast_move": "Thunder Shock",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
+   "kind": "faint",
+   "t": 91.95,
+   "fighting_turn": 46,
+   "side": "mine",
+   "pokemon": "Greninja",
+   "next": null,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 0,
      "left": 2,
-     "hp": 35,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.304,
-     "energy": 32
+     "hp_share": 0.0,
+     "energy": 44
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 45,
+     "hp": 49,
      "hp_max": 146,
-     "hp_share": 0.308,
+     "hp_share": 0.336,
      "energy": [
-      0,
-      1
-     ],
-     "energy_ceiling": 10
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 93.0,
-   "fighting_turn": 45,
-   "side": "mine",
-   "from": "Greninja",
-   "to": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 2,
-     "hp": 107,
-     "hp_max": 107,
-     "hp_share": 1.0,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Melmetal",
-     "shields": 0,
-     "left": 3,
-     "hp": 45,
-     "hp_max": 146,
-     "hp_share": 0.308,
-     "energy": [
-      0,
+      1,
       1
      ],
      "energy_ceiling": 10
@@ -1136,22 +1091,22 @@
   },
   {
    "kind": "fighting",
-   "t": 93.0,
+   "t": 91.95,
    "until": 100.8,
-   "fighting_turn": 45,
-   "turns": 19,
+   "fighting_turn": 46,
+   "turns": 15,
    "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
+    "pokemon": "Greninja",
+    "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 8
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 6
    },
    "state": {
@@ -1172,17 +1127,17 @@
      "hp_max": 146,
      "hp_share": 0.082,
      "energy": [
-      63,
+      64,
       64
      ],
-     "energy_ceiling": 82
+     "energy_ceiling": 73
     }
    }
   },
   {
    "kind": "charged",
    "t": 100.8,
-   "fighting_turn": 60,
+   "fighting_turn": 61,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -1190,10 +1145,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    72,
-    73
+    64,
+    64
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 73,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 88,
@@ -1201,7 +1156,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 75,
-   "resolved_t": 112.5,
+   "resolved_t": 109.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1211,7 +1166,7 @@
      "hp": 88,
      "hp_max": 107,
      "hp_share": 0.822,
-     "energy": 80
+     "energy": 64
     },
     "theirs": {
      "active": "Melmetal",
@@ -1221,31 +1176,31 @@
      "hp_max": 146,
      "hp_share": 0.082,
      "energy": [
-      37,
-      38
+      29,
+      29
      ],
-     "energy_ceiling": 47
+     "energy_ceiling": 38
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 112.5,
+   "t": 109.0,
    "until": 114.5,
-   "fighting_turn": 64,
-   "turns": 4,
+   "fighting_turn": 61,
+   "turns": 11,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 2
    },
    "state": {
@@ -1256,7 +1211,7 @@
      "hp": 85,
      "hp_max": 107,
      "hp_share": 0.794,
-     "energy": 88
+     "energy": 96
     },
     "theirs": {
      "active": "Melmetal",
@@ -1266,17 +1221,17 @@
      "hp_max": 146,
      "hp_share": 0.027,
      "energy": [
-      46,
-      47
+      65,
+      65
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 74
     }
    }
   },
   {
    "kind": "switch",
    "t": 114.5,
-   "fighting_turn": 68,
+   "fighting_turn": 72,
    "side": "theirs",
    "from": "Melmetal",
    "to": "Hydreigon",
@@ -1288,7 +1243,7 @@
      "hp": 81,
      "hp_max": 107,
      "hp_share": 0.757,
-     "energy": 96
+     "energy": 100
     },
     "theirs": {
      "active": "Hydreigon",
@@ -1298,10 +1253,10 @@
      "hp_max": 116,
      "hp_share": 0.5,
      "energy": [
-      33,
-      33
+      41,
+      41
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 45
     }
    }
   },
@@ -1309,7 +1264,97 @@
    "kind": "fighting",
    "t": 114.5,
    "until": 115.8,
-   "fighting_turn": 68,
+   "fighting_turn": 72,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Hydreigon",
+    "fast_move": "Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 1,
+     "hp": 81,
+     "hp_max": 107,
+     "hp_share": 0.757,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Hydreigon",
+     "shields": 0,
+     "left": 3,
+     "hp": 58,
+     "hp_max": 116,
+     "hp_share": 0.5,
+     "energy": [
+      45,
+      45
+     ],
+     "energy_ceiling": 49
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 115.8,
+   "fighting_turn": 73,
+   "side": "mine",
+   "pokemon": "Mimikyu",
+   "move": "Shadow Sneak",
+   "move_id": "SHADOW_SNEAK",
+   "move_known_from": "seen",
+   "cost": 50,
+   "energy_before": 100,
+   "target": "Hydreigon",
+   "shielded": false,
+   "target_hp_before": 58,
+   "target_hp_after": 58,
+   "target_hp_max": 116,
+   "target_bar_read": false,
+   "expected_damage": 43,
+   "resolved_t": 124.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 0,
+     "left": 1,
+     "hp": 81,
+     "hp_max": 107,
+     "hp_share": 0.757,
+     "energy": 50
+    },
+    "theirs": {
+     "active": "Hydreigon",
+     "shields": 0,
+     "left": 3,
+     "hp": 58,
+     "hp_max": 116,
+     "hp_share": 0.5,
+     "energy": [
+      45,
+      45
+     ],
+     "energy_ceiling": 49
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 124.0,
+   "until": 124.75,
+   "fighting_turn": 73,
    "turns": 2,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1333,7 +1378,7 @@
      "hp": 81,
      "hp_max": 107,
      "hp_share": 0.757,
-     "energy": 96
+     "energy": 50
     },
     "theirs": {
      "active": "Hydreigon",
@@ -1343,33 +1388,20 @@
      "hp_max": 116,
      "hp_share": 0.5,
      "energy": [
-      37,
-      37
+      45,
+      45
      ],
-     "energy_ceiling": 37
+     "energy_ceiling": 49
     }
    }
   },
   {
-   "kind": "charged",
-   "t": 115.8,
-   "fighting_turn": 69,
-   "side": "mine",
-   "pokemon": "Mimikyu",
-   "move": "Shadow Sneak",
-   "move_id": "SHADOW_SNEAK",
-   "move_known_from": "seen",
-   "cost": 50,
-   "energy_before": 96,
-   "target": "Hydreigon",
-   "shielded": false,
-   "target_hp_before": 58,
-   "target_hp_after": 58,
-   "target_hp_max": 116,
-   "target_bar_read": false,
-   "expected_damage": 43,
-   "resolved_t": 125.5,
-   "cue": true,
+   "kind": "faint",
+   "t": 124.75,
+   "fighting_turn": 75,
+   "side": "theirs",
+   "pokemon": "Hydreigon",
+   "next": null,
    "state": {
     "mine": {
      "active": "Mimikyu",
@@ -1378,41 +1410,41 @@
      "hp": 81,
      "hp_max": 107,
      "hp_share": 0.757,
-     "energy": 46
+     "energy": 58
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 0,
      "left": 3,
-     "hp": 58,
+     "hp": 0,
      "hp_max": 116,
-     "hp_share": 0.5,
+     "hp_share": 0.0,
      "energy": [
-      41,
-      41
+      53,
+      53
      ],
-     "energy_ceiling": 41
+     "energy_ceiling": 57
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 125.5,
-   "until": 128.0,
-   "fighting_turn": 70,
-   "turns": 4,
+   "t": 124.75,
+   "until": 133.8,
+   "fighting_turn": 75,
+   "turns": 2,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Hydreigon",
     "fast_move": "Bite",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1423,39 +1455,7 @@
      "hp": 81,
      "hp_max": 107,
      "hp_share": 0.757,
-     "energy": 54
-    },
-    "theirs": {
-     "active": "Hydreigon",
-     "shields": 0,
-     "left": 2,
-     "hp": 58,
-     "hp_max": 116,
-     "hp_share": 0.5,
-     "energy": [
-      53,
-      53
-     ],
-     "energy_ceiling": 53
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 128.0,
-   "fighting_turn": 74,
-   "side": "theirs",
-   "pokemon": "Hydreigon",
-   "next": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 1,
-     "hp": 81,
-     "hp_max": 107,
-     "hp_share": 0.757,
-     "energy": 70
+     "energy": 74
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1475,7 +1475,7 @@
   {
    "kind": "end",
    "t": 133.8,
-   "fighting_turn": 74,
+   "fighting_turn": 77,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1490,7 +1490,7 @@
      "hp": 81,
      "hp_max": 107,
      "hp_share": 0.757,
-     "energy": 70
+     "energy": 74
     },
     "theirs": {
      "active": "Mimikyu",
@@ -1510,13 +1510,15 @@
  ],
  "deductions": [
   {
-   "t": 5.0,
+   "t": 4.0,
    "side": "theirs",
    "pokemon": "Hydreigon",
    "what": "fast move",
    "value": "Bite",
-   "how": "fits the size and timing of its hits on our bar",
-   "ruled_out": []
+   "how": "every other fast move ruled out by effectiveness words or energy",
+   "ruled_out": [
+    "Dragon Breath"
+   ]
   }
  ],
  "built_from": [

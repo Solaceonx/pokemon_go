@@ -469,7 +469,7 @@ def creator_export(folder, game, meta, root):
         name += '-' + meta['view_id']
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
-    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json',
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json',
                'state.json', 'track.json', 'timeline.json', 'verdict.json']
     for name in allowed:
         path = game / name
@@ -518,8 +518,13 @@ def track_clip(folder, reader, *, creator_root=None):
             write_json(game / 'creator-evidence.json', evidence)
             from creator_impact import apply_impact
             terminal = apply_impact(folder, raw, game)
+            from creator_lifecycle import apply_lifecycle
+            apply_lifecycle(folder, raw, game, GameData())
         paired = reconcile(folder, game)
         prepare_team(game, GameData())
+        if evidence is not None:
+            from creator_state import reconcile_creator_state
+            reconcile_creator_state(game, raw)
         tracked = run_step(ROOT / "scripts/track.py", game)
         (game / "track.log").write_text(tracked["output"], encoding="utf-8")
         if evidence is not None:
@@ -604,7 +609,7 @@ def main():
     parser.add_argument('--creator', choices=('reis2occasion', 'homeslicehenry', 'itsaxn'))
     args = parser.parse_args()
     if args.jobs < 1 or args.jobs > 4 or args.fps <= 0 or args.text_rate <= 0:
-        parser.error("Use 1–4 workers and positive sampling rates")
+        parser.error("Use 1â€“4 workers and positive sampling rates")
     reader = reader_location(args.reader_dir)
     creator_root = ROOT / 'games/creators' / args.creator if args.creator else None
     folders = sorted(p.parent for p in args.library.glob("*/battle.json")

@@ -19,6 +19,21 @@ OWNER_SHEET = {}
 for entry in SHEET:
     OWNER_SHEET.setdefault(entry["species"], []).append(entry)
 canon = lambda s: re.sub(r"[^a-z]", "", s.lower())
+
+
+def public_announced_move(text, user):
+    # The game prints "Weather Ball" without a type suffix. Use a variant only
+    # when the named actor's possible forms collectively allow exactly one.
+    if canon(text) == 'weatherball' and user:
+        candidates = {mid for p in gd.species.values()
+                      if p['speciesName'].split(' (')[0] == user.split(' (')[0]
+                      for mid in p['chargedMoves'] if mid.startswith('WEATHER_BALL_')}
+        if len(candidates) == 1:
+            return gd.moves[next(iter(candidates))].name
+        return None
+    return nearest(text, moves, .8)
+
+
 @lru_cache(maxsize=None)
 def _nearest(word, options, cutoff):
     table = {}
@@ -126,7 +141,9 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         if m and seq and t - seq["start"] < 14:
             seq["user"] = seq["user"] or nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
             move_text = m.group(2).replace("lron", "iron") if PUBLIC else m.group(2)
-            seq["move"] = seq["move"] or nearest(move_text, moves, 0.8)
+            seq["move"] = seq["move"] or (public_announced_move(move_text, seq['user']) if PUBLIC else nearest(move_text, moves, 0.8))
+            if seq["move"]:
+                seq.setdefault("announcements", []).append(t)
         # "BLOCKED!" comes at the end of a move; one still on screen as the next cue appears belongs to the last move.
         if "blocked" in joined and seq and 6 < t - seq["start"] < 15: seq["blocked"] = True
         # NICE! GREAT! EXCELLENT! are the charging game, which only the thrower's own screen shows: our move.
@@ -134,6 +151,10 @@ def assemble(rows, texts, argv=(), span=None, now=None):
     for q in seqs:
         # A charged move is decided about 8.5 s after its cue and lands at about 9.5 s; fighting resumes at 10 s.
         q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"] if now is None else float("inf"))
+        # A release is observed even when a faint hides both health bars for
+        # the whole replacement timer. Do not date it at the replacement.
+        if PUBLIC and q.get("announcements"):
+            q["resume"] = min(q["resume"], q["announcements"][-1] + 1.0)
         # Whose move: the cue says ("Get Ready!" is ours, "Attack incoming!" theirs). Without a cue, the charging
         # game marks ours; failing that the name, if only one team has that Pokémon.
         if q["side"] is None:
@@ -599,7 +620,7 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"],
                            **({"header_seen_clip_seconds": f["seen"], "transition_evidence": f["transition_evidence"]} if PUBLIC else {})}
                           for f in field[side]] for side in field},
-        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"]} for q in seqs],
+        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"], **({"announcement_clip_seconds": q.get("announcements", [])} if PUBLIC else {})} for q in seqs],
         "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
         "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
         "own_energy_steps": dict(own_steps),

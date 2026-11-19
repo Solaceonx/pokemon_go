@@ -23,16 +23,17 @@
   }
  },
  "seconds": 163.1,
- "fighting_turns": 135,
+ "fighting_turns": 92,
  "checks": {
   "verdict": "fail",
   "failed": [
+   "shields: we used 2, but 0 charged move(s) were tracked as blocked",
    "ending: result says loss, tracker has us on 1 and them on 1"
   ],
   "notes": [
    "fast move only guessed for gurdurr, girafarig"
   ],
-  "unexplained_health_changes": 9
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -153,8 +154,8 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Low Kick": 0.63,
-      "Poison Jab": 0.37
+      "Low Kick": 0.69,
+      "Poison Jab": 0.31
      }
     },
     "charged_moves": [
@@ -268,7 +269,7 @@
   },
   "charged_shielded": {
    "mine": 2,
-   "theirs": 2
+   "theirs": 0
   },
   "shields_left": {
    "mine": 0,
@@ -384,7 +385,7 @@
    "target_hp_max": 123,
    "target_bar_read": false,
    "expected_damage": 42,
-   "resolved_t": 16.0,
+   "resolved_t": 15.5,
    "cue": true,
    "state": {
     "mine": {
@@ -413,15 +414,15 @@
   },
   {
    "kind": "fighting",
-   "t": 16.0,
+   "t": 15.5,
    "until": 17.0,
    "fighting_turn": 12,
-   "turns": 2,
+   "turns": 3,
    "mine": {
     "pokemon": "Shelgon",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
@@ -459,55 +460,10 @@
   {
    "kind": "switch",
    "t": 17.0,
-   "fighting_turn": 14,
+   "fighting_turn": 15,
    "side": "theirs",
    "from": "Gurdurr",
    "to": "Girafarig",
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 2,
-     "left": 3,
-     "hp": 43,
-     "hp_max": 123,
-     "hp_share": 0.35,
-     "energy": 56
-    },
-    "theirs": {
-     "active": "Girafarig",
-     "shields": 2,
-     "left": 3,
-     "hp": 130,
-     "hp_max": 130,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 14
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 17.0,
-   "until": 18.5,
-   "fighting_turn": 14,
-   "turns": 3,
-   "mine": {
-    "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Girafarig",
-    "fast_move": "Confusion",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 2
-   },
    "state": {
     "mine": {
      "active": "Shelgon",
@@ -534,9 +490,54 @@
    }
   },
   {
+   "kind": "fighting",
+   "t": 17.0,
+   "until": 18.5,
+   "fighting_turn": 15,
+   "turns": 3,
+   "mine": {
+    "pokemon": "Shelgon",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Girafarig",
+    "fast_move": "Confusion",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 2
+   },
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 2,
+     "left": 3,
+     "hp": 43,
+     "hp_max": 123,
+     "hp_share": 0.35,
+     "energy": 64
+    },
+    "theirs": {
+     "active": "Girafarig",
+     "shields": 2,
+     "left": 3,
+     "hp": 130,
+     "hp_max": 130,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 14
+    }
+   }
+  },
+  {
    "kind": "switch",
    "t": 18.5,
-   "fighting_turn": 17,
+   "fighting_turn": 18,
    "side": "mine",
    "from": "Shelgon",
    "to": "Cetitan",
@@ -569,20 +570,20 @@
    "kind": "fighting",
    "t": 18.5,
    "until": 23.1,
-   "fighting_turn": 17,
-   "turns": 9,
+   "fighting_turn": 18,
+   "turns": 7,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Girafarig",
     "fast_move": "Confusion",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "unexplained_health_changes": 2,
@@ -614,7 +615,7 @@
   {
    "kind": "charged",
    "t": 23.1,
-   "fighting_turn": 24,
+   "fighting_turn": 25,
    "side": "theirs",
    "pokemon": "Girafarig",
    "move": "Psychic Fangs",
@@ -625,61 +626,61 @@
     28,
     28
    ],
-   "energy_ceiling": 56,
+   "energy_ceiling": 42,
    "energy_short_by": 7,
    "target": "Cetitan",
-   "shielded": true,
+   "shielded": false,
    "target_hp_before": 152,
-   "target_hp_after": 151,
+   "target_hp_after": 152,
    "target_hp_max": 202,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 33.0,
+   "target_bar_read": false,
+   "expected_damage": 53,
+   "resolved_t": 31.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Cetitan",
-     "shields": 1,
+     "shields": 2,
      "left": 3,
-     "hp": 151,
+     "hp": 152,
      "hp_max": 202,
-     "hp_share": 0.748,
-     "energy": 40
+     "hp_share": 0.752,
+     "energy": 32
     },
     "theirs": {
      "active": "Girafarig",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 105,
      "hp_max": 130,
-     "hp_share": 0.538,
+     "hp_share": 0.808,
      "energy": [
       0,
-      21
+      7
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 21
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 33.0,
+   "t": 31.5,
    "until": 36.1,
-   "fighting_turn": 26,
-   "turns": 6,
+   "fighting_turn": 25,
+   "turns": 9,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Girafarig",
     "fast_move": "Confusion",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
    },
    "state": {
     "mine": {
@@ -699,7 +700,7 @@
      "hp_max": 130,
      "hp_share": 0.438,
      "energy": [
-      14,
+      28,
       35
      ],
      "energy_ceiling": 49
@@ -709,7 +710,7 @@
   {
    "kind": "charged",
    "t": 36.1,
-   "fighting_turn": 32,
+   "fighting_turn": 34,
    "side": "mine",
    "pokemon": "Cetitan",
    "move": "Icicle Spear",
@@ -720,31 +721,31 @@
    "target": "Girafarig",
    "shielded": true,
    "target_hp_before": 57,
-   "target_hp_after": 53,
+   "target_hp_after": 57,
    "target_hp_max": 130,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 46.0,
+   "resolved_t": 45.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Cetitan",
      "shields": 1,
      "left": 3,
-     "hp": 85,
+     "hp": 117,
      "hp_max": 202,
-     "hp_share": 0.421,
+     "hp_share": 0.579,
      "energy": 24
     },
     "theirs": {
      "active": "Girafarig",
      "shields": 1,
      "left": 3,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 130,
-     "hp_share": 0.408,
+     "hp_share": 0.438,
      "energy": [
-      28,
+      42,
       49
      ],
      "energy_ceiling": 49
@@ -753,10 +754,10 @@
   },
   {
    "kind": "fighting",
-   "t": 46.0,
+   "t": 45.5,
    "until": 47.1,
-   "fighting_turn": 32,
-   "turns": 2,
+   "fighting_turn": 34,
+   "turns": 3,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
@@ -789,8 +790,8 @@
      "hp_max": 130,
      "hp_share": 0.408,
      "energy": [
-      28,
-      49
+      56,
+      63
      ],
      "energy_ceiling": 63
     }
@@ -799,7 +800,7 @@
   {
    "kind": "charged",
    "t": 47.1,
-   "fighting_turn": 34,
+   "fighting_turn": 37,
    "side": "theirs",
    "pokemon": "Girafarig",
    "move": "Psychic Fangs",
@@ -807,28 +808,28 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    28,
-    49
+    56,
+    63
    ],
    "energy_ceiling": 63,
    "target": "Cetitan",
-   "shielded": true,
+   "shielded": false,
    "target_hp_before": 85,
-   "target_hp_after": 84,
+   "target_hp_after": 85,
    "target_hp_max": 202,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 57.0,
+   "target_bar_read": false,
+   "expected_damage": 66,
+   "resolved_t": 55.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Cetitan",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 84,
+     "hp": 85,
      "hp_max": 202,
-     "hp_share": 0.416,
-     "energy": 32
+     "hp_share": 0.421,
+     "energy": 40
     },
     "theirs": {
      "active": "Girafarig",
@@ -838,31 +839,31 @@
      "hp_max": 130,
      "hp_share": 0.408,
      "energy": [
-      0,
-      14
+      21,
+      28
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 42
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 57.0,
+   "t": 55.5,
    "until": 60.1,
-   "fighting_turn": 34,
-   "turns": 6,
+   "fighting_turn": 37,
+   "turns": 8,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Girafarig",
     "fast_move": "Confusion",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 2
    },
    "state": {
@@ -873,7 +874,7 @@
      "hp": 45,
      "hp_max": 202,
      "hp_share": 0.223,
-     "energy": 48
+     "energy": 72
     },
     "theirs": {
      "active": "Girafarig",
@@ -883,32 +884,32 @@
      "hp_max": 130,
      "hp_share": 0.215,
      "energy": [
-      14,
-      28
+      35,
+      42
      ],
-     "energy_ceiling": 42
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "charged",
    "t": 60.1,
-   "fighting_turn": 39,
+   "fighting_turn": 45,
    "side": "mine",
    "pokemon": "Cetitan",
    "move": "Icicle Spear",
    "move_id": "ICICLE_SPEAR",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 48,
+   "energy_before": 72,
    "target": "Girafarig",
    "shielded": true,
    "target_hp_before": 28,
-   "target_hp_after": 25,
+   "target_hp_after": 28,
    "target_hp_max": 130,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 70.0,
+   "resolved_t": 68.5,
    "cue": true,
    "state": {
     "mine": {
@@ -918,28 +919,28 @@
      "hp": 45,
      "hp_max": 202,
      "hp_share": 0.223,
-     "energy": 8
+     "energy": 32
     },
     "theirs": {
      "active": "Girafarig",
      "shields": 0,
      "left": 3,
-     "hp": 25,
+     "hp": 28,
      "hp_max": 130,
-     "hp_share": 0.192,
+     "hp_share": 0.215,
      "energy": [
-      28,
-      42
+      49,
+      56
      ],
-     "energy_ceiling": 42
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 70.0,
-   "until": 70.5,
-   "fighting_turn": 40,
+   "t": 68.5,
+   "until": 69.0,
+   "fighting_turn": 45,
    "turns": 1,
    "mine": {
     "pokemon": "Cetitan",
@@ -963,7 +964,39 @@
      "hp": 45,
      "hp_max": 202,
      "hp_share": 0.223,
-     "energy": 8
+     "energy": 32
+    },
+    "theirs": {
+     "active": "Girafarig",
+     "shields": 0,
+     "left": 3,
+     "hp": 28,
+     "hp_max": 130,
+     "hp_share": 0.215,
+     "energy": [
+      49,
+      56
+     ],
+     "energy_ceiling": 70
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 69.0,
+   "fighting_turn": 46,
+   "side": "mine",
+   "from": "Cetitan",
+   "to": "Shelgon",
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 0,
+     "left": 3,
+     "hp": 43,
+     "hp_max": 123,
+     "hp_share": 0.35,
+     "energy": 68
     },
     "theirs": {
      "active": "Girafarig",
@@ -973,140 +1006,18 @@
      "hp_max": 130,
      "hp_share": 0.192,
      "energy": [
-      28,
-      42
-     ],
-     "energy_ceiling": 42
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 70.5,
-   "fighting_turn": 41,
-   "side": "mine",
-   "from": "Cetitan",
-   "to": "Shelgon",
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 0,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 123,
-     "hp_share": 0.122,
-     "energy": 64
-    },
-    "theirs": {
-     "active": "Girafarig",
-     "shields": 0,
-     "left": 3,
-     "hp": 19,
-     "hp_max": 130,
-     "hp_share": 0.146,
-     "energy": [
-      28,
-      42
-     ],
-     "energy_ceiling": 42
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 70.5,
-   "until": 71.1,
-   "fighting_turn": 41,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Girafarig",
-    "fast_move": "Confusion",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 0,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 123,
-     "hp_share": 0.122,
-     "energy": 64
-    },
-    "theirs": {
-     "active": "Girafarig",
-     "shields": 0,
-     "left": 3,
-     "hp": 19,
-     "hp_max": 130,
-     "hp_share": 0.146,
-     "energy": [
-      28,
-      42
-     ],
-     "energy_ceiling": 42
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 71.1,
-   "fighting_turn": 41,
-   "side": "mine",
-   "pokemon": "Shelgon",
-   "move": "Twister",
-   "move_id": "TWISTER",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 64,
-   "target": "Girafarig",
-   "shielded": false,
-   "target_hp_before": 19,
-   "target_hp_after": 19,
-   "target_hp_max": 130,
-   "target_bar_read": false,
-   "expected_damage": 67,
-   "resolved_t": 81.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 0,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 123,
-     "hp_share": 0.122,
-     "energy": 24
-    },
-    "theirs": {
-     "active": "Girafarig",
-     "shields": 0,
-     "left": 3,
-     "hp": 19,
-     "hp_max": 130,
-     "hp_share": 0.146,
-     "energy": [
-      42,
+      49,
       56
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 81.0,
-   "until": 84.0,
-   "fighting_turn": 42,
+   "t": 69.0,
+   "until": 71.1,
+   "fighting_turn": 46,
    "turns": 3,
    "mine": {
     "pokemon": "Shelgon",
@@ -1120,8 +1031,9 @@
     "fast_move": "Confusion",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Shelgon",
@@ -1130,30 +1042,43 @@
      "hp": 15,
      "hp_max": 123,
      "hp_share": 0.122,
-     "energy": 32
+     "energy": 80
     },
     "theirs": {
      "active": "Girafarig",
      "shields": 0,
-     "left": 2,
+     "left": 3,
      "hp": 19,
      "hp_max": 130,
      "hp_share": 0.146,
      "energy": [
-      42,
-      56
+      63,
+      70
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 84
     }
    }
   },
   {
-   "kind": "faint",
-   "t": 84.0,
-   "fighting_turn": 45,
-   "side": "theirs",
-   "pokemon": "Girafarig",
-   "next": "Lapras",
+   "kind": "charged",
+   "t": 71.1,
+   "fighting_turn": 49,
+   "side": "mine",
+   "pokemon": "Shelgon",
+   "move": "Twister",
+   "move_id": "TWISTER",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 80,
+   "target": "Girafarig",
+   "shielded": false,
+   "target_hp_before": 19,
+   "target_hp_after": 19,
+   "target_hp_max": 130,
+   "target_bar_read": false,
+   "expected_damage": 67,
+   "resolved_t": 79.5,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Shelgon",
@@ -1165,115 +1090,25 @@
      "energy": 40
     },
     "theirs": {
-     "active": "Lapras",
+     "active": "Girafarig",
      "shields": 0,
-     "left": 2,
-     "hp": 179,
-     "hp_max": 179,
-     "hp_share": 1.0,
+     "left": 3,
+     "hp": 19,
+     "hp_max": 130,
+     "hp_share": 0.146,
      "energy": [
-      0,
-      0
+      63,
+      70
      ],
-     "energy_ceiling": 4
+     "energy_ceiling": 84
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 84.0,
-   "until": 86.1,
-   "fighting_turn": 45,
-   "turns": 24,
-   "mine": {
-    "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 24,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Lapras",
-    "fast_move": "Psywave",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 24,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 0,
-     "left": 2,
-     "hp": 15,
-     "hp_max": 123,
-     "hp_share": 0.122,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Lapras",
-     "shields": 0,
-     "left": 2,
-     "hp": 179,
-     "hp_max": 179,
-     "hp_share": 1.0,
-     "energy": [
-      96,
-      96
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 86.1,
-   "fighting_turn": 69,
-   "side": "mine",
-   "pokemon": "Shelgon",
-   "move": "Twister",
-   "move_id": "TWISTER",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 100,
-   "target": "Lapras",
-   "shielded": false,
-   "target_hp_before": 179,
-   "target_hp_after": 179,
-   "target_hp_max": 179,
-   "target_bar_read": false,
-   "expected_damage": 59,
-   "resolved_t": 97.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 0,
-     "left": 2,
-     "hp": 15,
-     "hp_max": 123,
-     "hp_share": 0.122,
-     "energy": 60
-    },
-    "theirs": {
-     "active": "Lapras",
-     "shields": 0,
-     "left": 2,
-     "hp": 179,
-     "hp_max": 179,
-     "hp_share": 1.0,
-     "energy": [
-      96,
-      96
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 97.0,
-   "until": 109.5,
-   "fighting_turn": 69,
+   "t": 79.5,
+   "until": 80.07,
+   "fighting_turn": 49,
    "turns": 1,
    "mine": {
     "pokemon": "Shelgon",
@@ -1283,10 +1118,177 @@
     "hits_seen": 0
    },
    "theirs": {
+    "pokemon": "Girafarig",
+    "fast_move": "Confusion",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 0,
+     "left": 3,
+     "hp": 15,
+     "hp_max": 123,
+     "hp_share": 0.122,
+     "energy": 40
+    },
+    "theirs": {
+     "active": "Girafarig",
+     "shields": 0,
+     "left": 3,
+     "hp": 19,
+     "hp_max": 130,
+     "hp_share": 0.146,
+     "energy": [
+      63,
+      70
+     ],
+     "energy_ceiling": 84
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 80.07,
+   "fighting_turn": 50,
+   "side": "theirs",
+   "pokemon": "Girafarig",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 0,
+     "left": 3,
+     "hp": 15,
+     "hp_max": 123,
+     "hp_share": 0.122,
+     "energy": 44
+    },
+    "theirs": {
+     "active": "Girafarig",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 130,
+     "hp_share": 0.0,
+     "energy": [
+      63,
+      70
+     ],
+     "energy_ceiling": 84
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 80.07,
+   "until": 86.1,
+   "fighting_turn": 50,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Shelgon",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Girafarig",
+    "fast_move": "Confusion",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 0,
+     "left": 3,
+     "hp": 15,
+     "hp_max": 123,
+     "hp_share": 0.122,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Lapras",
+     "shields": 0,
+     "left": 2,
+     "hp": 179,
+     "hp_max": 179,
+     "hp_share": 1.0,
+     "energy": [
+      4,
+      4
+     ],
+     "energy_ceiling": 8
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 86.1,
+   "fighting_turn": 52,
+   "side": "mine",
+   "pokemon": "Shelgon",
+   "move": "Twister",
+   "move_id": "TWISTER",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 56,
+   "target": "Lapras",
+   "shielded": false,
+   "target_hp_before": 179,
+   "target_hp_after": 179,
+   "target_hp_max": 179,
+   "target_bar_read": false,
+   "expected_damage": 59,
+   "resolved_t": 94.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Shelgon",
+     "shields": 0,
+     "left": 3,
+     "hp": 15,
+     "hp_max": 123,
+     "hp_share": 0.122,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Lapras",
+     "shields": 0,
+     "left": 2,
+     "hp": 179,
+     "hp_max": 179,
+     "hp_share": 1.0,
+     "energy": [
+      4,
+      4
+     ],
+     "energy_ceiling": 8
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 94.5,
+   "until": 109.5,
+   "fighting_turn": 52,
+   "turns": 3,
+   "mine": {
+    "pokemon": "Shelgon",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 0
+   },
+   "theirs": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -1297,7 +1299,7 @@
      "hp": 15,
      "hp_max": 123,
      "hp_share": 0.122,
-     "energy": 60
+     "energy": 24
     },
     "theirs": {
      "active": "Lapras",
@@ -1307,17 +1309,17 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      96,
-      96
+      12,
+      12
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "faint",
    "t": 109.5,
-   "fighting_turn": 70,
+   "fighting_turn": 55,
    "side": "mine",
    "pokemon": "Shelgon",
    "next": "Lapras",
@@ -1339,10 +1341,10 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      100,
-      100
+      16,
+      16
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 20
     }
    }
   },
@@ -1350,7 +1352,7 @@
    "kind": "fighting",
    "t": 109.5,
    "until": 110.5,
-   "fighting_turn": 70,
+   "fighting_turn": 55,
    "turns": 2,
    "mine": {
     "pokemon": "Lapras",
@@ -1384,17 +1386,17 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      100,
-      100
+      20,
+      20
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 24
     }
    }
   },
   {
    "kind": "switch",
    "t": 110.5,
-   "fighting_turn": 72,
+   "fighting_turn": 57,
    "side": "theirs",
    "from": "Lapras",
    "to": "Gurdurr",
@@ -1416,8 +1418,8 @@
      "hp_max": 143,
      "hp_share": 0.72,
      "energy": [
-      0,
-      0
+      8,
+      8
      ],
      "energy_ceiling": 16
     }
@@ -1427,7 +1429,7 @@
    "kind": "fighting",
    "t": 110.5,
    "until": 114.5,
-   "fighting_turn": 72,
+   "fighting_turn": 57,
    "turns": 8,
    "mine": {
     "pokemon": "Lapras",
@@ -1461,17 +1463,17 @@
      "hp_max": 143,
      "hp_share": 0.72,
      "energy": [
-      24,
-      24
+      32,
+      32
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "switch",
    "t": 114.5,
-   "fighting_turn": 80,
+   "fighting_turn": 65,
    "side": "mine",
    "from": "Lapras",
    "to": "Cetitan",
@@ -1483,7 +1485,7 @@
      "hp": 165,
      "hp_max": 202,
      "hp_share": 0.817,
-     "energy": 8
+     "energy": 32
     },
     "theirs": {
      "active": "Gurdurr",
@@ -1493,8 +1495,8 @@
      "hp_max": 143,
      "hp_share": 0.72,
      "energy": [
-      32,
-      32
+      40,
+      40
      ],
      "energy_ceiling": 48
     }
@@ -1504,20 +1506,20 @@
    "kind": "fighting",
    "t": 114.5,
    "until": 117.5,
-   "fighting_turn": 80,
-   "turns": 4,
+   "fighting_turn": 65,
+   "turns": 3,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Gurdurr",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -1528,7 +1530,7 @@
      "hp": 165,
      "hp_max": 202,
      "hp_share": 0.817,
-     "energy": 16
+     "energy": 40
     },
     "theirs": {
      "active": "Gurdurr",
@@ -1538,8 +1540,8 @@
      "hp_max": 143,
      "hp_share": 0.413,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 56
     }
@@ -1548,7 +1550,7 @@
   {
    "kind": "faint",
    "t": 117.5,
-   "fighting_turn": 84,
+   "fighting_turn": 68,
    "side": "mine",
    "pokemon": "Cetitan",
    "next": "Lapras",
@@ -1581,13 +1583,13 @@
    "kind": "fighting",
    "t": 117.5,
    "until": 119.1,
-   "fighting_turn": 84,
-   "turns": 3,
+   "fighting_turn": 68,
+   "turns": 2,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
@@ -1626,7 +1628,7 @@
   {
    "kind": "charged",
    "t": 119.1,
-   "fighting_turn": 86,
+   "fighting_turn": 70,
    "side": "theirs",
    "pokemon": "Gurdurr",
    "move": "Brick Break",
@@ -1641,21 +1643,21 @@
    "target": "Lapras",
    "shielded": false,
    "target_hp_before": 147,
-   "target_hp_after": 74,
+   "target_hp_after": 147,
    "target_hp_max": 179,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 69,
-   "resolved_t": 129.0,
+   "resolved_t": 127.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Lapras",
      "shields": 0,
      "left": 1,
-     "hp": 74,
+     "hp": 147,
      "hp_max": 179,
-     "hp_share": 0.413,
-     "energy": 48
+     "hp_share": 0.821,
+     "energy": 44
     },
     "theirs": {
      "active": "Gurdurr",
@@ -1674,25 +1676,25 @@
   },
   {
    "kind": "fighting",
-   "t": 129.0,
+   "t": 127.5,
    "until": 133.1,
-   "fighting_turn": 87,
-   "turns": 30,
+   "fighting_turn": 70,
+   "turns": 11,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 30,
+    "fast_moves_if_no_pause": 11,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Gurdurr",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 15,
-    "hits_seen": 8
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 9
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Lapras",
@@ -1701,42 +1703,42 @@
      "hp": 32,
      "hp_max": 179,
      "hp_share": 0.179,
-     "energy": 100
+     "energy": 88
     },
     "theirs": {
      "active": "Gurdurr",
      "shields": 0,
-     "left": 1,
-     "hp": 57,
+     "left": 2,
+     "hp": 60,
      "hp_max": 143,
-     "hp_share": 0.399,
+     "hp_share": 0.42,
      "energy": [
-      100,
-      100
+      56,
+      56
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 133.1,
-   "fighting_turn": 117,
+   "fighting_turn": 81,
    "side": "mine",
    "pokemon": "Lapras",
    "move": "Sparkling Aria",
    "move_id": "SPARKLING_ARIA",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 100,
+   "energy_before": 88,
    "target": "Gurdurr",
    "shielded": false,
-   "target_hp_before": 57,
-   "target_hp_after": 57,
+   "target_hp_before": 60,
+   "target_hp_after": 60,
    "target_hp_max": 143,
    "target_bar_read": false,
    "expected_damage": 66,
-   "resolved_t": 144.0,
+   "resolved_t": 142.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1746,41 +1748,41 @@
      "hp": 32,
      "hp_max": 179,
      "hp_share": 0.179,
-     "energy": 55
+     "energy": 43
     },
     "theirs": {
      "active": "Gurdurr",
      "shields": 0,
-     "left": 1,
-     "hp": 57,
+     "left": 2,
+     "hp": 60,
      "hp_max": 143,
-     "hp_share": 0.399,
+     "hp_share": 0.42,
      "energy": [
-      100,
-      100
+      56,
+      56
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 144.0,
+   "t": 142.5,
    "until": 144.5,
-   "fighting_turn": 117,
-   "turns": 1,
+   "fighting_turn": 81,
+   "turns": 4,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Gurdurr",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1797,21 +1799,21 @@
      "active": "Gurdurr",
      "shields": 0,
      "left": 1,
-     "hp": 57,
+     "hp": 60,
      "hp_max": 143,
-     "hp_share": 0.399,
+     "hp_share": 0.42,
      "energy": [
-      100,
-      100
+      64,
+      64
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "faint",
    "t": 144.5,
-   "fighting_turn": 118,
+   "fighting_turn": 85,
    "side": "theirs",
    "pokemon": "Gurdurr",
    "next": "Lapras",
@@ -1833,10 +1835,10 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      100,
-      100
+      20,
+      20
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 28
     }
    }
   },
@@ -1844,20 +1846,20 @@
    "kind": "fighting",
    "t": 144.5,
    "until": 149.1,
-   "fighting_turn": 118,
-   "turns": 17,
+   "fighting_turn": 85,
+   "turns": 7,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 17,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 17,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 3
    },
    "state": {
@@ -1878,17 +1880,17 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      100,
-      100
+      48,
+      48
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "charged",
    "t": 149.1,
-   "fighting_turn": 125,
+   "fighting_turn": 92,
    "side": "theirs",
    "pokemon": "Lapras",
    "move": "Sparkling Aria",
@@ -1896,10 +1898,10 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    100,
-    100
+    48,
+    48
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 56,
    "target": "Lapras",
    "shielded": false,
    "target_hp_before": 17,
@@ -1907,7 +1909,7 @@
    "target_hp_max": 179,
    "target_bar_read": false,
    "expected_damage": 45,
-   "resolved_t": 163.1,
+   "resolved_t": 156.5,
    "cue": true,
    "state": {
     "mine": {
@@ -1917,7 +1919,7 @@
      "hp": 17,
      "hp_max": 179,
      "hp_share": 0.095,
-     "energy": 100
+     "energy": 91
     },
     "theirs": {
      "active": "Lapras",
@@ -1927,17 +1929,17 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      55,
-      55
+      3,
+      3
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 7
     }
    }
   },
   {
    "kind": "end",
    "t": 163.1,
-   "fighting_turn": 135,
+   "fighting_turn": 92,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1952,7 +1954,7 @@
      "hp": 17,
      "hp_max": 179,
      "hp_share": 0.095,
-     "energy": 100
+     "energy": 91
     },
     "theirs": {
      "active": "Lapras",
@@ -1962,17 +1964,17 @@
      "hp_max": 179,
      "hp_share": 0.514,
      "energy": [
-      55,
-      55
+      3,
+      3
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 7
     }
    }
   }
  ],
  "deductions": [
   {
-   "t": 106.5,
+   "t": 105.5,
    "side": "theirs",
    "pokemon": "Lapras",
    "what": "fast move",

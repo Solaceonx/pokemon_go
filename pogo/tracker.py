@@ -61,6 +61,8 @@ class Observation:
     # then). On the first look to show the new one: how many seconds it has been out. Its fast moves are counted
     # from then, not from this look.
     foe_out_for: float | None = None
+    my_fainted: bool = False  # independently measured zero HP / disappearance
+    foe_fainted: bool = False
 
 
 class Foe:
@@ -193,6 +195,7 @@ class Tracker:
         # immediately used to turn the later replacement into a timed switch.
         self._my_counter_seen = self._foe_counter_seen = False
         self._my_pending_faint = self._foe_pending_faint = None
+        self._reported_faints = set()
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -376,6 +379,17 @@ class Tracker:
         if obs.my_switch is not None:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
+        for flag, prefix, victim in ((obs.my_fainted, "my", me.mon),
+                                      (obs.foe_fainted, "foe", self.foe.mon if self.foe else None)):
+            if flag and victim is not None and id(victim) not in self._reported_faints:
+                victim.hp = 0
+                self._reported_faints.add(id(victim))
+                self._note(obs.t, prefix + "_faint", species=victim.build.species_id,
+                           next=None, known_from="source_measured_faint")
+                if prefix == "my":
+                    self._my_pending_faint = victim
+                else:
+                    self._foe_pending_faint = self.foe
         self.t = obs.t
         self._turns.append((obs.t, self.turn))
 
@@ -403,7 +417,8 @@ class Tracker:
         if self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left):
             how = "faint"
             me.mon.hp = 0
-            self._note(obs.t, "my_faint", next=obs.my_species)
+            if id(me.mon) not in self._reported_faints:
+                self._note(obs.t, "my_faint", next=obs.my_species)
         else:
             how = "switch"
             me.mon.atk_stage = me.mon.def_stage = 0
@@ -422,7 +437,8 @@ class Tracker:
             if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
                 how = "faint"
                 self.foe.mon.hp = 0
-                self._note(obs.t, "foe_faint", next=obs.foe_species)
+                if id(self.foe.mon) not in self._reported_faints:
+                    self._note(obs.t, "foe_faint", next=obs.foe_species)
             else:
                 how = "switch"
                 self.foe.mon.atk_stage = self.foe.mon.def_stage = 0

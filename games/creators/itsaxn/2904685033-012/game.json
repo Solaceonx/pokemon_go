@@ -23,15 +23,17 @@
   }
  },
  "seconds": 213.8,
- "fighting_turns": 151,
+ "fighting_turns": 132,
  "checks": {
-  "verdict": "pass",
-  "failed": [],
-  "notes": [
-   "unexplained changes in 18% of looks",
-   "fast move only guessed for furret, cradily"
+  "verdict": "fail",
+  "failed": [
+   "energy: rage_fist at 94.0s had 24 of 40"
   ],
-  "unexplained_health_changes": 18
+  "notes": [
+   "unexplained changes in 15% of looks",
+   "fast move only guessed for cradily"
+  ],
+  "unexplained_health_changes": 17
  },
  "teams": {
   "mine": [
@@ -75,8 +77,8 @@
     "cp": 1499,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.299,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -190,11 +192,7 @@
      "name": "Sucker Punch",
      "turns": 2,
      "energy_gain": 7,
-     "known_from": "guessed",
-     "odds": {
-      "Quick Attack": 0.51,
-      "Sucker Punch": 0.49
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -231,7 +229,7 @@
      "odds": {
       "Infestation": 0.37,
       "Acid": 0.34,
-      "Bullet Seed": 0.3
+      "Bullet Seed": 0.28
      }
     },
     "charged_moves": [
@@ -274,11 +272,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 3,
+   "mine": 2,
    "theirs": 3
   },
   "faints": {
-   "mine": 2,
+   "mine": 3,
    "theirs": 3
   }
  },
@@ -429,19 +427,19 @@
    "t": 2.0,
    "until": 7.8,
    "fighting_turn": 4,
-   "turns": 17,
+   "turns": 11,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Furret",
     "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 3
    },
    "unexplained_health_changes": 2,
@@ -481,10 +479,10 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    56,
-    56
+    35,
+    35
    ],
-   "energy_ceiling": 63,
+   "energy_ceiling": 42,
    "target": "Mimikyu",
    "shielded": true,
    "target_hp_before": 95,
@@ -492,7 +490,7 @@
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 20.5,
+   "resolved_t": 17.0,
    "cue": true,
    "state": {
     "mine": {
@@ -502,7 +500,7 @@
      "hp": 95,
      "hp_max": 107,
      "hp_share": 0.888,
-     "energy": 88
+     "energy": 64
     },
     "theirs": {
      "active": "Furret",
@@ -512,31 +510,31 @@
      "hp_max": 160,
      "hp_share": 0.894,
      "energy": [
-      21,
-      21
+      0,
+      0
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 7
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 20.5,
+   "t": 17.0,
    "until": 23.8,
-   "fighting_turn": 21,
-   "turns": 6,
+   "fighting_turn": 15,
+   "turns": 13,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Furret",
     "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 1
    },
    "unexplained_health_changes": 2,
@@ -568,7 +566,7 @@
   {
    "kind": "charged",
    "t": 23.8,
-   "fighting_turn": 27,
+   "fighting_turn": 28,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
@@ -579,11 +577,11 @@
    "target": "Furret",
    "shielded": false,
    "target_hp_before": 140,
-   "target_hp_after": 53,
+   "target_hp_after": 140,
    "target_hp_max": 160,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 81,
-   "resolved_t": 33.5,
+   "resolved_t": 32.0,
    "cue": true,
    "state": {
     "mine": {
@@ -599,12 +597,12 @@
      "active": "Furret",
      "shields": 2,
      "left": 3,
-     "hp": 53,
+     "hp": 140,
      "hp_max": 160,
-     "hp_share": 0.331,
+     "hp_share": 0.875,
      "energy": [
-      42,
-      42
+      49,
+      49
      ],
      "energy_ceiling": 49
     }
@@ -612,22 +610,22 @@
   },
   {
    "kind": "fighting",
-   "t": 33.5,
+   "t": 32.0,
    "until": 38.8,
-   "fighting_turn": 27,
-   "turns": 10,
+   "fighting_turn": 28,
+   "turns": 13,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Furret",
     "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 4
    },
    "unexplained_health_changes": 2,
@@ -639,7 +637,7 @@
      "hp": 32,
      "hp_max": 107,
      "hp_share": 0.299,
-     "energy": 80
+     "energy": 88
     },
     "theirs": {
      "active": "Furret",
@@ -649,17 +647,17 @@
      "hp_max": 160,
      "hp_share": 0.319,
      "energy": [
-      70,
-      70
+      91,
+      91
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 98
     }
    }
   },
   {
    "kind": "charged",
    "t": 38.8,
-   "fighting_turn": 37,
+   "fighting_turn": 41,
    "side": "theirs",
    "pokemon": "Furret",
    "move": "Trailblaze",
@@ -667,28 +665,28 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    70,
-    70
+    91,
+    91
    ],
-   "energy_ceiling": 84,
+   "energy_ceiling": 98,
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 32,
-   "target_hp_after": 32,
+   "target_hp_after": 0,
    "target_hp_max": 107,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 35,
-   "resolved_t": 48.5,
+   "resolved_t": 46.95,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 1,
      "left": 3,
-     "hp": 32,
+     "hp": 0,
      "hp_max": 107,
-     "hp_share": 0.299,
-     "energy": 80
+     "hp_share": 0.0,
+     "energy": 96
     },
     "theirs": {
      "active": "Furret",
@@ -698,177 +696,37 @@
      "hp_max": 160,
      "hp_share": 0.319,
      "energy": [
-      25,
-      25
+      46,
+      46
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 53
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 48.5,
-   "until": 49.0,
-   "fighting_turn": 37,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Furret",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 1,
-     "left": 3,
-     "hp": 32,
-     "hp_max": 107,
-     "hp_share": 0.299,
-     "energy": 80
-    },
-    "theirs": {
-     "active": "Furret",
-     "shields": 2,
-     "left": 3,
-     "hp": 51,
-     "hp_max": 160,
-     "hp_share": 0.319,
-     "energy": [
-      25,
-      25
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 49.0,
-   "fighting_turn": 38,
+   "kind": "faint",
+   "t": 46.95,
+   "fighting_turn": 41,
    "side": "mine",
-   "from": "Mimikyu",
-   "to": "Vigoroth",
+   "pokemon": "Mimikyu",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Vigoroth",
+     "active": "Mimikyu",
      "shields": 1,
      "left": 3,
-     "hp": 145,
-     "hp_max": 145,
-     "hp_share": 1.0,
-     "energy": 0
+     "hp": 0,
+     "hp_max": 107,
+     "hp_share": 0.0,
+     "energy": 96
     },
     "theirs": {
      "active": "Furret",
      "shields": 2,
      "left": 3,
-     "hp": 37,
+     "hp": 51,
      "hp_max": 160,
-     "hp_share": 0.231,
-     "energy": [
-      25,
-      25
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 49.0,
-   "until": 56.8,
-   "fighting_turn": 38,
-   "turns": 15,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 15,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Furret",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 0
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 141,
-     "hp_max": 145,
-     "hp_share": 0.972,
-     "energy": 60
-    },
-    "theirs": {
-     "active": "Furret",
-     "shields": 2,
-     "left": 3,
-     "hp": 12,
-     "hp_max": 160,
-     "hp_share": 0.075,
-     "energy": [
-      81,
-      81
-     ],
-     "energy_ceiling": 88
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 56.8,
-   "fighting_turn": 53,
-   "side": "theirs",
-   "pokemon": "Furret",
-   "move": "Swift",
-   "move_id": "SWIFT",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": [
-    81,
-    81
-   ],
-   "energy_ceiling": 88,
-   "target": "Vigoroth",
-   "shielded": false,
-   "target_hp_before": 141,
-   "target_hp_after": 141,
-   "target_hp_max": 145,
-   "target_bar_read": false,
-   "expected_damage": 55,
-   "resolved_t": 66.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 141,
-     "hp_max": 145,
-     "hp_share": 0.972,
-     "energy": 60
-    },
-    "theirs": {
-     "active": "Furret",
-     "shields": 2,
-     "left": 3,
-     "hp": 74,
-     "hp_max": 160,
-     "hp_share": 0.463,
+     "hp_share": 0.319,
      "energy": [
       46,
       46
@@ -879,23 +737,196 @@
   },
   {
    "kind": "fighting",
-   "t": 66.5,
-   "until": 72.0,
-   "fighting_turn": 53,
-   "turns": 7,
+   "t": 46.95,
+   "until": 56.8,
+   "fighting_turn": 41,
+   "turns": 13,
    "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
+    "pokemon": "Mimikyu",
+    "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Furret",
     "fast_move": "Sucker Punch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 1,
+     "left": 2,
+     "hp": 141,
+     "hp_max": 145,
+     "hp_share": 0.972,
+     "energy": 52
+    },
+    "theirs": {
+     "active": "Furret",
+     "shields": 2,
+     "left": 3,
+     "hp": 12,
+     "hp_max": 160,
+     "hp_share": 0.075,
+     "energy": [
+      88,
+      88
+     ],
+     "energy_ceiling": 95
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 56.8,
+   "fighting_turn": 54,
+   "side": "theirs",
+   "pokemon": "Furret",
+   "move": "Swift",
+   "move_id": "SWIFT",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": [
+    88,
+    88
+   ],
+   "energy_ceiling": 95,
+   "target": "Vigoroth",
+   "shielded": false,
+   "target_hp_before": 141,
+   "target_hp_after": 141,
+   "target_hp_max": 145,
+   "target_bar_read": false,
+   "expected_damage": 55,
+   "resolved_t": 66.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 1,
+     "left": 2,
+     "hp": 141,
+     "hp_max": 145,
+     "hp_share": 0.972,
+     "energy": 52
+    },
+    "theirs": {
+     "active": "Furret",
+     "shields": 2,
+     "left": 3,
+     "hp": 12,
+     "hp_max": 160,
+     "hp_share": 0.075,
+     "energy": [
+      53,
+      53
+     ],
+     "energy_ceiling": 60
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 66.0,
+   "until": 67.82,
+   "fighting_turn": 54,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Furret",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 1,
+     "left": 2,
+     "hp": 50,
+     "hp_max": 145,
+     "hp_share": 0.345,
+     "energy": 64
+    },
+    "theirs": {
+     "active": "Furret",
+     "shields": 2,
+     "left": 3,
+     "hp": 74,
+     "hp_max": 160,
+     "hp_share": 0.463,
+     "energy": [
+      60,
+      60
+     ],
+     "energy_ceiling": 67
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 67.82,
+   "fighting_turn": 58,
+   "side": "theirs",
+   "pokemon": "Furret",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 1,
+     "left": 2,
+     "hp": 50,
+     "hp_max": 145,
+     "hp_share": 0.345,
+     "energy": 68
+    },
+    "theirs": {
+     "active": "Furret",
+     "shields": 2,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 160,
+     "hp_share": 0.0,
+     "energy": [
+      67,
+      67
+     ],
+     "energy_ceiling": 74
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 67.82,
+   "until": 72.8,
+   "fighting_turn": 58,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Furret",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -906,84 +937,7 @@
      "hp": 36,
      "hp_max": 145,
      "hp_share": 0.248,
-     "energy": 84
-    },
-    "theirs": {
-     "active": "Furret",
-     "shields": 2,
-     "left": 2,
-     "hp": 74,
-     "hp_max": 160,
-     "hp_share": 0.463,
-     "energy": [
-      67,
-      67
-     ],
-     "energy_ceiling": 74
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 72.0,
-   "fighting_turn": 60,
-   "side": "theirs",
-   "pokemon": "Furret",
-   "next": "Annihilape",
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 36,
-     "hp_max": 145,
-     "hp_share": 0.248,
-     "energy": 92
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 2,
-     "left": 2,
-     "hp": 140,
-     "hp_max": 140,
-     "hp_share": 1.0,
-     "energy": [
-      8,
-      8
-     ],
-     "energy_ceiling": 24
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 72.0,
-   "until": 72.8,
-   "fighting_turn": 60,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Annihilape",
-    "fast_move": "Low Kick",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 36,
-     "hp_max": 145,
-     "hp_share": 0.248,
-     "energy": 92
+     "energy": 80
     },
     "theirs": {
      "active": "Annihilape",
@@ -1010,15 +964,15 @@
    "move_id": "BULLDOZE",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 92,
+   "energy_before": 80,
    "target": "Annihilape",
    "shielded": false,
    "target_hp_before": 140,
-   "target_hp_after": 65,
+   "target_hp_after": 140,
    "target_hp_max": 140,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 58,
-   "resolved_t": 82.5,
+   "resolved_t": 82.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1028,18 +982,18 @@
      "hp": 36,
      "hp_max": 145,
      "hp_share": 0.248,
-     "energy": 37
+     "energy": 25
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 2,
      "left": 2,
-     "hp": 65,
+     "hp": 140,
      "hp_max": 140,
-     "hp_share": 0.464,
+     "hp_share": 1.0,
      "energy": [
-      16,
-      16
+      8,
+      8
      ],
      "energy_ceiling": 24
     }
@@ -1047,22 +1001,22 @@
   },
   {
    "kind": "fighting",
-   "t": 82.5,
-   "until": 83.5,
-   "fighting_turn": 61,
-   "turns": 2,
+   "t": 82.0,
+   "until": 82.5,
+   "fighting_turn": 60,
+   "turns": 1,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Annihilape",
     "fast_move": "Low Kick",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1073,7 +1027,39 @@
      "hp": 36,
      "hp_max": 145,
      "hp_share": 0.248,
-     "energy": 37
+     "energy": 25
+    },
+    "theirs": {
+     "active": "Annihilape",
+     "shields": 2,
+     "left": 2,
+     "hp": 140,
+     "hp_max": 140,
+     "hp_share": 1.0,
+     "energy": [
+      8,
+      8
+     ],
+     "energy_ceiling": 24
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 82.5,
+   "fighting_turn": 61,
+   "side": "mine",
+   "pokemon": "Vigoroth",
+   "next": "Corviknight",
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 1,
+     "left": 2,
+     "hp": 150,
+     "hp_max": 150,
+     "hp_share": 1.0,
+     "energy": 0
     },
     "theirs": {
      "active": "Annihilape",
@@ -1083,29 +1069,43 @@
      "hp_max": 140,
      "hp_share": 0.464,
      "energy": [
-      16,
-      16
+      8,
+      8
      ],
      "energy_ceiling": 24
     }
    }
   },
   {
-   "kind": "faint",
-   "t": 83.5,
-   "fighting_turn": 63,
-   "side": "mine",
-   "pokemon": "Vigoroth",
-   "next": "Corviknight",
+   "kind": "fighting",
+   "t": 82.5,
+   "until": 84.8,
+   "fighting_turn": 61,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Annihilape",
+    "fast_move": "Low Kick",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
+   },
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 2,
-     "hp": 143,
+     "hp": 147,
      "hp_max": 150,
-     "hp_share": 0.953,
-     "energy": 0
+     "hp_share": 0.98,
+     "energy": 16
     },
     "theirs": {
      "active": "Annihilape",
@@ -1117,52 +1117,6 @@
      "energy": [
       24,
       24
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 83.5,
-   "until": 84.8,
-   "fighting_turn": 63,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Annihilape",
-    "fast_move": "Low Kick",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 1,
-     "left": 2,
-     "hp": 147,
-     "hp_max": 150,
-     "hp_share": 0.98,
-     "energy": 8
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 2,
-     "left": 2,
-     "hp": 65,
-     "hp_max": 140,
-     "hp_share": 0.464,
-     "energy": [
-      32,
-      32
      ],
      "energy_ceiling": 40
     }
@@ -1179,11 +1133,11 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    32,
-    32
+    24,
+    24
    ],
    "energy_ceiling": 40,
-   "energy_short_by": 8,
+   "energy_short_by": 16,
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 147,
@@ -1191,7 +1145,7 @@
    "target_hp_max": 150,
    "target_bar_read": false,
    "expected_damage": 41,
-   "resolved_t": 94.5,
+   "resolved_t": 94.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1201,7 +1155,7 @@
      "hp": 147,
      "hp_max": 150,
      "hp_share": 0.98,
-     "energy": 8
+     "energy": 16
     },
     "theirs": {
      "active": "Annihilape",
@@ -1220,15 +1174,15 @@
   },
   {
    "kind": "fighting",
-   "t": 94.5,
+   "t": 94.0,
    "until": 95.5,
    "fighting_turn": 65,
-   "turns": 2,
+   "turns": 3,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
@@ -1246,7 +1200,7 @@
      "hp": 147,
      "hp_max": 150,
      "hp_share": 0.98,
-     "energy": 8
+     "energy": 16
     },
     "theirs": {
      "active": "Annihilape",
@@ -1266,7 +1220,7 @@
   {
    "kind": "switch",
    "t": 95.5,
-   "fighting_turn": 67,
+   "fighting_turn": 68,
    "side": "theirs",
    "from": "Annihilape",
    "to": "Cradily",
@@ -1278,7 +1232,7 @@
      "hp": 93,
      "hp_max": 150,
      "hp_share": 0.62,
-     "energy": 16
+     "energy": 28
     },
     "theirs": {
      "active": "Cradily",
@@ -1299,13 +1253,13 @@
    "kind": "fighting",
    "t": 95.5,
    "until": 100.8,
-   "fighting_turn": 67,
-   "turns": 11,
+   "fighting_turn": 68,
+   "turns": 10,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 10,
     "hits_seen": 1
    },
    "theirs": {
@@ -1323,7 +1277,7 @@
      "hp": 86,
      "hp_max": 150,
      "hp_share": 0.573,
-     "energy": 56
+     "energy": 68
     },
     "theirs": {
      "active": "Cradily",
@@ -1343,14 +1297,14 @@
   {
    "kind": "charged",
    "t": 100.8,
-   "fighting_turn": 77,
+   "fighting_turn": 78,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Iron Head",
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 56,
+   "energy_before": 68,
    "target": "Cradily",
    "shielded": true,
    "target_hp_before": 136,
@@ -1358,7 +1312,7 @@
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 111.0,
+   "resolved_t": 110.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1368,7 +1322,7 @@
      "hp": 86,
      "hp_max": 150,
      "hp_share": 0.573,
-     "energy": 6
+     "energy": 18
     },
     "theirs": {
      "active": "Cradily",
@@ -1378,8 +1332,8 @@
      "hp_max": 144,
      "hp_share": 0.944,
      "energy": [
-      48,
-      48
+      40,
+      40
      ],
      "energy_ceiling": 48
     }
@@ -1387,25 +1341,24 @@
   },
   {
    "kind": "fighting",
-   "t": 111.0,
+   "t": 110.0,
    "until": 112.8,
    "fighting_turn": 78,
-   "turns": 3,
+   "turns": 4,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Acid",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
@@ -1414,7 +1367,7 @@
      "hp": 82,
      "hp_max": 150,
      "hp_share": 0.547,
-     "energy": 10
+     "energy": 30
     },
     "theirs": {
      "active": "Cradily",
@@ -1424,8 +1377,8 @@
      "hp_max": 144,
      "hp_share": 0.896,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
      "energy_ceiling": 56
     }
@@ -1434,7 +1387,7 @@
   {
    "kind": "charged",
    "t": 112.8,
-   "fighting_turn": 79,
+   "fighting_turn": 81,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -1453,7 +1406,7 @@
    "target_hp_max": 150,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 122.5,
+   "resolved_t": 122.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1463,7 +1416,7 @@
      "hp": 82,
      "hp_max": 150,
      "hp_share": 0.547,
-     "energy": 18
+     "energy": 34
     },
     "theirs": {
      "active": "Cradily",
@@ -1482,16 +1435,16 @@
   },
   {
    "kind": "fighting",
-   "t": 122.5,
+   "t": 122.0,
    "until": 126.5,
-   "fighting_turn": 81,
-   "turns": 8,
+   "fighting_turn": 82,
+   "turns": 9,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Cradily",
@@ -1500,7 +1453,6 @@
     "fast_moves_if_no_pause": 4,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
@@ -1509,7 +1461,7 @@
      "hp": 74,
      "hp_max": 150,
      "hp_share": 0.493,
-     "energy": 46
+     "energy": 66
     },
     "theirs": {
      "active": "Cradily",
@@ -1519,17 +1471,17 @@
      "hp_max": 144,
      "hp_share": 0.854,
      "energy": [
-      30,
-      30
+      46,
+      46
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 46
     }
    }
   },
   {
    "kind": "switch",
    "t": 126.5,
-   "fighting_turn": 89,
+   "fighting_turn": 91,
    "side": "mine",
    "from": "Corviknight",
    "to": "Vigoroth",
@@ -1541,7 +1493,7 @@
      "hp": 71,
      "hp_max": 145,
      "hp_share": 0.49,
-     "energy": 45
+     "energy": 29
     },
     "theirs": {
      "active": "Cradily",
@@ -1551,8 +1503,8 @@
      "hp_max": 144,
      "hp_share": 0.854,
      "energy": [
-      38,
-      38
+      46,
+      46
      ],
      "energy_ceiling": 46
     }
@@ -1562,20 +1514,20 @@
    "kind": "fighting",
    "t": 126.5,
    "until": 134.8,
-   "fighting_turn": 89,
-   "turns": 39,
+   "fighting_turn": 91,
+   "turns": 15,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 39,
+    "fast_moves_if_no_pause": 15,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Acid",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 19,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1583,11 +1535,56 @@
     "mine": {
      "active": "Vigoroth",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 7,
      "hp_max": 145,
      "hp_share": 0.048,
-     "energy": 100
+     "energy": 77
+    },
+    "theirs": {
+     "active": "Cradily",
+     "shields": 1,
+     "left": 2,
+     "hp": 118,
+     "hp_max": 144,
+     "hp_share": 0.819,
+     "energy": [
+      94,
+      94
+     ],
+     "energy_ceiling": 94
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 134.8,
+   "fighting_turn": 103,
+   "side": "mine",
+   "pokemon": "Vigoroth",
+   "move": "Bulldoze",
+   "move_id": "BULLDOZE",
+   "move_known_from": "seen",
+   "cost": 55,
+   "energy_before": 85,
+   "target": "Cradily",
+   "shielded": false,
+   "target_hp_before": 118,
+   "target_hp_after": 118,
+   "target_hp_max": 144,
+   "target_bar_read": false,
+   "expected_damage": 44,
+   "resolved_t": 144.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 0,
+     "left": 2,
+     "hp": 7,
+     "hp_max": 145,
+     "hp_share": 0.048,
+     "energy": 30
     },
     "theirs": {
      "active": "Cradily",
@@ -1605,34 +1602,66 @@
    }
   },
   {
-   "kind": "charged",
-   "t": 134.8,
-   "fighting_turn": 128,
-   "side": "mine",
-   "pokemon": "Vigoroth",
-   "move": "Bulldoze",
-   "move_id": "BULLDOZE",
-   "move_known_from": "seen",
-   "cost": 55,
-   "energy_before": 100,
-   "target": "Cradily",
-   "shielded": false,
-   "target_hp_before": 118,
-   "target_hp_after": 118,
-   "target_hp_max": 144,
-   "target_bar_read": false,
-   "expected_damage": 44,
-   "resolved_t": 146.0,
-   "cue": true,
+   "kind": "fighting",
+   "t": 144.0,
+   "until": 144.62,
+   "fighting_turn": 106,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Vigoroth",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Cradily",
+    "fast_move": "Acid",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 7,
      "hp_max": 145,
      "hp_share": 0.048,
-     "energy": 45
+     "energy": 30
+    },
+    "theirs": {
+     "active": "Cradily",
+     "shields": 1,
+     "left": 2,
+     "hp": 118,
+     "hp_max": 144,
+     "hp_share": 0.819,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 144.62,
+   "fighting_turn": 107,
+   "side": "mine",
+   "pokemon": "Vigoroth",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Vigoroth",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 145,
+     "hp_share": 0.0,
+     "energy": 34
     },
     "theirs": {
      "active": "Cradily",
@@ -1652,7 +1681,7 @@
   {
    "kind": "switch",
    "t": 146.5,
-   "fighting_turn": 128,
+   "fighting_turn": 107,
    "side": "theirs",
    "from": "Cradily",
    "to": "Annihilape",
@@ -1661,10 +1690,10 @@
      "active": "Vigoroth",
      "shields": 0,
      "left": 1,
-     "hp": 7,
+     "hp": 0,
      "hp_max": 145,
-     "hp_share": 0.048,
-     "energy": 45
+     "hp_share": 0.0,
+     "energy": 34
     },
     "theirs": {
      "active": "Annihilape",
@@ -1674,8 +1703,8 @@
      "hp_max": 140,
      "hp_share": 0.393,
      "energy": [
-      0,
-      0
+      8,
+      8
      ],
      "energy_ceiling": 16
     }
@@ -1684,14 +1713,14 @@
   {
    "kind": "fighting",
    "t": 146.5,
-   "until": 148.0,
-   "fighting_turn": 128,
-   "turns": 2,
+   "until": 148.8,
+   "fighting_turn": 107,
+   "turns": 3,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
@@ -1704,139 +1733,17 @@
    "unexplained_health_changes": 1,
    "state": {
     "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 1,
-     "hp": 67,
-     "hp_max": 145,
-     "hp_share": 0.462,
-     "energy": 49
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 1,
-     "left": 2,
-     "hp": 55,
-     "hp_max": 140,
-     "hp_share": 0.393,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 16
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 148.0,
-   "fighting_turn": 130,
-   "side": "mine",
-   "pokemon": "Vigoroth",
-   "next": "Corviknight",
-   "state": {
-    "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 1,
      "hp": 70,
      "hp_max": 150,
      "hp_share": 0.467,
-     "energy": 46
+     "energy": 70
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 1,
-     "left": 2,
-     "hp": 55,
-     "hp_max": 140,
-     "hp_share": 0.393,
-     "energy": [
-      8,
-      8
-     ],
-     "energy_ceiling": 24
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 148.0,
-   "until": 148.8,
-   "fighting_turn": 130,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Annihilape",
-    "fast_move": "Low Kick",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 0,
-     "left": 1,
-     "hp": 70,
-     "hp_max": 150,
-     "hp_share": 0.467,
-     "energy": 50
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 1,
-     "left": 2,
-     "hp": 55,
-     "hp_max": 140,
-     "hp_share": 0.393,
-     "energy": [
-      8,
-      8
-     ],
-     "energy_ceiling": 24
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 148.8,
-   "fighting_turn": 131,
-   "side": "mine",
-   "pokemon": "Corviknight",
-   "move": "Air Cutter",
-   "move_id": "AIR_CUTTER",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 50,
-   "target": "Annihilape",
-   "shielded": true,
-   "target_hp_before": 55,
-   "target_hp_after": 55,
-   "target_hp_max": 140,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 158.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 0,
-     "left": 1,
-     "hp": 70,
-     "hp_max": 150,
-     "hp_share": 0.467,
-     "energy": 10
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 0,
      "left": 2,
      "hp": 55,
      "hp_max": 140,
@@ -1845,39 +1752,39 @@
       16,
       16
      ],
-     "energy_ceiling": 24
+     "energy_ceiling": 32
     }
    }
   },
   {
-   "kind": "fighting",
-   "t": 158.5,
-   "until": 160.8,
-   "fighting_turn": 131,
-   "turns": 6,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Annihilape",
-    "fast_move": "Low Kick",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
-   },
+   "kind": "charged",
+   "t": 148.8,
+   "fighting_turn": 110,
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "move": "Air Cutter",
+   "move_id": "AIR_CUTTER",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 70,
+   "target": "Annihilape",
+   "shielded": true,
+   "target_hp_before": 55,
+   "target_hp_after": 55,
+   "target_hp_max": 140,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 158.0,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 1,
-     "hp": 59,
+     "hp": 70,
      "hp_max": 150,
-     "hp_share": 0.393,
-     "energy": 26
+     "hp_share": 0.467,
+     "energy": 30
     },
     "theirs": {
      "active": "Annihilape",
@@ -1887,25 +1794,69 @@
      "hp_max": 140,
      "hp_share": 0.393,
      "energy": [
-      32,
-      32
+      24,
+      24
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 32
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 158.0,
+   "until": 160.8,
+   "fighting_turn": 110,
+   "turns": 5,
+   "mine": {
+    "pokemon": "Corviknight",
+    "fast_move": "Sand Attack",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Annihilape",
+    "fast_move": "Low Kick",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
+   },
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 0,
+     "left": 1,
+     "hp": 59,
+     "hp_max": 150,
+     "hp_share": 0.393,
+     "energy": 50
+    },
+    "theirs": {
+     "active": "Annihilape",
+     "shields": 0,
+     "left": 2,
+     "hp": 55,
+     "hp_max": 140,
+     "hp_share": 0.393,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 160.8,
-   "fighting_turn": 135,
+   "fighting_turn": 115,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Air Cutter",
    "move_id": "AIR_CUTTER",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 26,
-   "energy_short_by": 14,
+   "energy_before": 50,
    "target": "Annihilape",
    "shielded": false,
    "target_hp_before": 55,
@@ -1913,7 +1864,7 @@
    "target_hp_max": 140,
    "target_bar_read": false,
    "expected_damage": 77,
-   "resolved_t": 171.5,
+   "resolved_t": 170.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1923,7 +1874,7 @@
      "hp": 59,
      "hp_max": 150,
      "hp_share": 0.393,
-     "energy": 0
+     "energy": 10
     },
     "theirs": {
      "active": "Annihilape",
@@ -1942,9 +1893,9 @@
   },
   {
    "kind": "fighting",
-   "t": 171.5,
-   "until": 172.5,
-   "fighting_turn": 137,
+   "t": 170.0,
+   "until": 170.82,
+   "fighting_turn": 115,
    "turns": 2,
    "mine": {
     "pokemon": "Corviknight",
@@ -1968,15 +1919,47 @@
      "hp": 59,
      "hp_max": 150,
      "hp_share": 0.393,
-     "energy": 8
+     "energy": 10
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 0,
-     "left": 1,
+     "left": 2,
      "hp": 55,
      "hp_max": 140,
      "hp_share": 0.393,
+     "energy": [
+      48,
+      48
+     ],
+     "energy_ceiling": 48
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 170.82,
+   "fighting_turn": 117,
+   "side": "theirs",
+   "pokemon": "Annihilape",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Corviknight",
+     "shields": 0,
+     "left": 1,
+     "hp": 59,
+     "hp_max": 150,
+     "hp_share": 0.393,
+     "energy": 18
+    },
+    "theirs": {
+     "active": "Annihilape",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 140,
+     "hp_share": 0.0,
      "energy": [
       56,
       56
@@ -1986,54 +1969,22 @@
    }
   },
   {
-   "kind": "faint",
-   "t": 172.5,
-   "fighting_turn": 139,
-   "side": "theirs",
-   "pokemon": "Annihilape",
-   "next": "Cradily",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 0,
-     "left": 1,
-     "hp": 59,
-     "hp_max": 150,
-     "hp_share": 0.393,
-     "energy": 12
-    },
-    "theirs": {
-     "active": "Cradily",
-     "shields": 0,
-     "left": 1,
-     "hp": 118,
-     "hp_max": 144,
-     "hp_share": 0.819,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
    "kind": "fighting",
-   "t": 172.5,
+   "t": 170.82,
    "until": 173.8,
-   "fighting_turn": 139,
-   "turns": 2,
+   "fighting_turn": 117,
+   "turns": 3,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "theirs": {
-    "pokemon": "Cradily",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
+    "pokemon": "Annihilape",
+    "fast_move": "Low Kick",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
@@ -2045,7 +1996,7 @@
      "hp": 59,
      "hp_max": 150,
      "hp_share": 0.393,
-     "energy": 20
+     "energy": 34
     },
     "theirs": {
      "active": "Cradily",
@@ -2065,7 +2016,7 @@
   {
    "kind": "charged",
    "t": 173.8,
-   "fighting_turn": 141,
+   "fighting_turn": 120,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -2080,29 +2031,29 @@
    "target": "Corviknight",
    "shielded": false,
    "target_hp_before": 59,
-   "target_hp_after": 11,
+   "target_hp_after": 59,
    "target_hp_max": 150,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 48,
-   "resolved_t": 183.5,
+   "resolved_t": 183.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 0,
      "left": 1,
-     "hp": 11,
+     "hp": 59,
      "hp_max": 150,
-     "hp_share": 0.073,
-     "energy": 20
+     "hp_share": 0.393,
+     "energy": 34
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 1,
-     "hp": 46,
+     "hp": 118,
      "hp_max": 144,
-     "hp_share": 0.319,
+     "hp_share": 0.819,
      "energy": [
       50,
       50
@@ -2113,15 +2064,15 @@
   },
   {
    "kind": "fighting",
-   "t": 183.5,
+   "t": 183.0,
    "until": 185.8,
-   "fighting_turn": 141,
-   "turns": 4,
+   "fighting_turn": 120,
+   "turns": 5,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 1
    },
    "theirs": {
@@ -2131,7 +2082,6 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Corviknight",
@@ -2140,7 +2090,7 @@
      "hp": 57,
      "hp_max": 150,
      "hp_share": 0.38,
-     "energy": 36
+     "energy": 54
     },
     "theirs": {
      "active": "Cradily",
@@ -2160,7 +2110,7 @@
   {
    "kind": "charged",
    "t": 185.8,
-   "fighting_turn": 145,
+   "fighting_turn": 125,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -2179,7 +2129,7 @@
    "target_hp_max": 150,
    "target_bar_read": false,
    "expected_damage": 48,
-   "resolved_t": 195.5,
+   "resolved_t": 195.0,
    "cue": true,
    "state": {
     "mine": {
@@ -2189,7 +2139,7 @@
      "hp": 57,
      "hp_max": 150,
      "hp_share": 0.38,
-     "energy": 36
+     "energy": 54
     },
     "theirs": {
      "active": "Cradily",
@@ -2208,16 +2158,16 @@
   },
   {
    "kind": "fighting",
-   "t": 195.5,
-   "until": 207.516699,
-   "fighting_turn": 145,
-   "turns": 6,
+   "t": 195.0,
+   "until": 207.416699,
+   "fighting_turn": 125,
+   "turns": 7,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Cradily",
@@ -2235,7 +2185,7 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 60
+     "energy": 82
     },
     "theirs": {
      "active": "Cradily",
@@ -2254,8 +2204,8 @@
   },
   {
    "kind": "faint",
-   "t": 207.516699,
-   "fighting_turn": 151,
+   "t": 207.416699,
+   "fighting_turn": 132,
    "side": "theirs",
    "pokemon": "Cradily",
    "next": null,
@@ -2267,7 +2217,7 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 10
+     "energy": 32
     },
     "theirs": {
      "active": "Cradily",
@@ -2277,8 +2227,8 @@
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 48
     }
@@ -2287,14 +2237,14 @@
   {
    "kind": "charged",
    "t": 198.8,
-   "fighting_turn": 151,
+   "fighting_turn": 132,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Iron Head",
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 60,
+   "energy_before": 82,
    "target": "Cradily",
    "shielded": false,
    "target_hp_before": 37,
@@ -2302,7 +2252,7 @@
    "target_hp_max": 144,
    "target_bar_read": true,
    "expected_damage": 54,
-   "resolved_t": 207.52,
+   "resolved_t": 207.42,
    "cue": true,
    "state": {
     "mine": {
@@ -2312,7 +2262,7 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 10
+     "energy": 32
     },
     "theirs": {
      "active": "Cradily",
@@ -2322,8 +2272,8 @@
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 48
     }
@@ -2332,7 +2282,7 @@
   {
    "kind": "end",
    "t": 213.8,
-   "fighting_turn": 151,
+   "fighting_turn": 132,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -2347,7 +2297,7 @@
      "hp": 3,
      "hp_max": 150,
      "hp_share": 0.02,
-     "energy": 10
+     "energy": 32
     },
     "theirs": {
      "active": "Cradily",
@@ -2357,8 +2307,8 @@
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 48
     }
@@ -2367,7 +2317,7 @@
  ],
  "deductions": [
   {
-   "t": 94.5,
+   "t": 94.0,
    "side": "theirs",
    "pokemon": "Annihilape",
    "what": "fast move",

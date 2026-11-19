@@ -1,7 +1,7 @@
 {
   "t": 90.0,
-  "fighting_turns": 59,
-  "warnings": 8,
+  "fighting_turns": 64,
+  "warnings": 7,
   "matchup": {
     "ours": {
       "fast": {
@@ -17,16 +17,16 @@
           "id": "AQUA_TAIL",
           "name": "Aqua Tail",
           "type": "water",
-          "damage": 30,
+          "damage": 24,
           "energy": 35,
           "ready": true
         },
         {
-          "id": "SHADOW_BALL",
-          "name": "Shadow Ball",
-          "type": "ghost",
-          "damage": 64,
-          "energy": 50,
+          "id": "DARK_PULSE",
+          "name": "Dark Pulse",
+          "type": "dark",
+          "damage": 66,
+          "energy": 45,
           "ready": true
         }
       ]
@@ -34,19 +34,19 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "WATER_GUN",
-        "name": "Water Gun",
-        "type": "water",
-        "damage": 2,
-        "energy_gain": 3,
-        "turns": 1
+        "id": "PECK",
+        "name": "Peck",
+        "type": "flying",
+        "damage": 6,
+        "energy_gain": 8,
+        "turns": 2
       },
       "charged": [
         {
           "id": "DIVE",
           "name": "Dive",
           "type": "water",
-          "damage": 29,
+          "damage": 43,
           "energy": 40,
           "could_be_ready": false,
           "surely_ready": false
@@ -55,7 +55,7 @@
           "id": "FLY",
           "name": "Fly",
           "type": "flying",
-          "damage": 72,
+          "damage": 68,
           "energy": 45,
           "could_be_ready": false,
           "surely_ready": false
@@ -74,7 +74,7 @@
           "id": "WATER_GUN",
           "name": "Water Gun",
           "type": "water",
-          "damage": 2,
+          "damage": 3,
           "energy_gain": 3,
           "turns": 1
         }
@@ -84,28 +84,28 @@
           "id": "FLY",
           "name": "Fly",
           "type": "flying",
-          "damage": 72,
+          "damage": 68,
           "energy": 45
         },
         {
           "id": "HYDRO_PUMP",
           "name": "Hydro Pump",
           "type": "water",
-          "damage": 73,
+          "damage": 110,
           "energy": 75
         },
         {
           "id": "SURF",
           "name": "Surf",
           "type": "water",
-          "damage": 43,
+          "damage": 64,
           "energy": 45
         },
         {
           "id": "DIVE",
           "name": "Dive",
           "type": "water",
-          "damage": 29,
+          "damage": 43,
           "energy": 40
         }
       ]
@@ -118,26 +118,26 @@
     "switch_ready_in": 39.0,
     "pokemon": [
       {
-        "species": "qwilfish",
-        "name": "Qwilfish",
+        "species": "qwilfish_hisuian",
+        "name": "Qwilfish (Hisuian)",
         "types": [
-          "water",
+          "dark",
           "poison"
         ],
         "known_from": "team_sheet",
         "cp": 1497,
         "cp_read_from_screen": true,
         "stats_assumed": true,
-        "level": 27,
+        "level": 26,
         "ivs": [
-          5,
+          4,
           14,
           15
         ],
         "hp": 7,
-        "hp_max": 123,
-        "hp_share": 0.057,
-        "energy": 65,
+        "hp_max": 121,
+        "hp_share": 0.058,
+        "energy": 73,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -156,15 +156,15 @@
             "type": "water",
             "energy": 35,
             "known_from": "seen",
-            "times_used": 2
+            "times_used": 1
           },
           {
-            "id": "SHADOW_BALL",
-            "name": "Shadow Ball",
-            "type": "ghost",
-            "energy": 50,
-            "known_from": "guessed",
-            "times_used": 0
+            "id": "DARK_PULSE",
+            "name": "Dark Pulse",
+            "type": "dark",
+            "energy": 45,
+            "known_from": "seen",
+            "times_used": 1
           }
         ]
       },
@@ -188,7 +188,7 @@
         "hp": 27,
         "hp_max": 107,
         "hp_share": 0.252,
-        "energy": 54,
+        "energy": 66,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -227,7 +227,7 @@
     "left": 2,
     "unseen": 0,
     "switch_ready_in": 43.5,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 1,
     "pokemon": [
       {
         "species": "cramorant",
@@ -246,22 +246,23 @@
           15,
           13
         ],
-        "hp": 106,
+        "hp": 32,
         "hp_max": 126,
-        "hp_share": 0.841,
-        "energy": 9,
+        "hp_share": 0.254,
+        "energy": 27,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "WATER_GUN",
-          "name": "Water Gun",
-          "type": "water",
-          "turns": 1,
-          "energy_gain": 3,
+          "id": "PECK",
+          "name": "Peck",
+          "type": "flying",
+          "turns": 2,
+          "energy_gain": 8,
           "known_from": "inferred",
           "misfit": {
-            "WATER_GUN": 0.47
+            "PECK": 0.19,
+            "WATER_GUN": 0.39
           }
         },
         "charged_moves": [
@@ -283,19 +284,19 @@
           }
         ],
         "energy_range": [
-          9,
-          9
+          27,
+          27
         ],
-        "energy_by_clock": 15,
+        "energy_by_clock": 43,
         "energy_odds": {
-          "3": 0.08,
-          "6": 0.12,
-          "9": 0.33,
-          "12": 0.33,
-          "15": 0.12
+          "11": 0.08,
+          "19": 0.12,
+          "27": 0.33,
+          "35": 0.33,
+          "43": 0.12
         },
         "fast_move_odds": {
-          "WATER_GUN": 1.0
+          "PECK": 1.0
         },
         "charged_move_odds": {
           "FLY": 1.0,
@@ -305,7 +306,7 @@
         },
         "ready_odds": {
           "FLY": 0.0,
-          "DIVE": 0.0,
+          "DIVE": 0.07,
           "HYDRO_PUMP": 0.0,
           "SURF": 0.0
         }
@@ -329,7 +330,7 @@
         "hp": 0,
         "hp_max": 125,
         "hp_share": 0.0,
-        "energy": 30,
+        "energy": 40,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -341,8 +342,8 @@
           "energy_gain": 10,
           "known_from": "inferred",
           "misfit": {
-            "MUD_SLAP": 0.26,
-            "ROCK_SMASH": 0.71
+            "MUD_SLAP": 0.25,
+            "ROCK_SMASH": 0.69
           }
         },
         "charged_moves": [
@@ -364,16 +365,16 @@
           }
         ],
         "energy_range": [
-          30,
-          30
+          40,
+          40
         ],
         "energy_by_clock": 40,
         "energy_odds": {
-          "10": 0.08,
-          "20": 0.12,
-          "30": 0.33,
+          "20": 0.08,
+          "30": 0.12,
           "40": 0.33,
-          "50": 0.12
+          "50": 0.33,
+          "60": 0.12
         },
         "fast_move_odds": {
           "MUD_SLAP": 1.0
@@ -385,10 +386,10 @@
           "DIG": 0.19
         },
         "ready_odds": {
-          "BONE_CLUB": 0.46,
-          "ROCK_SLIDE": 0.08,
+          "BONE_CLUB": 0.79,
+          "ROCK_SLIDE": 0.28,
           "EARTHQUAKE": 0.0,
-          "DIG": 0.02
+          "DIG": 0.09
         }
       },
       {
@@ -423,8 +424,8 @@
           "energy_gain": 4,
           "known_from": "guessed",
           "misfit": {
-            "BITE": 0.41,
-            "DRAGON_BREATH": 0.48
+            "BITE": 0.52,
+            "DRAGON_BREATH": 0.36
           }
         },
         "charged_moves": [
@@ -458,8 +459,8 @@
           "44": 0.12
         },
         "fast_move_odds": {
-          "DRAGON_BREATH": 0.52,
-          "BITE": 0.48
+          "DRAGON_BREATH": 0.68,
+          "BITE": 0.32
         },
         "charged_move_odds": {
           "BRUTAL_SWING": 0.75,

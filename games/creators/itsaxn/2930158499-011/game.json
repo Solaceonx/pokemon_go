@@ -23,7 +23,7 @@
   }
  },
  "seconds": 147.5,
- "fighting_turns": 97,
+ "fighting_turns": 82,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -32,7 +32,7 @@
   "notes": [
    "fast move only guessed for florges, ninetales"
   ],
-  "unexplained_health_changes": 9
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -144,8 +144,8 @@
     "cp": 1500,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.036,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -153,8 +153,8 @@
      "energy_gain": 9,
      "known_from": "guessed",
      "odds": {
-      "Fairy Wind": 0.99,
-      "Tackle": 0.01
+      "Fairy Wind": 0.71,
+      "Tackle": 0.29
      }
     },
     "charged_moves": [
@@ -267,7 +267,7 @@
     }
    }
   ],
-  "theirs_unseen": 0
+  "theirs_unseen": 1
  },
  "summary": {
   "charged": {
@@ -284,11 +284,11 @@
   },
   "switches": {
    "mine": 2,
-   "theirs": 2
+   "theirs": 1
   },
   "faints": {
    "mine": 1,
-   "theirs": 0
+   "theirs": 1
   }
  },
  "actions": [
@@ -329,19 +329,19 @@
    "t": 0.0,
    "until": 6.5,
    "fighting_turn": 0,
-   "turns": 14,
+   "turns": 12,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 3
    },
    "unexplained_health_changes": 2,
@@ -388,7 +388,7 @@
    "target_hp_max": 110,
    "target_bar_read": false,
    "expected_damage": 51,
-   "resolved_t": 17.0,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
@@ -408,31 +408,31 @@
      "hp_max": 110,
      "hp_share": 0.755,
      "energy": [
-      63,
-      63
+      54,
+      54
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 63
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 17.0,
+   "t": 16.0,
    "until": 17.5,
-   "fighting_turn": 14,
-   "turns": 1,
+   "fighting_turn": 12,
+   "turns": 3,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -443,7 +443,7 @@
      "hp": 102,
      "hp_max": 124,
      "hp_share": 0.823,
-     "energy": 8
+     "energy": 16
     },
     "theirs": {
      "active": "Florges",
@@ -478,29 +478,29 @@
    "target": "Fearow",
    "shielded": false,
    "target_hp_before": 102,
-   "target_hp_after": 48,
+   "target_hp_after": 102,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 45,
-   "resolved_t": 27.5,
+   "resolved_t": 26.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 48,
+     "hp": 102,
      "hp_max": 124,
-     "hp_share": 0.387,
-     "energy": 16
+     "hp_share": 0.823,
+     "energy": 24
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 28,
+     "hp": 31,
      "hp_max": 110,
-     "hp_share": 0.255,
+     "hp_share": 0.282,
      "energy": [
       18,
       18
@@ -511,24 +511,25 @@
   },
   {
    "kind": "fighting",
-   "t": 27.5,
+   "t": 26.0,
    "until": 33.5,
    "fighting_turn": 15,
-   "turns": 12,
+   "turns": 15,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 8
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 10
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 5
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 6
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -537,7 +538,7 @@
      "hp": 26,
      "hp_max": 124,
      "hp_share": 0.21,
-     "energy": 64
+     "energy": 80
     },
     "theirs": {
      "active": "Florges",
@@ -547,17 +548,17 @@
      "hp_max": 110,
      "hp_share": 0.036,
      "energy": [
-      63,
-      63
+      72,
+      72
      ],
-     "energy_ceiling": 81
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "charged",
    "t": 33.5,
-   "fighting_turn": 27,
+   "fighting_turn": 30,
    "side": "theirs",
    "pokemon": "Florges",
    "move": "Chilling Water",
@@ -565,94 +566,125 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    63,
-    63
+    72,
+    72
    ],
-   "energy_ceiling": 81,
+   "energy_ceiling": 90,
    "target": "Fearow",
    "shielded": true,
    "target_hp_before": 26,
-   "target_hp_after": 25,
+   "target_hp_after": 26,
    "target_hp_max": 124,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 43.5,
+   "resolved_t": 42.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 25,
+     "hp": 26,
      "hp_max": 124,
-     "hp_share": 0.202,
-     "energy": 64
+     "hp_share": 0.21,
+     "energy": 88
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 4,
+     "hp": 1,
      "hp_max": 110,
-     "hp_share": 0.036,
+     "hp_share": 0.009,
      "energy": [
-      18,
-      18
+      27,
+      27
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 43.5,
-   "until": 57.5,
-   "fighting_turn": 27,
-   "turns": 28,
+   "t": 42.0,
+   "until": 43.92,
+   "fighting_turn": 30,
+   "turns": 4,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 14,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 14,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 12,
+     "hp": 26,
      "hp_max": 124,
-     "hp_share": 0.097,
+     "hp_share": 0.21,
+     "energy": 96
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 2,
+     "left": 3,
+     "hp": 1,
+     "hp_max": 110,
+     "hp_share": 0.009,
+     "energy": [
+      36,
+      36
+     ],
+     "energy_ceiling": 45
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 43.92,
+   "fighting_turn": 34,
+   "side": "theirs",
+   "pokemon": "Florges",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 1,
+     "left": 3,
+     "hp": 26,
+     "hp_max": 124,
+     "hp_share": 0.21,
      "energy": 100
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 4,
+     "hp": 0,
      "hp_max": 110,
-     "hp_share": 0.036,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      45,
+      45
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "switch",
    "t": 57.5,
-   "fighting_turn": 55,
+   "fighting_turn": 34,
    "side": "mine",
    "from": "Fearow",
    "to": "Seismitoad",
@@ -670,112 +702,35 @@
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 4,
+     "hp": 0,
      "hp_max": 110,
-     "hp_share": 0.036,
+     "hp_share": 0.0,
      "energy": [
-      100,
-      100
+      45,
+      45
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "fighting",
    "t": 57.5,
-   "until": 58.5,
-   "fighting_turn": 55,
-   "turns": 2,
+   "until": 64.5,
+   "fighting_turn": 34,
+   "turns": 14,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 154,
-     "hp_share": 0.097,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Florges",
-     "shields": 2,
-     "left": 3,
-     "hp": 4,
-     "hp_max": 110,
-     "hp_share": 0.036,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 58.5,
-   "fighting_turn": 57,
-   "side": "theirs",
-   "from": "Florges",
-   "to": "Ninetales",
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 1,
-     "left": 3,
-     "hp": 15,
-     "hp_max": 154,
-     "hp_share": 0.097,
-     "energy": 9
-    },
-    "theirs": {
-     "active": "Ninetales",
-     "shields": 2,
-     "left": 3,
-     "hp": 126,
-     "hp_max": 126,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 9
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 58.5,
-   "until": 64.5,
-   "fighting_turn": 57,
-   "turns": 12,
-   "mine": {
-    "pokemon": "Seismitoad",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 2
-   },
-   "theirs": {
-    "pokemon": "Ninetales",
-    "fast_move": "Ember",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 1
    },
    "unexplained_health_changes": 2,
@@ -787,7 +742,7 @@
      "hp": 138,
      "hp_max": 154,
      "hp_share": 0.896,
-     "energy": 63
+     "energy": 72
     },
     "theirs": {
      "active": "Ninetales",
@@ -807,7 +762,7 @@
   {
    "kind": "charged",
    "t": 64.5,
-   "fighting_turn": 69,
+   "fighting_turn": 48,
    "side": "theirs",
    "pokemon": "Ninetales",
    "move": "Energy Ball",
@@ -826,7 +781,7 @@
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 74.5,
+   "resolved_t": 74.0,
    "cue": true,
    "state": {
     "mine": {
@@ -836,7 +791,7 @@
      "hp": 138,
      "hp_max": 154,
      "hp_share": 0.896,
-     "energy": 63
+     "energy": 72
     },
     "theirs": {
      "active": "Ninetales",
@@ -855,25 +810,24 @@
   },
   {
    "kind": "fighting",
-   "t": 74.5,
+   "t": 74.0,
    "until": 79.5,
-   "fighting_turn": 69,
+   "fighting_turn": 48,
    "turns": 10,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Ninetales",
     "fast_move": "Ember",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
@@ -882,7 +836,7 @@
      "hp": 133,
      "hp_max": 154,
      "hp_share": 0.864,
-     "energy": 99
+     "energy": 100
     },
     "theirs": {
      "active": "Ninetales",
@@ -892,53 +846,8 @@
      "hp_max": 126,
      "hp_share": 0.627,
      "energy": [
-      45,
-      45
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 79.5,
-   "fighting_turn": 78,
-   "side": "mine",
-   "pokemon": "Seismitoad",
-   "move": "Icy Wind",
-   "move_id": "ICY_WIND",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 99,
-   "target": "Ninetales",
-   "shielded": false,
-   "target_hp_before": 79,
-   "target_hp_after": 57,
-   "target_hp_max": 126,
-   "target_bar_read": true,
-   "expected_damage": 22,
-   "resolved_t": 89.5,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Seismitoad",
-     "shields": 0,
-     "left": 3,
-     "hp": 133,
-     "hp_max": 154,
-     "hp_share": 0.864,
-     "energy": 54
-    },
-    "theirs": {
-     "active": "Ninetales",
-     "shields": 2,
-     "left": 3,
-     "hp": 57,
-     "hp_max": 126,
-     "hp_share": 0.452,
-     "energy": [
-      54,
-      54
+      63,
+      63
      ],
      "energy_ceiling": 63
     }
@@ -946,27 +855,23 @@
   },
   {
    "kind": "charged",
-   "t": 89.5,
-   "fighting_turn": 79,
-   "side": "theirs",
-   "pokemon": "Ninetales",
-   "move": "Energy Ball",
-   "move_id": "ENERGY_BALL",
+   "t": 79.5,
+   "fighting_turn": 58,
+   "side": "mine",
+   "pokemon": "Seismitoad",
+   "move": "Icy Wind",
+   "move_id": "ICY_WIND",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": [
-    54,
-    54
-   ],
-   "energy_ceiling": 63,
-   "target": "Seismitoad",
+   "energy_before": 100,
+   "target": "Ninetales",
    "shielded": false,
-   "target_hp_before": 133,
-   "target_hp_after": 133,
-   "target_hp_max": 154,
+   "target_hp_before": 79,
+   "target_hp_after": 79,
+   "target_hp_max": 126,
    "target_bar_read": false,
-   "expected_damage": 121,
-   "resolved_t": 99.5,
+   "expected_damage": 22,
+   "resolved_t": 88.0,
    "cue": true,
    "state": {
     "mine": {
@@ -976,7 +881,52 @@
      "hp": 133,
      "hp_max": 154,
      "hp_share": 0.864,
-     "energy": 54
+     "energy": 55
+    },
+    "theirs": {
+     "active": "Ninetales",
+     "shields": 2,
+     "left": 3,
+     "hp": 79,
+     "hp_max": 126,
+     "hp_share": 0.627,
+     "energy": [
+      63,
+      63
+     ],
+     "energy_ceiling": 63
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 88.0,
+   "until": 89.5,
+   "fighting_turn": 58,
+   "turns": 3,
+   "mine": {
+    "pokemon": "Seismitoad",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Ninetales",
+    "fast_move": "Ember",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 0,
+     "left": 3,
+     "hp": 133,
+     "hp_max": 154,
+     "hp_share": 0.864,
+     "energy": 64
     },
     "theirs": {
      "active": "Ninetales",
@@ -986,49 +936,98 @@
      "hp_max": 126,
      "hp_share": 0.563,
      "energy": [
-      9,
-      9
+      72,
+      72
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 89.5,
+   "fighting_turn": 61,
+   "side": "theirs",
+   "pokemon": "Ninetales",
+   "move": "Energy Ball",
+   "move_id": "ENERGY_BALL",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": [
+    72,
+    72
+   ],
+   "energy_ceiling": 72,
+   "target": "Seismitoad",
+   "shielded": false,
+   "target_hp_before": 133,
+   "target_hp_after": 0,
+   "target_hp_max": 154,
+   "target_bar_read": true,
+   "expected_damage": 121,
+   "resolved_t": 98.58,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 154,
+     "hp_share": 0.0,
+     "energy": 73
+    },
+    "theirs": {
+     "active": "Ninetales",
+     "shields": 2,
+     "left": 3,
+     "hp": 71,
+     "hp_max": 126,
+     "hp_share": 0.563,
+     "energy": [
+      27,
+      27
+     ],
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "faint",
-   "t": 112.0,
-   "fighting_turn": 79,
+   "t": 98.58,
+   "fighting_turn": 61,
    "side": "mine",
    "pokemon": "Seismitoad",
-   "next": "Fearow",
+   "next": null,
    "state": {
     "mine": {
-     "active": "Fearow",
+     "active": "Seismitoad",
      "shields": 0,
-     "left": 2,
-     "hp": 13,
-     "hp_max": 124,
-     "hp_share": 0.105,
-     "energy": 100
+     "left": 3,
+     "hp": 0,
+     "hp_max": 154,
+     "hp_share": 0.0,
+     "energy": 73
     },
     "theirs": {
-     "active": "Marowak",
+     "active": "Ninetales",
      "shields": 2,
      "left": 3,
-     "hp": 125,
-     "hp_max": 125,
-     "hp_share": 1.0,
+     "hp": 71,
+     "hp_max": 126,
+     "hp_share": 0.563,
      "energy": [
-      0,
-      0
+      27,
+      27
      ],
-     "energy_ceiling": 10
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "switch",
    "t": 112.0,
-   "fighting_turn": 79,
+   "fighting_turn": 61,
    "side": "theirs",
    "from": "Ninetales",
    "to": "Marowak",
@@ -1061,7 +1060,7 @@
    "kind": "fighting",
    "t": 112.0,
    "until": 113.0,
-   "fighting_turn": 79,
+   "fighting_turn": 61,
    "turns": 2,
    "mine": {
     "pokemon": "Fearow",
@@ -1105,7 +1104,7 @@
   {
    "kind": "switch",
    "t": 113.0,
-   "fighting_turn": 81,
+   "fighting_turn": 63,
    "side": "mine",
    "from": "Fearow",
    "to": "Tinkaton",
@@ -1138,7 +1137,7 @@
    "kind": "fighting",
    "t": 113.0,
    "until": 118.5,
-   "fighting_turn": 81,
+   "fighting_turn": 63,
    "turns": 11,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1183,7 +1182,7 @@
   {
    "kind": "charged",
    "t": 118.5,
-   "fighting_turn": 92,
+   "fighting_turn": 74,
    "side": "theirs",
    "pokemon": "Marowak",
    "move": "Bone Club",
@@ -1198,29 +1197,29 @@
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 93,
-   "target_hp_after": 35,
+   "target_hp_after": 93,
    "target_hp_max": 141,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 54,
-   "resolved_t": 128.5,
+   "resolved_t": 127.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 0,
      "left": 2,
-     "hp": 35,
+     "hp": 93,
      "hp_max": 141,
-     "hp_share": 0.248,
+     "hp_share": 0.66,
      "energy": 54
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 103,
+     "hp": 107,
      "hp_max": 125,
-     "hp_share": 0.824,
+     "hp_share": 0.856,
      "energy": [
       5,
       5
@@ -1231,24 +1230,25 @@
   },
   {
    "kind": "fighting",
-   "t": 128.5,
+   "t": 127.0,
    "until": 131.3,
-   "fighting_turn": 92,
-   "turns": 5,
+   "fighting_turn": 74,
+   "turns": 8,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Marowak",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 5
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -1257,7 +1257,7 @@
      "hp": 19,
      "hp_max": 141,
      "hp_share": 0.135,
-     "energy": 72
+     "energy": 90
     },
     "theirs": {
      "active": "Marowak",
@@ -1267,24 +1267,24 @@
      "hp_max": 125,
      "hp_share": 0.744,
      "energy": [
-      15,
-      15
+      25,
+      25
      ],
-     "energy_ceiling": 25
+     "energy_ceiling": 35
     }
    }
   },
   {
    "kind": "charged",
    "t": 131.3,
-   "fighting_turn": 97,
+   "fighting_turn": 82,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Gigaton Hammer",
    "move_id": "GIGATON_HAMMER",
    "move_known_from": "seen",
    "cost": 60,
-   "energy_before": 72,
+   "energy_before": 90,
    "target": "Marowak",
    "shielded": true,
    "target_hp_before": 93,
@@ -1302,7 +1302,7 @@
      "hp": 19,
      "hp_max": 141,
      "hp_share": 0.135,
-     "energy": 12
+     "energy": 30
     },
     "theirs": {
      "active": "Marowak",
@@ -1312,17 +1312,17 @@
      "hp_max": 125,
      "hp_share": 0.744,
      "energy": [
-      25,
-      25
+      35,
+      35
      ],
-     "energy_ceiling": 25
+     "energy_ceiling": 35
     }
    }
   },
   {
    "kind": "end",
    "t": 147.5,
-   "fighting_turn": 97,
+   "fighting_turn": 82,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1337,7 +1337,7 @@
      "hp": 19,
      "hp_max": 141,
      "hp_share": 0.135,
-     "energy": 12
+     "energy": 30
     },
     "theirs": {
      "active": "Marowak",
@@ -1347,10 +1347,10 @@
      "hp_max": 125,
      "hp_share": 0.744,
      "energy": [
-      25,
-      25
+      35,
+      35
      ],
-     "energy_ceiling": 25
+     "energy_ceiling": 35
     }
    }
   }

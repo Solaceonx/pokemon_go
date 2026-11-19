@@ -68,6 +68,7 @@ def main():
     ap.add_argument('--source', action='append', default=[])
     ap.add_argument('--channel', action='append', default=[])
     ap.add_argument('--resume', action='store_true')
+    ap.add_argument('--skip-index', action='store_true', help='Defer catalog rebuild for disjoint channel workers; rebuild once after all finish')
     args = ap.parse_args()
     work = args.work.resolve()
     if not work.is_relative_to((ROOT / '.vod').resolve()):
@@ -77,7 +78,9 @@ def main():
     code = {p.relative_to(ROOT).as_posix(): sha256(p) for p in [
         Path(__file__).resolve(), ROOT / 'scripts/recording/vod_track.py',
         ROOT / 'scripts/recording/assemble.py', ROOT / 'scripts/recording/vod_markers.py',
-        ROOT / 'scripts/recording/creator_impact.py',
+        ROOT / 'scripts/recording/creator_impact.py', ROOT / 'scripts/recording/creator_lifecycle.py',
+        ROOT / 'scripts/recording/creator_state.py',
+        ROOT / 'scripts/track.py',
         ROOT / 'scripts/recording/public_transitions.py', ROOT / 'scripts/recording/game_record.py',
         ROOT / 'scripts/recording/verdict.py', ROOT / 'pogo/tracker.py']}
     receipt_path = work / 'replay.json'
@@ -143,7 +146,9 @@ def main():
         write_json(receipt_path, receipt)
         print(json.dumps({'record': row['record'], 'processed': 'after' in row,
                           'verdict': row.get('after', {}).get('verdict')}), flush=True)
-    subprocess.run([sys.executable, str(ROOT / 'scripts/index_games.py')], cwd=ROOT, check=True)
+    if not args.skip_index:
+        subprocess.run([sys.executable, str(ROOT / 'scripts/index_games.py')], cwd=ROOT, check=True)
+    receipt['catalog_rebuild_deferred'] = args.skip_index
     receipt['complete'] = all('after' in r for r in receipt['records'])
     receipt['verdict_counts'] = dict(Counter(r.get('after', {}).get('verdict', 'processing_error')
                                            for r in receipt['records']))

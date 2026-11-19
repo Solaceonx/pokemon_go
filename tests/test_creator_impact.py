@@ -85,16 +85,16 @@ class CenterImpact(unittest.TestCase):
             (game/'observations.jsonl').write_text(json.dumps({'t': 2, 'foe_left': 1})+'\n'+
                 json.dumps({'t': 20, 'my_charged': 'Acrobatics', 'note': 'unresolved final attack'})+'\n')
             trace = {'accepted': True, 'side': 'theirs', 'attack_side': 'mine',
-                     'attack_start_clip_seconds': 8, 'measurement': {'confirmed_zero': {'t': 15}}}
+                     'attack_start_clip_seconds': 8, 'measurement': {'first_zero': {'t': 14}, 'confirmed_zero': {'t': 15}}}
             with patch('creator_impact.sample_impact', return_value=trace):
                 actual = apply_impact(game, game, game)
             rows = [json.loads(line) for line in (game/'observations.jsonl').read_text().splitlines()]
-            self.assertEqual(rows[-1]['t'], 10)
+            self.assertEqual(rows[-1]['t'], 9)
             self.assertEqual(rows[-1]['foe_left'], 0)
             self.assertEqual(rows[-1]['foe_hp'], 0)
             self.assertEqual(rows[-1]['my_charged'], 'Acrobatics')
             self.assertEqual(json.loads((game/'timeline.json').read_text()), timeline)
-            self.assertEqual(actual['tracker_seconds'], 10)
+            self.assertEqual(actual['tracker_seconds'], 9)
 
     def test_measured_faint_is_recorded_once_even_without_replacement(self):
         with tempfile.TemporaryDirectory() as tmp:

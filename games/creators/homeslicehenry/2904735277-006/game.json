@@ -19,18 +19,16 @@
   "from": "result screen",
   "left": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 217.1,
- "fighting_turns": 138,
+ "fighting_turns": 118,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "ending: result says win, tracker has us on 2 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [],
-  "unexplained_health_changes": 10
+  "unexplained_health_changes": 12
  },
  "teams": {
   "mine": [
@@ -89,7 +87,7 @@
       "name": "Energy Ball",
       "energy": 45,
       "known_from": "seen",
-      "times_used": 2
+      "times_used": 1
      },
      {
       "id": "ACROBATICS",
@@ -122,7 +120,7 @@
       "name": "Hydro Cannon",
       "energy": 40,
       "known_from": "seen",
-      "times_used": 2
+      "times_used": 3
      },
      {
       "id": "DRILL_PECK",
@@ -212,8 +210,8 @@
     "cp": 1497,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.017,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "MUD_SHOT",
      "name": "Mud Shot",
@@ -255,12 +253,12 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 3,
+   "mine": 4,
    "theirs": 3
   },
   "faints": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 3
   }
  },
  "actions": [
@@ -364,7 +362,7 @@
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 38,
-   "resolved_t": 17.0,
+   "resolved_t": 15.5,
    "cue": true,
    "state": {
     "mine": {
@@ -393,22 +391,22 @@
   },
   {
    "kind": "fighting",
-   "t": 17.0,
-   "until": 17.5,
+   "t": 15.5,
+   "until": 16.5,
    "fighting_turn": 14,
-   "turns": 1,
+   "turns": 2,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -438,8 +436,8 @@
   },
   {
    "kind": "switch",
-   "t": 17.5,
-   "fighting_turn": 15,
+   "t": 16.5,
+   "fighting_turn": 16,
    "side": "mine",
    "from": "Sableye",
    "to": "Jumpluff",
@@ -448,9 +446,9 @@
      "active": "Jumpluff",
      "shields": 2,
      "left": 3,
-     "hp": 149,
+     "hp": 153,
      "hp_max": 153,
-     "hp_share": 0.974,
+     "hp_share": 1.0,
      "energy": 0
     },
     "theirs": {
@@ -464,28 +462,28 @@
       18,
       18
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 27
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 17.5,
+   "t": 16.5,
    "until": 18.5,
-   "fighting_turn": 15,
-   "turns": 2,
+   "fighting_turn": 16,
+   "turns": 4,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -496,7 +494,7 @@
      "hp": 149,
      "hp_max": 153,
      "hp_share": 0.974,
-     "energy": 0
+     "energy": 9
     },
     "theirs": {
      "active": "Florges",
@@ -506,17 +504,17 @@
      "hp_max": 110,
      "hp_share": 0.709,
      "energy": [
-      18,
-      18
+      27,
+      27
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "switch",
    "t": 18.5,
-   "fighting_turn": 17,
+   "fighting_turn": 20,
    "side": "theirs",
    "from": "Florges",
    "to": "Charjabug",
@@ -528,7 +526,7 @@
      "hp": 149,
      "hp_max": 153,
      "hp_share": 0.974,
-     "energy": 9
+     "energy": 18
     },
     "theirs": {
      "active": "Charjabug",
@@ -549,8 +547,8 @@
    "kind": "fighting",
    "t": 18.5,
    "until": 25.1,
-   "fighting_turn": 17,
-   "turns": 13,
+   "fighting_turn": 20,
+   "turns": 12,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
@@ -573,7 +571,7 @@
      "hp": 133,
      "hp_max": 153,
      "hp_share": 0.869,
-     "energy": 63
+     "energy": 72
     },
     "theirs": {
      "active": "Charjabug",
@@ -593,22 +591,22 @@
   {
    "kind": "charged",
    "t": 25.1,
-   "fighting_turn": 29,
+   "fighting_turn": 32,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Acrobatics",
    "move_id": "ACROBATICS",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 63,
+   "energy_before": 72,
    "target": "Charjabug",
    "shielded": false,
    "target_hp_before": 116,
-   "target_hp_after": 54,
+   "target_hp_after": 116,
    "target_hp_max": 126,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 62,
-   "resolved_t": 35.0,
+   "resolved_t": 34.5,
    "cue": true,
    "state": {
     "mine": {
@@ -618,18 +616,18 @@
      "hp": 133,
      "hp_max": 153,
      "hp_share": 0.869,
-     "energy": 8
+     "energy": 17
     },
     "theirs": {
      "active": "Charjabug",
      "shields": 2,
      "left": 3,
-     "hp": 54,
+     "hp": 116,
      "hp_max": 126,
-     "hp_share": 0.429,
+     "hp_share": 0.921,
      "energy": [
-      64,
-      64
+      48,
+      48
      ],
      "energy_ceiling": 64
     }
@@ -637,9 +635,9 @@
   },
   {
    "kind": "fighting",
-   "t": 35.0,
+   "t": 34.5,
    "until": 40.1,
-   "fighting_turn": 30,
+   "fighting_turn": 32,
    "turns": 10,
    "mine": {
     "pokemon": "Jumpluff",
@@ -664,7 +662,7 @@
      "hp": 109,
      "hp_max": 153,
      "hp_share": 0.712,
-     "energy": 44
+     "energy": 62
     },
     "theirs": {
      "active": "Charjabug",
@@ -674,8 +672,8 @@
      "hp_max": 126,
      "hp_share": 0.349,
      "energy": [
-      100,
-      100
+      96,
+      96
      ],
      "energy_ceiling": 96
     }
@@ -684,7 +682,7 @@
   {
    "kind": "charged",
    "t": 40.1,
-   "fighting_turn": 39,
+   "fighting_turn": 42,
    "side": "theirs",
    "pokemon": "Charjabug",
    "move": "X-Scissor",
@@ -692,19 +690,65 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    100,
-    100
+    96,
+    96
    ],
    "energy_ceiling": 96,
    "target": "Jumpluff",
    "shielded": false,
    "target_hp_before": 109,
-   "target_hp_after": 70,
+   "target_hp_after": 109,
    "target_hp_max": 153,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 38,
-   "resolved_t": 50.0,
+   "resolved_t": 48.5,
    "cue": true,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 2,
+     "left": 3,
+     "hp": 109,
+     "hp_max": 153,
+     "hp_share": 0.712,
+     "energy": 62
+    },
+    "theirs": {
+     "active": "Charjabug",
+     "shields": 2,
+     "left": 3,
+     "hp": 44,
+     "hp_max": 126,
+     "hp_share": 0.349,
+     "energy": [
+      56,
+      56
+     ],
+     "energy_ceiling": 72
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 48.5,
+   "until": 50.1,
+   "fighting_turn": 42,
+   "turns": 3,
+   "mine": {
+    "pokemon": "Jumpluff",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Charjabug",
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -713,7 +757,7 @@
      "hp": 70,
      "hp_max": 153,
      "hp_share": 0.458,
-     "energy": 53
+     "energy": 71
     },
     "theirs": {
      "active": "Charjabug",
@@ -723,17 +767,17 @@
      "hp_max": 126,
      "hp_share": 0.333,
      "energy": [
-      60,
-      60
+      56,
+      56
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 50.1,
-   "fighting_turn": 40,
+   "fighting_turn": 45,
    "side": "theirs",
    "pokemon": "Charjabug",
    "move": "X-Scissor",
@@ -741,28 +785,28 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    60,
-    60
+    56,
+    56
    ],
-   "energy_ceiling": 76,
+   "energy_ceiling": 72,
    "target": "Jumpluff",
    "shielded": false,
    "target_hp_before": 70,
-   "target_hp_after": 34,
+   "target_hp_after": 70,
    "target_hp_max": 153,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 38,
-   "resolved_t": 60.0,
+   "resolved_t": 59.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 2,
      "left": 3,
-     "hp": 34,
+     "hp": 70,
      "hp_max": 153,
-     "hp_share": 0.222,
-     "energy": 53
+     "hp_share": 0.458,
+     "energy": 80
     },
     "theirs": {
      "active": "Charjabug",
@@ -772,18 +816,18 @@
      "hp_max": 126,
      "hp_share": 0.317,
      "energy": [
-      20,
-      20
+      16,
+      16
      ],
-     "energy_ceiling": 36
+     "energy_ceiling": 32
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 60.0,
+   "t": 59.5,
    "until": 64.1,
-   "fighting_turn": 40,
+   "fighting_turn": 45,
    "turns": 8,
    "mine": {
     "pokemon": "Jumpluff",
@@ -799,6 +843,7 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -807,7 +852,7 @@
      "hp": 27,
      "hp_max": 153,
      "hp_share": 0.176,
-     "energy": 80
+     "energy": 100
     },
     "theirs": {
      "active": "Charjabug",
@@ -817,24 +862,24 @@
      "hp_max": 126,
      "hp_share": 0.294,
      "energy": [
-      36,
-      36
+      32,
+      32
      ],
-     "energy_ceiling": 52
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 64.1,
-   "fighting_turn": 47,
+   "fighting_turn": 53,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Acrobatics",
    "move_id": "ACROBATICS",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 80,
+   "energy_before": 100,
    "target": "Charjabug",
    "shielded": false,
    "target_hp_before": 37,
@@ -842,7 +887,7 @@
    "target_hp_max": 126,
    "target_bar_read": false,
    "expected_damage": 62,
-   "resolved_t": 74.0,
+   "resolved_t": 72.5,
    "cue": true,
    "state": {
     "mine": {
@@ -852,7 +897,7 @@
      "hp": 27,
      "hp_max": 153,
      "hp_share": 0.176,
-     "energy": 25
+     "energy": 45
     },
     "theirs": {
      "active": "Charjabug",
@@ -862,24 +907,24 @@
      "hp_max": 126,
      "hp_share": 0.294,
      "energy": [
-      52,
-      52
+      48,
+      48
      ],
-     "energy_ceiling": 68
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 74.0,
-   "until": 80.0,
-   "fighting_turn": 48,
-   "turns": 3,
+   "t": 72.5,
+   "until": 73.18,
+   "fighting_turn": 53,
+   "turns": 1,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "theirs": {
@@ -897,30 +942,30 @@
      "hp": 27,
      "hp_max": 153,
      "hp_share": 0.176,
-     "energy": 34
+     "energy": 45
     },
     "theirs": {
      "active": "Charjabug",
      "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 37,
      "hp_max": 126,
      "hp_share": 0.294,
      "energy": [
-      52,
-      52
+      48,
+      48
      ],
-     "energy_ceiling": 68
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "faint",
-   "t": 80.0,
-   "fighting_turn": 51,
+   "t": 73.18,
+   "fighting_turn": 54,
    "side": "theirs",
    "pokemon": "Charjabug",
-   "next": "Florges",
+   "next": null,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -929,29 +974,29 @@
      "hp": 27,
      "hp_max": 153,
      "hp_share": 0.176,
-     "energy": 43
+     "energy": 45
     },
     "theirs": {
-     "active": "Florges",
+     "active": "Charjabug",
      "shields": 2,
-     "left": 2,
-     "hp": 78,
-     "hp_max": 110,
-     "hp_share": 0.709,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 126,
+     "hp_share": 0.0,
      "energy": [
-      18,
-      18
+      48,
+      48
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 80.0,
+   "t": 73.18,
    "until": 83.1,
-   "fighting_turn": 51,
-   "turns": 6,
+   "fighting_turn": 54,
+   "turns": 7,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
@@ -960,10 +1005,10 @@
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Florges",
-    "fast_move": "Fairy Wind",
+    "pokemon": "Charjabug",
+    "fast_move": "Volt Switch",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 2
    },
    "state": {
@@ -974,7 +1019,7 @@
      "hp": 20,
      "hp_max": 153,
      "hp_share": 0.131,
-     "energy": 70
+     "energy": 90
     },
     "theirs": {
      "active": "Florges",
@@ -984,78 +1029,79 @@
      "hp_max": 110,
      "hp_share": 0.664,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 83.1,
-   "fighting_turn": 57,
+   "fighting_turn": 61,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Acrobatics",
    "move_id": "ACROBATICS",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 70,
+   "energy_before": 90,
    "target": "Florges",
    "shielded": false,
    "target_hp_before": 73,
-   "target_hp_after": 12,
+   "target_hp_after": 73,
    "target_hp_max": 110,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 59,
-   "resolved_t": 93.0,
+   "resolved_t": 92.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 2,
      "left": 3,
-     "hp": 13,
+     "hp": 20,
      "hp_max": 153,
-     "hp_share": 0.085,
-     "energy": 15
+     "hp_share": 0.131,
+     "energy": 35
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 2,
-     "hp": 12,
+     "hp": 73,
      "hp_max": 110,
-     "hp_share": 0.109,
+     "hp_share": 0.664,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 93.0,
+   "t": 92.5,
    "until": 93.5,
-   "fighting_turn": 57,
-   "turns": 1,
+   "fighting_turn": 61,
+   "turns": 2,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -1064,7 +1110,7 @@
      "hp": 13,
      "hp_max": 153,
      "hp_share": 0.085,
-     "energy": 15
+     "energy": 35
     },
     "theirs": {
      "active": "Florges",
@@ -1074,17 +1120,17 @@
      "hp_max": 110,
      "hp_share": 0.109,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "switch",
    "t": 93.5,
-   "fighting_turn": 58,
+   "fighting_turn": 63,
    "side": "mine",
    "from": "Jumpluff",
    "to": "Empoleon",
@@ -1106,10 +1152,10 @@
      "hp_max": 110,
      "hp_share": 0.109,
      "energy": [
-      45,
-      45
+      63,
+      63
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 81
     }
    }
   },
@@ -1117,7 +1163,7 @@
    "kind": "fighting",
    "t": 93.5,
    "until": 95.5,
-   "fighting_turn": 58,
+   "fighting_turn": 63,
    "turns": 4,
    "mine": {
     "pokemon": "Empoleon",
@@ -1151,17 +1197,17 @@
      "hp_max": 110,
      "hp_share": 0.109,
      "energy": [
-      63,
-      63
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "switch",
    "t": 95.5,
-   "fighting_turn": 62,
+   "fighting_turn": 67,
    "side": "theirs",
    "from": "Florges",
    "to": "Diggersby",
@@ -1194,8 +1240,8 @@
    "kind": "fighting",
    "t": 95.5,
    "until": 100.1,
-   "fighting_turn": 62,
-   "turns": 9,
+   "fighting_turn": 67,
+   "turns": 8,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
@@ -1239,7 +1285,7 @@
   {
    "kind": "charged",
    "t": 100.1,
-   "fighting_turn": 70,
+   "fighting_turn": 75,
    "side": "mine",
    "pokemon": "Empoleon",
    "move": "Hydro Cannon",
@@ -1250,32 +1296,32 @@
    "target": "Diggersby",
    "shielded": true,
    "target_hp_before": 159,
-   "target_hp_after": 155,
+   "target_hp_after": 159,
    "target_hp_max": 174,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 110.0,
+   "resolved_t": 109.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 103,
+     "hp": 106,
      "hp_max": 122,
-     "hp_share": 0.844,
+     "hp_share": 0.869,
      "energy": 8
     },
     "theirs": {
      "active": "Diggersby",
      "shields": 1,
      "left": 2,
-     "hp": 155,
+     "hp": 159,
      "hp_max": 174,
-     "hp_share": 0.891,
+     "hp_share": 0.914,
      "energy": [
-      45,
-      45
+      36,
+      36
      ],
      "energy_ceiling": 45
     }
@@ -1283,16 +1329,16 @@
   },
   {
    "kind": "fighting",
-   "t": 110.0,
+   "t": 109.5,
    "until": 114.1,
-   "fighting_turn": 71,
+   "fighting_turn": 75,
    "turns": 8,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Diggersby",
@@ -1309,7 +1355,7 @@
      "hp": 94,
      "hp_max": 122,
      "hp_share": 0.77,
-     "energy": 32
+     "energy": 40
     },
     "theirs": {
      "active": "Diggersby",
@@ -1329,7 +1375,7 @@
   {
    "kind": "charged",
    "t": 114.1,
-   "fighting_turn": 78,
+   "fighting_turn": 83,
    "side": "theirs",
    "pokemon": "Diggersby",
    "move": "Fire Punch",
@@ -1344,29 +1390,29 @@
    "target": "Empoleon",
    "shielded": true,
    "target_hp_before": 94,
-   "target_hp_after": 87,
+   "target_hp_after": 94,
    "target_hp_max": 122,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 124.0,
+   "resolved_t": 122.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 1,
      "left": 3,
-     "hp": 87,
+     "hp": 94,
      "hp_max": 122,
-     "hp_share": 0.713,
+     "hp_share": 0.77,
      "energy": 40
     },
     "theirs": {
      "active": "Diggersby",
      "shields": 1,
      "left": 2,
-     "hp": 139,
+     "hp": 142,
      "hp_max": 174,
-     "hp_share": 0.799,
+     "hp_share": 0.816,
      "energy": [
       41,
       41
@@ -1377,23 +1423,23 @@
   },
   {
    "kind": "fighting",
-   "t": 124.0,
+   "t": 122.5,
    "until": 127.1,
-   "fighting_turn": 79,
-   "turns": 6,
+   "fighting_turn": 83,
+   "turns": 9,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Diggersby",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -1403,7 +1449,7 @@
      "hp": 80,
      "hp_max": 122,
      "hp_share": 0.656,
-     "energy": 64
+     "energy": 72
     },
     "theirs": {
      "active": "Diggersby",
@@ -1413,63 +1459,63 @@
      "hp_max": 174,
      "hp_share": 0.753,
      "energy": [
-      68,
-      68
+      86,
+      86
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 86
     }
    }
   },
   {
    "kind": "charged",
    "t": 127.1,
-   "fighting_turn": 85,
+   "fighting_turn": 92,
    "side": "mine",
    "pokemon": "Empoleon",
    "move": "Hydro Cannon",
    "move_id": "HYDRO_CANNON",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 64,
+   "energy_before": 72,
    "target": "Diggersby",
    "shielded": true,
    "target_hp_before": 131,
-   "target_hp_after": 125,
+   "target_hp_after": 131,
    "target_hp_max": 174,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 137.0,
+   "resolved_t": 136.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 1,
      "left": 3,
-     "hp": 76,
+     "hp": 80,
      "hp_max": 122,
-     "hp_share": 0.623,
-     "energy": 24
+     "hp_share": 0.656,
+     "energy": 32
     },
     "theirs": {
      "active": "Diggersby",
      "shields": 0,
      "left": 2,
-     "hp": 125,
+     "hp": 131,
      "hp_max": 174,
-     "hp_share": 0.718,
+     "hp_share": 0.753,
      "energy": [
-      68,
-      68
+      86,
+      86
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 86
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 137.0,
+   "t": 136.5,
    "until": 138.1,
-   "fighting_turn": 85,
+   "fighting_turn": 92,
    "turns": 2,
    "mine": {
     "pokemon": "Empoleon",
@@ -1493,7 +1539,7 @@
      "hp": 76,
      "hp_max": 122,
      "hp_share": 0.623,
-     "energy": 24
+     "energy": 40
     },
     "theirs": {
      "active": "Diggersby",
@@ -1503,17 +1549,17 @@
      "hp_max": 174,
      "hp_share": 0.718,
      "energy": [
-      68,
-      68
+      95,
+      95
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 95
     }
    }
   },
   {
    "kind": "charged",
    "t": 138.1,
-   "fighting_turn": 86,
+   "fighting_turn": 94,
    "side": "theirs",
    "pokemon": "Diggersby",
    "move": "Scorching Sands",
@@ -1521,28 +1567,28 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    68,
-    68
+    95,
+    95
    ],
-   "energy_ceiling": 86,
+   "energy_ceiling": 95,
    "target": "Empoleon",
    "shielded": true,
    "target_hp_before": 76,
-   "target_hp_after": 71,
+   "target_hp_after": 76,
    "target_hp_max": 122,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 148.0,
+   "resolved_t": 146.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 0,
      "left": 3,
-     "hp": 71,
+     "hp": 76,
      "hp_max": 122,
-     "hp_share": 0.582,
-     "energy": 32
+     "hp_share": 0.623,
+     "energy": 40
     },
     "theirs": {
      "active": "Diggersby",
@@ -1552,32 +1598,32 @@
      "hp_max": 174,
      "hp_share": 0.718,
      "energy": [
-      18,
-      18
+      45,
+      45
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 148.0,
+   "t": 146.5,
    "until": 148.5,
-   "fighting_turn": 87,
-   "turns": 1,
+   "fighting_turn": 94,
+   "turns": 4,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Diggersby",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -1587,7 +1633,7 @@
      "hp": 71,
      "hp_max": 122,
      "hp_share": 0.582,
-     "energy": 32
+     "energy": 48
     },
     "theirs": {
      "active": "Diggersby",
@@ -1597,17 +1643,17 @@
      "hp_max": 174,
      "hp_share": 0.718,
      "energy": [
-      18,
-      18
+      54,
+      54
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 63
     }
    }
   },
   {
    "kind": "switch",
    "t": 148.5,
-   "fighting_turn": 88,
+   "fighting_turn": 98,
    "side": "mine",
    "from": "Empoleon",
    "to": "Sableye",
@@ -1629,10 +1675,10 @@
      "hp_max": 174,
      "hp_share": 0.718,
      "energy": [
-      18,
-      18
+      63,
+      63
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 72
     }
    }
   },
@@ -1640,20 +1686,20 @@
    "kind": "fighting",
    "t": 148.5,
    "until": 151.1,
-   "fighting_turn": 88,
-   "turns": 5,
+   "fighting_turn": 98,
+   "turns": 3,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Diggersby",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "state": {
@@ -1674,24 +1720,24 @@
      "hp_max": 174,
      "hp_share": 0.701,
      "energy": [
-      36,
-      36
+      81,
+      81
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 81
     }
    }
   },
   {
    "kind": "charged",
    "t": 151.1,
-   "fighting_turn": 91,
+   "fighting_turn": 101,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Drain Punch",
    "move_id": "DRAIN_PUNCH",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 72,
+   "energy_before": 64,
    "target": "Diggersby",
    "shielded": false,
    "target_hp_before": 122,
@@ -1699,17 +1745,17 @@
    "target_hp_max": 174,
    "target_bar_read": false,
    "expected_damage": null,
-   "resolved_t": 161.0,
+   "resolved_t": 159.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 0,
      "left": 3,
-     "hp": 43,
+     "hp": 68,
      "hp_max": 125,
-     "hp_share": 0.344,
-     "energy": 32
+     "hp_share": 0.544,
+     "energy": 24
     },
     "theirs": {
      "active": "Diggersby",
@@ -1719,33 +1765,34 @@
      "hp_max": 174,
      "hp_share": 0.701,
      "energy": [
-      45,
-      45
+      81,
+      81
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 81
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 161.0,
-   "until": 161.5,
-   "fighting_turn": 93,
-   "turns": 1,
+   "t": 159.5,
+   "until": 161.0,
+   "fighting_turn": 101,
+   "turns": 3,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Diggersby",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Sableye",
@@ -1764,17 +1811,17 @@
      "hp_max": 174,
      "hp_share": 0.701,
      "energy": [
-      45,
-      45
+      90,
+      90
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "switch",
-   "t": 161.5,
-   "fighting_turn": 94,
+   "t": 161.0,
+   "fighting_turn": 104,
    "side": "theirs",
    "from": "Diggersby",
    "to": "Florges",
@@ -1796,42 +1843,42 @@
      "hp_max": 110,
      "hp_share": 0.109,
      "energy": [
-      63,
-      63
+      72,
+      72
      ],
-     "energy_ceiling": 81
+     "energy_ceiling": 99
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 161.5,
-   "until": 185.5,
-   "fighting_turn": 94,
-   "turns": 23,
+   "t": 161.0,
+   "until": 163.1,
+   "fighting_turn": 104,
+   "turns": 3,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 0,
-     "left": 2,
+     "left": 3,
      "hp": 39,
      "hp_max": 125,
      "hp_share": 0.312,
-     "energy": 100
+     "energy": 48
     },
     "theirs": {
      "active": "Florges",
@@ -1840,6 +1887,164 @@
      "hp": 12,
      "hp_max": 110,
      "hp_share": 0.109,
+     "energy": [
+      81,
+      81
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 163.1,
+   "fighting_turn": 107,
+   "side": "theirs",
+   "pokemon": "Florges",
+   "move": "Moonblast",
+   "move_id": "MOONBLAST",
+   "move_known_from": "seen",
+   "cost": 50,
+   "energy_before": [
+    81,
+    81
+   ],
+   "energy_ceiling": 100,
+   "target": "Sableye",
+   "shielded": false,
+   "target_hp_before": 39,
+   "target_hp_after": 0,
+   "target_hp_max": 125,
+   "target_bar_read": true,
+   "expected_damage": 87,
+   "resolved_t": 169.17,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Sableye",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 0,
+     "left": 2,
+     "hp": 12,
+     "hp_max": 110,
+     "hp_share": 0.109,
+     "energy": [
+      31,
+      31
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 169.17,
+   "fighting_turn": 107,
+   "side": "mine",
+   "pokemon": "Sableye",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Sableye",
+     "shields": 0,
+     "left": 3,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 0,
+     "left": 2,
+     "hp": 12,
+     "hp_max": 110,
+     "hp_share": 0.109,
+     "energy": [
+      31,
+      31
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 184.38,
+   "fighting_turn": 107,
+   "side": "theirs",
+   "pokemon": "Florges",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Sableye",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Florges",
+     "shields": 0,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 110,
+     "hp_share": 0.0,
+     "energy": [
+      31,
+      31
+     ],
+     "energy_ceiling": 40
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 184.38,
+   "until": 192.1,
+   "fighting_turn": 107,
+   "turns": 8,
+   "mine": {
+    "pokemon": "Sableye",
+    "fast_move": "Shadow Claw",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Florges",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
+   },
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 2,
+     "hp": 8,
+     "hp_max": 153,
+     "hp_share": 0.052,
+     "energy": 80
+    },
+    "theirs": {
+     "active": "Diggersby",
+     "shields": 0,
+     "left": 1,
+     "hp": 73,
+     "hp_max": 174,
+     "hp_share": 0.42,
      "energy": [
       100,
       100
@@ -1850,150 +2055,24 @@
   },
   {
    "kind": "charged",
-   "t": 185.5,
-   "fighting_turn": 117,
-   "side": "theirs",
-   "pokemon": "Florges",
-   "move": "Moonblast",
-   "move_id": "MOONBLAST",
-   "move_known_from": "inferred",
-   "cost": 50,
-   "energy_before": [
-    100,
-    100
-   ],
-   "energy_ceiling": 100,
-   "target": "Sableye",
-   "shielded": false,
-   "target_hp_before": 39,
-   "target_hp_after": 39,
-   "target_hp_max": 125,
-   "target_bar_read": false,
-   "expected_damage": 87,
-   "resolved_t": 185.5,
-   "cue": false,
-   "state": {
-    "mine": {
-     "active": "Sableye",
-     "shields": 0,
-     "left": 2,
-     "hp": 39,
-     "hp_max": 125,
-     "hp_share": 0.312,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Florges",
-     "shields": 0,
-     "left": 2,
-     "hp": 12,
-     "hp_max": 110,
-     "hp_share": 0.109,
-     "energy": [
-      50,
-      50
-     ],
-     "energy_ceiling": 59
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 185.5,
-   "until": 186.0,
-   "fighting_turn": 117,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Sableye",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Florges",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Sableye",
-     "shields": 0,
-     "left": 2,
-     "hp": 39,
-     "hp_max": 125,
-     "hp_share": 0.312,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Florges",
-     "shields": 0,
-     "left": 2,
-     "hp": 12,
-     "hp_max": 110,
-     "hp_share": 0.109,
-     "energy": [
-      50,
-      50
-     ],
-     "energy_ceiling": 59
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 186.0,
-   "fighting_turn": 118,
+   "t": 192.1,
+   "fighting_turn": 115,
    "side": "mine",
-   "pokemon": "Sableye",
-   "next": "Jumpluff",
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 2,
-     "hp": 11,
-     "hp_max": 153,
-     "hp_share": 0.072,
-     "energy": 15
-    },
-    "theirs": {
-     "active": "Florges",
-     "shields": 0,
-     "left": 2,
-     "hp": 12,
-     "hp_max": 110,
-     "hp_share": 0.109,
-     "energy": [
-      50,
-      50
-     ],
-     "energy_ceiling": 59
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 186.0,
-   "until": 188.0,
-   "fighting_turn": 118,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Florges",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
+   "pokemon": "Jumpluff",
+   "move": "Energy Ball",
+   "move_id": "ENERGY_BALL",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 80,
+   "target": "Diggersby",
+   "shielded": false,
+   "target_hp_before": 73,
+   "target_hp_after": 73,
+   "target_hp_max": 174,
+   "target_bar_read": false,
+   "expected_damage": 69,
+   "resolved_t": 200.5,
+   "cue": true,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -2002,84 +2081,7 @@
      "hp": 8,
      "hp_max": 153,
      "hp_share": 0.052,
-     "energy": 15
-    },
-    "theirs": {
-     "active": "Florges",
-     "shields": 0,
-     "left": 1,
-     "hp": 12,
-     "hp_max": 110,
-     "hp_share": 0.109,
-     "energy": [
-      59,
-      59
-     ],
-     "energy_ceiling": 68
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 188.0,
-   "fighting_turn": 120,
-   "side": "theirs",
-   "pokemon": "Florges",
-   "next": "Diggersby",
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 2,
-     "hp": 8,
-     "hp_max": 153,
-     "hp_share": 0.052,
-     "energy": 33
-    },
-    "theirs": {
-     "active": "Diggersby",
-     "shields": 0,
-     "left": 1,
-     "hp": 122,
-     "hp_max": 174,
-     "hp_share": 0.701,
-     "energy": [
-      45,
-      45
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 188.0,
-   "until": 192.1,
-   "fighting_turn": 120,
-   "turns": 8,
-   "mine": {
-    "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Diggersby",
-    "fast_move": "Mud Shot",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 0,
-     "left": 2,
-     "hp": 8,
-     "hp_max": 153,
-     "hp_share": 0.052,
-     "energy": 60
+     "energy": 35
     },
     "theirs": {
      "active": "Diggersby",
@@ -2089,33 +2091,33 @@
      "hp_max": 174,
      "hp_share": 0.42,
      "energy": [
-      72,
-      72
+      100,
+      100
      ],
-     "energy_ceiling": 90
+     "energy_ceiling": 100
     }
    }
   },
   {
-   "kind": "charged",
-   "t": 192.1,
-   "fighting_turn": 127,
-   "side": "mine",
-   "pokemon": "Jumpluff",
-   "move": "Energy Ball",
-   "move_id": "ENERGY_BALL",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 60,
-   "target": "Diggersby",
-   "shielded": false,
-   "target_hp_before": 73,
-   "target_hp_after": 3,
-   "target_hp_max": 174,
-   "target_bar_read": true,
-   "expected_damage": 69,
-   "resolved_t": 202.0,
-   "cue": true,
+   "kind": "fighting",
+   "t": 200.5,
+   "until": 201.5,
+   "fighting_turn": 115,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Jumpluff",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Diggersby",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -2124,7 +2126,39 @@
      "hp": 8,
      "hp_max": 153,
      "hp_share": 0.052,
-     "energy": 15
+     "energy": 35
+    },
+    "theirs": {
+     "active": "Diggersby",
+     "shields": 0,
+     "left": 1,
+     "hp": 73,
+     "hp_max": 174,
+     "hp_share": 0.42,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 201.5,
+   "fighting_turn": 117,
+   "side": "mine",
+   "from": "Jumpluff",
+   "to": "Empoleon",
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 71,
+     "hp_max": 122,
+     "hp_share": 0.582,
+     "energy": 48
     },
     "theirs": {
      "active": "Diggersby",
@@ -2134,42 +2168,42 @@
      "hp_max": 174,
      "hp_share": 0.017,
      "energy": [
-      81,
-      81
+      100,
+      100
      ],
-     "energy_ceiling": 90
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 202.0,
+   "t": 201.5,
    "until": 203.1,
-   "fighting_turn": 128,
-   "turns": 10,
+   "fighting_turn": 117,
+   "turns": 1,
    "mine": {
-    "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
+    "pokemon": "Empoleon",
+    "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Diggersby",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
     "mine": {
-     "active": "Jumpluff",
+     "active": "Empoleon",
      "shields": 0,
      "left": 2,
-     "hp": 8,
-     "hp_max": 153,
-     "hp_share": 0.052,
-     "energy": 15
+     "hp": 71,
+     "hp_max": 122,
+     "hp_share": 0.582,
+     "energy": 48
     },
     "theirs": {
      "active": "Diggersby",
@@ -2179,50 +2213,82 @@
      "hp_max": 174,
      "hp_share": 0.017,
      "energy": [
-      81,
-      81
+      100,
+      100
      ],
-     "energy_ceiling": 90
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 203.1,
-   "fighting_turn": 128,
+   "fighting_turn": 118,
    "side": "mine",
-   "pokemon": "Jumpluff",
-   "move": "Energy Ball",
-   "move_id": "ENERGY_BALL",
+   "pokemon": "Empoleon",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
    "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 51,
+   "cost": 40,
+   "energy_before": 48,
    "target": "Diggersby",
    "shielded": false,
    "target_hp_before": 3,
-   "target_hp_after": 3,
+   "target_hp_after": 0,
    "target_hp_max": 174,
-   "target_bar_read": false,
-   "expected_damage": 69,
-   "resolved_t": 217.1,
+   "target_bar_read": true,
+   "expected_damage": 90,
+   "resolved_t": 211.1,
    "cue": true,
    "state": {
     "mine": {
-     "active": "Jumpluff",
+     "active": "Empoleon",
      "shields": 0,
      "left": 2,
-     "hp": 8,
-     "hp_max": 153,
-     "hp_share": 0.052,
-     "energy": 6
+     "hp": 71,
+     "hp_max": 122,
+     "hp_share": 0.582,
+     "energy": 8
     },
     "theirs": {
      "active": "Diggersby",
      "shields": 0,
-     "left": 1,
-     "hp": 3,
+     "left": 0,
+     "hp": 0,
      "hp_max": 174,
-     "hp_share": 0.017,
+     "hp_share": 0.0,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 211.1,
+   "fighting_turn": 118,
+   "side": "theirs",
+   "pokemon": "Diggersby",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Empoleon",
+     "shields": 0,
+     "left": 2,
+     "hp": 71,
+     "hp_max": 122,
+     "hp_share": 0.582,
+     "energy": 8
+    },
+    "theirs": {
+     "active": "Diggersby",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 174,
+     "hp_share": 0.0,
      "energy": [
       100,
       100
@@ -2234,30 +2300,30 @@
   {
    "kind": "end",
    "t": 217.1,
-   "fighting_turn": 138,
+   "fighting_turn": 118,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 2,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
-     "active": "Jumpluff",
+     "active": "Empoleon",
      "shields": 0,
      "left": 2,
-     "hp": 8,
-     "hp_max": 153,
-     "hp_share": 0.052,
-     "energy": 6
+     "hp": 71,
+     "hp_max": 122,
+     "hp_share": 0.582,
+     "energy": 8
     },
     "theirs": {
      "active": "Diggersby",
      "shields": 0,
-     "left": 1,
-     "hp": 3,
+     "left": 0,
+     "hp": 0,
      "hp_max": 174,
-     "hp_share": 0.017,
+     "hp_share": 0.0,
      "energy": [
       100,
       100
@@ -2269,7 +2335,7 @@
  ],
  "deductions": [
   {
-   "t": 161.0,
+   "t": 159.5,
    "side": "mine",
    "pokemon": "Sableye",
    "what": "charged move",

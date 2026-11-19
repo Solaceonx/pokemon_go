@@ -197,7 +197,8 @@ def main():
               'scorer_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
               'baseline_git_ref': a.baseline_ref,
               'method': 'Maximum one-to-one matching; correct side, actor/species and move; annotated video-time interval +/- 3 seconds.',
-              'scope': 'Six manually reviewed diagnostic clips; one development example. No random-sample or independent-human accuracy claim.',
+              'scope': 'Six manually reviewed diagnostic clips, all used for current debugging. Regression scores, not heldout accuracy; no independent-human adjudication.',
+              'historical_development_flag': 'The exclusion group preserves the original Henry-only development marker. The other five clips are now also used for debugging, so neither group is held out.',
               'identity_scope': 'Visible species header names; unannotated form suffixes and generic Weather Ball variants are not graded.',
               'interval_caveat': 'Battle-cluster bootstrap intervals are descriptive; two battles per channel cannot support population accuracy.',
               'aggregate': aggregate, 'battles': details}

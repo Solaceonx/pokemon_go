@@ -1,7 +1,7 @@
 {
   "t": 177.0,
-  "fighting_turns": 130,
-  "warnings": 6,
+  "fighting_turns": 113,
+  "warnings": 7,
   "matchup": {
     "ours": {
       "fast": {
@@ -136,7 +136,7 @@
         "hp": 5,
         "hp_max": 145,
         "hp_share": 0.034,
-        "energy": 84,
+        "energy": 48,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -238,7 +238,7 @@
         "hp": 52,
         "hp_max": 107,
         "hp_share": 0.486,
-        "energy": 14,
+        "energy": 30,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -277,7 +277,7 @@
     "left": 1,
     "unseen": 0,
     "switch_ready_in": 2.5,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 2,
     "pokemon": [
       {
         "species": "ursaluna",
@@ -299,7 +299,7 @@
         "hp": 0,
         "hp_max": 144,
         "hp_share": 0.0,
-        "energy": 100,
+        "energy": 58,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -310,7 +310,12 @@
           "turns": 1,
           "energy_gain": 4,
           "known_from": "guessed",
-          "misfit": {}
+          "misfit": {
+            "TACKLE": 0.74,
+            "ROCK_SMASH": 0.55,
+            "SMACK_DOWN": 0.68,
+            "SCRATCH": 0.74
+          }
         },
         "charged_moves": [
           {
@@ -331,20 +336,22 @@
           }
         ],
         "energy_range": [
-          100,
-          100
+          58,
+          58
         ],
-        "energy_by_clock": 100,
+        "energy_by_clock": 62,
         "energy_odds": {
-          "92": 0.08,
-          "96": 0.12,
-          "100": 0.79
+          "50": 0.08,
+          "54": 0.12,
+          "58": 0.33,
+          "62": 0.33,
+          "66": 0.12
         },
         "fast_move_odds": {
-          "SCRATCH": 0.49,
-          "TACKLE": 0.23,
-          "SMACK_DOWN": 0.2,
-          "ROCK_SMASH": 0.09
+          "SCRATCH": 0.44,
+          "SMACK_DOWN": 0.21,
+          "TACKLE": 0.21,
+          "ROCK_SMASH": 0.14
         },
         "charged_move_odds": {
           "SWIFT": 1.0,
@@ -358,13 +365,13 @@
         },
         "ready_odds": {
           "SWIFT": 1.0,
-          "HIGH_HORSEPOWER": 0.19,
+          "HIGH_HORSEPOWER": 0.15,
           "ICE_PUNCH": 0.17,
           "THUNDER_PUNCH": 0.16,
           "TRAILBLAZE": 0.16,
           "FIRE_PUNCH": 0.16,
           "AERIAL_ACE": 0.09,
-          "PLAY_ROUGH": 0.07
+          "PLAY_ROUGH": 0.03
         }
       },
       {
@@ -397,8 +404,9 @@
           "type": "ghost",
           "turns": 2,
           "energy_gain": 8,
-          "known_from": "inferred",
+          "known_from": "guessed",
           "misfit": {
+            "FEINT_ATTACK": 0.48,
             "SHADOW_CLAW": 0.36
           }
         },
@@ -433,7 +441,8 @@
           "48": 0.12
         },
         "fast_move_odds": {
-          "SHADOW_CLAW": 1.0
+          "SHADOW_CLAW": 0.72,
+          "FEINT_ATTACK": 0.28
         },
         "charged_move_odds": {
           "FOUL_PLAY": 1.0,
@@ -476,8 +485,8 @@
           "energy_gain": 12,
           "known_from": "guessed",
           "misfit": {
-            "INFESTATION": 0.37,
-            "BUG_BITE": 0.61
+            "INFESTATION": 0.79,
+            "BUG_BITE": 1.16
           }
         },
         "charged_moves": [
@@ -509,8 +518,8 @@
           "100": 0.79
         },
         "fast_move_odds": {
-          "INFESTATION": 0.73,
-          "BUG_BITE": 0.27
+          "INFESTATION": 0.8,
+          "BUG_BITE": 0.2
         },
         "charged_move_odds": {
           "WATER_PULSE": 1.0,
