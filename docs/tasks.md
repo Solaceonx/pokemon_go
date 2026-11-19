@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — Claude on the owner's PC; done 2026-11-18: **stronger in the simulator** (55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, level against PvPoke at −1.3 ± 3.4; seed 4701, about the same search cost), and it throws Stone Edge in the Azumarill position. Benched energy counts too much in it. **Adopted 2026-11-19 on branch `task40-android`** (the owner: "Yes, adopt it"): `runs/eval/eval.npz` is the wide model there, the old one kept as `eval-42.npz`; release check passed. `main` and the website keep the old model until the branch is merged and the site rebuilt (`status.md`) | Done; adopted on `task40-android` |
+| **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — Claude on the owner's PC; done 2026-11-18: **stronger in the simulator** (55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, level against PvPoke at −1.3 ± 3.4; seed 4701, about the same search cost), and it throws Stone Edge in the Azumarill position. Benched energy counts too much in it. **Adopted 2026-11-19 on branch `task40-android`** (the owner: "Yes, adopt it"): `runs/eval/eval.npz` is the wide model there, the old one kept as `eval-42.npz`; release check passed; on the website since 2026-11-19. `main` keeps the old model until the branch is merged (`status.md`) | Done; adopted on `task40-android` |
 | **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
@@ -90,8 +90,8 @@ covered by `data/video_sources.csv`; task 3 (fast frame recognition for live pla
 - Release check passed: median 78 ms, 99th percentile 375 ms, 0.1% cut short; crowd 72.8% ± 6.1.
 - On the Azumarill replay, the live player arms and taps Stone Edge (it threw Earthquake before).
 
-Open: `main` and the website keep the old model until `task40-android` is merged and the site is rebuilt and pushed
-(`scripts/build_pvpbot_site.py`). Not yet measured in live battles.
+The website runs it since 2026-11-19 (the owner: "Yes, rebuild it"; built from `task40-android` e17f00d). Open:
+`main` keeps the old model until `task40-android` is merged. Not yet measured in live battles.
 
 **Why.** In a live position (replay 20261109-130030 at 15.95 s: Clodsire, 65 energy, against Azumarill with a move
 ready) Stone Edge won 50% of play-outs and every other option 23-39%. The engine kept fast-moving or threw
