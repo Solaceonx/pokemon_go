@@ -58,6 +58,9 @@ DECIDE_ON_HIT = _os.environ.get("POGO_DECIDE_ON_HIT", "1") != "0"
 # may take up to PRECOMPUTE_MS: a fast move lasts 500 ms or more, and the thread shares the processor with the loop.
 PRECOMPUTE = _os.environ.get("POGO_PRECOMPUTE", "1") != "0"
 PRECOMPUTE_MS = 500
+# A charged move's button tapped again every 0.2 s until the game has the move (Player.throw); POGO_SPAM_CHARGED=0
+# goes back to a second tap every 0.6 s while the buttons read it paid for
+SPAM_CHARGED = _os.environ.get("POGO_SPAM_CHARGED", "1") != "0"
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -1358,18 +1361,35 @@ class Player:
 
         def paid(m):
             return tuple(m.energy >= c.energy for c in m.build.charged)
-        same = (a.me.active == b.me.active and a.me.shields == b.me.shields
-                and (a.me.switch_wait > 0) == (b.me.switch_wait > 0)
-                and (ma.atk_stage, ma.def_stage) == (mb.atk_stage, mb.def_stage)
-                and abs(ma.hp - mb.hp) <= 0.04 * mb.build.hp
-                and paid(ma) == paid(mb) and abs(ma.energy - mb.energy) <= mb.build.fast.energy_gain
-                and fa.build.species_id == fb.build.species_id and a.foe_shields == b.foe_shields
-                and (a.foe_switch_wait > 0) == (b.foe_switch_wait > 0)
-                and (fa.atk_stage, fa.def_stage) == (fb.atk_stage, fb.def_stage)
-                and abs(fa.hp - fb.hp) <= 0.04 * fb.build.hp and paid(fa) == paid(fb)
-                and abs(fa.energy - fb.energy) <= fb.build.fast.energy_gain + 1)
-        if not same:
-            self.log("precompute_missed", self.now(), searched_ms=pre["ms"])
+        checks = {
+            "our active": a.me.active == b.me.active, "our shields": a.me.shields == b.me.shields,
+            "our switch timer": (a.me.switch_wait > 0) == (b.me.switch_wait > 0),
+            "our stages": (ma.atk_stage, ma.def_stage) == (mb.atk_stage, mb.def_stage),
+            "our health": abs(ma.hp - mb.hp) <= 0.04 * mb.build.hp, "our moves paid": paid(ma) == paid(mb),
+            "our energy": abs(ma.energy - mb.energy) <= mb.build.fast.energy_gain,
+            "their species": fa.build.species_id == fb.build.species_id, "their shields": a.foe_shields == b.foe_shields,
+            "their switch timer": (a.foe_switch_wait > 0) == (b.foe_switch_wait > 0),
+            "their stages": (fa.atk_stage, fa.def_stage) == (fb.atk_stage, fb.def_stage),
+            "their health": abs(fa.hp - fb.hp) <= 0.04 * fb.build.hp, "their moves paid": paid(fa) == paid(fb),
+            "their energy": abs(fa.energy - fb.energy) <= fb.build.fast.energy_gain + 1}
+        fails = {k for k, ok in checks.items() if not ok}
+        loose = {"our moves paid", "our energy", "our health", "their health", "their moves paid", "their energy"}
+        if any(paid(mb)):
+            loose.discard("their health")  # with a throw to hand, their health decides farm down or throw
+        if fails and fails <= loose and pre["action"] == FAST \
+                and all(now <= then for now, then in zip(paid(mb), paid(ma))) \
+                and all(now <= then for now, then in zip(paid(fb), paid(fa))) \
+                and mb.hp >= ma.hp - 0.04 * mb.build.hp and fb.hp >= fa.hp - 0.04 * fb.build.hp \
+                and fb.energy <= fa.energy + fb.build.fast.energy_gain + 1:
+            # Imagined a fast move on, the readings still a hit behind (34 of 55 misses on two replays were our
+            # moves paid, then their health and ours, 2026-11-18). A fast move chosen there stands when the position
+            # is no further on for either side: no more moves paid for by either, neither lower in health, their
+            # energy no higher. Throws and switches stay exact.
+            fails = set()
+        if fails:
+            self.log("precompute_missed", self.now(), searched_ms=pre["ms"], why=sorted(fails),
+                     ours=[ma.hp, mb.hp, ma.energy, mb.energy], theirs=[fa.hp, fb.hp, fa.energy, fb.energy],
+                     age=round(time.time() - pre["at"], 2))
             return None
         if pre["action"] not in view.legal():
             return None
@@ -1392,7 +1412,8 @@ class Player:
                     self.engine_calls += 1
                     if self.decision == FAST:
                         self.precompute(view)
-                    if self.decision != FAST:  # the view as the engine saw it (their energy with the margin)
+                    if self.decision != FAST or ready is not None:  # the view as the engine saw it (their energy
+                        # with the margin); also on answers searched ahead, to check them (scripts/live/engine_view.py)
                         try:
                             seen = view_record(view)
                         except Exception as error:  # noqa: BLE001
@@ -1872,7 +1893,14 @@ class Player:
             # 57 energy of 55, Discharge at 49 of 40, both shown by the buttons): tap again while they say so.
             e = screen.my_energy(rgb, costs) if on else None  # only with the fight on the screen
             named = screen.button_labels(rgb)[k] if on else None  # the name shows: paid for (readable in the flash)
-            if ((e is not None and e >= move.energy) or named) and time.time() - last_tap > 0.6:
+            # Tapped again every 0.2 s while the button is drawn (the owner, 2026-11-18: "spam tap it until it's
+            # confirmed"): 27% of the throws that went off had needed a second tap, 0.6 s later, and went off a median
+            # 1.87 s after the first against 1.26 s. Only on the button drawn: hidden (a close-up, an animation), a
+            # tap there would land on the field as a fast move and take the throw's place; and once the game has the
+            # move the buttons go, which ends it. 0.2 s apart: touches within 0.1 s of another are dropped.
+            drawn = screen.button_rim(rgb, k) >= 10
+            if drawn and time.time() - last_tap > (0.2 if SPAM_CHARGED else 0.6) and (
+                    SPAM_CHARGED or (e is not None and e >= move.energy) or named):
                 self.touch(point, f"charged move {k + 1} again: {move.name}")
                 last_tap = time.time()
             short = short + 1 if e is not None and e < move.energy - 3 else 0
