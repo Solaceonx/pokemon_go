@@ -1,0 +1,33 @@
+  $ C:\Users\lionl\AppData\Local\Programs\Python\Python312\python.exe -m unittest discover tests
+  $ C:\Users\lionl\AppData\Local\Programs\Python\Python312\python.exe scripts/check_pvpoke.py
+  $ C:\Users\lionl\AppData\Local\Programs\Python\Python312\python.exe scripts/realtime_trial.py --timing 30 --workers 1 --seed 3553 --settings samples=32 --save C:\Users\lionl\OneDrive\Documents\ChatGPT\pokemon_go-live\runs\bench\release_timing.json
+  $ C:\Users\lionl\AppData\Local\Programs\Python\Python312\python.exe scripts/realtime_trial.py --crowd 200 --workers 3 --seed 3553 --settings samples=32
+{
+ "commit": "6223158607bfb9e33ed642f00ecffea0e91b9436",
+ "code": "d47b1d350c458ad0fac5d5317d484b6e8e8c5970 52a2b36837f97e94a49bc91b21d9b2ff94c0cbb8 236225d0be81bf9e431b5122a4c223db675a9076 843e95b4338e5a99cbff9c3c6d3767b02328e69a 236cb389d08f172acce1b13213da3a0dbe964c22 9e93259df322e690c8d7fb65169c28049dd19a43",
+ "settings": {
+  "rollout": "bot",
+  "samples": 32,
+  "edge": 0.03,
+  "margin": 0.02
+ },
+ "date": "2026-11-19 00:37",
+ "tests": "OK",
+ "pvpoke": "108 of 108 PvPoke battles reproduced exactly",
+ "timing": {
+  "median_ms": 78.1,
+  "p99_ms": 375.0,
+  "cut_percent": 0.1,
+  "fallback_percent": 0.0,
+  "wait_percent": 2.9
+ },
+ "crowd": [
+  "real-time engine, settings: {'samples': 32, 'horizon': 20, 'edge': 0.03, 'margin': 0.02}, clock: cpu, pauses: defaults (pogo/realtime.py)",
+  "--- against the crowd, 200 battles, the same for all three",
+  "  real-time engine   72.8% \u00b1 6.1",
+  "  trained bot        66.5% \u00b1 6.5"
+ ],
+ "problems": [],
+ "passed": true
+}
+PASSED

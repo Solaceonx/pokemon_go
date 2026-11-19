@@ -5456,10 +5456,29 @@ seed 4701 (not used before), 3 workers, 102 min (`runs/wide_eval.out`). One sett
 
 Fewer swaps fits the blind spot: lines in which they swap a healthy Pokémon out no longer look nearly won.
 
-**Left, the owner's call:**
-- Whether to adopt it. The live player, the website (`scripts/pvpbot_site/play_api.py`; `build_pvpbot_site.py`
-  packs the model) and most scripts load `runs/eval/eval.npz`. Putting the wide model there switches them all,
-  since the width is read from the model. The website would need a rebuild with the new `pogo/evaluation.py`.
-- Not measured live, nor with the live 300 ms cap. At about the same search cost, the cap should bite about as
-  often.
+**Adopted 2026-11-19 (the owner: "Yes, adopt it"), on branch `task40-android`.** `runs/eval/eval.npz` is now the
+wide model. The 42-input one it replaces is kept as `runs/eval/eval-42.npz` (and `report-42.json`). The live
+player, the website's code (`scripts/pvpbot_site/play_api.py`) and most scripts load that path, and the width is read
+from the model, so all of them switched.
+- **Fixed with it.** `scripts/engine_loop.py` and `scripts/selfplay_eval.py` recorded 42 inputs and failed to
+  compare against a wide start. They now record positions as wide as the evaluation a round starts from.
+  `tests/test_engine_mid_swap.py` replays games recorded with the old model, so it now loads `eval-42.npz`.
+- **Tests:** 339 pass; PvPoke 108 of 108.
+- **The live player on the Azumarill battle** (replay 20261109-130030, dry run: taps logged, none sent). It arms
+  Stone Edge at 13.66 s (50 energy read, 59 after the fast move under way) and taps it at 14.37 s, once paid. With
+  the old model the replay threw Earthquake at 15.95 s, at 65 energy. No errors. Searched decisions: 8 of 100 at the 300 ms cap, against 34 of 114 on the
+  last replay with the old model. One replay. The recording plays as it was, so the battle does not follow the
+  engine's choices.
+- **The website's release check passed** (`scripts/release_check.py` on 6223158, `runs/bench/release.json`, this
+  machine).
+  - Decisions with the website's time limits: median 78 ms, 99th percentile 375 ms (limit 800), 0.1% cut short
+    (limit 20%), no fallbacks.
+  - Against the crowd, 200 battles: 72.8% ± 6.1, against 66.5% ± 6.5 for the trained bot.
+  - The last record (old model, 2026-11-04, commit 299a514) had median 67 ms, 99th percentile 253 ms and the crowd
+    at 69.0% ± 6.4. That is other code since, so it is no clean comparison.
+
+**Left:**
+- The website itself runs the old model until it is rebuilt and pushed (`scripts/build_pvpbot_site.py`), which
+  the owner has not been asked yet. `main` keeps the old model and code until `task40-android` is merged.
+- Not measured in live battles.
 - The weight on benched energy (above).
