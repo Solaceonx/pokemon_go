@@ -1,7 +1,7 @@
 {
   "t": 104.5,
   "fighting_turns": 85,
-  "warnings": 8,
+  "warnings": 9,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,12 +34,12 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "BITE",
-        "name": "Bite",
-        "type": "dark",
-        "damage": 2,
-        "energy_gain": 4,
-        "turns": 1
+        "id": "ASTONISH",
+        "name": "Astonish",
+        "type": "ghost",
+        "damage": 4,
+        "energy_gain": 10,
+        "turns": 3
       },
       "charged": [
         {
@@ -135,9 +135,9 @@
           15,
           13
         ],
-        "hp": 79,
+        "hp": 74,
         "hp_max": 124,
-        "hp_share": 0.637,
+        "hp_share": 0.597,
         "energy": 48,
         "fainted": false,
         "attack_stage": 0,
@@ -224,11 +224,11 @@
   },
   "opponent": {
     "active": 0,
-    "shields": 1,
+    "shields": 0,
     "left": 3,
     "unseen": 1,
     "switch_ready_in": 28.0,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 1,
     "pokemon": [
       {
         "species": "dunsparce",
@@ -246,24 +246,24 @@
           15,
           13
         ],
-        "hp": 39,
+        "hp": 45,
         "hp_max": 184,
-        "hp_share": 0.212,
+        "hp_share": 0.245,
         "energy": 100,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "BITE",
-          "name": "Bite",
-          "type": "dark",
-          "turns": 1,
-          "energy_gain": 4,
-          "known_from": "guessed",
+          "id": "ASTONISH",
+          "name": "Astonish",
+          "type": "ghost",
+          "turns": 3,
+          "energy_gain": 10,
+          "known_from": "inferred",
           "misfit": {
-            "ASTONISH": 1.89,
-            "BITE": 2.41,
-            "ROLLOUT": 2.07
+            "ASTONISH": 0.47,
+            "BITE": 0.48,
+            "ROLLOUT": 0.53
           }
         },
         "charged_moves": [
@@ -290,14 +290,12 @@
         ],
         "energy_by_clock": 100,
         "energy_odds": {
-          "92": 0.08,
-          "96": 0.12,
+          "80": 0.08,
+          "90": 0.12,
           "100": 0.79
         },
         "fast_move_odds": {
-          "ASTONISH": 0.52,
-          "ROLLOUT": 0.37,
-          "BITE": 0.11
+          "ASTONISH": 1.0
         },
         "charged_move_odds": {
           "DRILL_RUN": 1.0,
@@ -327,10 +325,10 @@
           14,
           15
         ],
-        "hp": 31,
+        "hp": 34,
         "hp_max": 134,
-        "hp_share": 0.231,
-        "energy": 37,
+        "hp_share": 0.254,
+        "energy": 42,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -342,8 +340,8 @@
           "energy_gain": 11,
           "known_from": "guessed",
           "misfit": {
-            "BUBBLE": 0.78,
-            "TACKLE": 0.92
+            "BUBBLE": 0.69,
+            "TACKLE": 0.87
           }
         },
         "charged_moves": [
@@ -360,35 +358,35 @@
             "name": "Rock Blast",
             "type": "rock",
             "energy": 40,
-            "known_from": "seen",
-            "times_used": 1
+            "known_from": "guessed",
+            "times_used": 0
           }
         ],
         "energy_range": [
           33,
-          41
+          52
         ],
-        "energy_by_clock": 63,
+        "energy_by_clock": 74,
         "energy_odds": {
-          "15": 0.08,
-          "26": 0.12,
-          "37": 0.33,
-          "48": 0.33,
-          "59": 0.12
+          "20": 0.08,
+          "31": 0.12,
+          "42": 0.33,
+          "53": 0.33,
+          "64": 0.12
         },
         "fast_move_odds": {
-          "BUBBLE": 0.71,
-          "TACKLE": 0.29
+          "BUBBLE": 0.73,
+          "TACKLE": 0.27
         },
         "charged_move_odds": {
-          "ROCK_BLAST": 1.0,
-          "POWER_GEM": 0.63,
-          "BUBBLE_BEAM": 0.37
+          "POWER_GEM": 0.82,
+          "ROCK_BLAST": 0.7,
+          "BUBBLE_BEAM": 0.48
         },
         "ready_odds": {
-          "ROCK_BLAST": 0.46,
-          "POWER_GEM": 0.08,
-          "BUBBLE_BEAM": 0.05
+          "POWER_GEM": 0.37,
+          "ROCK_BLAST": 0.55,
+          "BUBBLE_BEAM": 0.22
         }
       }
     ]

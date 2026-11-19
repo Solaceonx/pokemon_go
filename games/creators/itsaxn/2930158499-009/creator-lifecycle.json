@@ -2,36 +2,32 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "mine",
-      "species": "Seismitoad",
-      "clip_seconds": 73.75000850634372,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 73.81667518069973,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
       "side": "theirs",
       "species": "Dondozo",
       "clip_seconds": 80.08334257016531,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 80.15000924452134,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Tinkaton",
-      "clip_seconds": 126.93334797385621,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 127.00001464821223,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 82.66667620146097,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 82.50000951557094,
+        "confirmed_seconds": 82.66667620146097
+      }
     },
     {
       "side": "mine",
       "species": "Fearow",
       "clip_seconds": 110.61667942522107,
       "method": "outlined_empty_target_and_independent_party_decrement",
-      "confirmed_clip_seconds": 110.68334609957708,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 112.58334631872357,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 112.41667963283352,
+        "confirmed_seconds": 112.58334631872357
+      }
     },
     {
       "side": "mine",
@@ -39,7 +35,158 @@
       "clip_seconds": 165.616685768935,
       "method": "centered_positive_to_zero_and_fade",
       "confirmed_clip_seconds": 165.75001911764707,
-      "timing_uncertainty_seconds": 0.1
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 165.75001911764707
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Seismitoad",
+      "clip_seconds": 73.25000844867358,
+      "confirmed_clip_seconds": 74.5000085928489,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 73.25000844867358,
+        "bar": {
+          "bounds": [
+            181,
+            540,
+            333,
+            553
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            0.8889,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            0.9324,
+            0.9527
+          ],
+          "interior_width_pixels": 146,
+          "live_pixels": 0,
+          "damage_pixels": 42,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.013699
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 1.0,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Seismitoad",
+          "camera_identity_cutoff_seconds": 71.750008
+        },
+        "source_pts": 204188970,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 65.0,
+        "release_seconds": 71.000008
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 74.33334190695886,
+        "confirmed_seconds": 74.5000085928489
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Seismitoad",
+        "clip_seconds": 73.75000850634372,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 74.5000085928489,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 74.33334190695886,
+          "confirmed_seconds": 74.5000085928489
+        }
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Tinkaton",
+      "clip_seconds": 125.41668113225683,
+      "confirmed_clip_seconds": 126.33334790465206,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 125.41668113225683,
+        "bar": {
+          "bounds": [
+            181,
+            714,
+            333,
+            727
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 146,
+          "live_pixels": 0,
+          "damage_pixels": 58,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.013699
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 1.0,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Tinkaton",
+          "camera_identity_cutoff_seconds": 124.750014
+        },
+        "source_pts": 208883910,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 118.0,
+        "release_seconds": 124.000014
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 126.16668121876201,
+        "confirmed_seconds": 126.33334790465206
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Tinkaton",
+        "clip_seconds": 126.93334797385621,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 128.16668144944254,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 128.00001476355249,
+          "confirmed_seconds": 128.16668144944254
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -628,5 +775,836 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "6f50180e2ad8c1a2859a72fb59a3cdc31eb479e4dc80a18db024579ec41dfa99",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Seismitoad",
+        "clip_seconds": 73.25000844867358,
+        "confirmed_clip_seconds": 74.5000085928489,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 73.25000844867358,
+          "bar": {
+            "bounds": [
+              181,
+              540,
+              333,
+              553
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              0.8889,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              0.9324,
+              0.9527
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 42,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Seismitoad",
+            "camera_identity_cutoff_seconds": 71.750008
+          },
+          "source_pts": 204188970,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 65.0,
+          "release_seconds": 71.000008
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 74.33334190695886,
+          "confirmed_seconds": 74.5000085928489
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Seismitoad",
+          "clip_seconds": 73.75000850634372,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 74.5000085928489,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 74.33334190695886,
+            "confirmed_seconds": 74.5000085928489
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dondozo",
+        "clip_seconds": 80.83334265667051,
+        "confirmed_clip_seconds": 82.66667620146097,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 80.83334265667051,
+          "bar": {
+            "bounds": [
+              303,
+              453,
+              455,
+              466
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 204871440,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 82.50000951557094,
+          "confirmed_seconds": 82.66667620146097
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Fearow",
+        "clip_seconds": 110.66667943098808,
+        "confirmed_clip_seconds": 112.58334631872357,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 110.66667943098808,
+          "bar": {
+            "bounds": [
+              181,
+              540,
+              335,
+              556
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 148,
+            "live_pixels": 0,
+            "damage_pixels": 94,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013514
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9791,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Fearow",
+            "camera_identity_cutoff_seconds": 109.750013
+          },
+          "source_pts": 207556410,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 103.0,
+          "release_seconds": 109.000013
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 112.41667963283352,
+          "confirmed_seconds": 112.58334631872357
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Tinkaton",
+        "clip_seconds": 125.41668113225683,
+        "confirmed_clip_seconds": 126.33334790465206,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 125.41668113225683,
+          "bar": {
+            "bounds": [
+              181,
+              714,
+              333,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 58,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Tinkaton",
+            "camera_identity_cutoff_seconds": 124.750014
+          },
+          "source_pts": 208883910,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 118.0,
+          "release_seconds": 124.000014
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 126.16668121876201,
+          "confirmed_seconds": 126.33334790465206
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Tinkaton",
+          "clip_seconds": 126.93334797385621,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 128.16668144944254,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 128.00001476355249,
+            "confirmed_seconds": 128.16668144944254
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dondozo",
+        "clip_seconds": 79.16667579777008,
+        "confirmed_clip_seconds": 82.66667620146097,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 79.08334245482507,
+          "bar": {
+            "bounds": [
+              303,
+              445,
+              457,
+              461
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 148,
+            "live_pixels": 2,
+            "damage_pixels": 0,
+            "fraction": 0.013514,
+            "fraction_interval": [
+              0.0,
+              0.027027
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9642,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 2
+            }
+          }
+        },
+        "first_zero": {
+          "t": 79.16667579777008,
+          "bar": {
+            "bounds": [
+              303,
+              446,
+              455,
+              459
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 1,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9892,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 204721410,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 82.50000951557094,
+            "confirmed_seconds": 82.66667620146097,
+            "value": 2,
+            "source_pts": 205021470,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Fearow",
+        "clip_seconds": 110.66667943098808,
+        "confirmed_clip_seconds": 112.58334631872357,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 110.50001274509803,
+          "bar": {
+            "bounds": [
+              181,
+              561,
+              333,
+              575
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 93,
+            "damage_pixels": 0,
+            "fraction": 0.636986,
+            "fraction_interval": [
+              0.623288,
+              0.650685
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9555,
+            "live_color_pixels": {
+              "cyan": 93,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Fearow",
+            "camera_identity_cutoff_seconds": 109.750013
+          }
+        },
+        "first_zero": {
+          "t": 110.66667943098808,
+          "bar": {
+            "bounds": [
+              181,
+              540,
+              335,
+              556
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 148,
+            "live_pixels": 0,
+            "damage_pixels": 94,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013514
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9791,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Fearow",
+            "camera_identity_cutoff_seconds": 109.750013
+          },
+          "source_pts": 207556410,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 112.41667963283352,
+            "confirmed_seconds": 112.58334631872357,
+            "value": 1,
+            "source_pts": 207713910,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 3,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Tinkaton",
+        "clip_seconds": 165.58335243175702,
+        "confirmed_clip_seconds": 166.91668591887736,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 165.500019088812,
+          "bar": {
+            "bounds": [
+              181,
+              714,
+              333,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 69,
+            "damage_pixels": 0,
+            "fraction": 0.472603,
+            "fraction_interval": [
+              0.458904,
+              0.486301
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.998,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 69,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Tinkaton",
+            "camera_identity_cutoff_seconds": 164.750019
+          }
+        },
+        "first_zero": {
+          "t": 165.58335243175702,
+          "bar": {
+            "bounds": [
+              181,
+              714,
+              333,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 69,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Tinkaton",
+            "camera_identity_cutoff_seconds": 164.750019
+          },
+          "source_pts": 212498940,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independently_observed_last_party_member",
+          "counter": {
+            "first_visible_seconds": 112.41667963283352,
+            "confirmed_seconds": 112.58334631872357,
+            "value": 1,
+            "source_pts": 207713910,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Seismitoad",
+        "clip_seconds": 74.33334190695886,
+        "confirmed_clip_seconds": 74.66667527873895,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 74.25000856401384,
+          "bar": {
+            "bounds": [
+              31,
+              714,
+              183,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 204286440,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          74.25000856401384,
+          74.33334190695886
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 74.5000085928489,
+          "confirmed_seconds": 74.66667527873895
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Fearow",
+        "clip_seconds": 112.33334628988851,
+        "confirmed_clip_seconds": 112.6666796616686,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 112.25001294694349,
+          "bar": {
+            "bounds": [
+              20,
+              714,
+              172,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 207706440,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          112.25001294694349,
+          112.33334628988851
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 112.50001297577855,
+          "confirmed_seconds": 112.6666796616686
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Tinkaton",
+        "clip_seconds": 166.7500192329873,
+        "confirmed_clip_seconds": 166.91668591887736,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 166.6666858900423,
+          "bar": {
+            "bounds": [
+              55,
+              714,
+              207,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              0.8889,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9865
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 56,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9971,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 212603970,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          166.6666858900423,
+          166.7500192329873
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "known_last_party_member_and_measured_zero_fade",
+          "confirmed_seconds": 166.91668591887736
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dondozo",
+        "clip_seconds": 81.66667608612072,
+        "confirmed_clip_seconds": 82.66667620146097,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 81.5833427431757,
+          "bar": {
+            "bounds": [
+              299,
+              507,
+              458,
+              525
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              0.8571,
+              0.6429
+            ],
+            "horizontal_rail_support": [
+              0.9871,
+              0.9742
+            ],
+            "interior_width_pixels": 153,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013072
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9755,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 204946410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          81.5833427431757,
+          81.66667608612072
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 82.50000951557094,
+          "confirmed_seconds": 82.66667620146097
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Tinkaton",
+        "clip_seconds": 127.6666813917724,
+        "confirmed_clip_seconds": 128.16668144944254,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 127.58334804882738,
+          "bar": {
+            "bounds": [
+              301,
+              527,
+              453,
+              540
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9961,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 209086410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          127.58334804882738,
+          127.6666813917724
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 128.00001476355249,
+          "confirmed_seconds": 128.16668144944254
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

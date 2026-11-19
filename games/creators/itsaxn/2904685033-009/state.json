@@ -1,7 +1,7 @@
 {
   "t": 184.5,
-  "fighting_turns": 115,
-  "warnings": 10,
+  "fighting_turns": 116,
+  "warnings": 15,
   "matchup": {
     "ours": {
       "fast": {
@@ -57,8 +57,8 @@
           "type": "fairy",
           "damage": 41,
           "energy": 60,
-          "could_be_ready": false,
-          "surely_ready": false
+          "could_be_ready": true,
+          "surely_ready": true
         }
       ],
       "every_fast_move_possible": [
@@ -129,7 +129,7 @@
         "hp": 0,
         "hp_max": 145,
         "hp_share": 0.0,
-        "energy": 56,
+        "energy": 48,
         "fainted": true,
         "attack_stage": -1,
         "defense_stage": 0,
@@ -180,7 +180,7 @@
         "hp": 0,
         "hp_max": 107,
         "hp_share": 0.0,
-        "energy": 74,
+        "energy": 66,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -228,10 +228,10 @@
           12,
           14
         ],
-        "hp": 14,
+        "hp": 16,
         "hp_max": 150,
-        "hp_share": 0.093,
-        "energy": 16,
+        "hp_share": 0.107,
+        "energy": 36,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -268,9 +268,9 @@
     "active": 1,
     "shields": 0,
     "left": 0,
-    "unseen": 0,
+    "unseen": -1,
     "switch_ready_in": 0.0,
-    "fast_move_turns_left": 1,
+    "fast_move_turns_left": 0,
     "pokemon": [
       {
         "species": "annihilape",
@@ -292,7 +292,7 @@
         "hp": 0,
         "hp_max": 140,
         "hp_share": 0.0,
-        "energy": 64,
+        "energy": 48,
         "fainted": true,
         "attack_stage": 2,
         "defense_stage": 0,
@@ -304,8 +304,8 @@
           "energy_gain": 8,
           "known_from": "guessed",
           "misfit": {
-            "LOW_KICK": 1.1,
-            "COUNTER": 1.5
+            "LOW_KICK": 0.48,
+            "COUNTER": 0.67
           }
         },
         "charged_moves": [
@@ -327,20 +327,20 @@
           }
         ],
         "energy_range": [
-          64,
-          64
+          48,
+          48
         ],
-        "energy_by_clock": 72,
+        "energy_by_clock": 56,
         "energy_odds": {
-          "48": 0.08,
-          "56": 0.12,
-          "64": 0.33,
-          "72": 0.33,
-          "80": 0.12
+          "32": 0.08,
+          "40": 0.12,
+          "48": 0.33,
+          "56": 0.33,
+          "64": 0.12
         },
         "fast_move_odds": {
-          "LOW_KICK": 0.86,
-          "COUNTER": 0.14
+          "LOW_KICK": 0.76,
+          "COUNTER": 0.24
         },
         "charged_move_odds": {
           "RAGE_FIST": 1.0,
@@ -351,12 +351,12 @@
           "LOW_SWEEP": 0.1
         },
         "ready_odds": {
-          "RAGE_FIST": 1.0,
-          "CLOSE_COMBAT": 0.37,
-          "ICE_PUNCH": 0.19,
-          "NIGHT_SLASH": 0.18,
-          "SHADOW_BALL": 0.16,
-          "LOW_SWEEP": 0.1
+          "RAGE_FIST": 0.92,
+          "CLOSE_COMBAT": 0.29,
+          "ICE_PUNCH": 0.17,
+          "NIGHT_SLASH": 0.16,
+          "SHADOW_BALL": 0.08,
+          "LOW_SWEEP": 0.09
         }
       },
       {
@@ -376,11 +376,11 @@
           14,
           15
         ],
-        "hp": 0,
+        "hp": 2,
         "hp_max": 107,
-        "hp_share": 0.0,
-        "energy": 50,
-        "fainted": true,
+        "hp_share": 0.019,
+        "energy": 66,
+        "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
@@ -391,8 +391,8 @@
           "energy_gain": 8,
           "known_from": "guessed",
           "misfit": {
-            "SHADOW_CLAW": 0.27,
-            "HEX": 0.28
+            "SHADOW_CLAW": 0.17,
+            "HEX": 0.23
           }
         },
         "charged_moves": [
@@ -414,28 +414,28 @@
           }
         ],
         "energy_range": [
-          50,
-          50
+          66,
+          66
         ],
-        "energy_by_clock": 66,
+        "energy_by_clock": 82,
         "energy_odds": {
-          "34": 0.08,
-          "42": 0.12,
-          "50": 0.33,
-          "58": 0.33,
-          "66": 0.12
+          "50": 0.08,
+          "58": 0.12,
+          "66": 0.33,
+          "74": 0.33,
+          "82": 0.12
         },
         "fast_move_odds": {
-          "SHADOW_CLAW": 0.53,
-          "HEX": 0.47
+          "SHADOW_CLAW": 0.56,
+          "HEX": 0.44
         },
         "charged_move_odds": {
           "SHADOW_SNEAK": 1.0,
           "PLAY_ROUGH": 1.0
         },
         "ready_odds": {
-          "SHADOW_SNEAK": 0.79,
-          "PLAY_ROUGH": 0.12
+          "SHADOW_SNEAK": 1.0,
+          "PLAY_ROUGH": 0.79
         }
       },
       {
@@ -467,8 +467,11 @@
           "type": "fairy",
           "turns": 2,
           "energy_gain": 9,
-          "known_from": "inferred",
-          "misfit": {}
+          "known_from": "guessed",
+          "misfit": {
+            "VINE_WHIP": 0.8,
+            "FAIRY_WIND": 0.8
+          }
         },
         "charged_moves": [
           {
@@ -492,7 +495,7 @@
           45,
           45
         ],
-        "energy_by_clock": 54,
+        "energy_by_clock": 45,
         "energy_odds": {
           "27": 0.08,
           "36": 0.12,
@@ -501,7 +504,8 @@
           "63": 0.12
         },
         "fast_move_odds": {
-          "FAIRY_WIND": 1.0
+          "FAIRY_WIND": 0.58,
+          "VINE_WHIP": 0.42
         },
         "charged_move_odds": {
           "CHILLING_WATER": 1.0,

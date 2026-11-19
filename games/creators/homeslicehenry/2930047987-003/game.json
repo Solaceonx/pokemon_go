@@ -23,17 +23,15 @@
   }
  },
  "seconds": 197.47,
- "fighting_turns": 127,
+ "fighting_turns": 123,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "energy: double_iron_bash at 68.0s had 18 of 35"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
    "no result screen read; result taken from who had Pokémon left",
-   "fast move only guessed for annihilape"
+   "fast move only guessed for annihilape, clodsire"
   ],
-  "unexplained_health_changes": 15
+  "unexplained_health_changes": 7
  },
  "teams": {
   "mine": [
@@ -111,7 +109,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.533,
+    "hp_share_at_end": 0.505,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -154,8 +152,8 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Low Kick": 0.6,
-      "Counter": 0.4
+      "Low Kick": 0.61,
+      "Counter": 0.39
      }
     },
     "charged_moves": [
@@ -230,14 +228,18 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.024,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "POISON_STING",
      "name": "Poison Sting",
      "turns": 2,
      "energy_gain": 9,
-     "known_from": "inferred"
+     "known_from": "guessed",
+     "odds": {
+      "Poison Sting": 0.54,
+      "Mud Shot": 0.46
+     }
     },
     "charged_moves": [
      {
@@ -264,7 +266,7 @@
     }
    }
   ],
-  "theirs_unseen": -1
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -326,62 +328,62 @@
    "t": 0.0,
    "until": 6.8,
    "fighting_turn": 0,
-   "turns": 13,
+   "turns": 11,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 5,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Annihilape",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 6
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 5
    },
-   "unexplained_health_changes": 3,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 79,
+     "hp": 87,
      "hp_max": 121,
-     "hp_share": 0.653,
-     "energy": 54
+     "hp_share": 0.719,
+     "energy": 45
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 127,
+     "hp": 125,
      "hp_max": 140,
-     "hp_share": 0.907,
+     "hp_share": 0.893,
      "energy": [
-      56,
-      56
+      40,
+      40
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 6.8,
-   "fighting_turn": 13,
+   "fighting_turn": 11,
    "side": "mine",
    "pokemon": "Qwilfish (Hisuian)",
    "move": "Dark Pulse",
    "move_id": "DARK_PULSE",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 54,
+   "energy_before": 45,
    "target": "Annihilape",
    "shielded": false,
-   "target_hp_before": 127,
-   "target_hp_after": 127,
+   "target_hp_before": 125,
+   "target_hp_after": 125,
    "target_hp_max": 140,
    "target_bar_read": false,
    "expected_damage": 76,
@@ -392,23 +394,23 @@
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 79,
+     "hp": 87,
      "hp_max": 121,
-     "hp_share": 0.653,
-     "energy": 9
+     "hp_share": 0.719,
+     "energy": 0
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 127,
+     "hp": 125,
      "hp_max": 140,
-     "hp_share": 0.907,
+     "hp_share": 0.893,
      "energy": [
-      56,
-      56
+      40,
+      40
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 48
     }
    }
   },
@@ -416,7 +418,7 @@
    "kind": "fighting",
    "t": 15.0,
    "until": 18.8,
-   "fighting_turn": 13,
+   "fighting_turn": 11,
    "turns": 7,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
@@ -430,38 +432,38 @@
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 65,
+     "hp": 63,
      "hp_max": 121,
-     "hp_share": 0.537,
-     "energy": 36
+     "hp_share": 0.521,
+     "energy": 27
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 31,
+     "hp": 22,
      "hp_max": 140,
-     "hp_share": 0.221,
+     "hp_share": 0.157,
      "energy": [
-      80,
-      80
+      64,
+      64
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "charged",
    "t": 18.8,
-   "fighting_turn": 20,
+   "fighting_turn": 18,
    "side": "theirs",
    "pokemon": "Annihilape",
    "move": "Ice Punch",
@@ -469,14 +471,14 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    80,
-    80
+    64,
+    64
    ],
-   "energy_ceiling": 88,
+   "energy_ceiling": 80,
    "target": "Qwilfish (Hisuian)",
    "shielded": false,
-   "target_hp_before": 65,
-   "target_hp_after": 65,
+   "target_hp_before": 63,
+   "target_hp_after": 63,
    "target_hp_max": 121,
    "target_bar_read": false,
    "expected_damage": 43,
@@ -487,56 +489,10 @@
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 65,
+     "hp": 63,
      "hp_max": 121,
-     "hp_share": 0.537,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Annihilape",
-     "shields": 2,
-     "left": 3,
-     "hp": 31,
-     "hp_max": 140,
-     "hp_share": 0.221,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 48
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 27.0,
-   "until": 36.6,
-   "fighting_turn": 20,
-   "turns": 19,
-   "mine": {
-    "pokemon": "Qwilfish (Hisuian)",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Annihilape",
-    "fast_move": "Low Kick",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 2
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Qwilfish (Hisuian)",
-     "shields": 2,
-     "left": 3,
-     "hp": 4,
-     "hp_max": 121,
-     "hp_share": 0.033,
-     "energy": 63
+     "hp_share": 0.521,
+     "energy": 36
     },
     "theirs": {
      "active": "Annihilape",
@@ -546,17 +502,63 @@
      "hp_max": 140,
      "hp_share": 0.157,
      "energy": [
-      56,
-      56
+      24,
+      24
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 32
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 27.0,
+   "until": 36.6,
+   "fighting_turn": 18,
+   "turns": 19,
+   "mine": {
+    "pokemon": "Qwilfish (Hisuian)",
+    "fast_move": "Poison Sting",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 1
+   },
+   "theirs": {
+    "pokemon": "Annihilape",
+    "fast_move": "Low Kick",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 1
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Qwilfish (Hisuian)",
+     "shields": 2,
+     "left": 3,
+     "hp": 5,
+     "hp_max": 121,
+     "hp_share": 0.041,
+     "energy": 45
+    },
+    "theirs": {
+     "active": "Annihilape",
+     "shields": 2,
+     "left": 3,
+     "hp": 20,
+     "hp_max": 140,
+     "hp_share": 0.143,
+     "energy": [
+      32,
+      32
+     ],
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "faint",
    "t": 36.6,
-   "fighting_turn": 39,
+   "fighting_turn": 37,
    "side": "mine",
    "pokemon": "Qwilfish (Hisuian)",
    "next": null,
@@ -564,7 +566,7 @@
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 121,
      "hp_share": 0.0,
@@ -574,12 +576,12 @@
      "active": "Annihilape",
      "shields": 2,
      "left": 3,
-     "hp": 22,
+     "hp": 20,
      "hp_max": 140,
-     "hp_share": 0.157,
+     "hp_share": 0.143,
      "energy": [
-      100,
-      100
+      96,
+      96
      ],
      "energy_ceiling": 100
     }
@@ -588,7 +590,7 @@
   {
    "kind": "charged",
    "t": 29.8,
-   "fighting_turn": 39,
+   "fighting_turn": 37,
    "side": "mine",
    "pokemon": "Qwilfish (Hisuian)",
    "move": "Aqua Tail",
@@ -598,8 +600,8 @@
    "energy_before": 100,
    "target": "Annihilape",
    "shielded": true,
-   "target_hp_before": 22,
-   "target_hp_after": 22,
+   "target_hp_before": 20,
+   "target_hp_after": 20,
    "target_hp_max": 140,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -609,7 +611,7 @@
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 121,
      "hp_share": 0.0,
@@ -619,9 +621,9 @@
      "active": "Annihilape",
      "shields": 1,
      "left": 3,
-     "hp": 22,
+     "hp": 20,
      "hp_max": 140,
-     "hp_share": 0.157,
+     "hp_share": 0.143,
      "energy": [
       100,
       100
@@ -634,21 +636,21 @@
    "kind": "fighting",
    "t": 38.0,
    "until": 44.8,
-   "fighting_turn": 39,
+   "fighting_turn": 37,
    "turns": 3,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Annihilape",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -665,9 +667,9 @@
      "active": "Annihilape",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 10,
      "hp_max": 140,
-     "hp_share": 0.129,
+     "hp_share": 0.071,
      "energy": [
       100,
       100
@@ -679,7 +681,7 @@
   {
    "kind": "charged",
    "t": 44.8,
-   "fighting_turn": 42,
+   "fighting_turn": 40,
    "side": "theirs",
    "pokemon": "Annihilape",
    "move": "Ice Punch",
@@ -694,9 +696,9 @@
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 105,
-   "target_hp_after": 105,
+   "target_hp_after": 67,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 30,
    "resolved_t": 54.0,
    "cue": true,
@@ -705,18 +707,18 @@
      "active": "Greninja",
      "shields": 2,
      "left": 2,
-     "hp": 105,
+     "hp": 67,
      "hp_max": 115,
-     "hp_share": 0.913,
+     "hp_share": 0.583,
      "energy": 14
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 10,
      "hp_max": 140,
-     "hp_share": 0.129,
+     "hp_share": 0.071,
      "energy": [
       60,
       60
@@ -729,7 +731,7 @@
    "kind": "fighting",
    "t": 54.0,
    "until": 55.5,
-   "fighting_turn": 42,
+   "fighting_turn": 40,
    "turns": 3,
    "mine": {
     "pokemon": "Greninja",
@@ -743,26 +745,25 @@
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 3
    },
-   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 2,
      "left": 2,
-     "hp": 62,
+     "hp": 63,
      "hp_max": 115,
-     "hp_share": 0.539,
+     "hp_share": 0.548,
      "energy": 14
     },
     "theirs": {
      "active": "Annihilape",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 10,
      "hp_max": 140,
-     "hp_share": 0.129,
+     "hp_share": 0.071,
      "energy": [
       68,
       68
@@ -774,7 +775,7 @@
   {
    "kind": "switch",
    "t": 55.5,
-   "fighting_turn": 45,
+   "fighting_turn": 43,
    "side": "theirs",
    "from": "Annihilape",
    "to": "Melmetal",
@@ -783,9 +784,9 @@
      "active": "Greninja",
      "shields": 2,
      "left": 2,
-     "hp": 62,
+     "hp": 56,
      "hp_max": 115,
-     "hp_share": 0.539,
+     "hp_share": 0.487,
      "energy": 28
     },
     "theirs": {
@@ -807,21 +808,21 @@
    "kind": "fighting",
    "t": 55.5,
    "until": 58.8,
-   "fighting_turn": 45,
+   "fighting_turn": 43,
    "turns": 6,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 4
+    "hits_seen": 2
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -838,12 +839,12 @@
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 131,
+     "hp": 127,
      "hp_max": 146,
-     "hp_share": 0.897,
+     "hp_share": 0.87,
      "energy": [
-      18,
-      18
+      27,
+      27
      ],
      "energy_ceiling": 36
     }
@@ -852,7 +853,7 @@
   {
    "kind": "charged",
    "t": 58.8,
-   "fighting_turn": 51,
+   "fighting_turn": 49,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -860,11 +861,11 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    18,
-    18
+    27,
+    27
    ],
    "energy_ceiling": 36,
-   "energy_short_by": 17,
+   "energy_short_by": 8,
    "target": "Greninja",
    "shielded": true,
    "target_hp_before": 47,
@@ -888,9 +889,9 @@
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 131,
+     "hp": 127,
      "hp_max": 146,
-     "hp_share": 0.897,
+     "hp_share": 0.87,
      "energy": [
       0,
       1
@@ -903,7 +904,7 @@
    "kind": "fighting",
    "t": 68.0,
    "until": 69.6,
-   "fighting_turn": 51,
+   "fighting_turn": 49,
    "turns": 3,
    "mine": {
     "pokemon": "Greninja",
@@ -917,16 +918,16 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 42,
+     "hp": 35,
      "hp_max": 115,
-     "hp_share": 0.365,
+     "hp_share": 0.304,
      "energy": 70
     },
     "theirs": {
@@ -937,8 +938,8 @@
      "hp_max": 146,
      "hp_share": 0.808,
      "energy": [
-      9,
-      10
+      18,
+      19
      ],
      "energy_ceiling": 19
     }
@@ -947,7 +948,7 @@
   {
    "kind": "charged",
    "t": 69.6,
-   "fighting_turn": 54,
+   "fighting_turn": 52,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
@@ -969,9 +970,9 @@
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 42,
+     "hp": 35,
      "hp_max": 115,
-     "hp_share": 0.365,
+     "hp_share": 0.304,
      "energy": 30
     },
     "theirs": {
@@ -982,8 +983,8 @@
      "hp_max": 146,
      "hp_share": 0.808,
      "energy": [
-      9,
-      10
+      18,
+      19
      ],
      "energy_ceiling": 19
     }
@@ -993,31 +994,30 @@
    "kind": "fighting",
    "t": 79.0,
    "until": 81.8,
-   "fighting_turn": 54,
+   "fighting_turn": 52,
    "turns": 5,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 26,
      "hp_max": 115,
-     "hp_share": 0.261,
+     "hp_share": 0.226,
      "energy": 44
     },
     "theirs": {
@@ -1028,8 +1028,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      27,
-      28
+      36,
+      37
      ],
      "energy_ceiling": 46
     }
@@ -1038,7 +1038,7 @@
   {
    "kind": "charged",
    "t": 81.8,
-   "fighting_turn": 59,
+   "fighting_turn": 57,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Hydro Cannon",
@@ -1060,9 +1060,9 @@
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 26,
      "hp_max": 115,
-     "hp_share": 0.261,
+     "hp_share": 0.226,
      "energy": 4
     },
     "theirs": {
@@ -1073,8 +1073,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      36,
-      37
+      45,
+      46
      ],
      "energy_ceiling": 46
     }
@@ -1084,14 +1084,14 @@
    "kind": "fighting",
    "t": 91.0,
    "until": 91.5,
-   "fighting_turn": 59,
+   "fighting_turn": 57,
    "turns": 1,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Melmetal",
@@ -1105,9 +1105,9 @@
      "active": "Greninja",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 26,
      "hp_max": 115,
-     "hp_share": 0.261,
+     "hp_share": 0.226,
      "energy": 4
     },
     "theirs": {
@@ -1118,8 +1118,8 @@
      "hp_max": 146,
      "hp_share": 0.753,
      "energy": [
-      36,
-      37
+      45,
+      46
      ],
      "energy_ceiling": 46
     }
@@ -1128,7 +1128,7 @@
   {
    "kind": "switch",
    "t": 91.5,
-   "fighting_turn": 60,
+   "fighting_turn": 58,
    "side": "mine",
    "from": "Greninja",
    "to": "Mimikyu",
@@ -1146,12 +1146,12 @@
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 26,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.178,
+     "hp_share": 0.151,
      "energy": [
-      36,
-      37
+      45,
+      46
      ],
      "energy_ceiling": 46
     }
@@ -1161,7 +1161,7 @@
    "kind": "fighting",
    "t": 91.5,
    "until": 93.8,
-   "fighting_turn": 60,
+   "fighting_turn": 58,
    "turns": 4,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1182,21 +1182,21 @@
      "active": "Mimikyu",
      "shields": 1,
      "left": 2,
-     "hp": 104,
+     "hp": 103,
      "hp_max": 107,
-     "hp_share": 0.972,
+     "hp_share": 0.963,
      "energy": 16
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 20,
+     "hp": 15,
      "hp_max": 146,
-     "hp_share": 0.137,
+     "hp_share": 0.103,
      "energy": [
-      54,
-      55
+      63,
+      64
      ],
      "energy_ceiling": 64
     }
@@ -1205,7 +1205,7 @@
   {
    "kind": "charged",
    "t": 93.8,
-   "fighting_turn": 64,
+   "fighting_turn": 62,
    "side": "theirs",
    "pokemon": "Melmetal",
    "move": "Double Iron Bash",
@@ -1213,14 +1213,14 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    54,
-    55
+    63,
+    64
    ],
    "energy_ceiling": 64,
    "target": "Mimikyu",
    "shielded": true,
-   "target_hp_before": 104,
-   "target_hp_after": 103,
+   "target_hp_before": 103,
+   "target_hp_after": 102,
    "target_hp_max": 107,
    "target_bar_read": true,
    "expected_damage": 1,
@@ -1231,23 +1231,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 103,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 0.963,
+     "hp_share": 0.953,
      "energy": 16
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 20,
+     "hp": 15,
      "hp_max": 146,
-     "hp_share": 0.137,
+     "hp_share": 0.103,
      "energy": [
-      19,
-      20
+      28,
+      29
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 38
     }
    }
   },
@@ -1255,7 +1255,7 @@
    "kind": "fighting",
    "t": 102.0,
    "until": 104.15,
-   "fighting_turn": 64,
+   "fighting_turn": 62,
    "turns": 4,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1269,37 +1269,37 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 97,
+     "hp": 95,
      "hp_max": 107,
-     "hp_share": 0.907,
+     "hp_share": 0.888,
      "energy": 24
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
      "left": 3,
-     "hp": 8,
+     "hp": 4,
      "hp_max": 146,
-     "hp_share": 0.055,
+     "hp_share": 0.027,
      "energy": [
-      37,
-      38
+      46,
+      47
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 47
     }
    }
   },
   {
    "kind": "faint",
    "t": 104.15,
-   "fighting_turn": 68,
+   "fighting_turn": 66,
    "side": "theirs",
    "pokemon": "Melmetal",
    "next": null,
@@ -1308,23 +1308,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 97,
+     "hp": 95,
      "hp_max": 107,
-     "hp_share": 0.907,
+     "hp_share": 0.888,
      "energy": 32
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 0,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 146,
      "hp_share": 0.0,
      "energy": [
-      37,
-      38
+      46,
+      47
      ],
-     "energy_ceiling": 47
+     "energy_ceiling": 56
     }
    }
   },
@@ -1332,14 +1332,14 @@
    "kind": "fighting",
    "t": 104.15,
    "until": 112.8,
-   "fighting_turn": 68,
+   "fighting_turn": 66,
    "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
@@ -1353,9 +1353,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 86,
+     "hp": 85,
      "hp_max": 107,
-     "hp_share": 0.804,
+     "hp_share": 0.794,
      "energy": 72
     },
     "theirs": {
@@ -1376,7 +1376,7 @@
   {
    "kind": "charged",
    "t": 112.8,
-   "fighting_turn": 77,
+   "fighting_turn": 75,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -1398,9 +1398,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 86,
+     "hp": 85,
      "hp_max": 107,
-     "hp_share": 0.804,
+     "hp_share": 0.794,
      "energy": 22
     },
     "theirs": {
@@ -1422,7 +1422,7 @@
    "kind": "fighting",
    "t": 122.0,
    "until": 126.6,
-   "fighting_turn": 77,
+   "fighting_turn": 75,
    "turns": 9,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1434,18 +1434,18 @@
    "theirs": {
     "pokemon": "Clodsire",
     "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 79,
+     "hp": 80,
      "hp_max": 107,
-     "hp_share": 0.738,
+     "hp_share": 0.748,
      "energy": 54
     },
     "theirs": {
@@ -1456,8 +1456,8 @@
      "hp_max": 208,
      "hp_share": 0.567,
      "energy": [
-      72,
-      72
+      81,
+      81
      ],
      "energy_ceiling": 81
     }
@@ -1466,7 +1466,7 @@
   {
    "kind": "charged",
    "t": 126.6,
-   "fighting_turn": 86,
+   "fighting_turn": 84,
    "side": "theirs",
    "pokemon": "Clodsire",
    "move": "Stone Edge",
@@ -1474,14 +1474,14 @@
    "move_known_from": "seen",
    "cost": 55,
    "energy_before": [
-    72,
-    72
+    81,
+    81
    ],
    "energy_ceiling": 81,
    "target": "Mimikyu",
    "shielded": false,
-   "target_hp_before": 79,
-   "target_hp_after": 79,
+   "target_hp_before": 80,
+   "target_hp_after": 80,
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 44,
@@ -1492,9 +1492,9 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 79,
+     "hp": 80,
      "hp_max": 107,
-     "hp_share": 0.738,
+     "hp_share": 0.748,
      "energy": 62
     },
     "theirs": {
@@ -1505,10 +1505,10 @@
      "hp_max": 208,
      "hp_share": 0.567,
      "energy": [
-      17,
-      17
+      26,
+      26
      ],
-     "energy_ceiling": 26
+     "energy_ceiling": 35
     }
    }
   },
@@ -1516,7 +1516,7 @@
    "kind": "fighting",
    "t": 136.0,
    "until": 145.8,
-   "fighting_turn": 86,
+   "fighting_turn": 84,
    "turns": 19,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1528,28 +1528,27 @@
    "theirs": {
     "pokemon": "Clodsire",
     "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 3
+    "hits_seen": 7
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 70,
+     "hp": 58,
      "hp_max": 107,
-     "hp_share": 0.654,
+     "hp_share": 0.542,
      "energy": 100
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 93,
+     "hp": 92,
      "hp_max": 208,
-     "hp_share": 0.447,
+     "hp_share": 0.442,
      "energy": [
       98,
       98
@@ -1561,7 +1560,7 @@
   {
    "kind": "charged",
    "t": 145.8,
-   "fighting_turn": 105,
+   "fighting_turn": 103,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -1571,8 +1570,8 @@
    "energy_before": 100,
    "target": "Clodsire",
    "shielded": false,
-   "target_hp_before": 93,
-   "target_hp_after": 93,
+   "target_hp_before": 92,
+   "target_hp_after": 92,
    "target_hp_max": 208,
    "target_bar_read": false,
    "expected_damage": 60,
@@ -1583,18 +1582,18 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 70,
+     "hp": 58,
      "hp_max": 107,
-     "hp_share": 0.654,
+     "hp_share": 0.542,
      "energy": 50
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 93,
+     "hp": 92,
      "hp_max": 208,
-     "hp_share": 0.447,
+     "hp_share": 0.442,
      "energy": [
       98,
       98
@@ -1606,21 +1605,21 @@
   {
    "kind": "fighting",
    "t": 154.0,
-   "until": 155.0,
-   "fighting_turn": 105,
-   "turns": 2,
+   "until": 154.5,
+   "fighting_turn": 103,
+   "turns": 1,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Clodsire",
     "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1628,18 +1627,18 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 70,
+     "hp": 58,
      "hp_max": 107,
-     "hp_share": 0.654,
+     "hp_share": 0.542,
      "energy": 50
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 93,
+     "hp": 92,
      "hp_max": 208,
-     "hp_share": 0.447,
+     "hp_share": 0.442,
      "energy": [
       98,
       98
@@ -1650,8 +1649,8 @@
   },
   {
    "kind": "switch",
-   "t": 155.0,
-   "fighting_turn": 107,
+   "t": 154.5,
+   "fighting_turn": 104,
    "side": "mine",
    "from": "Mimikyu",
    "to": "Greninja",
@@ -1660,21 +1659,21 @@
      "active": "Greninja",
      "shields": 0,
      "left": 2,
-     "hp": 30,
+     "hp": 26,
      "hp_max": 115,
-     "hp_share": 0.261,
+     "hp_share": 0.226,
      "energy": 4
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 30,
+     "hp": 33,
      "hp_max": 208,
-     "hp_share": 0.144,
+     "hp_share": 0.159,
      "energy": [
-      100,
-      100
+      98,
+      98
      ],
      "energy_ceiling": 100
     }
@@ -1682,10 +1681,10 @@
   },
   {
    "kind": "fighting",
-   "t": 155.0,
+   "t": 154.5,
    "until": 159.5,
-   "fighting_turn": 107,
-   "turns": 9,
+   "fighting_turn": 104,
+   "turns": 10,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
@@ -1696,28 +1695,27 @@
    "theirs": {
     "pokemon": "Clodsire",
     "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 6
    },
-   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 0,
      "left": 2,
-     "hp": 13,
+     "hp": 14,
      "hp_max": 115,
-     "hp_share": 0.113,
-     "energy": 32
+     "hp_share": 0.122,
+     "energy": 46
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 2,
-     "hp": 18,
+     "hp": 17,
      "hp_max": 208,
-     "hp_share": 0.087,
+     "hp_share": 0.082,
      "energy": [
       100,
       100
@@ -1729,7 +1727,7 @@
   {
    "kind": "switch",
    "t": 159.5,
-   "fighting_turn": 116,
+   "fighting_turn": 114,
    "side": "theirs",
    "from": "Clodsire",
    "to": "Annihilape",
@@ -1747,9 +1745,9 @@
      "active": "Annihilape",
      "shields": 0,
      "left": 2,
-     "hp": 18,
+     "hp": 10,
      "hp_max": 140,
-     "hp_share": 0.129,
+     "hp_share": 0.071,
      "energy": [
       68,
       68
@@ -1761,7 +1759,7 @@
   {
    "kind": "charged",
    "t": 160.8,
-   "fighting_turn": 116,
+   "fighting_turn": 114,
    "side": "mine",
    "pokemon": "Greninja",
    "move": "Brutal Swing",
@@ -1771,12 +1769,12 @@
    "energy_before": 46,
    "target": "Annihilape",
    "shielded": false,
-   "target_hp_before": 18,
+   "target_hp_before": 10,
    "target_hp_after": 0,
    "target_hp_max": 140,
    "target_bar_read": true,
    "expected_damage": 57,
-   "resolved_t": 168.88,
+   "resolved_t": 167.38,
    "cue": true,
    "state": {
     "mine": {
@@ -1791,7 +1789,7 @@
     "theirs": {
      "active": "Annihilape",
      "shields": 0,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 140,
      "hp_share": 0.0,
@@ -1805,8 +1803,8 @@
   },
   {
    "kind": "faint",
-   "t": 168.88,
-   "fighting_turn": 116,
+   "t": 167.38,
+   "fighting_turn": 114,
    "side": "theirs",
    "pokemon": "Annihilape",
    "next": null,
@@ -1823,7 +1821,7 @@
     "theirs": {
      "active": "Annihilape",
      "shields": 0,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 140,
      "hp_share": 0.0,
@@ -1837,23 +1835,23 @@
   },
   {
    "kind": "fighting",
-   "t": 168.88,
+   "t": 167.38,
    "until": 173.6,
-   "fighting_turn": 116,
+   "fighting_turn": 114,
    "turns": 7,
    "mine": {
     "pokemon": "Greninja",
     "fast_move": "Water Shuriken",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Annihilape",
     "fast_move": "Low Kick",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "state": {
     "mine": {
@@ -1883,7 +1881,7 @@
   {
    "kind": "charged",
    "t": 173.6,
-   "fighting_turn": 123,
+   "fighting_turn": 121,
    "side": "theirs",
    "pokemon": "Clodsire",
    "move": "Stone Edge",
@@ -1898,65 +1896,20 @@
    "target": "Greninja",
    "shielded": false,
    "target_hp_before": 7,
-   "target_hp_after": 7,
+   "target_hp_after": 0,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 62,
-   "resolved_t": 182.0,
+   "resolved_t": 181.8,
    "cue": true,
    "state": {
     "mine": {
      "active": "Greninja",
      "shields": 0,
-     "left": 2,
-     "hp": 7,
-     "hp_max": 115,
-     "hp_share": 0.061,
-     "energy": 67
-    },
-    "theirs": {
-     "active": "Clodsire",
-     "shields": 0,
      "left": 1,
-     "hp": 5,
-     "hp_max": 208,
-     "hp_share": 0.024,
-     "energy": [
-      45,
-      45
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 182.0,
-   "until": 182.82,
-   "fighting_turn": 123,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Greninja",
-    "fast_move": "Water Shuriken",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Clodsire",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Greninja",
-     "shields": 0,
-     "left": 2,
-     "hp": 7,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.061,
+     "hp_share": 0.0,
      "energy": 67
     },
     "theirs": {
@@ -1976,8 +1929,8 @@
   },
   {
    "kind": "faint",
-   "t": 182.82,
-   "fighting_turn": 125,
+   "t": 181.8,
+   "fighting_turn": 121,
    "side": "mine",
    "pokemon": "Greninja",
    "next": null,
@@ -1985,7 +1938,7 @@
     "mine": {
      "active": "Greninja",
      "shields": 0,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 115,
      "hp_share": 0.0,
@@ -1999,18 +1952,18 @@
      "hp_max": 208,
      "hp_share": 0.024,
      "energy": [
-      63,
-      63
+      45,
+      45
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 182.82,
+   "t": 181.8,
    "until": 185.08,
-   "fighting_turn": 125,
+   "fighting_turn": 121,
    "turns": 2,
    "mine": {
     "pokemon": "Greninja",
@@ -2022,11 +1975,10 @@
    "theirs": {
     "pokemon": "Clodsire",
     "fast_move": "Poison Sting",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Mimikyu",
@@ -2045,17 +1997,17 @@
      "hp_max": 208,
      "hp_share": 0.024,
      "energy": [
-      72,
-      72
+      54,
+      54
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 63
     }
    }
   },
   {
    "kind": "faint",
    "t": 185.08,
-   "fighting_turn": 127,
+   "fighting_turn": 123,
    "side": "theirs",
    "pokemon": "Clodsire",
    "next": null,
@@ -2077,17 +2029,17 @@
      "hp_max": 208,
      "hp_share": 0.0,
      "energy": [
-      72,
-      72
+      54,
+      54
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 63
     }
    }
   },
   {
    "kind": "end",
    "t": 197.47,
-   "fighting_turn": 127,
+   "fighting_turn": 123,
    "result": "win",
    "result_from": "who had Pokémon left",
    "left": {
@@ -2099,23 +2051,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 1,
-     "hp": 57,
+     "hp": 54,
      "hp_max": 107,
-     "hp_share": 0.533,
+     "hp_share": 0.505,
      "energy": 58
     },
     "theirs": {
      "active": "Clodsire",
      "shields": 0,
      "left": 0,
-     "hp": 5,
+     "hp": 0,
      "hp_max": 208,
-     "hp_share": 0.024,
+     "hp_share": 0.0,
      "energy": [
-      81,
-      81
+      54,
+      54
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 63
     }
    }
   }

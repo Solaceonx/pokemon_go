@@ -69,6 +69,80 @@ class MarkerTests(unittest.TestCase):
 
 
 class LedgerTests(unittest.TestCase):
+    def test_fresh_cp_without_readable_species_invalidates_previous_active(self):
+        ledger=PublicState({});ledger.update(frame(0),SLIM)
+        current=frame(.2);current['mine']['species']=unknown('Unreadable name')
+        current['mine']['cp']={'value':1500,'status':'observed','evidence':{'observed_at_seconds':.2}}
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['active'],'Lanturn:1493')
+        self.assertEqual(state['active_status'],'pending')
+        self.assertEqual(len(state['pokemon']),1)
+
+    def test_known_move_legality_can_invalidate_but_not_invent_replacement(self):
+        ledger=PublicState({},legal_moves={'Lanturn':{'Surf','Thunderbolt'}})
+        ledger.update(frame(0),SLIM)
+        current=frame(.2);current['mine']['species']=unknown('Unreadable name');current['mine']['cp']=unknown('Unreadable CP')
+        current['charge_label_candidates']=[dict(name='Night Slash',observed_at_seconds=.2)]
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['active_status'],'pending')
+        self.assertEqual(len(state['pokemon']),1)
+        self.assertNotIn('Night Slash',str(state['pokemon']['Lanturn:1493']['charged_moves']))
+        state=ledger.update(frame(.3,name='Whiscash',cp=1498),SLIM)['sides']['mine']
+        self.assertEqual((state['active'],state['active_status']),('Whiscash:1498','observed'))
+
+    def test_recent_header_uses_current_native_hp_without_reusing_old_pixels(self):
+        ledger=PublicState({});ledger.update(frame(0,health=[.7,.75]),SLIM)
+        current=frame(.2);current['mine']['species']=unknown('Unreadable this frame');current['mine']['cp']=unknown('Unreadable this frame')
+        current['mine']['health_estimate']=dict(status='estimated',method='native_live_pixels',fraction_range=[.64,.68],identity=None)
+        state=ledger.update(current,SLIM)['sides']['mine']
+        health=state['pokemon'][state['active']]['health']
+        self.assertEqual((health['value'],health['observed_at_seconds']),([.64,.68],.2))
+        self.assertEqual(health['identity_basis'],'last_recent_confirmed_header')
+
+    def test_native_hp_with_conflicting_fresh_cp_cannot_damage_previous_member(self):
+        ledger=PublicState({});ledger.update(frame(0,health=[.7,.75]),SLIM)
+        current=frame(.2);current['mine']['species']=unknown('Unreadable name')
+        current['mine']['cp']={'value':1500,'status':'observed','evidence':{'observed_at_seconds':.2}}
+        current['mine']['health_estimate']=dict(status='estimated',method='native_live_pixels',fraction_range=[.1,.15],identity=None)
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['pokemon']['Lanturn:1493']['health']['value'],[.7,.75])
+        self.assertEqual(state['active_status'],'pending')
+
+    def test_lingering_center_bar_updates_outgoing_identity(self):
+        ledger=PublicState({})
+        ledger.update(frame(0),SLIM)
+        ledger.update(frame(1,name='Whiscash',cp=1498,health=[.8,.9]),SLIM)
+        current=frame(2,name='Whiscash',cp=1498)
+        current['mine']['health_estimate'].update(method='native_live_pixels',
+            camera_owner_basis='charged_target',camera_species='Lanturn',fraction_range=[0,.02])
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertEqual(state['pokemon']['Lanturn:1493']['health']['value'],[0,.02])
+        self.assertEqual(state['pokemon']['Whiscash:1498']['health']['value'],[.8,.9])
+
+    def test_new_header_does_not_inherit_an_outgoing_side_bar(self):
+        ledger=PublicState({})
+        ledger.update(frame(0),SLIM)
+        current=frame(1,name='Whiscash',cp=1498,health=[0,.02])
+        current['mine']['health_estimate']['method']='native_live_pixels'
+        state=ledger.update(current,SLIM)['sides']['mine']
+        self.assertIsNone(state['pokemon']['Whiscash:1498']['health']['value'])
+
+    def test_delayed_party_decrease_belongs_to_measured_victim(self):
+        ledger = PublicState({})
+        for t in [0, .1, .2]:
+            ledger.update(frame(t), SLIM)
+        f = frame(.3)
+        f['source_faints'] = [{'side': 'mine', 'species': 'Lanturn',
+                             'clip_seconds': .25, 'confirmed_clip_seconds': .3}]
+        ledger.update(f, SLIM)
+        ledger.update(frame(.4, name='Swampert'), SLIM)
+        for t in [.5, .6, .7]:
+            state = ledger.update(frame(t, name='Swampert', left=2), SLIM)
+        mons = state['sides']['mine']['pokemon']
+        self.assertTrue(mons['Lanturn:1493']['fainted']['value'])
+        self.assertIsNot(mons['Swampert:1493']['fainted'].get('value'), True)
+        self.assertEqual(mons['Lanturn:1493']['health']['value'], [0, 0])
+
     def test_no_default_stats_or_unseen_team(self):
         state = PublicState({}).update(frame(0), SLIM)
         ours = state["sides"]["mine"]

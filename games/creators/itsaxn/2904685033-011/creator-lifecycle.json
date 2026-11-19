@@ -6,32 +6,155 @@
       "species": "Melmetal",
       "clip_seconds": 84.95001304915515,
       "method": "native_fighting_live_to_zero_and_fade",
-      "confirmed_clip_seconds": 85.0833464029698,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Mimikyu",
-      "clip_seconds": 186.75002868663594,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 186.81669536354326,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 88.4166802483359,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 88.25001355606759,
+        "confirmed_seconds": 88.4166802483359
+      }
     },
     {
       "side": "mine",
       "species": "Corviknight",
       "clip_seconds": 140.133354859191,
       "method": "outlined_empty_target_and_independent_party_decrement",
-      "confirmed_clip_seconds": 140.20002153609832,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 142.000021812596,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 141.75002177419356,
+        "confirmed_seconds": 142.000021812596
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Mimikyu",
+      "clip_seconds": 185.66669518689196,
+      "confirmed_clip_seconds": 186.25002860983102,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 185.66669518689196,
+        "bar": {
+          "bounds": [
+            179,
+            516,
+            329,
+            529
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 144,
+          "live_pixels": 0,
+          "damage_pixels": 121,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.013889
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 1.0,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Mimikyu",
+          "camera_identity_cutoff_seconds": 184.750028
+        },
+        "source_pts": 280232970,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 176.79999999999998,
+        "release_seconds": 184.000028
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 186.0833619175627,
+        "confirmed_seconds": 186.25002860983102
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Mimikyu",
+        "clip_seconds": 186.75002868663594,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 188.08336222478238,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 187.91669553251407,
+          "confirmed_seconds": 188.08336222478238
+        }
+      }
     },
     {
       "side": "theirs",
       "species": "Pangoro",
-      "clip_seconds": 191.35002939324116,
-      "confirmed_clip_seconds": 191.61669610087046,
-      "method": "complete_last_member_zero_and_fade",
-      "timing_uncertainty_seconds": 0.1
+      "clip_seconds": 191.16669603174603,
+      "confirmed_clip_seconds": 191.33336272401434,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+      "last_tiny_bar": {
+        "t": 191.0833626856119,
+        "bar": {
+          "bounds": [
+            253,
+            386,
+            403,
+            399
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            0.9932
+          ],
+          "interior_width_pixels": 144,
+          "live_pixels": 0,
+          "damage_pixels": 6,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.013889
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9921,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        }
+      },
+      "disappearance_source_pts": 280727970,
+      "disappearance_source_time_base": "1/90000",
+      "timing_interval_seconds": [
+        191.0833626856119,
+        191.16669603174603
+      ],
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 191.33336272401434
+      }
     }
   ],
   "charged_impact_probes": [
@@ -73,7 +196,15 @@
       "video_sha256": "b5c71255b2762f39f82047df570913c4146f82a0497cebbe43a4ab74ee20dc47",
       "result_based_faints": 0,
       "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-      "reason": "No matching named attack announcement"
+      "side": "theirs",
+      "species": "Melmetal",
+      "move": "Shadow Sneak",
+      "attack_side": "mine",
+      "announced_clip_seconds": 53.000008,
+      "attack_start_clip_seconds": 45.8,
+      "sample_count": 75,
+      "target_counter_before": 3,
+      "reason": "No continuous positive-to-zero live strip with disappearing tail"
     },
     {
       "schema": "terminal-impact-v1",
@@ -235,19 +366,85 @@
     },
     {
       "schema": "terminal-impact-v1",
-      "accepted": false,
+      "accepted": true,
       "video_sha256": "b5c71255b2762f39f82047df570913c4146f82a0497cebbe43a4ab74ee20dc47",
       "result_based_faints": 0,
       "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-      "side": "mine",
+      "side": "theirs",
       "species": "Mimikyu",
       "move": "Shadow Sneak",
-      "attack_side": "theirs",
+      "attack_side": "mine",
       "announced_clip_seconds": 185.000028,
       "attack_start_clip_seconds": 176.79999999999998,
       "sample_count": 75,
       "target_counter_before": 2,
-      "reason": "Subsequent same-target health contradicts terminal zero"
+      "reason": "Live strip drains to zero during named centered impact",
+      "measurement": {
+        "positive": {
+          "t": 185.2000284485407,
+          "clip_pts": 72339131112,
+          "clip_time_base": "1/390600000",
+          "source_pts": 280190940,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              176,
+              515,
+              330,
+              531
+            ],
+            "width": 148,
+            "live_pixels": 123,
+            "orange_pixels": 0,
+            "live_fraction": 0.83108,
+            "outline_method": "paired_outline"
+          }
+        },
+        "first_zero": {
+          "t": 185.26669512544802,
+          "clip_pts": 72365171116,
+          "clip_time_base": "1/390600000",
+          "source_pts": 280196970,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              179,
+              516,
+              329,
+              529
+            ],
+            "width": 144,
+            "live_pixels": 0,
+            "orange_pixels": 120,
+            "live_fraction": 0.0,
+            "outline_method": "edge_contour"
+          }
+        },
+        "confirmed_zero": {
+          "t": 185.40002847926266,
+          "clip_pts": 72417251124,
+          "clip_time_base": "1/390600000",
+          "source_pts": 280208940,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              179,
+              516,
+              329,
+              530
+            ],
+            "width": 144,
+            "live_pixels": 0,
+            "orange_pixels": 120,
+            "live_fraction": 0.0,
+            "outline_method": "edge_contour"
+          }
+        },
+        "zero_samples": 3,
+        "missing_tail_samples": 11
+      },
+      "live_hp_pixel_tolerance": 2,
+      "faint_inference": "sustained_zero_live_strip_and_bar_fade_without_surviving_target"
     }
   ],
   "forms": [],
@@ -420,5 +617,553 @@
     }
   ],
   "result_based_faints": 0,
-  "unattributed_zero_candidates": []
+  "native_stream_faint_audit": {
+    "measurement_sha256": "009caf01208d9c3101fe1b522e2e3b4f63fb87657a2730876569c527cef9c426",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Corviknight",
+        "clip_seconds": 140.00002150537634,
+        "confirmed_clip_seconds": 142.000021812596,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 140.00002150537634,
+          "bar": {
+            "bounds": [
+              179,
+              398,
+              329,
+              412
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 32,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9965,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Corviknight",
+            "camera_identity_cutoff_seconds": 139.750021
+          },
+          "source_pts": 276122940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 133.0,
+          "release_seconds": 139.000021
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 141.75002177419356,
+          "confirmed_seconds": 142.000021812596
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Mimikyu",
+        "clip_seconds": 185.66669518689196,
+        "confirmed_clip_seconds": 186.25002860983102,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 185.66669518689196,
+          "bar": {
+            "bounds": [
+              179,
+              516,
+              329,
+              529
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 121,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Mimikyu",
+            "camera_identity_cutoff_seconds": 184.750028
+          },
+          "source_pts": 280232970,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 176.79999999999998,
+          "release_seconds": 184.000028
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 186.0833619175627,
+          "confirmed_seconds": 186.25002860983102
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Mimikyu",
+          "clip_seconds": 186.75002868663594,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 188.08336222478238,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 187.91669553251407,
+            "confirmed_seconds": 188.08336222478238
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Melmetal",
+        "clip_seconds": 84.91667971070149,
+        "confirmed_clip_seconds": 88.4166802483359,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 84.83334636456733,
+          "bar": {
+            "bounds": [
+              252,
+              411,
+              403,
+              424
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 145,
+            "live_pixels": 5,
+            "damage_pixels": 1,
+            "fraction": 0.034483,
+            "fraction_interval": [
+              0.02069,
+              0.048276
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9773,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 4
+            }
+          }
+        },
+        "first_zero": {
+          "t": 84.91667971070149,
+          "bar": {
+            "bounds": [
+              252,
+              410,
+              403,
+              423
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 145,
+            "live_pixels": 0,
+            "damage_pixels": 5,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013793
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9842,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 271165470,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 88.25001355606759,
+            "confirmed_seconds": 88.4166802483359,
+            "value": 2,
+            "source_pts": 271465440,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Corviknight",
+        "clip_seconds": 140.00002150537634,
+        "confirmed_clip_seconds": 142.1666885048643,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 139.83335481310803,
+          "bar": {
+            "bounds": [
+              71,
+              383,
+              221,
+              396
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 30,
+            "damage_pixels": 0,
+            "fraction": 0.208333,
+            "fraction_interval": [
+              0.194444,
+              0.222222
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9931,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 30
+            }
+          }
+        },
+        "first_zero": {
+          "t": 140.00002150537634,
+          "bar": {
+            "bounds": [
+              179,
+              398,
+              329,
+              412
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 32,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9965,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Corviknight",
+            "camera_identity_cutoff_seconds": 139.750021
+          },
+          "source_pts": 276122940,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 142.000021812596,
+            "confirmed_seconds": 142.1666885048643,
+            "value": 2,
+            "source_pts": 276302940,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Corviknight",
+        "clip_seconds": 141.8333551203277,
+        "confirmed_clip_seconds": 142.1666885048643,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 141.75002177419356,
+          "bar": {
+            "bounds": [
+              56,
+              596,
+              206,
+              610
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              0.9,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              0.9863,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 276288000,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          141.75002177419356,
+          141.8333551203277
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 142.000021812596,
+          "confirmed_seconds": 142.1666885048643
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Melmetal",
+        "clip_seconds": 86.41667994111623,
+        "confirmed_clip_seconds": 88.4166802483359,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 86.33334659498207,
+          "bar": {
+            "bounds": [
+              252,
+              509,
+              403,
+              524
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 145,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013793
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 271300470,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          86.33334659498207,
+          86.41667994111623
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 88.25001355606759,
+          "confirmed_seconds": 88.4166802483359
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Mimikyu",
+        "clip_seconds": 187.5000288018433,
+        "confirmed_clip_seconds": 188.08336222478238,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 187.41669545570917,
+          "bar": {
+            "bounds": [
+              251,
+              546,
+              401,
+              559
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 280397940,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          187.41669545570917,
+          187.5000288018433
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 187.91669553251407,
+          "confirmed_seconds": 188.08336222478238
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Pangoro",
+        "clip_seconds": 191.16669603174603,
+        "confirmed_clip_seconds": 191.33336272401434,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 191.0833626856119,
+          "bar": {
+            "bounds": [
+              253,
+              386,
+              403,
+              399
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9932
+            ],
+            "interior_width_pixels": 144,
+            "live_pixels": 0,
+            "damage_pixels": 6,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013889
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9921,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 280727970,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          191.0833626856119,
+          191.16669603174603
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "known_last_party_member_and_measured_zero_fade",
+          "confirmed_seconds": 191.33336272401434
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

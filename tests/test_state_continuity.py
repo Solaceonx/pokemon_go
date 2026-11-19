@@ -144,6 +144,20 @@ class ContinuityTests(unittest.TestCase):
         self.assertIsNone(state["sides"]["mine"]["left"]["value"])
         self.assertIsNone(state["pending_attack"]["attacker"])
 
+    def test_native_battle_camera_clears_old_pending_animation_with_unknown_ocr_phase(self):
+        reader,_=self.settled()
+        reader.update(hidden(.2,'my_charged_minigame'),SLIM)
+        f=hidden(.8,'charged_resolution')
+        f['text_observation']={'fresh_this_frame':True,'records':[{'text':'Lanturn used Surf!'}]}
+        reader.update(f,SLIM)
+        for t in [2,2.067,2.134,2.201]:
+            f=frame(t);f['phase']=unknown('No text cue')
+            f['normal_fighting_evidence']={'supported':True,'observed_at_seconds':t}
+            state=reader.update(f,SLIM)
+        self.assertEqual(state['sides']['opponent']['shields']['status'],'observed')
+        self.assertEqual(state['sides']['mine']['left']['status'],'observed')
+        self.assertEqual(self.mon(state,'opponent')['health']['status'],'estimated')
+
     def test_fainted_pokemon_keeps_historical_bars_not_current_health(self):
         reader, before = self.settled()
         for t in (.2, .267, .334):

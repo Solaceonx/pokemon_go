@@ -19,21 +19,20 @@
   "from": "result screen",
   "left": {
    "mine": 1,
-   "theirs": 3
+   "theirs": 1
   }
  },
  "seconds": 157.8,
- "fighting_turns": 87,
+ "fighting_turns": 93,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "energy: high_horsepower at 95.08s had 45 of 55",
-   "ending: result says loss, tracker has us on 1 and them on 3"
+   "ending: result says loss, tracker has us on 1 and them on 1"
   ],
   "notes": [
-   "fast move only guessed for ursaluna, mimikyu"
+   "fast move only guessed for mimikyu"
   ],
-  "unexplained_health_changes": 5
+  "unexplained_health_changes": 6
  },
  "teams": {
   "mine": [
@@ -45,7 +44,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.048,
+    "hp_share_at_end": 0.137,
     "fast_move": {
      "id": "PECK",
      "name": "Peck",
@@ -152,11 +151,7 @@
      "name": "Scratch",
      "turns": 1,
      "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Scratch": 0.68,
-      "Tackle": 0.32
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -230,7 +225,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.794,
+    "hp_share_at_end": 0.822,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -265,7 +260,7 @@
     }
    }
   ],
-  "theirs_unseen": 2
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -333,37 +328,38 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 6
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 13,
-    "hits_seen": 2
+    "hits_seen": 9
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 115,
+     "hp": 85,
      "hp_max": 124,
-     "hp_share": 0.927,
+     "hp_share": 0.685,
      "energy": 48
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 2,
      "left": 3,
-     "hp": 101,
+     "hp": 106,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.736,
      "energy": [
-      52,
-      52
+      35,
+      35
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 35
     }
    }
   },
@@ -380,8 +376,8 @@
    "energy_before": 48,
    "target": "Ursaluna",
    "shielded": true,
-   "target_hp_before": 101,
-   "target_hp_after": 101,
+   "target_hp_before": 106,
+   "target_hp_after": 106,
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -392,23 +388,23 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 115,
+     "hp": 85,
      "hp_max": 124,
-     "hp_share": 0.927,
+     "hp_share": 0.685,
      "energy": 8
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 101,
+     "hp": 106,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.736,
      "energy": [
-      52,
-      52
+      42,
+      42
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 35
     }
    }
   },
@@ -423,12 +419,12 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
@@ -437,23 +433,23 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 115,
+     "hp": 85,
      "hp_max": 124,
-     "hp_share": 0.927,
+     "hp_share": 0.685,
      "energy": 8
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 101,
+     "hp": 106,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.736,
      "energy": [
-      52,
-      52
+      42,
+      42
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 35
     }
    }
   },
@@ -478,14 +474,14 @@
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 101,
+     "hp": 104,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.722,
      "energy": [
-      56,
-      56
+      42,
+      42
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 35
     }
    }
   },
@@ -505,32 +501,32 @@
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 145,
      "hp_max": 154,
-     "hp_share": 0.987,
+     "hp_share": 0.942,
      "energy": 18
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 98,
+     "hp": 97,
      "hp_max": 144,
-     "hp_share": 0.681,
+     "hp_share": 0.674,
      "energy": [
-      72,
-      72
+      49,
+      49
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 49
     }
    }
   },
@@ -545,16 +541,17 @@
    "move_known_from": "seen",
    "cost": 55,
    "energy_before": [
-    72,
-    72
+    54,
+    54
    ],
-   "energy_ceiling": 76,
+   "energy_ceiling": 57,
+   "energy_short_by": 1,
    "target": "Seismitoad",
    "shielded": false,
-   "target_hp_before": 152,
-   "target_hp_after": 152,
+   "target_hp_before": 145,
+   "target_hp_after": 47,
    "target_hp_max": 154,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 98,
    "resolved_t": 27.0,
    "cue": true,
@@ -563,75 +560,76 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 47,
      "hp_max": 154,
-     "hp_share": 0.987,
+     "hp_share": 0.305,
      "energy": 18
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 98,
+     "hp": 97,
      "hp_max": 144,
-     "hp_share": 0.681,
+     "hp_share": 0.674,
      "energy": [
-      17,
-      17
+      0,
+      2
      ],
-     "energy_ceiling": 21
+     "energy_ceiling": 5
     }
    }
   },
   {
    "kind": "fighting",
    "t": 27.0,
-   "until": 40.0,
+   "until": 31.5,
    "fighting_turn": 18,
-   "turns": 6,
+   "turns": 9,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 0
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 3
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 3,
      "hp_max": 154,
-     "hp_share": 0.987,
-     "energy": 27
+     "hp_share": 0.019,
+     "energy": 45
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 93,
+     "hp": 126,
      "hp_max": 144,
-     "hp_share": 0.646,
+     "hp_share": 0.875,
      "energy": [
-      29,
-      29
+      24,
+      26
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 26
     }
    }
   },
   {
    "kind": "switch",
-   "t": 40.0,
-   "fighting_turn": 24,
+   "t": 31.5,
+   "fighting_turn": 27,
    "side": "theirs",
    "from": "Ursaluna",
    "to": "Araquanid",
@@ -640,10 +638,10 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 3,
      "hp_max": 154,
-     "hp_share": 0.987,
-     "energy": 0
+     "hp_share": 0.019,
+     "energy": 54
     },
     "theirs": {
      "active": "Araquanid",
@@ -663,22 +661,21 @@
   {
    "kind": "charged",
    "t": 31.8,
-   "fighting_turn": 21,
+   "fighting_turn": 27,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
    "move_id": "ICY_WIND",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 27,
-   "energy_short_by": 18,
-   "target": "Ursaluna",
+   "energy_before": 54,
+   "target": "Araquanid",
    "shielded": false,
-   "target_hp_before": 93,
-   "target_hp_after": 93,
-   "target_hp_max": 144,
+   "target_hp_before": 136,
+   "target_hp_after": 136,
+   "target_hp_max": 136,
    "target_bar_read": false,
-   "expected_damage": 77,
+   "expected_damage": 17,
    "resolved_t": 40.0,
    "cue": true,
    "state": {
@@ -686,10 +683,10 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 3,
      "hp_max": 154,
-     "hp_share": 0.987,
-     "energy": 0
+     "hp_share": 0.019,
+     "energy": 9
     },
     "theirs": {
      "active": "Araquanid",
@@ -710,7 +707,7 @@
    "kind": "fighting",
    "t": 40.0,
    "until": 40.35,
-   "fighting_turn": 24,
+   "fighting_turn": 27,
    "turns": 1,
    "mine": {
     "pokemon": "Seismitoad",
@@ -731,10 +728,10 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 152,
+     "hp": 3,
      "hp_max": 154,
-     "hp_share": 0.987,
-     "energy": 0
+     "hp_share": 0.019,
+     "energy": 9
     },
     "theirs": {
      "active": "Araquanid",
@@ -754,7 +751,7 @@
   {
    "kind": "faint",
    "t": 40.35,
-   "fighting_turn": 25,
+   "fighting_turn": 28,
    "side": "mine",
    "pokemon": "Seismitoad",
    "next": null,
@@ -762,11 +759,11 @@
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 154,
      "hp_share": 0.0,
-     "energy": 0
+     "energy": 9
     },
     "theirs": {
      "active": "Araquanid",
@@ -787,21 +784,21 @@
    "kind": "fighting",
    "t": 40.35,
    "until": 56.8,
-   "fighting_turn": 25,
-   "turns": 14,
+   "fighting_turn": 28,
+   "turns": 15,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 7,
-    "hits_seen": 0
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Araquanid",
     "fast_move": "Infestation",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -809,30 +806,30 @@
      "active": "Fearow",
      "shields": 2,
      "left": 2,
-     "hp": 62,
+     "hp": 65,
      "hp_max": 124,
-     "hp_share": 0.5,
-     "energy": 32
+     "hp_share": 0.524,
+     "energy": 56
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 3,
-     "hp": 136,
+     "hp": 79,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.581,
      "energy": [
-      36,
-      36
+      60,
+      60
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 56.8,
-   "fighting_turn": 35,
+   "fighting_turn": 43,
    "side": "theirs",
    "pokemon": "Araquanid",
    "move": "Water Pulse",
@@ -840,15 +837,14 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    48,
-    48
+    60,
+    60
    ],
    "energy_ceiling": 72,
-   "energy_short_by": 2,
    "target": "Fearow",
    "shielded": true,
-   "target_hp_before": 62,
-   "target_hp_after": 57,
+   "target_hp_before": 65,
+   "target_hp_after": 62,
    "target_hp_max": 124,
    "target_bar_read": true,
    "expected_damage": 1,
@@ -859,65 +855,65 @@
      "active": "Fearow",
      "shields": 1,
      "left": 2,
-     "hp": 57,
+     "hp": 62,
      "hp_max": 124,
-     "hp_share": 0.46,
-     "energy": 56
-    },
-    "theirs": {
-     "active": "Araquanid",
-     "shields": 1,
-     "left": 3,
-     "hp": 136,
-     "hp_max": 136,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      22
-     ],
-     "energy_ceiling": 34
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 66.0,
-   "until": 70.5,
-   "fighting_turn": 39,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 1,
-     "left": 2,
-     "hp": 57,
-     "hp_max": 124,
-     "hp_share": 0.46,
+     "hp_share": 0.5,
      "energy": 64
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 3,
-     "hp": 136,
+     "hp": 79,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.581,
      "energy": [
-      0,
+      10,
+      10
+     ],
+     "energy_ceiling": 22
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 66.0,
+   "until": 68.0,
+   "fighting_turn": 43,
+   "turns": 4,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 2
+   },
+   "theirs": {
+    "pokemon": "Araquanid",
+    "fast_move": "Infestation",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 1,
+     "left": 2,
+     "hp": 62,
+     "hp_max": 124,
+     "hp_share": 0.5,
+     "energy": 72
+    },
+    "theirs": {
+     "active": "Araquanid",
+     "shields": 1,
+     "left": 3,
+     "hp": 73,
+     "hp_max": 136,
+     "hp_share": 0.537,
+     "energy": [
+      22,
       22
      ],
      "energy_ceiling": 34
@@ -926,8 +922,8 @@
   },
   {
    "kind": "switch",
-   "t": 70.5,
-   "fighting_turn": 48,
+   "t": 68.0,
+   "fighting_turn": 47,
    "side": "mine",
    "from": "Fearow",
    "to": "Tinkaton",
@@ -945,116 +941,22 @@
      "active": "Araquanid",
      "shields": 1,
      "left": 3,
-     "hp": 136,
+     "hp": 66,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.485,
      "energy": [
-      36,
-      58
+      22,
+      22
      ],
-     "energy_ceiling": 70
+     "energy_ceiling": 34
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 70.5,
+   "t": 68.0,
    "until": 72.8,
-   "fighting_turn": 48,
-   "turns": 4,
-   "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 141,
-     "hp_max": 141,
-     "hp_share": 1.0,
-     "energy": 18
-    },
-    "theirs": {
-     "active": "Araquanid",
-     "shields": 1,
-     "left": 3,
-     "hp": 136,
-     "hp_max": 136,
-     "hp_share": 1.0,
-     "energy": [
-      48,
-      70
-     ],
-     "energy_ceiling": 82
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 72.8,
-   "fighting_turn": 52,
-   "side": "theirs",
-   "pokemon": "Araquanid",
-   "move": "Water Pulse",
-   "move_id": "WATER_PULSE",
-   "move_known_from": "seen",
-   "cost": 50,
-   "energy_before": [
-    48,
-    70
-   ],
-   "energy_ceiling": 82,
-   "target": "Tinkaton",
-   "shielded": false,
-   "target_hp_before": 141,
-   "target_hp_after": 141,
-   "target_hp_max": 141,
-   "target_bar_read": false,
-   "expected_damage": 35,
-   "resolved_t": 81.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 141,
-     "hp_max": 141,
-     "hp_share": 1.0,
-     "energy": 18
-    },
-    "theirs": {
-     "active": "Araquanid",
-     "shields": 1,
-     "left": 3,
-     "hp": 136,
-     "hp_max": 136,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      20
-     ],
-     "energy_ceiling": 32
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 81.0,
-   "until": 84.5,
-   "fighting_turn": 52,
+   "fighting_turn": 47,
    "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1068,7 +970,103 @@
     "fast_move": "Infestation",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 2,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 139,
+     "hp_max": 141,
+     "hp_share": 0.986,
+     "energy": 27
+    },
+    "theirs": {
+     "active": "Araquanid",
+     "shields": 1,
+     "left": 3,
+     "hp": 59,
+     "hp_max": 136,
+     "hp_share": 0.434,
+     "energy": [
+      46,
+      46
+     ],
+     "energy_ceiling": 58
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 72.8,
+   "fighting_turn": 54,
+   "side": "theirs",
+   "pokemon": "Araquanid",
+   "move": "Water Pulse",
+   "move_id": "WATER_PULSE",
+   "move_known_from": "seen",
+   "cost": 50,
+   "energy_before": [
+    46,
+    46
+   ],
+   "energy_ceiling": 58,
+   "energy_short_by": 4,
+   "target": "Tinkaton",
+   "shielded": false,
+   "target_hp_before": 139,
+   "target_hp_after": 139,
+   "target_hp_max": 141,
+   "target_bar_read": false,
+   "expected_damage": 35,
+   "resolved_t": 81.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 139,
+     "hp_max": 141,
+     "hp_share": 0.986,
+     "energy": 36
+    },
+    "theirs": {
+     "active": "Araquanid",
+     "shields": 1,
+     "left": 3,
+     "hp": 59,
+     "hp_max": 136,
+     "hp_share": 0.434,
+     "energy": [
+      0,
+      8
+     ],
+     "energy_ceiling": 20
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 81.0,
+   "until": 83.5,
+   "fighting_turn": 54,
+   "turns": 5,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Araquanid",
+    "fast_move": "Infestation",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1076,29 +1074,29 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 99,
+     "hp": 101,
      "hp_max": 141,
-     "hp_share": 0.702,
-     "energy": 27
+     "hp_share": 0.716,
+     "energy": 45
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 3,
-     "hp": 136,
+     "hp": 59,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.434,
      "energy": [
       0,
-      20
+      8
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 20
     }
    }
   },
   {
    "kind": "switch",
-   "t": 84.5,
+   "t": 83.5,
    "fighting_turn": 59,
    "side": "theirs",
    "from": "Araquanid",
@@ -1108,75 +1106,75 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 99,
+     "hp": 101,
      "hp_max": 141,
-     "hp_share": 0.702,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Ursaluna",
-     "shields": 1,
-     "left": 3,
-     "hp": 68,
-     "hp_max": 144,
-     "hp_share": 0.472,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 45
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 84.5,
-   "until": 86.8,
-   "fighting_turn": 59,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Tinkaton",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Ursaluna",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
-   "state": {
-    "mine": {
-     "active": "Tinkaton",
-     "shields": 1,
-     "left": 2,
-     "hp": 99,
-     "hp_max": 141,
-     "hp_share": 0.702,
+     "hp_share": 0.716,
      "energy": 54
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 68,
+     "hp": 78,
      "hp_max": 144,
-     "hp_share": 0.472,
+     "hp_share": 0.542,
+     "energy": [
+      27,
+      29
+     ],
+     "energy_ceiling": 32
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 83.5,
+   "until": 86.8,
+   "fighting_turn": 59,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Tinkaton",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
+   },
+   "theirs": {
+    "pokemon": "Ursaluna",
+    "fast_move": "Scratch",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Tinkaton",
+     "shields": 1,
+     "left": 2,
+     "hp": 101,
+     "hp_max": 141,
+     "hp_share": 0.716,
+     "energy": 81
+    },
+    "theirs": {
+     "active": "Ursaluna",
+     "shields": 1,
+     "left": 3,
+     "hp": 62,
+     "hp_max": 144,
+     "hp_share": 0.431,
      "energy": [
       45,
-      45
+      47
      ],
-     "energy_ceiling": 53
+     "energy_ceiling": 50
     }
    }
   },
   {
    "kind": "charged",
    "t": 86.8,
-   "fighting_turn": 61,
+   "fighting_turn": 65,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "move": "High Horsepower",
@@ -1184,14 +1182,13 @@
    "move_known_from": "seen",
    "cost": 55,
    "energy_before": [
-    45,
-    45
+    60,
+    62
    ],
-   "energy_ceiling": 53,
-   "energy_short_by": 10,
+   "energy_ceiling": 66,
    "target": "Tinkaton",
    "shielded": false,
-   "target_hp_before": 99,
+   "target_hp_before": 101,
    "target_hp_after": 0,
    "target_hp_max": 141,
    "target_bar_read": true,
@@ -1202,31 +1199,31 @@
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 141,
      "hp_share": 0.0,
-     "energy": 63
+     "energy": 90
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 68,
+     "hp": 62,
      "hp_max": 144,
-     "hp_share": 0.472,
+     "hp_share": 0.431,
      "energy": [
-      0,
-      0
+      5,
+      7
      ],
-     "energy_ceiling": 4
+     "energy_ceiling": 11
     }
    }
   },
   {
    "kind": "faint",
    "t": 95.08,
-   "fighting_turn": 61,
+   "fighting_turn": 65,
    "side": "mine",
    "pokemon": "Tinkaton",
    "next": null,
@@ -1234,24 +1231,24 @@
     "mine": {
      "active": "Tinkaton",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 141,
      "hp_share": 0.0,
-     "energy": 63
+     "energy": 90
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 68,
+     "hp": 62,
      "hp_max": 144,
-     "hp_share": 0.472,
+     "hp_share": 0.431,
      "energy": [
-      0,
-      0
+      5,
+      7
      ],
-     "energy_ceiling": 4
+     "energy_ceiling": 11
     }
    }
   },
@@ -1259,61 +1256,61 @@
    "kind": "fighting",
    "t": 95.08,
    "until": 100.8,
-   "fighting_turn": 61,
-   "turns": 6,
+   "fighting_turn": 65,
+   "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 0
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 57,
+     "hp": 38,
      "hp_max": 124,
-     "hp_share": 0.46,
-     "energy": 100
+     "hp_share": 0.306,
+     "energy": 96
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 58,
+     "hp": 51,
      "hp_max": 144,
-     "hp_share": 0.403,
+     "hp_share": 0.354,
      "energy": [
-      24,
-      24
+      41,
+      43
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 39
     }
    }
   },
   {
    "kind": "charged",
    "t": 100.8,
-   "fighting_turn": 67,
+   "fighting_turn": 72,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
    "move_id": "DRILL_PECK",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 100,
+   "energy_before": 96,
    "target": "Ursaluna",
    "shielded": false,
-   "target_hp_before": 58,
+   "target_hp_before": 51,
    "target_hp_after": 0,
    "target_hp_max": 144,
    "target_bar_read": true,
@@ -1325,30 +1322,30 @@
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 57,
+     "hp": 38,
      "hp_max": 124,
-     "hp_share": 0.46,
-     "energy": 60
+     "hp_share": 0.306,
+     "energy": 56
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      24,
-      24
+      41,
+      43
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 39
     }
    }
   },
   {
    "kind": "faint",
    "t": 108.87,
-   "fighting_turn": 67,
+   "fighting_turn": 72,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "next": null,
@@ -1357,23 +1354,23 @@
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 57,
+     "hp": 38,
      "hp_max": 124,
-     "hp_share": 0.46,
-     "energy": 60
+     "hp_share": 0.306,
+     "energy": 56
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      24,
-      24
+      41,
+      43
      ],
-     "energy_ceiling": 28
+     "energy_ceiling": 39
     }
    }
   },
@@ -1381,97 +1378,96 @@
    "kind": "fighting",
    "t": 108.87,
    "until": 125.8,
-   "fighting_turn": 67,
+   "fighting_turn": 72,
    "turns": 9,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 0
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 2
+    "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 26,
      "hp_max": 124,
-     "hp_share": 0.169,
-     "energy": 100
+     "hp_share": 0.21,
+     "energy": 96
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
-     "left": 3,
-     "hp": 136,
+     "left": 2,
+     "hp": 32,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.235,
      "energy": [
       48,
-      68
+      56
      ],
-     "energy_ceiling": 92
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "charged",
    "t": 125.8,
-   "fighting_turn": 76,
+   "fighting_turn": 81,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
    "move_id": "DRILL_PECK",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 100,
+   "energy_before": 96,
    "target": "Araquanid",
    "shielded": false,
-   "target_hp_before": 136,
-   "target_hp_after": 136,
+   "target_hp_before": 32,
+   "target_hp_after": 0,
    "target_hp_max": 136,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 66,
-   "resolved_t": 135.0,
+   "resolved_t": 133.88,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 26,
      "hp_max": 124,
-     "hp_share": 0.169,
-     "energy": 60
+     "hp_share": 0.21,
+     "energy": 56
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
-     "left": 3,
-     "hp": 136,
+     "left": 1,
+     "hp": 0,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.0,
      "energy": [
-      60,
-      80
+      48,
+      56
      ],
-     "energy_ceiling": 92
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "faint",
-   "t": 135.22,
-   "fighting_turn": 76,
+   "t": 133.88,
+   "fighting_turn": 81,
    "side": "theirs",
    "pokemon": "Araquanid",
    "next": null,
@@ -1480,32 +1476,32 @@
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 26,
      "hp_max": 124,
-     "hp_share": 0.169,
-     "energy": 60
+     "hp_share": 0.21,
+     "energy": 56
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
-     "left": 3,
+     "left": 1,
      "hp": 0,
      "hp_max": 136,
      "hp_share": 0.0,
      "energy": [
-      60,
-      80
+      48,
+      56
      ],
-     "energy_ceiling": 92
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 135.22,
+   "t": 133.88,
    "until": 139.8,
-   "fighting_turn": 76,
-   "turns": 4,
+   "fighting_turn": 81,
+   "turns": 5,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -1518,28 +1514,28 @@
     "fast_move": "Infestation",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 23,
      "hp_max": 124,
-     "hp_share": 0.169,
-     "energy": 84
+     "hp_share": 0.185,
+     "energy": 80
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 1,
-     "left": 3,
-     "hp": 107,
+     "left": 1,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 1.0,
+     "hp_share": 0.953,
      "energy": [
-      8,
-      8
+      16,
+      16
      ],
      "energy_ceiling": 16
     }
@@ -1548,18 +1544,18 @@
   {
    "kind": "charged",
    "t": 139.8,
-   "fighting_turn": 80,
+   "fighting_turn": 86,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
    "move_id": "DRILL_PECK",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 84,
+   "energy_before": 80,
    "target": "Mimikyu",
    "shielded": true,
-   "target_hp_before": 107,
-   "target_hp_after": 107,
+   "target_hp_before": 102,
+   "target_hp_after": 102,
    "target_hp_max": 107,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1570,18 +1566,18 @@
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 23,
      "hp_max": 124,
-     "hp_share": 0.169,
-     "energy": 44
+     "hp_share": 0.185,
+     "energy": 40
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 3,
-     "hp": 107,
+     "left": 1,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 1.0,
+     "hp_share": 0.953,
      "energy": [
       16,
       16
@@ -1594,7 +1590,7 @@
    "kind": "fighting",
    "t": 149.0,
    "until": 157.8,
-   "fighting_turn": 80,
+   "fighting_turn": 86,
    "turns": 7,
    "mine": {
     "pokemon": "Fearow",
@@ -1608,29 +1604,28 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 6,
+     "hp": 17,
      "hp_max": 124,
-     "hp_share": 0.048,
-     "energy": 68
+     "hp_share": 0.137,
+     "energy": 64
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 3,
-     "hp": 85,
+     "left": 1,
+     "hp": 88,
      "hp_max": 107,
-     "hp_share": 0.794,
+     "hp_share": 0.822,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 48
     }
@@ -1639,33 +1634,33 @@
   {
    "kind": "end",
    "t": 157.8,
-   "fighting_turn": 87,
+   "fighting_turn": 93,
    "result": "loss",
    "result_from": "result screen",
    "left": {
     "mine": 1,
-    "theirs": 3
+    "theirs": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 1,
-     "hp": 6,
+     "hp": 17,
      "hp_max": 124,
-     "hp_share": 0.048,
-     "energy": 68
+     "hp_share": 0.137,
+     "energy": 64
     },
     "theirs": {
      "active": "Mimikyu",
      "shields": 0,
-     "left": 3,
-     "hp": 85,
+     "left": 1,
+     "hp": 88,
      "hp_max": 107,
-     "hp_share": 0.794,
+     "hp_share": 0.822,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
      "energy_ceiling": 48
     }
@@ -1674,7 +1669,27 @@
  ],
  "deductions": [
   {
-   "t": 66.0,
+   "t": 4.0,
+   "side": "theirs",
+   "pokemon": "Ursaluna",
+   "what": "fast move",
+   "value": "Rock Smash",
+   "how": "fits the size and timing of its hits on our bar",
+   "ruled_out": []
+  },
+  {
+   "t": 27.0,
+   "side": "theirs",
+   "pokemon": "Ursaluna",
+   "what": "fast move",
+   "value": "Tackle",
+   "how": "fits its hits on our bar best of the moves not ruled out",
+   "ruled_out": [
+    "Rock Smash"
+   ]
+  },
+  {
+   "t": 81.0,
    "side": "theirs",
    "pokemon": "Araquanid",
    "what": "fast move",
@@ -1682,6 +1697,19 @@
    "how": "every other fast move ruled out",
    "ruled_out": [
     "Bug Bite"
+   ]
+  },
+  {
+   "t": 95.08,
+   "side": "theirs",
+   "pokemon": "Ursaluna",
+   "what": "fast move",
+   "value": "Scratch",
+   "how": "fits its hits on our bar best of the moves not ruled out",
+   "ruled_out": [
+    "Rock Smash",
+    "Smack Down",
+    "Tackle"
    ]
   }
  ],

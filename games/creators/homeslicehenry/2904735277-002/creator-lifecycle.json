@@ -6,24 +6,28 @@
       "species": "Sableye",
       "clip_seconds": 78.95001697849462,
       "method": "native_fighting_live_to_zero_and_fade",
-      "confirmed_clip_seconds": 79.0833503405018,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Kingdra",
-      "clip_seconds": 58.73334596415771,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 58.80001264516129,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 79.50001709677419,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 79.33335039426524,
+        "confirmed_seconds": 79.50001709677419
+      }
     },
     {
       "side": "theirs",
       "species": "Cramorant",
       "clip_seconds": 118.26669210035843,
       "method": "centered_positive_to_zero_and_fade",
-      "confirmed_clip_seconds": 118.40002546236559,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 123.0000264516129,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 122.83335974910395,
+        "confirmed_seconds": 123.0000264516129
+      }
     },
     {
       "side": "theirs",
@@ -31,7 +35,85 @@
       "clip_seconds": 170.53337000716846,
       "method": "complete_empty_centered_target_and_fade_after_named_attack",
       "confirmed_clip_seconds": 170.66670336917562,
-      "timing_uncertainty_seconds": 0.1
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 170.66670336917562
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Kingdra",
+      "clip_seconds": 57.33334566308244,
+      "confirmed_clip_seconds": 58.08334582437276,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 57.33334566308244,
+        "bar": {
+          "bounds": [
+            184,
+            664,
+            326,
+            677
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 136,
+          "live_pixels": 0,
+          "damage_pixels": 64,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014706
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 1.0,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Kingdra",
+          "camera_identity_cutoff_seconds": 56.750012
+        },
+        "source_pts": 37381410,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 50.0,
+        "release_seconds": 56.000012
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 57.9166791218638,
+        "confirmed_seconds": 58.08334582437276
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Kingdra",
+        "clip_seconds": 58.73334596415771,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 59.50001279569892,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 59.33334609318997,
+          "confirmed_seconds": 59.50001279569892
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -520,5 +602,714 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "59af73a997bebdcc4665e61aac395e4f5fe8a64a0e12c9da82e90fc6890b9c1b",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "theirs",
+        "species": "Kingdra",
+        "clip_seconds": 57.33334566308244,
+        "confirmed_clip_seconds": 58.08334582437276,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 57.33334566308244,
+          "bar": {
+            "bounds": [
+              184,
+              664,
+              326,
+              677
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 136,
+            "live_pixels": 0,
+            "damage_pixels": 64,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014706
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Kingdra",
+            "camera_identity_cutoff_seconds": 56.750012
+          },
+          "source_pts": 37381410,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 50.0,
+          "release_seconds": 56.000012
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 57.9166791218638,
+          "confirmed_seconds": 58.08334582437276
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Kingdra",
+          "clip_seconds": 58.73334596415771,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 59.50001279569892,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 59.33334609318997,
+            "confirmed_seconds": 59.50001279569892
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 78.91668363799283,
+        "confirmed_clip_seconds": 79.50001709677419,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 78.91668363799283,
+          "bar": {
+            "bounds": [
+              29,
+              700,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9786,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 39323880,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 79.33335039426524,
+          "confirmed_seconds": 79.50001709677419
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Cramorant",
+        "clip_seconds": 118.25002543010753,
+        "confirmed_clip_seconds": 123.0000264516129,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 118.25002543010753,
+          "bar": {
+            "bounds": [
+              182,
+              557,
+              326,
+              570
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 55,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Cramorant",
+            "camera_identity_cutoff_seconds": 117.750025
+          },
+          "source_pts": 42863940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 111.0,
+          "release_seconds": 117.000025
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 122.83335974910395,
+          "confirmed_seconds": 123.0000264516129
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Kingdra",
+        "clip_seconds": 57.33334566308244,
+        "confirmed_clip_seconds": 58.750012634408606,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 57.25001231182796,
+          "bar": {
+            "bounds": [
+              182,
+              669,
+              328,
+              684
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 66,
+            "damage_pixels": 0,
+            "fraction": 0.471429,
+            "fraction_interval": [
+              0.457143,
+              0.485714
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.8817,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 65,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Kingdra",
+            "camera_identity_cutoff_seconds": 56.750012
+          }
+        },
+        "first_zero": {
+          "t": 57.33334566308244,
+          "bar": {
+            "bounds": [
+              184,
+              664,
+              326,
+              677
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 136,
+            "live_pixels": 0,
+            "damage_pixels": 64,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014706
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Kingdra",
+            "camera_identity_cutoff_seconds": 56.750012
+          },
+          "source_pts": 37381410,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 57.9166791218638,
+            "confirmed_seconds": 58.08334582437276,
+            "value": 2,
+            "source_pts": 37433880,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 78.91668363799283,
+        "confirmed_clip_seconds": 80.41668396057348,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 78.83335028673835,
+          "bar": {
+            "bounds": [
+              29,
+              700,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 4,
+            "damage_pixels": 2,
+            "fraction": 0.028571,
+            "fraction_interval": [
+              0.014286,
+              0.042857
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9921,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 4
+            }
+          }
+        },
+        "first_zero": {
+          "t": 78.91668363799283,
+          "bar": {
+            "bounds": [
+              29,
+              700,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9786,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 39323880,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 79.33335039426524,
+            "confirmed_seconds": 79.50001709677419,
+            "value": 2,
+            "source_pts": 39361410,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 3,
+        "missing_frames": 3
+      },
+      {
+        "side": "theirs",
+        "species": "Mimikyu",
+        "clip_seconds": 170.25003661290322,
+        "confirmed_clip_seconds": 171.6667035842294,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 170.16670326164873,
+          "bar": {
+            "bounds": [
+              182,
+              511,
+              328,
+              526
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 92,
+            "damage_pixels": 0,
+            "fraction": 0.657143,
+            "fraction_interval": [
+              0.642857,
+              0.671429
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9984,
+            "live_color_pixels": {
+              "cyan": 92,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Mimikyu",
+            "camera_identity_cutoff_seconds": 169.750036
+          }
+        },
+        "first_zero": {
+          "t": 170.25003661290322,
+          "bar": {
+            "bounds": [
+              182,
+              511,
+              328,
+              526
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 91,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.996,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Mimikyu",
+            "camera_identity_cutoff_seconds": 169.750036
+          },
+          "source_pts": 47543940,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independently_observed_last_party_member",
+          "counter": {
+            "first_visible_seconds": 122.83335974910395,
+            "confirmed_seconds": 123.0000264516129,
+            "value": 1,
+            "source_pts": 43276410,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 80.41668396057348,
+        "confirmed_clip_seconds": 80.7500173655914,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 80.333350609319,
+          "bar": {
+            "bounds": [
+              30,
+              700,
+              176,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 39458880,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          80.333350609319,
+          80.41668396057348
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 80.58335066308244,
+          "confirmed_seconds": 80.7500173655914
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Kingdra",
+        "clip_seconds": 59.666679498207884,
+        "confirmed_clip_seconds": 60.00001290322581,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 59.5833461469534,
+          "bar": {
+            "bounds": [
+              255,
+              500,
+              399,
+              512
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.6857
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 37591380,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          59.5833461469534,
+          59.666679498207884
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 59.833346200716846,
+          "confirmed_seconds": 60.00001290322581
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Cramorant",
+        "clip_seconds": 122.00002623655914,
+        "confirmed_clip_seconds": 123.0000264516129,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 121.91669288530466,
+          "bar": {
+            "bounds": [
+              182,
+              520,
+              329,
+              534
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 4,
+            "damage_pixels": 0,
+            "fraction": 0.028369,
+            "fraction_interval": [
+              0.014184,
+              0.042553
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9734,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 4
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Cramorant",
+            "camera_identity_cutoff_seconds": 117.750025
+          }
+        },
+        "disappearance_source_pts": 43201440,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          121.91669288530466,
+          122.00002623655914
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 122.83335974910395,
+          "confirmed_seconds": 123.0000264516129
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Mimikyu",
+        "clip_seconds": 171.50003688172043,
+        "confirmed_clip_seconds": 171.6667035842294,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 171.41670353046595,
+          "bar": {
+            "bounds": [
+              182,
+              509,
+              328,
+              526
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              0.7692,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 90,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.8994,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Mimikyu",
+            "camera_identity_cutoff_seconds": 169.750036
+          }
+        },
+        "disappearance_source_pts": 47656440,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          171.41670353046595,
+          171.50003688172043
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "known_last_party_member_and_measured_zero_fade",
+          "confirmed_seconds": 171.6667035842294
+        }
+      }
+    ],
+    "added": 1,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

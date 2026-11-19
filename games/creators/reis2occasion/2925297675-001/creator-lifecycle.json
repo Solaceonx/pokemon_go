@@ -6,8 +6,14 @@
       "species": "Charjabug",
       "clip_seconds": 37.53333552059052,
       "method": "native_fighting_live_to_zero_and_fade",
-      "confirmed_clip_seconds": 37.666668861693864,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 38.16666889083139,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 38.000002214452216,
+        "confirmed_seconds": 38.16666889083139
+      }
     }
   ],
   "charged_impact_probes": [
@@ -90,6 +96,22 @@
       "sample_count": 75,
       "target_counter_before": 3,
       "reason": "No continuous positive-to-zero live strip with disappearing tail"
+    },
+    {
+      "schema": "terminal-impact-v1",
+      "accepted": false,
+      "video_sha256": "9d5c2a0e2a82f1491442801fc7ae03c71bd7b81aee12a3abdb679252b1f5bc04",
+      "result_based_faints": 0,
+      "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+      "reason": "No matching named attack announcement"
+    },
+    {
+      "schema": "terminal-impact-v1",
+      "accepted": false,
+      "video_sha256": "9d5c2a0e2a82f1491442801fc7ae03c71bd7b81aee12a3abdb679252b1f5bc04",
+      "result_based_faints": 0,
+      "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+      "reason": "No matching named attack announcement"
     },
     {
       "schema": "terminal-impact-v1",
@@ -188,5 +210,162 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "854e09adb552745acd8bb88ec4f4703724c63ae9f16f1b267d3c7216fbe02b12",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "theirs",
+        "species": "Charjabug",
+        "clip_seconds": 37.666668861693864,
+        "confirmed_clip_seconds": 38.2666688966589,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 37.500002185314685,
+          "bar": {
+            "bounds": [
+              255,
+              521,
+              399,
+              533
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9571
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 2,
+            "damage_pixels": 0,
+            "fraction": 0.014493,
+            "fraction_interval": [
+              0.0,
+              0.028986
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9855,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 2
+            }
+          }
+        },
+        "first_zero": {
+          "t": 37.666668861693864,
+          "bar": {
+            "bounds": [
+              255,
+              521,
+              399,
+              533
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9214
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 1,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9952,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 43535280,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 38.000002214452216,
+            "confirmed_seconds": 38.16666889083139,
+            "value": 2,
+            "source_pts": 43565340,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 3,
+        "missing_frames": 3
+      },
+      {
+        "side": "theirs",
+        "species": "Charjabug",
+        "clip_seconds": 38.9333356021756,
+        "confirmed_clip_seconds": 39.266668954933955,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 38.8333355963481,
+          "bar": {
+            "bounds": [
+              255,
+              533,
+              399,
+              545
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 43649310,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          38.8333355963481,
+          38.9333356021756
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 39.100002278554776,
+          "confirmed_seconds": 39.266668954933955
+        }
+      }
+    ],
+    "added": 0,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

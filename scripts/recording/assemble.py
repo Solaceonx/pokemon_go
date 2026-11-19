@@ -7,11 +7,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pogo.gamedata import GameData
 from public_transitions import counter_changes, replacement_evidence
+from creator_charge_evidence import actor_for_release, actor_consensus, historical_side, prior_minigame
 lines = lambda path: (gzip.open(path, "rt", encoding="utf-8") if str(path).endswith(".gz") else open(path, encoding="utf-8"))
 gm = json.load(open(Path(__file__).resolve().parents[2] / "data" / "gamemaster.json"))
 gd = GameData()
 species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
 moves = sorted({m["name"] for m in gm["moves"]})
+LEGAL_RELEASE_PAIRS = tuple(sorted({(p['speciesName'].split(' (')[0], gd.moves[mid].name.split(' (')[0])
+                                  for p in gd.species.values() for mid in p['chargedMoves'] if mid in gd.moves}))
 # The owner's own Pokémon, known before the battle: moves, and IVs and CP where given (data/owner_team.json).
 # Any other Pokémon of ours gets the usual moves until the battle shows otherwise.
 SHEET = json.loads((Path(__file__).resolve().parents[2] / "data" / "owner_team.json").read_text())["pokemon"]
@@ -30,7 +33,7 @@ def public_announced_move(text, user):
                       for mid in p['chargedMoves'] if mid.startswith('WEATHER_BALL_')}
         if len(candidates) == 1:
             return gd.moves[next(iter(candidates))].name
-        return None
+        return 'Weather Ball'
     return nearest(text, moves, .8)
 
 
@@ -44,6 +47,8 @@ def nearest(word, options, cutoff=0.72):
     return _nearest(word, tuple(options), cutoff)
 
 def health(side):
+    if "live_hp_fraction" in side:
+        return side["live_hp_fraction"]
     seg, w = side["seg"], side["w"]
     if not seg or not w: return None
     return round(seg[0][1] if seg[0][0] == "cyan" else sum(p for _, p in seg)) / w
@@ -126,7 +131,11 @@ def assemble(rows, texts, argv=(), span=None, now=None):
                 if name and not any(g[1] == name and t - g[0] < 3 for g in gos): gos.append((t, name))
         if "switchinanewpok" in joined: prompts.append(t)
         start = "mine" if "getready" in joined else "theirs" if "ackincoming" in joined else None
-        if start and (seq is None or t - seq["start"] > 9):
+        completed_cue = PUBLIC and seq and seq.get('announcements') and t-max(seq['announcements'])>.5 and not any(
+            start == ('mine' if 'getready' in canon(' '.join(v for _,v in old['text'])) else
+                      'theirs' if 'ackincoming' in canon(' '.join(v for _,v in old['text'])) else None)
+            for old in texts if t-2<=old['t']<t)
+        if start and (seq is None or t - seq["start"] > 9 or completed_cue):
             seq = {"side": start, "start": t, "move": None, "user": None, "blocked": False}; seqs.append(seq)
         # Broadcast logos can cover the actor prefix while leaving "used MOVE"
         # readable. An earlier charge cue still establishes the thrower's side.
@@ -135,12 +144,21 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         if m and not (seq and t - seq["start"] < 14):
             # "X used Y!" with no cue read before it (the cue can sit under other text): the cue comes about 7 s
             # earlier. Whose move it was is settled from the name below, or failing that from a shield going.
-            user = nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
+            user = (actor_for_release(m.group(1),public_announced_move(m.group(2),None),LEGAL_RELEASE_PAIRS)
+                    if PUBLIC else nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species))
             if user:
                 seq = {"side": None, "start": t - 7.2, "move": None, "user": None, "blocked": False, "late": True}; seqs.append(seq)
         if m and seq and t - seq["start"] < 14:
-            seq["user"] = seq["user"] or nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
             move_text = m.group(2).replace("lron", "iron") if PUBLIC else m.group(2)
+            if PUBLIC:
+                actor=actor_for_release(m.group(1),public_announced_move(move_text,None),LEGAL_RELEASE_PAIRS)
+                if actor:
+                    seq.setdefault('actor_observations',[]).append(dict(t=t,**actor))
+                    consensus=actor_consensus(seq['actor_observations'])
+                    seq['user']=consensus['name'] if consensus else None
+                    seq['actor_confirmed_clip_seconds']=consensus['t'] if consensus else None
+            else:
+                seq["user"] = seq["user"] or nearest(m.group(1), OURS + THEIRS) or nearest(m.group(1), species)
             seq["move"] = seq["move"] or (public_announced_move(move_text, seq['user']) if PUBLIC else nearest(move_text, moves, 0.8))
             if seq["move"]:
                 seq.setdefault("announcements", []).append(t)
@@ -149,6 +167,12 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         # NICE! GREAT! EXCELLENT! are the charging game, which only the thrower's own screen shows: our move.
         if seq and t - seq["start"] < 9 and any(canon(x) in ("nice", "great", "excellent") for x in items): seq["ours"] = True
     for q in seqs:
+        if PUBLIC and q.get('announcements') and q['side'] is None:
+            previous=max((max(p['announcements']) for p in seqs if p is not q and p.get('announcements')
+                          and max(p['announcements'])<min(q['announcements'])),default=float('-inf'))
+            cue=prior_minigame(texts,previous+1,min(q['announcements']))
+            if cue is not None:
+                q.update(ours=True,side_confirmed_clip_seconds=cue)
         # A charged move is decided about 8.5 s after its cue and lands at about 9.5 s; fighting resumes at 10 s.
         q["resume"] = next((t for t in bar_times if t >= q["start"] + 9.5), rows[-1]["t"] if now is None else float("inf"))
         # A release is observed even when a faint hides both health bars for
@@ -201,7 +225,9 @@ def assemble(rows, texts, argv=(), span=None, now=None):
             if runs and runs[-1][2] == name: runs[-1][1] = r["t"]; runs[-1][3] += 1
             else: runs.append([r["t"], r["t"], name, 1])
         # one odd reading inside a run of another name is a misread
-        runs = [x for i, x in enumerate(runs) if not (x[3] == 1 and 0 < i < len(runs) - 1 and runs[i - 1][2] == runs[i + 1][2])]
+        runs = [x for i, x in enumerate(runs) if not (x[3] == 1 and 0 < i < len(runs) - 1
+                and runs[i - 1][2] == runs[i + 1][2]
+                and not (PUBLIC and any(n == x[2] and 0 <= x[0]-t <= 2 for t,n in gos)))]
         joined_up = []
         for x in runs:
             if joined_up and joined_up[-1][2] == x[2]: joined_up[-1][1] = x[1]
@@ -226,6 +252,9 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         entry = {"t": t + (ENTER if faint or first else SWAPPED if side == "mine" else SWAPPED_THEIRS), "name": name, "faint": faint, "read": t}
         if PUBLIC:
             entry.update(seen=seen if seen is not None else t, transition_evidence=proof)
+            physical=[r[key].get('identity_first_visible_seconds') for r in rows
+                      if r['t']==seen and r[key].get('identity_first_visible_seconds') is not None]
+            entry['first_visible']=min(physical) if physical else entry['seen']
         field[side].append(entry)
     field = {"mine": [], "theirs": []}
     stints = {"mine": header_stints("m"), "theirs": header_stints("o")}
@@ -247,6 +276,14 @@ def assemble(rows, texts, argv=(), span=None, now=None):
                 was = {k: (field[k][-1]["name"] if field[k] else None) for k in field}
                 if was["mine"] == name: side = "theirs"
             entered(side, "m" if side == "mine" else "o", t, name, first=not field[side])
+
+    if PUBLIC:
+        for q in seqs:
+            if not q.get('late') or q.get('ours') or not q.get('announcements'):
+                continue
+            side=historical_side(q.get('user'),field,min(q['announcements']))
+            if side:
+                q.update(side=side,side_evidence='past_active_header',side_confirmed_clip_seconds=min(q['announcements']))
 
     def header_shields(key):
         """The header's shield counter, once it has shown the same number for half a second."""
@@ -618,9 +655,9 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         "clip_origin_seconds": T0, "public_footage": PUBLIC,
         "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
         "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"],
-                           **({"header_seen_clip_seconds": f["seen"], "transition_evidence": f["transition_evidence"]} if PUBLIC else {})}
+                           **({"header_seen_clip_seconds": f["seen"], "header_first_visible_clip_seconds": f['first_visible'], "transition_evidence": f["transition_evidence"]} if PUBLIC else {})}
                           for f in field[side]] for side in field},
-        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"], **({"announcement_clip_seconds": q.get("announcements", [])} if PUBLIC else {})} for q in seqs],
+        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"], **({"actor": q.get('user'), "actor_confirmed_clip_seconds": q.get('actor_confirmed_clip_seconds'), "side_confirmed_clip_seconds": q.get('side_confirmed_clip_seconds',q['start']), "announcement_clip_seconds": q.get("announcements", []), "side_evidence": q.get('side_evidence',"explicit_cue" if not q.get("late") else "minigame" if q.get("ours") else "named_actor_inference")} if PUBLIC else {})} for q in seqs],
         "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
         "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
         "own_energy_steps": dict(own_steps),

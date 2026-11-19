@@ -2,28 +2,105 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "theirs",
-      "species": "Giratina",
-      "clip_seconds": 98.75001930596285,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 98.81668598566309,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
       "side": "mine",
       "species": "Greninja",
       "clip_seconds": 82.08334938090583,
       "method": "outlined_empty_target_and_independent_party_decrement",
-      "confirmed_clip_seconds": 82.15001606060606,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 83.08334957640925,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 82.91668287715868,
+        "confirmed_seconds": 83.08334957640925
+      }
     },
     {
       "side": "theirs",
       "species": "Corviknight",
       "clip_seconds": 119.06668994460736,
       "method": "centered_positive_to_zero_and_fade",
-      "confirmed_clip_seconds": 119.20002330400781,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 119.83335676115999,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 119.66669006190942,
+        "confirmed_seconds": 119.83335676115999
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Giratina",
+      "clip_seconds": 97.4166857119583,
+      "confirmed_clip_seconds": 99.5833528022157,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 97.4166857119583,
+        "bar": {
+          "bounds": [
+            182,
+            700,
+            329,
+            715
+          ],
+          "outline_method": "physical_rail_intersection",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 141,
+          "live_pixels": 0,
+          "damage_pixels": 0,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014184
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9803,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Giratina",
+          "camera_identity_cutoff_seconds": 96.750019
+        },
+        "source_pts": 239393910,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 90.0,
+        "release_seconds": 96.000019
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 99.41668610296513,
+        "confirmed_seconds": 99.5833528022157
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Giratina",
+        "clip_seconds": 98.75001930596285,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 99.5833528022157,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 99.41668610296513,
+          "confirmed_seconds": 99.5833528022157
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -383,8 +460,53 @@
         "t": 43.000008,
         "species": "Giratina"
       },
-      "accepted": false,
-      "measurement": null
+      "accepted": true,
+      "measurement": {
+        "first_zero": {
+          "t": 42.46667496904529,
+          "clip_pts": 13033022548,
+          "clip_time_base": "1/306900000",
+          "source_pts": 234448410,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              240,
+              530,
+              374,
+              545
+            ],
+            "width": 128,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "paired_outline"
+          },
+          "replacement_bar": false
+        },
+        "confirmed_zero": {
+          "t": 42.53334164874552,
+          "clip_pts": 13053482552,
+          "clip_time_base": "1/306900000",
+          "source_pts": 234454440,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              256,
+              431,
+              390,
+              446
+            ],
+            "width": 128,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "paired_outline"
+          },
+          "replacement_bar": false
+        },
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "zero_samples": 2
+      }
     },
     {
       "candidate": {
@@ -495,5 +617,585 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "618fe0404b0585b7f77b3f4114f18a34996642608180c1006216ac7c83b8e365",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 82.08334938090583,
+        "confirmed_clip_seconds": 83.08334957640925,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 82.08334938090583,
+          "bar": {
+            "bounds": [
+              182,
+              578,
+              326,
+              590
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 31,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9626,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Greninja",
+            "camera_identity_cutoff_seconds": 81.750016
+          },
+          "source_pts": 238013940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 74.0,
+          "release_seconds": 81.000016
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 82.91668287715868,
+          "confirmed_seconds": 83.08334957640925
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Giratina",
+        "clip_seconds": 97.4166857119583,
+        "confirmed_clip_seconds": 99.5833528022157,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 97.4166857119583,
+          "bar": {
+            "bounds": [
+              182,
+              700,
+              329,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9803,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Giratina",
+            "camera_identity_cutoff_seconds": 96.750019
+          },
+          "source_pts": 239393910,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 90.0,
+          "release_seconds": 96.000019
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 99.41668610296513,
+          "confirmed_seconds": 99.5833528022157
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Giratina",
+          "clip_seconds": 98.75001930596285,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 99.5833528022157,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 99.41668610296513,
+            "confirmed_seconds": 99.5833528022157
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Corviknight",
+        "clip_seconds": 119.08335661453242,
+        "confirmed_clip_seconds": 119.83335676115999,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 119.08335661453242,
+          "bar": {
+            "bounds": [
+              182,
+              540,
+              326,
+              553
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 30,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9845,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Corviknight",
+            "camera_identity_cutoff_seconds": 118.750023
+          },
+          "source_pts": 241343940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 111.0,
+          "release_seconds": 118.000023
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 119.66669006190942,
+          "confirmed_seconds": 119.83335676115999
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 82.41668277940697,
+        "confirmed_clip_seconds": 84.08334977191268,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 82.00001603128055,
+          "bar": {
+            "bounds": [
+              182,
+              576,
+              326,
+              589
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 31,
+            "damage_pixels": 0,
+            "fraction": 0.224638,
+            "fraction_interval": [
+              0.210145,
+              0.23913
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 31
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Greninja",
+            "camera_identity_cutoff_seconds": 81.750016
+          }
+        },
+        "first_zero": {
+          "t": 82.41668277940697,
+          "bar": {
+            "bounds": [
+              182,
+              580,
+              326,
+              592
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 31,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9952,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Greninja",
+            "camera_identity_cutoff_seconds": 81.750016
+          },
+          "source_pts": 238043910,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 82.91668287715868,
+            "confirmed_seconds": 83.08334957640925,
+            "value": 2,
+            "source_pts": 238088910,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "theirs",
+        "species": "Corviknight",
+        "clip_seconds": 119.08335661453242,
+        "confirmed_clip_seconds": 120.16669015966113,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 119.00002326490714,
+          "bar": {
+            "bounds": [
+              182,
+              543,
+              326,
+              556
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 29,
+            "damage_pixels": 0,
+            "fraction": 0.210145,
+            "fraction_interval": [
+              0.195652,
+              0.224638
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9876,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 28
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Corviknight",
+            "camera_identity_cutoff_seconds": 118.750023
+          }
+        },
+        "first_zero": {
+          "t": 119.08335661453242,
+          "bar": {
+            "bounds": [
+              182,
+              540,
+              326,
+              553
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 30,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9845,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Corviknight",
+            "camera_identity_cutoff_seconds": 118.750023
+          },
+          "source_pts": 241343940,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 119.66669006190942,
+            "confirmed_seconds": 119.83335676115999,
+            "value": 1,
+            "source_pts": 241396410,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 84.00001642228739,
+        "confirmed_clip_seconds": 84.33334982078853,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 83.91668307266211,
+          "bar": {
+            "bounds": [
+              29,
+              700,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9992,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 238186470,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          83.91668307266211,
+          84.00001642228739
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 84.16668312153796,
+          "confirmed_seconds": 84.33334982078853
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Giratina",
+        "clip_seconds": 98.16668585858586,
+        "confirmed_clip_seconds": 99.5833528022157,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 98.08335250896057,
+          "bar": {
+            "bounds": [
+              182,
+              701,
+              328,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 2,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9955,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Giratina",
+            "camera_identity_cutoff_seconds": 96.750019
+          }
+        },
+        "disappearance_source_pts": 239461410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          98.08335250896057,
+          98.16668585858586
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 99.41668610296513,
+          "confirmed_seconds": 99.5833528022157
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Corviknight",
+        "clip_seconds": 121.16669035516455,
+        "confirmed_clip_seconds": 121.50002375366569,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 121.08335700553927,
+          "bar": {
+            "bounds": [
+              255,
+              539,
+              400,
+              554
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 139,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014388
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 241531410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          121.08335700553927,
+          121.16669035516455
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 121.33335705441512,
+          "confirmed_seconds": 121.50002375366569
+        }
+      }
+    ],
+    "added": 1,
+    "quarantined": [
+      {
+        "side": "theirs",
+        "species": "Giratina",
+        "clip_seconds": 42.46667496904529,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 42.53334164874552,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "contradicted",
+          "reason": "same_species_returns_alive_after_proposed_faint",
+          "confirmed_seconds": 89.00001739980449
+        }
+      }
+    ],
+    "result_based_faints": 0
+  }
 }

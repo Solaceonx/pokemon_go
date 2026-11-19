@@ -3,8 +3,14 @@
     {
       "victim_side": "my",
       "species": "Corviknight",
-      "charged_look_before": 131.0,
-      "measured_zero_seconds": 129.933355
+      "charged_look_before": 132.0,
+      "measured_zero_seconds": 130.933355
+    },
+    {
+      "victim_side": "foe",
+      "species": "Mimikyu",
+      "charged_look_before": 177.0,
+      "measured_zero_seconds": 176.466695
     }
   ],
   "quarantined_waits_removed": [],
@@ -13,39 +19,39 @@
       "side": "theirs",
       "species": "Melmetal",
       "interval": [
-        74.75001304915514,
-        77.80001399999999
-      ]
-    },
-    {
-      "side": "theirs",
-      "species": "Mimikyu",
-      "interval": [
-        176.55002868663595,
-        177.80002900000002
+        75.75001304915514,
+        78.80001351766512
       ]
     },
     {
       "side": "mine",
       "species": "Corviknight",
       "interval": [
-        129.933354859191,
-        138.800023
+        130.933354859191,
+        139.80002288786483
+      ]
+    },
+    {
+      "side": "theirs",
+      "species": "Mimikyu",
+      "interval": [
+        176.46669518689197,
+        178.80002887864825
       ]
     },
     {
       "side": "theirs",
       "species": "Pangoro",
       "interval": [
-        181.15002939324117,
-        186.8
+        181.96669603174604,
+        187.8
       ]
     }
   ],
   "terminal_zero_from_three_measured_victims": [
     {
       "side": "theirs",
-      "t": 181.15002939324117,
+      "t": 181.96669603174604,
       "species": [
         "Melmetal",
         "Mimikyu",
@@ -55,105 +61,54 @@
   ],
   "unattributed_zero_candidates": [],
   "unattributed_observations_removed": [],
-  "merged_wait_intervals": [
-    [
-      74.75001304915514,
-      78.0
-    ],
-    [
-      129.933354859191,
-      139.0
-    ],
-    [
-      176.55002868663595,
-      177.80002900000002
-    ],
-    [
-      181.15002939324117,
-      186.8
-    ]
-  ],
-  "cached_zero_recovery": [
+  "party_counts_from_measured_victims": [
     {
-      "faint": {
-        "side": "theirs",
-        "species": "Pangoro",
-        "clip_seconds": 191.35002939324116,
-        "confirmed_clip_seconds": 191.61669610087046,
-        "method": "complete_last_member_zero_and_fade",
-        "timing_uncertainty_seconds": 0.1
-      },
-      "cache_file": "fighting-faint-005.json",
-      "cache_sha256": "ddaf7d5253f611d40fe4c3db0c0be54c390687d8b5a0dfa7fd94a6e49ba23b9a",
-      "acquisition_fingerprint": {
-        "video": "b5c71255b2762f39f82047df570913c4146f82a0497cebbe43a4ab74ee20dc47",
-        "alignment": "dc5e16a3e72236868b57bc56d13ea50d04eccf4cf3074e84a246ce0f2c62fe02",
-        "code": "f577ca650ed68d819694c17673a3b09f7fc2e36df2f849e18b3a2756b0b39581",
-        "impact_code": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-        "health_reader": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
-        "candidate": {
-          "side": "theirs",
-          "t": 190.333363,
-          "species": "Pangoro"
-        },
-        "width": 144,
-        "av_version": "19.0.2",
-        "cv2_version": "5.1.0"
-      },
-      "measurement": {
-        "first_zero": {
-          "t": 191.35002939324116,
-          "clip_pts": 74741321481,
-          "clip_time_base": "1/390600000",
-          "source_pts": 280744440,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              252,
-              392,
-              403,
-              405
-            ],
-            "width": 145,
-            "live_pixels": 0,
-            "orange_pixels": 2,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          },
-          "replacement_bar": false
-        },
-        "confirmed_zero": {
-          "t": 191.61669610087046,
-          "clip_pts": 74845481497,
-          "clip_time_base": "1/390600000",
-          "source_pts": 280768470,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              253,
-              386,
-              403,
-              399
-            ],
-            "width": 144,
-            "live_pixels": 0,
-            "orange_pixels": 0,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          },
-          "replacement_bar": false
-        },
-        "isolated_fade_pixel_samples": [],
-        "missing_tail_samples": 12
-      },
-      "replacement_header_clip_seconds": null
+      "side": "mine",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.03,
+      "distinct_victims": {
+        "Corviknight": 130.933354859191
+      }
+    },
+    {
+      "side": "theirs",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.03,
+      "distinct_victims": {
+        "Melmetal": 75.75001304915514,
+        "Mimikyu": 176.46669518689197,
+        "Pangoro": 181.96669603174604
+      }
     }
   ],
+  "merged_wait_intervals": [
+    [
+      75.75001304915514,
+      78.80001351766512
+    ],
+    [
+      79.3,
+      93.0
+    ],
+    [
+      130.933354859191,
+      140.0
+    ],
+    [
+      176.46669518689197,
+      178.80002887864825
+    ],
+    [
+      181.96669603174604,
+      187.8
+    ]
+  ],
+  "cached_zero_recovery": [],
   "schema": "creator-state-reconciliation-v1",
-  "code_sha256": "15133a35f6c2641abb23bb59c802f58d0a81f6095474021b7e6f407ce67812ff",
-  "observations_before_canonical_sha256": "0c578073815395ac9419828423befcf58322e9f615f7623654d1d7a3b9d0093f",
-  "observations_after_canonical_sha256": "5bfbf14d8e707dc3755b9ce62e84f6355123dbd43db48462d34852c604aed8d5",
-  "lifecycle_canonical_sha256": "e3dc3ce30200797d3c7f28f5653611a5f2a680ca4e7c40c931c738a73b19e330",
+  "code_sha256": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+  "observations_before_canonical_sha256": "bc238537edd186e4f5891298000fdec42de4f7bb7643120ec387064845a21a38",
+  "observations_after_canonical_sha256": "56c611b317bca2ba8dc0d1b6e2bf4a7d8e99bf08fe36c55301b48a0ba467cb07",
+  "lifecycle_canonical_sha256": "dceef042b7311ef6bbaa417971325b718c91a8caa21e8af5a569f66811043123",
   "terminal_impact_accepted": false,
   "digest_method": "SHA256 of compact sorted-key UTF-8 JSON; observations have one LF after each row",
   "result_based_faints": 0

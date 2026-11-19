@@ -6,16 +6,14 @@
       "species": "Lapras",
       "clip_seconds": 83.96667155982907,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 84.03333823038074,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "mine",
-      "species": "Shelgon",
-      "clip_seconds": 118.23334022338773,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 118.3000068939394,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 85.10000495920745,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 84.83333827700078,
+        "confirmed_seconds": 85.10000495920745
+      }
     },
     {
       "side": "mine",
@@ -23,23 +21,99 @@
       "clip_seconds": 170.2666765889666,
       "method": "native_fighting_live_to_zero_and_fade",
       "confirmed_clip_seconds": 170.40000993006993,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Cetitan",
-      "clip_seconds": 80.96667138500389,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 81.1666713966589,
-      "timing_uncertainty_seconds": 0.1
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 170.40000993006993
+      }
     },
     {
       "side": "theirs",
       "species": "Cetitan",
       "clip_seconds": 150.9000087937063,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 150.96667546425797,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 151.50000882867133,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 151.33334215229215,
+        "confirmed_seconds": 151.50000882867133
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Shelgon",
+      "clip_seconds": 117.33334017094018,
+      "confirmed_clip_seconds": 118.00000687645688,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 117.33334017094018,
+        "bar": {
+          "bounds": [
+            183,
+            698,
+            327,
+            711
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 42,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9555,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Shelgon",
+          "camera_identity_cutoff_seconds": 116.750007
+        },
+        "source_pts": 182510310,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 109.0,
+        "release_seconds": 116.000007
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 117.76667352952603,
+        "confirmed_seconds": 118.00000687645688
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 118.23334022338773,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 119.16667361111111,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 119.00000693473193,
+          "confirmed_seconds": 119.16667361111111
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -209,7 +283,15 @@
       "video_sha256": "b046d127423af10f625aa232a42e08eb32c4a1b37efe90883a60fa4703c3347e",
       "result_based_faints": 0,
       "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-      "reason": "No matching named attack announcement"
+      "side": "theirs",
+      "species": "Lapras",
+      "move": "Superpower",
+      "attack_side": "mine",
+      "announced_clip_seconds": 167.00001,
+      "attack_start_clip_seconds": 159.8,
+      "sample_count": 75,
+      "target_counter_before": 2,
+      "reason": "No continuous positive-to-zero live strip with disappearing tail"
     }
   ],
   "forms": [],
@@ -690,5 +772,466 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "c0b56f7e0e54f8c7c2afdccdbd8b219797b184109260441a25c8a9d9df433fd6",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Lapras",
+        "clip_seconds": 84.0000048951049,
+        "confirmed_clip_seconds": 85.10000495920745,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 84.0000048951049,
+          "bar": {
+            "bounds": [
+              30,
+              492,
+              174,
+              505
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 2,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.8696,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 179510340,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 84.83333827700078,
+          "confirmed_seconds": 85.10000495920745
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 117.33334017094018,
+        "confirmed_clip_seconds": 118.00000687645688,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 117.33334017094018,
+          "bar": {
+            "bounds": [
+              183,
+              698,
+              327,
+              711
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 42,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9555,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Shelgon",
+            "camera_identity_cutoff_seconds": 116.750007
+          },
+          "source_pts": 182510310,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 109.0,
+          "release_seconds": 116.000007
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 117.76667352952603,
+          "confirmed_seconds": 118.00000687645688
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Shelgon",
+          "clip_seconds": 118.23334022338773,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 119.16667361111111,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 119.00000693473193,
+            "confirmed_seconds": 119.16667361111111
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Cetitan",
+        "clip_seconds": 151.16667547591297,
+        "confirmed_clip_seconds": 151.50000882867133,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 151.16667547591297,
+          "bar": {
+            "bounds": [
+              336,
+              474,
+              481,
+              490
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              0.8333,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 139,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014388
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9993,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 185555280,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 151.33334215229215,
+          "confirmed_seconds": 151.50000882867133
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Cetitan",
+        "clip_seconds": 170.2666765889666,
+        "confirmed_clip_seconds": 170.76667661810413,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 170.1000099125874,
+          "bar": {
+            "bounds": [
+              48,
+              512,
+              192,
+              525
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 2,
+            "damage_pixels": 0,
+            "fraction": 0.014493,
+            "fraction_interval": [
+              0.0,
+              0.028986
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9803,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 2
+            }
+          }
+        },
+        "first_zero": {
+          "t": 170.2666765889666,
+          "bar": {
+            "bounds": [
+              48,
+              515,
+              193,
+              530
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 139,
+            "live_pixels": 0,
+            "damage_pixels": 4,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014388
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.956,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 187274280,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independently_observed_last_party_member",
+          "counter": {
+            "first_visible_seconds": 119.00000693473193,
+            "confirmed_seconds": 119.16667361111111,
+            "value": 1,
+            "source_pts": 182660340,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 3,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Lapras",
+        "clip_seconds": 81.8333381021756,
+        "confirmed_clip_seconds": 85.10000495920745,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 81.76667143162393,
+          "bar": {
+            "bounds": [
+              30,
+              457,
+              174,
+              470
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              0.8889,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 10,
+            "damage_pixels": 0,
+            "fraction": 0.072464,
+            "fraction_interval": [
+              0.057971,
+              0.086957
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9979,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 10
+            }
+          }
+        },
+        "disappearance_source_pts": 179315310,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          81.76667143162393,
+          81.8333381021756
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 84.83333827700078,
+          "confirmed_seconds": 85.10000495920745
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 117.60000685314685,
+        "confirmed_clip_seconds": 118.00000687645688,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 117.50000684731934,
+          "bar": {
+            "bounds": [
+              182,
+              698,
+              326,
+              711
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 44,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9472,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Shelgon",
+            "camera_identity_cutoff_seconds": 116.750007
+          }
+        },
+        "disappearance_source_pts": 182534340,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          117.50000684731934,
+          117.60000685314685
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 117.76667352952603,
+          "confirmed_seconds": 118.00000687645688
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Cetitan",
+        "clip_seconds": 151.60000883449882,
+        "confirmed_clip_seconds": 152.00000885780887,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 151.50000882867133,
+          "bar": {
+            "bounds": [
+              336,
+              487,
+              479,
+              500
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 137,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014599
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9969,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 185594340,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          151.50000882867133,
+          151.60000883449882
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 151.766675510878,
+          "confirmed_seconds": 152.00000885780887
+        }
+      }
+    ],
+    "added": 1,
+    "quarantined": [
+      {
+        "side": "theirs",
+        "species": "Cetitan",
+        "clip_seconds": 80.96667138500389,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 81.1666713966589,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "contradicted",
+          "reason": "same_species_returns_alive_after_proposed_faint",
+          "confirmed_seconds": 149.0000086829837
+        }
+      }
+    ],
+    "result_based_faints": 0
+  }
 }

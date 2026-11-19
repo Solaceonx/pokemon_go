@@ -8,6 +8,7 @@ import json
 import hashlib
 from creator_impact import _rows
 from vod_media import sha256, write_json
+from creator_faint_support import death_state_seconds
 
 
 def confirmed_empty_cache(samples, after):
@@ -55,6 +56,12 @@ def recover_cached_faints(raw, timeline, evidence):
     meta = json.loads((raw.parent/'battle.json').read_text(encoding='utf-8'))
     origin = timeline['clip_origin_seconds']
     recovered, proofs = [], []
+    native_path = raw/'native-health-12hz.jsonl.gz'
+    native = None
+    if native_path.exists():
+        from creator_health import rows as native_rows
+        from creator_observations import interpret_measurements
+        native, _ = interpret_measurements(native_rows(native_path))
     for path in sorted(list(raw.glob('center-impact-*.json'))+list(raw.glob('fighting-faint-*.json'))):
         cache = json.loads(path.read_text(encoding='utf-8'))
         fp = cache.get('fingerprint', {})
@@ -96,6 +103,14 @@ def recover_cached_faints(raw, timeline, evidence):
         death = {'side': side, 'species': name, 'clip_seconds': at,
                  'confirmed_clip_seconds': measurement['confirmed_zero']['t'],
                  'method': method, 'timing_uncertainty_seconds': .1}
+        if native is not None:
+            from creator_faint_support import faint_support
+            support = faint_support(death, timeline, native)
+            if support['status'] != 'confirmed':
+                proofs.append({'candidate': death, 'accepted': False, 'independent_support': support})
+                continue
+            death['independent_support'] = support
+            death['confirmed_clip_seconds'] = max(death['confirmed_clip_seconds'], support['confirmed_seconds'])
         recovered.append(death)
         proofs.append({'faint': death, 'cache_file': path.name, 'cache_sha256': sha256(path),
                        'acquisition_fingerprint': fp, 'measurement': measurement,
@@ -178,13 +193,35 @@ def reconcile_looks(looks, timeline, evidence):
         else:
             retained.append([a, b])
     for d in evidence['faints']:
-        start = d['clip_seconds']-origin
+        start = death_state_seconds(d)-origin
         next_headers = [f['header_seen_clip_seconds']-origin for f in timeline['field'][d['side']]
                         if f['name'] != d['species'] and f.get('header_seen_clip_seconds', -1) > d['clip_seconds']]
         end = min(next_headers) if next_headers else timeline['end']
         audit['source_waits'].append({'side': d['side'], 'species': d['species'],
                                       'interval': [max(0, start), end]})
     waits = union(retained+[d['interval'] for d in audit['source_waits']])
+    # A delayed header decrement can appear after the replacement has arrived.
+    # Debit each independently measured victim at its zero, so that the same
+    # decrement cannot later kill the surviving replacement a second time.
+    audit['party_counts_from_measured_victims'] = []
+    for side, prefix in [('mine', 'my'), ('theirs', 'foe')]:
+        counts = timeline.get('left', {}).get(side, [])
+        if not counts:
+            continue
+        seed_t, seed_count = counts[0]
+        deaths = {}
+        for d in evidence['faints']:
+            at = death_state_seconds(d)-origin
+            if d['side'] == side and at >= seed_t:
+                deaths[d['species']] = min(deaths.get(d['species'], float('inf')), at)
+        for r in looks:
+            n = sum(at <= r['t']+1e-5 for at in deaths.values())
+            if n:
+                limit = max(0, seed_count-n)
+                r[prefix+'_left'] = min(r.get(prefix+'_left', limit), limit)
+        audit['party_counts_from_measured_victims'].append({'side': side,
+            'initial_observed_count': seed_count, 'initial_seconds': seed_t,
+            'distinct_victims': deaths})
     # Three distinct observed victims establish an empty party without using a
     # result screen or trusting an earlier broken party counter.
     for side, prefix in [('mine', 'my'), ('theirs', 'foe')]:
@@ -192,7 +229,7 @@ def reconcile_looks(looks, timeline, evidence):
         dead = {}
         for d in evidence['faints']:
             if d['side'] == side and d['species'] in roster:
-                dead[d['species']] = min(dead.get(d['species'], float('inf')), d['clip_seconds']-origin)
+                dead[d['species']] = min(dead.get(d['species'], float('inf')), death_state_seconds(d)-origin)
         if len(roster) != 3 or set(dead) != roster:
             continue
         at = max(dead.values())
@@ -211,6 +248,19 @@ def reconcile_looks(looks, timeline, evidence):
         previous = r['t']
     audit['merged_wait_intervals'] = waits
     return looks, audit
+
+
+def update_output_digest(game):
+    """Refresh the receipt after independently measured counter corrections."""
+    receipt = game/'creator-state-reconciliation.json'
+    if not receipt.exists():
+        return
+    audit = json.loads(receipt.read_text(encoding='utf-8'))
+    values = _rows(game/'observations.jsonl')
+    audit['observations_after_canonical_sha256'] = hashlib.sha256(''.join(
+        json.dumps(v, sort_keys=True, ensure_ascii=False, separators=(',', ':'))+'\n'
+        for v in values).encode('utf-8')).hexdigest()
+    write_json(receipt, audit)
 
 
 def reconcile_creator_state(game, raw=None):

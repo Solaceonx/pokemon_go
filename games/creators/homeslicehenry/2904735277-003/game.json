@@ -15,27 +15,26 @@
   "dataset_role": "unassigned"
  },
  "result": {
-  "value": null,
-  "from": "unknown",
+  "value": "loss",
+  "from": "who had Pokémon left",
   "left": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 3
   }
  },
- "seconds": 192.83,
- "fighting_turns": 114,
+ "seconds": 193.13,
+ "fighting_turns": 125,
  "checks": {
   "verdict": "fail",
   "failed": [
    "moves: 1 charged move(s) without an observed name",
-   "moves: 14 charged moves announced, 13 tracked",
-   "ending: no result screen, and the tracker has us on 1 and them on 3"
+   "moves: 14 charged moves announced, 13 tracked"
   ],
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
-   "fast move only guessed for zapdos"
+   "no result screen read; result taken from who had Pokémon left"
   ],
-  "unexplained_health_changes": 13
+  "unexplained_health_changes": 16
  },
  "teams": {
   "mine": [
@@ -112,8 +111,8 @@
     "cp": 1498,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.02,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -148,7 +147,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.429,
+    "hp_share_at_end": 0.435,
     "fast_move": {
      "id": "MUD_SHOT",
      "name": "Mud Shot",
@@ -189,17 +188,13 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.765,
+    "hp_share_at_end": 0.757,
     "fast_move": {
      "id": "THUNDER_SHOCK",
      "name": "Thunder Shock",
      "turns": 2,
      "energy_gain": 9,
-     "known_from": "guessed",
-     "odds": {
-      "Thunder Shock": 0.63,
-      "Charge Beam": 0.37
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -232,8 +227,8 @@
     "cp": 1496,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": true,
-    "hp_share_at_end": 0.0,
+    "fainted": false,
+    "hp_share_at_end": 0.027,
     "fast_move": {
      "id": "ROLLOUT",
      "name": "Rollout",
@@ -263,7 +258,7 @@
     }
    }
   ],
-  "theirs_unseen": 1
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -272,19 +267,19 @@
   },
   "charged_shielded": {
    "mine": 2,
-   "theirs": 1
+   "theirs": 2
   },
   "shields_left": {
-   "mine": 1,
+   "mine": 0,
    "theirs": 0
   },
   "switches": {
    "mine": 1,
-   "theirs": 2
+   "theirs": 3
   },
   "faints": {
-   "mine": 2,
-   "theirs": 1
+   "mine": 3,
+   "theirs": 0
   }
  },
  "actions": [
@@ -323,7 +318,7 @@
   {
    "kind": "fighting",
    "t": 0.0,
-   "until": 5.5,
+   "until": 5.8,
    "fighting_turn": 0,
    "turns": 11,
    "mine": {
@@ -331,23 +326,24 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 5
+    "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Quagsire",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 4
+    "hits_seen": 5
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 114,
+     "hp": 109,
      "hp_max": 125,
-     "hp_share": 0.912,
+     "hp_share": 0.872,
      "energy": 40
     },
     "theirs": {
@@ -358,8 +354,8 @@
      "hp_max": 161,
      "hp_share": 0.77,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
      "energy_ceiling": 54
     }
@@ -367,7 +363,7 @@
   },
   {
    "kind": "charged",
-   "t": 5.5,
+   "t": 5.8,
    "fighting_turn": 11,
    "side": "theirs",
    "pokemon": "Quagsire",
@@ -376,14 +372,14 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    45,
-    45
+    54,
+    54
    ],
    "energy_ceiling": 54,
    "target": "Sableye",
    "shielded": false,
-   "target_hp_before": 114,
-   "target_hp_after": 114,
+   "target_hp_before": 109,
+   "target_hp_after": 109,
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 39,
@@ -394,9 +390,9 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 114,
+     "hp": 109,
      "hp_max": 125,
-     "hp_share": 0.912,
+     "hp_share": 0.872,
      "energy": 48
     },
     "theirs": {
@@ -407,10 +403,10 @@
      "hp_max": 161,
      "hp_share": 0.77,
      "energy": [
-      10,
-      10
+      19,
+      19
      ],
-     "energy_ceiling": 19
+     "energy_ceiling": 28
     }
    }
   },
@@ -425,14 +421,14 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Quagsire",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -440,23 +436,23 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 44,
+     "hp": 39,
      "hp_max": 125,
-     "hp_share": 0.352,
+     "hp_share": 0.312,
      "energy": 72
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 2,
      "left": 3,
-     "hp": 108,
+     "hp": 99,
      "hp_max": 161,
-     "hp_share": 0.671,
+     "hp_share": 0.615,
      "energy": [
-      37,
-      37
+      46,
+      46
      ],
-     "energy_ceiling": 46
+     "energy_ceiling": 55
     }
    }
   },
@@ -472,30 +468,30 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 40,
+     "hp": 34,
      "hp_max": 122,
-     "hp_share": 0.328,
+     "hp_share": 0.279,
      "energy": 0
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 2,
      "left": 3,
-     "hp": 108,
+     "hp": 99,
      "hp_max": 161,
-     "hp_share": 0.671,
+     "hp_share": 0.615,
      "energy": [
       46,
       46
      ],
-     "energy_ceiling": 55
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
    "t": 19.0,
-   "until": 20.5,
+   "until": 20.8,
    "fighting_turn": 19,
    "turns": 3,
    "mine": {
@@ -518,29 +514,29 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 122,
+     "hp": 120,
      "hp_max": 122,
-     "hp_share": 1.0,
+     "hp_share": 0.984,
      "energy": 8
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 2,
      "left": 3,
-     "hp": 108,
+     "hp": 92,
      "hp_max": 161,
-     "hp_share": 0.671,
+     "hp_share": 0.571,
      "energy": [
-      55,
-      55
+      64,
+      64
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 73
     }
    }
   },
   {
    "kind": "charged",
-   "t": 20.5,
+   "t": 20.8,
    "fighting_turn": 22,
    "side": "theirs",
    "pokemon": "Quagsire",
@@ -549,13 +545,13 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    55,
-    55
+    64,
+    64
    ],
-   "energy_ceiling": 64,
+   "energy_ceiling": 73,
    "target": "Empoleon",
    "shielded": false,
-   "target_hp_before": 122,
+   "target_hp_before": 120,
    "target_hp_after": 91,
    "target_hp_max": 122,
    "target_bar_read": true,
@@ -576,14 +572,14 @@
      "active": "Quagsire",
      "shields": 2,
      "left": 3,
-     "hp": 108,
+     "hp": 92,
      "hp_max": 161,
-     "hp_share": 0.671,
+     "hp_share": 0.571,
      "energy": [
-      20,
-      20
+      29,
+      29
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 38
     }
    }
   },
@@ -605,30 +601,30 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 86,
+     "hp": 88,
      "hp_max": 122,
-     "hp_share": 0.705,
+     "hp_share": 0.721,
      "energy": 24
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 2,
      "left": 3,
-     "hp": 108,
+     "hp": 92,
      "hp_max": 161,
-     "hp_share": 0.671,
+     "hp_share": 0.571,
      "energy": [
-      29,
-      29
+      38,
+      38
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 47
     }
    }
   },
@@ -644,9 +640,9 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 80,
+     "hp": 81,
      "hp_max": 122,
-     "hp_share": 0.656,
+     "hp_share": 0.664,
      "energy": 24
     },
     "theirs": {
@@ -667,7 +663,7 @@
   {
    "kind": "fighting",
    "t": 31.5,
-   "until": 35.5,
+   "until": 35.8,
    "fighting_turn": 25,
    "turns": 8,
    "mine": {
@@ -675,14 +671,14 @@
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Zapdos",
     "fast_move": "Thunder Shock",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 6
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -690,18 +686,18 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 63,
+     "hp": 55,
      "hp_max": 122,
-     "hp_share": 0.516,
+     "hp_share": 0.451,
      "energy": 56
     },
     "theirs": {
      "active": "Zapdos",
      "shields": 2,
      "left": 3,
-     "hp": 101,
+     "hp": 115,
      "hp_max": 115,
-     "hp_share": 0.878,
+     "hp_share": 1.0,
      "energy": [
       45,
       45
@@ -712,7 +708,7 @@
   },
   {
    "kind": "charged",
-   "t": 35.5,
+   "t": 35.8,
    "fighting_turn": 33,
    "side": "mine",
    "pokemon": "Empoleon",
@@ -723,8 +719,8 @@
    "energy_before": 56,
    "target": "Zapdos",
    "shielded": true,
-   "target_hp_before": 101,
-   "target_hp_after": 101,
+   "target_hp_before": 115,
+   "target_hp_after": 115,
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -735,18 +731,18 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 63,
+     "hp": 55,
      "hp_max": 122,
-     "hp_share": 0.516,
+     "hp_share": 0.451,
      "energy": 16
     },
     "theirs": {
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 101,
+     "hp": 115,
      "hp_max": 115,
-     "hp_share": 0.878,
+     "hp_share": 1.0,
      "energy": [
       45,
       45
@@ -758,7 +754,7 @@
   {
    "kind": "fighting",
    "t": 45.0,
-   "until": 51.5,
+   "until": 51.8,
    "fighting_turn": 33,
    "turns": 13,
    "mine": {
@@ -766,14 +762,14 @@
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 2
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Zapdos",
     "fast_move": "Thunder Shock",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 6
+    "hits_seen": 5
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -781,21 +777,21 @@
      "active": "Empoleon",
      "shields": 2,
      "left": 3,
-     "hp": 31,
+     "hp": 30,
      "hp_max": 122,
-     "hp_share": 0.254,
+     "hp_share": 0.246,
      "energy": 64
     },
     "theirs": {
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 91,
+     "hp": 85,
      "hp_max": 115,
-     "hp_share": 0.791,
+     "hp_share": 0.739,
      "energy": [
-      90,
-      90
+      100,
+      100
      ],
      "energy_ceiling": 99
     }
@@ -803,7 +799,7 @@
   },
   {
    "kind": "charged",
-   "t": 51.5,
+   "t": 51.8,
    "fighting_turn": 46,
    "side": "theirs",
    "pokemon": "Zapdos",
@@ -812,24 +808,24 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    90,
-    90
+    100,
+    100
    ],
    "energy_ceiling": 99,
    "target": "Empoleon",
    "shielded": false,
-   "target_hp_before": 31,
+   "target_hp_before": 30,
    "target_hp_after": 0,
    "target_hp_max": 122,
    "target_bar_read": true,
    "expected_damage": 40,
-   "resolved_t": 58.12,
+   "resolved_t": 58.42,
    "cue": true,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 122,
      "hp_share": 0.0,
@@ -839,20 +835,20 @@
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 84,
+     "hp": 85,
      "hp_max": 115,
-     "hp_share": 0.73,
+     "hp_share": 0.739,
      "energy": [
-      50,
-      50
+      60,
+      60
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 69
     }
    }
   },
   {
    "kind": "faint",
-   "t": 58.12,
+   "t": 58.42,
    "fighting_turn": 46,
    "side": "mine",
    "pokemon": "Empoleon",
@@ -861,7 +857,7 @@
     "mine": {
      "active": "Empoleon",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 122,
      "hp_share": 0.0,
@@ -871,36 +867,36 @@
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 84,
+     "hp": 85,
      "hp_max": 115,
-     "hp_share": 0.73,
+     "hp_share": 0.739,
      "energy": [
-      50,
-      50
+      60,
+      60
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 69
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 58.12,
-   "until": 63.5,
+   "t": 58.42,
+   "until": 63.8,
    "fighting_turn": 46,
-   "turns": 4,
+   "turns": 3,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Zapdos",
     "fast_move": "Thunder Shock",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -911,27 +907,27 @@
      "hp": 32,
      "hp_max": 125,
      "hp_share": 0.256,
-     "energy": 80
+     "energy": 72
     },
     "theirs": {
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 88,
+     "hp": 87,
      "hp_max": 115,
-     "hp_share": 0.765,
+     "hp_share": 0.757,
      "energy": [
-      68,
-      68
+      69,
+      69
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "charged",
-   "t": 63.5,
-   "fighting_turn": 50,
+   "t": 63.8,
+   "fighting_turn": 49,
    "side": "theirs",
    "pokemon": "Zapdos",
    "move": "Drill Peck",
@@ -939,10 +935,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    68,
-    68
+    69,
+    69
    ],
-   "energy_ceiling": 77,
+   "energy_ceiling": 78,
    "target": "Sableye",
    "shielded": true,
    "target_hp_before": 32,
@@ -966,21 +962,21 @@
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 88,
+     "hp": 87,
      "hp_max": 115,
-     "hp_share": 0.765,
+     "hp_share": 0.757,
      "energy": [
-      28,
-      28
+      29,
+      29
      ],
-     "energy_ceiling": 37
+     "energy_ceiling": 38
     }
    }
   },
   {
    "kind": "charged",
-   "t": 73.5,
-   "fighting_turn": 50,
+   "t": 73.8,
+   "fighting_turn": 49,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Foul Play",
@@ -990,8 +986,8 @@
    "energy_before": 80,
    "target": "Zapdos",
    "shielded": false,
-   "target_hp_before": 88,
-   "target_hp_after": 88,
+   "target_hp_before": 87,
+   "target_hp_after": 87,
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 58,
@@ -1011,14 +1007,14 @@
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 88,
+     "hp": 87,
      "hp_max": 115,
-     "hp_share": 0.765,
+     "hp_share": 0.757,
      "energy": [
-      28,
-      28
+      29,
+      29
      ],
-     "energy_ceiling": 37
+     "energy_ceiling": 38
     }
    }
   },
@@ -1026,7 +1022,7 @@
    "kind": "fighting",
    "t": 82.0,
    "until": 84.5,
-   "fighting_turn": 50,
+   "fighting_turn": 49,
    "turns": 5,
    "mine": {
     "pokemon": "Sableye",
@@ -1038,7 +1034,7 @@
    "theirs": {
     "pokemon": "Zapdos",
     "fast_move": "Thunder Shock",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
@@ -1047,30 +1043,30 @@
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 32,
      "hp_max": 125,
-     "hp_share": 0.24,
+     "hp_share": 0.256,
      "energy": 56
     },
     "theirs": {
      "active": "Zapdos",
      "shields": 1,
      "left": 3,
-     "hp": 88,
+     "hp": 87,
      "hp_max": 115,
-     "hp_share": 0.765,
+     "hp_share": 0.757,
      "energy": [
-      46,
-      46
+      47,
+      47
      ],
-     "energy_ceiling": 55
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "switch",
    "t": 84.5,
-   "fighting_turn": 55,
+   "fighting_turn": 54,
    "side": "theirs",
    "from": "Zapdos",
    "to": "Dunsparce",
@@ -1079,9 +1075,9 @@
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 30,
+     "hp": 28,
      "hp_max": 125,
-     "hp_share": 0.24,
+     "hp_share": 0.224,
      "energy": 56
     },
     "theirs": {
@@ -1102,8 +1098,8 @@
   {
    "kind": "fighting",
    "t": 84.5,
-   "until": 87.5,
-   "fighting_turn": 55,
+   "until": 87.8,
+   "fighting_turn": 54,
    "turns": 7,
    "mine": {
     "pokemon": "Sableye",
@@ -1125,18 +1121,18 @@
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 20,
+     "hp": 16,
      "hp_max": 125,
-     "hp_share": 0.16,
+     "hp_share": 0.128,
      "energy": 80
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 177,
+     "hp": 184,
      "hp_max": 184,
-     "hp_share": 0.962,
+     "hp_share": 1.0,
      "energy": [
       24,
       24
@@ -1147,8 +1143,8 @@
   },
   {
    "kind": "charged",
-   "t": 87.5,
-   "fighting_turn": 61,
+   "t": 87.8,
+   "fighting_turn": 60,
    "side": "mine",
    "pokemon": "Sableye",
    "move": "Drain Punch",
@@ -1158,10 +1154,10 @@
    "energy_before": 80,
    "target": "Dunsparce",
    "shielded": false,
-   "target_hp_before": 177,
-   "target_hp_after": 111,
+   "target_hp_before": 184,
+   "target_hp_after": 184,
    "target_hp_max": 184,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": null,
    "resolved_t": 98.0,
    "cue": true,
@@ -1170,18 +1166,18 @@
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 20,
+     "hp": 16,
      "hp_max": 125,
-     "hp_share": 0.16,
+     "hp_share": 0.128,
      "energy": 40
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 111,
+     "hp": 184,
      "hp_max": 184,
-     "hp_share": 0.603,
+     "hp_share": 1.0,
      "energy": [
       28,
       28
@@ -1193,8 +1189,8 @@
   {
    "kind": "fighting",
    "t": 98.0,
-   "until": 99.5,
-   "fighting_turn": 62,
+   "until": 99.8,
+   "fighting_turn": 61,
    "turns": 3,
    "mine": {
     "pokemon": "Sableye",
@@ -1208,26 +1204,25 @@
     "fast_move": "Rollout",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 2
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 15,
+     "hp": 14,
      "hp_max": 125,
-     "hp_share": 0.12,
+     "hp_share": 0.112,
      "energy": 48
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 111,
+     "hp": 108,
      "hp_max": 184,
-     "hp_share": 0.603,
+     "hp_share": 0.587,
      "energy": [
       40,
       40
@@ -1238,8 +1233,8 @@
   },
   {
    "kind": "charged",
-   "t": 99.5,
-   "fighting_turn": 65,
+   "t": 99.8,
+   "fighting_turn": 64,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "move": "Rock Slide",
@@ -1254,18 +1249,18 @@
    "energy_short_by": 6,
    "target": "Sableye",
    "shielded": false,
-   "target_hp_before": 15,
+   "target_hp_before": 14,
    "target_hp_after": 0,
    "target_hp_max": 125,
    "target_bar_read": true,
    "expected_damage": 33,
-   "resolved_t": 109.72,
+   "resolved_t": 108.8,
    "cue": true,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 125,
      "hp_share": 0.0,
@@ -1288,8 +1283,8 @@
   },
   {
    "kind": "faint",
-   "t": 109.72,
-   "fighting_turn": 65,
+   "t": 108.8,
+   "fighting_turn": 64,
    "side": "mine",
    "pokemon": "Sableye",
    "next": null,
@@ -1297,7 +1292,7 @@
     "mine": {
      "active": "Sableye",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 125,
      "hp_share": 0.0,
@@ -1320,10 +1315,10 @@
   },
   {
    "kind": "fighting",
-   "t": 109.72,
-   "until": 117.3,
-   "fighting_turn": 65,
-   "turns": 13,
+   "t": 108.8,
+   "until": 117.6,
+   "fighting_turn": 64,
+   "turns": 12,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
@@ -1336,7 +1331,7 @@
     "fast_move": "Rollout",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1347,7 +1342,7 @@
      "hp": 140,
      "hp_max": 153,
      "hp_share": 0.915,
-     "energy": 54
+     "energy": 45
     },
     "theirs": {
      "active": "Dunsparce",
@@ -1366,8 +1361,8 @@
   },
   {
    "kind": "charged",
-   "t": 117.3,
-   "fighting_turn": 78,
+   "t": 117.6,
+   "fighting_turn": 76,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "move": "Rock Slide",
@@ -1382,9 +1377,9 @@
    "target": "Jumpluff",
    "shielded": false,
    "target_hp_before": 140,
-   "target_hp_after": 140,
+   "target_hp_after": 86,
    "target_hp_max": 153,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 53,
    "resolved_t": 127.0,
    "cue": true,
@@ -1393,10 +1388,10 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 140,
+     "hp": 86,
      "hp_max": 153,
-     "hp_share": 0.915,
-     "energy": 63
+     "hp_share": 0.562,
+     "energy": 45
     },
     "theirs": {
      "active": "Dunsparce",
@@ -1416,64 +1411,64 @@
   {
    "kind": "fighting",
    "t": 127.0,
-   "until": 131.5,
-   "fighting_turn": 78,
-   "turns": 8,
+   "until": 131.8,
+   "fighting_turn": 76,
+   "turns": 9,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Rollout",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 4
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 76,
+     "hp": 73,
      "hp_max": 153,
-     "hp_share": 0.497,
-     "energy": 99
+     "hp_share": 0.477,
+     "energy": 81
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 89,
+     "hp": 84,
      "hp_max": 184,
-     "hp_share": 0.484,
+     "hp_share": 0.457,
      "energy": [
-      26,
-      27
+      39,
+      40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 53
     }
    }
   },
   {
    "kind": "charged",
-   "t": 131.5,
-   "fighting_turn": 86,
+   "t": 131.8,
+   "fighting_turn": 85,
    "side": "mine",
    "pokemon": "Jumpluff",
    "move": "Acrobatics",
    "move_id": "ACROBATICS",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 99,
+   "energy_before": 81,
    "target": "Dunsparce",
    "shielded": false,
-   "target_hp_before": 89,
-   "target_hp_after": 89,
+   "target_hp_before": 84,
+   "target_hp_after": 84,
    "target_hp_max": 184,
    "target_bar_read": false,
    "expected_damage": 75,
@@ -1484,107 +1479,76 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 76,
+     "hp": 73,
      "hp_max": 153,
-     "hp_share": 0.497,
-     "energy": 44
+     "hp_share": 0.477,
+     "energy": 26
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 89,
+     "hp": 84,
      "hp_max": 184,
-     "hp_share": 0.484,
+     "hp_share": 0.457,
      "energy": [
       39,
       40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 53
     }
    }
   },
   {
    "kind": "fighting",
    "t": 141.0,
-   "until": 147.12,
-   "fighting_turn": 86,
-   "turns": 12,
+   "until": 143.8,
+   "fighting_turn": 85,
+   "turns": 21,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 10,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Rollout",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 7,
     "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 70,
+     "hp": 65,
      "hp_max": 153,
-     "hp_share": 0.458,
-     "energy": 62
+     "hp_share": 0.425,
+     "energy": 100
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 4,
+     "hp": 5,
      "hp_max": 184,
-     "hp_share": 0.022,
+     "hp_share": 0.027,
      "energy": [
-      65,
-      66
+      100,
+      100
      ],
-     "energy_ceiling": 66
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 147.12,
-   "fighting_turn": 98,
-   "side": "theirs",
-   "pokemon": "Dunsparce",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 1,
-     "left": 1,
-     "hp": 70,
-     "hp_max": 153,
-     "hp_share": 0.458,
-     "energy": 98
-    },
-    "theirs": {
-     "active": "Dunsparce",
-     "shields": 1,
-     "left": 3,
-     "hp": 0,
-     "hp_max": 184,
-     "hp_share": 0.0,
-     "energy": [
-      91,
-      92
-     ],
-     "energy_ceiling": 92
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
-   "t": 143.5,
-   "fighting_turn": 98,
+   "t": 143.8,
+   "fighting_turn": 106,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "move": "Rock Slide",
@@ -1592,14 +1556,14 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    91,
-    92
+    100,
+    100
    ],
-   "energy_ceiling": 92,
+   "energy_ceiling": 100,
    "target": "Jumpluff",
    "shielded": false,
-   "target_hp_before": 70,
-   "target_hp_after": 70,
+   "target_hp_before": 65,
+   "target_hp_after": 65,
    "target_hp_max": 153,
    "target_bar_read": false,
    "expected_damage": 53,
@@ -1610,44 +1574,44 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 70,
+     "hp": 65,
      "hp_max": 153,
-     "hp_share": 0.458,
-     "energy": 98
+     "hp_share": 0.425,
+     "energy": 100
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 0,
+     "hp": 5,
      "hp_max": 184,
-     "hp_share": 0.0,
+     "hp_share": 0.027,
      "energy": [
-      46,
-      47
+      55,
+      55
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "fighting",
    "t": 153.0,
-   "until": 157.5,
-   "fighting_turn": 98,
-   "turns": 7,
+   "until": 154.5,
+   "fighting_turn": 106,
+   "turns": 3,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Rollout",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1656,63 +1620,50 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 11,
+     "hp": 12,
      "hp_max": 153,
-     "hp_share": 0.072,
+     "hp_share": 0.078,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Dunsparce",
+     "shields": 1,
+     "left": 3,
+     "hp": 5,
+     "hp_max": 184,
+     "hp_share": 0.027,
+     "energy": [
+      55,
+      55
+     ],
+     "energy_ceiling": 68
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 154.5,
+   "fighting_turn": 109,
+   "side": "theirs",
+   "from": "Dunsparce",
+   "to": "Quagsire",
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 1,
+     "left": 1,
+     "hp": 12,
+     "hp_max": 153,
+     "hp_share": 0.078,
      "energy": 100
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 1,
      "left": 3,
-     "hp": 83,
+     "hp": 92,
      "hp_max": 161,
-     "hp_share": 0.516,
-     "energy": [
-      38,
-      38
-     ],
-     "energy_ceiling": 47
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 157.5,
-   "fighting_turn": 105,
-   "side": "mine",
-   "pokemon": "Jumpluff",
-   "move": "Energy Ball",
-   "move_id": "ENERGY_BALL",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 100,
-   "target": "Quagsire",
-   "shielded": true,
-   "target_hp_before": 83,
-   "target_hp_after": 82,
-   "target_hp_max": 161,
-   "target_bar_read": true,
-   "expected_damage": 1,
-   "resolved_t": 167.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 1,
-     "left": 1,
-     "hp": 6,
-     "hp_max": 153,
-     "hp_share": 0.039,
-     "energy": 55
-    },
-    "theirs": {
-     "active": "Quagsire",
-     "shields": 0,
-     "left": 3,
-     "hp": 82,
-     "hp_max": 161,
-     "hp_share": 0.509,
+     "hp_share": 0.571,
      "energy": [
       38,
       38
@@ -1723,16 +1674,16 @@
   },
   {
    "kind": "fighting",
-   "t": 167.0,
-   "until": 170.5,
-   "fighting_turn": 105,
-   "turns": 7,
+   "t": 154.5,
+   "until": 157.8,
+   "fighting_turn": 109,
+   "turns": 6,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 4
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Quagsire",
@@ -1746,10 +1697,149 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 1,
-     "hp": 6,
+     "hp": 12,
      "hp_max": 153,
-     "hp_share": 0.039,
+     "hp_share": 0.078,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Quagsire",
+     "shields": 1,
+     "left": 3,
+     "hp": 83,
+     "hp_max": 161,
+     "hp_share": 0.516,
+     "energy": [
+      65,
+      65
+     ],
+     "energy_ceiling": 74
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 157.8,
+   "fighting_turn": 115,
+   "side": "mine",
+   "pokemon": "Jumpluff",
+   "move": "Energy Ball",
+   "move_id": "ENERGY_BALL",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 100,
+   "target": "Quagsire",
+   "shielded": true,
+   "target_hp_before": 83,
+   "target_hp_after": 83,
+   "target_hp_max": 161,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 167.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 1,
+     "left": 1,
+     "hp": 12,
+     "hp_max": 153,
+     "hp_share": 0.078,
+     "energy": 55
+    },
+    "theirs": {
+     "active": "Quagsire",
+     "shields": 0,
+     "left": 3,
+     "hp": 83,
+     "hp_max": 161,
+     "hp_share": 0.516,
+     "energy": [
+      65,
+      65
+     ],
+     "energy_ceiling": 74
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 167.0,
+   "until": 170.8,
+   "fighting_turn": 115,
+   "turns": 7,
+   "mine": {
+    "pokemon": "Jumpluff",
+    "fast_move": "Fairy Wind",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
+   },
+   "theirs": {
+    "pokemon": "Quagsire",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
+   },
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 1,
+     "left": 1,
+     "hp": 10,
+     "hp_max": 153,
+     "hp_share": 0.065,
      "energy": 82
+    },
+    "theirs": {
+     "active": "Quagsire",
+     "shields": 0,
+     "left": 3,
+     "hp": 72,
+     "hp_max": 161,
+     "hp_share": 0.447,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 170.8,
+   "fighting_turn": 122,
+   "side": "theirs",
+   "pokemon": "Quagsire",
+   "move": "Aqua Tail",
+   "move_id": "AQUA_TAIL",
+   "move_known_from": "seen",
+   "cost": 35,
+   "energy_before": [
+    100,
+    100
+   ],
+   "energy_ceiling": 100,
+   "target": "Jumpluff",
+   "shielded": true,
+   "target_hp_before": 10,
+   "target_hp_after": 10,
+   "target_hp_max": 153,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 180.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 1,
+     "hp": 10,
+     "hp_max": 153,
+     "hp_share": 0.065,
+     "energy": 91
     },
     "theirs": {
      "active": "Quagsire",
@@ -1762,65 +1852,16 @@
       65,
       65
      ],
-     "energy_ceiling": 83
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 170.5,
-   "fighting_turn": 112,
-   "side": "theirs",
-   "pokemon": "Quagsire",
-   "move": "Aqua Tail",
-   "move_id": "AQUA_TAIL",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": [
-    65,
-    65
-   ],
-   "energy_ceiling": 83,
-   "target": "Jumpluff",
-   "shielded": false,
-   "target_hp_before": 6,
-   "target_hp_after": 0,
-   "target_hp_max": 153,
-   "target_bar_read": true,
-   "expected_damage": 20,
-   "resolved_t": 180.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Jumpluff",
-     "shields": 1,
-     "left": 1,
-     "hp": 0,
-     "hp_max": 153,
-     "hp_share": 0.0,
-     "energy": 91
-    },
-    "theirs": {
-     "active": "Quagsire",
-     "shields": 0,
-     "left": 3,
-     "hp": 72,
-     "hp_max": 161,
-     "hp_share": 0.447,
-     "energy": [
-      30,
-      30
-     ],
-     "energy_ceiling": 39
+     "energy_ceiling": 74
     }
    }
   },
   {
    "kind": "fighting",
    "t": 180.0,
-   "until": 192.83,
-   "fighting_turn": 112,
-   "turns": 2,
+   "until": 181.55,
+   "fighting_turn": 122,
+   "turns": 3,
    "mine": {
     "pokemon": "Jumpluff",
     "fast_move": "Fairy Wind",
@@ -1839,60 +1880,92 @@
    "state": {
     "mine": {
      "active": "Jumpluff",
-     "shields": 1,
+     "shields": 0,
      "left": 1,
-     "hp": 3,
+     "hp": 6,
      "hp_max": 153,
-     "hp_share": 0.02,
+     "hp_share": 0.039,
      "energy": 100
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 0,
      "left": 3,
-     "hp": 69,
+     "hp": 70,
      "hp_max": 161,
-     "hp_share": 0.429,
+     "hp_share": 0.435,
      "energy": [
-      39,
-      39
+      74,
+      74
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 83
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 181.55,
+   "fighting_turn": 125,
+   "side": "mine",
+   "pokemon": "Jumpluff",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Jumpluff",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 153,
+     "hp_share": 0.0,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Quagsire",
+     "shields": 0,
+     "left": 3,
+     "hp": 70,
+     "hp_max": 161,
+     "hp_share": 0.435,
+     "energy": [
+      74,
+      74
+     ],
+     "energy_ceiling": 83
     }
    }
   },
   {
    "kind": "end",
-   "t": 192.83,
-   "fighting_turn": 114,
-   "result": null,
-   "result_from": "unknown",
+   "t": 193.13,
+   "fighting_turn": 125,
+   "result": "loss",
+   "result_from": "who had Pokémon left",
    "left": {
-    "mine": 1,
+    "mine": 0,
     "theirs": 3
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
-     "shields": 1,
-     "left": 1,
-     "hp": 3,
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
      "hp_max": 153,
-     "hp_share": 0.02,
+     "hp_share": 0.0,
      "energy": 100
     },
     "theirs": {
      "active": "Quagsire",
      "shields": 0,
      "left": 3,
-     "hp": 69,
+     "hp": 70,
      "hp_max": 161,
-     "hp_share": 0.429,
+     "hp_share": 0.435,
      "energy": [
-      39,
-      39
+      74,
+      74
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 83
     }
    }
   }
@@ -1908,7 +1981,7 @@
    "ruled_out": []
   },
   {
-   "t": 109.72,
+   "t": 108.8,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "what": "fast move",

@@ -1,7 +1,7 @@
 {
-  "t": 171.45,
-  "fighting_turns": 118,
-  "warnings": 9,
+  "t": 172.5,
+  "fighting_turns": 125,
+  "warnings": 17,
   "matchup": {
     "ours": {
       "fast": {
@@ -48,8 +48,8 @@
           "type": "ground",
           "damage": 84,
           "energy": 50,
-          "could_be_ready": false,
-          "surely_ready": false
+          "could_be_ready": true,
+          "surely_ready": true
         },
         {
           "id": "ICY_WIND",
@@ -57,8 +57,8 @@
           "type": "ice",
           "damage": 47,
           "energy": 45,
-          "could_be_ready": false,
-          "surely_ready": false
+          "could_be_ready": true,
+          "surely_ready": true
         }
       ],
       "every_fast_move_possible": [
@@ -115,7 +115,7 @@
     "active": 2,
     "shields": 0,
     "left": 0,
-    "switch_ready_in": 0.0,
+    "switch_ready_in": 6.0,
     "pokemon": [
       {
         "species": "fearow",
@@ -137,7 +137,7 @@
         "hp": 0,
         "hp_max": 124,
         "hp_share": 0.0,
-        "energy": 64,
+        "energy": 56,
         "fainted": true,
         "attack_stage": -1,
         "defense_stage": 0,
@@ -188,7 +188,7 @@
         "hp": 0,
         "hp_max": 141,
         "hp_share": 0.0,
-        "energy": 71,
+        "energy": 80,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -239,7 +239,7 @@
         "hp": 0,
         "hp_max": 154,
         "hp_share": 0.0,
-        "energy": 86,
+        "energy": 95,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -275,10 +275,10 @@
   "opponent": {
     "active": 0,
     "shields": 0,
-    "left": 3,
+    "left": 2,
     "unseen": 0,
-    "switch_ready_in": 19.5,
-    "fast_move_turns_left": 1,
+    "switch_ready_in": 18.5,
+    "fast_move_turns_left": 0,
     "pokemon": [
       {
         "species": "seismitoad",
@@ -300,7 +300,7 @@
         "hp": 2,
         "hp_max": 154,
         "hp_share": 0.013,
-        "energy": 31,
+        "energy": 50,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -311,7 +311,9 @@
           "turns": 2,
           "energy_gain": 9,
           "known_from": "inferred",
-          "misfit": {}
+          "misfit": {
+            "MUD_SHOT": 0.69
+          }
         },
         "charged_moves": [
           {
@@ -332,16 +334,16 @@
           }
         ],
         "energy_range": [
-          31,
-          31
+          50,
+          50
         ],
-        "energy_by_clock": 40,
+        "energy_by_clock": 59,
         "energy_odds": {
-          "13": 0.08,
-          "22": 0.12,
-          "31": 0.33,
-          "40": 0.33,
-          "49": 0.12
+          "32": 0.08,
+          "41": 0.12,
+          "50": 0.33,
+          "59": 0.33,
+          "68": 0.12
         },
         "fast_move_odds": {
           "MUD_SHOT": 1.0
@@ -351,8 +353,8 @@
           "EARTH_POWER": 1.0
         },
         "ready_odds": {
-          "ICY_WIND": 0.12,
-          "EARTH_POWER": 0.0
+          "ICY_WIND": 0.79,
+          "EARTH_POWER": 0.79
         }
       },
       {
@@ -371,13 +373,13 @@
           9,
           15
         ],
-        "hp": 2,
+        "hp": 0,
         "hp_max": 118,
-        "hp_share": 0.017,
-        "energy": 51,
-        "fainted": false,
+        "hp_share": 0.0,
+        "energy": 59,
+        "fainted": true,
         "attack_stage": 0,
-        "defense_stage": 0,
+        "defense_stage": -1,
         "fast_move": {
           "id": "TACKLE",
           "name": "Tackle",
@@ -386,7 +388,7 @@
           "energy_gain": 3,
           "known_from": "inferred",
           "misfit": {
-            "TACKLE": 1.07
+            "TACKLE": 0.6
           }
         },
         "charged_moves": [
@@ -395,43 +397,43 @@
             "name": "Discharge",
             "type": "electric",
             "energy": 40,
-            "known_from": "guessed",
-            "times_used": 0
+            "known_from": "seen",
+            "times_used": 2
           },
           {
             "id": "FOUL_PLAY",
             "name": "Foul Play",
             "type": "dark",
             "energy": 40,
-            "known_from": "seen",
-            "times_used": 1
+            "known_from": "guessed",
+            "times_used": 0
           }
         ],
         "energy_range": [
-          51,
-          51
+          59,
+          60
         ],
-        "energy_by_clock": 57,
+        "energy_by_clock": 63,
         "energy_odds": {
-          "45": 0.08,
-          "48": 0.12,
-          "51": 0.33,
-          "54": 0.33,
-          "57": 0.12
+          "53": 0.08,
+          "56": 0.12,
+          "59": 0.33,
+          "62": 0.33,
+          "65": 0.12
         },
         "fast_move_odds": {
           "TACKLE": 1.0
         },
         "charged_move_odds": {
-          "FOUL_PLAY": 1.0,
-          "DISCHARGE": 0.66,
-          "THUNDERBOLT": 0.25,
+          "DISCHARGE": 1.0,
+          "FOUL_PLAY": 0.67,
+          "THUNDERBOLT": 0.24,
           "HYPER_BEAM": 0.09
         },
         "ready_odds": {
-          "FOUL_PLAY": 1.0,
-          "DISCHARGE": 0.66,
-          "THUNDERBOLT": 0.03,
+          "DISCHARGE": 1.0,
+          "FOUL_PLAY": 0.67,
+          "THUNDERBOLT": 0.22,
           "HYPER_BEAM": 0.0
         }
       },
@@ -452,9 +454,9 @@
           15,
           15
         ],
-        "hp": 56,
+        "hp": 54,
         "hp_max": 125,
-        "hp_share": 0.448,
+        "hp_share": 0.432,
         "energy": 32,
         "fainted": false,
         "attack_stage": 0,
@@ -467,8 +469,8 @@
           "energy_gain": 8,
           "known_from": "guessed",
           "misfit": {
-            "FEINT_ATTACK": 0.36,
-            "SHADOW_CLAW": 0.36
+            "FEINT_ATTACK": 0.19,
+            "SHADOW_CLAW": 0.19
           }
         },
         "charged_moves": [

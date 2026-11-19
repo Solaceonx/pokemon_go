@@ -62,9 +62,11 @@ def move_id(gd: GameData, text: str) -> str:
     raise ValueError(f"unknown move {text!r}; closest: {', '.join(close) or 'nothing'}")
 
 
-def charged_index(gd: GameData, tracker: Tracker, look: dict, number: int) -> int:
+def charged_index(gd: GameData, tracker: Tracker, look: dict, number: int) -> int | None:
     """Which of our charged moves was thrown: given as 0/1, "left"/"right", or the move's name."""
     value = look["my_charged"]
+    if not tracker.me.team:
+        return None
     if isinstance(value, int):
         return value
     if value.lower() in ("left", "right"):

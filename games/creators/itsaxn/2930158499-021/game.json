@@ -19,18 +19,18 @@
   "from": "result screen",
   "left": {
    "mine": 3,
-   "theirs": 3
+   "theirs": 1
   }
  },
- "seconds": 98.5,
- "fighting_turns": 69,
+ "seconds": 99.1,
+ "fighting_turns": 67,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "ending: result says win, tracker has us on 3 and them on 3"
+   "ending: result says win, tracker has us on 3 and them on 1"
   ],
   "notes": [
-   "fast move only guessed for bombirdier, florges, ludicolo"
+   "fast move only guessed for florges, ludicolo"
   ],
   "unexplained_health_changes": 9
  },
@@ -44,7 +44,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.298,
+    "hp_share_at_end": 0.347,
     "fast_move": {
      "id": "PECK",
      "name": "Peck",
@@ -77,7 +77,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.34,
+    "hp_share_at_end": 0.376,
     "fast_move": {
      "id": "FAIRY_WIND",
      "name": "Fairy Wind",
@@ -114,16 +114,11 @@
     "fainted": true,
     "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "SUCKER_PUNCH",
-     "name": "Sucker Punch",
+     "id": "WING_ATTACK",
+     "name": "Wing Attack",
      "turns": 2,
-     "energy_gain": 7,
-     "known_from": "guessed",
-     "odds": {
-      "Wing Attack": 0.83,
-      "Sucker Punch": 0.16,
-      "Rock Throw": 0.01
-     }
+     "energy_gain": 8,
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -202,7 +197,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 1.0,
+    "hp_share_at_end": 0.94,
     "fast_move": {
      "id": "ASTONISH",
      "name": "Astonish",
@@ -243,7 +238,7 @@
     }
    }
   ],
-  "theirs_unseen": 2
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -311,38 +306,37 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 1
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Bombirdier",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Wing Attack",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 1
+    "hits_seen": 7
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 96,
+     "hp": 101,
      "hp_max": 124,
-     "hp_share": 0.774,
+     "hp_share": 0.815,
      "energy": 40
     },
     "theirs": {
      "active": "Bombirdier",
      "shields": 2,
      "left": 3,
-     "hp": 92,
+     "hp": 88,
      "hp_max": 117,
-     "hp_share": 0.786,
+     "hp_share": 0.752,
      "energy": [
-      35,
-      35
+      40,
+      40
      ],
-     "energy_ceiling": 42
+     "energy_ceiling": 48
     }
    }
   },
@@ -358,9 +352,9 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 96,
+     "hp": 99,
      "hp_max": 124,
-     "hp_share": 0.774,
+     "hp_share": 0.798,
      "energy": 48
     },
     "theirs": {
@@ -381,52 +375,52 @@
   {
    "kind": "fighting",
    "t": 6.0,
-   "until": 9.0,
+   "until": 9.5,
    "fighting_turn": 12,
-   "turns": 6,
+   "turns": 7,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Florges",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 84,
+     "hp": 86,
      "hp_max": 124,
-     "hp_share": 0.677,
-     "energy": 64
+     "hp_share": 0.694,
+     "energy": 72
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 94,
+     "hp": 95,
      "hp_max": 110,
-     "hp_share": 0.855,
+     "hp_share": 0.864,
      "energy": [
       27,
       27
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "switch",
-   "t": 9.0,
-   "fighting_turn": 18,
+   "t": 9.5,
+   "fighting_turn": 19,
    "side": "mine",
    "from": "Fearow",
    "to": "Tinkaton",
@@ -435,18 +429,18 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 95,
+     "hp": 98,
      "hp_max": 141,
-     "hp_share": 0.674,
+     "hp_share": 0.695,
      "energy": 0
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 94,
+     "hp": 93,
      "hp_max": 110,
-     "hp_share": 0.855,
+     "hp_share": 0.845,
      "energy": [
       36,
       36
@@ -457,16 +451,16 @@
   },
   {
    "kind": "fighting",
-   "t": 9.0,
-   "until": 16.5,
-   "fighting_turn": 18,
-   "turns": 15,
+   "t": 9.5,
+   "until": 17.1,
+   "fighting_turn": 19,
+   "turns": 14,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 7,
-    "hits_seen": 4
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Florges",
@@ -481,18 +475,18 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 141,
+     "hp": 134,
      "hp_max": 141,
-     "hp_share": 1.0,
+     "hp_share": 0.95,
      "energy": 63
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 73,
      "hp_max": 110,
-     "hp_share": 0.636,
+     "hp_share": 0.664,
      "energy": [
       99,
       99
@@ -503,7 +497,7 @@
   },
   {
    "kind": "charged",
-   "t": 16.5,
+   "t": 17.1,
    "fighting_turn": 33,
    "side": "theirs",
    "pokemon": "Florges",
@@ -518,30 +512,30 @@
    "energy_ceiling": 99,
    "target": "Tinkaton",
    "shielded": false,
-   "target_hp_before": 141,
-   "target_hp_after": 141,
+   "target_hp_before": 134,
+   "target_hp_after": 134,
    "target_hp_max": 141,
    "target_bar_read": false,
    "expected_damage": 34,
-   "resolved_t": 25.0,
+   "resolved_t": 25.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 141,
+     "hp": 134,
      "hp_max": 141,
-     "hp_share": 1.0,
-     "energy": 72
+     "hp_share": 0.95,
+     "energy": 63
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 73,
      "hp_max": 110,
-     "hp_share": 0.636,
+     "hp_share": 0.664,
      "energy": [
       54,
       54
@@ -552,16 +546,16 @@
   },
   {
    "kind": "fighting",
-   "t": 25.0,
-   "until": 27.5,
+   "t": 25.5,
+   "until": 28.1,
    "fighting_turn": 33,
-   "turns": 5,
+   "turns": 4,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Florges",
@@ -576,18 +570,18 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 90,
+     "hp": 96,
      "hp_max": 141,
-     "hp_share": 0.638,
-     "energy": 90
+     "hp_share": 0.681,
+     "energy": 81
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 72,
      "hp_max": 110,
-     "hp_share": 0.636,
+     "hp_share": 0.655,
      "energy": [
       72,
       72
@@ -598,8 +592,8 @@
   },
   {
    "kind": "charged",
-   "t": 27.5,
-   "fighting_turn": 38,
+   "t": 28.1,
+   "fighting_turn": 37,
    "side": "theirs",
    "pokemon": "Florges",
    "move": "Chilling Water",
@@ -613,30 +607,30 @@
    "energy_ceiling": 81,
    "target": "Tinkaton",
    "shielded": false,
-   "target_hp_before": 90,
-   "target_hp_after": 90,
+   "target_hp_before": 96,
+   "target_hp_after": 96,
    "target_hp_max": 141,
    "target_bar_read": false,
    "expected_damage": 34,
-   "resolved_t": 36.0,
+   "resolved_t": 36.5,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 90,
+     "hp": 96,
      "hp_max": 141,
-     "hp_share": 0.638,
-     "energy": 99
+     "hp_share": 0.681,
+     "energy": 81
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 72,
      "hp_max": 110,
-     "hp_share": 0.636,
+     "hp_share": 0.655,
      "energy": [
       27,
       27
@@ -647,16 +641,16 @@
   },
   {
    "kind": "fighting",
-   "t": 36.0,
-   "until": 39.5,
-   "fighting_turn": 38,
+   "t": 36.5,
+   "until": 40.1,
+   "fighting_turn": 37,
    "turns": 6,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Florges",
@@ -671,18 +665,18 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 141,
-     "hp_share": 0.376,
+     "hp_share": 0.404,
      "energy": 100
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
      "left": 3,
-     "hp": 63,
+     "hp": 66,
      "hp_max": 110,
-     "hp_share": 0.573,
+     "hp_share": 0.6,
      "energy": [
       54,
       54
@@ -693,8 +687,8 @@
   },
   {
    "kind": "charged",
-   "t": 39.5,
-   "fighting_turn": 44,
+   "t": 40.1,
+   "fighting_turn": 43,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Gigaton Hammer",
@@ -704,27 +698,27 @@
    "energy_before": 100,
    "target": "Florges",
    "shielded": false,
-   "target_hp_before": 63,
+   "target_hp_before": 66,
    "target_hp_after": 0,
    "target_hp_max": 110,
    "target_bar_read": true,
    "expected_damage": 82,
-   "resolved_t": 47.52,
+   "resolved_t": 48.18,
    "cue": true,
    "state": {
     "mine": {
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 141,
-     "hp_share": 0.376,
+     "hp_share": 0.404,
      "energy": 40
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 110,
      "hp_share": 0.0,
@@ -738,8 +732,8 @@
   },
   {
    "kind": "faint",
-   "t": 47.52,
-   "fighting_turn": 44,
+   "t": 48.18,
+   "fighting_turn": 43,
    "side": "theirs",
    "pokemon": "Florges",
    "next": null,
@@ -748,15 +742,15 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 53,
+     "hp": 57,
      "hp_max": 141,
-     "hp_share": 0.376,
+     "hp_share": 0.404,
      "energy": 40
     },
     "theirs": {
      "active": "Florges",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 110,
      "hp_share": 0.0,
@@ -770,9 +764,9 @@
   },
   {
    "kind": "fighting",
-   "t": 47.52,
-   "until": 55.0,
-   "fighting_turn": 44,
+   "t": 48.18,
+   "until": 55.5,
+   "fighting_turn": 43,
    "turns": 5,
    "mine": {
     "pokemon": "Tinkaton",
@@ -786,7 +780,7 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -794,15 +788,15 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 48,
+     "hp": 53,
      "hp_max": 141,
-     "hp_share": 0.34,
+     "hp_share": 0.376,
      "energy": 67
     },
     "theirs": {
      "active": "Ludicolo",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 134,
      "hp_max": 134,
      "hp_share": 1.0,
@@ -816,8 +810,8 @@
   },
   {
    "kind": "switch",
-   "t": 55.0,
-   "fighting_turn": 49,
+   "t": 55.5,
+   "fighting_turn": 48,
    "side": "mine",
    "from": "Tinkaton",
    "to": "Fearow",
@@ -826,15 +820,15 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 42,
+     "hp": 47,
      "hp_max": 124,
-     "hp_share": 0.339,
-     "energy": 64
+     "hp_share": 0.379,
+     "energy": 72
     },
     "theirs": {
      "active": "Ludicolo",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 134,
      "hp_max": 134,
      "hp_share": 1.0,
@@ -848,42 +842,42 @@
   },
   {
    "kind": "fighting",
-   "t": 55.0,
-   "until": 67.0,
-   "fighting_turn": 49,
+   "t": 55.5,
+   "until": 67.5,
+   "fighting_turn": 48,
    "turns": 6,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Ludicolo",
     "fast_move": "Astonish",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 68,
      "hp_max": 124,
-     "hp_share": 0.565,
-     "energy": 88
+     "hp_share": 0.548,
+     "energy": 96
     },
     "theirs": {
      "active": "Ludicolo",
      "shields": 2,
-     "left": 3,
-     "hp": 134,
+     "left": 2,
+     "hp": 126,
      "hp_max": 134,
-     "hp_share": 1.0,
+     "hp_share": 0.94,
      "energy": [
       30,
       30
@@ -894,8 +888,8 @@
   },
   {
    "kind": "switch",
-   "t": 67.0,
-   "fighting_turn": 55,
+   "t": 67.5,
+   "fighting_turn": 54,
    "side": "theirs",
    "from": "Ludicolo",
    "to": "Bombirdier",
@@ -904,112 +898,21 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 68,
      "hp_max": 124,
-     "hp_share": 0.565,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Bombirdier",
-     "shields": 1,
-     "left": 3,
-     "hp": 92,
-     "hp_max": 117,
-     "hp_share": 0.786,
-     "energy": [
-      35,
-      35
-     ],
-     "energy_ceiling": 49
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 58.5,
-   "fighting_turn": 55,
-   "side": "mine",
-   "pokemon": "Fearow",
-   "move": "Drill Peck",
-   "move_id": "DRILL_PECK",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 88,
-   "target": "Ludicolo",
-   "shielded": true,
-   "target_hp_before": 134,
-   "target_hp_after": 134,
-   "target_hp_max": 134,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 67.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 2,
-     "left": 3,
-     "hp": 70,
-     "hp_max": 124,
-     "hp_share": 0.565,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Bombirdier",
-     "shields": 1,
-     "left": 3,
-     "hp": 92,
-     "hp_max": 117,
-     "hp_share": 0.786,
-     "energy": [
-      35,
-      35
-     ],
-     "energy_ceiling": 49
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 67.0,
-   "until": 68.5,
-   "fighting_turn": 55,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Bombirdier",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 2,
-     "left": 3,
-     "hp": 58,
-     "hp_max": 124,
-     "hp_share": 0.468,
+     "hp_share": 0.548,
      "energy": 56
     },
     "theirs": {
      "active": "Bombirdier",
      "shields": 1,
-     "left": 3,
-     "hp": 78,
+     "left": 2,
+     "hp": 81,
      "hp_max": 117,
-     "hp_share": 0.667,
+     "hp_share": 0.692,
      "energy": [
-      42,
-      42
+      40,
+      40
      ],
      "energy_ceiling": 56
     }
@@ -1017,8 +920,189 @@
   },
   {
    "kind": "charged",
-   "t": 68.5,
-   "fighting_turn": 57,
+   "t": 59.1,
+   "fighting_turn": 54,
+   "side": "mine",
+   "pokemon": "Fearow",
+   "move": "Drill Peck",
+   "move_id": "DRILL_PECK",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 96,
+   "target": "Ludicolo",
+   "shielded": true,
+   "target_hp_before": 126,
+   "target_hp_after": 126,
+   "target_hp_max": 134,
+   "target_bar_read": true,
+   "expected_damage": 1,
+   "resolved_t": 67.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 68,
+     "hp_max": 124,
+     "hp_share": 0.548,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Bombirdier",
+     "shields": 1,
+     "left": 2,
+     "hp": 81,
+     "hp_max": 117,
+     "hp_share": 0.692,
+     "energy": [
+      40,
+      40
+     ],
+     "energy_ceiling": 56
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 67.5,
+   "until": 69.1,
+   "fighting_turn": 54,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Bombirdier",
+    "fast_move": "Wing Attack",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 68,
+     "hp_max": 124,
+     "hp_share": 0.548,
+     "energy": 64
+    },
+    "theirs": {
+     "active": "Bombirdier",
+     "shields": 1,
+     "left": 2,
+     "hp": 81,
+     "hp_max": 117,
+     "hp_share": 0.692,
+     "energy": [
+      48,
+      48
+     ],
+     "energy_ceiling": 64
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 69.1,
+   "fighting_turn": 56,
+   "side": "mine",
+   "pokemon": "Fearow",
+   "move": "Drill Peck",
+   "move_id": "DRILL_PECK",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": 64,
+   "target": "Bombirdier",
+   "shielded": true,
+   "target_hp_before": 81,
+   "target_hp_after": 80,
+   "target_hp_max": 117,
+   "target_bar_read": true,
+   "expected_damage": 1,
+   "resolved_t": 77.5,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 68,
+     "hp_max": 124,
+     "hp_share": 0.548,
+     "energy": 24
+    },
+    "theirs": {
+     "active": "Bombirdier",
+     "shields": 0,
+     "left": 2,
+     "hp": 80,
+     "hp_max": 117,
+     "hp_share": 0.684,
+     "energy": [
+      48,
+      48
+     ],
+     "energy_ceiling": 64
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 77.5,
+   "until": 82.1,
+   "fighting_turn": 56,
+   "turns": 9,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 6
+   },
+   "theirs": {
+    "pokemon": "Bombirdier",
+    "fast_move": "Wing Attack",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 6
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 43,
+     "hp_max": 124,
+     "hp_share": 0.347,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Bombirdier",
+     "shields": 0,
+     "left": 2,
+     "hp": 55,
+     "hp_max": 117,
+     "hp_share": 0.47,
+     "energy": [
+      80,
+      80
+     ],
+     "energy_ceiling": 96
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 82.1,
+   "fighting_turn": 65,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Peck",
@@ -1027,133 +1111,43 @@
    "cost": 40,
    "energy_before": 56,
    "target": "Bombirdier",
-   "shielded": true,
-   "target_hp_before": 78,
-   "target_hp_after": 78,
+   "shielded": false,
+   "target_hp_before": 55,
+   "target_hp_after": 0,
    "target_hp_max": 117,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 77.0,
+   "target_bar_read": true,
+   "expected_damage": 62,
+   "resolved_t": 90.18,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 58,
+     "hp": 43,
      "hp_max": 124,
-     "hp_share": 0.468,
+     "hp_share": 0.347,
      "energy": 16
     },
     "theirs": {
      "active": "Bombirdier",
      "shields": 0,
-     "left": 3,
-     "hp": 78,
+     "left": 1,
+     "hp": 0,
      "hp_max": 117,
-     "hp_share": 0.667,
+     "hp_share": 0.0,
      "energy": [
-      42,
-      42
+      80,
+      80
      ],
-     "energy_ceiling": 56
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 77.0,
-   "until": 81.5,
-   "fighting_turn": 57,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
-   },
-   "theirs": {
-    "pokemon": "Bombirdier",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 6
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 2,
-     "left": 3,
-     "hp": 43,
-     "hp_max": 124,
-     "hp_share": 0.347,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Bombirdier",
-     "shields": 0,
-     "left": 3,
-     "hp": 58,
-     "hp_max": 117,
-     "hp_share": 0.496,
-     "energy": [
-      70,
-      70
-     ],
-     "energy_ceiling": 84
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 81.5,
-   "fighting_turn": 66,
-   "side": "mine",
-   "pokemon": "Fearow",
-   "move": "Drill Peck",
-   "move_id": "DRILL_PECK",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": 48,
-   "target": "Bombirdier",
-   "shielded": false,
-   "target_hp_before": 58,
-   "target_hp_after": 58,
-   "target_hp_max": 117,
-   "target_bar_read": false,
-   "expected_damage": 62,
-   "resolved_t": 91.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 2,
-     "left": 3,
-     "hp": 43,
-     "hp_max": 124,
-     "hp_share": 0.347,
-     "energy": 8
-    },
-    "theirs": {
-     "active": "Bombirdier",
-     "shields": 0,
-     "left": 3,
-     "hp": 58,
-     "hp_max": 117,
-     "hp_share": 0.496,
-     "energy": [
-      77,
-      77
-     ],
-     "energy_ceiling": 84
+     "energy_ceiling": 96
     }
    }
   },
   {
    "kind": "faint",
-   "t": 91.05,
-   "fighting_turn": 66,
+   "t": 90.18,
+   "fighting_turn": 65,
    "side": "theirs",
    "pokemon": "Bombirdier",
    "next": null,
@@ -1165,29 +1159,29 @@
      "hp": 43,
      "hp_max": 124,
      "hp_share": 0.347,
-     "energy": 8
+     "energy": 16
     },
     "theirs": {
      "active": "Bombirdier",
      "shields": 0,
-     "left": 3,
+     "left": 1,
      "hp": 0,
      "hp_max": 117,
      "hp_share": 0.0,
      "energy": [
-      77,
-      77
+      80,
+      80
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 96
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 91.05,
-   "until": 98.5,
-   "fighting_turn": 66,
-   "turns": 3,
+   "t": 90.18,
+   "until": 99.1,
+   "fighting_turn": 65,
+   "turns": 2,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
@@ -1197,28 +1191,28 @@
    },
    "theirs": {
     "pokemon": "Bombirdier",
-    "fast_move": "Sucker Punch",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Wing Attack",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 37,
+     "hp": 43,
      "hp_max": 124,
-     "hp_share": 0.298,
-     "energy": 24
+     "hp_share": 0.347,
+     "energy": 32
     },
     "theirs": {
      "active": "Ludicolo",
      "shields": 0,
-     "left": 3,
-     "hp": 134,
+     "left": 1,
+     "hp": 126,
      "hp_max": 134,
-     "hp_share": 1.0,
+     "hp_share": 0.94,
      "energy": [
       30,
       30
@@ -1229,31 +1223,31 @@
   },
   {
    "kind": "end",
-   "t": 98.5,
-   "fighting_turn": 69,
+   "t": 99.1,
+   "fighting_turn": 67,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 3,
-    "theirs": 3
+    "theirs": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 37,
+     "hp": 43,
      "hp_max": 124,
-     "hp_share": 0.298,
-     "energy": 24
+     "hp_share": 0.347,
+     "energy": 32
     },
     "theirs": {
      "active": "Ludicolo",
      "shields": 0,
-     "left": 3,
-     "hp": 134,
+     "left": 1,
+     "hp": 126,
      "hp_max": 134,
-     "hp_share": 1.0,
+     "hp_share": 0.94,
      "energy": [
       30,
       30
@@ -1263,7 +1257,17 @@
    }
   }
  ],
- "deductions": [],
+ "deductions": [
+  {
+   "t": 4.5,
+   "side": "theirs",
+   "pokemon": "Bombirdier",
+   "what": "fast move",
+   "value": "Wing Attack",
+   "how": "fits the size and timing of its hits on our bar",
+   "ruled_out": []
+  }
+ ],
  "built_from": [
   "events.jsonl.gz",
   "source.json",

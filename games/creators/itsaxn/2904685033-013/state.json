@@ -1,7 +1,7 @@
 {
-  "t": 139.5,
+  "t": 140.0,
   "fighting_turns": 110,
-  "warnings": 10,
+  "warnings": 17,
   "matchup": {
     "ours": {
       "fast": {
@@ -141,10 +141,10 @@
           15,
           14
         ],
-        "hp": 97,
+        "hp": 16,
         "hp_max": 145,
-        "hp_share": 0.669,
-        "energy": 96,
+        "hp_share": 0.11,
+        "energy": 92,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -192,10 +192,10 @@
           14,
           15
         ],
-        "hp": 8,
+        "hp": 9,
         "hp_max": 107,
-        "hp_share": 0.075,
-        "energy": 40,
+        "hp_share": 0.084,
+        "energy": 32,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -243,9 +243,9 @@
           12,
           14
         ],
-        "hp": 4,
+        "hp": 7,
         "hp_max": 150,
-        "hp_share": 0.027,
+        "hp_share": 0.047,
         "energy": 48,
         "fainted": false,
         "attack_stage": 0,
@@ -306,18 +306,22 @@
         "hp": 0,
         "hp_max": 126,
         "hp_share": 0.0,
-        "energy": 69,
+        "energy": 57,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "EMBER",
-          "name": "Ember",
+          "id": "FIRE_SPIN",
+          "name": "Fire Spin",
           "type": "fire",
-          "turns": 2,
-          "energy_gain": 9,
-          "known_from": "guessed",
-          "misfit": {}
+          "turns": 3,
+          "energy_gain": 10,
+          "known_from": "inferred",
+          "misfit": {
+            "EMBER": 0.31,
+            "FEINT_ATTACK": 0.31,
+            "FIRE_SPIN": 0.15
+          }
         },
         "charged_moves": [
           {
@@ -338,21 +342,19 @@
           }
         ],
         "energy_range": [
-          64,
-          74
+          50,
+          65
         ],
-        "energy_by_clock": 83,
+        "energy_by_clock": 75,
         "energy_odds": {
-          "51": 0.08,
-          "60": 0.12,
-          "69": 0.33,
-          "78": 0.33,
-          "87": 0.12
+          "37": 0.08,
+          "47": 0.12,
+          "57": 0.33,
+          "67": 0.33,
+          "77": 0.12
         },
         "fast_move_odds": {
-          "EMBER": 0.46,
-          "FIRE_SPIN": 0.35,
-          "FEINT_ATTACK": 0.19
+          "FIRE_SPIN": 1.0
         },
         "charged_move_odds": {
           "WEATHER_BALL_FIRE": 0.57,
@@ -367,14 +369,14 @@
         },
         "ready_odds": {
           "WEATHER_BALL_FIRE": 0.57,
-          "PSYSHOCK": 0.32,
-          "ENERGY_BALL": 0.31,
-          "SCORCHING_SANDS": 0.23,
-          "OVERHEAT": 0.18,
-          "HEAT_WAVE": 0.16,
-          "FLAMETHROWER": 0.1,
-          "FIRE_BLAST": 0.01,
-          "SOLAR_BEAM": 0.01
+          "PSYSHOCK": 0.29,
+          "ENERGY_BALL": 0.28,
+          "SCORCHING_SANDS": 0.18,
+          "OVERHEAT": 0.15,
+          "HEAT_WAVE": 0.15,
+          "FLAMETHROWER": 0.08,
+          "FIRE_BLAST": 0.0,
+          "SOLAR_BEAM": 0.0
         }
       },
       {
@@ -397,7 +399,7 @@
         "hp": 0,
         "hp_max": 134,
         "hp_share": 0.0,
-        "energy": 87,
+        "energy": 92,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -409,7 +411,7 @@
           "energy_gain": 11,
           "known_from": "inferred",
           "misfit": {
-            "BUBBLE": 0.49
+            "BUBBLE": 1115.0
           }
         },
         "charged_moves": [
@@ -426,34 +428,33 @@
             "name": "Rock Blast",
             "type": "rock",
             "energy": 40,
-            "known_from": "guessed",
-            "times_used": 0
+            "known_from": "seen",
+            "times_used": 1
           }
         ],
         "energy_range": [
-          82,
+          92,
           92
         ],
-        "energy_by_clock": 92,
+        "energy_by_clock": 100,
         "energy_odds": {
-          "65": 0.08,
-          "76": 0.12,
-          "87": 0.33,
-          "98": 0.33,
-          "100": 0.12
+          "70": 0.08,
+          "81": 0.12,
+          "92": 0.33,
+          "100": 0.46
         },
         "fast_move_odds": {
           "BUBBLE": 1.0
         },
         "charged_move_odds": {
-          "POWER_GEM": 0.82,
-          "ROCK_BLAST": 0.7,
-          "BUBBLE_BEAM": 0.48
+          "ROCK_BLAST": 1.0,
+          "POWER_GEM": 0.63,
+          "BUBBLE_BEAM": 0.37
         },
         "ready_odds": {
-          "POWER_GEM": 0.82,
-          "ROCK_BLAST": 0.7,
-          "BUBBLE_BEAM": 0.48
+          "ROCK_BLAST": 1.0,
+          "POWER_GEM": 0.63,
+          "BUBBLE_BEAM": 0.37
         }
       },
       {
@@ -472,10 +473,10 @@
           9,
           15
         ],
-        "hp": 21,
+        "hp": 27,
         "hp_max": 118,
-        "hp_share": 0.178,
-        "energy": 44,
+        "hp_share": 0.229,
+        "energy": 47,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -487,7 +488,7 @@
           "energy_gain": 3,
           "known_from": "inferred",
           "misfit": {
-            "TACKLE": 0.39
+            "TACKLE": 0.35
           }
         },
         "charged_moves": [
@@ -509,16 +510,16 @@
           }
         ],
         "energy_range": [
-          44,
-          44
+          47,
+          47
         ],
-        "energy_by_clock": 47,
+        "energy_by_clock": 50,
         "energy_odds": {
-          "38": 0.08,
-          "41": 0.12,
-          "44": 0.33,
+          "41": 0.08,
+          "44": 0.12,
           "47": 0.33,
-          "50": 0.12
+          "50": 0.33,
+          "53": 0.12
         },
         "fast_move_odds": {
           "TACKLE": 1.0
@@ -530,8 +531,8 @@
           "HYPER_BEAM": 0.09
         },
         "ready_odds": {
-          "DISCHARGE": 0.92,
-          "FOUL_PLAY": 0.61,
+          "DISCHARGE": 1.0,
+          "FOUL_PLAY": 0.67,
           "THUNDERBOLT": 0.0,
           "HYPER_BEAM": 0.0
         }

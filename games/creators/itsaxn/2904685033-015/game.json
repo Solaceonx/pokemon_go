@@ -23,16 +23,16 @@
   }
  },
  "seconds": 179.5,
- "fighting_turns": 113,
+ "fighting_turns": 114,
  "checks": {
   "verdict": "fail",
   "failed": [
    "ending: result says win, tracker has us on 2 and them on 1"
   ],
   "notes": [
-   "fast move only guessed for ursaluna, sableye, araquanid"
+   "fast move only guessed for ursaluna"
   ],
-  "unexplained_health_changes": 7
+  "unexplained_health_changes": 15
  },
  "teams": {
   "mine": [
@@ -44,7 +44,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.034,
+    "hp_share_at_end": 0.055,
     "fast_move": {
      "id": "SCRATCH",
      "name": "Scratch",
@@ -110,7 +110,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.486,
+    "hp_share_at_end": 0.495,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -153,10 +153,9 @@
      "energy_gain": 4,
      "known_from": "guessed",
      "odds": {
-      "Scratch": 0.44,
-      "Smack Down": 0.21,
-      "Tackle": 0.21,
-      "Rock Smash": 0.14
+      "Scratch": 0.53,
+      "Tackle": 0.25,
+      "Smack Down": 0.23
      }
     },
     "charged_moves": [
@@ -199,11 +198,7 @@
      "name": "Shadow Claw",
      "turns": 2,
      "energy_gain": 8,
-     "known_from": "guessed",
-     "odds": {
-      "Shadow Claw": 0.72,
-      "Feint Attack": 0.28
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -230,17 +225,13 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.007,
+    "hp_share_at_end": 0.25,
     "fast_move": {
-     "id": "INFESTATION",
-     "name": "Infestation",
-     "turns": 3,
-     "energy_gain": 12,
-     "known_from": "guessed",
-     "odds": {
-      "Infestation": 0.8,
-      "Bug Bite": 0.2
-     }
+     "id": "BUG_BITE",
+     "name": "Bug Bite",
+     "turns": 1,
+     "energy_gain": 3,
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -322,61 +313,62 @@
    "t": 0.0,
    "until": 5.5,
    "fighting_turn": 0,
-   "turns": 10,
+   "turns": 11,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 11,
+    "hits_seen": 8
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 11,
+    "hits_seen": 7
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 143,
+     "hp": 112,
      "hp_max": 145,
-     "hp_share": 0.986,
-     "energy": 40
+     "hp_share": 0.772,
+     "energy": 44
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 2,
      "left": 3,
-     "hp": 111,
+     "hp": 110,
      "hp_max": 144,
-     "hp_share": 0.771,
+     "hp_share": 0.764,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
-     "energy_ceiling": 44
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 5.5,
-   "fighting_turn": 10,
+   "fighting_turn": 11,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Body Slam",
    "move_id": "BODY_SLAM",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 40,
+   "energy_before": 44,
    "target": "Ursaluna",
    "shielded": true,
-   "target_hp_before": 111,
-   "target_hp_after": 111,
+   "target_hp_before": 110,
+   "target_hp_after": 110,
    "target_hp_max": 144,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -387,23 +379,23 @@
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 143,
+     "hp": 112,
      "hp_max": 145,
-     "hp_share": 0.986,
-     "energy": 0
+     "hp_share": 0.772,
+     "energy": 4
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 111,
+     "hp": 110,
      "hp_max": 144,
-     "hp_share": 0.771,
+     "hp_share": 0.764,
      "energy": [
-      40,
-      40
+      48,
+      48
      ],
-     "energy_ceiling": 44
+     "energy_ceiling": 48
     }
    }
   },
@@ -411,21 +403,21 @@
    "kind": "fighting",
    "t": 15.0,
    "until": 18.5,
-   "fighting_turn": 10,
-   "turns": 7,
+   "fighting_turn": 11,
+   "turns": 6,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
+    "fast_moves_if_no_pause": 6,
     "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 3
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -433,21 +425,21 @@
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 84,
+     "hp": 91,
      "hp_max": 145,
-     "hp_share": 0.579,
+     "hp_share": 0.628,
      "energy": 28
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 86,
+     "hp": 89,
      "hp_max": 144,
-     "hp_share": 0.597,
+     "hp_share": 0.618,
      "energy": [
-      68,
-      68
+      72,
+      72
      ],
      "energy_ceiling": 72
     }
@@ -464,16 +456,16 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    68,
-    68
+    72,
+    72
    ],
    "energy_ceiling": 72,
    "target": "Vigoroth",
    "shielded": false,
-   "target_hp_before": 84,
-   "target_hp_after": 84,
+   "target_hp_before": 91,
+   "target_hp_after": 28,
    "target_hp_max": 145,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": null,
    "resolved_t": 28.0,
    "cue": true,
@@ -482,23 +474,23 @@
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 84,
+     "hp": 28,
      "hp_max": 145,
-     "hp_share": 0.579,
+     "hp_share": 0.193,
      "energy": 28
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 86,
+     "hp": 89,
      "hp_max": 144,
-     "hp_share": 0.597,
+     "hp_share": 0.618,
      "energy": [
-      33,
-      33
+      37,
+      37
      ],
-     "energy_ceiling": 37
+     "energy_ceiling": 41
     }
    }
   },
@@ -507,39 +499,38 @@
    "t": 28.0,
    "until": 30.5,
    "fighting_turn": 17,
-   "turns": 5,
+   "turns": 4,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 2
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 2,
      "left": 3,
-     "hp": 18,
+     "hp": 20,
      "hp_max": 145,
-     "hp_share": 0.124,
-     "energy": 48
+     "hp_share": 0.138,
+     "energy": 44
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 69,
+     "hp": 77,
      "hp_max": 144,
-     "hp_share": 0.479,
+     "hp_share": 0.535,
      "energy": [
       53,
       53
@@ -551,7 +542,7 @@
   {
    "kind": "charged",
    "t": 30.5,
-   "fighting_turn": 22,
+   "fighting_turn": 21,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "move": "Swift",
@@ -565,8 +556,8 @@
    "energy_ceiling": 57,
    "target": "Vigoroth",
    "shielded": true,
-   "target_hp_before": 18,
-   "target_hp_after": 18,
+   "target_hp_before": 20,
+   "target_hp_after": 20,
    "target_hp_max": 145,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -577,18 +568,18 @@
      "active": "Vigoroth",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 20,
      "hp_max": 145,
-     "hp_share": 0.124,
-     "energy": 48
+     "hp_share": 0.138,
+     "energy": 44
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 69,
+     "hp": 77,
      "hp_max": 144,
-     "hp_share": 0.479,
+     "hp_share": 0.535,
      "energy": [
       18,
       18
@@ -601,7 +592,7 @@
    "kind": "fighting",
    "t": 40.0,
    "until": 41.5,
-   "fighting_turn": 22,
+   "fighting_turn": 21,
    "turns": 3,
    "mine": {
     "pokemon": "Vigoroth",
@@ -623,18 +614,18 @@
      "active": "Vigoroth",
      "shields": 1,
      "left": 3,
-     "hp": 5,
+     "hp": 8,
      "hp_max": 145,
-     "hp_share": 0.034,
-     "energy": 60
+     "hp_share": 0.055,
+     "energy": 56
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
      "left": 3,
-     "hp": 59,
+     "hp": 61,
      "hp_max": 144,
-     "hp_share": 0.41,
+     "hp_share": 0.424,
      "energy": [
       30,
       30
@@ -646,85 +637,40 @@
   {
    "kind": "charged",
    "t": 41.5,
-   "fighting_turn": 25,
+   "fighting_turn": 24,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Body Slam",
    "move_id": "BODY_SLAM",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 60,
+   "energy_before": 56,
    "target": "Ursaluna",
    "shielded": false,
-   "target_hp_before": 59,
-   "target_hp_after": 59,
+   "target_hp_before": 61,
+   "target_hp_after": 0,
    "target_hp_max": 144,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 60,
-   "resolved_t": 51.0,
+   "resolved_t": 50.17,
    "cue": true,
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 1,
      "left": 3,
-     "hp": 5,
+     "hp": 8,
      "hp_max": 145,
-     "hp_share": 0.034,
-     "energy": 20
+     "hp_share": 0.055,
+     "energy": 16
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
-     "left": 3,
-     "hp": 59,
+     "left": 2,
+     "hp": 0,
      "hp_max": 144,
-     "hp_share": 0.41,
-     "energy": [
-      30,
-      30
-     ],
-     "energy_ceiling": 34
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 51.0,
-   "until": 51.65,
-   "fighting_turn": 25,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Ursaluna",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 3,
-     "hp": 5,
-     "hp_max": 145,
-     "hp_share": 0.034,
-     "energy": 20
-    },
-    "theirs": {
-     "active": "Ursaluna",
-     "shields": 1,
-     "left": 3,
-     "hp": 59,
-     "hp_max": 144,
-     "hp_share": 0.41,
+     "hp_share": 0.0,
      "energy": [
       30,
       30
@@ -735,8 +681,8 @@
   },
   {
    "kind": "faint",
-   "t": 51.65,
-   "fighting_turn": 26,
+   "t": 50.17,
+   "fighting_turn": 24,
    "side": "theirs",
    "pokemon": "Ursaluna",
    "next": null,
@@ -745,55 +691,55 @@
      "active": "Vigoroth",
      "shields": 1,
      "left": 3,
-     "hp": 5,
+     "hp": 8,
      "hp_max": 145,
-     "hp_share": 0.034,
-     "energy": 24
+     "hp_share": 0.055,
+     "energy": 16
     },
     "theirs": {
      "active": "Ursaluna",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 144,
      "hp_share": 0.0,
      "energy": [
-      34,
-      34
+      30,
+      30
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 34
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 51.65,
-   "until": 56.5,
-   "fighting_turn": 26,
-   "turns": 6,
+   "t": 50.17,
+   "until": 55.0,
+   "fighting_turn": 24,
+   "turns": 3,
    "mine": {
     "pokemon": "Vigoroth",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Vigoroth",
      "shields": 1,
      "left": 3,
-     "hp": 5,
+     "hp": 8,
      "hp_max": 145,
-     "hp_share": 0.034,
-     "energy": 24
+     "hp_share": 0.055,
+     "energy": 20
     },
     "theirs": {
      "active": "Ursaluna",
@@ -812,8 +758,8 @@
   },
   {
    "kind": "switch",
-   "t": 56.5,
-   "fighting_turn": 32,
+   "t": 55.0,
+   "fighting_turn": 27,
    "side": "mine",
    "from": "Vigoroth",
    "to": "Corviknight",
@@ -822,9 +768,9 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 150,
+     "hp": 7,
      "hp_max": 150,
-     "hp_share": 1.0,
+     "hp_share": 0.047,
      "energy": 0
     },
     "theirs": {
@@ -844,54 +790,54 @@
   },
   {
    "kind": "fighting",
-   "t": 56.5,
+   "t": 55.0,
    "until": 60.5,
-   "fighting_turn": 32,
-   "turns": 7,
+   "fighting_turn": 27,
+   "turns": 11,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 11,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 4
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 4,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 117,
+     "hp": 122,
      "hp_max": 150,
-     "hp_share": 0.78,
-     "energy": 28
+     "hp_share": 0.813,
+     "energy": 44
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 125,
+     "hp": 102,
      "hp_max": 125,
-     "hp_share": 1.0,
+     "hp_share": 0.816,
      "energy": [
-      32,
-      32
+      40,
+      40
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 60.5,
-   "fighting_turn": 39,
+   "fighting_turn": 38,
    "side": "theirs",
    "pokemon": "Sableye",
    "move": "Foul Play",
@@ -899,17 +845,16 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    32,
-    32
+    40,
+    40
    ],
-   "energy_ceiling": 32,
-   "energy_short_by": 8,
+   "energy_ceiling": 48,
    "target": "Corviknight",
    "shielded": false,
-   "target_hp_before": 117,
-   "target_hp_after": 117,
+   "target_hp_before": 122,
+   "target_hp_after": 62,
    "target_hp_max": 150,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 47,
    "resolved_t": 70.0,
    "cue": true,
@@ -918,18 +863,18 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 117,
+     "hp": 62,
      "hp_max": 150,
-     "hp_share": 0.78,
-     "energy": 28
+     "hp_share": 0.413,
+     "energy": 44
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 125,
+     "hp": 102,
      "hp_max": 125,
-     "hp_share": 1.0,
+     "hp_share": 0.816,
      "energy": [
       0,
       0
@@ -942,40 +887,40 @@
    "kind": "fighting",
    "t": 70.0,
    "until": 73.5,
-   "fighting_turn": 39,
+   "fighting_turn": 38,
    "turns": 7,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 7,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 45,
+     "hp": 46,
      "hp_max": 150,
-     "hp_share": 0.3,
-     "energy": 56
+     "hp_share": 0.307,
+     "energy": 72
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 48,
+     "hp": 91,
      "hp_max": 125,
-     "hp_share": 0.384,
+     "hp_share": 0.728,
      "energy": [
       24,
       24
@@ -987,18 +932,18 @@
   {
    "kind": "charged",
    "t": 73.5,
-   "fighting_turn": 46,
+   "fighting_turn": 45,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Iron Head",
    "move_id": "IRON_HEAD",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 56,
+   "energy_before": 72,
    "target": "Sableye",
    "shielded": false,
-   "target_hp_before": 48,
-   "target_hp_after": 48,
+   "target_hp_before": 91,
+   "target_hp_after": 91,
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 57,
@@ -1009,18 +954,18 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 45,
+     "hp": 46,
      "hp_max": 150,
-     "hp_share": 0.3,
-     "energy": 6
+     "hp_share": 0.307,
+     "energy": 22
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 48,
+     "hp": 91,
      "hp_max": 125,
-     "hp_share": 0.384,
+     "hp_share": 0.728,
      "energy": [
       24,
       24
@@ -1033,7 +978,7 @@
    "kind": "fighting",
    "t": 83.0,
    "until": 84.5,
-   "fighting_turn": 46,
+   "fighting_turn": 45,
    "turns": 3,
    "mine": {
     "pokemon": "Corviknight",
@@ -1045,27 +990,28 @@
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 39,
+     "hp": 43,
      "hp_max": 150,
-     "hp_share": 0.26,
-     "energy": 14
+     "hp_share": 0.287,
+     "energy": 30
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 48,
+     "hp": 91,
      "hp_max": 125,
-     "hp_share": 0.384,
+     "hp_share": 0.728,
      "energy": [
       32,
       32
@@ -1077,7 +1023,7 @@
   {
    "kind": "switch",
    "t": 84.5,
-   "fighting_turn": 49,
+   "fighting_turn": 48,
    "side": "theirs",
    "from": "Sableye",
    "to": "Araquanid",
@@ -1086,10 +1032,10 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 39,
+     "hp": 43,
      "hp_max": 150,
-     "hp_share": 0.26,
-     "energy": 18
+     "hp_share": 0.287,
+     "energy": 34
     },
     "theirs": {
      "active": "Araquanid",
@@ -1110,7 +1056,7 @@
    "kind": "fighting",
    "t": 84.5,
    "until": 89.5,
-   "fighting_turn": 49,
+   "fighting_turn": 48,
    "turns": 10,
    "mine": {
     "pokemon": "Corviknight",
@@ -1121,20 +1067,20 @@
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 10,
+    "hits_seen": 4
    },
    "state": {
     "mine": {
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 28,
+     "hp": 35,
      "hp_max": 150,
-     "hp_share": 0.187,
-     "energy": 58
+     "hp_share": 0.233,
+     "energy": 74
     },
     "theirs": {
      "active": "Araquanid",
@@ -1144,30 +1090,30 @@
      "hp_max": 136,
      "hp_share": 1.0,
      "energy": [
-      48,
-      48
+      30,
+      30
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 33
     }
    }
   },
   {
    "kind": "charged",
    "t": 89.5,
-   "fighting_turn": 59,
+   "fighting_turn": 58,
    "side": "mine",
    "pokemon": "Corviknight",
    "move": "Air Cutter",
    "move_id": "AIR_CUTTER",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 58,
+   "energy_before": 74,
    "target": "Araquanid",
    "shielded": false,
    "target_hp_before": 136,
-   "target_hp_after": 136,
+   "target_hp_after": 81,
    "target_hp_max": 136,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 47,
    "resolved_t": 99.0,
    "cue": true,
@@ -1176,23 +1122,23 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 28,
+     "hp": 35,
      "hp_max": 150,
-     "hp_share": 0.187,
-     "energy": 18
+     "hp_share": 0.233,
+     "energy": 34
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 136,
+     "hp": 81,
      "hp_max": 136,
-     "hp_share": 1.0,
+     "hp_share": 0.596,
      "energy": [
-      48,
-      48
+      30,
+      30
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 33
     }
    }
   },
@@ -1200,7 +1146,7 @@
    "kind": "fighting",
    "t": 99.0,
    "until": 104.5,
-   "fighting_turn": 59,
+   "fighting_turn": 58,
    "turns": 11,
    "mine": {
     "pokemon": "Corviknight",
@@ -1211,9 +1157,9 @@
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 11,
     "hits_seen": 3
    },
    "state": {
@@ -1221,30 +1167,30 @@
      "active": "Corviknight",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 25,
      "hp_max": 150,
-     "hp_share": 0.12,
-     "energy": 62
+     "hp_share": 0.167,
+     "energy": 78
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 76,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.559,
      "energy": [
-      96,
-      96
+      63,
+      63
      ],
-     "energy_ceiling": 96
+     "energy_ceiling": 66
     }
    }
   },
   {
    "kind": "charged",
    "t": 104.5,
-   "fighting_turn": 70,
+   "fighting_turn": 69,
    "side": "theirs",
    "pokemon": "Araquanid",
    "move": "Water Pulse",
@@ -1252,13 +1198,13 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    96,
-    96
+    63,
+    63
    ],
-   "energy_ceiling": 96,
+   "energy_ceiling": 66,
    "target": "Corviknight",
    "shielded": false,
-   "target_hp_before": 18,
+   "target_hp_before": 25,
    "target_hp_after": 0,
    "target_hp_max": 150,
    "target_bar_read": true,
@@ -1269,31 +1215,31 @@
     "mine": {
      "active": "Corviknight",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 150,
      "hp_share": 0.0,
-     "energy": 62
+     "energy": 78
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 76,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.559,
      "energy": [
-      46,
-      46
+      13,
+      13
      ],
-     "energy_ceiling": 58
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "faint",
    "t": 111.63,
-   "fighting_turn": 70,
+   "fighting_turn": 69,
    "side": "mine",
    "pokemon": "Corviknight",
    "next": null,
@@ -1301,24 +1247,24 @@
     "mine": {
      "active": "Corviknight",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 150,
      "hp_share": 0.0,
-     "energy": 62
+     "energy": 78
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 76,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.559,
      "energy": [
-      46,
-      46
+      13,
+      13
      ],
-     "energy_ceiling": 58
+     "energy_ceiling": 16
     }
    }
   },
@@ -1326,21 +1272,21 @@
    "kind": "fighting",
    "t": 111.63,
    "until": 121.5,
-   "fighting_turn": 70,
+   "fighting_turn": 69,
    "turns": 14,
    "mine": {
     "pokemon": "Corviknight",
     "fast_move": "Sand Attack",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 14,
-    "hits_seen": 1
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 14,
+    "hits_seen": 5
    },
    "state": {
     "mine": {
@@ -1350,27 +1296,27 @@
      "hp": 98,
      "hp_max": 107,
      "hp_share": 0.916,
-     "energy": 56
+     "energy": 48
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 52,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.382,
      "energy": [
-      94,
-      94
+      55,
+      55
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 58
     }
    }
   },
   {
    "kind": "charged",
    "t": 121.5,
-   "fighting_turn": 84,
+   "fighting_turn": 83,
    "side": "theirs",
    "pokemon": "Araquanid",
    "move": "Mirror Coat",
@@ -1378,41 +1324,41 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    94,
-    94
+    55,
+    55
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 58,
    "target": "Mimikyu",
-   "shielded": true,
+   "shielded": false,
    "target_hp_before": 98,
-   "target_hp_after": 98,
+   "target_hp_after": 64,
    "target_hp_max": 107,
-   "target_bar_read": false,
-   "expected_damage": 1,
+   "target_bar_read": true,
+   "expected_damage": 34,
    "resolved_t": 131.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 2,
-     "hp": 98,
+     "hp": 64,
      "hp_max": 107,
-     "hp_share": 0.916,
+     "hp_share": 0.598,
      "energy": 56
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 52,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.382,
      "energy": [
-      49,
-      49
+      10,
+      10
      ],
-     "energy_ceiling": 61
+     "energy_ceiling": 13
     }
    }
   },
@@ -1420,7 +1366,7 @@
    "kind": "fighting",
    "t": 131.0,
    "until": 134.5,
-   "fighting_turn": 84,
+   "fighting_turn": 83,
    "turns": 7,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1431,15 +1377,16 @@
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 2,
      "hp": 96,
      "hp_max": 107,
@@ -1450,28 +1397,28 @@
      "active": "Araquanid",
      "shields": 1,
      "left": 2,
-     "hp": 71,
+     "hp": 52,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.382,
      "energy": [
-      73,
-      73
+      28,
+      28
      ],
-     "energy_ceiling": 85
+     "energy_ceiling": 31
     }
    }
   },
   {
    "kind": "switch",
    "t": 134.5,
-   "fighting_turn": 91,
+   "fighting_turn": 90,
    "side": "theirs",
    "from": "Araquanid",
    "to": "Sableye",
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 2,
      "hp": 96,
      "hp_max": 107,
@@ -1482,9 +1429,9 @@
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 48,
+     "hp": 91,
      "hp_max": 125,
-     "hp_share": 0.384,
+     "hp_share": 0.728,
      "energy": [
       32,
       32
@@ -1497,39 +1444,40 @@
    "kind": "fighting",
    "t": 134.5,
    "until": 137.5,
-   "fighting_turn": 91,
+   "fighting_turn": 90,
    "turns": 6,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 2,
-     "hp": 74,
+     "hp": 76,
      "hp_max": 107,
-     "hp_share": 0.692,
+     "hp_share": 0.71,
      "energy": 100
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 7,
+     "hp": 43,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.344,
      "energy": [
       56,
       56
@@ -1541,7 +1489,7 @@
   {
    "kind": "charged",
    "t": 137.5,
-   "fighting_turn": 97,
+   "fighting_turn": 96,
    "side": "theirs",
    "pokemon": "Sableye",
    "move": "Drain Punch",
@@ -1554,12 +1502,12 @@
    ],
    "energy_ceiling": 72,
    "target": "Mimikyu",
-   "shielded": false,
-   "target_hp_before": 74,
-   "target_hp_after": 74,
+   "shielded": true,
+   "target_hp_before": 76,
+   "target_hp_after": 76,
    "target_hp_max": 107,
    "target_bar_read": false,
-   "expected_damage": null,
+   "expected_damage": 1,
    "resolved_t": 147.0,
    "cue": true,
    "state": {
@@ -1567,18 +1515,18 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 74,
+     "hp": 76,
      "hp_max": 107,
-     "hp_share": 0.692,
+     "hp_share": 0.71,
      "energy": 100
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 7,
+     "hp": 43,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.344,
      "energy": [
       16,
       16
@@ -1591,7 +1539,7 @@
    "kind": "fighting",
    "t": 147.0,
    "until": 147.72,
-   "fighting_turn": 97,
+   "fighting_turn": 96,
    "turns": 1,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1603,7 +1551,7 @@
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
     "hits_seen": 1
    },
@@ -1612,18 +1560,18 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 74,
+     "hp": 76,
      "hp_max": 107,
-     "hp_share": 0.692,
+     "hp_share": 0.71,
      "energy": 100
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
      "left": 2,
-     "hp": 7,
+     "hp": 43,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.344,
      "energy": [
       16,
       16
@@ -1635,7 +1583,7 @@
   {
    "kind": "faint",
    "t": 147.72,
-   "fighting_turn": 98,
+   "fighting_turn": 97,
    "side": "theirs",
    "pokemon": "Sableye",
    "next": null,
@@ -1644,15 +1592,15 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 74,
+     "hp": 76,
      "hp_max": 107,
-     "hp_share": 0.692,
+     "hp_share": 0.71,
      "energy": 100
     },
     "theirs": {
      "active": "Sableye",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 125,
      "hp_share": 0.0,
@@ -1668,20 +1616,20 @@
    "kind": "fighting",
    "t": 147.72,
    "until": 152.5,
-   "fighting_turn": 98,
-   "turns": 5,
+   "fighting_turn": 97,
+   "turns": 6,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1690,23 +1638,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 60,
+     "hp": 64,
      "hp_max": 107,
-     "hp_share": 0.561,
+     "hp_share": 0.598,
      "energy": 100
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 1,
      "left": 1,
-     "hp": 71,
+     "hp": 52,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.382,
      "energy": [
-      85,
-      85
+      37,
+      37
      ],
-     "energy_ceiling": 97
+     "energy_ceiling": 43
     }
    }
   },
@@ -1723,10 +1671,10 @@
    "energy_before": 100,
    "target": "Araquanid",
    "shielded": true,
-   "target_hp_before": 71,
-   "target_hp_after": 71,
+   "target_hp_before": 52,
+   "target_hp_after": 46,
    "target_hp_max": 136,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 1,
    "resolved_t": 162.0,
    "cue": true,
@@ -1735,23 +1683,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 60,
+     "hp": 64,
      "hp_max": 107,
-     "hp_share": 0.561,
+     "hp_share": 0.598,
      "energy": 50
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 0,
      "left": 1,
-     "hp": 71,
+     "hp": 46,
      "hp_max": 136,
-     "hp_share": 0.522,
+     "hp_share": 0.338,
      "energy": [
-      85,
-      85
+      37,
+      37
      ],
-     "energy_ceiling": 97
+     "energy_ceiling": 43
     }
    }
   },
@@ -1760,20 +1708,20 @@
    "t": 162.0,
    "until": 165.5,
    "fighting_turn": 103,
-   "turns": 6,
+   "turns": 7,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 2
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1781,30 +1729,30 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 52,
+     "hp": 55,
      "hp_max": 107,
-     "hp_share": 0.486,
+     "hp_share": 0.514,
      "energy": 74
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 34,
      "hp_max": 136,
-     "hp_share": 0.007,
+     "hp_share": 0.25,
      "energy": [
-      100,
-      100
+      61,
+      61
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "charged",
    "t": 165.5,
-   "fighting_turn": 109,
+   "fighting_turn": 110,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
@@ -1814,8 +1762,8 @@
    "energy_before": 74,
    "target": "Araquanid",
    "shielded": false,
-   "target_hp_before": 1,
-   "target_hp_after": 1,
+   "target_hp_before": 34,
+   "target_hp_after": 34,
    "target_hp_max": 136,
    "target_bar_read": false,
    "expected_damage": 49,
@@ -1826,23 +1774,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 52,
+     "hp": 55,
      "hp_max": 107,
-     "hp_share": 0.486,
+     "hp_share": 0.514,
      "energy": 14
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 34,
      "hp_max": 136,
-     "hp_share": 0.007,
+     "hp_share": 0.25,
      "energy": [
-      100,
-      100
+      61,
+      61
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 64
     }
    }
   },
@@ -1850,7 +1798,7 @@
    "kind": "fighting",
    "t": 175.0,
    "until": 179.5,
-   "fighting_turn": 109,
+   "fighting_turn": 110,
    "turns": 4,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1861,40 +1809,40 @@
    },
    "theirs": {
     "pokemon": "Araquanid",
-    "fast_move": "Infestation",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "fast_move": "Bug Bite",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 52,
+     "hp": 53,
      "hp_max": 107,
-     "hp_share": 0.486,
+     "hp_share": 0.495,
      "energy": 30
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 34,
      "hp_max": 136,
-     "hp_share": 0.007,
+     "hp_share": 0.25,
      "energy": [
-      100,
-      100
+      73,
+      73
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "end",
    "t": 179.5,
-   "fighting_turn": 113,
+   "fighting_turn": 114,
    "result": "win",
    "result_from": "result screen",
    "left": {
@@ -1906,23 +1854,23 @@
      "active": "Mimikyu",
      "shields": 0,
      "left": 2,
-     "hp": 52,
+     "hp": 53,
      "hp_max": 107,
-     "hp_share": 0.486,
+     "hp_share": 0.495,
      "energy": 30
     },
     "theirs": {
      "active": "Araquanid",
      "shields": 0,
      "left": 1,
-     "hp": 1,
+     "hp": 34,
      "hp_max": 136,
-     "hp_share": 0.007,
+     "hp_share": 0.25,
      "energy": [
-      100,
-      100
+      73,
+      73
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 76
     }
    }
   }
@@ -1935,6 +1883,26 @@
    "what": "charged move",
    "value": "Swift",
    "how": "thrown on screen, not one of the moves assumed",
+   "ruled_out": []
+  },
+  {
+   "t": 70.0,
+   "side": "theirs",
+   "pokemon": "Sableye",
+   "what": "fast move",
+   "value": "Shadow Claw",
+   "how": "every other fast move ruled out",
+   "ruled_out": [
+    "Feint Attack"
+   ]
+  },
+  {
+   "t": 89.0,
+   "side": "theirs",
+   "pokemon": "Araquanid",
+   "what": "fast move",
+   "value": "Bug Bite",
+   "how": "fits the size and timing of its hits on our bar",
    "ruled_out": []
   },
   {

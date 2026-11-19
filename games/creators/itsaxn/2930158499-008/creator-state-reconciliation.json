@@ -3,14 +3,20 @@
     {
       "victim_side": "my",
       "species": "Fearow",
-      "charged_look_before": 37.5,
-      "measured_zero_seconds": 35.016672
+      "charged_look_before": 35.0,
+      "measured_zero_seconds": 33.883339
     },
     {
       "victim_side": "foe",
       "species": "Jumpluff",
       "charged_look_before": 151.0,
-      "measured_zero_seconds": 150.350019
+      "measured_zero_seconds": 150.216685
+    },
+    {
+      "victim_side": "foe",
+      "species": "Ninetales",
+      "charged_look_before": 180.0,
+      "measured_zero_seconds": 179.966689
     }
   ],
   "quarantined_waits_removed": [],
@@ -19,117 +25,69 @@
       "side": "mine",
       "species": "Fearow",
       "interval": [
-        35.016672112648976,
-        36.800005999999996
-      ]
-    },
-    {
-      "side": "theirs",
-      "species": "Poliwrath",
-      "interval": [
-        113.81668120146098,
-        115.80001499999999
+        33.88333864859669,
+        36.800005651672436
       ]
     },
     {
       "side": "theirs",
       "species": "Jumpluff",
       "interval": [
-        150.35001874855826,
-        163.80002000000002
+        150.21668539984623,
+        163.80002029988466
+      ]
+    },
+    {
+      "side": "theirs",
+      "species": "Ninetales",
+      "interval": [
+        179.96668883121876,
+        184.8
       ]
     }
   ],
   "terminal_zero_from_three_measured_victims": [],
   "unattributed_zero_candidates": [],
   "unattributed_observations_removed": [],
+  "party_counts_from_measured_victims": [
+    {
+      "side": "mine",
+      "initial_observed_count": 3,
+      "initial_seconds": -3.03,
+      "distinct_victims": {
+        "Fearow": 33.88333864859669
+      }
+    },
+    {
+      "side": "theirs",
+      "initial_observed_count": 3,
+      "initial_seconds": -3.03,
+      "distinct_victims": {
+        "Jumpluff": 150.21668539984623,
+        "Ninetales": 179.96668883121876
+      }
+    }
+  ],
   "merged_wait_intervals": [
     [
-      35.016672112648976,
+      33.88333864859669,
       37.0
     ],
     [
-      113.81668120146098,
-      115.80001499999999
+      150.21668539984623,
+      164.0
     ],
     [
-      150.35001874855826,
-      163.80002000000002
+      179.96668883121876,
+      184.8
     ]
   ],
-  "cached_zero_recovery": [
-    {
-      "faint": {
-        "side": "theirs",
-        "species": "Jumpluff",
-        "clip_seconds": 162.55001874855824,
-        "confirmed_clip_seconds": 162.68335209727027,
-        "method": "complete_center_zero_then_fresh_replacement_header",
-        "timing_uncertainty_seconds": 0.1
-      },
-      "cache_file": "center-impact-011.json",
-      "cache_sha256": "72c398ede338baa956bc99b8f36993974bc15e0a23f461b8d20aa2532788545c",
-      "acquisition_fingerprint": {
-        "code": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-        "video": "49fbc0008bfc7d3fa69a6e665890044145adcb5eb3f950a3c21071997196ed06",
-        "alignment": "e37190d0df1c82dc4b2a86c2beb6404046b8324a577f8a57cbd077a586f7405d",
-        "health_reader": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
-        "av_version": "19.0.2",
-        "announcement_seconds": 161.000019,
-        "width": 144
-      },
-      "measurement": {
-        "first_zero": {
-          "t": 162.55001874855824,
-          "clip_pts": 84558519753,
-          "clip_time_base": "1/520200000",
-          "source_pts": 180320970,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              181,
-              610,
-              333,
-              624
-            ],
-            "width": 146,
-            "live_pixels": 0,
-            "orange_pixels": 62,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          }
-        },
-        "confirmed_zero": {
-          "t": 162.68335209727027,
-          "clip_pts": 84627879761,
-          "clip_time_base": "1/520200000",
-          "source_pts": 180332940,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              181,
-              613,
-              333,
-              627
-            ],
-            "width": 146,
-            "live_pixels": 0,
-            "orange_pixels": 62,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          }
-        },
-        "isolated_fade_pixel_samples": [],
-        "missing_tail_samples": 15
-      },
-      "replacement_header_clip_seconds": 176.00002
-    }
-  ],
+  "cached_zero_recovery": [],
   "schema": "creator-state-reconciliation-v1",
-  "code_sha256": "15133a35f6c2641abb23bb59c802f58d0a81f6095474021b7e6f407ce67812ff",
-  "observations_before_canonical_sha256": "8e86e58df2ab0d7bd9f3349ebeb38e28082ccfc0a89d8637738d5b74dd18f6ec",
-  "observations_after_canonical_sha256": "591269dbc70414b821ed75b0e7194a2af18eb3faea50b9f0436ab2a837004c86",
-  "lifecycle_canonical_sha256": "3b08adf2101cf11098a32726a69602189d9b2eee7c4ad66fa11c0399b65df542",
+  "code_sha256": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+  "observations_before_canonical_sha256": "c175d901a8e873e30fb257a32d1d8be1e31e3a6e8be62ccbddda6ba64117324b",
+  "observations_after_canonical_sha256": "27b67551feb5c7aa89f16f71aa347cf14bb51baa5d8848cb7bfa9ec67987c90c",
+  "lifecycle_canonical_sha256": "3aa796762500e09592758ec8d926c4695e277b13387be748e831598641f06b04",
   "terminal_impact_accepted": false,
   "digest_method": "SHA256 of compact sorted-key UTF-8 JSON; observations have one LF after each row",
   "result_based_faints": 0

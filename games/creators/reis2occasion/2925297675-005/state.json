@@ -1,38 +1,9 @@
 {
   "t": 125.0,
-  "fighting_turns": 73,
-  "warnings": 8,
+  "fighting_turns": 72,
+  "warnings": 10,
   "matchup": {
     "ours": {
-      "fast": {
-        "id": "POWDER_SNOW",
-        "name": "Powder Snow",
-        "type": "ice",
-        "damage": 6,
-        "energy_gain": 8,
-        "turns": 2
-      },
-      "charged": [
-        {
-          "id": "ICICLE_SPEAR",
-          "name": "Icicle Spear",
-          "type": "ice",
-          "damage": 67,
-          "energy": 40,
-          "ready": true
-        },
-        {
-          "id": "SUPER_POWER",
-          "name": "Superpower",
-          "type": "fighting",
-          "damage": 173,
-          "energy": 40,
-          "ready": true
-        }
-      ]
-    },
-    "theirs": {
-      "stats_assumed": true,
       "fast": {
         "id": "POWDER_SNOW",
         "name": "Powder Snow",
@@ -48,6 +19,35 @@
           "type": "ice",
           "damage": 43,
           "energy": 40,
+          "ready": false
+        },
+        {
+          "id": "SUPER_POWER",
+          "name": "Superpower",
+          "type": "fighting",
+          "damage": 111,
+          "energy": 40,
+          "ready": false
+        }
+      ]
+    },
+    "theirs": {
+      "stats_assumed": true,
+      "fast": {
+        "id": "POWDER_SNOW",
+        "name": "Powder Snow",
+        "type": "ice",
+        "damage": 6,
+        "energy_gain": 8,
+        "turns": 2
+      },
+      "charged": [
+        {
+          "id": "ICICLE_SPEAR",
+          "name": "Icicle Spear",
+          "type": "ice",
+          "damage": 67,
+          "energy": 40,
           "could_be_ready": false,
           "surely_ready": false
         },
@@ -55,7 +55,7 @@
           "id": "SUPER_POWER",
           "name": "Superpower",
           "type": "fighting",
-          "damage": 111,
+          "damage": 173,
           "energy": 40,
           "could_be_ready": false,
           "surely_ready": false
@@ -66,7 +66,7 @@
           "id": "ICE_SHARD",
           "name": "Ice Shard",
           "type": "ice",
-          "damage": 6,
+          "damage": 9,
           "energy_gain": 10,
           "turns": 3
         },
@@ -74,7 +74,7 @@
           "id": "TACKLE",
           "name": "Tackle",
           "type": "normal",
-          "damage": 3,
+          "damage": 4,
           "energy_gain": 3,
           "turns": 1
         },
@@ -82,7 +82,7 @@
           "id": "POWDER_SNOW",
           "name": "Powder Snow",
           "type": "ice",
-          "damage": 4,
+          "damage": 6,
           "energy_gain": 8,
           "turns": 2
         }
@@ -92,35 +92,35 @@
           "id": "BODY_SLAM",
           "name": "Body Slam",
           "type": "normal",
-          "damage": 53,
+          "damage": 83,
           "energy": 40
         },
         {
           "id": "AVALANCHE",
           "name": "Avalanche",
           "type": "ice",
-          "damage": 55,
+          "damage": 86,
           "energy": 45
         },
         {
           "id": "HEAVY_SLAM",
           "name": "Heavy Slam",
           "type": "steel",
-          "damage": 91,
+          "damage": 142,
           "energy": 50
         },
         {
           "id": "SUPER_POWER",
           "name": "Superpower",
           "type": "fighting",
-          "damage": 111,
+          "damage": 173,
           "energy": 40
         },
         {
           "id": "ICICLE_SPEAR",
           "name": "Icicle Spear",
           "type": "ice",
-          "damage": 43,
+          "damage": 67,
           "energy": 40
         }
       ]
@@ -198,13 +198,13 @@
           13,
           10
         ],
-        "hp": 102,
+        "hp": 101,
         "hp_max": 202,
-        "hp_share": 0.505,
-        "energy": 76,
+        "hp_share": 0.5,
+        "energy": 28,
         "fainted": false,
-        "attack_stage": 0,
-        "defense_stage": 0,
+        "attack_stage": -1,
+        "defense_stage": -1,
         "fast_move": {
           "id": "POWDER_SNOW",
           "name": "Powder Snow",
@@ -227,8 +227,8 @@
             "name": "Superpower",
             "type": "fighting",
             "energy": 40,
-            "known_from": "guessed",
-            "times_used": 0
+            "known_from": "seen",
+            "times_used": 1
           }
         ]
       },
@@ -290,7 +290,7 @@
     "shields": 0,
     "left": 2,
     "unseen": 0,
-    "switch_ready_in": 32.0,
+    "switch_ready_in": 34.0,
     "fast_move_turns_left": 0,
     "pokemon": [
       {
@@ -324,8 +324,8 @@
           "energy_gain": 4,
           "known_from": "guessed",
           "misfit": {
-            "LICK": 0.3,
-            "SCRATCH": 0.3
+            "LICK": 0.27,
+            "SCRATCH": 0.27
           }
         },
         "charged_moves": [
@@ -350,7 +350,7 @@
           54,
           54
         ],
-        "energy_by_clock": 58,
+        "energy_by_clock": 50,
         "energy_odds": {
           "46": 0.08,
           "50": 0.12,
@@ -393,9 +393,9 @@
           12,
           14
         ],
-        "hp": 115,
+        "hp": 53,
         "hp_max": 171,
-        "hp_share": 0.673,
+        "hp_share": 0.31,
         "energy": 6,
         "fainted": false,
         "attack_stage": 0,
@@ -408,7 +408,7 @@
           "energy_gain": 6,
           "known_from": "inferred",
           "misfit": {
-            "LOW_KICK": 0.49,
+            "LOW_KICK": 0.55,
             "ZEN_HEADBUTT": 0.23
           }
         },
@@ -434,7 +434,7 @@
           6,
           6
         ],
-        "energy_by_clock": 12,
+        "energy_by_clock": 18,
         "energy_odds": {
           "0": 0.21,
           "6": 0.33,
@@ -476,10 +476,10 @@
         "hp": 193,
         "hp_max": 202,
         "hp_share": 0.955,
-        "energy": 0,
+        "energy": 16,
         "fainted": false,
-        "attack_stage": -1,
-        "defense_stage": -1,
+        "attack_stage": 0,
+        "defense_stage": 0,
         "fast_move": {
           "id": "POWDER_SNOW",
           "name": "Powder Snow",
@@ -503,19 +503,21 @@
             "name": "Superpower",
             "type": "fighting",
             "energy": 40,
-            "known_from": "seen",
-            "times_used": 1
+            "known_from": "guessed",
+            "times_used": 0
           }
         ],
         "energy_range": [
-          0,
-          0
+          16,
+          16
         ],
-        "energy_by_clock": 8,
+        "energy_by_clock": 24,
         "energy_odds": {
-          "0": 0.54,
-          "8": 0.33,
-          "16": 0.12
+          "0": 0.08,
+          "8": 0.12,
+          "16": 0.33,
+          "24": 0.33,
+          "32": 0.12
         },
         "fast_move_odds": {
           "POWDER_SNOW": 0.51,
@@ -523,16 +525,16 @@
           "TACKLE": 0.19
         },
         "charged_move_odds": {
-          "SUPER_POWER": 1.0,
-          "ICICLE_SPEAR": 0.37,
-          "AVALANCHE": 0.36,
-          "BODY_SLAM": 0.18,
-          "HEAVY_SLAM": 0.09
+          "ICICLE_SPEAR": 0.57,
+          "AVALANCHE": 0.57,
+          "SUPER_POWER": 0.43,
+          "BODY_SLAM": 0.28,
+          "HEAVY_SLAM": 0.15
         },
         "ready_odds": {
-          "SUPER_POWER": 0.0,
           "ICICLE_SPEAR": 0.0,
           "AVALANCHE": 0.0,
+          "SUPER_POWER": 0.0,
           "BODY_SLAM": 0.0,
           "HEAVY_SLAM": 0.0
         }

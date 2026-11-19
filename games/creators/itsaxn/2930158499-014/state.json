@@ -1,7 +1,7 @@
 {
-  "t": 200.0,
-  "fighting_turns": 128,
-  "warnings": 13,
+  "t": 199.83,
+  "fighting_turns": 129,
+  "warnings": 16,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,12 +34,12 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "ASTONISH",
-        "name": "Astonish",
-        "type": "ghost",
-        "damage": 6,
-        "energy_gain": 10,
-        "turns": 3
+        "id": "BITE",
+        "name": "Bite",
+        "type": "dark",
+        "damage": 1,
+        "energy_gain": 4,
+        "turns": 1
       },
       "charged": [
         {
@@ -114,7 +114,7 @@
   },
   "me": {
     "active": 2,
-    "shields": 2,
+    "shields": 1,
     "left": 1,
     "switch_ready_in": 0.0,
     "pokemon": [
@@ -237,10 +237,10 @@
           11,
           13
         ],
-        "hp": 4,
+        "hp": 6,
         "hp_max": 154,
-        "hp_share": 0.026,
-        "energy": 19,
+        "hp_share": 0.039,
+        "energy": 37,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -275,9 +275,9 @@
   },
   "opponent": {
     "active": 2,
-    "shields": 2,
-    "left": 3,
-    "unseen": 2,
+    "shields": 0,
+    "left": 0,
+    "unseen": 0,
     "switch_ready_in": 0.0,
     "fast_move_turns_left": 0,
     "pokemon": [
@@ -301,7 +301,7 @@
         "hp": 0,
         "hp_max": 161,
         "hp_share": 0.0,
-        "energy": 74,
+        "energy": 65,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -333,16 +333,16 @@
           }
         ],
         "energy_range": [
-          74,
-          74
+          65,
+          65
         ],
         "energy_by_clock": 74,
         "energy_odds": {
-          "56": 0.08,
-          "65": 0.12,
+          "47": 0.08,
+          "56": 0.12,
+          "65": 0.33,
           "74": 0.33,
-          "83": 0.33,
-          "92": 0.12
+          "83": 0.12
         },
         "fast_move_odds": {
           "MUD_SHOT": 1.0
@@ -359,10 +359,10 @@
         "ready_odds": {
           "AQUA_TAIL": 1.0,
           "MUD_BOMB": 0.28,
-          "STONE_EDGE": 0.24,
+          "STONE_EDGE": 0.22,
           "DRAIN_PUNCH": 0.18,
-          "SLUDGE_BOMB": 0.17,
-          "EARTHQUAKE": 0.1,
+          "SLUDGE_BOMB": 0.15,
+          "EARTHQUAKE": 0.09,
           "ACID_SPRAY": 0.04
         }
       },
@@ -385,7 +385,7 @@
         "hp": 0,
         "hp_max": 118,
         "hp_share": 0.0,
-        "energy": 50,
+        "energy": 35,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": -1,
@@ -397,7 +397,7 @@
           "energy_gain": 3,
           "known_from": "inferred",
           "misfit": {
-            "TACKLE": 209.0
+            "TACKLE": 1.15
           }
         },
         "charged_moves": [
@@ -419,16 +419,16 @@
           }
         ],
         "energy_range": [
-          50,
-          51
+          35,
+          35
         ],
-        "energy_by_clock": 54,
+        "energy_by_clock": 38,
         "energy_odds": {
-          "44": 0.08,
-          "47": 0.12,
-          "50": 0.33,
-          "53": 0.33,
-          "56": 0.12
+          "29": 0.08,
+          "32": 0.12,
+          "35": 0.33,
+          "38": 0.33,
+          "41": 0.12
         },
         "fast_move_odds": {
           "TACKLE": 1.0
@@ -440,9 +440,9 @@
           "HYPER_BEAM": 0.09
         },
         "ready_odds": {
-          "DISCHARGE": 1.0,
-          "FOUL_PLAY": 0.67,
-          "THUNDERBOLT": 0.03,
+          "DISCHARGE": 0.12,
+          "FOUL_PLAY": 0.08,
+          "THUNDERBOLT": 0.0,
           "HYPER_BEAM": 0.0
         }
       },
@@ -462,24 +462,23 @@
           15,
           13
         ],
-        "hp": 13,
+        "hp": 0,
         "hp_max": 184,
-        "hp_share": 0.071,
+        "hp_share": 0.0,
         "energy": 100,
-        "fainted": false,
+        "fainted": true,
         "attack_stage": -2,
         "defense_stage": 0,
         "fast_move": {
-          "id": "ASTONISH",
-          "name": "Astonish",
-          "type": "ghost",
-          "turns": 3,
-          "energy_gain": 10,
-          "known_from": "inferred",
+          "id": "BITE",
+          "name": "Bite",
+          "type": "dark",
+          "turns": 1,
+          "energy_gain": 4,
+          "known_from": "guessed",
           "misfit": {
-            "ASTONISH": 0.16,
-            "BITE": 0.39,
-            "ROLLOUT": 0.65
+            "ASTONISH": 0.34,
+            "BITE": 0.37
           }
         },
         "charged_moves": [
@@ -506,12 +505,13 @@
         ],
         "energy_by_clock": 100,
         "energy_odds": {
-          "80": 0.08,
-          "90": 0.12,
+          "92": 0.08,
+          "96": 0.12,
           "100": 0.79
         },
         "fast_move_odds": {
-          "ASTONISH": 1.0
+          "ASTONISH": 0.52,
+          "BITE": 0.48
         },
         "charged_move_odds": {
           "DRILL_RUN": 1.0,

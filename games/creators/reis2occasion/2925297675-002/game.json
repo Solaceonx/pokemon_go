@@ -19,24 +19,18 @@
   "from": "result screen",
   "left": {
    "mine": 1,
-   "theirs": 1
+   "theirs": 0
   }
  },
  "seconds": 141.8,
- "fighting_turns": 104,
+ "fighting_turns": 98,
  "checks": {
-  "verdict": "fail",
-  "failed": [
-   "shields: we used 1, but 0 charged move(s) were tracked as blocked",
-   "shields: they used 2, but 1 charged move(s) were tracked as blocked",
-   "energy: super_power at 117.0s had 0 of 40",
-   "ending: result says win, tracker has us on 1 and them on 1"
-  ],
+  "verdict": "pass",
+  "failed": [],
   "notes": [
-   "unexplained changes in 16% of looks",
    "fast move only guessed for cetitan"
   ],
-  "unexplained_health_changes": 15
+  "unexplained_health_changes": 10
  },
  "teams": {
   "mine": [
@@ -81,7 +75,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.342,
+    "hp_share_at_end": 0.312,
     "fast_move": {
      "id": "POWDER_SNOW",
      "name": "Powder Snow",
@@ -101,8 +95,8 @@
       "id": "SUPER_POWER",
       "name": "Superpower",
       "energy": 40,
-      "known_from": "guessed",
-      "times_used": 0
+      "known_from": "seen",
+      "times_used": 1
      }
     ]
    },
@@ -148,8 +142,8 @@
     "cp": 1494,
     "cp_from": "screen",
     "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.047,
+    "fainted": true,
+    "hp_share_at_end": 0.0,
     "fast_move": {
      "id": "DRAGON_BREATH",
      "name": "Dragon Breath",
@@ -233,8 +227,9 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Powder Snow": 0.62,
-      "Ice Shard": 0.38
+      "Powder Snow": 0.46,
+      "Tackle": 0.31,
+      "Ice Shard": 0.22
      }
     },
     "charged_moves": [
@@ -250,7 +245,7 @@
       "name": "Superpower",
       "energy": 40,
       "known_from": "seen",
-      "times_used": 3
+      "times_used": 2
      }
     ],
     "other_charged_moves": {
@@ -265,24 +260,24 @@
  },
  "summary": {
   "charged": {
-   "mine": 3,
-   "theirs": 5
+   "mine": 4,
+   "theirs": 4
   },
   "charged_shielded": {
-   "mine": 1,
-   "theirs": 0
+   "mine": 2,
+   "theirs": 1
   },
   "shields_left": {
    "mine": 1,
    "theirs": 0
   },
   "switches": {
-   "mine": 0,
+   "mine": 1,
    "theirs": 1
   },
   "faints": {
-   "mine": 3,
-   "theirs": 2
+   "mine": 2,
+   "theirs": 3
   }
  },
  "actions": [
@@ -336,29 +331,29 @@
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 11,
-    "hits_seen": 7
+    "hits_seen": 9
    },
-   "unexplained_health_changes": 3,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Shelgon",
      "shields": 2,
      "left": 3,
-     "hp": 62,
+     "hp": 64,
      "hp_max": 123,
-     "hp_share": 0.504,
+     "hp_share": 0.52,
      "energy": 44
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 2,
      "left": 3,
-     "hp": 75,
+     "hp": 73,
      "hp_max": 127,
-     "hp_share": 0.591,
+     "hp_share": 0.575,
      "energy": [
-      44,
-      44
+      52,
+      52
      ],
      "energy_ceiling": 48
     }
@@ -377,8 +372,8 @@
    "energy_before": 44,
    "target": "Dragonair",
    "shielded": true,
-   "target_hp_before": 75,
-   "target_hp_after": 75,
+   "target_hp_before": 73,
+   "target_hp_after": 73,
    "target_hp_max": 127,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -389,21 +384,21 @@
      "active": "Shelgon",
      "shields": 2,
      "left": 3,
-     "hp": 62,
+     "hp": 64,
      "hp_max": 123,
-     "hp_share": 0.504,
+     "hp_share": 0.52,
      "energy": 4
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 1,
      "left": 3,
-     "hp": 75,
+     "hp": 73,
      "hp_max": 127,
-     "hp_share": 0.591,
+     "hp_share": 0.575,
      "energy": [
-      44,
-      44
+      52,
+      52
      ],
      "energy_ceiling": 48
     }
@@ -420,7 +415,7 @@
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 11,
-    "hits_seen": 9
+    "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Dragonair",
@@ -444,12 +439,12 @@
      "active": "Dragonair",
      "shields": 1,
      "left": 3,
-     "hp": 29,
+     "hp": 30,
      "hp_max": 127,
-     "hp_share": 0.228,
+     "hp_share": 0.236,
      "energy": [
-      92,
-      92
+      100,
+      100
      ],
      "energy_ceiling": 92
     }
@@ -466,93 +461,48 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    92,
-    92
+    100,
+    100
    ],
    "energy_ceiling": 92,
    "target": "Shelgon",
    "shielded": false,
    "target_hp_before": 19,
-   "target_hp_after": 19,
+   "target_hp_after": 0,
    "target_hp_max": 123,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 24,
-   "resolved_t": 28.0,
+   "resolved_t": 27.13,
    "cue": true,
    "state": {
     "mine": {
      "active": "Shelgon",
      "shields": 2,
-     "left": 3,
-     "hp": 19,
+     "left": 2,
+     "hp": 0,
      "hp_max": 123,
-     "hp_share": 0.154,
+     "hp_share": 0.0,
      "energy": 48
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 1,
      "left": 3,
-     "hp": 29,
+     "hp": 30,
      "hp_max": 127,
-     "hp_share": 0.228,
+     "hp_share": 0.236,
      "energy": [
-      57,
-      57
+      65,
+      65
      ],
-     "energy_ceiling": 61
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 28.0,
-   "until": 28.37,
-   "fighting_turn": 22,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Shelgon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Dragonair",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Shelgon",
-     "shields": 2,
-     "left": 3,
-     "hp": 19,
-     "hp_max": 123,
-     "hp_share": 0.154,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Dragonair",
-     "shields": 1,
-     "left": 3,
-     "hp": 29,
-     "hp_max": 127,
-     "hp_share": 0.228,
-     "energy": [
-      57,
-      57
-     ],
-     "energy_ceiling": 61
+     "energy_ceiling": 69
     }
    }
   },
   {
    "kind": "faint",
-   "t": 28.37,
-   "fighting_turn": 23,
+   "t": 27.13,
+   "fighting_turn": 22,
    "side": "mine",
    "pokemon": "Shelgon",
    "next": null,
@@ -560,32 +510,32 @@
     "mine": {
      "active": "Shelgon",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 123,
      "hp_share": 0.0,
-     "energy": 52
+     "energy": 48
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 1,
      "left": 3,
-     "hp": 29,
+     "hp": 30,
      "hp_max": 127,
-     "hp_share": 0.228,
+     "hp_share": 0.236,
      "energy": [
-      61,
-      61
+      65,
+      65
      ],
-     "energy_ceiling": 65
+     "energy_ceiling": 69
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 28.37,
+   "t": 27.13,
    "until": 32.0,
-   "fighting_turn": 23,
+   "fighting_turn": 22,
    "turns": 4,
    "mine": {
     "pokemon": "Shelgon",
@@ -599,7 +549,7 @@
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "state": {
     "mine": {
@@ -615,21 +565,21 @@
      "active": "Dragonair",
      "shields": 1,
      "left": 3,
-     "hp": 29,
+     "hp": 30,
      "hp_max": 127,
-     "hp_share": 0.228,
+     "hp_share": 0.236,
      "energy": [
-      73,
-      73
+      77,
+      77
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 81
     }
    }
   },
   {
    "kind": "switch",
    "t": 32.0,
-   "fighting_turn": 27,
+   "fighting_turn": 26,
    "side": "theirs",
    "from": "Dragonair",
    "to": "Crustle",
@@ -662,14 +612,14 @@
    "kind": "fighting",
    "t": 32.0,
    "until": 36.8,
-   "fighting_turn": 27,
+   "fighting_turn": 26,
    "turns": 9,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Crustle",
@@ -678,7 +628,7 @@
     "fast_moves_if_no_pause": 9,
     "hits_seen": 4
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Cetitan",
@@ -693,12 +643,12 @@
      "active": "Crustle",
      "shields": 1,
      "left": 3,
-     "hp": 94,
+     "hp": 98,
      "hp_max": 115,
-     "hp_share": 0.817,
+     "hp_share": 0.852,
      "energy": [
-      40,
-      40
+      36,
+      36
      ],
      "energy_ceiling": 40
     }
@@ -707,7 +657,7 @@
   {
    "kind": "charged",
    "t": 36.8,
-   "fighting_turn": 36,
+   "fighting_turn": 35,
    "side": "mine",
    "pokemon": "Cetitan",
    "move": "Icicle Spear",
@@ -717,8 +667,8 @@
    "energy_before": 48,
    "target": "Crustle",
    "shielded": false,
-   "target_hp_before": 94,
-   "target_hp_after": 94,
+   "target_hp_before": 98,
+   "target_hp_after": 98,
    "target_hp_max": 115,
    "target_bar_read": false,
    "expected_damage": 49,
@@ -738,104 +688,9 @@
      "active": "Crustle",
      "shields": 1,
      "left": 3,
-     "hp": 94,
+     "hp": 98,
      "hp_max": 115,
-     "hp_share": 0.817,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 46.0,
-   "until": 50.8,
-   "fighting_turn": 36,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Cetitan",
-    "fast_move": "Powder Snow",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 5
-   },
-   "theirs": {
-    "pokemon": "Crustle",
-    "fast_move": "Fury Cutter",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 5
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Cetitan",
-     "shields": 2,
-     "left": 2,
-     "hp": 138,
-     "hp_max": 202,
-     "hp_share": 0.683,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Crustle",
-     "shields": 1,
-     "left": 3,
-     "hp": 22,
-     "hp_max": 115,
-     "hp_share": 0.191,
-     "energy": [
-      76,
-      76
-     ],
-     "energy_ceiling": 76
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 50.8,
-   "fighting_turn": 45,
-   "side": "theirs",
-   "pokemon": "Crustle",
-   "move": "X-Scissor",
-   "move_id": "X_SCISSOR",
-   "move_known_from": "seen",
-   "cost": 40,
-   "energy_before": [
-    76,
-    76
-   ],
-   "energy_ceiling": 76,
-   "target": "Cetitan",
-   "shielded": false,
-   "target_hp_before": 138,
-   "target_hp_after": 138,
-   "target_hp_max": 202,
-   "target_bar_read": false,
-   "expected_damage": 80,
-   "resolved_t": 60.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Cetitan",
-     "shields": 2,
-     "left": 2,
-     "hp": 138,
-     "hp_max": 202,
-     "hp_share": 0.683,
-     "energy": 48
-    },
-    "theirs": {
-     "active": "Crustle",
-     "shields": 1,
-     "left": 3,
-     "hp": 22,
-     "hp_max": 115,
-     "hp_share": 0.191,
+     "hp_share": 0.852,
      "energy": [
       36,
       36
@@ -846,16 +701,110 @@
   },
   {
    "kind": "fighting",
+   "t": 46.0,
+   "until": 50.8,
+   "fighting_turn": 35,
+   "turns": 9,
+   "mine": {
+    "pokemon": "Cetitan",
+    "fast_move": "Powder Snow",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Crustle",
+    "fast_move": "Fury Cutter",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 4
+   },
+   "state": {
+    "mine": {
+     "active": "Cetitan",
+     "shields": 2,
+     "left": 2,
+     "hp": 135,
+     "hp_max": 202,
+     "hp_share": 0.668,
+     "energy": 40
+    },
+    "theirs": {
+     "active": "Crustle",
+     "shields": 1,
+     "left": 3,
+     "hp": 19,
+     "hp_max": 115,
+     "hp_share": 0.165,
+     "energy": [
+      72,
+      72
+     ],
+     "energy_ceiling": 76
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 50.8,
+   "fighting_turn": 44,
+   "side": "theirs",
+   "pokemon": "Crustle",
+   "move": "X-Scissor",
+   "move_id": "X_SCISSOR",
+   "move_known_from": "seen",
+   "cost": 40,
+   "energy_before": [
+    72,
+    72
+   ],
+   "energy_ceiling": 76,
+   "target": "Cetitan",
+   "shielded": true,
+   "target_hp_before": 135,
+   "target_hp_after": 135,
+   "target_hp_max": 202,
+   "target_bar_read": false,
+   "expected_damage": 1,
+   "resolved_t": 60.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Cetitan",
+     "shields": 1,
+     "left": 2,
+     "hp": 135,
+     "hp_max": 202,
+     "hp_share": 0.668,
+     "energy": 48
+    },
+    "theirs": {
+     "active": "Crustle",
+     "shields": 1,
+     "left": 3,
+     "hp": 19,
+     "hp_max": 115,
+     "hp_share": 0.165,
+     "energy": [
+      32,
+      32
+     ],
+     "energy_ceiling": 36
+    }
+   }
+  },
+  {
+   "kind": "fighting",
    "t": 60.0,
    "until": 61.8,
-   "fighting_turn": 45,
+   "fighting_turn": 44,
    "turns": 3,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Crustle",
@@ -864,36 +813,35 @@
     "fast_moves_if_no_pause": 3,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Cetitan",
      "shields": 1,
      "left": 2,
-     "hp": 127,
+     "hp": 130,
      "hp_max": 202,
-     "hp_share": 0.629,
+     "hp_share": 0.644,
      "energy": 56
     },
     "theirs": {
      "active": "Crustle",
      "shields": 1,
      "left": 3,
-     "hp": 16,
+     "hp": 88,
      "hp_max": 115,
-     "hp_share": 0.139,
+     "hp_share": 0.765,
      "energy": [
-      48,
-      48
+      44,
+      44
      ],
-     "energy_ceiling": 52
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 61.8,
-   "fighting_turn": 48,
+   "fighting_turn": 47,
    "side": "mine",
    "pokemon": "Cetitan",
    "move": "Icicle Spear",
@@ -903,87 +851,42 @@
    "energy_before": 56,
    "target": "Crustle",
    "shielded": false,
-   "target_hp_before": 16,
-   "target_hp_after": 16,
+   "target_hp_before": 88,
+   "target_hp_after": 0,
    "target_hp_max": 115,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 49,
-   "resolved_t": 71.0,
+   "resolved_t": 70.13,
    "cue": true,
    "state": {
     "mine": {
      "active": "Cetitan",
      "shields": 1,
      "left": 2,
-     "hp": 127,
+     "hp": 130,
      "hp_max": 202,
-     "hp_share": 0.629,
+     "hp_share": 0.644,
      "energy": 16
     },
     "theirs": {
      "active": "Crustle",
-     "shields": 1,
-     "left": 3,
-     "hp": 16,
-     "hp_max": 115,
-     "hp_share": 0.139,
-     "energy": [
-      48,
-      48
-     ],
-     "energy_ceiling": 52
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 71.0,
-   "until": 71.97,
-   "fighting_turn": 48,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Cetitan",
-    "fast_move": "Powder Snow",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Crustle",
-    "fast_move": "Fury Cutter",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Cetitan",
      "shields": 1,
      "left": 2,
-     "hp": 127,
-     "hp_max": 202,
-     "hp_share": 0.629,
-     "energy": 16
-    },
-    "theirs": {
-     "active": "Crustle",
-     "shields": 1,
-     "left": 3,
-     "hp": 16,
+     "hp": 0,
      "hp_max": 115,
-     "hp_share": 0.139,
+     "hp_share": 0.0,
      "energy": [
-      48,
-      48
+      44,
+      44
      ],
-     "energy_ceiling": 52
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "faint",
-   "t": 71.97,
-   "fighting_turn": 50,
+   "t": 70.13,
+   "fighting_turn": 47,
    "side": "theirs",
    "pokemon": "Crustle",
    "next": null,
@@ -992,32 +895,32 @@
      "active": "Cetitan",
      "shields": 1,
      "left": 2,
-     "hp": 127,
+     "hp": 130,
      "hp_max": 202,
-     "hp_share": 0.629,
-     "energy": 24
+     "hp_share": 0.644,
+     "energy": 16
     },
     "theirs": {
      "active": "Crustle",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 115,
      "hp_share": 0.0,
      "energy": [
-      56,
-      56
+      44,
+      44
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 71.97,
+   "t": 70.13,
    "until": 82.6,
-   "fighting_turn": 50,
-   "turns": 13,
+   "fighting_turn": 47,
+   "turns": 12,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
@@ -1029,8 +932,8 @@
     "pokemon": "Crustle",
     "fast_move": "Fury Cutter",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 13,
-    "hits_seen": 3
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1041,45 +944,41 @@
      "hp": 110,
      "hp_max": 202,
      "hp_share": 0.545,
-     "energy": 80
+     "energy": 56
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 1,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      48,
-      48
+      32,
+      32
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "charged",
    "t": 82.6,
-   "fighting_turn": 63,
-   "side": "theirs",
+   "fighting_turn": 56,
+   "side": "mine",
    "pokemon": "Cetitan",
    "move": "Superpower",
    "move_id": "SUPER_POWER",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": [
-    48,
-    48
-   ],
-   "energy_ceiling": 56,
+   "energy_before": 64,
    "target": "Cetitan",
-   "shielded": false,
-   "target_hp_before": 110,
-   "target_hp_after": 110,
+   "shielded": true,
+   "target_hp_before": 202,
+   "target_hp_after": 202,
    "target_hp_max": 202,
    "target_bar_read": false,
-   "expected_damage": 138,
+   "expected_damage": 1,
    "resolved_t": 92.0,
    "cue": true,
    "state": {
@@ -1090,41 +989,41 @@
      "hp": 110,
      "hp_max": 202,
      "hp_share": 0.545,
-     "energy": 88
+     "energy": 24
     },
     "theirs": {
      "active": "Cetitan",
-     "shields": 1,
+     "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      8,
-      8
+      48,
+      48
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
    "t": 92.0,
-   "until": 92.5,
-   "fighting_turn": 63,
-   "turns": 1,
+   "until": 94.0,
+   "fighting_turn": 59,
+   "turns": 4,
    "mine": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1135,30 +1034,30 @@
      "hp": 110,
      "hp_max": 202,
      "hp_share": 0.545,
-     "energy": 88
+     "energy": 24
     },
     "theirs": {
      "active": "Cetitan",
-     "shields": 1,
+     "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      8,
-      8
+      48,
+      48
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 48
     }
    }
   },
   {
-   "kind": "faint",
-   "t": 92.5,
-   "fighting_turn": 64,
+   "kind": "switch",
+   "t": 94.0,
+   "fighting_turn": 63,
    "side": "mine",
-   "pokemon": "Cetitan",
-   "next": "Lapras",
+   "from": "Cetitan",
+   "to": "Lapras",
    "state": {
     "mine": {
      "active": "Lapras",
@@ -1171,68 +1070,68 @@
     },
     "theirs": {
      "active": "Cetitan",
-     "shields": 1,
+     "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      8,
-      8
+      64,
+      64
      ],
-     "energy_ceiling": 16
+     "energy_ceiling": 64
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 92.5,
+   "t": 94.0,
    "until": 96.8,
-   "fighting_turn": 64,
-   "turns": 8,
+   "fighting_turn": 63,
+   "turns": 4,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cetitan",
     "fast_move": "Powder Snow",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
    },
    "state": {
     "mine": {
      "active": "Lapras",
      "shields": 1,
      "left": 2,
-     "hp": 176,
+     "hp": 179,
      "hp_max": 179,
-     "hp_share": 0.983,
-     "energy": 32
+     "hp_share": 1.0,
+     "energy": 4
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      40,
-      40
+      64,
+      64
      ],
-     "energy_ceiling": 48
+     "energy_ceiling": 72
     }
    }
   },
   {
    "kind": "charged",
    "t": 96.8,
-   "fighting_turn": 72,
+   "fighting_turn": 64,
    "side": "theirs",
    "pokemon": "Cetitan",
    "move": "Superpower",
@@ -1240,17 +1139,17 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    40,
-    40
+    72,
+    72
    ],
-   "energy_ceiling": 48,
+   "energy_ceiling": 80,
    "target": "Lapras",
    "shielded": false,
-   "target_hp_before": 176,
-   "target_hp_after": 176,
+   "target_hp_before": 179,
+   "target_hp_after": 179,
    "target_hp_max": 179,
    "target_bar_read": false,
-   "expected_damage": 75,
+   "expected_damage": 93,
    "resolved_t": 106.0,
    "cue": true,
    "state": {
@@ -1258,23 +1157,23 @@
      "active": "Lapras",
      "shields": 1,
      "left": 2,
-     "hp": 176,
+     "hp": 179,
      "hp_max": 179,
-     "hp_share": 0.983,
-     "energy": 32
+     "hp_share": 1.0,
+     "energy": 16
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      0,
-      0
+      32,
+      32
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 40
     }
    }
   },
@@ -1282,7 +1181,7 @@
    "kind": "fighting",
    "t": 106.0,
    "until": 107.8,
-   "fighting_turn": 72,
+   "fighting_turn": 67,
    "turns": 2,
    "mine": {
     "pokemon": "Lapras",
@@ -1304,30 +1203,30 @@
      "active": "Lapras",
      "shields": 1,
      "left": 2,
-     "hp": 80,
+     "hp": 77,
      "hp_max": 179,
-     "hp_share": 0.447,
-     "energy": 36
+     "hp_share": 0.43,
+     "energy": 20
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
-      0,
-      0
+      32,
+      32
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 40
     }
    }
   },
   {
    "kind": "charged",
    "t": 107.8,
-   "fighting_turn": 73,
+   "fighting_turn": 68,
    "side": "theirs",
    "pokemon": "Cetitan",
    "move": "Superpower",
@@ -1335,18 +1234,18 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    0,
-    0
+    32,
+    32
    ],
-   "energy_ceiling": 16,
-   "energy_short_by": 40,
+   "energy_ceiling": 48,
+   "energy_short_by": 8,
    "target": "Lapras",
    "shielded": false,
-   "target_hp_before": 80,
-   "target_hp_after": 80,
+   "target_hp_before": 77,
+   "target_hp_after": 77,
    "target_hp_max": 179,
    "target_bar_read": false,
-   "expected_damage": 62,
+   "expected_damage": 75,
    "resolved_t": 117.0,
    "cue": true,
    "state": {
@@ -1354,38 +1253,38 @@
      "active": "Lapras",
      "shields": 1,
      "left": 2,
-     "hp": 80,
+     "hp": 77,
      "hp_max": 179,
-     "hp_share": 0.447,
-     "energy": 40
+     "hp_share": 0.43,
+     "energy": 24
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
      "left": 2,
-     "hp": 155,
+     "hp": 202,
      "hp_max": 202,
-     "hp_share": 0.767,
+     "hp_share": 1.0,
      "energy": [
       0,
-      0
+      8
      ],
-     "energy_ceiling": 8
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "fighting",
    "t": 117.0,
-   "until": 127.6,
-   "fighting_turn": 74,
-   "turns": 21,
+   "until": 127.13,
+   "fighting_turn": 69,
+   "turns": 20,
    "mine": {
     "pokemon": "Lapras",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 21,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 20,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cetitan",
@@ -1394,36 +1293,67 @@
     "fast_moves_if_no_pause": 10,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Lapras",
      "shields": 1,
      "left": 2,
-     "hp": 4,
+     "hp": 77,
      "hp_max": 179,
-     "hp_share": 0.022,
-     "energy": 100
+     "hp_share": 0.43,
+     "energy": 28
     },
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
      "left": 2,
-     "hp": 7,
+     "hp": 138,
      "hp_max": 202,
-     "hp_share": 0.035,
+     "hp_share": 0.683,
+     "energy": [
+      0,
+      8
+     ],
+     "energy_ceiling": 16
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 127.13,
+   "fighting_turn": 89,
+   "side": "theirs",
+   "pokemon": "Cetitan",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Lapras",
+     "shields": 1,
+     "left": 2,
+     "hp": 77,
+     "hp_max": 179,
+     "hp_share": 0.43,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Cetitan",
+     "shields": 0,
+     "left": 1,
+     "hp": 0,
+     "hp_max": 202,
+     "hp_share": 0.0,
      "energy": [
       80,
-      80
+      88
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 96
     }
    }
   },
   {
    "kind": "faint",
    "t": 127.6,
-   "fighting_turn": 95,
+   "fighting_turn": 89,
    "side": "mine",
    "pokemon": "Lapras",
    "next": null,
@@ -1431,7 +1361,7 @@
     "mine": {
      "active": "Lapras",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 179,
      "hp_share": 0.0,
@@ -1440,55 +1370,23 @@
     "theirs": {
      "active": "Cetitan",
      "shields": 0,
-     "left": 2,
-     "hp": 7,
-     "hp_max": 202,
-     "hp_share": 0.035,
-     "energy": [
-      80,
-      80
-     ],
-     "energy_ceiling": 88
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 133.0,
-   "fighting_turn": 95,
-   "side": "theirs",
-   "pokemon": "Cetitan",
-   "next": "Dragonair",
-   "state": {
-    "mine": {
-     "active": "Lapras",
-     "shields": 1,
      "left": 1,
      "hp": 0,
-     "hp_max": 179,
+     "hp_max": 202,
      "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Dragonair",
-     "shields": 0,
-     "left": 1,
-     "hp": 26,
-     "hp_max": 127,
-     "hp_share": 0.205,
      "energy": [
-      73,
-      73
+      80,
+      88
      ],
-     "energy_ceiling": 81
+     "energy_ceiling": 96
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 133.0,
-   "until": 141.8,
-   "fighting_turn": 95,
+   "t": 127.6,
+   "until": 137.4,
+   "fighting_turn": 89,
    "turns": 9,
    "mine": {
     "pokemon": "Lapras",
@@ -1498,11 +1396,11 @@
     "hits_seen": 1
    },
    "theirs": {
-    "pokemon": "Dragonair",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 4
+    "pokemon": "Cetitan",
+    "fast_move": "Powder Snow",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1510,18 +1408,50 @@
      "active": "Cetitan",
      "shields": 1,
      "left": 1,
-     "hp": 69,
+     "hp": 63,
      "hp_max": 202,
-     "hp_share": 0.342,
-     "energy": 100
+     "hp_share": 0.312,
+     "energy": 56
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 0,
      "left": 1,
-     "hp": 6,
+     "hp": 26,
      "hp_max": 127,
-     "hp_share": 0.047,
+     "hp_share": 0.205,
+     "energy": [
+      100,
+      100
+     ],
+     "energy_ceiling": 100
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 137.4,
+   "fighting_turn": 98,
+   "side": "theirs",
+   "pokemon": "Dragonair",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Cetitan",
+     "shields": 1,
+     "left": 1,
+     "hp": 63,
+     "hp_max": 202,
+     "hp_share": 0.312,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Dragonair",
+     "shields": 0,
+     "left": 0,
+     "hp": 0,
+     "hp_max": 127,
+     "hp_share": 0.0,
      "energy": [
       100,
       100
@@ -1533,30 +1463,30 @@
   {
    "kind": "end",
    "t": 141.8,
-   "fighting_turn": 104,
+   "fighting_turn": 98,
    "result": "win",
    "result_from": "result screen",
    "left": {
     "mine": 1,
-    "theirs": 1
+    "theirs": 0
    },
    "state": {
     "mine": {
      "active": "Cetitan",
      "shields": 1,
      "left": 1,
-     "hp": 69,
+     "hp": 63,
      "hp_max": 202,
-     "hp_share": 0.342,
-     "energy": 100
+     "hp_share": 0.312,
+     "energy": 56
     },
     "theirs": {
      "active": "Dragonair",
      "shields": 0,
-     "left": 1,
-     "hp": 6,
+     "left": 0,
+     "hp": 0,
      "hp_max": 127,
-     "hp_share": 0.047,
+     "hp_share": 0.0,
      "energy": [
       100,
       100

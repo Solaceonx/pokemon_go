@@ -9,7 +9,8 @@
         "t": 0.3,
         "name": "Fearow",
         "faint": false,
-        "header_seen_clip_seconds": 1.0,
+        "header_seen_clip_seconds": 1.0000001153402538,
+        "header_first_visible_clip_seconds": 0.6666667435601692,
         "transition_evidence": {
           "kind": "first",
           "method": "first_visible_header"
@@ -19,7 +20,8 @@
         "t": 31.1,
         "name": "Tinkaton",
         "faint": false,
-        "header_seen_clip_seconds": 33.000004,
+        "header_seen_clip_seconds": 33.00000380622837,
+        "header_first_visible_clip_seconds": 33.00000380622837,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -29,7 +31,8 @@
         "t": 79.1,
         "name": "Fearow",
         "faint": false,
-        "header_seen_clip_seconds": 81.000009,
+        "header_seen_clip_seconds": 81.00000934256056,
+        "header_first_visible_clip_seconds": 81.00000934256056,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -39,12 +42,13 @@
         "t": 105.3,
         "name": "Tinkaton",
         "faint": true,
-        "header_seen_clip_seconds": 106.000012,
+        "header_seen_clip_seconds": 106.0000122260669,
+        "header_first_visible_clip_seconds": 106.0000122260669,
         "transition_evidence": {
           "kind": "faint",
           "method": "local_party_counter_decrease",
-          "first_visible_seconds": 104.000012,
-          "confirmed_seconds": 104.666679,
+          "first_visible_seconds": 103.6666786236063,
+          "confirmed_seconds": 104.33334536716647,
           "before": 3,
           "after": 2
         }
@@ -53,7 +57,8 @@
         "t": 119.6,
         "name": "Seismitoad",
         "faint": false,
-        "header_seen_clip_seconds": 122.000014,
+        "header_seen_clip_seconds": 122.00001407151096,
+        "header_first_visible_clip_seconds": 122.00001407151096,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -65,7 +70,8 @@
         "t": -0.2,
         "name": "Pidgeot",
         "faint": false,
-        "header_seen_clip_seconds": 1.0,
+        "header_seen_clip_seconds": 1.0000001153402538,
+        "header_first_visible_clip_seconds": 0.6666667435601692,
         "transition_evidence": {
           "kind": "first",
           "method": "first_visible_header"
@@ -75,30 +81,63 @@
         "t": 34.6,
         "name": "Mawile",
         "faint": false,
-        "header_seen_clip_seconds": 35.000004,
+        "header_seen_clip_seconds": 35.000004036908884,
+        "header_first_visible_clip_seconds": 35.000004036908884,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
         }
       },
       {
-        "t": 65.6,
+        "t": 65.8,
         "name": "Gastrodon",
-        "faint": false,
-        "header_seen_clip_seconds": 66.000008,
+        "faint": true,
+        "header_seen_clip_seconds": 66.00000761245674,
+        "header_first_visible_clip_seconds": 65.66667424067666,
         "transition_evidence": {
-          "kind": "switch",
-          "method": "header_changed_without_local_faint_evidence"
+          "kind": "faint",
+          "method": "local_party_counter_decrease",
+          "first_visible_seconds": 63.66667400999616,
+          "confirmed_seconds": 64.33334075355633,
+          "before": 3,
+          "after": 2
         }
       },
       {
         "t": 92.1,
         "name": "Pidgeot",
         "faint": false,
-        "header_seen_clip_seconds": 93.000011,
+        "header_seen_clip_seconds": 93.0000107266436,
+        "header_first_visible_clip_seconds": 93.0000107266436,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
+        }
+      },
+      {
+        "t": 148.6,
+        "name": "Gastrodon",
+        "faint": false,
+        "header_seen_clip_seconds": 149.3333505574779,
+        "header_first_visible_clip_seconds": 149.3333505574779,
+        "transition_evidence": {
+          "kind": "switch",
+          "method": "header_changed_without_local_faint_evidence"
+        }
+      },
+      {
+        "t": 151.8,
+        "name": "Pidgeot",
+        "faint": true,
+        "header_seen_clip_seconds": 152.00001753171858,
+        "header_first_visible_clip_seconds": 151.66668415993848,
+        "transition_evidence": {
+          "kind": "faint",
+          "method": "local_party_counter_decrease",
+          "first_visible_seconds": 151.66668415993848,
+          "confirmed_seconds": 152.33335090349865,
+          "before": 2,
+          "after": 1
         }
       }
     ]
@@ -109,119 +148,163 @@
       "side": "mine",
       "move": "Drill Peck",
       "blocked": false,
+      "actor": "Fearow",
+      "actor_confirmed_clip_seconds": 14.000002,
+      "side_confirmed_clip_seconds": 8.000001,
       "announcement_clip_seconds": [
         14.000002,
         15.000002
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 19.1,
       "side": "theirs",
       "move": "Feather Dance",
       "blocked": false,
+      "actor": "Pidgeot",
+      "actor_confirmed_clip_seconds": 26.000003,
+      "side_confirmed_clip_seconds": 20.000002,
       "announcement_clip_seconds": [
         26.000003,
         27.000003
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 40.1,
       "side": "mine",
       "move": "Bulldoze",
       "blocked": false,
+      "actor": "Tinkaton",
+      "actor_confirmed_clip_seconds": 48.000006,
+      "side_confirmed_clip_seconds": 41.000005,
       "announcement_clip_seconds": [
         48.000006,
         49.000006
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 54.1,
       "side": "theirs",
       "move": "Iron Head",
       "blocked": true,
+      "actor": "Mawile",
+      "actor_confirmed_clip_seconds": 61.000007,
+      "side_confirmed_clip_seconds": 55.000006,
       "announcement_clip_seconds": [
         61.000007,
         62.000007
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 70.1,
       "side": "mine",
       "move": "Bulldoze",
       "blocked": false,
+      "actor": "Tinkaton",
+      "actor_confirmed_clip_seconds": 78.000009,
+      "side_confirmed_clip_seconds": 71.000008,
       "announcement_clip_seconds": [
         78.000009,
         79.000009
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 82.1,
       "side": "mine",
       "move": "Drill Peck",
       "blocked": false,
+      "actor": "Fearow",
+      "actor_confirmed_clip_seconds": 90.00001,
+      "side_confirmed_clip_seconds": 83.00001,
       "announcement_clip_seconds": [
         90.00001,
         91.00001
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 93.1,
       "side": "theirs",
       "move": "Twister",
       "blocked": false,
+      "actor": "Pidgeot",
+      "actor_confirmed_clip_seconds": 100.000012,
+      "side_confirmed_clip_seconds": 94.000011,
       "announcement_clip_seconds": [
         100.000012,
         101.000012
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 112.1,
       "side": "mine",
       "move": "Gigaton Hammer",
       "blocked": true,
+      "actor": "Tinkaton",
+      "actor_confirmed_clip_seconds": 119.000014,
+      "side_confirmed_clip_seconds": 113.000013,
       "announcement_clip_seconds": [
         119.000014,
         120.000014
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 126.1,
       "side": "theirs",
       "move": "Feather Dance",
       "blocked": false,
+      "actor": "Pidgeot",
+      "actor_confirmed_clip_seconds": 134.000015,
+      "side_confirmed_clip_seconds": 127.000015,
       "announcement_clip_seconds": [
         134.000015
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 139.1,
       "side": "mine",
       "move": "Icy Wind",
       "blocked": false,
+      "actor": "Seismitoad",
+      "actor_confirmed_clip_seconds": 146.000017,
+      "side_confirmed_clip_seconds": 140.000016,
       "announcement_clip_seconds": [
         146.000017,
         147.000017
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 156.1,
       "side": "mine",
       "move": "Icy Wind",
       "blocked": false,
+      "actor": "Seismitoad",
+      "actor_confirmed_clip_seconds": 163.000019,
+      "side_confirmed_clip_seconds": 157.000018,
       "announcement_clip_seconds": [
         163.000019,
         164.000019
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     }
   ],
   "left": {
     "mine": [
       [
-        0.27,
+        -0.07,
         3
       ],
       [
-        103.27,
+        102.93,
         2
       ],
       [
@@ -229,72 +312,93 @@
         1
       ]
     ],
-    "theirs": []
+    "theirs": [
+      [
+        -0.07,
+        3
+      ],
+      [
+        62.93,
+        2
+      ],
+      [
+        150.93,
+        1
+      ]
+    ]
   },
   "steps": {
     "mine": [
       [
-        2.43,
-        11
-      ],
-      [
-        3.1,
-        5
+        2.1,
+        14
       ],
       [
         4.1,
-        18
+        16
       ],
       [
-        16.1,
-        17
+        5.43,
+        16
       ],
       [
-        17.1,
-        18
-      ],
-      [
-        29.43,
-        17
-      ],
-      [
-        34.1,
+        13.1,
         2
       ],
       [
-        34.43,
-        10
+        17.1,
+        15
+      ],
+      [
+        28.77,
+        16
+      ],
+      [
+        29.1,
+        2
+      ],
+      [
+        34.1,
+        14
       ],
       [
         35.1,
         12
       ],
       [
-        38.1,
-        27
+        36.43,
+        8
+      ],
+      [
+        37.1,
+        7
+      ],
+      [
+        37.43,
+        2
+      ],
+      [
+        38.43,
+        8
       ],
       [
         39.43,
+        9
+      ],
+      [
+        49.77,
         10
       ],
       [
         50.77,
-        8
-      ],
-      [
-        51.43,
         9
       ],
       [
-        52.43,
-        4
+        51.77,
+        8
       ],
       [
-        52.77,
-        7
-      ],
-      [
-        62.77,
+        53.43,
         2
       ],
       [
@@ -302,56 +406,60 @@
         2
       ],
       [
-        67.1,
-        6
+        66.43,
+        9
       ],
       [
-        67.43,
-        4
-      ],
-      [
-        68.43,
-        10
-      ],
-      [
-        92.1,
-        5
+        68.1,
+        2
       ],
       [
         106.43,
-        25
+        21
       ],
       [
-        124.43,
-        11
+        107.1,
+        2
+      ],
+      [
+        107.43,
+        5
+      ],
+      [
+        110.77,
+        7
       ],
       [
         125.43,
-        3
+        12
       ],
       [
-        135.1,
-        30
+        134.1,
+        28
       ],
       [
-        136.77,
-        14
+        135.43,
+        2
       ],
       [
-        148.77,
+        136.43,
+        11
+      ],
+      [
+        137.1,
+        2
+      ],
+      [
+        138.43,
         12
       ],
       [
         153.1,
-        3
+        13
       ],
       [
-        153.77,
-        9
-      ],
-      [
-        154.1,
-        3
+        161.77,
+        16
       ]
     ],
     "theirs": [
@@ -364,64 +472,80 @@
         2
       ],
       [
-        3.1,
-        13
-      ],
-      [
-        3.77,
-        8
-      ],
-      [
-        5.43,
+        2.1,
         5
+      ],
+      [
+        3.1,
+        10
+      ],
+      [
+        4.1,
+        3
+      ],
+      [
+        4.77,
+        4
+      ],
+      [
+        13.77,
+        2
       ],
       [
         15.77,
-        6
+        5
       ],
       [
-        17.77,
+        16.77,
         7
       ],
       [
-        18.77,
-        5
+        18.1,
+        4
       ],
       [
-        28.77,
+        28.1,
         3
-      ],
-      [
-        29.1,
-        5
       ],
       [
         29.43,
+        6
+      ],
+      [
+        30.1,
         3
       ],
       [
-        30.77,
-        5
-      ],
-      [
-        32.43,
-        3
+        31.1,
+        4
       ],
       [
         49.43,
-        66
+        65
+      ],
+      [
+        50.1,
+        3
       ],
       [
         68.77,
-        13
+        3
       ],
       [
-        80.43,
-        55
+        78.1,
+        46
       ],
       [
-        106.1,
-        4
+        79.77,
+        3
+      ],
+      [
+        80.77,
+        2
+      ],
+      [
+        106.43,
+        2
       ],
       [
         107.43,
@@ -429,19 +553,23 @@
       ],
       [
         109.43,
-        5
+        6
+      ],
+      [
+        110.1,
+        2
       ],
       [
         110.43,
         2
       ],
       [
-        111.43,
-        4
+        119.43,
+        2
       ],
       [
-        126.1,
-        3
+        126.77,
+        2
       ]
     ]
   },
@@ -449,8 +577,16 @@
   "buttons_on": [],
   "waits": [
     [
-      103.27,
+      102.93,
       104.8
+    ],
+    [
+      62.93,
+      65.3
+    ],
+    [
+      150.93,
+      151.3
     ]
   ]
 }

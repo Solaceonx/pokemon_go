@@ -1,7 +1,7 @@
 {
-  "t": 254.0,
+  "t": 255.0,
   "fighting_turns": 145,
-  "warnings": 8,
+  "warnings": 11,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,12 +34,12 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "BITE",
-        "name": "Bite",
-        "type": "dark",
-        "damage": 1,
-        "energy_gain": 4,
-        "turns": 1
+        "id": "ASTONISH",
+        "name": "Astonish",
+        "type": "ghost",
+        "damage": 10,
+        "energy_gain": 10,
+        "turns": 3
       },
       "charged": [
         {
@@ -48,8 +48,8 @@
           "type": "ground",
           "damage": 34,
           "energy": 40,
-          "could_be_ready": true,
-          "surely_ready": true
+          "could_be_ready": false,
+          "surely_ready": false
         },
         {
           "id": "ROCK_SLIDE",
@@ -57,8 +57,8 @@
           "type": "rock",
           "damage": 36,
           "energy": 45,
-          "could_be_ready": true,
-          "surely_ready": true
+          "could_be_ready": false,
+          "surely_ready": false
         }
       ],
       "every_fast_move_possible": [
@@ -137,7 +137,7 @@
         "hp": 0,
         "hp_max": 145,
         "hp_share": 0.0,
-        "energy": 96,
+        "energy": 76,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -188,7 +188,7 @@
         "hp": 0,
         "hp_max": 150,
         "hp_share": 0.0,
-        "energy": 38,
+        "energy": 50,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -236,10 +236,10 @@
           14,
           15
         ],
-        "hp": 86,
+        "hp": 75,
         "hp_max": 107,
-        "hp_share": 0.804,
-        "energy": 80,
+        "hp_share": 0.701,
+        "energy": 72,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -278,7 +278,7 @@
     "left": 1,
     "unseen": 0,
     "switch_ready_in": 1.0,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 2,
     "pokemon": [
       {
         "species": "marowak",
@@ -299,7 +299,7 @@
         "hp": 0,
         "hp_max": 125,
         "hp_share": 0.0,
-        "energy": 21,
+        "energy": 0,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -311,7 +311,7 @@
           "energy_gain": 7,
           "known_from": "inferred",
           "misfit": {
-            "ROCK_SMASH": 6.5
+            "ROCK_SMASH": 1.84
           }
         },
         "charged_moves": [
@@ -333,16 +333,14 @@
           }
         ],
         "energy_range": [
-          21,
-          21
+          0,
+          0
         ],
-        "energy_by_clock": 28,
+        "energy_by_clock": 14,
         "energy_odds": {
-          "7": 0.08,
-          "14": 0.12,
-          "21": 0.33,
-          "28": 0.33,
-          "35": 0.12
+          "0": 0.54,
+          "7": 0.33,
+          "14": 0.12
         },
         "fast_move_odds": {
           "ROCK_SMASH": 1.0
@@ -354,7 +352,7 @@
           "DIG": 0.19
         },
         "ready_odds": {
-          "BONE_CLUB": 0.12,
+          "BONE_CLUB": 0.0,
           "ROCK_SLIDE": 0.0,
           "EARTHQUAKE": 0.0,
           "DIG": 0.0
@@ -380,7 +378,7 @@
         "hp": 0,
         "hp_max": 174,
         "hp_share": 0.0,
-        "energy": 100,
+        "energy": 96,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -392,8 +390,8 @@
           "energy_gain": 9,
           "known_from": "guessed",
           "misfit": {
-            "MUD_SHOT": 0.8,
-            "QUICK_ATTACK": 0.8
+            "MUD_SHOT": 0.49,
+            "QUICK_ATTACK": 0.51
           }
         },
         "charged_moves": [
@@ -415,18 +413,19 @@
           }
         ],
         "energy_range": [
-          100,
-          100
+          96,
+          96
         ],
-        "energy_by_clock": 100,
+        "energy_by_clock": 96,
         "energy_odds": {
-          "82": 0.08,
-          "91": 0.12,
-          "100": 0.79
+          "78": 0.08,
+          "87": 0.12,
+          "96": 0.33,
+          "100": 0.46
         },
         "fast_move_odds": {
-          "MUD_SHOT": 0.51,
-          "QUICK_ATTACK": 0.49
+          "MUD_SHOT": 0.52,
+          "QUICK_ATTACK": 0.48
         },
         "charged_move_odds": {
           "FIRE_PUNCH": 1.0,
@@ -440,7 +439,7 @@
           "SCORCHING_SANDS": 0.51,
           "EARTHQUAKE": 0.19,
           "DIG": 0.19,
-          "HYPER_BEAM": 0.11
+          "HYPER_BEAM": 0.1
         }
       },
       {
@@ -459,24 +458,22 @@
           15,
           13
         ],
-        "hp": 60,
+        "hp": 67,
         "hp_max": 184,
-        "hp_share": 0.326,
-        "energy": 64,
+        "hp_share": 0.364,
+        "energy": 20,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "BITE",
-          "name": "Bite",
-          "type": "dark",
-          "turns": 1,
-          "energy_gain": 4,
-          "known_from": "guessed",
+          "id": "ASTONISH",
+          "name": "Astonish",
+          "type": "ghost",
+          "turns": 3,
+          "energy_gain": 10,
+          "known_from": "inferred",
           "misfit": {
-            "ASTONISH": 0.97,
-            "BITE": 0.91,
-            "ROLLOUT": 0.9
+            "ASTONISH": 0.85
           }
         },
         "charged_moves": [
@@ -498,21 +495,19 @@
           }
         ],
         "energy_range": [
-          64,
-          64
+          20,
+          20
         ],
-        "energy_by_clock": 68,
+        "energy_by_clock": 40,
         "energy_odds": {
-          "56": 0.08,
-          "60": 0.12,
-          "64": 0.33,
-          "68": 0.33,
-          "72": 0.12
+          "0": 0.08,
+          "10": 0.12,
+          "20": 0.33,
+          "30": 0.33,
+          "40": 0.12
         },
         "fast_move_odds": {
-          "ROLLOUT": 0.4,
-          "BITE": 0.33,
-          "ASTONISH": 0.27
+          "ASTONISH": 1.0
         },
         "charged_move_odds": {
           "DRILL_RUN": 1.0,
@@ -520,9 +515,9 @@
           "DIG": 0.2
         },
         "ready_odds": {
-          "DRILL_RUN": 1.0,
-          "ROCK_SLIDE": 0.8,
-          "DIG": 0.2
+          "DRILL_RUN": 0.12,
+          "ROCK_SLIDE": 0.0,
+          "DIG": 0.0
         }
       }
     ]

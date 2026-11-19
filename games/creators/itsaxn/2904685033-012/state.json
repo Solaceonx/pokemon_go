@@ -1,7 +1,7 @@
 {
-  "t": 207.42,
-  "fighting_turns": 132,
-  "warnings": 17,
+  "t": 208.63,
+  "fighting_turns": 134,
+  "warnings": 14,
   "matchup": {
     "ours": {
       "fast": {
@@ -48,8 +48,8 @@
           "type": "rock",
           "damage": 48,
           "energy": 50,
-          "could_be_ready": false,
-          "surely_ready": false
+          "could_be_ready": true,
+          "surely_ready": true
         },
         {
           "id": "GRASS_KNOT",
@@ -57,8 +57,8 @@
           "type": "grass",
           "damage": 23,
           "energy": 50,
-          "could_be_ready": false,
-          "surely_ready": false
+          "could_be_ready": true,
+          "surely_ready": true
         }
       ],
       "every_fast_move_possible": [
@@ -151,7 +151,7 @@
         "hp": 0,
         "hp_max": 145,
         "hp_share": 0.0,
-        "energy": 42,
+        "energy": 50,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -250,10 +250,10 @@
           12,
           14
         ],
-        "hp": 3,
+        "hp": 7,
         "hp_max": 150,
-        "hp_share": 0.02,
-        "energy": 32,
+        "hp_share": 0.047,
+        "energy": 28,
         "fainted": false,
         "attack_stage": -2,
         "defense_stage": 0,
@@ -314,7 +314,7 @@
         "hp": 0,
         "hp_max": 140,
         "hp_share": 0.0,
-        "energy": 56,
+        "energy": 40,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -324,8 +324,11 @@
           "type": "fighting",
           "turns": 2,
           "energy_gain": 8,
-          "known_from": "inferred",
-          "misfit": {}
+          "known_from": "guessed",
+          "misfit": {
+            "LOW_KICK": 77.0,
+            "COUNTER": 76.0
+          }
         },
         "charged_moves": [
           {
@@ -346,19 +349,20 @@
           }
         ],
         "energy_range": [
-          56,
-          56
+          40,
+          40
         ],
-        "energy_by_clock": 64,
+        "energy_by_clock": 56,
         "energy_odds": {
-          "40": 0.08,
-          "48": 0.12,
-          "56": 0.33,
-          "64": 0.33,
-          "72": 0.12
+          "24": 0.08,
+          "32": 0.12,
+          "40": 0.33,
+          "48": 0.33,
+          "56": 0.12
         },
         "fast_move_odds": {
-          "LOW_KICK": 1.0
+          "COUNTER": 0.92,
+          "LOW_KICK": 0.08
         },
         "charged_move_odds": {
           "RAGE_FIST": 1.0,
@@ -369,12 +373,12 @@
           "LOW_SWEEP": 0.1
         },
         "ready_odds": {
-          "RAGE_FIST": 1.0,
-          "CLOSE_COMBAT": 0.34,
-          "ICE_PUNCH": 0.19,
-          "NIGHT_SLASH": 0.18,
-          "SHADOW_BALL": 0.14,
-          "LOW_SWEEP": 0.1
+          "RAGE_FIST": 0.79,
+          "CLOSE_COMBAT": 0.17,
+          "ICE_PUNCH": 0.15,
+          "NIGHT_SLASH": 0.14,
+          "SHADOW_BALL": 0.02,
+          "LOW_SWEEP": 0.08
         }
       },
       {
@@ -408,8 +412,8 @@
           "energy_gain": 7,
           "known_from": "inferred",
           "misfit": {
-            "QUICK_ATTACK": 0.78,
-            "SUCKER_PUNCH": 0.62
+            "QUICK_ATTACK": 0.62,
+            "SUCKER_PUNCH": 0.64
           }
         },
         "charged_moves": [
@@ -474,7 +478,7 @@
         "hp": 0,
         "hp_max": 144,
         "hp_share": 0.0,
-        "energy": 48,
+        "energy": 56,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -486,9 +490,9 @@
           "energy_gain": 8,
           "known_from": "guessed",
           "misfit": {
-            "ACID": 0.71,
-            "INFESTATION": 0.69,
-            "BULLET_SEED": 0.74
+            "ACID": 0.6,
+            "INFESTATION": 0.59,
+            "BULLET_SEED": 0.71
           }
         },
         "charged_moves": [
@@ -510,21 +514,21 @@
           }
         ],
         "energy_range": [
-          48,
-          48
+          56,
+          56
         ],
-        "energy_by_clock": 48,
+        "energy_by_clock": 56,
         "energy_odds": {
-          "32": 0.08,
-          "40": 0.12,
-          "48": 0.33,
+          "40": 0.08,
+          "48": 0.12,
           "56": 0.33,
-          "64": 0.12
+          "64": 0.33,
+          "72": 0.12
         },
         "fast_move_odds": {
-          "INFESTATION": 0.37,
-          "ACID": 0.34,
-          "BULLET_SEED": 0.28
+          "INFESTATION": 0.39,
+          "ACID": 0.37,
+          "BULLET_SEED": 0.24
         },
         "charged_move_odds": {
           "ROCK_TOMB": 1.0,
@@ -534,11 +538,11 @@
           "STONE_EDGE": 0.13
         },
         "ready_odds": {
-          "ROCK_TOMB": 0.46,
-          "ROCK_SLIDE": 0.27,
-          "GRASS_KNOT": 0.14,
-          "BULLDOZE": 0.1,
-          "STONE_EDGE": 0.06
+          "ROCK_TOMB": 0.79,
+          "ROCK_SLIDE": 0.31,
+          "GRASS_KNOT": 0.24,
+          "BULLDOZE": 0.18,
+          "STONE_EDGE": 0.11
         }
       }
     ]

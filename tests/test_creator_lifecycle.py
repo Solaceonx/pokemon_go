@@ -94,7 +94,7 @@ class Lifecycle(unittest.TestCase):
 
     def test_weather_ball_variant_needs_unique_legal_actor(self):
         self.assertEqual(public_announced_move('weatherball', 'Hippowdon'), 'Weather Ball (Rock)')
-        self.assertIsNone(public_announced_move('weatherball', 'Castform'))
+        self.assertEqual(public_announced_move('weatherball', 'Castform'), 'Weather Ball')
 
     def test_native_faint_follows_vertical_bounce_but_rejects_live_return(self):
         samples = []

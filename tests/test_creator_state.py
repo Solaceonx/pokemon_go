@@ -14,6 +14,18 @@ from pogo.tracker import Tracker, Observation
 
 
 class SourceClock(unittest.TestCase):
+    def test_caught_charge_faint_does_not_kill_outgoing_pokemon(self):
+        gd = GameData()
+        tracker = Tracker(gd, [gd.default('vigoroth')])
+        events = []
+        tracker._note = lambda t, event, **details: events.append({'t': t, 'event': event, **details})
+        tracker.update(Observation(t=0, foe_species='quagsire', foe_left=3))
+        tracker.update(Observation(t=1, foe_species='cramorant', foe_left=2, foe_fainted=True))
+        deaths = [e for e in events if e['event'] == 'foe_faint']
+        self.assertEqual(len(deaths), 1)
+        self.assertEqual(deaths[0]['species'], 'cramorant')
+        self.assertGreater(tracker.foes['quagsire'].mon.hp, 0)
+
     def zero_samples(self):
         return [{'t': 1+i/15, 'bar': {'bounds': [182, 500, 334, 514], 'live_pixels': 0,
                 'outline_method': 'edge_contour'} if i < 10 else None} for i in range(50)]

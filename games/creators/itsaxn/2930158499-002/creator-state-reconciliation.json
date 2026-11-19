@@ -1,5 +1,12 @@
 {
-  "merged_impacts": [],
+  "merged_impacts": [
+    {
+      "victim_side": "foe",
+      "species": "Forretress",
+      "charged_look_before": 188.5,
+      "measured_zero_seconds": 187.266689
+    }
+  ],
   "quarantined_waits_removed": [],
   "source_waits": [
     {
@@ -7,7 +14,7 @@
       "species": "Fearow",
       "interval": [
         40.96667195693964,
-        44.100006
+        44.10000565167243
       ]
     },
     {
@@ -15,7 +22,7 @@
       "species": "Tinkaton",
       "interval": [
         175.45002080161476,
-        177.100021
+        177.1000209919262
       ]
     },
     {
@@ -23,112 +30,88 @@
       "species": "Mightyena",
       "interval": [
         60.45000753748558,
-        64.10000799999999
+        64.1000079584775
       ]
     },
     {
       "side": "theirs",
       "species": "Azumarill",
       "interval": [
-        132.6500158650519,
-        134.10001599999998
+        132.76668254517492,
+        134.10001603229526
+      ]
+    },
+    {
+      "side": "theirs",
+      "species": "Forretress",
+      "interval": [
+        187.26668883121874,
+        193.1
       ]
     }
   ],
-  "terminal_zero_from_three_measured_victims": [],
+  "terminal_zero_from_three_measured_victims": [
+    {
+      "side": "theirs",
+      "t": 187.26668883121874,
+      "species": [
+        "Azumarill",
+        "Forretress",
+        "Mightyena"
+      ]
+    }
+  ],
   "unattributed_zero_candidates": [],
   "unattributed_observations_removed": [],
+  "party_counts_from_measured_victims": [
+    {
+      "side": "mine",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.07,
+      "distinct_victims": {
+        "Fearow": 40.96667195693964,
+        "Tinkaton": 175.45002080161476
+      }
+    },
+    {
+      "side": "theirs",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.07,
+      "distinct_victims": {
+        "Mightyena": 60.45000753748558,
+        "Azumarill": 132.76668254517492,
+        "Forretress": 187.26668883121874
+      }
+    }
+  ],
   "merged_wait_intervals": [
     [
       40.96667195693964,
-      44.100006
+      44.10000565167243
     ],
     [
       60.45000753748558,
-      64.10000799999999
+      64.3
     ],
     [
-      132.6500158650519,
-      134.10001599999998
+      132.76668254517492,
+      134.3
     ],
     [
       175.45002080161476,
       177.3
+    ],
+    [
+      187.26668883121874,
+      193.1
     ]
   ],
-  "cached_zero_recovery": [
-    {
-      "faint": {
-        "side": "theirs",
-        "species": "Azumarill",
-        "clip_seconds": 137.5500158650519,
-        "confirmed_clip_seconds": 137.68334921376393,
-        "method": "complete_center_zero_then_fresh_replacement_header",
-        "timing_uncertainty_seconds": 0.1
-      },
-      "cache_file": "center-impact-008.json",
-      "cache_sha256": "b2dfadf6118037a267de5ead9dd324e74a8ef31fe0e3022708daafd7a642f50c",
-      "acquisition_fingerprint": {
-        "code": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
-        "video": "a29ae0191bb6520510d2359c61f54f7b8888c3e63c8486f161f1dd889a90a812",
-        "alignment": "72810612b4665eff0ec8ef9b8750e2db0cff4b74e527b17eb9822d9e1acea38e",
-        "health_reader": "d3fdd7dc46e02e27761b20a502a778b2bae78f4391b00782307fbfaa1e6ea04b",
-        "av_version": "19.0.2",
-        "announcement_seconds": 136.000016,
-        "width": 144
-      },
-      "measurement": {
-        "first_zero": {
-          "t": 137.5500158650519,
-          "clip_pts": 71553518253,
-          "clip_time_base": "1/520200000",
-          "source_pts": 74255970,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              183,
-              615,
-              333,
-              626
-            ],
-            "width": 144,
-            "live_pixels": 0,
-            "orange_pixels": 8,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          }
-        },
-        "confirmed_zero": {
-          "t": 137.68334921376393,
-          "clip_pts": 71622878261,
-          "clip_time_base": "1/520200000",
-          "source_pts": 74267940,
-          "source_time_base": "1/90000",
-          "bar": {
-            "bounds": [
-              181,
-              614,
-              333,
-              627
-            ],
-            "width": 146,
-            "live_pixels": 0,
-            "orange_pixels": 5,
-            "live_fraction": 0.0,
-            "outline_method": "edge_contour"
-          }
-        },
-        "isolated_fade_pixel_samples": [],
-        "missing_tail_samples": 22
-      },
-      "replacement_header_clip_seconds": 139.000016
-    }
-  ],
+  "cached_zero_recovery": [],
   "schema": "creator-state-reconciliation-v1",
-  "code_sha256": "15133a35f6c2641abb23bb59c802f58d0a81f6095474021b7e6f407ce67812ff",
-  "observations_before_canonical_sha256": "a8d817c8f5dcdd0d1df18bca34b885ee269b5bddd41db8ab80704e6766311a9c",
-  "observations_after_canonical_sha256": "e63a176e98d295b06501735ec7524319f4bc7aa1d6c057d56ef327d848361d2e",
-  "lifecycle_canonical_sha256": "24902d692e9cd134f94025b421c16e7605e04fce3501792cdab087f3a0db92ad",
+  "code_sha256": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+  "observations_before_canonical_sha256": "26a941616e688b621436ae108416dbe32e3c7b65154448b9e2e67de99bd6003c",
+  "observations_after_canonical_sha256": "51699e9b3a850275efa27ec1bd5c51627f00c7d2e78c919866929d1877424425",
+  "lifecycle_canonical_sha256": "fca2fafb99083ff99b13bbc42a9e5e8590f2c1bdd12ea49a15ee5c210518901d",
   "terminal_impact_accepted": false,
   "digest_method": "SHA256 of compact sorted-key UTF-8 JSON; observations have one LF after each row",
   "result_based_faints": 0

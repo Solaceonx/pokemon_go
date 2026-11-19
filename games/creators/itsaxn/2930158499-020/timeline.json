@@ -9,7 +9,8 @@
         "t": -2.8,
         "name": "Fearow",
         "faint": false,
-        "header_seen_clip_seconds": 8.000001,
+        "header_seen_clip_seconds": 8.00000092272203,
+        "header_first_visible_clip_seconds": 8.00000092272203,
         "transition_evidence": {
           "kind": "first",
           "method": "first_visible_header"
@@ -19,7 +20,8 @@
         "t": 46.0,
         "name": "Tinkaton",
         "faint": false,
-        "header_seen_clip_seconds": 56.000006,
+        "header_seen_clip_seconds": 56.00000645905421,
+        "header_first_visible_clip_seconds": 56.00000645905421,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -29,12 +31,13 @@
         "t": 104.2,
         "name": "Fearow",
         "faint": true,
-        "header_seen_clip_seconds": 112.000013,
+        "header_seen_clip_seconds": 111.66667954632834,
+        "header_first_visible_clip_seconds": 111.33334617454825,
         "transition_evidence": {
           "kind": "faint",
           "method": "local_party_counter_decrease",
-          "first_visible_seconds": 109.000013,
-          "confirmed_seconds": 109.666679,
+          "first_visible_seconds": 108.66667920030757,
+          "confirmed_seconds": 109.33334594386774,
           "before": 3,
           "after": 2
         }
@@ -45,7 +48,8 @@
         "t": -0.8,
         "name": "Dunsparce",
         "faint": false,
-        "header_seen_clip_seconds": 8.000001,
+        "header_seen_clip_seconds": 8.00000092272203,
+        "header_first_visible_clip_seconds": 8.00000092272203,
         "transition_evidence": {
           "kind": "first",
           "method": "first_visible_header"
@@ -55,7 +59,8 @@
         "t": 29.5,
         "name": "Corsola",
         "faint": false,
-        "header_seen_clip_seconds": 38.000004,
+        "header_seen_clip_seconds": 38.000004382929646,
+        "header_first_visible_clip_seconds": 37.66667101114956,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -65,7 +70,8 @@
         "t": 87.0,
         "name": "Dunsparce",
         "faint": false,
-        "header_seen_clip_seconds": 95.000011,
+        "header_seen_clip_seconds": 95.00001095732411,
+        "header_first_visible_clip_seconds": 94.66667758554402,
         "transition_evidence": {
           "kind": "switch",
           "method": "header_changed_without_local_faint_evidence"
@@ -79,76 +85,108 @@
       "side": "theirs",
       "move": "Drill Run",
       "blocked": true,
+      "actor": "Dunsparce",
+      "actor_confirmed_clip_seconds": 24.000003,
+      "side_confirmed_clip_seconds": 17.000002,
       "announcement_clip_seconds": [
         25.000003
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 19.5,
       "side": "mine",
       "move": "Drill Peck",
       "blocked": false,
+      "actor": "Fearow",
+      "actor_confirmed_clip_seconds": 35.000004,
+      "side_confirmed_clip_seconds": 28.000003,
       "announcement_clip_seconds": [
         35.000004,
         36.000004
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 33.5,
       "side": "mine",
       "move": "Drill Peck",
       "blocked": false,
+      "actor": "Fearow",
+      "actor_confirmed_clip_seconds": 49.000006,
+      "side_confirmed_clip_seconds": 42.000005,
       "announcement_clip_seconds": [
         49.000006,
         50.000006
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 48.5,
       "side": "theirs",
       "move": "Night Shade",
       "blocked": false,
+      "actor": "Corsola",
+      "actor_confirmed_clip_seconds": 64.000007,
+      "side_confirmed_clip_seconds": 57.000007,
       "announcement_clip_seconds": [
         64.000007,
         65.000007
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 62.5,
       "side": "theirs",
       "move": "Night Shade",
       "blocked": false,
+      "actor": "Corsola",
+      "actor_confirmed_clip_seconds": 78.000009,
+      "side_confirmed_clip_seconds": 71.000008,
       "announcement_clip_seconds": [
         78.000009,
         79.000009
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 76.5,
       "side": "mine",
       "move": "Bulldoze",
       "blocked": false,
+      "actor": "Tinkaton",
+      "actor_confirmed_clip_seconds": 92.000011,
+      "side_confirmed_clip_seconds": 85.00001,
       "announcement_clip_seconds": [
         92.000011,
         93.000011
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 91.5,
       "side": "mine",
       "move": "Gigaton Hammer",
       "blocked": true,
+      "actor": "Tinkaton",
+      "actor_confirmed_clip_seconds": 106.000012,
+      "side_confirmed_clip_seconds": 100.000012,
       "announcement_clip_seconds": [
         106.000012,
         107.000012
-      ]
+      ],
+      "side_evidence": "explicit_cue"
     },
     {
       "t": 105.5,
       "side": "mine",
       "move": null,
       "blocked": false,
-      "announcement_clip_seconds": []
+      "actor": null,
+      "actor_confirmed_clip_seconds": null,
+      "side_confirmed_clip_seconds": 114.000013,
+      "announcement_clip_seconds": [],
+      "side_evidence": "explicit_cue"
     }
   ],
   "left": {
@@ -158,25 +196,46 @@
         3
       ],
       [
-        100.67,
+        100.33,
         2
       ]
     ],
-    "theirs": []
+    "theirs": [
+      [
+        -0.33,
+        3
+      ]
+    ]
   },
   "steps": {
     "mine": [
       [
+        0.83,
+        3
+      ],
+      [
         2.5,
-        2
+        6
       ],
       [
-        9.17,
-        23
+        3.83,
+        3
       ],
       [
-        29.17,
-        10
+        5.17,
+        5
+      ],
+      [
+        6.83,
+        6
+      ],
+      [
+        18.5,
+        3
+      ],
+      [
+        29.5,
+        6
       ],
       [
         31.5,
@@ -187,52 +246,60 @@
         5
       ],
       [
-        44.17,
-        5
-      ],
-      [
-        57.83,
-        42
-      ],
-      [
-        58.83,
-        6
-      ],
-      [
-        59.83,
-        8
-      ],
-      [
-        62.17,
-        8
-      ],
-      [
-        72.17,
-        43
-      ],
-      [
-        73.83,
-        4
-      ],
-      [
-        74.17,
-        2
-      ],
-      [
-        75.17,
-        4
-      ],
-      [
-        75.5,
+        43.83,
         3
       ],
       [
-        85.83,
+        45.17,
+        5
+      ],
+      [
+        46.83,
+        6
+      ],
+      [
+        56.83,
+        38
+      ],
+      [
+        58.17,
+        6
+      ],
+      [
+        59.5,
         9
       ],
       [
-        88.5,
-        8
+        61.5,
+        7
+      ],
+      [
+        71.17,
+        39
+      ],
+      [
+        72.17,
+        2
+      ],
+      [
+        73.17,
+        5
+      ],
+      [
+        74.5,
+        7
+      ],
+      [
+        75.83,
+        7
+      ],
+      [
+        87.5,
+        7
+      ],
+      [
+        88.83,
+        5
       ]
     ],
     "theirs": [
@@ -241,8 +308,16 @@
         3
       ],
       [
+        1.5,
+        3
+      ],
+      [
+        1.83,
+        2
+      ],
+      [
         2.5,
-        12
+        5
       ],
       [
         3.5,
@@ -250,75 +325,99 @@
       ],
       [
         4.5,
-        4
+        2
+      ],
+      [
+        5.17,
+        2
       ],
       [
         5.5,
-        7
+        4
       ],
       [
         6.5,
-        4
-      ],
-      [
-        7.5,
-        3
-      ],
-      [
-        17.5,
-        6
-      ],
-      [
-        32.5,
-        15
-      ],
-      [
-        42.83,
-        47
-      ],
-      [
-        43.5,
         5
       ],
       [
-        44.5,
+        7.5,
+        2
+      ],
+      [
+        9.17,
         3
       ],
       [
-        45.83,
-        3
-      ],
-      [
-        47.5,
-        6
-      ],
-      [
-        58.83,
+        17.83,
         4
       ],
       [
-        59.83,
+        32.17,
+        6
+      ],
+      [
+        41.5,
+        44
+      ],
+      [
+        42.83,
+        2
+      ],
+      [
+        43.5,
+        2
+      ],
+      [
+        44.5,
+        5
+      ],
+      [
+        45.5,
+        4
+      ],
+      [
+        46.5,
+        4
+      ],
+      [
+        49.17,
+        2
+      ],
+      [
+        58.17,
+        2
+      ],
+      [
+        58.83,
         3
+      ],
+      [
+        59.83,
+        2
       ],
       [
         60.83,
         2
       ],
       [
+        61.17,
+        2
+      ],
+      [
         61.83,
-        4
-      ],
-      [
-        71.83,
-        4
-      ],
-      [
-        73.17,
         2
       ],
       [
-        74.5,
+        72.17,
         2
+      ],
+      [
+        72.83,
+        2
+      ],
+      [
+        74.17,
+        5
       ],
       [
         75.5,
@@ -326,19 +425,15 @@
       ],
       [
         88.5,
-        2
+        3
       ],
       [
-        89.17,
-        4
+        89.5,
+        3
       ],
       [
-        90.17,
-        2
-      ],
-      [
-        99.83,
-        2
+        102.83,
+        3
       ]
     ]
   },
@@ -346,7 +441,7 @@
   "buttons_on": [],
   "waits": [
     [
-      100.67,
+      100.33,
       103.7
     ]
   ]

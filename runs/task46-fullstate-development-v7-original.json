@@ -1,0 +1,894 @@
+{
+  "schema": "creator-fullstate-evaluation-v1",
+  "battles": 6,
+  "primary_event_tolerance_seconds": 3,
+  "event_source": "source",
+  "completed_runs": 6,
+  "all_reference_events_correct": 5,
+  "events": {
+    "charged": {
+      "tp": 62,
+      "fp": 0,
+      "fn": 2,
+      "precision": 1.0,
+      "recall": 0.96875,
+      "f1": 0.9841269841269841,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        0.8928571428571429,
+        1.0
+      ]
+    },
+    "shield": {
+      "tp": 22,
+      "fp": 0,
+      "fn": 1,
+      "precision": 1.0,
+      "recall": 0.9565217391304348,
+      "f1": 0.9777777777777777,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        0.8695652173913043,
+        1.0
+      ]
+    },
+    "faint": {
+      "tp": 21,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "shield_decisions": {
+    "reference_charges": 64,
+    "matched_charges": 62,
+    "missing_charges": 2,
+    "correct": 61,
+    "incorrect": 0,
+    "unknown": 1
+  },
+  "fields": {},
+  "details": [
+    {
+      "channel": "homeslicehenry",
+      "record": "2904735277-002",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 11,
+              "1": 11,
+              "3": 11
+            },
+            "matched_events": 11,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 1,
+              "1": 3,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 3,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.3916454605734785,
+            "maximum_absolute_distance_seconds": 1.16665433691756,
+            "p95_absolute_distance_seconds": 0.5499830215053834,
+            "signed_distances_seconds": [
+              -1.166654,
+              -0.549983,
+              -0.233308,
+              0.0
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "f3687b0c0aac37ca5d72690ca8c96dd57444bd4d0d12de720c931c0fc4241483",
+        "timeline.json": "c004fe00b3a16edc72626902f545a6982e1e569736d4b9de72659acce3d44bdd",
+        "continuity.jsonl.gz": "316681ae3f0fdda3573bfddf4945b624f9d80e44b6bdea55a9513f43833dadc3",
+        "source-events.jsonl.gz": "60547d88e767564ad4b566bdfc9bb74d103fa853497667652657af1f0ed1871c",
+        "events.jsonl.gz": "a52b9482aa7d07469c1c1884b54affa012216637d3ff65a2a7c3f57e2af0ad85",
+        "states.jsonl.gz": "6b0a955efdd3836b3a011cebf7fe1c70a782c6396cc0a6694ce7f1190d8458e0"
+      },
+      "shield_decisions": {
+        "reference_charges": 11,
+        "matched_charges": 11,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "homeslicehenry",
+      "record": "2930047987-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 10,
+              "1": 10,
+              "3": 10
+            },
+            "matched_events": 10,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 0,
+              "1": 2,
+              "3": 3
+            },
+            "matched_events": 3,
+            "early_outside_interval": 3,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.5666483023786242,
+            "maximum_absolute_distance_seconds": 2.483307719126742,
+            "p95_absolute_distance_seconds": 0.5666483023786242,
+            "signed_distances_seconds": [
+              -0.566648,
+              -2.483308,
+              -0.383304
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "abcec04b737faff71b1cc0661445ea4dda6538ba2fa2ff5754c66ba58b9f10d8",
+        "timeline.json": "7ffc73056e95a49f70fad883781033a70d775617200d499d435586825a638dc4",
+        "continuity.jsonl.gz": "5010da8e0f26281b064b104040248ab80b939e4fae217ad83d9e0fa6e52f08c9",
+        "source-events.jsonl.gz": "1e7540b63626898e016e91354502ceb318030d31cc8cf546129e1cb5abb891ee",
+        "events.jsonl.gz": "ecba08f0b24317e837d8bd01f7f5a42fb0e9bf2d3f0f826d3d525907cc5376e1",
+        "states.jsonl.gz": "22c5f0c3c978aeda5568fab2f1609f1b93d95ace789448ddfc2a9082d3390e3e"
+      },
+      "shield_decisions": {
+        "reference_charges": 10,
+        "matched_charges": 10,
+        "missing_charges": 0,
+        "correct": 10,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2904685033-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 14,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 14,
+              "1": 14,
+              "3": 14
+            },
+            "matched_events": 14,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 1,
+              "1": 3,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 3,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.23331147977469868,
+            "maximum_absolute_distance_seconds": 1.216645424987206,
+            "p95_absolute_distance_seconds": 0.4166533666154635,
+            "signed_distances_seconds": [
+              -0.416653,
+              -1.216645,
+              -0.04997,
+              0.0
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "b51d4450362122b70685526c87dd4b6062d6eb49573b7ffa50209a9e909daa13",
+        "timeline.json": "d859b102624232538ceee8bfe60f1c7f17a8a1f80b33fe69f8f7cdd0eefa2af7",
+        "continuity.jsonl.gz": "ce9233d543961e83ecf2e382b7d421e23814d85022a611a57f26d5fe01c84807",
+        "source-events.jsonl.gz": "3424a0590f3a1678e96f7784809da8567319a633e252ed7e1ab1f874539a73ba",
+        "events.jsonl.gz": "e25c7e34638de173b51acaf142ebdd28562e69201b0c6cc65387043c2a17d6c8",
+        "states.jsonl.gz": "f48018e66e38736d9703bf0ee85316763b1e8f2a2f2df71123a84635490c7008"
+      },
+      "shield_decisions": {
+        "reference_charges": 14,
+        "matched_charges": 14,
+        "missing_charges": 0,
+        "correct": 14,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2930158499-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 11,
+              "1": 11,
+              "3": 11
+            },
+            "matched_events": 11,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 1,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "early_outside_interval": 3,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.6249821655132735,
+            "maximum_absolute_distance_seconds": 0.8333131872356887,
+            "p95_absolute_distance_seconds": 0.7499838235294192,
+            "signed_distances_seconds": [
+              0.0,
+              -0.749984,
+              -0.499981,
+              -0.833313
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "2d511ee8b14f7d569cdcc2ebf916994223a39a88ee54599227ef81d07addc6c1",
+        "timeline.json": "0c14f8b38a52f4d50aa9b3685d8beb11e7673b4457ccebc0924fadd24850dd81",
+        "continuity.jsonl.gz": "3bfa01ca95bb8fadfb5e066e51b21c4b6b3412b1e94741cdca0214435bb74d62",
+        "source-events.jsonl.gz": "991f74a1160b53b1a75b0036ba6f1176849246a075529711c0105029296da428",
+        "events.jsonl.gz": "40637dc6d61663d73b5b421fe6b59bee99a00c1e26d6e34744592e098d874ccd",
+        "states.jsonl.gz": "013f14d3eba5f4c5abc5c94b690f166100f4cb80f208d451b1e5e3e295e45bc1"
+      },
+      "shield_decisions": {
+        "reference_charges": 11,
+        "matched_charges": 11,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2887787713-002",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 10,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 10,
+              "1": 10,
+              "3": 10
+            },
+            "matched_events": 10,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 3,
+              "3": 3
+            },
+            "matched_events": 3,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 3,
+              "3": 5
+            },
+            "matched_events": 5,
+            "early_outside_interval": 2,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 2.6333467085463553,
+            "p95_absolute_distance_seconds": 1.3666893243047298,
+            "signed_distances_seconds": [
+              0.0,
+              -2.633347,
+              0.0,
+              0.0,
+              -1.366689
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "82c2872b4835553d04489dd8dc17bff65e98e4dd86e9220250648ca9e34ea5c1",
+        "timeline.json": "00282aad855d0760b9d5501928cba47232f8c7f008caa498ce5922a878b7014d",
+        "continuity.jsonl.gz": "b16c5b3c02a4038ba9816add31748f950ddcfefcb6908e33aab4c5d1134c76b7",
+        "source-events.jsonl.gz": "bc3e8549934410dabfa04afef99516cb2988f55a12645409d89585773c7e6edd",
+        "events.jsonl.gz": "e29f14cdc2628a88382e07f8a06f219627697805bbaa2cb100c7d0ae71c96db2",
+        "states.jsonl.gz": "2d77f45510ff6dbc95439fcf95f261b963f6eb0b20d44a834e39e2d7ef5ffd23"
+      },
+      "shield_decisions": {
+        "reference_charges": 10,
+        "matched_charges": 10,
+        "missing_charges": 0,
+        "correct": 10,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2925297675-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 2,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "missing": [
+            {
+              "kind": "charged",
+              "side": "mine",
+              "pokemon": "Lapras",
+              "move": "Sparkling Aria",
+              "window": [
+                90,
+                98.5
+              ],
+              "announcement_frame": 96,
+              "shielded": false,
+              "shield_frame": null,
+              "id": "2925297675-001-06",
+              "evidence": [
+                {
+                  "role": "window_start",
+                  "clip_seconds": 90.00000524475524,
+                  "clip_pts": 46332002700,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 48245340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "c73aa6e90700d4eeaab57606c0d5d96dd4a7f44623fd20eb19f725e02a6991d7"
+                },
+                {
+                  "role": "announcement",
+                  "clip_seconds": 96.0000055944056,
+                  "clip_pts": 49420802880,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 48785340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "2082d07c9ffdbb9c4375d278ab554c6a110273c9fcbeafa3c5346489705d85f2"
+                },
+                {
+                  "role": "window_end",
+                  "clip_seconds": 98.50000574009324,
+                  "clip_pts": 50707802955,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 49010340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "7af88418a2956f5f2ca537de26225d6300427a9abfc33ab08b306c2754a0d2e3"
+                }
+              ]
+            },
+            {
+              "kind": "charged",
+              "side": "mine",
+              "pokemon": "Lapras",
+              "move": "Sparkling Aria",
+              "window": [
+                102,
+                110.5
+              ],
+              "announcement_frame": 108,
+              "shielded": true,
+              "shield_frame": 109.5,
+              "id": "2925297675-001-07",
+              "evidence": [
+                {
+                  "role": "window_start",
+                  "clip_seconds": 102.00000594405594,
+                  "clip_pts": 52509603060,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 49325340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "c62a079809140461236a182130df480b0f8a3fe07f233c2d27b3dcc1c3b97ea3"
+                },
+                {
+                  "role": "announcement",
+                  "clip_seconds": 108.00000629370629,
+                  "clip_pts": 55598403240,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 49865340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "5c5fb4978113dcf6915a40db94b2587d198e60687871336c7e694c3d603eed52"
+                },
+                {
+                  "role": "shield_barrier",
+                  "clip_seconds": 109.50000638111888,
+                  "clip_pts": 56370603285,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 50000340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "df4a1e0d3226a463204025213cc6de3086ff6a8c223fed1ee11b077f7bfebf10"
+                },
+                {
+                  "role": "window_end",
+                  "clip_seconds": 110.50000643939394,
+                  "clip_pts": 56885403315,
+                  "clip_time_base": "1/514800000",
+                  "source_pts": 50090340,
+                  "source_time_base": "1/90000",
+                  "decoded_rgb_sha256": "7e73b3ae8f1f327472948cb0322fd928f4e75eb9e481b11473809aed118c2b1c"
+                }
+              ]
+            }
+          ],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 6,
+              "1": 6,
+              "3": 6
+            },
+            "matched_events": 6,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.75,
+          "f1": 0.8571428571428571,
+          "missing": [
+            {
+              "kind": "shield",
+              "side": "theirs",
+              "window": [
+                102,
+                110.5
+              ],
+              "associated_attack": "Sparkling Aria"
+            }
+          ],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 3,
+              "3": 3
+            },
+            "matched_events": 3,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 1,
+              "1": 1,
+              "3": 1
+            },
+            "matched_events": 1,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0
+            ]
+          }
+        }
+      },
+      "anchors": [],
+      "prediction_sha256": {
+        "source.json": "09bff680f2cfed1cb542377b75c32868faf3c523eb255dd8fa9091ed57e5cf0d",
+        "timeline.json": "a0063010ff43bf27069a354fe96ce9d61cf7a47ba317490ab4ca62482b0bab13",
+        "continuity.jsonl.gz": "ff8c9ea2e8568c1e46fa22790076d7fac8c4dffcb1397a6f345d2e66bfb84526",
+        "source-events.jsonl.gz": "6fd2a9fac09c99cdfa5c16c34589eb7d07324d9c128a557d38cf9c40a804bfd6",
+        "events.jsonl.gz": "e00a13ead24ba20c6e5eb622879372f530814c5efaddccebdf79c0a8f8ecd152",
+        "states.jsonl.gz": "a41a74d3c4d5e06f5129484373bb4814b52d030acd99b0c7b6d7a36d7216df37"
+      },
+      "shield_decisions": {
+        "reference_charges": 8,
+        "matched_charges": 6,
+        "missing_charges": 2,
+        "correct": 5,
+        "incorrect": 0,
+        "unknown": 1
+      },
+      "all_reference_events_correct": false
+    }
+  ],
+  "limitations": [
+    "Six battles from three source archives; clustered intervals are unstable at this size.",
+    "Assistant-reviewed source labels have not been independently adjudicated.",
+    "HP score is overlap with broad visual annotation bounds and predicted width <=0.2, not exact HP accuracy.",
+    "Unknown, stale and pending fields do not count as usable; missing runs remain in every denominator.",
+    "Energy, clock and stage accuracy not established; event scores do not establish full-state readiness."
+  ],
+  "truth_sha256": "3375c1a4f2fec17d893c2b000ae8d4908d68df42ea5aac28ef27f79e499450f4",
+  "predictions_root": "private integration-v7/original-export",
+  "evaluation_code_sha256": {
+    "evaluate_creator_fullstate.py": "4154a43934a9ae7bb5da99583e9d9a4be2f70144377877879ae4672aa9bb9ce9",
+    "score_creator_events.py": "ea0f79d9a2a3478139a819c5f3f771e015b2ef99418ed50490d65cafcc103b63"
+  },
+  "evaluation_role": "development_after_initial_source_evaluation"
+}

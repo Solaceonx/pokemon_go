@@ -1,6 +1,24 @@
 {
   "merged_impacts": [
     {
+      "victim_side": "foe",
+      "species": "Snorlax",
+      "charged_look_before": 54.0,
+      "measured_zero_seconds": 52.800006
+    },
+    {
+      "victim_side": "foe",
+      "species": "Corviknight",
+      "charged_look_before": 128.0,
+      "measured_zero_seconds": 127.133348
+    },
+    {
+      "victim_side": "my",
+      "species": "Seismitoad",
+      "charged_look_before": 154.0,
+      "measured_zero_seconds": 153.966685
+    },
+    {
       "victim_side": "my",
       "species": "Tinkaton",
       "charged_look_before": 168.0,
@@ -11,86 +29,100 @@
   "source_waits": [
     {
       "side": "mine",
-      "species": "Seismitoad",
+      "species": "Tinkaton",
       "interval": [
-        154.4000179469435,
-        156.80001800000002
+        166.6666860284506,
+        168.80001960784315
       ]
     },
     {
       "side": "theirs",
       "species": "Snorlax",
       "interval": [
-        54.01667303537101,
-        55.800006999999994
+        52.8000062283737,
+        55.80000657439446
       ]
     },
     {
       "side": "theirs",
       "species": "Corviknight",
       "interval": [
-        128.48334829104192,
-        129.800015
-      ]
-    },
-    {
-      "side": "theirs",
-      "species": "Pangoro",
-      "interval": [
-        171.28335322760478,
-        176.8
+        127.13334813533255,
+        129.46668173779318
       ]
     },
     {
       "side": "mine",
-      "species": "Tinkaton",
+      "species": "Seismitoad",
       "interval": [
-        166.6666860284506,
-        168.80002000000002
+        153.96668456362937,
+        156.46668485198
       ]
     }
   ],
-  "terminal_zero_from_three_measured_victims": [
-    {
-      "side": "theirs",
-      "t": 171.28335322760478,
-      "species": [
-        "Corviknight",
-        "Pangoro",
-        "Snorlax"
-      ]
-    }
-  ],
+  "terminal_zero_from_three_measured_victims": [],
   "unattributed_zero_candidates": [],
   "unattributed_observations_removed": [],
+  "party_counts_from_measured_victims": [
+    {
+      "side": "mine",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.37,
+      "distinct_victims": {
+        "Tinkaton": 166.6666860284506,
+        "Seismitoad": 153.96668456362937
+      }
+    },
+    {
+      "side": "theirs",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.37,
+      "distinct_victims": {
+        "Snorlax": 52.8000062283737,
+        "Corviknight": 127.13334813533255
+      }
+    }
+  ],
   "merged_wait_intervals": [
     [
-      54.01667303537101,
-      55.800006999999994
+      52.8000062283737,
+      55.80000657439446
     ],
     [
-      128.48334829104192,
-      129.800015
+      127.13334813533255,
+      130.0
     ],
     [
-      154.4000179469435,
+      153.96668456362937,
       157.0
     ],
     [
       166.6666860284506,
-      168.80002000000002
-    ],
-    [
-      171.28335322760478,
-      176.8
+      168.80001960784315
     ]
   ],
-  "cached_zero_recovery": [],
+  "cached_zero_recovery": [
+    {
+      "candidate": {
+        "side": "theirs",
+        "species": "Pangoro",
+        "clip_seconds": 172.48335322760477,
+        "confirmed_clip_seconds": 172.6166865763168,
+        "method": "complete_last_member_zero_and_fade",
+        "timing_uncertainty_seconds": 0.1
+      },
+      "accepted": false,
+      "independent_support": {
+        "status": "unconfirmed",
+        "reason": "no_unique_party_decrement_or_last_member_confirmation"
+      }
+    }
+  ],
   "schema": "creator-state-reconciliation-v1",
-  "code_sha256": "15133a35f6c2641abb23bb59c802f58d0a81f6095474021b7e6f407ce67812ff",
-  "observations_before_canonical_sha256": "7f7e9b18b0731afa3b6fb152caae7d0698595b6c09a9f3de1d8addb2efc2c234",
-  "observations_after_canonical_sha256": "c272cf83ce7a00403df50261c7c6390c83add9947480d1d606c75134e2b65a8c",
-  "lifecycle_canonical_sha256": "4285f15ee64f54364b35866093fa23c9474519eeb0cb4de6a843b79356a23556",
+  "code_sha256": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+  "observations_before_canonical_sha256": "84f93e84b230e9a37ed80c101f999290db0a405501149574a18b9955d2d57e77",
+  "observations_after_canonical_sha256": "9739a7b2e6011f8caeaa03ae2ef6eeee8ded6763f2e2c390943f130eb10fcd8b",
+  "lifecycle_canonical_sha256": "a8c7f05f1191b228b7b5070102e8c1a8a0844089ab8889755593be364f432029",
   "terminal_impact_accepted": false,
   "digest_method": "SHA256 of compact sorted-key UTF-8 JSON; observations have one LF after each row",
   "result_based_faints": 0

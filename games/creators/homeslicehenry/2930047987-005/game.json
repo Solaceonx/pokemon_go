@@ -22,8 +22,8 @@
    "theirs": 2
   }
  },
- "seconds": 95.5,
- "fighting_turns": 64,
+ "seconds": 96.5,
+ "fighting_turns": 65,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -33,9 +33,9 @@
   ],
   "notes": [
    "final charged-move cue has no observed name; resolution and ending are unverified",
-   "fast move only guessed for hydreigon"
+   "fast move only guessed for cramorant"
   ],
-  "unexplained_health_changes": 7
+  "unexplained_health_changes": 8
  },
  "teams": {
   "mine": [
@@ -47,7 +47,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.058,
+    "hp_share_at_end": 0.017,
     "fast_move": {
      "id": "POISON_STING",
      "name": "Poison Sting",
@@ -80,7 +80,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.252,
+    "hp_share_at_end": 0.262,
     "fast_move": {
      "id": "SHADOW_CLAW",
      "name": "Shadow Claw",
@@ -115,13 +115,17 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.254,
+    "hp_share_at_end": 0.222,
     "fast_move": {
      "id": "PECK",
      "name": "Peck",
      "turns": 2,
      "energy_gain": 8,
-     "known_from": "inferred"
+     "known_from": "guessed",
+     "odds": {
+      "Peck": 0.79,
+      "Water Gun": 0.21
+     }
     },
     "charged_moves": [
      {
@@ -191,17 +195,13 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.819,
+    "hp_share_at_end": 0.845,
     "fast_move": {
-     "id": "DRAGON_BREATH",
-     "name": "Dragon Breath",
+     "id": "BITE",
+     "name": "Bite",
      "turns": 1,
      "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Dragon Breath": 0.68,
-      "Bite": 0.32
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -237,10 +237,10 @@
   },
   "charged_shielded": {
    "mine": 0,
-   "theirs": 2
+   "theirs": 1
   },
   "shields_left": {
-   "mine": 0,
+   "mine": 1,
    "theirs": 2
   },
   "switches": {
@@ -271,50 +271,35 @@
      "energy": 0
     },
     "theirs": {
-     "active": "Cramorant",
+     "active": null,
      "shields": 2,
-     "left": 3,
-     "hp": 126,
-     "hp_max": 126,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 8
+     "left": 3
     }
    }
   },
   {
    "kind": "fighting",
    "t": 0.0,
-   "until": 6.5,
+   "until": 7.5,
    "fighting_turn": 0,
-   "turns": 12,
+   "turns": 14,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 7,
+    "hits_seen": 5
    },
-   "theirs": {
-    "pokemon": "Cramorant",
-    "fast_move": "Peck",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 3
-   },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 85,
+     "hp": 87,
      "hp_max": 121,
-     "hp_share": 0.702,
-     "energy": 54
+     "hp_share": 0.719,
+     "energy": 63
     },
     "theirs": {
      "active": "Cramorant",
@@ -333,15 +318,15 @@
   },
   {
    "kind": "charged",
-   "t": 6.5,
-   "fighting_turn": 12,
+   "t": 7.5,
+   "fighting_turn": 14,
    "side": "mine",
    "pokemon": "Qwilfish (Hisuian)",
    "move": "Dark Pulse",
    "move_id": "DARK_PULSE",
    "move_known_from": "seen",
    "cost": 45,
-   "energy_before": 54,
+   "energy_before": 63,
    "target": "Cramorant",
    "shielded": false,
    "target_hp_before": 106,
@@ -349,17 +334,17 @@
    "target_hp_max": 126,
    "target_bar_read": false,
    "expected_damage": 66,
-   "resolved_t": 15.0,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 2,
      "left": 3,
-     "hp": 85,
+     "hp": 87,
      "hp_max": 121,
-     "hp_share": 0.702,
-     "energy": 9
+     "hp_share": 0.719,
+     "energy": 18
     },
     "theirs": {
      "active": "Cramorant",
@@ -378,9 +363,9 @@
   },
   {
    "kind": "fighting",
-   "t": 15.0,
-   "until": 16.5,
-   "fighting_turn": 12,
+   "t": 16.0,
+   "until": 17.5,
+   "fighting_turn": 14,
    "turns": 2,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
@@ -392,7 +377,7 @@
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
@@ -404,15 +389,15 @@
      "hp": 85,
      "hp_max": 121,
      "hp_share": 0.702,
-     "energy": 18
+     "energy": 27
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
       56,
       56
@@ -423,8 +408,8 @@
   },
   {
    "kind": "charged",
-   "t": 16.5,
-   "fighting_turn": 14,
+   "t": 17.5,
+   "fighting_turn": 16,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Fly",
@@ -439,29 +424,29 @@
    "target": "Qwilfish (Hisuian)",
    "shielded": true,
    "target_hp_before": 85,
-   "target_hp_after": 85,
+   "target_hp_after": 83,
    "target_hp_max": 121,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 1,
-   "resolved_t": 25.0,
+   "resolved_t": 26.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 85,
+     "hp": 83,
      "hp_max": 121,
-     "hp_share": 0.702,
-     "energy": 18
+     "hp_share": 0.686,
+     "energy": 27
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
       11,
       11
@@ -472,9 +457,9 @@
   },
   {
    "kind": "fighting",
-   "t": 25.0,
-   "until": 26.5,
-   "fighting_turn": 14,
+   "t": 26.0,
+   "until": 27.5,
+   "fighting_turn": 16,
    "turns": 3,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
@@ -486,27 +471,27 @@
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 85,
+     "hp": 83,
      "hp_max": 121,
-     "hp_share": 0.702,
-     "energy": 27
+     "hp_share": 0.686,
+     "energy": 36
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
       19,
       19
@@ -517,8 +502,8 @@
   },
   {
    "kind": "switch",
-   "t": 26.5,
-   "fighting_turn": 17,
+   "t": 27.5,
+   "fighting_turn": 19,
    "side": "theirs",
    "from": "Cramorant",
    "to": "Marowak",
@@ -527,10 +512,10 @@
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 85,
+     "hp": 71,
      "hp_max": 121,
-     "hp_share": 0.702,
-     "energy": 27
+     "hp_share": 0.587,
+     "energy": 36
     },
     "theirs": {
      "active": "Marowak",
@@ -549,16 +534,16 @@
   },
   {
    "kind": "fighting",
-   "t": 26.5,
-   "until": 29.5,
-   "fighting_turn": 17,
+   "t": 27.5,
+   "until": 30.5,
+   "fighting_turn": 19,
    "turns": 6,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Marowak",
@@ -572,18 +557,18 @@
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 56,
+     "hp": 44,
      "hp_max": 121,
-     "hp_share": 0.463,
-     "energy": 54
+     "hp_share": 0.364,
+     "energy": 63
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 119,
+     "hp": 125,
      "hp_max": 125,
-     "hp_share": 0.952,
+     "hp_share": 1.0,
      "energy": [
       20,
       20
@@ -594,44 +579,44 @@
   },
   {
    "kind": "charged",
-   "t": 29.5,
-   "fighting_turn": 23,
+   "t": 30.5,
+   "fighting_turn": 25,
    "side": "mine",
    "pokemon": "Qwilfish (Hisuian)",
    "move": "Aqua Tail",
    "move_id": "AQUA_TAIL",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 54,
+   "energy_before": 63,
    "target": "Marowak",
    "shielded": false,
-   "target_hp_before": 119,
-   "target_hp_after": 66,
+   "target_hp_before": 125,
+   "target_hp_after": 125,
    "target_hp_max": 125,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 50,
-   "resolved_t": 39.0,
+   "resolved_t": 40.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 56,
+     "hp": 44,
      "hp_max": 121,
-     "hp_share": 0.463,
-     "energy": 19
+     "hp_share": 0.364,
+     "energy": 28
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 66,
+     "hp": 125,
      "hp_max": 125,
-     "hp_share": 0.528,
+     "hp_share": 1.0,
      "energy": [
-      30,
-      30
+      20,
+      20
      ],
      "energy_ceiling": 30
     }
@@ -639,16 +624,16 @@
   },
   {
    "kind": "fighting",
-   "t": 39.0,
-   "until": 39.5,
-   "fighting_turn": 23,
+   "t": 40.0,
+   "until": 40.5,
+   "fighting_turn": 25,
    "turns": 1,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Marowak",
@@ -662,21 +647,21 @@
      "active": "Qwilfish (Hisuian)",
      "shields": 1,
      "left": 3,
-     "hp": 56,
+     "hp": 44,
      "hp_max": 121,
-     "hp_share": 0.463,
-     "energy": 19
+     "hp_share": 0.364,
+     "energy": 28
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 66,
+     "hp": 125,
      "hp_max": 125,
-     "hp_share": 0.528,
+     "hp_share": 1.0,
      "energy": [
-      30,
-      30
+      20,
+      20
      ],
      "energy_ceiling": 30
     }
@@ -684,8 +669,8 @@
   },
   {
    "kind": "switch",
-   "t": 39.5,
-   "fighting_turn": 24,
+   "t": 40.5,
+   "fighting_turn": 26,
    "side": "mine",
    "from": "Qwilfish (Hisuian)",
    "to": "Mimikyu",
@@ -703,12 +688,12 @@
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 66,
+     "hp": 64,
      "hp_max": 125,
-     "hp_share": 0.528,
+     "hp_share": 0.512,
      "energy": [
-      30,
-      30
+      20,
+      20
      ],
      "energy_ceiling": 30
     }
@@ -716,42 +701,41 @@
   },
   {
    "kind": "fighting",
-   "t": 39.5,
-   "until": 41.5,
-   "fighting_turn": 24,
+   "t": 40.5,
+   "until": 42.5,
+   "fighting_turn": 26,
    "turns": 5,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Marowak",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Mimikyu",
      "shields": 1,
      "left": 3,
-     "hp": 100,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 0.935,
+     "hp_share": 0.953,
      "energy": 16
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 62,
+     "hp": 60,
      "hp_max": 125,
-     "hp_share": 0.496,
+     "hp_share": 0.48,
      "energy": [
       40,
       40
@@ -762,8 +746,8 @@
   },
   {
    "kind": "charged",
-   "t": 41.5,
-   "fighting_turn": 28,
+   "t": 42.5,
+   "fighting_turn": 30,
    "side": "theirs",
    "pokemon": "Marowak",
    "move": "Bone Club",
@@ -776,31 +760,31 @@
    ],
    "energy_ceiling": 50,
    "target": "Mimikyu",
-   "shielded": true,
-   "target_hp_before": 100,
-   "target_hp_after": 100,
+   "shielded": false,
+   "target_hp_before": 102,
+   "target_hp_after": 102,
    "target_hp_max": 107,
    "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 52.0,
+   "expected_damage": 34,
+   "resolved_t": 53.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 100,
+     "hp": 102,
      "hp_max": 107,
-     "hp_share": 0.935,
+     "hp_share": 0.953,
      "energy": 24
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 62,
+     "hp": 60,
      "hp_max": 125,
-     "hp_share": 0.496,
+     "hp_share": 0.48,
      "energy": [
       5,
       5
@@ -811,29 +795,29 @@
   },
   {
    "kind": "fighting",
-   "t": 52.0,
-   "until": 60.5,
-   "fighting_turn": 29,
+   "t": 53.0,
+   "until": 61.5,
+   "fighting_turn": 31,
    "turns": 17,
    "mine": {
     "pokemon": "Mimikyu",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 8,
-    "hits_seen": 7
+    "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Marowak",
     "fast_move": "Mud Slap",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 3
+    "hits_seen": 4
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
      "hp": 71,
      "hp_max": 107,
@@ -844,9 +828,9 @@
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 43,
+     "hp": 39,
      "hp_max": 125,
-     "hp_share": 0.344,
+     "hp_share": 0.312,
      "energy": [
       55,
       55
@@ -857,8 +841,8 @@
   },
   {
    "kind": "charged",
-   "t": 60.5,
-   "fighting_turn": 46,
+   "t": 61.5,
+   "fighting_turn": 48,
    "side": "theirs",
    "pokemon": "Marowak",
    "move": "Bone Club",
@@ -873,29 +857,29 @@
    "target": "Mimikyu",
    "shielded": false,
    "target_hp_before": 71,
-   "target_hp_after": 27,
+   "target_hp_after": 28,
    "target_hp_max": 107,
    "target_bar_read": true,
    "expected_damage": 34,
-   "resolved_t": 70.0,
+   "resolved_t": 71.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 27,
+     "hp": 28,
      "hp_max": 107,
-     "hp_share": 0.252,
+     "hp_share": 0.262,
      "energy": 96
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 39,
+     "hp": 36,
      "hp_max": 125,
-     "hp_share": 0.312,
+     "hp_share": 0.288,
      "energy": [
       20,
       20
@@ -906,9 +890,9 @@
   },
   {
    "kind": "fighting",
-   "t": 70.0,
-   "until": 71.5,
-   "fighting_turn": 46,
+   "t": 71.0,
+   "until": 72.5,
+   "fighting_turn": 48,
    "turns": 2,
    "mine": {
     "pokemon": "Mimikyu",
@@ -927,20 +911,20 @@
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 27,
+     "hp": 28,
      "hp_max": 107,
-     "hp_share": 0.252,
+     "hp_share": 0.262,
      "energy": 100
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
      "left": 3,
-     "hp": 39,
+     "hp": 34,
      "hp_max": 125,
-     "hp_share": 0.312,
+     "hp_share": 0.272,
      "energy": [
       20,
       20
@@ -951,8 +935,8 @@
   },
   {
    "kind": "charged",
-   "t": 71.5,
-   "fighting_turn": 48,
+   "t": 72.5,
+   "fighting_turn": 50,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
@@ -962,30 +946,62 @@
    "energy_before": 100,
    "target": "Marowak",
    "shielded": false,
-   "target_hp_before": 39,
-   "target_hp_after": 39,
+   "target_hp_before": 34,
+   "target_hp_after": 0,
    "target_hp_max": 125,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 48,
    "resolved_t": 80.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 27,
+     "hp": 28,
      "hp_max": 107,
-     "hp_share": 0.252,
+     "hp_share": 0.262,
      "energy": 50
     },
     "theirs": {
      "active": "Marowak",
      "shields": 2,
-     "left": 3,
-     "hp": 39,
+     "left": 2,
+     "hp": 0,
      "hp_max": 125,
-     "hp_share": 0.312,
+     "hp_share": 0.0,
+     "energy": [
+      30,
+      30
+     ],
+     "energy_ceiling": 30
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 80.0,
+   "fighting_turn": 50,
+   "side": "theirs",
+   "pokemon": "Marowak",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Mimikyu",
+     "shields": 1,
+     "left": 3,
+     "hp": 28,
+     "hp_max": 107,
+     "hp_share": 0.262,
+     "energy": 50
+    },
+    "theirs": {
+     "active": "Marowak",
+     "shields": 2,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 125,
+     "hp_share": 0.0,
      "energy": [
       30,
       30
@@ -997,85 +1013,8 @@
   {
    "kind": "fighting",
    "t": 80.0,
-   "until": 80.65,
-   "fighting_turn": 48,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Marowak",
-    "fast_move": "Mud Slap",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 3,
-     "hp": 27,
-     "hp_max": 107,
-     "hp_share": 0.252,
-     "energy": 50
-    },
-    "theirs": {
-     "active": "Marowak",
-     "shields": 2,
-     "left": 3,
-     "hp": 39,
-     "hp_max": 125,
-     "hp_share": 0.312,
-     "energy": [
-      30,
-      30
-     ],
-     "energy_ceiling": 30
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 80.65,
-   "fighting_turn": 49,
-   "side": "theirs",
-   "pokemon": "Marowak",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 0,
-     "left": 3,
-     "hp": 27,
-     "hp_max": 107,
-     "hp_share": 0.252,
-     "energy": 50
-    },
-    "theirs": {
-     "active": "Marowak",
-     "shields": 2,
-     "left": 3,
-     "hp": 0,
-     "hp_max": 125,
-     "hp_share": 0.0,
-     "energy": [
-      30,
-      30
-     ],
-     "energy_ceiling": 40
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 80.65,
-   "until": 84.0,
-   "fighting_turn": 49,
+   "until": 85.0,
+   "fighting_turn": 50,
    "turns": 3,
    "mine": {
     "pokemon": "Mimikyu",
@@ -1094,11 +1033,11 @@
    "state": {
     "mine": {
      "active": "Mimikyu",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 27,
+     "hp": 28,
      "hp_max": 107,
-     "hp_share": 0.252,
+     "hp_share": 0.262,
      "energy": 66
     },
     "theirs": {
@@ -1118,20 +1057,20 @@
   },
   {
    "kind": "switch",
-   "t": 84.0,
-   "fighting_turn": 52,
+   "t": 85.0,
+   "fighting_turn": 53,
    "side": "mine",
    "from": "Mimikyu",
    "to": "Qwilfish (Hisuian)",
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 31,
+     "hp": 32,
      "hp_max": 121,
-     "hp_share": 0.256,
-     "energy": 19
+     "hp_share": 0.264,
+     "energy": 28
     },
     "theirs": {
      "active": "Hydreigon",
@@ -1150,42 +1089,42 @@
   },
   {
    "kind": "fighting",
-   "t": 84.0,
-   "until": 88.5,
-   "fighting_turn": 52,
+   "t": 85.0,
+   "until": 89.5,
+   "fighting_turn": 53,
    "turns": 9,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
     "fast_move": "Poison Sting",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Hydreigon",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Bite",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 5
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 15,
+     "hp": 13,
      "hp_max": 121,
-     "hp_share": 0.124,
-     "energy": 55
+     "hp_share": 0.107,
+     "energy": 64
     },
     "theirs": {
      "active": "Hydreigon",
      "shields": 2,
      "left": 2,
-     "hp": 95,
+     "hp": 98,
      "hp_max": 116,
-     "hp_share": 0.819,
+     "hp_share": 0.845,
      "energy": [
       36,
       36
@@ -1196,28 +1135,28 @@
   },
   {
    "kind": "switch",
-   "t": 88.5,
-   "fighting_turn": 61,
+   "t": 89.5,
+   "fighting_turn": 62,
    "side": "theirs",
    "from": "Hydreigon",
    "to": "Cramorant",
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 15,
+     "hp": 13,
      "hp_max": 121,
-     "hp_share": 0.124,
-     "energy": 55
+     "hp_share": 0.107,
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 2,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
       19,
       19
@@ -1228,9 +1167,9 @@
   },
   {
    "kind": "fighting",
-   "t": 88.5,
-   "until": 95.5,
-   "fighting_turn": 61,
+   "t": 89.5,
+   "until": 96.5,
+   "fighting_turn": 62,
    "turns": 3,
    "mine": {
     "pokemon": "Qwilfish (Hisuian)",
@@ -1242,31 +1181,30 @@
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
-    "fast_move_known_from": "inferred",
+    "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 2,
      "hp_max": 121,
-     "hp_share": 0.058,
-     "energy": 73
+     "hp_share": 0.017,
+     "energy": 82
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 2,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
-      27,
-      27
+      35,
+      35
      ],
      "energy_ceiling": 43
     }
@@ -1274,8 +1212,8 @@
   },
   {
    "kind": "end",
-   "t": 95.5,
-   "fighting_turn": 64,
+   "t": 96.5,
+   "fighting_turn": 65,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1285,30 +1223,42 @@
    "state": {
     "mine": {
      "active": "Qwilfish (Hisuian)",
-     "shields": 0,
+     "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 2,
      "hp_max": 121,
-     "hp_share": 0.058,
-     "energy": 73
+     "hp_share": 0.017,
+     "energy": 82
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 2,
-     "hp": 32,
+     "hp": 28,
      "hp_max": 126,
-     "hp_share": 0.254,
+     "hp_share": 0.222,
      "energy": [
-      27,
-      27
+      35,
+      35
      ],
      "energy_ceiling": 43
     }
    }
   }
  ],
- "deductions": [],
+ "deductions": [
+  {
+   "t": 89.0,
+   "side": "theirs",
+   "pokemon": "Hydreigon",
+   "what": "fast move",
+   "value": "Bite",
+   "how": "every other fast move ruled out by effectiveness words or energy",
+   "ruled_out": [
+    "Dragon Breath"
+   ]
+  }
+ ],
  "built_from": [
   "events.jsonl.gz",
   "source.json",

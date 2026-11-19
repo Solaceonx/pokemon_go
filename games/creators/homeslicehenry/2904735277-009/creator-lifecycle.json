@@ -2,23 +2,169 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "mine",
-      "species": "Sableye",
-      "clip_seconds": 152.81669953046594,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 152.88336621146954,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
       "side": "theirs",
       "species": "Vigoroth",
-      "clip_seconds": 99.48335472759857,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 99.55002140860215,
-      "timing_uncertainty_seconds": 0.1
+      "clip_seconds": 98.0833544265233,
+      "confirmed_clip_seconds": 99.00002129032258,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 98.0833544265233,
+        "bar": {
+          "bounds": [
+            182,
+            589,
+            328,
+            604
+          ],
+          "outline_method": "physical_rail_intersection",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 140,
+          "live_pixels": 0,
+          "damage_pixels": 21,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014286
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9778,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Vigoroth",
+          "camera_identity_cutoff_seconds": 97.750021
+        },
+        "source_pts": 205073910,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 90.0,
+        "release_seconds": 97.000021
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 98.83335458781362,
+        "confirmed_seconds": 99.00002129032258
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Vigoroth",
+        "clip_seconds": 99.48335472759857,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 100.1666882078853,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 100.00002150537634,
+          "confirmed_seconds": 100.1666882078853
+        }
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Sableye",
+      "clip_seconds": 152.33336609318997,
+      "confirmed_clip_seconds": 152.6666994982079,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 152.33336609318997,
+        "bar": {
+          "bounds": [
+            182,
+            524,
+            326,
+            537
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            0.8889
+          ],
+          "horizontal_rail_support": [
+            0.7429,
+            0.9
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 7,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9948,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Sableye",
+          "camera_identity_cutoff_seconds": 151.750032
+        },
+        "source_pts": 209956410,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 144.0,
+        "release_seconds": 151.000032
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 152.50003279569893,
+        "confirmed_seconds": 152.6666994982079
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 152.81669953046594,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 153.75003306451612,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 153.58336636200715,
+          "confirmed_seconds": 153.75003306451612
+        }
+      }
     }
   ],
   "charged_impact_probes": [
+    {
+      "schema": "terminal-impact-v1",
+      "accepted": false,
+      "video_sha256": "90756e44662bac3ddf632cc703d902ccb66ba2e5275ddc41995f208d3ac04400",
+      "result_based_faints": 0,
+      "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+      "side": "mine",
+      "species": "Sableye",
+      "move": "Weather Ball",
+      "attack_side": "theirs",
+      "announced_clip_seconds": 14.000003,
+      "attack_start_clip_seconds": 7.0,
+      "sample_count": 75,
+      "target_counter_before": 3,
+      "reason": "No continuous positive-to-zero live strip with disappearing tail"
+    },
     {
       "schema": "terminal-impact-v1",
       "accepted": false,
@@ -463,5 +609,366 @@
       "measurement": null
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "981cd59291ac863b7749090e081373f43b0b49419ac7db1975acb510270562d4",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "theirs",
+        "species": "Vigoroth",
+        "clip_seconds": 98.0833544265233,
+        "confirmed_clip_seconds": 99.00002129032258,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 98.0833544265233,
+          "bar": {
+            "bounds": [
+              182,
+              589,
+              328,
+              604
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 21,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9778,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Vigoroth",
+            "camera_identity_cutoff_seconds": 97.750021
+          },
+          "source_pts": 205073910,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 90.0,
+          "release_seconds": 97.000021
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 98.83335458781362,
+          "confirmed_seconds": 99.00002129032258
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Vigoroth",
+          "clip_seconds": 99.48335472759857,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 100.1666882078853,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 100.00002150537634,
+            "confirmed_seconds": 100.1666882078853
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 152.33336609318997,
+        "confirmed_clip_seconds": 152.6666994982079,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 152.33336609318997,
+          "bar": {
+            "bounds": [
+              182,
+              524,
+              326,
+              537
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              0.8889
+            ],
+            "horizontal_rail_support": [
+              0.7429,
+              0.9
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 7,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9948,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Sableye",
+            "camera_identity_cutoff_seconds": 151.750032
+          },
+          "source_pts": 209956410,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 144.0,
+          "release_seconds": 151.000032
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 152.50003279569893,
+          "confirmed_seconds": 152.6666994982079
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Sableye",
+          "clip_seconds": 152.81669953046594,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 153.75003306451612,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 153.58336636200715,
+            "confirmed_seconds": 153.75003306451612
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Vigoroth",
+        "clip_seconds": 98.16668777777778,
+        "confirmed_clip_seconds": 99.50002139784947,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 97.83335437275986,
+          "bar": {
+            "bounds": [
+              335,
+              540,
+              479,
+              553
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 22,
+            "damage_pixels": 0,
+            "fraction": 0.15942,
+            "fraction_interval": [
+              0.144928,
+              0.173913
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9959,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 22
+            }
+          }
+        },
+        "first_zero": {
+          "t": 98.16668777777778,
+          "bar": {
+            "bounds": [
+              182,
+              595,
+              326,
+              608
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 22,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9948,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Vigoroth",
+            "camera_identity_cutoff_seconds": 97.750021
+          },
+          "source_pts": 205081380,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 98.83335458781362,
+            "confirmed_seconds": 99.00002129032258,
+            "value": 2,
+            "source_pts": 205141410,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 153.58336636200715,
+        "confirmed_clip_seconds": 153.91669976702508,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 153.5000330107527,
+          "bar": {
+            "bounds": [
+              31,
+              700,
+              177,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 210068910,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          153.5000330107527,
+          153.58336636200715
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 153.75003306451612,
+          "confirmed_seconds": 153.91669976702508
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Vigoroth",
+        "clip_seconds": 99.83335480286739,
+        "confirmed_clip_seconds": 100.1666882078853,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 99.75002145161291,
+          "bar": {
+            "bounds": [
+              253,
+              506,
+              401,
+              523
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              0.9231
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9931
+            ],
+            "interior_width_pixels": 142,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014085
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 205231410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          99.75002145161291,
+          99.83335480286739
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 100.00002150537634,
+          "confirmed_seconds": 100.1666882078853
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

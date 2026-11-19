@@ -3,9 +3,10 @@ Source: https://www.twitch.tv/videos/2930158499, 4669.016333333333-4796.016333 s
 Checks: fail
   failed: moves: 1 charged move(s) without an observed name
   failed: moves: 8 charged moves announced, 7 tracked
+  failed: shields: they used 2, but 1 charged move(s) were tracked as blocked
   failed: ending: no result screen, and the tracker has us on 2 and them on 3
   note: final charged-move cue has no observed name; resolution and ending are unverified
-  note: fast move only guessed for dunsparce, corsola
+  note: fast move only guessed for corsola
 Mine = the player whose screen this is.
 
 Mine
@@ -13,31 +14,32 @@ Mine
   Tinkaton     CP 1496   Fairy Wind? | Gigaton Hammer, Bulldoze  [fainted]
 
 Theirs (1 not seen)
-  Dunsparce    CP 1494   Bite? | Drill Run, Rock Slide?
-  Corsola      CP 1500   Bubble? | Power Gem?, Rock Blast
+  Dunsparce    CP 1494   Astonish* | Drill Run, Rock Slide?
+  Corsola      CP 1500   Bubble? | Power Gem?, Rock Blast?
   plain = seen or told   * = worked out from the screen   ? = assumed, not confirmed
 
    0:00.0  Start: Fearow vs Dunsparce
-   0:00.0  fight to 0:08.5, 16 turns: Fearow ~8 Peck? (7 seen); Dunsparce ~16 Bite? (1 seen)
-   0:08.5  They throw Drill Run (Dunsparce, 64 of 40 energy, clock allows 68) -> Fearow shielded
-   0:18.0  fight to 0:19.5, 2 turns: Fearow ~1 Peck? (0 seen); Dunsparce ~2 Bite? (0 seen)  [1 unexplained health change(s)]
-   0:19.5  We throw Drill Peck (Fearow, 72 of 40 energy) -> Dunsparce 70% -> ? (bar not read; the move does ~35%)
-   0:29.0  fight to 0:30.5, 3 turns: Fearow ~1 Peck? (0 seen); Dunsparce ~3 Bite? (1 seen)
-   0:30.5  They switch Dunsparce -> Corsola
-   0:30.5  fight to 0:33.5, 6 turns: Fearow ~3 Peck? (1 seen); Corsola ~2 Bubble? (2 seen)  [1 unexplained health change(s)]
-   0:33.5  We throw Drill Peck (Fearow, 64 of 40 energy) -> Corsola 87% -> ? (bar not read; the move does ~24%)
-   0:43.0  fight to 0:47.0, 8 turns: Fearow ~4 Peck? (3 seen); Corsola ~2 Bubble? (1 seen)
+   0:00.0  fight to 0:08.5, 16 turns: Fearow ~8 Peck? (10 seen); Dunsparce ~5 Astonish* (5 seen)  [1 unexplained health change(s)]
+   0:06.0  . worked out: their Dunsparce has Astonish (fits the size and timing of its hits on our bar)
+   0:08.5  They throw Drill Run (Dunsparce, 50 of 40 energy, clock allows 60) -> Fearow shielded
+   0:18.0  fight to 0:19.5, 2 turns: Fearow ~1 Peck? (0 seen); Dunsparce ~0 Astonish* (1 seen)
+   0:19.5  We throw Drill Peck (Fearow, 72 of 40 energy) -> Dunsparce 72% -> ? (bar not read; the move does ~35%)
+   0:29.0  fight to 0:30.0, 2 turns: Fearow ~1 Peck? (0 seen); Dunsparce ~0 Astonish* (1 seen)
+   0:30.0  They switch Dunsparce -> Corsola
+   0:30.0  fight to 0:33.5, 7 turns: Fearow ~3 Peck? (1 seen); Corsola ~2 Bubble? (2 seen)  [1 unexplained health change(s)]
+   0:33.5  We throw Drill Peck (Fearow, 64 of 40 energy) -> Corsola 90% -> 58%
+   0:43.0  fight to 0:47.0, 8 turns: Fearow ~4 Peck? (4 seen); Corsola ~2 Bubble? (3 seen)
    0:47.0  We switch Fearow -> Tinkaton
-   0:47.0  fight to 0:48.5, 3 turns: Tinkaton ~1 Fairy Wind? (1 seen); Corsola ~1 Bubble? (0 seen)
-   0:48.5  They throw Night Shade (Corsola, 55 energy, clock allows 66) -> Tinkaton 100% -> ? (bar not read)
-   0:58.0  fight to 1:02.5, 9 turns: Tinkaton ~4 Fairy Wind? (4 seen); Corsola ~3 Bubble? (3 seen)  [2 unexplained health change(s)]
-   1:02.5  They throw Rock Blast (Corsola, 38-48 of 40 energy, clock allows 59) -> Tinkaton 60% -> ? (bar not read; the move does ~13%)
-   1:12.0  fight to 1:16.5, 9 turns: Tinkaton ~4 Fairy Wind? (3 seen); Corsola ~3 Bubble? (5 seen)  [2 unexplained health change(s)]
-   1:16.5  We throw Bulldoze (Tinkaton, 99 of 55 energy) -> Corsola 23% -> ? (bar not read; the move does ~47%)
-   1:26.0  fight to 1:27.5, 3 turns: Tinkaton ~1 Fairy Wind? (0 seen); Corsola ~1 Bubble? (0 seen)  [1 unexplained health change(s)]
+   0:47.0  fight to 0:48.5, 3 turns: Tinkaton ~1 Fairy Wind? (0 seen); Corsola ~1 Bubble? (0 seen)  [1 unexplained health change(s)]
+   0:48.5  They throw Night Shade (Corsola, 66 energy, clock allows 77) -> Tinkaton 60% -> ? (bar not read)
+   0:58.0  fight to 1:02.5, 9 turns: Tinkaton ~4 Fairy Wind? (6 seen); Corsola ~3 Bubble? (3 seen)  [3 unexplained health change(s)]
+   1:02.5  They throw Night Shade (Corsola, 49-59 energy, clock allows 70) -> Tinkaton 57% -> ? (bar not read)
+   1:12.0  fight to 1:16.5, 9 turns: Tinkaton ~4 Fairy Wind? (4 seen); Corsola ~3 Bubble? (4 seen)  [3 unexplained health change(s)]
+   1:16.5  We throw Bulldoze (Tinkaton, 99 of 55 energy) -> Corsola shielded
+   1:26.0  fight to 1:27.5, 3 turns: Tinkaton ~1 Fairy Wind? (0 seen); Corsola ~1 Bubble? (1 seen)
    1:27.5  They switch Corsola -> Dunsparce
-   1:27.5  fight to 1:39.7, 24 turns: Tinkaton ~12 Fairy Wind? (3 seen); Dunsparce ~24 Bite? (1 seen)  [1 unexplained health change(s)]
+   1:27.5  fight to 1:39.7, 24 turns: Tinkaton ~12 Fairy Wind? (2 seen); Dunsparce ~8 Astonish* (1 seen)
    1:39.7  Our Tinkaton faints; None comes in
-   1:31.5  We throw Gigaton Hammer (Tinkaton, 100 of 60 energy) -> Dunsparce shielded
-   1:40.0  fight to 1:58.2, 2 turns: Tinkaton ~1 Fairy Wind? (0 seen); Dunsparce ~2 Bite? (0 seen)
+   1:31.5  We throw Gigaton Hammer (Tinkaton, 100 of 60 energy) -> Dunsparce 27% -> 0%
+   1:40.0  fight to 1:58.2, 2 turns: Tinkaton ~1 Fairy Wind? (1 seen); Dunsparce ~0 Astonish* (0 seen)
    1:58.2  End: result unknown; Pokémon left: us 2, them 3

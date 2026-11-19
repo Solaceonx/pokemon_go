@@ -3,27 +3,142 @@
   "faints": [
     {
       "side": "theirs",
-      "species": "Ninetales",
-      "clip_seconds": 84.63332182548315,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 84.69998848308495,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Charizard",
-      "clip_seconds": 154.39997900576526,
-      "method": "native_fighting_live_to_zero_and_fade",
-      "confirmed_clip_seconds": 155.13331223938505,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
       "species": "Charizard",
       "clip_seconds": 157.83331187225787,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 158.03331184506328,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 160.19997821712172,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 160.03331157311723,
+        "confirmed_seconds": 160.19997821712172
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Ninetales",
+      "clip_seconds": 83.53332197505348,
+      "confirmed_clip_seconds": 84.19998855107147,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 83.53332197505348,
+        "bar": {
+          "bounds": [
+            198,
+            602,
+            338,
+            615
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 134,
+          "live_pixels": 0,
+          "damage_pixels": 21,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014925
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9861,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Ninetales",
+          "camera_identity_cutoff_seconds": 82.783322
+        },
+        "source_pts": 125828310,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 75.03,
+        "release_seconds": 82.033322
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 84.03332190706698,
+        "confirmed_seconds": 84.19998855107147
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Ninetales",
+        "clip_seconds": 84.63332182548315,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 86.19998827912542,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 86.03332163512093,
+          "confirmed_seconds": 86.19998827912542
+        }
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Victreebel",
+      "clip_seconds": 126.1999828402045,
+      "confirmed_clip_seconds": 126.7666494298198,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 126.1999828402045,
+        "bar": {
+          "bounds": [
+            48,
+            703,
+            189,
+            715
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 135,
+          "live_pixels": 0,
+          "damage_pixels": 0,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014815
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 1.0,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        },
+        "source_pts": 129668340,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 126.5999827858153,
+        "confirmed_seconds": 126.7666494298198
+      }
     }
   ],
   "charged_impact_probes": [
@@ -56,6 +171,38 @@
       "announced_clip_seconds": 27.03333,
       "attack_start_clip_seconds": 20.029999999999998,
       "sample_count": 75,
+      "target_counter_before": 2,
+      "reason": "No continuous positive-to-zero live strip with disappearing tail"
+    },
+    {
+      "schema": "terminal-impact-v1",
+      "accepted": false,
+      "video_sha256": "3b32e530c4140f47a9541d1828ff2fb1359d5a93d19e762286add84a266d8633",
+      "result_based_faints": 0,
+      "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+      "side": "mine",
+      "species": "Turtonator",
+      "move": "Weather Ball",
+      "attack_side": "theirs",
+      "announced_clip_seconds": 47.033327,
+      "attack_start_clip_seconds": 39.03,
+      "sample_count": 75,
+      "target_counter_before": 2,
+      "reason": "No continuous positive-to-zero live strip with disappearing tail"
+    },
+    {
+      "schema": "terminal-impact-v1",
+      "accepted": false,
+      "video_sha256": "3b32e530c4140f47a9541d1828ff2fb1359d5a93d19e762286add84a266d8633",
+      "result_based_faints": 0,
+      "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+      "side": "mine",
+      "species": "Turtonator",
+      "move": "Weather Ball",
+      "attack_side": "theirs",
+      "announced_clip_seconds": 61.033325,
+      "attack_start_clip_seconds": 54.03,
+      "sample_count": 76,
       "target_counter_before": 2,
       "reason": "No continuous positive-to-zero live strip with disappearing tail"
     },
@@ -219,15 +366,7 @@
     }
   ],
   "forms": [],
-  "quarantined_counters": [
-    {
-      "side": "mine",
-      "clip_seconds": 146.2,
-      "species": "Kingdra",
-      "reason": "decrement contradicted by surviving unchanged active",
-      "corroborating_live_frames": 5
-    }
-  ],
+  "quarantined_counters": [],
   "fighting_faint_probes": [
     {
       "candidate": {
@@ -485,5 +624,260 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "974f5c834e0c8aab5b32908656589a533bb53eb36ac759a73a8db533c5d4ee0c",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "theirs",
+        "species": "Ninetales",
+        "clip_seconds": 83.53332197505348,
+        "confirmed_clip_seconds": 84.19998855107147,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 83.53332197505348,
+          "bar": {
+            "bounds": [
+              198,
+              602,
+              338,
+              615
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 134,
+            "live_pixels": 0,
+            "damage_pixels": 21,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014925
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9861,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Ninetales",
+            "camera_identity_cutoff_seconds": 82.783322
+          },
+          "source_pts": 125828310,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 75.03,
+          "release_seconds": 82.033322
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 84.03332190706698,
+          "confirmed_seconds": 84.19998855107147
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Ninetales",
+          "clip_seconds": 84.63332182548315,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 86.19998827912542,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 86.03332163512093,
+            "confirmed_seconds": 86.19998827912542
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Victreebel",
+        "clip_seconds": 126.1999828402045,
+        "confirmed_clip_seconds": 126.7666494298198,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 126.1999828402045,
+          "bar": {
+            "bounds": [
+              48,
+              703,
+              189,
+              715
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 135,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014815
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 129668340,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 126.5999827858153,
+          "confirmed_seconds": 126.7666494298198
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Charizard",
+        "clip_seconds": 159.43331165470104,
+        "confirmed_clip_seconds": 160.19997821712172,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 159.43331165470104,
+          "bar": {
+            "bounds": [
+              347,
+              406,
+              487,
+              418
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 134,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014925
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 132659310,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 160.03331157311723,
+          "confirmed_seconds": 160.19997821712172
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Ninetales",
+        "clip_seconds": 85.19998841509845,
+        "confirmed_clip_seconds": 86.19998827912542,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 85.09998842869575,
+          "bar": {
+            "bounds": [
+              268,
+              480,
+              409,
+              493
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 135,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014815
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9926,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 125978340,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          85.09998842869575,
+          85.19998841509845
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 86.03332163512093,
+          "confirmed_seconds": 86.19998827912542
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [
+      {
+        "side": "theirs",
+        "species": "Charizard",
+        "clip_seconds": 154.39997900576526,
+        "method": "native_fighting_live_to_zero_and_fade",
+        "confirmed_clip_seconds": 155.13331223938505,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "contradicted",
+          "reason": "later_named_release_before_replacement",
+          "confirmed_seconds": 157.033312
+        }
+      }
+    ],
+    "result_based_faints": 0
+  }
 }

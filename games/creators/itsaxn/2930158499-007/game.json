@@ -19,18 +19,18 @@
   "from": "result screen",
   "left": {
    "mine": 1,
-   "theirs": 3
+   "theirs": 2
   }
  },
- "seconds": 150.5,
- "fighting_turns": 104,
+ "seconds": 151.5,
+ "fighting_turns": 106,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "ending: result says loss, tracker has us on 1 and them on 3"
+   "ending: result says loss, tracker has us on 1 and them on 2"
   ],
   "notes": [],
-  "unexplained_health_changes": 6
+  "unexplained_health_changes": 9
  },
  "teams": {
   "mine": [
@@ -75,7 +75,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.149,
+    "hp_share_at_end": 0.123,
     "fast_move": {
      "id": "MUD_SHOT",
      "name": "Mud Shot",
@@ -180,7 +180,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.04,
+    "hp_share_at_end": 0.095,
     "fast_move": {
      "id": "PECK",
      "name": "Peck",
@@ -218,7 +218,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.424,
+    "hp_share_at_end": 0.398,
     "fast_move": {
      "id": "DRAGON_BREATH",
      "name": "Dragon Breath",
@@ -251,7 +251,7 @@
     }
    }
   ],
-  "theirs_unseen": 1
+  "theirs_unseen": 0
  },
  "summary": {
   "charged": {
@@ -280,16 +280,61 @@
    "kind": "start",
    "t": 0.0,
    "fighting_turn": 0,
-   "mine": "Seismitoad",
+   "mine": "Fearow",
    "theirs": "Stunfisk",
    "incomplete_start": false,
    "state": {
     "mine": {
-     "active": "Seismitoad",
+     "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 154,
-     "hp_max": 154,
+     "hp": 124,
+     "hp_max": 124,
+     "hp_share": 1.0,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Stunfisk",
+     "shields": 2,
+     "left": 3,
+     "hp": 172,
+     "hp_max": 172,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 9
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 0.0,
+   "until": 1.0,
+   "fighting_turn": 0,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Fearow",
+    "fast_move": "Peck",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Stunfisk",
+    "fast_move": "Thunder Shock",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 2,
+     "left": 3,
+     "hp": 124,
+     "hp_max": 124,
      "hp_share": 1.0,
      "energy": 0
     },
@@ -310,10 +355,10 @@
   },
   {
    "kind": "switch",
-   "t": 0.0,
-   "fighting_turn": 0,
+   "t": 1.0,
+   "fighting_turn": 2,
    "side": "mine",
-   "from": "Seismitoad",
+   "from": "Fearow",
    "to": "Seismitoad",
    "state": {
     "mine": {
@@ -333,18 +378,18 @@
      "hp_max": 172,
      "hp_share": 1.0,
      "energy": [
-      0,
-      0
+      9,
+      9
      ],
-     "energy_ceiling": 9
+     "energy_ceiling": 18
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 0.0,
-   "until": 2.0,
-   "fighting_turn": 0,
+   "t": 1.0,
+   "until": 3.0,
+   "fighting_turn": 2,
    "turns": 4,
    "mine": {
     "pokemon": "Seismitoad",
@@ -358,7 +403,7 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
@@ -378,17 +423,17 @@
      "hp_max": 172,
      "hp_share": 1.0,
      "energy": [
-      9,
-      9
+      18,
+      18
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 27
     }
    }
   },
   {
    "kind": "switch",
-   "t": 2.0,
-   "fighting_turn": 4,
+   "t": 3.0,
+   "fighting_turn": 6,
    "side": "theirs",
    "from": "Stunfisk",
    "to": "Cramorant",
@@ -397,9 +442,9 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 154,
+     "hp": 148,
      "hp_max": 154,
-     "hp_share": 1.0,
+     "hp_share": 0.961,
      "energy": 18
     },
     "theirs": {
@@ -419,16 +464,16 @@
   },
   {
    "kind": "fighting",
-   "t": 2.0,
-   "until": 6.5,
-   "fighting_turn": 4,
+   "t": 3.0,
+   "until": 7.5,
+   "fighting_turn": 6,
    "turns": 8,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cramorant",
@@ -437,15 +482,15 @@
     "fast_moves_if_no_pause": 4,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 134,
+     "hp": 128,
      "hp_max": 154,
-     "hp_share": 0.87,
+     "hp_share": 0.831,
      "energy": 54
     },
     "theirs": {
@@ -465,8 +510,8 @@
   },
   {
    "kind": "charged",
-   "t": 6.5,
-   "fighting_turn": 12,
+   "t": 7.5,
+   "fighting_turn": 14,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
@@ -481,16 +526,16 @@
    "target_hp_max": 126,
    "target_bar_read": false,
    "expected_damage": 39,
-   "resolved_t": 15.0,
+   "resolved_t": 16.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 134,
+     "hp": 128,
      "hp_max": 154,
-     "hp_share": 0.87,
+     "hp_share": 0.831,
      "energy": 9
     },
     "theirs": {
@@ -510,9 +555,9 @@
   },
   {
    "kind": "fighting",
-   "t": 15.0,
-   "until": 17.5,
-   "fighting_turn": 12,
+   "t": 16.0,
+   "until": 18.5,
+   "fighting_turn": 14,
    "turns": 5,
    "mine": {
     "pokemon": "Seismitoad",
@@ -526,28 +571,29 @@
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 134,
+     "hp": 121,
      "hp_max": 154,
-     "hp_share": 0.87,
+     "hp_share": 0.786,
      "energy": 27
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 78,
+     "hp": 81,
      "hp_max": 126,
-     "hp_share": 0.619,
+     "hp_share": 0.643,
      "energy": [
-      48,
-      48
+      56,
+      56
      ],
      "energy_ceiling": 56
     }
@@ -555,8 +601,8 @@
   },
   {
    "kind": "charged",
-   "t": 17.5,
-   "fighting_turn": 17,
+   "t": 18.5,
+   "fighting_turn": 19,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Surf",
@@ -564,49 +610,49 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    48,
-    48
+    56,
+    56
    ],
    "energy_ceiling": 56,
    "target": "Seismitoad",
    "shielded": false,
-   "target_hp_before": 134,
-   "target_hp_after": 134,
+   "target_hp_before": 121,
+   "target_hp_after": 121,
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": null,
-   "resolved_t": 26.0,
+   "resolved_t": 27.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 134,
+     "hp": 121,
      "hp_max": 154,
-     "hp_share": 0.87,
+     "hp_share": 0.786,
      "energy": 36
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 78,
+     "hp": 81,
      "hp_max": 126,
-     "hp_share": 0.619,
+     "hp_share": 0.643,
      "energy": [
-      3,
-      3
+      11,
+      11
      ],
-     "energy_ceiling": 11
+     "energy_ceiling": 19
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 26.0,
-   "until": 35.5,
-   "fighting_turn": 17,
+   "t": 27.0,
+   "until": 36.5,
+   "fighting_turn": 19,
    "turns": 19,
    "mine": {
     "pokemon": "Seismitoad",
@@ -620,38 +666,38 @@
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 7
+    "hits_seen": 10
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 2,
      "left": 3,
-     "hp": 23,
+     "hp": 20,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.13,
      "energy": 100
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 68,
+     "hp": 79,
      "hp_max": 126,
-     "hp_share": 0.54,
+     "hp_share": 0.627,
      "energy": [
-      75,
-      75
+      83,
+      83
      ],
-     "energy_ceiling": 83
+     "energy_ceiling": 91
     }
    }
   },
   {
    "kind": "charged",
-   "t": 35.5,
-   "fighting_turn": 36,
+   "t": 36.5,
+   "fighting_turn": 38,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Surf",
@@ -659,50 +705,50 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    75,
-    75
+    83,
+    83
    ],
-   "energy_ceiling": 83,
+   "energy_ceiling": 91,
    "target": "Seismitoad",
    "shielded": true,
-   "target_hp_before": 23,
-   "target_hp_after": 23,
+   "target_hp_before": 20,
+   "target_hp_after": 20,
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 44.0,
+   "resolved_t": 45.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 1,
      "left": 3,
-     "hp": 23,
+     "hp": 20,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.13,
      "energy": 100
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 68,
+     "hp": 79,
      "hp_max": 126,
-     "hp_share": 0.54,
+     "hp_share": 0.627,
      "energy": [
-      30,
-      30
+      38,
+      38
      ],
-     "energy_ceiling": 38
+     "energy_ceiling": 46
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 44.0,
-   "until": 45.5,
-   "fighting_turn": 36,
-   "turns": 3,
+   "t": 45.0,
+   "until": 46.0,
+   "fighting_turn": 38,
+   "turns": 2,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
@@ -722,50 +768,18 @@
      "active": "Seismitoad",
      "shields": 1,
      "left": 3,
-     "hp": 23,
+     "hp": 20,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.13,
      "energy": 100
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 68,
+     "hp": 79,
      "hp_max": 126,
-     "hp_share": 0.54,
-     "energy": [
-      30,
-      30
-     ],
-     "energy_ceiling": 38
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 45.5,
-   "fighting_turn": 39,
-   "side": "mine",
-   "from": "Seismitoad",
-   "to": "Fearow",
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 1,
-     "left": 3,
-     "hp": 124,
-     "hp_max": 124,
-     "hp_share": 1.0,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Cramorant",
-     "shields": 2,
-     "left": 3,
-     "hp": 65,
-     "hp_max": 126,
-     "hp_share": 0.516,
+     "hp_share": 0.627,
      "energy": [
       38,
       38
@@ -775,10 +789,42 @@
    }
   },
   {
+   "kind": "switch",
+   "t": 46.0,
+   "fighting_turn": 40,
+   "side": "mine",
+   "from": "Seismitoad",
+   "to": "Fearow",
+   "state": {
+    "mine": {
+     "active": "Fearow",
+     "shields": 1,
+     "left": 3,
+     "hp": 16,
+     "hp_max": 124,
+     "hp_share": 0.129,
+     "energy": 0
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 2,
+     "left": 3,
+     "hp": 69,
+     "hp_max": 126,
+     "hp_share": 0.548,
+     "energy": [
+      46,
+      46
+     ],
+     "energy_ceiling": 54
+    }
+   }
+  },
+  {
    "kind": "fighting",
-   "t": 45.5,
-   "until": 49.0,
-   "fighting_turn": 39,
+   "t": 46.0,
+   "until": 49.5,
+   "fighting_turn": 40,
    "turns": 7,
    "mine": {
     "pokemon": "Fearow",
@@ -792,38 +838,38 @@
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 2,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 107,
+     "hp": 109,
      "hp_max": 124,
-     "hp_share": 0.863,
-     "energy": 16
+     "hp_share": 0.879,
+     "energy": 24
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
      "left": 3,
-     "hp": 61,
+     "hp": 64,
      "hp_max": 126,
-     "hp_share": 0.484,
+     "hp_share": 0.508,
      "energy": [
-      62,
-      62
+      70,
+      70
      ],
-     "energy_ceiling": 70
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "switch",
-   "t": 49.0,
-   "fighting_turn": 46,
+   "t": 49.5,
+   "fighting_turn": 47,
    "side": "theirs",
    "from": "Cramorant",
    "to": "Stunfisk",
@@ -832,9 +878,9 @@
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 107,
+     "hp": 109,
      "hp_max": 124,
-     "hp_share": 0.863,
+     "hp_share": 0.879,
      "energy": 24
     },
     "theirs": {
@@ -845,18 +891,18 @@
      "hp_max": 172,
      "hp_share": 1.0,
      "energy": [
-      9,
-      9
+      18,
+      18
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 36
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 49.0,
-   "until": 51.5,
-   "fighting_turn": 46,
+   "t": 49.5,
+   "until": 52.5,
+   "fighting_turn": 47,
    "turns": 4,
    "mine": {
     "pokemon": "Fearow",
@@ -872,14 +918,15 @@
     "fast_moves_if_no_pause": 2,
     "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 95,
+     "hp": 98,
      "hp_max": 124,
-     "hp_share": 0.766,
+     "hp_share": 0.79,
      "energy": 40
     },
     "theirs": {
@@ -893,14 +940,14 @@
       36,
       36
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "charged",
-   "t": 51.5,
-   "fighting_turn": 50,
+   "t": 52.5,
+   "fighting_turn": 51,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Run",
@@ -911,86 +958,86 @@
    "target": "Stunfisk",
    "shielded": false,
    "target_hp_before": 172,
-   "target_hp_after": 172,
+   "target_hp_after": 84,
    "target_hp_max": 172,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 76,
-   "resolved_t": 60.0,
+   "resolved_t": 61.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 95,
+     "hp": 98,
      "hp_max": 124,
-     "hp_share": 0.766,
+     "hp_share": 0.79,
      "energy": 0
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
      "left": 3,
-     "hp": 172,
+     "hp": 84,
      "hp_max": 172,
-     "hp_share": 1.0,
+     "hp_share": 0.488,
      "energy": [
       36,
       36
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 60.0,
-   "until": 64.5,
-   "fighting_turn": 50,
+   "t": 61.0,
+   "until": 65.5,
+   "fighting_turn": 51,
    "turns": 9,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Stunfisk",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 74,
+     "hp": 79,
      "hp_max": 124,
-     "hp_share": 0.597,
+     "hp_share": 0.637,
      "energy": 32
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 84,
      "hp_max": 172,
-     "hp_share": 0.407,
+     "hp_share": 0.488,
      "energy": [
       81,
       81
      ],
-     "energy_ceiling": 81
+     "energy_ceiling": 90
     }
    }
   },
   {
    "kind": "charged",
-   "t": 64.5,
-   "fighting_turn": 59,
+   "t": 65.5,
+   "fighting_turn": 60,
    "side": "theirs",
    "pokemon": "Stunfisk",
    "move": "Discharge",
@@ -1001,33 +1048,33 @@
     81,
     81
    ],
-   "energy_ceiling": 81,
+   "energy_ceiling": 90,
    "target": "Fearow",
    "shielded": false,
-   "target_hp_before": 74,
-   "target_hp_after": 74,
+   "target_hp_before": 79,
+   "target_hp_after": 8,
    "target_hp_max": 124,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 67,
-   "resolved_t": 73.0,
+   "resolved_t": 74.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 74,
+     "hp": 8,
      "hp_max": 124,
-     "hp_share": 0.597,
+     "hp_share": 0.065,
      "energy": 40
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
      "left": 3,
-     "hp": 70,
+     "hp": 84,
      "hp_max": 172,
-     "hp_share": 0.407,
+     "hp_share": 0.488,
      "energy": [
       41,
       41
@@ -1038,144 +1085,98 @@
   },
   {
    "kind": "fighting",
-   "t": 73.0,
-   "until": 75.5,
-   "fighting_turn": 59,
-   "turns": 3,
+   "t": 74.0,
+   "until": 76.5,
+   "fighting_turn": 60,
+   "turns": 4,
    "mine": {
     "pokemon": "Fearow",
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Stunfisk",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 2,
+     "hp": 4,
      "hp_max": 124,
-     "hp_share": 0.016,
-     "energy": 48
+     "hp_share": 0.032,
+     "energy": 56
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
      "left": 3,
-     "hp": 60,
+     "hp": 69,
      "hp_max": 172,
-     "hp_share": 0.349,
+     "hp_share": 0.401,
      "energy": [
       50,
       50
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "charged",
-   "t": 75.5,
-   "fighting_turn": 62,
+   "t": 76.5,
+   "fighting_turn": 64,
    "side": "mine",
    "pokemon": "Fearow",
    "move": "Drill Run",
    "move_id": "DRILL_RUN",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 48,
+   "energy_before": 56,
    "target": "Stunfisk",
    "shielded": false,
-   "target_hp_before": 60,
-   "target_hp_after": 60,
+   "target_hp_before": 69,
+   "target_hp_after": 0,
    "target_hp_max": 172,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 76,
-   "resolved_t": 84.0,
+   "resolved_t": 83.92,
    "cue": true,
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 2,
+     "hp": 4,
      "hp_max": 124,
-     "hp_share": 0.016,
-     "energy": 8
+     "hp_share": 0.032,
+     "energy": 16
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
-     "left": 3,
-     "hp": 60,
+     "left": 2,
+     "hp": 0,
      "hp_max": 172,
-     "hp_share": 0.349,
+     "hp_share": 0.0,
      "energy": [
       59,
       59
      ],
-     "energy_ceiling": 59
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 84.0,
-   "until": 84.65,
-   "fighting_turn": 62,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Fearow",
-    "fast_move": "Peck",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Stunfisk",
-    "fast_move": "Thunder Shock",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Fearow",
-     "shields": 1,
-     "left": 3,
-     "hp": 2,
-     "hp_max": 124,
-     "hp_share": 0.016,
-     "energy": 8
-    },
-    "theirs": {
-     "active": "Stunfisk",
-     "shields": 2,
-     "left": 3,
-     "hp": 60,
-     "hp_max": 172,
-     "hp_share": 0.349,
-     "energy": [
-      59,
-      59
-     ],
-     "energy_ceiling": 59
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "faint",
-   "t": 84.65,
-   "fighting_turn": 63,
+   "t": 83.92,
+   "fighting_turn": 64,
    "side": "theirs",
    "pokemon": "Stunfisk",
    "next": null,
@@ -1184,15 +1185,15 @@
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 2,
+     "hp": 4,
      "hp_max": 124,
-     "hp_share": 0.016,
-     "energy": 8
+     "hp_share": 0.032,
+     "energy": 16
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 172,
      "hp_share": 0.0,
@@ -1206,9 +1207,9 @@
   },
   {
    "kind": "fighting",
-   "t": 84.65,
-   "until": 87.57,
-   "fighting_turn": 63,
+   "t": 83.92,
+   "until": 88.57,
+   "fighting_turn": 64,
    "turns": 2,
    "mine": {
     "pokemon": "Fearow",
@@ -1229,30 +1230,30 @@
      "active": "Fearow",
      "shields": 1,
      "left": 3,
-     "hp": 2,
+     "hp": 4,
      "hp_max": 124,
-     "hp_share": 0.016,
-     "energy": 8
+     "hp_share": 0.032,
+     "energy": 32
     },
     "theirs": {
-     "active": "Stunfisk",
+     "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 0,
-     "hp_max": 172,
-     "hp_share": 0.0,
+     "left": 2,
+     "hp": 64,
+     "hp_max": 126,
+     "hp_share": 0.508,
      "energy": [
-      59,
-      59
+      70,
+      70
      ],
-     "energy_ceiling": 68
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "faint",
-   "t": 87.57,
-   "fighting_turn": 65,
+   "t": 88.57,
+   "fighting_turn": 66,
    "side": "mine",
    "pokemon": "Fearow",
    "next": null,
@@ -1260,32 +1261,32 @@
     "mine": {
      "active": "Fearow",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 124,
      "hp_share": 0.0,
-     "energy": 16
+     "energy": 32
     },
     "theirs": {
-     "active": "Stunfisk",
+     "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 0,
-     "hp_max": 172,
-     "hp_share": 0.0,
+     "left": 2,
+     "hp": 64,
+     "hp_max": 126,
+     "hp_share": 0.508,
      "energy": [
-      68,
-      68
+      70,
+      70
      ],
-     "energy_ceiling": 77
+     "energy_ceiling": 78
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 87.57,
-   "until": 94.5,
-   "fighting_turn": 65,
+   "t": 88.57,
+   "until": 95.5,
+   "fighting_turn": 66,
    "turns": 6,
    "mine": {
     "pokemon": "Fearow",
@@ -1295,32 +1296,33 @@
     "hits_seen": 0
    },
    "theirs": {
-    "pokemon": "Stunfisk",
-    "fast_move": "Thunder Shock",
+    "pokemon": "Cramorant",
+    "fast_move": "Peck",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 1,
      "left": 2,
-     "hp": 23,
+     "hp": 19,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.123,
      "energy": 100
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 47,
+     "left": 2,
+     "hp": 53,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.421,
      "energy": [
-      86,
-      86
+      94,
+      94
      ],
      "energy_ceiling": 100
     }
@@ -1328,8 +1330,8 @@
   },
   {
    "kind": "charged",
-   "t": 94.5,
-   "fighting_turn": 71,
+   "t": 95.5,
+   "fighting_turn": 72,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Surf",
@@ -1337,48 +1339,93 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    86,
-    86
+    94,
+    94
    ],
    "energy_ceiling": 100,
    "target": "Seismitoad",
    "shielded": true,
-   "target_hp_before": 23,
-   "target_hp_after": 23,
+   "target_hp_before": 19,
+   "target_hp_after": 19,
    "target_hp_max": 154,
    "target_bar_read": false,
    "expected_damage": 1,
-   "resolved_t": 101.5,
+   "resolved_t": 103.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 23,
+     "hp": 19,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.123,
      "energy": 100
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 47,
+     "left": 2,
+     "hp": 53,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.421,
      "energy": [
-      41,
-      41
+      49,
+      49
      ],
-     "energy_ceiling": 49
+     "energy_ceiling": 57
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 103.0,
+   "until": 103.5,
+   "fighting_turn": 72,
+   "turns": 1,
+   "mine": {
+    "pokemon": "Seismitoad",
+    "fast_move": "Mud Shot",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Cramorant",
+    "fast_move": "Peck",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
+    "hits_seen": 0
+   },
+   "state": {
+    "mine": {
+     "active": "Seismitoad",
+     "shields": 0,
+     "left": 2,
+     "hp": 19,
+     "hp_max": 154,
+     "hp_share": 0.123,
+     "energy": 100
+    },
+    "theirs": {
+     "active": "Cramorant",
+     "shields": 2,
+     "left": 2,
+     "hp": 53,
+     "hp_max": 126,
+     "hp_share": 0.421,
+     "energy": [
+      49,
+      49
+     ],
+     "energy_ceiling": 57
     }
    }
   },
   {
    "kind": "charged",
-   "t": 101.3,
-   "fighting_turn": 71,
+   "t": 103.5,
+   "fighting_turn": 73,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
@@ -1388,56 +1435,56 @@
    "energy_before": 100,
    "target": "Cramorant",
    "shielded": false,
-   "target_hp_before": 47,
-   "target_hp_after": 47,
+   "target_hp_before": 53,
+   "target_hp_after": 12,
    "target_hp_max": 126,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 39,
-   "resolved_t": 111.0,
+   "resolved_t": 112.0,
    "cue": true,
    "state": {
     "mine": {
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 23,
+     "hp": 19,
      "hp_max": 154,
-     "hp_share": 0.149,
+     "hp_share": 0.123,
      "energy": 55
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 47,
+     "left": 2,
+     "hp": 12,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.095,
      "energy": [
-      41,
-      41
+      57,
+      57
      ],
-     "energy_ceiling": 49
+     "energy_ceiling": 57
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 111.0,
-   "until": 115.0,
-   "fighting_turn": 71,
-   "turns": 8,
+   "t": 112.0,
+   "until": 114.0,
+   "fighting_turn": 73,
+   "turns": 4,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -1445,30 +1492,30 @@
      "active": "Seismitoad",
      "shields": 0,
      "left": 2,
-     "hp": 23,
+     "hp": 19,
      "hp_max": 154,
-     "hp_share": 0.149,
-     "energy": 55
+     "hp_share": 0.123,
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 47,
+     "left": 2,
+     "hp": 12,
      "hp_max": 126,
-     "hp_share": 0.373,
+     "hp_share": 0.095,
      "energy": [
-      41,
-      41
+      65,
+      65
      ],
-     "energy_ceiling": 49
+     "energy_ceiling": 73
     }
    }
   },
   {
    "kind": "switch",
-   "t": 115.0,
-   "fighting_turn": 79,
+   "t": 114.0,
+   "fighting_turn": 77,
    "side": "mine",
    "from": "Seismitoad",
    "to": "Tinkaton",
@@ -1485,36 +1532,36 @@
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 5,
+     "left": 2,
+     "hp": 12,
      "hp_max": 126,
-     "hp_share": 0.04,
+     "hp_share": 0.095,
      "energy": [
       73,
       73
      ],
-     "energy_ceiling": 81
+     "energy_ceiling": 73
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 115.0,
-   "until": 116.5,
-   "fighting_turn": 79,
-   "turns": 3,
+   "t": 114.0,
+   "until": 117.5,
+   "fighting_turn": 77,
+   "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Cramorant",
     "fast_move": "Peck",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -1525,27 +1572,27 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 9
+     "energy": 27
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 2,
-     "left": 3,
-     "hp": 5,
+     "left": 2,
+     "hp": 12,
      "hp_max": 126,
-     "hp_share": 0.04,
+     "hp_share": 0.095,
      "energy": [
-      81,
-      81
+      97,
+      97
      ],
-     "energy_ceiling": 89
+     "energy_ceiling": 97
     }
    }
   },
   {
    "kind": "switch",
-   "t": 116.5,
-   "fighting_turn": 82,
+   "t": 117.5,
+   "fighting_turn": 84,
    "side": "theirs",
    "from": "Cramorant",
    "to": "Kingdra",
@@ -1557,12 +1604,12 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 9
+     "energy": 27
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 3,
+     "left": 2,
      "hp": 118,
      "hp_max": 118,
      "hp_share": 1.0,
@@ -1576,16 +1623,16 @@
   },
   {
    "kind": "fighting",
-   "t": 116.5,
-   "until": 123.5,
-   "fighting_turn": 82,
+   "t": 117.5,
+   "until": 124.5,
+   "fighting_turn": 84,
    "turns": 13,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 5
+    "hits_seen": 6
    },
    "theirs": {
     "pokemon": "Kingdra",
@@ -1602,15 +1649,15 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 72
+     "energy": 90
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 3,
-     "hp": 74,
+     "left": 2,
+     "hp": 76,
      "hp_max": 118,
-     "hp_share": 0.627,
+     "hp_share": 0.644,
      "energy": [
       52,
       52
@@ -1621,23 +1668,23 @@
   },
   {
    "kind": "charged",
-   "t": 123.5,
-   "fighting_turn": 95,
+   "t": 124.5,
+   "fighting_turn": 97,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
    "move_id": "BULLDOZE",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 72,
+   "energy_before": 90,
    "target": "Kingdra",
    "shielded": true,
-   "target_hp_before": 74,
+   "target_hp_before": 76,
    "target_hp_after": 74,
    "target_hp_max": 118,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 1,
-   "resolved_t": 132.0,
+   "resolved_t": 133.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1647,12 +1694,12 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 17
+     "energy": 35
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 74,
      "hp_max": 118,
      "hp_share": 0.627,
@@ -1666,9 +1713,9 @@
   },
   {
    "kind": "fighting",
-   "t": 132.0,
-   "until": 136.5,
-   "fighting_turn": 95,
+   "t": 133.0,
+   "until": 137.5,
+   "fighting_turn": 97,
    "turns": 9,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1692,15 +1739,15 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 53
+     "energy": 71
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 1,
-     "left": 3,
-     "hp": 50,
+     "left": 2,
+     "hp": 47,
      "hp_max": 118,
-     "hp_share": 0.424,
+     "hp_share": 0.398,
      "energy": [
       88,
       88
@@ -1711,8 +1758,8 @@
   },
   {
    "kind": "charged",
-   "t": 136.5,
-   "fighting_turn": 104,
+   "t": 137.5,
+   "fighting_turn": 106,
    "side": "theirs",
    "pokemon": "Kingdra",
    "move": "Surf",
@@ -1731,7 +1778,7 @@
    "target_hp_max": 141,
    "target_bar_read": false,
    "expected_damage": 51,
-   "resolved_t": 145.0,
+   "resolved_t": 146.0,
    "cue": true,
    "state": {
     "mine": {
@@ -1741,15 +1788,15 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 62
+     "energy": 80
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 1,
-     "left": 3,
-     "hp": 50,
+     "left": 2,
+     "hp": 47,
      "hp_max": 118,
-     "hp_share": 0.424,
+     "hp_share": 0.398,
      "energy": [
       43,
       43
@@ -1760,13 +1807,13 @@
   },
   {
    "kind": "end",
-   "t": 150.5,
-   "fighting_turn": 104,
+   "t": 151.5,
+   "fighting_turn": 106,
    "result": "loss",
    "result_from": "result screen",
    "left": {
     "mine": 1,
-    "theirs": 3
+    "theirs": 2
    },
    "state": {
     "mine": {
@@ -1776,15 +1823,15 @@
      "hp": 141,
      "hp_max": 141,
      "hp_share": 1.0,
-     "energy": 62
+     "energy": 80
     },
     "theirs": {
      "active": "Kingdra",
      "shields": 1,
-     "left": 3,
-     "hp": 50,
+     "left": 2,
+     "hp": 47,
      "hp_max": 118,
-     "hp_share": 0.424,
+     "hp_share": 0.398,
      "energy": [
       43,
       43
@@ -1796,7 +1843,7 @@
  ],
  "deductions": [
   {
-   "t": 26.0,
+   "t": 27.0,
    "side": "theirs",
    "pokemon": "Cramorant",
    "what": "charged move",
@@ -1805,7 +1852,7 @@
    "ruled_out": []
   },
   {
-   "t": 26.0,
+   "t": 27.0,
    "side": "theirs",
    "pokemon": "Cramorant",
    "what": "fast move",
@@ -1816,18 +1863,7 @@
    ]
   },
   {
-   "t": 64.0,
-   "side": "theirs",
-   "pokemon": "Stunfisk",
-   "what": "fast move",
-   "value": "Thunder Shock",
-   "how": "every other fast move ruled out",
-   "ruled_out": [
-    "Mud Shot"
-   ]
-  },
-  {
-   "t": 120.0,
+   "t": 122.0,
    "side": "theirs",
    "pokemon": "Kingdra",
    "what": "fast move",

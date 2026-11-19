@@ -1,78 +1,150 @@
 {
-  "merged_impacts": [],
+  "merged_impacts": [
+    {
+      "victim_side": "my",
+      "species": "Victreebel",
+      "charged_look_before": 51.0,
+      "measured_zero_seconds": 50.066659
+    },
+    {
+      "victim_side": "my",
+      "species": "Kingdra",
+      "charged_look_before": 122.0,
+      "measured_zero_seconds": 120.899982
+    },
+    {
+      "victim_side": "my",
+      "species": "Turtonator",
+      "charged_look_before": 157.0,
+      "measured_zero_seconds": 156.899977
+    }
+  ],
   "quarantined_waits_removed": [],
   "source_waits": [
+    {
+      "side": "theirs",
+      "species": "Pawmot",
+      "interval": [
+        89.99998651147612,
+        91.83331959552558
+      ]
+    },
     {
       "side": "mine",
       "species": "Victreebel",
       "interval": [
-        51.166658458428515,
-        52.833325
+        50.066658607998846,
+        52.83332489847348
       ]
     },
     {
       "side": "mine",
       "species": "Kingdra",
       "interval": [
-        122.1666488043439,
-        122.83331499999998
+        120.8999823099097,
+        122.83331538036187
       ]
     },
     {
-      "side": "theirs",
-      "species": "Pawmot",
+      "side": "mine",
+      "species": "Turtonator",
       "interval": [
-        89.99998651147612,
-        91.83332
-      ]
-    },
-    {
-      "side": "theirs",
-      "species": "Jumpluff",
-      "interval": [
-        146.29997885619494,
+        156.8999774148809,
         161.83
       ]
     }
   ],
-  "terminal_zero_from_three_measured_victims": [],
+  "terminal_zero_from_three_measured_victims": [
+    {
+      "side": "mine",
+      "t": 156.8999774148809,
+      "species": [
+        "Kingdra",
+        "Turtonator",
+        "Victreebel"
+      ]
+    }
+  ],
   "unattributed_zero_candidates": [
     {
       "side": "theirs",
       "species": null,
       "clip_seconds": 66.23332432738678,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 66.36665764259038,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 66.69999093059937,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 66.53332428659488,
+        "confirmed_seconds": 66.69999093059937
+      }
     }
   ],
   "unattributed_observations_removed": [
     57.033324
   ],
+  "party_counts_from_measured_victims": [
+    {
+      "side": "mine",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.33,
+      "distinct_victims": {
+        "Victreebel": 50.066658607998846,
+        "Kingdra": 120.8999823099097,
+        "Turtonator": 156.8999774148809
+      }
+    },
+    {
+      "side": "theirs",
+      "initial_observed_count": 3,
+      "initial_seconds": -0.0,
+      "distinct_victims": {
+        "Pawmot": 89.99998651147612
+      }
+    }
+  ],
   "merged_wait_intervals": [
     [
-      51.166658458428515,
-      52.833325
+      50.066658607998846,
+      53.03
     ],
     [
-      65.67,
+      89.99998651147612,
       92.03
     ],
     [
-      122.1666488043439,
-      122.83331499999998
+      120.8999823099097,
+      123.03
     ],
     [
-      146.29997885619494,
+      156.8999774148809,
       161.83
     ]
   ],
-  "cached_zero_recovery": [],
+  "cached_zero_recovery": [
+    {
+      "candidate": {
+        "side": "theirs",
+        "species": "Jumpluff",
+        "clip_seconds": 161.6999780131622,
+        "confirmed_clip_seconds": 161.89997798596758,
+        "method": "complete_last_member_zero_and_fade",
+        "timing_uncertainty_seconds": 0.1
+      },
+      "accepted": false,
+      "independent_support": {
+        "status": "contradicted",
+        "reason": "later_named_release_before_replacement",
+        "confirmed_seconds": 164.033311
+      }
+    }
+  ],
   "schema": "creator-state-reconciliation-v1",
-  "code_sha256": "15133a35f6c2641abb23bb59c802f58d0a81f6095474021b7e6f407ce67812ff",
-  "observations_before_canonical_sha256": "139b7ed9c8dc371fe612c3e58bd140e269aefc4f3a6317bb25a06547444d38d2",
-  "observations_after_canonical_sha256": "28aea62117d3a3e2a05245ac42bebedaa1f7ab1a67780720113b8eb077327631",
-  "lifecycle_canonical_sha256": "0ff4a84c5acea2883d63a77fb746e1a2781fefe9c5078cfc6e6b2681b07113f6",
+  "code_sha256": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+  "observations_before_canonical_sha256": "fefb092e546b593c9f0faf7c8937520525ab7f64b7a2278f3926b261a9205972",
+  "observations_after_canonical_sha256": "c6d6ca8f0dd9643fa39b16f16bc869153a4c169856b9562b2c0a830ce6e77d16",
+  "lifecycle_canonical_sha256": "1de65b5c09f947fb281f36bbcce6e28e94afe64e3179bf265297e49095d59797",
   "terminal_impact_accepted": false,
   "digest_method": "SHA256 of compact sorted-key UTF-8 JSON; observations have one LF after each row",
   "result_based_faints": 0

@@ -3,27 +3,163 @@
   "faints": [
     {
       "side": "mine",
+      "species": "Qwilfish",
+      "clip_seconds": 27.600005395894428,
+      "method": "centered_positive_to_zero_and_fade",
+      "confirmed_clip_seconds": 30.16667256435321,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 30.00000586510264,
+        "confirmed_seconds": 30.16667256435321
+      }
+    },
+    {
+      "side": "mine",
       "species": "Greninja",
-      "clip_seconds": 92.15001801564027,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 92.2166846953405,
-      "timing_uncertainty_seconds": 0.1
+      "clip_seconds": 91.08335114043662,
+      "confirmed_clip_seconds": 93.16668488106875,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 91.08335114043662,
+        "bar": {
+          "bounds": [
+            182,
+            574,
+            329,
+            589
+          ],
+          "outline_method": "physical_rail_intersection",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 141,
+          "live_pixels": 0,
+          "damage_pixels": 38,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014184
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9716,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Greninja",
+          "camera_identity_cutoff_seconds": 90.750018
+        },
+        "source_pts": 64043940,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 83.0,
+        "release_seconds": 90.000018
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 93.00001818181818,
+        "confirmed_seconds": 93.16668488106875
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 92.15001801564027,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 93.16668488106875,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 93.00001818181818,
+          "confirmed_seconds": 93.16668488106875
+        }
+      }
     },
     {
       "side": "theirs",
       "species": "Hydreigon",
-      "clip_seconds": 124.95002442815249,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 125.01669110785272,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "mine",
-      "species": "Qwilfish",
-      "clip_seconds": 27.600005395894428,
-      "method": "centered_positive_to_zero_and_fade",
-      "confirmed_clip_seconds": 27.733338755294884,
-      "timing_uncertainty_seconds": 0.1
+      "clip_seconds": 124.00002424242425,
+      "confirmed_clip_seconds": 126.16669133268165,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 124.00002424242425,
+        "bar": {
+          "bounds": [
+            182,
+            690,
+            326,
+            703
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 46,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9979,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Hydreigon",
+          "camera_identity_cutoff_seconds": 123.750024
+        },
+        "source_pts": 67006470,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 116.0,
+        "release_seconds": 123.000024
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 126.00002463343108,
+        "confirmed_seconds": 126.16669133268165
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Hydreigon",
+        "clip_seconds": 124.95002442815249,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 126.16669133268165,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 126.00002463343108,
+          "confirmed_seconds": 126.16669133268165
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -361,5 +497,387 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "fb5e49b7b36c434185c455bc6f987ab0d90c4875bb2809b7fa6c71c918ccad94",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Qwilfish",
+        "clip_seconds": 28.41667222222222,
+        "confirmed_clip_seconds": 30.16667256435321,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 28.41667222222222,
+          "bar": {
+            "bounds": [
+              182,
+              610,
+              326,
+              623
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              0.9929
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 29,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9948,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Qwilfish",
+            "camera_identity_cutoff_seconds": 27.750005
+          },
+          "source_pts": 58403910,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 20.0,
+          "release_seconds": 27.000005
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 30.00000586510264,
+          "confirmed_seconds": 30.16667256435321
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 91.08335114043662,
+        "confirmed_clip_seconds": 93.16668488106875,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 91.08335114043662,
+          "bar": {
+            "bounds": [
+              182,
+              574,
+              329,
+              589
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 38,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9716,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Greninja",
+            "camera_identity_cutoff_seconds": 90.750018
+          },
+          "source_pts": 64043940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 83.0,
+          "release_seconds": 90.000018
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 93.00001818181818,
+          "confirmed_seconds": 93.16668488106875
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Greninja",
+          "clip_seconds": 92.15001801564027,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 93.16668488106875,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 93.00001818181818,
+            "confirmed_seconds": 93.16668488106875
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Hydreigon",
+        "clip_seconds": 124.00002424242425,
+        "confirmed_clip_seconds": 126.16669133268165,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 124.00002424242425,
+          "bar": {
+            "bounds": [
+              182,
+              690,
+              326,
+              703
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 46,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9979,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Hydreigon",
+            "camera_identity_cutoff_seconds": 123.750024
+          },
+          "source_pts": 67006470,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 116.0,
+          "release_seconds": 123.000024
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 126.00002463343108,
+          "confirmed_seconds": 126.16669133268165
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Hydreigon",
+          "clip_seconds": 124.95002442815249,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 126.16669133268165,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 126.00002463343108,
+            "confirmed_seconds": 126.16669133268165
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Qwilfish",
+        "clip_seconds": 29.500005767350927,
+        "confirmed_clip_seconds": 30.16667256435321,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 29.416672417725643,
+          "bar": {
+            "bounds": [
+              31,
+              701,
+              177,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 58501470,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          29.416672417725643,
+          29.500005767350927
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 30.00000586510264,
+          "confirmed_seconds": 30.16667256435321
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Greninja",
+        "clip_seconds": 92.75001813294233,
+        "confirmed_clip_seconds": 93.16668488106875,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 92.66668478331704,
+          "bar": {
+            "bounds": [
+              35,
+              701,
+              182,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 64193970,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          92.66668478331704,
+          92.75001813294233
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 93.00001818181818,
+          "confirmed_seconds": 93.16668488106875
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Hydreigon",
+        "clip_seconds": 124.2500242913001,
+        "confirmed_clip_seconds": 126.16669133268165,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 124.16669094167482,
+          "bar": {
+            "bounds": [
+              182,
+              698,
+              328,
+              712
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 46,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9705,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Hydreigon",
+            "camera_identity_cutoff_seconds": 123.750024
+          }
+        },
+        "disappearance_source_pts": 67028970,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          124.16669094167482,
+          124.2500242913001
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 126.00002463343108,
+          "confirmed_seconds": 126.16669133268165
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

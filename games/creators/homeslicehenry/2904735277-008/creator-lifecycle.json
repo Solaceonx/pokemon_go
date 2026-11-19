@@ -2,28 +2,157 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "mine",
-      "species": "Sableye",
-      "clip_seconds": 135.15002906451613,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 135.2166957455197,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "mine",
-      "species": "Jumpluff",
-      "clip_seconds": 150.0666989390681,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 150.1333656200717,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
       "side": "theirs",
       "species": "Dunsparce",
       "clip_seconds": 153.21669961648746,
       "method": "native_fighting_live_to_zero_and_fade",
-      "confirmed_clip_seconds": 153.35003297849462,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 154.08336646953404,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 153.91669976702508,
+        "confirmed_seconds": 154.08336646953404
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Sableye",
+      "clip_seconds": 134.66669562724013,
+      "confirmed_clip_seconds": 136.0833625985663,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 134.66669562724013,
+        "bar": {
+          "bounds": [
+            29,
+            701,
+            175,
+            715
+          ],
+          "outline_method": "physical_rail_intersection",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 140,
+          "live_pixels": 0,
+          "damage_pixels": 5,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014286
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.992,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        },
+        "source_pts": 182041380,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 135.91669589605735,
+        "confirmed_seconds": 136.0833625985663
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 135.15002906451613,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 136.0833625985663,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 135.91669589605735,
+          "confirmed_seconds": 136.0833625985663
+        }
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Jumpluff",
+      "clip_seconds": 149.00003204301075,
+      "confirmed_clip_seconds": 149.91669890681004,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 149.00003204301075,
+        "bar": {
+          "bounds": [
+            182,
+            618,
+            326,
+            631
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 26,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9689,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Jumpluff",
+          "camera_identity_cutoff_seconds": 148.750032
+        },
+        "source_pts": 183331440,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 141.0,
+        "release_seconds": 148.000032
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 149.75003220430108,
+        "confirmed_seconds": 149.91669890681004
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Jumpluff",
+        "clip_seconds": 150.0666989390681,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 150.9166991218638,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 150.75003241935485,
+          "confirmed_seconds": 150.9166991218638
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -508,5 +637,463 @@
       "measurement": null
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "125f8f09759f3f8f27f56c09448d76d2d954979d2527272a98470b700d073e09",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 134.66669562724013,
+        "confirmed_clip_seconds": 136.0833625985663,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 134.66669562724013,
+          "bar": {
+            "bounds": [
+              29,
+              701,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 5,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.992,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 182041380,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 135.91669589605735,
+          "confirmed_seconds": 136.0833625985663
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Sableye",
+          "clip_seconds": 135.15002906451613,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 136.0833625985663,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 135.91669589605735,
+            "confirmed_seconds": 136.0833625985663
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Jumpluff",
+        "clip_seconds": 149.00003204301075,
+        "confirmed_clip_seconds": 149.91669890681004,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 149.00003204301075,
+          "bar": {
+            "bounds": [
+              182,
+              618,
+              326,
+              631
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 26,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9689,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Jumpluff",
+            "camera_identity_cutoff_seconds": 148.750032
+          },
+          "source_pts": 183331440,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 141.0,
+          "release_seconds": 148.000032
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 149.75003220430108,
+          "confirmed_seconds": 149.91669890681004
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Jumpluff",
+          "clip_seconds": 150.0666989390681,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 150.9166991218638,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 150.75003241935485,
+            "confirmed_seconds": 150.9166991218638
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dunsparce",
+        "clip_seconds": 153.25003295698926,
+        "confirmed_clip_seconds": 154.08336646953404,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 153.25003295698926,
+          "bar": {
+            "bounds": [
+              255,
+              495,
+              399,
+              508
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9969,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 183713940,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 153.91669976702508,
+          "confirmed_seconds": 154.08336646953404
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dunsparce",
+        "clip_seconds": 152.50003279569893,
+        "confirmed_clip_seconds": 154.08336646953404,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 152.41669944444445,
+          "bar": {
+            "bounds": [
+              254,
+              509,
+              399,
+              521
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 139,
+            "live_pixels": 4,
+            "damage_pixels": 0,
+            "fraction": 0.028777,
+            "fraction_interval": [
+              0.014388,
+              0.043165
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9904,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 4
+            }
+          }
+        },
+        "first_zero": {
+          "t": 152.50003279569893,
+          "bar": {
+            "bounds": [
+              257,
+              509,
+              399,
+              521
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 136,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014706
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9865,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 183646440,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 153.91669976702508,
+            "confirmed_seconds": 154.08336646953404,
+            "value": 2,
+            "source_pts": 183773880,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 3,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Sableye",
+        "clip_seconds": 137.0000294623656,
+        "confirmed_clip_seconds": 137.3333628673835,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 136.91669611111112,
+          "bar": {
+            "bounds": [
+              30,
+              700,
+              176,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 182251440,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          136.91669611111112,
+          137.0000294623656
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 137.16669616487457,
+          "confirmed_seconds": 137.3333628673835
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Jumpluff",
+        "clip_seconds": 150.9166991218638,
+        "confirmed_clip_seconds": 151.2500325268817,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 150.8333657706093,
+          "bar": {
+            "bounds": [
+              35,
+              700,
+              182,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9819,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 183503880,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          150.8333657706093,
+          150.9166991218638
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 151.08336582437275,
+          "confirmed_seconds": 151.2500325268817
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dunsparce",
+        "clip_seconds": 153.8333664157706,
+        "confirmed_clip_seconds": 154.16669982078852,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 153.75003306451612,
+          "bar": {
+            "bounds": [
+              254,
+              501,
+              401,
+              517
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 183766410,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          153.75003306451612,
+          153.8333664157706
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 154.00003311827956,
+          "confirmed_seconds": 154.16669982078852
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

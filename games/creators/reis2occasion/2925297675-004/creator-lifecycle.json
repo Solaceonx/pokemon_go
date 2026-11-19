@@ -2,44 +2,18 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "mine",
-      "species": "Cetitan",
-      "clip_seconds": 106.5000062062937,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 106.56667287684537,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "mine",
-      "species": "Shelgon",
-      "clip_seconds": 134.96667453185702,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 135.0333412024087,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Persian",
-      "clip_seconds": 35.06666871017871,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 35.13333538073038,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "theirs",
-      "species": "Dusknoir",
-      "clip_seconds": 101.46667257964258,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 101.53333925019425,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
       "side": "theirs",
       "species": "Persian",
       "clip_seconds": 129.80000756410257,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 129.86667423465423,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 130.16667425213674,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 130.00000757575756,
+        "confirmed_seconds": 130.16667425213674
+      }
     },
     {
       "side": "theirs",
@@ -47,7 +21,217 @@
       "clip_seconds": 147.16667524281274,
       "method": "complete_empty_centered_target_and_fade_after_named_attack",
       "confirmed_clip_seconds": 147.36667525446776,
-      "timing_uncertainty_seconds": 0.1
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 147.36667525446776
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Dusknoir",
+      "clip_seconds": 100.2666725097125,
+      "confirmed_clip_seconds": 101.16667256216006,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 100.2666725097125,
+        "bar": {
+          "bounds": [
+            183,
+            600,
+            327,
+            613
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 37,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.999,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Dusknoir",
+          "camera_identity_cutoff_seconds": 99.750006
+        },
+        "source_pts": 132239280,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 92.0,
+        "release_seconds": 99.000006
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 101.00000588578088,
+        "confirmed_seconds": 101.16667256216006
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Dusknoir",
+        "clip_seconds": 101.46667257964258,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 102.26667262626263,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 102.10000594988345,
+          "confirmed_seconds": 102.26667262626263
+        }
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Cetitan",
+      "clip_seconds": 105.50000614801864,
+      "confirmed_clip_seconds": 106.10000618298368,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 105.50000614801864,
+        "bar": {
+          "bounds": [
+            30,
+            562,
+            174,
+            575
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 6,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9959,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        },
+        "source_pts": 132710340,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 105.76667283022533,
+        "confirmed_seconds": 106.10000618298368
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Cetitan",
+        "clip_seconds": 106.5000062062937,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 106.7666728885004,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 106.60000621212122,
+          "confirmed_seconds": 106.7666728885004
+        }
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Shelgon",
+      "clip_seconds": 134.2666744910645,
+      "confirmed_clip_seconds": 135.10000787296036,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 134.2666744910645,
+        "bar": {
+          "bounds": [
+            31,
+            706,
+            175,
+            718
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 138,
+          "live_pixels": 0,
+          "damage_pixels": 2,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014493
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.994,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        },
+        "source_pts": 135299280,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 134.83334119075369,
+        "confirmed_seconds": 135.10000787296036
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 134.96667453185702,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 135.26667454933954,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 135.10000787296036,
+          "confirmed_seconds": 135.26667454933954
+        }
+      }
     }
   ],
   "charged_impact_probes": [
@@ -588,5 +772,652 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "07b9f7c8e4591d9e78d8d4d720d15039e4ca3c74665e593a31076e94c37f3ca1",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "theirs",
+        "species": "Dusknoir",
+        "clip_seconds": 100.2666725097125,
+        "confirmed_clip_seconds": 101.16667256216006,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 100.2666725097125,
+          "bar": {
+            "bounds": [
+              183,
+              600,
+              327,
+              613
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 37,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.999,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Dusknoir",
+            "camera_identity_cutoff_seconds": 99.750006
+          },
+          "source_pts": 132239280,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 92.0,
+          "release_seconds": 99.000006
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 101.00000588578088,
+          "confirmed_seconds": 101.16667256216006
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Dusknoir",
+          "clip_seconds": 101.46667257964258,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 102.26667262626263,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 102.10000594988345,
+            "confirmed_seconds": 102.26667262626263
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Cetitan",
+        "clip_seconds": 105.50000614801864,
+        "confirmed_clip_seconds": 106.10000618298368,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 105.50000614801864,
+          "bar": {
+            "bounds": [
+              30,
+              562,
+              174,
+              575
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 6,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9959,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 132710340,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 105.76667283022533,
+          "confirmed_seconds": 106.10000618298368
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Cetitan",
+          "clip_seconds": 106.5000062062937,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 106.7666728885004,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 106.60000621212122,
+            "confirmed_seconds": 106.7666728885004
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Persian",
+        "clip_seconds": 129.8333408993784,
+        "confirmed_clip_seconds": 130.16667425213674,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 129.8333408993784,
+          "bar": {
+            "bounds": [
+              252,
+              494,
+              396,
+              506
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9493,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 134900310,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 130.00000757575756,
+          "confirmed_seconds": 130.16667425213674
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 134.2666744910645,
+        "confirmed_clip_seconds": 135.10000787296036,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 134.2666744910645,
+          "bar": {
+            "bounds": [
+              31,
+              706,
+              175,
+              718
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 2,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.994,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 135299280,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 134.83334119075369,
+          "confirmed_seconds": 135.10000787296036
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Shelgon",
+          "clip_seconds": 134.96667453185702,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 135.26667454933954,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 135.10000787296036,
+            "confirmed_seconds": 135.26667454933954
+          }
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Shelgon",
+        "clip_seconds": 134.2666744910645,
+        "confirmed_clip_seconds": 135.6000079020979,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 134.166674485237,
+          "bar": {
+            "bounds": [
+              31,
+              705,
+              175,
+              718
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 1,
+            "damage_pixels": 4,
+            "fraction": 0.007246,
+            "fraction_interval": [
+              0.0,
+              0.021739
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9876,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 1
+            }
+          }
+        },
+        "first_zero": {
+          "t": 134.2666744910645,
+          "bar": {
+            "bounds": [
+              31,
+              706,
+              175,
+              718
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 2,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.994,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          },
+          "source_pts": 135299280,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independent_party_decrement",
+          "counter": {
+            "first_visible_seconds": 135.00000786713287,
+            "confirmed_seconds": 135.16667454351204,
+            "value": 1,
+            "source_pts": 135365340,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Cetitan",
+        "clip_seconds": 106.7666728885004,
+        "confirmed_clip_seconds": 107.16667291181041,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 106.66667288267288,
+          "bar": {
+            "bounds": [
+              51,
+              618,
+              195,
+              631
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 132824280,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          106.66667288267288,
+          106.7666728885004
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 107.00000623543123,
+          "confirmed_seconds": 107.16667291181041
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dusknoir",
+        "clip_seconds": 102.4333393026418,
+        "confirmed_clip_seconds": 102.76667265540016,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 102.3333392968143,
+          "bar": {
+            "bounds": [
+              336,
+              472,
+              479,
+              484
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              0.9568,
+              1.0
+            ],
+            "interior_width_pixels": 137,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014599
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 132434310,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          102.3333392968143,
+          102.4333393026418
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 102.60000597902098,
+          "confirmed_seconds": 102.76667265540016
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Persian",
+        "clip_seconds": 130.66667428127428,
+        "confirmed_clip_seconds": 131.00000763403264,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 130.6000076107226,
+          "bar": {
+            "bounds": [
+              255,
+              536,
+              399,
+              550
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              0.9429,
+              0.9929
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9692,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 134975280,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          130.6000076107226,
+          130.66667428127428
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 130.76667428710178,
+          "confirmed_seconds": 131.00000763403264
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Toucannon",
+        "clip_seconds": 147.6000086013986,
+        "confirmed_clip_seconds": 147.76667527777778,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 147.5000085955711,
+          "bar": {
+            "bounds": [
+              183,
+              520,
+              326,
+              533
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 137,
+            "live_pixels": 0,
+            "damage_pixels": 41,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014599
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9885,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Toucannon",
+            "camera_identity_cutoff_seconds": 145.750008
+          }
+        },
+        "disappearance_source_pts": 136499340,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          147.5000085955711,
+          147.6000086013986
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "known_last_party_member_and_measured_zero_fade",
+          "confirmed_seconds": 147.76667527777778
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Persian",
+        "clip_seconds": 129.66667422299923,
+        "confirmed_clip_seconds": 131.00000763403264,
+        "timing_interval_seconds": [
+          127.50000745920747,
+          129.66667422299923
+        ],
+        "timing_uncertainty_seconds": 0.5,
+        "method": "party_zero_for_short_identified_entry_with_outgoing_survivor_return",
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement_and_outgoing_returns_alive",
+          "first_visible_seconds": 129.66667422299923,
+          "confirmed_seconds": 131.00000763403264
+        },
+        "entry": {
+          "t": 119.3,
+          "name": "Persian",
+          "faint": false,
+          "header_seen_clip_seconds": 128.00000745920747,
+          "header_first_visible_clip_seconds": 128.00000745920747,
+          "transition_evidence": {
+            "kind": "switch",
+            "method": "header_changed_without_local_faint_evidence"
+          }
+        },
+        "outgoing_survivor_return": {
+          "t": 122.0,
+          "name": "Toucannon",
+          "faint": true,
+          "header_seen_clip_seconds": 131.00000763403264,
+          "header_first_visible_clip_seconds": 131.00000763403264,
+          "transition_evidence": {
+            "kind": "faint",
+            "method": "local_party_counter_decrease",
+            "first_visible_seconds": 129.66667422299923,
+            "confirmed_seconds": 130.33334092851592,
+            "before": 2,
+            "after": 1
+          }
+        },
+        "counter": {
+          "first_visible_seconds": 129.66667422299923,
+          "confirmed_seconds": 129.8333408993784,
+          "value": 1,
+          "source_pts": 134885280,
+          "source_time_base": "1/90000",
+          "continuity": "consistent"
+        }
+      }
+    ],
+    "added": 3,
+    "quarantined": [
+      {
+        "side": "theirs",
+        "species": "Persian",
+        "clip_seconds": 35.06666871017871,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 35.13333538073038,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "contradicted",
+          "reason": "same_species_returns_alive_after_proposed_faint",
+          "confirmed_seconds": 128.00000745920747
+        }
+      }
+    ],
+    "result_based_faints": 0
+  }
 }

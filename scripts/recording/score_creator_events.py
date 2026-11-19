@@ -94,8 +94,8 @@ def compatible(truth, prediction, timed=True, tolerance=3):
     return True
 
 
-def match(truth, predicted, timed=True):
-    edges = [[j for j, p in enumerate(predicted) if compatible(t, p, timed)] for t in truth]
+def match(truth, predicted, timed=True, tolerance=3):
+    edges = [[j for j, p in enumerate(predicted) if compatible(t, p, timed,tolerance)] for t in truth]
     owners = {}
 
     def augment(i, seen):

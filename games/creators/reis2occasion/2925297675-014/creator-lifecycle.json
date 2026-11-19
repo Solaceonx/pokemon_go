@@ -3,27 +3,31 @@
   "faints": [
     {
       "side": "mine",
-      "species": "Blastoise",
-      "clip_seconds": 98.30000572843822,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 98.3666723989899,
-      "timing_uncertainty_seconds": 0.1
-    },
-    {
-      "side": "mine",
       "species": "Solrock",
       "clip_seconds": 204.3000119055944,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 204.36667857614609,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 205.1666786227661,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 205.00001194638693,
+        "confirmed_seconds": 205.1666786227661
+      }
     },
     {
       "side": "theirs",
       "species": "Cramorant",
       "clip_seconds": 143.76667504467756,
       "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 143.8333417152292,
-      "timing_uncertainty_seconds": 0.1
+      "confirmed_clip_seconds": 145.50000847902098,
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 145.3333418026418,
+        "confirmed_seconds": 145.50000847902098
+      }
     },
     {
       "side": "theirs",
@@ -31,7 +35,137 @@
       "clip_seconds": 215.46667922299923,
       "method": "complete_empty_centered_target_and_fade_after_named_attack",
       "confirmed_clip_seconds": 215.60001256410257,
-      "timing_uncertainty_seconds": 0.1
+      "timing_uncertainty_seconds": 0.1,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "known_last_party_member_and_measured_zero_fade",
+        "confirmed_seconds": 215.60001256410257
+      }
+    },
+    {
+      "side": "mine",
+      "species": "Blastoise",
+      "clip_seconds": 97.16667232905984,
+      "confirmed_clip_seconds": 98.0000057109557,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 97.16667232905984,
+        "bar": {
+          "bounds": [
+            183,
+            512,
+            326,
+            525
+          ],
+          "outline_method": "closed_physical_contour",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 137,
+          "live_pixels": 0,
+          "damage_pixels": 13,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014599
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9823,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          },
+          "camera_owner_basis": "charged_target",
+          "camera_species": "Blastoise",
+          "camera_identity_cutoff_seconds": 96.750006
+        },
+        "source_pts": 491105280,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "charged_target_anchor": {
+        "cue_seconds": 88.0,
+        "release_seconds": 96.000006
+      },
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 97.83333903457654,
+        "confirmed_seconds": 98.0000057109557
+      },
+      "supersedes_later_faint": {
+        "side": "mine",
+        "species": "Blastoise",
+        "clip_seconds": 98.30000572843822,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 99.10000577505828,
+        "timing_uncertainty_seconds": 0.1,
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 98.9333390986791,
+          "confirmed_seconds": 99.10000577505828
+        }
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Dunsparce",
+      "clip_seconds": 156.6666757964258,
+      "confirmed_clip_seconds": 158.00000920745921,
+      "timing_interval_seconds": [
+        153.50000897435896,
+        156.6666757964258
+      ],
+      "timing_uncertainty_seconds": 0.5,
+      "method": "party_zero_for_short_identified_entry_with_outgoing_survivor_return",
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 156.7666758022533,
+        "confirmed_seconds": 157.00000914918414
+      },
+      "entry": {
+        "t": 149.6,
+        "name": "Dunsparce",
+        "faint": false,
+        "header_seen_clip_seconds": 154.00000897435896,
+        "header_first_visible_clip_seconds": 154.00000897435896,
+        "transition_evidence": {
+          "kind": "switch",
+          "method": "header_changed_without_local_faint_evidence"
+        }
+      },
+      "outgoing_survivor_return": {
+        "t": 153.8,
+        "name": "Stunfisk",
+        "faint": true,
+        "header_seen_clip_seconds": 158.00000920745921,
+        "header_first_visible_clip_seconds": 158.00000920745921,
+        "transition_evidence": {
+          "kind": "faint",
+          "method": "local_party_counter_decrease",
+          "first_visible_seconds": 156.6666757964258,
+          "confirmed_seconds": 157.3333425019425,
+          "before": 2,
+          "after": 1
+        }
+      },
+      "counter": {
+        "first_visible_seconds": 156.6666757964258,
+        "confirmed_seconds": 156.833342472805,
+        "value": 1,
+        "source_pts": 496460280,
+        "source_time_base": "1/90000",
+        "continuity": "consistent"
+      }
     }
   ],
   "charged_impact_probes": [
@@ -74,7 +208,7 @@
       "result_based_faints": 0,
       "code_sha256": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
       "side": "mine",
-      "species": "Ursaluna",
+      "species": "Blastoise",
       "move": "Dive",
       "attack_side": "theirs",
       "announced_clip_seconds": 43.000003,
@@ -591,5 +725,405 @@
       }
     }
   ],
-  "result_based_faints": 0
+  "result_based_faints": 0,
+  "native_stream_faint_audit": {
+    "measurement_sha256": "a46d9bc47f95b0c0520bc945810f8675dfa308d013ae74ef6a80924e384a41b3",
+    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "candidates": [
+      {
+        "side": "mine",
+        "species": "Blastoise",
+        "clip_seconds": 97.16667232905984,
+        "confirmed_clip_seconds": 98.0000057109557,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "three_empty_bar_samples_and_independent_party_decrement",
+        "first_zero": {
+          "t": 97.16667232905984,
+          "bar": {
+            "bounds": [
+              183,
+              512,
+              326,
+              525
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 137,
+            "live_pixels": 0,
+            "damage_pixels": 13,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014599
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9823,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Blastoise",
+            "camera_identity_cutoff_seconds": 96.750006
+          },
+          "source_pts": 491105280,
+          "source_time_base": "1/90000"
+        },
+        "zero_frames": 3,
+        "charged_target_anchor": {
+          "cue_seconds": 88.0,
+          "release_seconds": 96.000006
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 97.83333903457654,
+          "confirmed_seconds": 98.0000057109557
+        },
+        "supersedes_later_faint": {
+          "side": "mine",
+          "species": "Blastoise",
+          "clip_seconds": 98.30000572843822,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 99.10000577505828,
+          "timing_uncertainty_seconds": 0.1,
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 98.9333390986791,
+            "confirmed_seconds": 99.10000577505828
+          }
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Stunfisk",
+        "clip_seconds": 215.4333458877234,
+        "confirmed_clip_seconds": 216.43334594599844,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "native_stream_positive_zero_fade_and_independent_confirmation",
+        "previous_positive": {
+          "t": 215.3333458818959,
+          "bar": {
+            "bounds": [
+              182,
+              464,
+              329,
+              479
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 2,
+            "damage_pixels": 25,
+            "fraction": 0.014184,
+            "fraction_interval": [
+              0.0,
+              0.028369
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9559,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 2
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Stunfisk",
+            "camera_identity_cutoff_seconds": 214.750012
+          }
+        },
+        "first_zero": {
+          "t": 215.4333458877234,
+          "bar": {
+            "bounds": [
+              183,
+              469,
+              327,
+              482
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 138,
+            "live_pixels": 0,
+            "damage_pixels": 24,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014493
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9959,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Stunfisk",
+            "camera_identity_cutoff_seconds": 214.750012
+          },
+          "source_pts": 501749310,
+          "source_time_base": "1/90000"
+        },
+        "independent_confirmation": {
+          "method": "independently_observed_last_party_member",
+          "counter": {
+            "first_visible_seconds": 156.6666757964258,
+            "confirmed_seconds": 156.833342472805,
+            "value": 1,
+            "source_pts": 496460280,
+            "source_time_base": "1/90000",
+            "continuity": "consistent"
+          }
+        },
+        "zero_frames": 4,
+        "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Blastoise",
+        "clip_seconds": 98.66667241647242,
+        "confirmed_clip_seconds": 99.10000577505828,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 98.60000574592074,
+          "bar": {
+            "bounds": [
+              34,
+              704,
+              180,
+              719
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              0.993,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 491240280,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          98.60000574592074,
+          98.66667241647242
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 98.9333390986791,
+          "confirmed_seconds": 99.10000577505828
+        }
+      },
+      {
+        "side": "mine",
+        "species": "Solrock",
+        "clip_seconds": 204.6666785936286,
+        "confirmed_clip_seconds": 205.1666786227661,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 204.60001192307692,
+          "bar": {
+            "bounds": [
+              30,
+              704,
+              176,
+              719
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 500780280,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          204.60001192307692,
+          204.6666785936286
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 205.00001194638693,
+          "confirmed_seconds": 205.1666786227661
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Stunfisk",
+        "clip_seconds": 216.26667926961926,
+        "confirmed_clip_seconds": 216.43334594599844,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 216.16667926379176,
+          "bar": {
+            "bounds": [
+              178,
+              484,
+              325,
+              500
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 141,
+            "live_pixels": 0,
+            "damage_pixels": 23,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014184
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            },
+            "camera_owner_basis": "charged_target",
+            "camera_species": "Stunfisk",
+            "camera_identity_cutoff_seconds": 214.750012
+          }
+        },
+        "disappearance_source_pts": 501824280,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          216.16667926379176,
+          216.26667926961926
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "known_last_party_member_and_measured_zero_fade",
+          "confirmed_seconds": 216.43334594599844
+        }
+      },
+      {
+        "side": "theirs",
+        "species": "Dunsparce",
+        "clip_seconds": 156.6666757964258,
+        "confirmed_clip_seconds": 158.00000920745921,
+        "timing_interval_seconds": [
+          153.50000897435896,
+          156.6666757964258
+        ],
+        "timing_uncertainty_seconds": 0.5,
+        "method": "party_zero_for_short_identified_entry_with_outgoing_survivor_return",
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 156.7666758022533,
+          "confirmed_seconds": 157.00000914918414
+        },
+        "entry": {
+          "t": 149.6,
+          "name": "Dunsparce",
+          "faint": false,
+          "header_seen_clip_seconds": 154.00000897435896,
+          "header_first_visible_clip_seconds": 154.00000897435896,
+          "transition_evidence": {
+            "kind": "switch",
+            "method": "header_changed_without_local_faint_evidence"
+          }
+        },
+        "outgoing_survivor_return": {
+          "t": 153.8,
+          "name": "Stunfisk",
+          "faint": true,
+          "header_seen_clip_seconds": 158.00000920745921,
+          "header_first_visible_clip_seconds": 158.00000920745921,
+          "transition_evidence": {
+            "kind": "faint",
+            "method": "local_party_counter_decrease",
+            "first_visible_seconds": 156.6666757964258,
+            "confirmed_seconds": 157.3333425019425,
+            "before": 2,
+            "after": 1
+          }
+        },
+        "counter": {
+          "first_visible_seconds": 156.6666757964258,
+          "confirmed_seconds": 156.833342472805,
+          "value": 1,
+          "source_pts": 496460280,
+          "source_time_base": "1/90000",
+          "continuity": "consistent"
+        }
+      }
+    ],
+    "added": 2,
+    "quarantined": [],
+    "result_based_faints": 0
+  }
 }

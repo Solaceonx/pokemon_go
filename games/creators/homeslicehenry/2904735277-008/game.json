@@ -23,7 +23,7 @@
   }
  },
  "seconds": 196.8,
- "fighting_turns": 127,
+ "fighting_turns": 125,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -32,7 +32,7 @@
   "notes": [
    "fast move only guessed for dunsparce, cramorant"
   ],
-  "unexplained_health_changes": 17
+  "unexplained_health_changes": 18
  },
  "teams": {
   "mine": [
@@ -110,7 +110,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.172,
+    "hp_share_at_end": 0.148,
     "fast_move": {
      "id": "METAL_SOUND",
      "name": "Metal Sound",
@@ -153,9 +153,9 @@
      "energy_gain": 4,
      "known_from": "guessed",
      "odds": {
-      "Astonish": 0.42,
-      "Rollout": 0.37,
-      "Bite": 0.21
+      "Astonish": 0.54,
+      "Rollout": 0.33,
+      "Bite": 0.13
      }
     },
     "charged_moves": [
@@ -183,7 +183,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.096,
+    "hp_share_at_end": 0.151,
     "fast_move": {
      "id": "THUNDER_SHOCK",
      "name": "Thunder Shock",
@@ -224,7 +224,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.421,
+    "hp_share_at_end": 0.04,
     "fast_move": {
      "id": "PECK",
      "name": "Peck",
@@ -232,8 +232,8 @@
      "energy_gain": 8,
      "known_from": "guessed",
      "odds": {
-      "Peck": 0.81,
-      "Water Gun": 0.19
+      "Peck": 0.79,
+      "Water Gun": 0.21
      }
     },
     "charged_moves": [
@@ -302,9 +302,17 @@
      "energy": 0
     },
     "theirs": {
-     "active": null,
+     "active": "Dunsparce",
      "shields": 2,
-     "left": 3
+     "left": 3,
+     "hp": 184,
+     "hp_max": 184,
+     "hp_share": 1.0,
+     "energy": [
+      0,
+      0
+     ],
+     "energy_ceiling": 4
     }
    }
   },
@@ -319,7 +327,14 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 4
+    "hits_seen": 2
+   },
+   "theirs": {
+    "pokemon": "Dunsparce",
+    "fast_move": "Bite",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 18,
+    "hits_seen": 6
    },
    "unexplained_health_changes": 4,
    "state": {
@@ -327,23 +342,23 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 79,
+     "hp": 81,
      "hp_max": 125,
-     "hp_share": 0.632,
+     "hp_share": 0.648,
      "energy": 72
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 165,
+     "hp": 173,
      "hp_max": 184,
-     "hp_share": 0.897,
+     "hp_share": 0.94,
      "energy": [
-      68,
-      68
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 76
     }
    }
   },
@@ -360,8 +375,8 @@
    "energy_before": 72,
    "target": "Dunsparce",
    "shielded": false,
-   "target_hp_before": 165,
-   "target_hp_after": 165,
+   "target_hp_before": 173,
+   "target_hp_after": 173,
    "target_hp_max": 184,
    "target_bar_read": false,
    "expected_damage": null,
@@ -372,23 +387,23 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 79,
+     "hp": 81,
      "hp_max": 125,
-     "hp_share": 0.632,
+     "hp_share": 0.648,
      "energy": 32
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 165,
+     "hp": 173,
      "hp_max": 184,
-     "hp_share": 0.897,
+     "hp_share": 0.94,
      "energy": [
-      68,
-      68
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 76
     }
    }
   },
@@ -403,14 +418,14 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 7,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -418,9 +433,9 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 74,
+     "hp": 72,
      "hp_max": 125,
-     "hp_share": 0.592,
+     "hp_share": 0.576,
      "energy": 56
     },
     "theirs": {
@@ -431,8 +446,8 @@
      "hp_max": 184,
      "hp_share": 0.565,
      "energy": [
-      96,
-      96
+      100,
+      100
      ],
      "energy_ceiling": 100
     }
@@ -449,14 +464,14 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    96,
-    96
+    100,
+    100
    ],
    "energy_ceiling": 100,
    "target": "Sableye",
    "shielded": false,
-   "target_hp_before": 74,
-   "target_hp_after": 74,
+   "target_hp_before": 72,
+   "target_hp_after": 72,
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 31,
@@ -467,9 +482,9 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 74,
+     "hp": 72,
      "hp_max": 125,
-     "hp_share": 0.592,
+     "hp_share": 0.576,
      "energy": 64
     },
     "theirs": {
@@ -480,10 +495,10 @@
      "hp_max": 184,
      "hp_share": 0.565,
      "energy": [
-      56,
-      56
+      60,
+      60
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 64
     }
    }
   },
@@ -498,14 +513,14 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 9,
-    "hits_seen": 4
+    "hits_seen": 3
    },
    "unexplained_health_changes": 3,
    "state": {
@@ -513,9 +528,9 @@
      "active": "Sableye",
      "shields": 2,
      "left": 3,
-     "hp": 20,
+     "hp": 21,
      "hp_max": 125,
-     "hp_share": 0.16,
+     "hp_share": 0.168,
      "energy": 96
     },
     "theirs": {
@@ -526,10 +541,10 @@
      "hp_max": 184,
      "hp_share": 0.505,
      "energy": [
-      92,
-      92
+      96,
+      96
      ],
-     "energy_ceiling": 96
+     "energy_ceiling": 100
     }
    }
   },
@@ -544,14 +559,14 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    92,
-    92
+    96,
+    96
    ],
-   "energy_ceiling": 96,
+   "energy_ceiling": 100,
    "target": "Sableye",
    "shielded": true,
-   "target_hp_before": 20,
-   "target_hp_after": 20,
+   "target_hp_before": 21,
+   "target_hp_after": 21,
    "target_hp_max": 125,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -562,9 +577,9 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 20,
+     "hp": 21,
      "hp_max": 125,
-     "hp_share": 0.16,
+     "hp_share": 0.168,
      "energy": 100
     },
     "theirs": {
@@ -575,10 +590,10 @@
      "hp_max": 184,
      "hp_share": 0.505,
      "energy": [
-      52,
-      52
+      56,
+      56
      ],
-     "energy_ceiling": 56
+     "energy_ceiling": 60
     }
    }
   },
@@ -593,7 +608,7 @@
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
@@ -607,9 +622,9 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 19,
      "hp_max": 125,
-     "hp_share": 0.144,
+     "hp_share": 0.152,
      "energy": 100
     },
     "theirs": {
@@ -620,10 +635,10 @@
      "hp_max": 184,
      "hp_share": 0.505,
      "energy": [
-      60,
-      60
+      64,
+      64
      ],
-     "energy_ceiling": 60
+     "energy_ceiling": 64
     }
    }
   },
@@ -639,9 +654,9 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 22,
+     "hp": 23,
      "hp_max": 153,
-     "hp_share": 0.144,
+     "hp_share": 0.15,
      "energy": 0
     },
     "theirs": {
@@ -652,10 +667,10 @@
      "hp_max": 184,
      "hp_share": 0.495,
      "energy": [
-      64,
-      64
+      68,
+      68
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 68
     }
    }
   },
@@ -694,14 +709,14 @@
      "active": "Dunsparce",
      "shields": 2,
      "left": 3,
-     "hp": 91,
+     "hp": 169,
      "hp_max": 184,
-     "hp_share": 0.495,
+     "hp_share": 0.918,
      "energy": [
-      84,
-      84
+      88,
+      88
      ],
-     "energy_ceiling": 84
+     "energy_ceiling": 88
     }
    }
   },
@@ -748,32 +763,32 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 5,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 135,
+     "hp": 133,
      "hp_max": 153,
-     "hp_share": 0.882,
+     "hp_share": 0.869,
      "energy": 72
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 135,
+     "hp": 146,
      "hp_max": 146,
-     "hp_share": 0.925,
+     "hp_share": 1.0,
      "energy": [
       45,
       45
@@ -799,8 +814,8 @@
    "energy_ceiling": 54,
    "target": "Jumpluff",
    "shielded": false,
-   "target_hp_before": 135,
-   "target_hp_after": 135,
+   "target_hp_before": 133,
+   "target_hp_after": 133,
    "target_hp_max": 153,
    "target_bar_read": false,
    "expected_damage": 43,
@@ -811,18 +826,18 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 135,
+     "hp": 133,
      "hp_max": 153,
-     "hp_share": 0.882,
+     "hp_share": 0.869,
      "energy": 81
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 135,
+     "hp": 146,
      "hp_max": 146,
-     "hp_share": 0.925,
+     "hp_share": 1.0,
      "energy": [
       10,
       10
@@ -842,14 +857,14 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
+    "hits_seen": 2
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -866,9 +881,9 @@
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 128,
+     "hp": 134,
      "hp_max": 146,
-     "hp_share": 0.877,
+     "hp_share": 0.918,
      "energy": [
       46,
       46
@@ -890,10 +905,10 @@
    "energy_before": 100,
    "target": "Melmetal",
    "shielded": false,
-   "target_hp_before": 128,
-   "target_hp_after": 80,
+   "target_hp_before": 134,
+   "target_hp_after": 134,
    "target_hp_max": 146,
-   "target_bar_read": true,
+   "target_bar_read": false,
    "expected_damage": 50,
    "resolved_t": 76.0,
    "cue": true,
@@ -911,9 +926,9 @@
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 80,
+     "hp": 134,
      "hp_max": 146,
-     "hp_share": 0.548,
+     "hp_share": 0.918,
      "energy": [
       46,
       46
@@ -933,32 +948,32 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 2
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 79,
+     "hp": 78,
      "hp_max": 153,
-     "hp_share": 0.516,
+     "hp_share": 0.51,
      "energy": 81
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 75,
+     "hp": 81,
      "hp_max": 146,
-     "hp_share": 0.514,
+     "hp_share": 0.555,
      "energy": [
       82,
       82
@@ -980,8 +995,8 @@
    "energy_before": 81,
    "target": "Melmetal",
    "shielded": false,
-   "target_hp_before": 75,
-   "target_hp_after": 75,
+   "target_hp_before": 81,
+   "target_hp_after": 81,
    "target_hp_max": 146,
    "target_bar_read": false,
    "expected_damage": 50,
@@ -992,21 +1007,21 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 79,
+     "hp": 78,
      "hp_max": 153,
-     "hp_share": 0.516,
+     "hp_share": 0.51,
      "energy": 26
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 75,
+     "hp": 81,
      "hp_max": 146,
-     "hp_share": 0.514,
+     "hp_share": 0.555,
      "energy": [
-      91,
-      91
+      82,
+      82
      ],
      "energy_ceiling": 91
     }
@@ -1023,32 +1038,32 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 0
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 75,
+     "hp": 74,
      "hp_max": 153,
-     "hp_share": 0.49,
+     "hp_share": 0.484,
      "energy": 53
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 23,
+     "hp": 24,
      "hp_max": 146,
-     "hp_share": 0.158,
+     "hp_share": 0.164,
      "energy": [
       100,
       100
@@ -1074,8 +1089,8 @@
    "energy_ceiling": 100,
    "target": "Jumpluff",
    "shielded": false,
-   "target_hp_before": 75,
-   "target_hp_after": 75,
+   "target_hp_before": 74,
+   "target_hp_after": 74,
    "target_hp_max": 153,
    "target_bar_read": false,
    "expected_damage": 43,
@@ -1086,18 +1101,18 @@
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 75,
+     "hp": 74,
      "hp_max": 153,
-     "hp_share": 0.49,
+     "hp_share": 0.484,
      "energy": 62
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 24,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.164,
      "energy": [
       65,
       65
@@ -1124,25 +1139,25 @@
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
      "left": 3,
-     "hp": 75,
+     "hp": 74,
      "hp_max": 153,
-     "hp_share": 0.49,
+     "hp_share": 0.484,
      "energy": 62
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 24,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.164,
      "energy": [
       65,
       65
@@ -1163,18 +1178,18 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 19,
      "hp_max": 125,
-     "hp_share": 0.144,
+     "hp_share": 0.152,
      "energy": 100
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.151,
      "energy": [
       65,
       65
@@ -1208,18 +1223,18 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 15,
      "hp_max": 125,
-     "hp_share": 0.144,
+     "hp_share": 0.12,
      "energy": 100
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.151,
      "energy": [
       74,
       74
@@ -1241,8 +1256,8 @@
    "energy_before": 100,
    "target": "Melmetal",
    "shielded": true,
-   "target_hp_before": 21,
-   "target_hp_after": 21,
+   "target_hp_before": 22,
+   "target_hp_after": 22,
    "target_hp_max": 146,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1253,18 +1268,18 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 15,
      "hp_max": 125,
-     "hp_share": 0.144,
+     "hp_share": 0.12,
      "energy": 60
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 21,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.151,
      "energy": [
       74,
       74
@@ -1298,23 +1313,23 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 18,
+     "hp": 15,
      "hp_max": 125,
-     "hp_share": 0.144,
-     "energy": 60
+     "hp_share": 0.12,
+     "energy": 68
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 3,
-     "hp": 21,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.151,
      "energy": [
-      74,
-      74
+      83,
+      83
      ],
-     "energy_ceiling": 83
+     "energy_ceiling": 92
     }
    }
   },
@@ -1330,23 +1345,23 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 15,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.12,
      "energy": 68
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 91,
+     "hp": 169,
      "hp_max": 184,
-     "hp_share": 0.495,
+     "hp_share": 0.918,
      "energy": [
-      84,
-      84
+      88,
+      88
      ],
-     "energy_ceiling": 88
+     "energy_ceiling": 92
     }
    }
   },
@@ -1370,28 +1385,29 @@
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 9,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.072,
      "energy": 76
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 91,
+     "hp": 169,
      "hp_max": 184,
-     "hp_share": 0.495,
+     "hp_share": 0.918,
      "energy": [
-      88,
-      88
+      92,
+      92
      ],
-     "energy_ceiling": 92
+     "energy_ceiling": 96
     }
    }
   },
@@ -1408,8 +1424,8 @@
    "energy_before": 76,
    "target": "Dunsparce",
    "shielded": false,
-   "target_hp_before": 91,
-   "target_hp_after": 91,
+   "target_hp_before": 169,
+   "target_hp_after": 169,
    "target_hp_max": 184,
    "target_bar_read": false,
    "expected_damage": 55,
@@ -1420,44 +1436,44 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 9,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.072,
      "energy": 36
     },
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 91,
+     "hp": 169,
      "hp_max": 184,
-     "hp_share": 0.495,
+     "hp_share": 0.918,
      "energy": [
-      88,
-      88
+      92,
+      92
      ],
-     "energy_ceiling": 92
+     "energy_ceiling": 96
     }
    }
   },
   {
    "kind": "fighting",
    "t": 123.0,
-   "until": 124.95,
+   "until": 124.47,
    "fighting_turn": 83,
-   "turns": 4,
+   "turns": 3,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "state": {
@@ -1465,9 +1481,9 @@
      "active": "Sableye",
      "shields": 1,
      "left": 3,
-     "hp": 7,
+     "hp": 9,
      "hp_max": 125,
-     "hp_share": 0.056,
+     "hp_share": 0.072,
      "energy": 44
     },
     "theirs": {
@@ -1487,8 +1503,8 @@
   },
   {
    "kind": "faint",
-   "t": 124.95,
-   "fighting_turn": 87,
+   "t": 124.47,
+   "fighting_turn": 86,
    "side": "mine",
    "pokemon": "Sableye",
    "next": null,
@@ -1496,11 +1512,11 @@
     "mine": {
      "active": "Sableye",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 125,
      "hp_share": 0.0,
-     "energy": 52
+     "energy": 44
     },
     "theirs": {
      "active": "Dunsparce",
@@ -1519,16 +1535,16 @@
   },
   {
    "kind": "fighting",
-   "t": 124.95,
+   "t": 124.47,
    "until": 130.8,
-   "fighting_turn": 87,
+   "fighting_turn": 86,
    "turns": 3,
    "mine": {
     "pokemon": "Sableye",
     "fast_move": "Shadow Claw",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 2
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Dunsparce",
@@ -1537,7 +1553,6 @@
     "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Jumpluff",
@@ -1552,9 +1567,9 @@
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 5,
      "hp_max": 184,
-     "hp_share": 0.016,
+     "hp_share": 0.027,
      "energy": [
       100,
       100
@@ -1566,7 +1581,7 @@
   {
    "kind": "charged",
    "t": 130.8,
-   "fighting_turn": 90,
+   "fighting_turn": 89,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "move": "Rock Slide",
@@ -1585,13 +1600,13 @@
    "target_hp_max": 153,
    "target_bar_read": true,
    "expected_damage": 53,
-   "resolved_t": 139.87,
+   "resolved_t": 138.8,
    "cue": true,
    "state": {
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 153,
      "hp_share": 0.0,
@@ -1601,9 +1616,9 @@
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 5,
      "hp_max": 184,
-     "hp_share": 0.016,
+     "hp_share": 0.027,
      "energy": [
       55,
       55
@@ -1614,8 +1629,8 @@
   },
   {
    "kind": "faint",
-   "t": 139.87,
-   "fighting_turn": 90,
+   "t": 138.8,
+   "fighting_turn": 89,
    "side": "mine",
    "pokemon": "Jumpluff",
    "next": null,
@@ -1623,7 +1638,7 @@
     "mine": {
      "active": "Jumpluff",
      "shields": 1,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 153,
      "hp_share": 0.0,
@@ -1633,9 +1648,9 @@
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 5,
      "hp_max": 184,
-     "hp_share": 0.016,
+     "hp_share": 0.027,
      "energy": [
       55,
       55
@@ -1646,9 +1661,9 @@
   },
   {
    "kind": "fighting",
-   "t": 139.87,
+   "t": 138.8,
    "until": 143.02,
-   "fighting_turn": 90,
+   "fighting_turn": 89,
    "turns": 4,
    "mine": {
     "pokemon": "Jumpluff",
@@ -1678,9 +1693,9 @@
      "active": "Dunsparce",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 89,
      "hp_max": 184,
-     "hp_share": 0.016,
+     "hp_share": 0.484,
      "energy": [
       71,
       71
@@ -1692,7 +1707,7 @@
   {
    "kind": "faint",
    "t": 143.02,
-   "fighting_turn": 94,
+   "fighting_turn": 93,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "next": null,
@@ -1709,7 +1724,7 @@
     "theirs": {
      "active": "Dunsparce",
      "shields": 1,
-     "left": 3,
+     "left": 2,
      "hp": 0,
      "hp_max": 184,
      "hp_share": 0.0,
@@ -1725,7 +1740,7 @@
    "kind": "fighting",
    "t": 143.02,
    "until": 153.8,
-   "fighting_turn": 94,
+   "fighting_turn": 93,
    "turns": 13,
    "mine": {
     "pokemon": "Empoleon",
@@ -1741,7 +1756,7 @@
     "fast_moves_if_no_pause": 13,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 1,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Empoleon",
@@ -1756,9 +1771,9 @@
      "active": "Cramorant",
      "shields": 1,
      "left": 2,
-     "hp": 119,
+     "hp": 126,
      "hp_max": 126,
-     "hp_share": 0.944,
+     "hp_share": 1.0,
      "energy": [
       48,
       48
@@ -1770,7 +1785,7 @@
   {
    "kind": "charged",
    "t": 153.8,
-   "fighting_turn": 107,
+   "fighting_turn": 106,
    "side": "mine",
    "pokemon": "Empoleon",
    "move": "Drill Peck",
@@ -1780,10 +1795,10 @@
    "energy_before": 72,
    "target": "Cramorant",
    "shielded": false,
-   "target_hp_before": 119,
-   "target_hp_after": 119,
+   "target_hp_before": 126,
+   "target_hp_after": 61,
    "target_hp_max": 126,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 47,
    "resolved_t": 163.0,
    "cue": true,
@@ -1801,12 +1816,12 @@
      "active": "Cramorant",
      "shields": 1,
      "left": 2,
-     "hp": 119,
+     "hp": 61,
      "hp_max": 126,
-     "hp_share": 0.944,
+     "hp_share": 0.484,
      "energy": [
-      56,
-      56
+      48,
+      48
      ],
      "energy_ceiling": 56
     }
@@ -1816,7 +1831,7 @@
    "kind": "fighting",
    "t": 163.0,
    "until": 164.8,
-   "fighting_turn": 107,
+   "fighting_turn": 106,
    "turns": 3,
    "mine": {
     "pokemon": "Empoleon",
@@ -1850,8 +1865,8 @@
      "hp_max": 126,
      "hp_share": 0.484,
      "energy": [
-      64,
-      64
+      56,
+      56
      ],
      "energy_ceiling": 64
     }
@@ -1860,7 +1875,7 @@
   {
    "kind": "charged",
    "t": 164.8,
-   "fighting_turn": 110,
+   "fighting_turn": 109,
    "side": "theirs",
    "pokemon": "Cramorant",
    "move": "Surf",
@@ -1868,8 +1883,8 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    64,
-    64
+    56,
+    56
    ],
    "energy_ceiling": 64,
    "target": "Empoleon",
@@ -1899,10 +1914,10 @@
      "hp_max": 126,
      "hp_share": 0.484,
      "energy": [
-      19,
-      19
+      11,
+      11
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 19
     }
    }
   },
@@ -1910,14 +1925,14 @@
    "kind": "fighting",
    "t": 173.0,
    "until": 176.8,
-   "fighting_turn": 110,
-   "turns": 7,
+   "fighting_turn": 109,
+   "turns": 6,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Cramorant",
@@ -1932,43 +1947,43 @@
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 50,
+     "hp": 42,
      "hp_max": 122,
-     "hp_share": 0.41,
-     "energy": 72
+     "hp_share": 0.344,
+     "energy": 64
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 1,
      "left": 2,
-     "hp": 53,
+     "hp": 56,
      "hp_max": 126,
-     "hp_share": 0.421,
+     "hp_share": 0.444,
      "energy": [
-      43,
-      43
+      35,
+      35
      ],
-     "energy_ceiling": 51
+     "energy_ceiling": 35
     }
    }
   },
   {
    "kind": "charged",
    "t": 176.8,
-   "fighting_turn": 117,
+   "fighting_turn": 114,
    "side": "mine",
    "pokemon": "Empoleon",
    "move": "Drill Peck",
    "move_id": "DRILL_PECK",
    "move_known_from": "seen",
    "cost": 40,
-   "energy_before": 72,
+   "energy_before": 64,
    "target": "Cramorant",
    "shielded": false,
-   "target_hp_before": 53,
-   "target_hp_after": 53,
+   "target_hp_before": 56,
+   "target_hp_after": 5,
    "target_hp_max": 126,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 47,
    "resolved_t": 186.0,
    "cue": true,
@@ -1977,23 +1992,23 @@
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 50,
+     "hp": 42,
      "hp_max": 122,
-     "hp_share": 0.41,
-     "energy": 32
+     "hp_share": 0.344,
+     "energy": 24
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 1,
      "left": 2,
-     "hp": 53,
+     "hp": 5,
      "hp_max": 126,
-     "hp_share": 0.421,
+     "hp_share": 0.04,
      "energy": [
       43,
       43
      ],
-     "energy_ceiling": 51
+     "energy_ceiling": 43
     }
    }
   },
@@ -2001,7 +2016,7 @@
    "kind": "fighting",
    "t": 186.0,
    "until": 189.5,
-   "fighting_turn": 117,
+   "fighting_turn": 115,
    "turns": 7,
    "mine": {
     "pokemon": "Empoleon",
@@ -2015,37 +2030,38 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 50,
+     "hp": 23,
      "hp_max": 122,
-     "hp_share": 0.41,
-     "energy": 32
+     "hp_share": 0.189,
+     "energy": 48
     },
     "theirs": {
      "active": "Cramorant",
      "shields": 1,
      "left": 2,
-     "hp": 53,
+     "hp": 5,
      "hp_max": 126,
-     "hp_share": 0.421,
+     "hp_share": 0.04,
      "energy": [
-      43,
-      43
+      67,
+      67
      ],
-     "energy_ceiling": 51
+     "energy_ceiling": 67
     }
    }
   },
   {
    "kind": "switch",
    "t": 189.5,
-   "fighting_turn": 124,
+   "fighting_turn": 122,
    "side": "theirs",
    "from": "Cramorant",
    "to": "Melmetal",
@@ -2054,18 +2070,18 @@
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 23,
      "hp_max": 122,
-     "hp_share": 0.172,
-     "energy": 56
+     "hp_share": 0.189,
+     "energy": 48
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 2,
-     "hp": 21,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.144,
+     "hp_share": 0.151,
      "energy": [
       83,
       83
@@ -2078,14 +2094,14 @@
    "kind": "fighting",
    "t": 189.5,
    "until": 196.8,
-   "fighting_turn": 124,
+   "fighting_turn": 122,
    "turns": 3,
    "mine": {
     "pokemon": "Empoleon",
     "fast_move": "Metal Sound",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Melmetal",
@@ -2099,18 +2115,18 @@
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 18,
      "hp_max": 122,
-     "hp_share": 0.172,
-     "energy": 72
+     "hp_share": 0.148,
+     "energy": 64
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 2,
-     "hp": 14,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.096,
+     "hp_share": 0.151,
      "energy": [
       92,
       92
@@ -2122,7 +2138,7 @@
   {
    "kind": "end",
    "t": 196.8,
-   "fighting_turn": 127,
+   "fighting_turn": 125,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -2134,18 +2150,18 @@
      "active": "Empoleon",
      "shields": 1,
      "left": 1,
-     "hp": 21,
+     "hp": 18,
      "hp_max": 122,
-     "hp_share": 0.172,
-     "energy": 72
+     "hp_share": 0.148,
+     "energy": 64
     },
     "theirs": {
      "active": "Melmetal",
      "shields": 1,
      "left": 2,
-     "hp": 14,
+     "hp": 22,
      "hp_max": 146,
-     "hp_share": 0.096,
+     "hp_share": 0.151,
      "energy": [
       92,
       92

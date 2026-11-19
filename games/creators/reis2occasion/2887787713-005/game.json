@@ -23,7 +23,7 @@
   }
  },
  "seconds": 187.87,
- "fighting_turns": 136,
+ "fighting_turns": 111,
  "checks": {
   "verdict": "fail",
   "failed": [
@@ -33,8 +33,7 @@
    "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
   ],
   "notes": [
-   "final charged-move cue has no observed name; resolution and ending are unverified",
-   "fast move only guessed for lileep"
+   "final charged-move cue has no observed name; resolution and ending are unverified"
   ],
   "unexplained_health_changes": 7
  },
@@ -114,7 +113,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.867,
+    "hp_share_at_end": 0.257,
     "fast_move": {
      "id": "INCINERATE",
      "name": "Incinerate",
@@ -190,16 +189,11 @@
     "fainted": true,
     "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "ACID",
-     "name": "Acid",
-     "turns": 2,
-     "energy_gain": 8,
-     "known_from": "guessed",
-     "odds": {
-      "Infestation": 0.37,
-      "Bullet Seed": 0.32,
-      "Acid": 0.32
-     }
+     "id": "BULLET_SEED",
+     "name": "Bullet Seed",
+     "turns": 3,
+     "energy_gain": 13,
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -226,7 +220,7 @@
     "cp_from": "screen",
     "stats_assumed": true,
     "fainted": false,
-    "hp_share_at_end": 0.16,
+    "hp_share_at_end": 0.146,
     "fast_move": {
      "id": "BULLET_SEED",
      "name": "Bullet Seed",
@@ -274,11 +268,11 @@
    "theirs": 0
   },
   "switches": {
-   "mine": 0,
+   "mine": 2,
    "theirs": 2
   },
   "faints": {
-   "mine": 4,
+   "mine": 2,
    "theirs": 2
   }
  },
@@ -326,14 +320,14 @@
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 3
+    "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Toxtricity",
     "fast_move": "Spark",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
-    "hits_seen": 4
+    "hits_seen": 6
    },
    "unexplained_health_changes": 2,
    "state": {
@@ -341,21 +335,21 @@
      "active": "Victreebel",
      "shields": 2,
      "left": 3,
-     "hp": 86,
+     "hp": 88,
      "hp_max": 131,
-     "hp_share": 0.656,
+     "hp_share": 0.672,
      "energy": 42
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 2,
      "left": 3,
-     "hp": 89,
+     "hp": 115,
      "hp_max": 118,
-     "hp_share": 0.754,
+     "hp_share": 0.975,
      "energy": [
-      42,
-      42
+      49,
+      49
      ],
      "energy_ceiling": 49
     }
@@ -372,16 +366,16 @@
    "move_known_from": "seen",
    "cost": 35,
    "energy_before": [
-    42,
-    42
+    49,
+    49
    ],
    "energy_ceiling": 49,
    "target": "Victreebel",
    "shielded": false,
-   "target_hp_before": 86,
-   "target_hp_after": 86,
+   "target_hp_before": 88,
+   "target_hp_after": 34,
    "target_hp_max": 131,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 54,
    "resolved_t": 16.0,
    "cue": true,
@@ -389,42 +383,88 @@
     "mine": {
      "active": "Victreebel",
      "shields": 2,
-     "left": 2,
-     "hp": 86,
+     "left": 3,
+     "hp": 34,
      "hp_max": 131,
-     "hp_share": 0.656,
+     "hp_share": 0.26,
      "energy": 49
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 2,
      "left": 3,
-     "hp": 89,
+     "hp": 115,
      "hp_max": 118,
-     "hp_share": 0.754,
+     "hp_share": 0.975,
      "energy": [
-      7,
-      7
+      14,
+      14
      ],
-     "energy_ceiling": 14
+     "energy_ceiling": 21
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 16.0,
+   "until": 17.53,
+   "fighting_turn": 13,
+   "turns": 2,
+   "mine": {
+    "pokemon": "Victreebel",
+    "fast_move": "Sucker Punch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Toxtricity",
+    "fast_move": "Spark",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 0
+   },
+   "unexplained_health_changes": 1,
+   "state": {
+    "mine": {
+     "active": "Victreebel",
+     "shields": 2,
+     "left": 3,
+     "hp": 19,
+     "hp_max": 131,
+     "hp_share": 0.145,
+     "energy": 56
+    },
+    "theirs": {
+     "active": "Toxtricity",
+     "shields": 2,
+     "left": 3,
+     "hp": 115,
+     "hp_max": 118,
+     "hp_share": 0.975,
+     "energy": [
+      21,
+      21
+     ],
+     "energy_ceiling": 28
     }
    }
   },
   {
    "kind": "charged",
    "t": 17.53,
-   "fighting_turn": 13,
+   "fighting_turn": 15,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
    "move_id": "LEAF_BLADE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 49,
+   "energy_before": 56,
    "target": "Toxtricity",
    "shielded": false,
-   "target_hp_before": 89,
-   "target_hp_after": 89,
+   "target_hp_before": 115,
+   "target_hp_after": 115,
    "target_hp_max": 118,
    "target_bar_read": false,
    "expected_damage": 49,
@@ -434,24 +474,24 @@
     "mine": {
      "active": "Victreebel",
      "shields": 2,
-     "left": 2,
-     "hp": 86,
+     "left": 3,
+     "hp": 19,
      "hp_max": 131,
-     "hp_share": 0.656,
-     "energy": 14
+     "hp_share": 0.145,
+     "energy": 21
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 2,
      "left": 3,
-     "hp": 89,
+     "hp": 115,
      "hp_max": 118,
-     "hp_share": 0.754,
+     "hp_share": 0.975,
      "energy": [
-      7,
-      7
+      21,
+      21
      ],
-     "energy_ceiling": 14
+     "energy_ceiling": 28
     }
    }
   },
@@ -459,7 +499,7 @@
    "kind": "fighting",
    "t": 26.0,
    "until": 27.0,
-   "fighting_turn": 13,
+   "fighting_turn": 15,
    "turns": 2,
    "mine": {
     "pokemon": "Victreebel",
@@ -479,88 +519,43 @@
     "mine": {
      "active": "Victreebel",
      "shields": 2,
-     "left": 2,
-     "hp": 86,
+     "left": 3,
+     "hp": 19,
      "hp_max": 131,
-     "hp_share": 0.656,
-     "energy": 14
+     "hp_share": 0.145,
+     "energy": 21
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 2,
      "left": 3,
-     "hp": 89,
+     "hp": 115,
      "hp_max": 118,
-     "hp_share": 0.754,
+     "hp_share": 0.975,
      "energy": [
-      7,
-      7
+      21,
+      21
      ],
-     "energy_ceiling": 14
+     "energy_ceiling": 28
     }
    }
   },
   {
-   "kind": "faint",
+   "kind": "switch",
    "t": 27.0,
-   "fighting_turn": 15,
+   "fighting_turn": 17,
    "side": "mine",
-   "pokemon": "Victreebel",
-   "next": "Kingdra",
+   "from": "Victreebel",
+   "to": "Kingdra",
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
+     "left": 3,
      "hp": 118,
      "hp_max": 118,
      "hp_share": 1.0,
      "energy": 0
-    },
-    "theirs": {
-     "active": "Toxtricity",
-     "shields": 2,
-     "left": 3,
-     "hp": 28,
-     "hp_max": 118,
-     "hp_share": 0.237,
-     "energy": [
-      14,
-      14
-     ],
-     "energy_ceiling": 21
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 27.0,
-   "until": 29.5,
-   "fighting_turn": 15,
-   "turns": 5,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Toxtricity",
-    "fast_move": "Spark",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 2,
-     "hp": 113,
-     "hp_max": 118,
-     "hp_share": 0.958,
-     "energy": 16
     },
     "theirs": {
      "active": "Toxtricity",
@@ -578,9 +573,54 @@
    }
   },
   {
+   "kind": "fighting",
+   "t": 27.0,
+   "until": 30.0,
+   "fighting_turn": 17,
+   "turns": 6,
+   "mine": {
+    "pokemon": "Kingdra",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 6,
+    "hits_seen": 0
+   },
+   "theirs": {
+    "pokemon": "Toxtricity",
+    "fast_move": "Spark",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 2
+   },
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 2,
+     "left": 3,
+     "hp": 113,
+     "hp_max": 118,
+     "hp_share": 0.958,
+     "energy": 16
+    },
+    "theirs": {
+     "active": "Toxtricity",
+     "shields": 2,
+     "left": 3,
+     "hp": 22,
+     "hp_max": 118,
+     "hp_share": 0.186,
+     "energy": [
+      42,
+      42
+     ],
+     "energy_ceiling": 49
+    }
+   }
+  },
+  {
    "kind": "switch",
-   "t": 29.5,
-   "fighting_turn": 20,
+   "t": 30.0,
+   "fighting_turn": 23,
    "side": "theirs",
    "from": "Toxtricity",
    "to": "Lileep",
@@ -588,11 +628,11 @@
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 113,
+     "left": 3,
+     "hp": 108,
      "hp_max": 118,
-     "hp_share": 0.958,
-     "energy": 20
+     "hp_share": 0.915,
+     "energy": 24
     },
     "theirs": {
      "active": "Lileep",
@@ -611,53 +651,53 @@
   },
   {
    "kind": "fighting",
-   "t": 29.5,
+   "t": 30.0,
    "until": 34.53,
-   "fighting_turn": 20,
-   "turns": 9,
+   "fighting_turn": 23,
+   "turns": 8,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 1
    },
    "theirs": {
     "pokemon": "Lileep",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 101,
+     "left": 3,
+     "hp": 99,
      "hp_max": 118,
-     "hp_share": 0.856,
+     "hp_share": 0.839,
      "energy": 56
     },
     "theirs": {
      "active": "Lileep",
      "shields": 2,
      "left": 3,
-     "hp": 123,
+     "hp": 121,
      "hp_max": 151,
-     "hp_share": 0.815,
+     "hp_share": 0.801,
      "energy": [
-      40,
-      40
+      26,
+      26
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 39
     }
    }
   },
   {
    "kind": "charged",
    "t": 34.53,
-   "fighting_turn": 29,
+   "fighting_turn": 31,
    "side": "mine",
    "pokemon": "Kingdra",
    "move": "Surf",
@@ -667,8 +707,8 @@
    "energy_before": 56,
    "target": "Lileep",
    "shielded": true,
-   "target_hp_before": 123,
-   "target_hp_after": 115,
+   "target_hp_before": 121,
+   "target_hp_after": 116,
    "target_hp_max": 151,
    "target_bar_read": true,
    "expected_damage": 1,
@@ -678,24 +718,24 @@
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 101,
+     "left": 3,
+     "hp": 97,
      "hp_max": 118,
-     "hp_share": 0.856,
+     "hp_share": 0.822,
      "energy": 11
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 115,
+     "hp": 116,
      "hp_max": 151,
-     "hp_share": 0.762,
+     "hp_share": 0.768,
      "energy": [
-      40,
-      40
+      39,
+      39
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 39
     }
    }
   },
@@ -703,51 +743,51 @@
    "kind": "fighting",
    "t": 44.0,
    "until": 46.53,
-   "fighting_turn": 29,
-   "turns": 5,
+   "fighting_turn": 31,
+   "turns": 4,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Lileep",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 0
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 96,
+     "left": 3,
+     "hp": 91,
      "hp_max": 118,
-     "hp_share": 0.814,
-     "energy": 31
+     "hp_share": 0.771,
+     "energy": 27
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 111,
+     "hp": 107,
      "hp_max": 151,
-     "hp_share": 0.735,
+     "hp_share": 0.709,
      "energy": [
-      64,
-      64
+      65,
+      65
      ],
-     "energy_ceiling": 64
+     "energy_ceiling": 65
     }
    }
   },
   {
    "kind": "charged",
    "t": 46.53,
-   "fighting_turn": 34,
+   "fighting_turn": 35,
    "side": "theirs",
    "pokemon": "Lileep",
    "move": "Grass Knot",
@@ -755,16 +795,16 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    64,
-    64
+    65,
+    65
    ],
-   "energy_ceiling": 64,
+   "energy_ceiling": 65,
    "target": "Kingdra",
    "shielded": false,
-   "target_hp_before": 96,
-   "target_hp_after": 96,
+   "target_hp_before": 91,
+   "target_hp_after": 24,
    "target_hp_max": 118,
-   "target_bar_read": false,
+   "target_bar_read": true,
    "expected_damage": 56,
    "resolved_t": 56.0,
    "cue": true,
@@ -772,24 +812,24 @@
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 96,
+     "left": 3,
+     "hp": 24,
      "hp_max": 118,
-     "hp_share": 0.814,
-     "energy": 31
+     "hp_share": 0.203,
+     "energy": 27
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 111,
+     "hp": 107,
      "hp_max": 151,
-     "hp_share": 0.735,
+     "hp_share": 0.709,
      "energy": [
-      14,
-      14
+      15,
+      15
      ],
-     "energy_ceiling": 22
+     "energy_ceiling": 28
     }
    }
   },
@@ -797,7 +837,97 @@
    "kind": "fighting",
    "t": 56.0,
    "until": 60.53,
-   "fighting_turn": 34,
+   "fighting_turn": 35,
+   "turns": 9,
+   "mine": {
+    "pokemon": "Kingdra",
+    "fast_move": "Dragon Breath",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 9,
+    "hits_seen": 3
+   },
+   "theirs": {
+    "pokemon": "Lileep",
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 4
+   },
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 2,
+     "left": 3,
+     "hp": 12,
+     "hp_max": 118,
+     "hp_share": 0.102,
+     "energy": 63
+    },
+    "theirs": {
+     "active": "Lileep",
+     "shields": 1,
+     "left": 3,
+     "hp": 83,
+     "hp_max": 151,
+     "hp_share": 0.55,
+     "energy": [
+      54,
+      54
+     ],
+     "energy_ceiling": 67
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "t": 60.53,
+   "fighting_turn": 44,
+   "side": "mine",
+   "pokemon": "Kingdra",
+   "move": "Surf",
+   "move_id": "SURF",
+   "move_known_from": "seen",
+   "cost": 45,
+   "energy_before": 63,
+   "target": "Lileep",
+   "shielded": false,
+   "target_hp_before": 83,
+   "target_hp_after": 22,
+   "target_hp_max": 151,
+   "target_bar_read": true,
+   "expected_damage": 52,
+   "resolved_t": 70.0,
+   "cue": true,
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 2,
+     "left": 3,
+     "hp": 12,
+     "hp_max": 118,
+     "hp_share": 0.102,
+     "energy": 18
+    },
+    "theirs": {
+     "active": "Lileep",
+     "shields": 1,
+     "left": 3,
+     "hp": 22,
+     "hp_max": 151,
+     "hp_share": 0.146,
+     "energy": [
+      54,
+      54
+     ],
+     "energy_ceiling": 67
+    }
+   }
+  },
+  {
+   "kind": "fighting",
+   "t": 70.0,
+   "until": 74.53,
+   "fighting_turn": 44,
    "turns": 8,
    "mine": {
     "pokemon": "Kingdra",
@@ -808,163 +938,40 @@
    },
    "theirs": {
     "pokemon": "Lileep",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
-   },
-   "unexplained_health_changes": 1,
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 2,
-     "hp": 1,
-     "hp_max": 118,
-     "hp_share": 0.008,
-     "energy": 63
-    },
-    "theirs": {
-     "active": "Lileep",
-     "shields": 1,
-     "left": 3,
-     "hp": 85,
-     "hp_max": 151,
-     "hp_share": 0.563,
-     "energy": [
-      46,
-      46
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "charged",
-   "t": 60.53,
-   "fighting_turn": 42,
-   "side": "mine",
-   "pokemon": "Kingdra",
-   "move": "Surf",
-   "move_id": "SURF",
-   "move_known_from": "seen",
-   "cost": 45,
-   "energy_before": 63,
-   "target": "Lileep",
-   "shielded": false,
-   "target_hp_before": 85,
-   "target_hp_after": 85,
-   "target_hp_max": 151,
-   "target_bar_read": false,
-   "expected_damage": 52,
-   "resolved_t": 70.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 2,
-     "hp": 1,
-     "hp_max": 118,
-     "hp_share": 0.008,
-     "energy": 18
-    },
-    "theirs": {
-     "active": "Lileep",
-     "shields": 1,
-     "left": 3,
-     "hp": 85,
-     "hp_max": 151,
-     "hp_share": 0.563,
-     "energy": [
-      46,
-      46
-     ],
-     "energy_ceiling": 54
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 70.0,
-   "until": 73.2,
-   "fighting_turn": 42,
-   "turns": 6,
-   "mine": {
-    "pokemon": "Kingdra",
-    "fast_move": "Dragon Breath",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 5
-   },
-   "theirs": {
-    "pokemon": "Lileep",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
      "active": "Kingdra",
      "shields": 2,
-     "left": 2,
-     "hp": 1,
+     "left": 3,
+     "hp": 4,
      "hp_max": 118,
-     "hp_share": 0.008,
-     "energy": 42
+     "hp_share": 0.034,
+     "energy": 50
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 8,
+     "hp": 9,
      "hp_max": 151,
-     "hp_share": 0.053,
+     "hp_share": 0.06,
      "energy": [
-      70,
-      70
+      80,
+      80
      ],
-     "energy_ceiling": 78
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 73.2,
-   "fighting_turn": 48,
-   "side": "theirs",
-   "pokemon": "Lileep",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Kingdra",
-     "shields": 2,
-     "left": 2,
-     "hp": 1,
-     "hp_max": 118,
-     "hp_share": 0.008,
-     "energy": 42
-    },
-    "theirs": {
-     "active": "Lileep",
-     "shields": 1,
-     "left": 3,
-     "hp": 0,
-     "hp_max": 151,
-     "hp_share": 0.0,
-     "energy": [
-      70,
-      70
-     ],
-     "energy_ceiling": 78
+     "energy_ceiling": 93
     }
    }
   },
   {
    "kind": "charged",
    "t": 74.53,
-   "fighting_turn": 48,
+   "fighting_turn": 52,
    "side": "theirs",
    "pokemon": "Lileep",
    "move": "Ancient Power",
@@ -972,18 +979,18 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    70,
-    70
+    80,
+    80
    ],
-   "energy_ceiling": 78,
+   "energy_ceiling": 93,
    "target": "Kingdra",
    "shielded": false,
-   "target_hp_before": 1,
+   "target_hp_before": 4,
    "target_hp_after": 0,
    "target_hp_max": 118,
    "target_bar_read": true,
    "expected_damage": 37,
-   "resolved_t": 83.77,
+   "resolved_t": 82.6,
    "cue": true,
    "state": {
     "mine": {
@@ -993,27 +1000,27 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 42
+     "energy": 50
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 9,
      "hp_max": 151,
-     "hp_share": 0.02,
+     "hp_share": 0.06,
      "energy": [
-      25,
-      25
+      35,
+      35
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "faint",
-   "t": 83.77,
-   "fighting_turn": 48,
+   "t": 82.6,
+   "fighting_turn": 52,
    "side": "mine",
    "pokemon": "Kingdra",
    "next": null,
@@ -1025,53 +1032,84 @@
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
-     "energy": 42
+     "energy": 50
     },
     "theirs": {
      "active": "Lileep",
      "shields": 1,
      "left": 3,
-     "hp": 3,
+     "hp": 9,
      "hp_max": 151,
-     "hp_share": 0.02,
+     "hp_share": 0.06,
      "energy": [
-      25,
-      25
+      35,
+      35
      ],
-     "energy_ceiling": 33
+     "energy_ceiling": 48
+    }
+   }
+  },
+  {
+   "kind": "faint",
+   "t": 85.2,
+   "fighting_turn": 52,
+   "side": "theirs",
+   "pokemon": "Lileep",
+   "next": null,
+   "state": {
+    "mine": {
+     "active": "Kingdra",
+     "shields": 2,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 118,
+     "hp_share": 0.0,
+     "energy": 50
+    },
+    "theirs": {
+     "active": "Lileep",
+     "shields": 1,
+     "left": 2,
+     "hp": 0,
+     "hp_max": 151,
+     "hp_share": 0.0,
+     "energy": [
+      35,
+      35
+     ],
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 83.77,
+   "t": 85.2,
    "until": 99.53,
-   "fighting_turn": 48,
-   "turns": 30,
+   "fighting_turn": 52,
+   "turns": 15,
    "mine": {
     "pokemon": "Kingdra",
     "fast_move": "Dragon Breath",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 30,
+    "fast_moves_if_no_pause": 15,
     "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Lileep",
-    "fast_move": "Acid",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 15,
-    "hits_seen": 3
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 5,
+    "hits_seen": 2
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 2,
-     "left": 1,
+     "left": 2,
      "hp": 106,
      "hp_max": 113,
      "hp_share": 0.938,
-     "energy": 100
+     "energy": 80
     },
     "theirs": {
      "active": "Cradily",
@@ -1081,17 +1119,17 @@
      "hp_max": 144,
      "hp_share": 0.861,
      "energy": [
-      100,
-      100
+      48,
+      48
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 60
     }
    }
   },
   {
    "kind": "charged",
    "t": 99.53,
-   "fighting_turn": 78,
+   "fighting_turn": 67,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -1099,10 +1137,11 @@
    "move_known_from": "seen",
    "cost": 50,
    "energy_before": [
-    100,
-    100
+    48,
+    48
    ],
-   "energy_ceiling": 100,
+   "energy_ceiling": 60,
+   "energy_short_by": 2,
    "target": "Turtonator",
    "shielded": true,
    "target_hp_before": 106,
@@ -1116,11 +1155,11 @@
     "mine": {
      "active": "Turtonator",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 106,
      "hp_max": 113,
      "hp_share": 0.938,
-     "energy": 100
+     "energy": 80
     },
     "theirs": {
      "active": "Cradily",
@@ -1130,25 +1169,25 @@
      "hp_max": 144,
      "hp_share": 0.861,
      "energy": [
-      50,
-      50
+      0,
+      10
      ],
-     "energy_ceiling": 62
+     "energy_ceiling": 22
     }
    }
   },
   {
    "kind": "fighting",
    "t": 108.0,
-   "until": 109.5,
-   "fighting_turn": 78,
+   "until": 109.0,
+   "fighting_turn": 67,
    "turns": 2,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 0,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Cradily",
@@ -1161,39 +1200,39 @@
     "mine": {
      "active": "Turtonator",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 106,
      "hp_max": 113,
      "hp_share": 0.938,
-     "energy": 100
+     "energy": 80
     },
     "theirs": {
      "active": "Cradily",
      "shields": 1,
      "left": 2,
-     "hp": 122,
+     "hp": 124,
      "hp_max": 144,
-     "hp_share": 0.847,
+     "hp_share": 0.861,
      "energy": [
-      50,
-      50
+      0,
+      10
      ],
-     "energy_ceiling": 62
+     "energy_ceiling": 22
     }
    }
   },
   {
-   "kind": "faint",
-   "t": 109.5,
-   "fighting_turn": 80,
+   "kind": "switch",
+   "t": 109.0,
+   "fighting_turn": 69,
    "side": "mine",
-   "pokemon": "Turtonator",
-   "next": "Victreebel",
+   "from": "Turtonator",
+   "to": "Victreebel",
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 19,
      "hp_max": 131,
      "hp_share": 0.145,
@@ -1207,73 +1246,74 @@
      "hp_max": 144,
      "hp_share": 0.847,
      "energy": [
-      50,
-      50
+      0,
+      10
      ],
-     "energy_ceiling": 62
+     "energy_ceiling": 22
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 109.5,
+   "t": 109.0,
    "until": 113.53,
-   "fighting_turn": 80,
-   "turns": 7,
+   "fighting_turn": 69,
+   "turns": 8,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 5
+    "fast_moves_if_no_pause": 4,
+    "hits_seen": 4
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Bullet Seed",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 3
+    "hits_seen": 2
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 11,
      "hp_max": 131,
      "hp_share": 0.084,
-     "energy": 42
+     "energy": 49
     },
     "theirs": {
      "active": "Cradily",
      "shields": 1,
      "left": 2,
-     "hp": 101,
+     "hp": 100,
      "hp_max": 144,
-     "hp_share": 0.701,
+     "hp_share": 0.694,
      "energy": [
-      76,
-      76
+      39,
+      49
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 62
     }
    }
   },
   {
    "kind": "charged",
    "t": 113.53,
-   "fighting_turn": 87,
+   "fighting_turn": 77,
    "side": "mine",
    "pokemon": "Victreebel",
    "move": "Leaf Blade",
    "move_id": "LEAF_BLADE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 42,
+   "energy_before": 49,
    "target": "Cradily",
    "shielded": true,
-   "target_hp_before": 101,
-   "target_hp_after": 100,
+   "target_hp_before": 100,
+   "target_hp_after": 99,
    "target_hp_max": 144,
    "target_bar_read": true,
    "expected_damage": 1,
@@ -1283,24 +1323,24 @@
     "mine": {
      "active": "Victreebel",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 11,
      "hp_max": 131,
      "hp_share": 0.084,
-     "energy": 7
+     "energy": 14
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 2,
-     "hp": 100,
+     "hp": 99,
      "hp_max": 144,
-     "hp_share": 0.694,
+     "hp_share": 0.688,
      "energy": [
-      76,
-      76
+      52,
+      62
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 62
     }
    }
   },
@@ -1308,51 +1348,51 @@
    "kind": "fighting",
    "t": 123.0,
    "until": 126.87,
-   "fighting_turn": 87,
+   "fighting_turn": 77,
    "turns": 8,
    "mine": {
     "pokemon": "Victreebel",
     "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 5
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Bullet Seed",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 1,
-     "left": 1,
+     "left": 2,
      "hp": 6,
      "hp_max": 131,
      "hp_share": 0.046,
-     "energy": 28
+     "energy": 35
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 2,
-     "hp": 81,
+     "hp": 83,
      "hp_max": 144,
-     "hp_share": 0.562,
+     "hp_share": 0.576,
      "energy": [
-      100,
-      100
+      78,
+      88
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 88
     }
    }
   },
   {
    "kind": "faint",
    "t": 126.87,
-   "fighting_turn": 95,
+   "fighting_turn": 85,
    "side": "mine",
    "pokemon": "Victreebel",
    "next": null,
@@ -1364,17 +1404,17 @@
      "hp": 0,
      "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 35
+     "energy": 42
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 2,
-     "hp": 81,
+     "hp": 83,
      "hp_max": 144,
-     "hp_share": 0.562,
+     "hp_share": 0.576,
      "energy": [
-      100,
+      91,
       100
      ],
      "energy_ceiling": 100
@@ -1385,7 +1425,7 @@
    "kind": "fighting",
    "t": 126.87,
    "until": 129.0,
-   "fighting_turn": 95,
+   "fighting_turn": 85,
    "turns": 1,
    "mine": {
     "pokemon": "Victreebel",
@@ -1401,26 +1441,25 @@
     "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Victreebel",
      "shields": 1,
      "left": 1,
-     "hp": 6,
+     "hp": 0,
      "hp_max": 131,
-     "hp_share": 0.046,
-     "energy": 35
+     "hp_share": 0.0,
+     "energy": 42
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 2,
-     "hp": 81,
+     "hp": 83,
      "hp_max": 144,
-     "hp_share": 0.562,
+     "hp_share": 0.576,
      "energy": [
-      100,
+      91,
       100
      ],
      "energy_ceiling": 100
@@ -1430,19 +1469,19 @@
   {
    "kind": "switch",
    "t": 129.0,
-   "fighting_turn": 96,
+   "fighting_turn": 86,
    "side": "theirs",
    "from": "Cradily",
    "to": "Toxtricity",
    "state": {
     "mine": {
-     "active": "Turtonator",
+     "active": "Victreebel",
      "shields": 1,
      "left": 1,
      "hp": 0,
-     "hp_max": 113,
+     "hp_max": 131,
      "hp_share": 0.0,
-     "energy": 100
+     "energy": 42
     },
     "theirs": {
      "active": "Toxtricity",
@@ -1452,10 +1491,10 @@
      "hp_max": 118,
      "hp_share": 0.119,
      "energy": [
-      28,
-      28
+      42,
+      42
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 56
     }
    }
   },
@@ -1463,32 +1502,31 @@
    "kind": "fighting",
    "t": 129.0,
    "until": 131.53,
-   "fighting_turn": 96,
-   "turns": 20,
+   "fighting_turn": 86,
+   "turns": 4,
    "mine": {
-    "pokemon": "Turtonator",
-    "fast_move": "Incinerate",
+    "pokemon": "Victreebel",
+    "fast_move": "Sucker Punch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Toxtricity",
     "fast_move": "Spark",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 10,
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 1,
      "left": 1,
-     "hp": 106,
+     "hp": 105,
      "hp_max": 113,
-     "hp_share": 0.938,
-     "energy": 100
+     "hp_share": 0.929,
+     "energy": 80
     },
     "theirs": {
      "active": "Toxtricity",
@@ -1498,31 +1536,31 @@
      "hp_max": 118,
      "hp_share": 0.119,
      "energy": [
-      98,
-      98
+      56,
+      56
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "charged",
    "t": 131.53,
-   "fighting_turn": 116,
+   "fighting_turn": 90,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Brutal Swing",
    "move_id": "BRUTAL_SWING",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 100,
+   "energy_before": 80,
    "target": "Toxtricity",
    "shielded": false,
    "target_hp_before": 14,
    "target_hp_after": 0,
    "target_hp_max": 118,
    "target_bar_read": true,
-   "expected_damage": 35,
+   "expected_damage": 43,
    "resolved_t": 139.67,
    "cue": true,
    "state": {
@@ -1530,30 +1568,30 @@
      "active": "Turtonator",
      "shields": 1,
      "left": 1,
-     "hp": 106,
+     "hp": 105,
      "hp_max": 113,
-     "hp_share": 0.938,
-     "energy": 65
+     "hp_share": 0.929,
+     "energy": 45
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 0,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
      "energy": [
-      98,
-      98
+      56,
+      56
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "faint",
    "t": 139.67,
-   "fighting_turn": 116,
+   "fighting_turn": 90,
    "side": "theirs",
    "pokemon": "Toxtricity",
    "next": null,
@@ -1562,23 +1600,23 @@
      "active": "Turtonator",
      "shields": 1,
      "left": 1,
-     "hp": 106,
+     "hp": 105,
      "hp_max": 113,
-     "hp_share": 0.938,
-     "energy": 65
+     "hp_share": 0.929,
+     "energy": 45
     },
     "theirs": {
      "active": "Toxtricity",
      "shields": 0,
-     "left": 2,
+     "left": 1,
      "hp": 0,
      "hp_max": 118,
      "hp_share": 0.0,
      "energy": [
-      98,
-      98
+      56,
+      56
      ],
-     "energy_ceiling": 100
+     "energy_ceiling": 70
     }
    }
   },
@@ -1586,7 +1624,7 @@
    "kind": "fighting",
    "t": 139.67,
    "until": 144.53,
-   "fighting_turn": 116,
+   "fighting_turn": 90,
    "turns": 5,
    "mine": {
     "pokemon": "Turtonator",
@@ -1600,25 +1638,25 @@
     "fast_move": "Spark",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
+    "hits_seen": 0
    },
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 1,
      "left": 1,
-     "hp": 104,
+     "hp": 103,
      "hp_max": 113,
-     "hp_share": 0.92,
-     "energy": 100
+     "hp_share": 0.912,
+     "energy": 85
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 1,
-     "hp": 81,
+     "hp": 83,
      "hp_max": 144,
-     "hp_share": 0.562,
+     "hp_share": 0.576,
      "energy": [
       100,
       100
@@ -1630,7 +1668,7 @@
   {
    "kind": "charged",
    "t": 144.53,
-   "fighting_turn": 121,
+   "fighting_turn": 95,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -1644,8 +1682,8 @@
    "energy_ceiling": 100,
    "target": "Turtonator",
    "shielded": true,
-   "target_hp_before": 104,
-   "target_hp_after": 104,
+   "target_hp_before": 103,
+   "target_hp_after": 103,
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1656,18 +1694,18 @@
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 104,
+     "hp": 103,
      "hp_max": 113,
-     "hp_share": 0.92,
-     "energy": 100
+     "hp_share": 0.912,
+     "energy": 85
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 1,
-     "hp": 81,
+     "hp": 83,
      "hp_max": 144,
-     "hp_share": 0.562,
+     "hp_share": 0.576,
      "energy": [
       50,
       50
@@ -1680,7 +1718,7 @@
    "kind": "fighting",
    "t": 153.0,
    "until": 155.53,
-   "fighting_turn": 121,
+   "fighting_turn": 95,
    "turns": 4,
    "mine": {
     "pokemon": "Turtonator",
@@ -1694,17 +1732,18 @@
     "fast_move": "Bullet Seed",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 104,
+     "hp": 102,
      "hp_max": 113,
-     "hp_share": 0.92,
-     "energy": 100
+     "hp_share": 0.903,
+     "energy": 85
     },
     "theirs": {
      "active": "Cradily",
@@ -1724,21 +1763,21 @@
   {
    "kind": "charged",
    "t": 155.53,
-   "fighting_turn": 125,
+   "fighting_turn": 99,
    "side": "mine",
    "pokemon": "Turtonator",
    "move": "Dragon Claw",
    "move_id": "DRAGON_CLAW",
    "move_known_from": "seen",
    "cost": 50,
-   "energy_before": 100,
+   "energy_before": 85,
    "target": "Cradily",
    "shielded": false,
    "target_hp_before": 74,
    "target_hp_after": 74,
    "target_hp_max": 144,
    "target_bar_read": false,
-   "expected_damage": 34,
+   "expected_damage": 41,
    "resolved_t": 165.0,
    "cue": true,
    "state": {
@@ -1746,10 +1785,10 @@
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 104,
+     "hp": 102,
      "hp_max": 113,
-     "hp_share": 0.92,
-     "energy": 50
+     "hp_share": 0.903,
+     "energy": 35
     },
     "theirs": {
      "active": "Cradily",
@@ -1770,31 +1809,31 @@
    "kind": "fighting",
    "t": 165.0,
    "until": 169.53,
-   "fighting_turn": 125,
+   "fighting_turn": 99,
    "turns": 9,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 1,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Cradily",
     "fast_move": "Bullet Seed",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 3
+    "hits_seen": 2
    },
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 98,
+     "hp": 97,
      "hp_max": 113,
-     "hp_share": 0.867,
-     "energy": 70
+     "hp_share": 0.858,
+     "energy": 55
     },
     "theirs": {
      "active": "Cradily",
@@ -1814,7 +1853,7 @@
   {
    "kind": "charged",
    "t": 169.53,
-   "fighting_turn": 134,
+   "fighting_turn": 108,
    "side": "theirs",
    "pokemon": "Cradily",
    "move": "Rock Tomb",
@@ -1828,8 +1867,8 @@
    "energy_ceiling": 100,
    "target": "Turtonator",
    "shielded": false,
-   "target_hp_before": 98,
-   "target_hp_after": 98,
+   "target_hp_before": 97,
+   "target_hp_after": 97,
    "target_hp_max": 113,
    "target_bar_read": false,
    "expected_damage": 65,
@@ -1840,10 +1879,10 @@
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 98,
+     "hp": 97,
      "hp_max": 113,
-     "hp_share": 0.867,
-     "energy": 90
+     "hp_share": 0.858,
+     "energy": 75
     },
     "theirs": {
      "active": "Cradily",
@@ -1864,8 +1903,8 @@
    "kind": "fighting",
    "t": 179.0,
    "until": 187.87,
-   "fighting_turn": 134,
-   "turns": 2,
+   "fighting_turn": 108,
+   "turns": 3,
    "mine": {
     "pokemon": "Turtonator",
     "fast_move": "Incinerate",
@@ -1877,38 +1916,39 @@
     "pokemon": "Cradily",
     "fast_move": "Bullet Seed",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 98,
+     "hp": 29,
      "hp_max": 113,
-     "hp_share": 0.867,
-     "energy": 90
+     "hp_share": 0.257,
+     "energy": 75
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 1,
-     "hp": 23,
+     "hp": 21,
      "hp_max": 144,
-     "hp_share": 0.16,
+     "hp_share": 0.146,
      "energy": [
-      50,
-      50
+      63,
+      63
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 76
     }
    }
   },
   {
    "kind": "end",
    "t": 187.87,
-   "fighting_turn": 136,
+   "fighting_turn": 111,
    "result": null,
    "result_from": "unknown",
    "left": {
@@ -1920,23 +1960,23 @@
      "active": "Turtonator",
      "shields": 0,
      "left": 1,
-     "hp": 98,
+     "hp": 29,
      "hp_max": 113,
-     "hp_share": 0.867,
-     "energy": 90
+     "hp_share": 0.257,
+     "energy": 75
     },
     "theirs": {
      "active": "Cradily",
      "shields": 0,
      "left": 1,
-     "hp": 23,
+     "hp": 21,
      "hp_max": 144,
-     "hp_share": 0.16,
+     "hp_share": 0.146,
      "energy": [
-      50,
-      50
+      63,
+      63
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 76
     }
    }
   }
@@ -1948,14 +1988,23 @@
    "pokemon": "Toxtricity",
    "what": "fast move",
    "value": "Spark",
-   "how": "every other fast move ruled out by effectiveness words or energy",
+   "how": "fits its hits on our bar best of the moves not ruled out",
    "ruled_out": [
     "Acid",
     "Poison Jab"
    ]
   },
   {
-   "t": 96.0,
+   "t": 33.5,
+   "side": "theirs",
+   "pokemon": "Lileep",
+   "what": "fast move",
+   "value": "Bullet Seed",
+   "how": "fits the size and timing of its hits on our bar",
+   "ruled_out": []
+  },
+  {
+   "t": 97.0,
    "side": "theirs",
    "pokemon": "Cradily",
    "what": "fast move",
@@ -1966,7 +2015,7 @@
    ]
   },
   {
-   "t": 111.0,
+   "t": 112.5,
    "side": "theirs",
    "pokemon": "Cradily",
    "what": "fast move",

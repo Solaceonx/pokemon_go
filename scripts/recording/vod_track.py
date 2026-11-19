@@ -365,14 +365,27 @@ def publish(folder, game, verdict, reader):
     observations = [{"t": round(origin + s["t"], 6), "look": s} for s in plain_rows(game / "observations.jsonl")] if (game / "observations.jsonl").exists() else []
     events = [{"t": round(origin + s["t"], 6), "event": s} for s in plain_rows(game / "events.jsonl")] if (game / "events.jsonl").exists() else []
     gm = json.loads((ROOT / "data/gamemaster.json").read_text(encoding="utf-8"))
+    move_names={m['moveId']:m['name'] for m in gm['moves']}
+    legal_moves={}
+    for pokemon in gm['pokemon']:
+        legal_moves.setdefault(pokemon['speciesName'].split(' (')[0],set()).update(
+            move_names[mid] for mid in pokemon['chargedMoves'] if mid in move_names)
     ledger = PublicState({m["name"]: m["energy"] for m in gm["moves"] if m["energy"] > 0},
-                         incomplete_start=meta.get("incomplete_start", False))
+                         incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves)
     display, statuses = [], Counter()
     at = 0
-    for raw_frame, slim in zip(rows(raw / "screen-refined.jsonl.gz"), rows(raw / "readings-refined.jsonl.gz"), strict=True):
+    if (game/'creator-measurements.json').exists():
+        from creator_frames import measured_frames
+        source_frames = measured_frames(raw, timeline,
+            json.loads((game/'creator-lifecycle.json').read_text(encoding='utf-8')))
+    else:
+        source_frames = zip(rows(raw / "screen-refined.jsonl.gz"), rows(raw / "readings-refined.jsonl.gz"), strict=True)
+    for raw_frame, slim in source_frames:
         if abs(raw_frame["timestamp_seconds"] - slim["t"]) > .00001:
             raise ValueError("Rich and compact frame logs differ in time")
         frame = compact(raw_frame)
+        if raw_frame.get('native_source'):
+            frame['native_source'] = raw_frame['native_source']
         frame["game_state"] = ledger.update(raw_frame, slim)
         while at + 1 < len(states) and states[at + 1]["t"] <= frame["t"]:
             at += 1
@@ -386,7 +399,8 @@ def publish(folder, game, verdict, reader):
                 active = team["pokemon"][team["active"]] if team["active"] is not None and team["active"] < len(team["pokemon"]) else None
                 # Inferred energy belongs to this active identity only. Never
                 # label a model's default IV-derived HP or moves as observed.
-                if active and visible["species"].get("value") == active["name"] and not meta.get("incomplete_start"):
+                if (not (game/'creator-measurements.json').exists() and active
+                        and visible["species"].get("value") == active["name"] and not meta.get("incomplete_start")):
                     known = active["fast_move"]["known_from"]
                     visible["energy"] = {"value": active["energy"], "status": "inferred",
                         "range": active.get("energy_range"),
@@ -396,6 +410,7 @@ def publish(folder, game, verdict, reader):
                     (public_mon and public_side["active_status"] == "retained" and public_mon["species"]["value"] == active["name"]))
                 if identity_matches:
                     visible["model"] = {"fast_move": active["fast_move"], "charged_moves": active["charged_moves"],
+                        "energy": active['energy'], "energy_range": active.get('energy_range'),
                         "attack_stage": active["attack_stage"], "defense_stage": active["defense_stage"],
                         "switch_ready_in": switch_time_left(team.get("switch_ready_in"), frame["t"], model["t"]), "status": "inferred",
                         "stats_assumed": active["stats_assumed"], "accuracy_verified": False}
@@ -404,6 +419,11 @@ def publish(folder, game, verdict, reader):
                 interval = public_mon["energy"]["value"]
                 visible["energy"] = {"value": interval[0] if interval[0] == interval[1] else None,
                     "range": interval, "status": "estimated", "evidence": public_mon["energy"]}
+            elif (game/'creator-measurements.json').exists():
+                value = public_mon['energy'] if public_mon else {'value': None, 'status': 'unknown', 'reason': 'No confirmed active identity'}
+                interval = value.get('value')
+                visible['energy'] = {'value': None, 'range': interval,
+                    'status': value['status'], 'evidence': value}
             for key in ("species", "cp", "health_bar", "shields_left", "pokemon_left", "energy"):
                 statuses[f"{side}.{key}.{visible[key]['status']}"] += 1
         display.append(frame)
@@ -412,20 +432,32 @@ def publish(folder, game, verdict, reader):
                 for c in timeline.get("charged", [])]
     provenance = {**receipt["fingerprint"], "coverage": receipt["coverage"], "sample_interval_seconds": 1/receipt["fingerprint"]["fps"],
                   "every_decoded_frame": False, "source_start_seconds": meta["source_start_seconds"],
+                  "native_health_sample_hz": 12 if (game/'creator-measurements.json').exists() else None,
                   "maximum_hp_supplied": False, "causal_screen_readings": True,
                   "tracker_timeline": "offline_reconstruction_with_assumptions",
                   "processing_sha256": {name: sha256(ROOT / name) for name in
                     ("scripts/recording/assemble.py", "scripts/recording/public_transitions.py", "scripts/recording/vod_track.py", "scripts/recording/public_state.py",
                      "scripts/recording/state_continuity.py", "scripts/recording/vod_markers.py", "scripts/recording/public_fast.py", "scripts/recording/vod_pairs.py",
                      "scripts/recording/buttons.py", "scripts/recording/verdict.py", "data/vod_tracking_layouts.json",
-                     "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json")}}
+                     "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json",
+                     "scripts/recording/creator_health.py", "scripts/recording/creator_observations.py",
+                     "scripts/recording/creator_frames.py", "scripts/recording/native_health.py",
+                     "scripts/recording/native_controls.py", "scripts/recording/creator_controls.py",
+                     "scripts/recording/creator_energy.py", "scripts/recording/creator_native_faints.py",
+                     "scripts/recording/creator_identity.py", "scripts/recording/creator_faint_support.py",
+                     "scripts/recording/creator_event_ledger.py", "scripts/recording/creator_move_labels.py",
+                     "scripts/recording/creator_charge_evidence.py", "scripts/recording/creator_announcements.py")}}
+    if (game/'creator-measurements.json').exists():
+        provenance['ocr_context_sample_interval_seconds'] = provenance['sample_interval_seconds']
+        provenance['sample_interval_seconds'] = 1/12
     data = {**previous, "readings": display, "states": states, "observations": observations, "events": events,
             "screen_events": list(rows(raw / "screen_events.jsonl.gz")), "origin": origin,
             "bookmarks": bookmarks, "tracking_verdict": verdict, "prediction_provenance": provenance}
     ledger_path = game / "continuity.jsonl.gz"
     with gzip.GzipFile(filename=str(ledger_path), mode="wb", mtime=0) as stream:
         for row in display:
-            stream.write((json.dumps({"t": row["t"], "game_state": row["game_state"]},
+            stream.write((json.dumps({"t": row["t"], "game_state": row["game_state"],
+                                     **({'native_source': row['native_source']} if row.get('native_source') else {})},
                                     separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8"))
     temporary = target.with_name("viewer-data.incomplete.json.gz")
     temporary.write_bytes(gzip.compress(json.dumps(data, separators=(",", ":"), ensure_ascii=False).encode("utf-8"), compresslevel=6, mtime=0))
@@ -469,7 +501,7 @@ def creator_export(folder, game, meta, root):
         name += '-' + meta['view_id']
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
-    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json',
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'source-events.jsonl', 'continuity.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json', 'creator-measurements.json',
                'state.json', 'track.json', 'timeline.json', 'verdict.json']
     for name in allowed:
         path = game / name
@@ -507,7 +539,31 @@ def track_clip(folder, reader, *, creator_root=None):
         bootstrap(reader)
         refine(folder, raw, rows)
         evidence_path, evidence = creator_readings(raw) if creator_root is not None else (raw / 'readings-refined.jsonl.gz', None)
-        assembled = run_step(HERE / "assemble.py", evidence_path, raw / "text.jsonl.gz", game,
+        measurements = None
+        text_path=raw/'text.jsonl.gz'
+        if evidence is not None:
+            from creator_identity import acquire_identities, enrich_readings
+            acquire_identities(folder, raw)
+            evidence_path = enrich_readings(evidence_path, raw)
+            from native_controls import acquire_controls
+            acquire_controls(folder, raw)
+            from creator_move_labels import acquire_labels
+            acquire_labels(folder, raw)
+            phase_folder = game / 'source-phase'
+            phase_folder.mkdir(exist_ok=True)
+            run_step(HERE / "assemble.py", evidence_path, raw / "text.jsonl.gz", phase_folder,
+                     "--public-footage", "--single-clip")
+            if not (phase_folder/'timeline.json').exists():
+                raise ValueError('Source phase extraction failed before native health refinement')
+            from creator_announcements import acquire_releases
+            text_path=acquire_releases(folder,raw,json.loads((phase_folder/'timeline.json').read_text(encoding='utf8')))
+            if text_path!=raw/'text.jsonl.gz':
+                run_step(HERE/'assemble.py',evidence_path,text_path,phase_folder,'--public-footage','--single-clip')
+            from creator_health import derive
+            evidence_path, measurements = derive(folder, raw, evidence_path,
+                json.loads((phase_folder/'timeline.json').read_text(encoding='utf-8')))
+            write_json(game/'creator-measurements.json', measurements)
+        assembled = run_step(HERE / "assemble.py", evidence_path, text_path, game,
                              "--public-footage", "--single-clip")
         (game / "assembly.log").write_text(assembled["output"], encoding="utf-8")
         if not (game / "team.json").exists():
@@ -520,16 +576,32 @@ def track_clip(folder, reader, *, creator_root=None):
             terminal = apply_impact(folder, raw, game)
             from creator_lifecycle import apply_lifecycle
             apply_lifecycle(folder, raw, game, GameData())
+            from creator_native_faints import apply_native_faints
+            apply_native_faints(game, raw)
         paired = reconcile(folder, game)
         prepare_team(game, GameData())
         if evidence is not None:
             from creator_state import reconcile_creator_state
             reconcile_creator_state(game, raw)
+            if measurements is not None:
+                from creator_observations import reconcile_source_shields
+                observed_looks = plain_rows(game/'observations.jsonl')
+                shield_evidence = reconcile_source_shields(observed_looks,
+                    json.loads((game/'timeline.json').read_text(encoding='utf-8')), measurements['counters'])
+                (game/'observations.jsonl').write_bytes(''.join(json.dumps(r)+'\n' for r in observed_looks).encode('utf-8'))
+                measurements['shield_reconciliation'] = shield_evidence
+                write_json(game/'creator-measurements.json', measurements)
+                from creator_state import update_output_digest
+                update_output_digest(game)
         tracked = run_step(ROOT / "scripts/track.py", game)
         (game / "track.log").write_text(tracked["output"], encoding="utf-8")
         if evidence is not None:
             from creator_impact import record_faint
             record_faint(game, terminal)
+            from creator_event_ledger import source_events
+            observable = source_events(json.loads((game/'timeline.json').read_text(encoding='utf8')),
+                json.loads((game/'creator-lifecycle.json').read_text(encoding='utf8')), measurements or {})
+            (game/'source-events.jsonl').write_bytes(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in observable).encode('utf8'))
         result = decide(game, GameData())
         result["paired_move_names_recovered"] = len(paired)
         blind = game / "blind"
