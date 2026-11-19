@@ -5477,8 +5477,18 @@ from the model, so all of them switched.
   - The last record (old model, 2026-11-04, commit 299a514) had median 67 ms, 99th percentile 253 ms and the crowd
     at 69.0% ± 6.4. That is other code since, so it is no clean comparison.
 
+- **On the website since 2026-11-19 (the owner: "Yes, rebuild it").** Built from `task40-android` e17f00d and pushed
+  to `Solaceonx/solaceonx.github.io` (76b5321). Only `bundle.zip` changed. Its modules were written with LF line
+  endings, as the earlier builds were. Apart from line endings, it differs from the previous bundle in
+  `pogo/agents.py`, `engine.py`, `evaluation.py`, `learner.py` and `runs/eval/eval.npz`. The other module changes
+  had been merged before: the Disguise rule, a cap of three on their team, and off-by-default search options.
+  - Checked before pushing, on a local copy: one battle against the engine, played to the end. The engine played,
+    and the end screen (the evaluation graph and the review of decisions) worked, with no console errors.
+  - **That test game reached the owner's game store** (the page sends every finished game): started
+    `2026-11-19_09-44-29`, no player name, against the engine, from 127.0.0.1. It is not a real game; leave it
+    out of `games/played/`.
+
 **Left:**
-- The website itself runs the old model until it is rebuilt and pushed (`scripts/build_pvpbot_site.py`), which
-  the owner has not been asked yet. `main` keeps the old model and code until `task40-android` is merged.
+- `main` keeps the old model and code until `task40-android` is merged.
 - Not measured in live battles.
 - The weight on benched energy (above).
