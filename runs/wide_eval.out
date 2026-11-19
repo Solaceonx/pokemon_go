@@ -1,0 +1,109 @@
+800 jobs to run on 3 workers
+  45 results, 1 min
+  105 results, 2 min
+  165 results, 3 min
+  215 results, 4 min
+  285 results, 5 min
+  345 results, 7 min
+  400 results, 8 min
+  455 results, 9 min
+  500 results, 10 min
+  550 results, 11 min
+  605 results, 12 min
+  660 results, 13 min
+  725 results, 14 min
+  790 results, 15 min
+  845 results, 16 min
+  905 results, 17 min
+  970 results, 18 min
+  1030 results, 19 min
+  1095 results, 20 min
+  1150 results, 21 min
+  1215 results, 22 min
+  1280 results, 24 min
+  1350 results, 25 min
+  1415 results, 26 min
+  1475 results, 27 min
+  1505 results, 28 min
+  1535 results, 30 min
+  1560 results, 31 min
+  1580 results, 32 min
+  1610 results, 34 min
+  1635 results, 35 min
+  1655 results, 36 min
+  1675 results, 37 min
+  1700 results, 38 min
+  1730 results, 40 min
+  1760 results, 41 min
+  1785 results, 42 min
+  1805 results, 43 min
+  1835 results, 44 min
+  1865 results, 46 min
+  1895 results, 47 min
+  1915 results, 48 min
+  1940 results, 49 min
+  1960 results, 51 min
+  1985 results, 52 min
+  2015 results, 53 min
+  2045 results, 55 min
+  2075 results, 56 min
+  2105 results, 58 min
+  2135 results, 59 min
+  2165 results, 60 min
+  2195 results, 62 min
+  2225 results, 63 min
+  2255 results, 65 min
+  2285 results, 66 min
+  2310 results, 67 min
+  2330 results, 68 min
+  2355 results, 69 min
+  2385 results, 71 min
+  2415 results, 72 min
+  2440 results, 73 min
+  2460 results, 75 min
+  2485 results, 76 min
+  2520 results, 77 min
+  2580 results, 78 min
+  2645 results, 79 min
+  2700 results, 80 min
+  2770 results, 81 min
+  2830 results, 82 min
+  2900 results, 83 min
+  2960 results, 85 min
+  3010 results, 86 min
+  3070 results, 87 min
+  3130 results, 88 min
+  3195 results, 89 min
+  3260 results, 90 min
+  3325 results, 91 min
+  3380 results, 92 min
+  3445 results, 93 min
+  3500 results, 94 min
+  3560 results, 95 min
+  3630 results, 96 min
+  3690 results, 97 min
+  3745 results, 98 min
+  3810 results, 99 min
+  3875 results, 100 min
+  3940 results, 101 min
+  3990 results, 102 min
+
+baseline: website
+  head to head, all candidates: baseline shields / shield prompts 3819 / 10094 (37.8%)
+  against the crowd: 71.9% ± 2.8
+    baseline: 1.704 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1000 battles; 23.77 total searches/battle, 3.334 search seconds/battle); shields / shield prompts 1837 / 5233 (35.1%)
+  against the pvpoke: 85.7% ± 3.1
+    baseline: 1.246 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (500 battles; 23.93 total searches/battle, 3.072 search seconds/battle); shields / shield prompts 879 / 2447 (35.9%)
+
+candidate 1: website,eval=runs/eval-wide/eval.npz
+  head to head against the baseline, 1000 pairings both ways: 55.7% ± 1.9
+    candidate: 1.935 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2000 battles; 22.59 total searches/battle, 2.253 search seconds/battle); shields / shield prompts 3797 / 10303 (36.9%)
+    baseline:  2.094 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2000 battles; 21.81 total searches/battle, 2.161 search seconds/battle); shields / shield prompts 3819 / 10094 (37.8%)
+  against the crowd: 77.3% ± 2.6, +5.5 ± 3.0 points on the baseline
+    candidate: 1.575 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1000 battles; 23.74 total searches/battle, 3.096 search seconds/battle); shields / shield prompts 1835 / 5251 (34.9%)
+  against the pvpoke: 84.4% ± 3.2, -1.3 ± 3.4 points on the baseline
+    candidate: 1.168 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (500 battles; 23.66 total searches/battle, 3.003 search seconds/battle); shields / shield prompts 864 / 2453 (35.2%)
+  search time per searched decision: median 78 ms, 99th percentile 453, worst 938 (this machine)
+
+elapsed: 6142.6 seconds
+results: runs\engine_versus\wide-eval.json

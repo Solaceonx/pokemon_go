@@ -5365,7 +5365,8 @@ owner: "the engine should be right so maybe it's just input delay?").** `scripts
   - **The wider inputs were tried only on the trained bot's networks** (2026-10-14, above). There they predicted
     better but chose the same, because who is winning is the same for every option at a decision. In the engine's
     evaluation, options lead to different benches, so the blind spot can change the choice. An evaluation trained
-    with `known_foes` (54 inputs) has not been built or measured.
+    with `known_foes` (54 inputs) has not been built or measured. *Built and measured the same day (task 47, the
+    last section of this file): with it the engine throws Stone Edge here, and it is stronger in the simulator.*
   - One position, so no rule from it; the engine is unchanged.
 - **The text recogniser is rebuilt after five failures running.** In two replays run four at a time, every OCR call
   failed from the start (444 in one), so the opponent was never named and no decision was made all battle. It never
@@ -5396,3 +5397,69 @@ of Clodsire's and Snorlax's fight frames, 19% of Thievul's.
     Thievul 0-6% to 28-36%.
 - **better_soon counts their hits through the input delay** (two turns, `THROW_DELAY_TURNS`) in place of one hit
   added for safety.
+
+## An evaluation that sees their bench (task 47, 2026-11-18, Claude on the owner's PC; the owner: "Yes, train it"): stronger in the simulator, not adopted yet
+
+The engine's evaluation (`runs/eval/eval.npz`) reads the 42 inputs of `describe()`. Their Pokémon seen and off the
+field count for nothing in it (the Azumarill check above). `scripts/train_eval.py --wide` also fits on
+`pogo.learner.known_foes`: 12 inputs for up to two of theirs seen and off the field (up or not, health, energy, our
+one-on-ones against each). `pogo.evaluation.Evaluator` reads them when the model has 54 inputs. 42-input models work
+as before (`tests/test_wide_evaluation.py`). Model, the narrow one fitted beside it, and the report: `runs/eval-wide/`.
+
+**Prediction.** 40,000 battles of the trained bot against the varied crowd and itself (783,150 positions, 5 min),
+3,999 battles kept back whole (78,672 positions).
+
+| Picks the eventual winner | Early | Middle | Late | All | Off by, on average |
+|---|---|---|---|---|---|
+| Wide, 54 inputs (`runs/eval-wide/eval.npz`) | 66.7% | 78.8% | 88.8% | **77.1%** | **0.166** |
+| Narrow, fitted on the same positions (`eval-narrow.npz`) | 65.8% | 75.0% | 85.8% | 74.6% | 0.186 |
+| Today's, on its own battles kept back (also 40,000 battles) | 65.6% | 74.0% | 86.8% | 74.5% | 0.188 |
+| Material count, on these | 58.1% | 68.5% | 78.7% | 67.5% | 0.258 |
+
+- **Where one of theirs is up and off the field** (39,833 positions): wide 80.6%, narrow 75.8%; off by 0.148
+  against 0.184.
+- The narrow refit predicts like today's, so the gain comes from the bench inputs, not from more data.
+- Calibration is about as before. Of positions rated 0.6-0.7, 75% were won (today's: 72%); of those rated 0.7-0.8,
+  93% (91%).
+
+**The Azumarill position again** (replay 130030; 8 engines asked as live: judged at 20 steps, matchup judged).
+
+| | Today's evaluation | Wide evaluation | Played to the end |
+|---|---|---|---|
+| 14.08 s, 50 energy: picks | fast (as live) | fast 8 in 8 | fast is right |
+| 15.95 s, 65 energy: picks | fast 7, Earthquake 1 | **Stone Edge 8 in 8** | Stone Edge is best |
+| 15.95 s, look values: fast / Stone Edge / Earthquake / to Snorlax | 0.46 / 0.44 / 0.49 / 0.71 | 0.26 / 0.40 / 0.28 / 0.31 | 0.27 / 0.43 / 0.29 / 0.31 |
+
+- With the wide evaluation the look values at 20 steps nearly match the play-outs, although the Stone Edge line is
+  still judged after Clodsire has fainted.
+- With `judge=turn` (40) it still fast-moves: every option reads 0.35 there.
+- **Caveat: benched energy counts too much.** Where the switch line is judged (Snorlax in, Azumarill 165 HP on the
+  bench), the wide evaluation follows benched health as play-outs do (Azumarill at 1 HP: 0.79, played out 0.81).
+  Benched energy moves it far more than play-outs do, in all 3 positions tried (300 play-outs each):
+  - Azumarill at 0 energy against 100: +0.29 to +0.39 in the evaluation, at most 0.03 played out;
+  - one of the 3 it rates 0.35 at 100 energy; played out, 0.76.
+
+  Not looked into.
+
+**Engine strength.** `website` settings with the wide evaluation against `website` with today's, `--field mixed`,
+seed 4701 (not used before), 3 workers, 102 min (`runs/wide_eval.out`). One setting tried, so no rerun.
+
+| | Result |
+|---|---|
+| Head to head, 1,000 pairings both ways | **55.7% ± 1.9** |
+| Against the crowd, 1,000 battles | 77.3% ± 2.6 against 71.9% ± 2.8: **+5.5 ± 3.0 points** |
+| Against PvPoke's AI, 500 battles | 84.4% ± 3.2 against 85.7% ± 3.1: −1.3 ± 3.4, level |
+| Search seconds a battle, head to head | 2.25 against 2.16 |
+| Search time per searched decision | median 78 ms, 99th percentile 453, worst 938 (no time cap, this machine) |
+| Mid-matchup swaps a battle: head to head; against the crowd | 1.94 against 2.09; 1.58 against 1.70 |
+| Shields per shield prompt, head to head | 36.9% against 37.8% |
+
+Fewer swaps fits the blind spot: lines in which they swap a healthy Pokémon out no longer look nearly won.
+
+**Left, the owner's call:**
+- Whether to adopt it. The live player, the website (`scripts/pvpbot_site/play_api.py`; `build_pvpbot_site.py`
+  packs the model) and most scripts load `runs/eval/eval.npz`. Putting the wide model there switches them all,
+  since the width is read from the model. The website would need a rebuild with the new `pogo/evaluation.py`.
+- Not measured live, nor with the live 300 ms cap. At about the same search cost, the cap should bite about as
+  often.
+- The weight on benched energy (above).
