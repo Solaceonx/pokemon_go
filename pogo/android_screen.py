@@ -629,9 +629,28 @@ def form_by_types(gd, sid: str, types: list) -> str:
 class NameReader:
     """Reads their Pokémon's name in a background thread when that part of the header changes."""
 
-    def __init__(self, gd):
+    @staticmethod
+    def _new_ocr():
         from rapidocr_onnxruntime import RapidOCR
-        self.ocr = RapidOCR()
+        return RapidOCR()
+
+    def ocr(self, img):
+        """The text recogniser, rebuilt after five failures running (2026-11-18: in two replays run four at a time
+        every call failed from the start, 444 in one, and the opponent was never named: a battle with no decision).
+        A failure gives no words."""
+        try:
+            out = self._ocr_engine(img)
+            self._ocr_failures = 0
+            return out
+        except Exception:  # noqa: BLE001
+            self._ocr_failures += 1
+            if self._ocr_failures >= 5:
+                self._ocr_engine, self._ocr_failures = self._new_ocr(), 0
+            return None, None
+
+    def __init__(self, gd):
+        self._ocr_engine = self._new_ocr()
+        self._ocr_failures = 0
         self.gd = gd
         self.names = species_lookup(gd)
         self.types = []  # their Pokémon's types as the header's icons last showed

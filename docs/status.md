@@ -5285,6 +5285,27 @@ owner: "the engine should be right so maybe it's just input delay?").** `scripts
   - **On replays of 7 recorded battles:** charged taps sent before the fast move under way ended rose from 3 of 7
     (43%) without it to 7 of 9 (78%) with it. The samples are small, and none of it is measured live yet.
   - Each hit is now logged as a `my_hit` row.
+- **The next decision searched ahead (the owner: "yes, precompute").**
+  - **How:** after each decision that is not a throw, with a charged move of ours paid for or a fast move away, the
+    player imagines the position at the end of our fast move under way, as `pogo.realtime.predict` does (both sides
+    fast-moving). It searches that position on a copy of the engine (its own evaluator caches, 500 ms) in a thread.
+  - **When it is used:** at the next decision, if no other engine call came since and the position is the one
+    imagined, the answer is used at once and the copy stands in as the engine. Same Pokemon, shields, stat stages,
+    switch timers and moves paid for on each side; health within 4%, energy within a fast move.
+    `POGO_PRECOMPUTE=0` turns it off.
+  - **On replays of 6 recorded battles, both ways, two at a time:**
+
+    | | Off | On |
+    |---|---|---|
+    | Decisions served from the search ahead | - | 97 of 1,019 (10%; 145 searches ahead did not match) |
+    | Decisions at the 300 ms cap | 17% | 11% |
+    | Decision to charged tap, median | 0.43 s | 0.39 s |
+    | Charged taps sent inside the fast move under way | 4 of 14 | 10 of 16 |
+
+    Small samples on replays; not measured live yet.
+- **The text recogniser is rebuilt after five failures running.** In two replays run four at a time, every OCR call
+  failed from the start (444 in one), so the opponent was never named and no decision was made all battle. It never
+  happened live (0 of 250 battles); a failure now gives no words instead of raising.
 - **Left:**
   - the engine's search time at the decision, and its assumed 0.2 s delay (`pogo.realtime`), are the owner's call;
   - `better_soon` counts two turns of delay (`THROW_DELAY_TURNS`).

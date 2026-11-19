@@ -54,6 +54,10 @@ THROW_DELAY_TURNS = 2
 # environment's POGO_DECIDE_ON_HIT=0 turns it off, to compare on replays
 import os as _os
 DECIDE_ON_HIT = _os.environ.get("POGO_DECIDE_ON_HIT", "1") != "0"
+# The next decision searched ahead during our fast move (Player.precompute); POGO_PRECOMPUTE=0 turns it off. Its search
+# may take up to PRECOMPUTE_MS: a fast move lasts 500 ms or more, and the thread shares the processor with the loop.
+PRECOMPUTE = _os.environ.get("POGO_PRECOMPUTE", "1") != "0"
+PRECOMPUTE_MS = 500
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -580,6 +584,8 @@ class Player:
         self.energy_read = None
         self._energy_raw = None
         self.queued = None  # (button, move, time tapped, deadline, battle time set): a move of ours still to start
+        self.pre = None  # a search run ahead (Player.precompute)
+        self.engine_calls = 0  # calls to the engine: a search run ahead on a copy is used only if none came since
         self.cue_busy, self.cue_found = False, None  # watch_queued's Get Ready! read, on its own thread
         self.armed_read = 0.0  # the energy read when the hold for a throw began
         # A switch tapped and not yet seen: (slot, time tapped, bench strip before, since when it differs, fighting
@@ -1289,14 +1295,103 @@ class Player:
     def view(self):
         return self.tracker.view() if self.tracker.foe is not None else None
 
+    def precompute(self, view) -> None:
+        """Search ahead, on a copy of the engine in a thread, the position at the end of our fast move under way, as
+        if both sides only fast-move (the imagined battle of pogo.realtime.predict): when the next decision comes
+        there, its answer is ready (Player.precomputed). Only with a charged move of ours paid for or a fast move
+        away, and not while a switch or a throw is under way. The owner, 2026-11-18: "a lot of stuff you can figure
+        out in advance". A decision searched at its moment took a median 90 ms on the loop, a quarter of them the
+        300 ms cap, with a throw waiting on it."""
+        if not PRECOMPUTE or self.switching is not None or self.switch_wanted is not None or self.armed is not None:
+            return
+        if self.pre is not None and not self.pre["done"]:
+            return  # one at a time
+        mon = view.me.mon
+        if mon.energy + mon.build.fast.energy_gain < min(m.energy for m in mon.build.charged):
+            return
+        import random
+        from pogo.engine import imagine
+        from pogo.realtime import _Quiet
+        try:
+            twin = imagine(view, random.Random(0), self.engine.pool, _Quiet(), _Quiet())
+            active = [side.active for side in twin.sides]
+            for _ in range(mon.build.fast.turns):
+                twin.step()
+                if twin.winner is not None or any(sd.mon.hp <= 0 or sd.active != a for sd, a in zip(twin.sides, active)):
+                    return  # a faint first: nothing to search ahead
+            ahead_view = twin.views[0]
+            copy = self.engine.clone()
+            ev = getattr(copy, "evaluator", None)
+            if ev is not None and hasattr(ev, "model"):
+                copy.evaluator = type(ev)(ev.model)  # its own caches: the two may search at once
+        except Exception as error:  # noqa: BLE001
+            self.log("precompute_error", self.now(), error=str(error))
+            return
+        copy.cap_ms = PRECOMPUTE_MS  # the fast move's time, not the moment's
+        pre = {"done": False, "action": None, "engine": copy, "view": ahead_view, "calls": self.engine_calls,
+               "active": self.active, "at": time.time(), "ms": None, "cap": self.engine.cap_ms}
+        self.pre = pre
+
+        def run():
+            t1 = time.perf_counter()
+            try:
+                pre["action"] = copy.act(ahead_view)
+            except Exception:  # noqa: BLE001
+                pre["action"] = None
+            pre["ms"] = round((time.perf_counter() - t1) * 1000)
+            pre["done"] = True
+        threading.Thread(target=run, daemon=True).start()
+
+    def precomputed(self, view):
+        """(action, the engine copy that chose it) when a search run ahead (Player.precompute) is done, no other call
+        to the engine came since, the same Pokemon are out, and the position is the one imagined: shields, stat
+        stages, the moves each side has paid for and the switch timers the same; health within 4%, energy within a
+        fast move. Else None, and the engine searches as usual. The copy then stands in for the engine: it made the
+        decision the engine would have, from the same state."""
+        pre, self.pre = self.pre, None
+        if pre is None or not pre["done"] or pre["action"] is None or pre["calls"] != self.engine_calls:
+            return None
+        if pre["active"] != self.active or time.time() - pre["at"] > 3.0:
+            return None
+        a, b = pre["view"], view
+        ma, mb, fa, fb = a.me.mon, b.me.mon, a.foe, b.foe
+
+        def paid(m):
+            return tuple(m.energy >= c.energy for c in m.build.charged)
+        same = (a.me.active == b.me.active and a.me.shields == b.me.shields
+                and (a.me.switch_wait > 0) == (b.me.switch_wait > 0)
+                and (ma.atk_stage, ma.def_stage) == (mb.atk_stage, mb.def_stage)
+                and abs(ma.hp - mb.hp) <= 0.04 * mb.build.hp
+                and paid(ma) == paid(mb) and abs(ma.energy - mb.energy) <= mb.build.fast.energy_gain
+                and fa.build.species_id == fb.build.species_id and a.foe_shields == b.foe_shields
+                and (a.foe_switch_wait > 0) == (b.foe_switch_wait > 0)
+                and (fa.atk_stage, fa.def_stage) == (fb.atk_stage, fb.def_stage)
+                and abs(fa.hp - fb.hp) <= 0.04 * fb.build.hp and paid(fa) == paid(fb)
+                and abs(fa.energy - fb.energy) <= fb.build.fast.energy_gain + 1)
+        if not same:
+            self.log("precompute_missed", self.now(), searched_ms=pre["ms"])
+            return None
+        if pre["action"] not in view.legal():
+            return None
+        pre["engine"].cap_ms = pre["cap"]  # back to the live limit, as the engine from here
+        return pre["action"], pre["engine"]
+
     def act(self, t: float, look, rgb=None) -> None:
         view = self.view()
         if view is not None and t - self.last_look < 0.05:  # a decision at each look
             t0 = time.perf_counter()
             seen = None
+            ready = None
             try:
                 with self.engine_sees():
-                    self.decision = self.engine.act(view)
+                    ready = self.precomputed(view)
+                    if ready is not None:
+                        self.decision, self.engine = ready
+                    else:
+                        self.decision = self.engine.act(view)
+                    self.engine_calls += 1
+                    if self.decision == FAST:
+                        self.precompute(view)
                     if self.decision != FAST:  # the view as the engine saw it (their energy with the margin)
                         try:
                             seen = view_record(view)
@@ -1307,6 +1402,8 @@ class Player:
                 self.decision = FAST
             self.decided_for = self.active
             extra = {"view": seen} if seen is not None else {}
+            if ready is not None:
+                extra["precomputed"] = True
             self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000), **extra)
             self.no_weaker_move(t, view)
             if self.armed is not None and self.decision != FAST:
@@ -1671,6 +1768,7 @@ class Player:
         try:
             with self.engine_sees():
                 ahead = self.engine.act(self.view())
+                self.engine_calls += 1
         except Exception as error:  # noqa: BLE001
             self.log("engine_error", t, error=str(error), ahead=True)
             return
@@ -1950,6 +2048,7 @@ class Player:
             # any hit of 35% or more, which cost 7 to 13 points in simulation; the margin was worth nothing)
             try:
                 shield = bool(self.engine.shield(view, self.tracker.foe.hi))
+                self.engine_calls += 1
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
                 shield = True
@@ -1992,6 +2091,7 @@ class Player:
         if view is not None:
             try:
                 slot = self.engine.replace(view)
+                self.engine_calls += 1
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
         if slot not in bench and bench:
