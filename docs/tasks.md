@@ -37,7 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
-| **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — taken: Claude on the owner's PC, 2026-11-18 (the owner: "Yes, train it"; branch `task40-android`) | Owner's PC; small data |
+| **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — Claude on the owner's PC; done 2026-11-18: **stronger in the simulator** (55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, level against PvPoke at −1.3 ± 3.4; seed 4701, about the same search cost), and it throws Stone Edge in the Azumarill position. Benched energy counts too much in it. **Not adopted: the owner's call.** Model `runs/eval-wide/eval.npz` on branch `task40-android` (`status.md`) | Done; adoption is the owner's call |
 | **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
@@ -73,7 +73,18 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
-## 47. An evaluation that sees their bench — Claude on the owner's PC (the owner, 2026-11-18) — **taken: Claude, 2026-11-18 (branch `task40-android`)**
+## 47. An evaluation that sees their bench — Claude on the owner's PC (the owner, 2026-11-18) — **done 2026-11-18 (branch `task40-android`): stronger in the simulator, not adopted yet**
+
+**Result** (`docs/status.md` on `task40-android`, "An evaluation that sees their bench").
+- *Prediction:* it picks the eventual winner in 77.1% of positions kept back, against 74.6% for the 42-input one
+  fitted on the same positions (80.6% against 75.8% where one of theirs is up and off the field).
+- *Engine strength, seed 4701:* 55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, and
+  −1.3 ± 3.4 against PvPoke (level), at about the same search cost.
+- *The Azumarill position:* it throws Stone Edge 8 times in 8.
+- *Caveat:* benched energy moves it far more than play-outs do.
+
+Open, for the owner: adopting it (putting it at `runs/eval/eval.npz` switches the live player, the website and the
+scripts), measuring it live.
 
 **Why.** In a live position (replay 20261109-130030 at 15.95 s: Clodsire, 65 energy, against Azumarill with a move
 ready) Stone Edge won 50% of play-outs and every other option 23-39%. The engine kept fast-moving or threw
