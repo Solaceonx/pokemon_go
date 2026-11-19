@@ -60,7 +60,7 @@ def games(task) -> dict:
     for n in range(count):
         # A fresh evaluation cache for each player and for the recorder in every game: the cache is keyed by team slot
         # and opposing species, not by our team, so sharing it lets one game or player change another's features.
-        features = Evaluator()
+        features = Evaluator(model)  # inputs as wide as the evaluation the round starts from
         players = [Engine(Evaluator(model), pool, rollout="bot", samples=4, edge=0.03, q=net, margin=0.02,
                           **varied_settings(rng, pool))
                    for _ in range(2)]

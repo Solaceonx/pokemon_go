@@ -116,7 +116,8 @@ class SaveAndResume(unittest.TestCase):
             self.assertEqual(list(data["games"]), [0, 1])
             self.assertEqual(len(data["x"]), info["decisions"])
             self.assertEqual(data["legal"].shape, (info["decisions"], engine_loop.OPTIONS))
-            self.assertEqual(data["pos_x"].shape[1], 42)
+            # as wide as the evaluation it starts from (54 inputs since task 47)
+            self.assertEqual(data["pos_x"].shape[1], Evaluator.load(engine_loop.START_EVAL).model.layers[0][0].shape[0])
             self.assertTrue(set(data["result"]) <= {0.0, 0.5, 1.0})
             self.assertEqual(int((data["bot"] != data["pick"]).sum()), info["changed"])
             # The same game again gives the same file: a resumed run plays exactly the games it skipped.

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 GD = GameData()
 POOL = GD.meta(50)
 Q = QNet.load(ROOT / "runs/general-decide/q.npz")
-MODEL = Evaluator.load(ROOT / "runs/eval/eval.npz").model
+MODEL = Evaluator.load(ROOT / "runs/eval/eval-42.npz").model  # the model the recorded games below were played with
 
 
 class MidSwapSearch(unittest.TestCase):

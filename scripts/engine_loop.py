@@ -119,7 +119,7 @@ def play(n: int, seed: int, q: QNet, model, pool: list, draw, sample: float, set
     players = [Recorder(Evaluator(model), pool, q=q, seed=rng.getrandbits(32), **settings) for _ in range(2)]
     battle = Battle(*teams, *players, seed=rng.getrandbits(32))
     keep = random.Random(rng.getrandbits(32))  # when to keep positions; apart from the game's dice
-    recorders = [Evaluator(), Evaluator()]
+    recorders = [Evaluator(model), Evaluator(model)]  # inputs as wide as the evaluation the round starts from
     seen = []
     while battle.winner is None:
         if keep.random() < sample:
@@ -165,11 +165,12 @@ def chunk(task) -> dict:
     columns = list(zip(*rows)) if rows else [()] * 8
     pos = list(zip(*positions)) if positions else [()] * 4
     inputs = max(ps[0].shape[0] for ps in q.params.values())  # what the bot sees: describe(), its advice, any extras
+    seen = model.layers[0][0].shape[0] if model is not None else N_SITUATION  # the evaluation's inputs (54 if wide)
     out = {"head": np.array(columns[0], dtype=np.int8), "x": np.array(columns[1], dtype=np.float32).reshape(-1, inputs),
            "legal": np.array(columns[2], dtype=bool).reshape(-1, OPTIONS), "bot": np.array(columns[3], dtype=np.int8),
            "pick": np.array(columns[4], dtype=np.int8), "side": np.array(columns[5], dtype=np.int8),
            "game": np.array(columns[6], dtype=np.int64), "result": np.array(columns[7], dtype=np.float32),
-           "pos_x": np.array(pos[0], dtype=np.float32).reshape(-1, N_SITUATION), "pos_y": np.array(pos[1], dtype=np.float32),
+           "pos_x": np.array(pos[0], dtype=np.float32).reshape(-1, seen), "pos_y": np.array(pos[1], dtype=np.float32),
            "pos_side": np.array(pos[2], dtype=np.int8), "pos_game": np.array(pos[3], dtype=np.int64),
            "games": np.array([g[0] for g in games], dtype=np.int64), "game_cpu": np.array([g[1] for g in games]),
            "game_turns": np.array([g[2] for g in games], dtype=np.int32), "game_winner": np.array([g[3] for g in games], dtype=np.int8)}
