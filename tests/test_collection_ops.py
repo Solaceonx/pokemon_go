@@ -133,5 +133,43 @@ class Retirement(unittest.TestCase):
         validate.assert_not_called()
         self.assertFalse(self.source.exists())
         self.assertTrue(__import__('json').loads((self.root/'receipts/123.json').read_text())['source_retired'])
+    def test_source_mismatch_refuses_before_export_or_proof_overwrite(self):
+        expected=digest(self.source)
+        self.review['source_sha256']=expected
+        self.review['decisions'][0]['league']='open_great_league'
+        write(self.source.parent/'source.json',{'media':{'sha256':expected}})
+        alternative=self.root/'new-review.json';write(alternative,self.review)
+        saved_review=self.root/'runs/123/league-review.json';before_review=saved_review.read_bytes()
+        saved_manifest=self.root/'runs/123/battle-candidates.json';before_manifest=saved_manifest.read_bytes()
+        self.source.write_bytes(b'changed full source bytes after scan')
+        export,read,track=Mock(),Mock(),Mock()
+        modules={'vod_verify':SimpleNamespace(verify=Mock()),'vod_track':SimpleNamespace(read_clip=read,track_clip=track),'game_record':SimpleNamespace(write=Mock())}
+        with patch('scripts.recording.collection_ops.worker_root',return_value=self.root),\
+             patch('scripts.recording.collection_ops.frozen_modules',return_value=SimpleNamespace(export_one=export)),\
+             patch.dict(sys.modules,modules),self.assertRaises(ValueError):
+            finish('worker-b','123',alternative)
+        export.assert_not_called();read.assert_not_called();track.assert_not_called()
+        self.assertEqual(saved_review.read_bytes(),before_review)
+        self.assertEqual(saved_manifest.read_bytes(),before_manifest)
+        self.assertFalse((self.root/'cuts').exists())
+    def test_source_change_during_export_refuses_before_tracking(self):
+        expected=digest(self.source)
+        self.review['source_sha256']=expected
+        self.review['decisions'][0]['league']='open_great_league'
+        self.manifest['fingerprint']['layout']={'channel':'itsaxn','views':[{'id':'pov'}]}
+        self.manifest['url']='https://www.twitch.tv/videos/123'
+        write(self.root/'runs/123/battle-candidates.json',self.manifest)
+        write(self.source.parent/'source.json',{'media':{'sha256':expected}})
+        alternative=self.root/'new-review.json';write(alternative,self.review)
+        export=Mock(side_effect=lambda *a,**kw:self.source.write_bytes(b'changed during encoding'))
+        read,track=Mock(),Mock()
+        modules={'vod_verify':SimpleNamespace(verify=Mock(return_value={'media_checks_passed':True})),
+                 'vod_track':SimpleNamespace(read_clip=read,track_clip=track),'game_record':SimpleNamespace(write=Mock())}
+        with patch('scripts.recording.collection_ops.worker_root',return_value=self.root),\
+             patch('scripts.recording.collection_ops.frozen_modules',return_value=SimpleNamespace(export_one=export)),\
+             patch.dict(sys.modules,modules),self.assertRaises(ValueError):
+            finish('worker-b','123',alternative)
+        export.assert_called_once();read.assert_not_called();track.assert_not_called()
+        self.assertTrue(self.source.exists())
 
 if __name__=='__main__':unittest.main()

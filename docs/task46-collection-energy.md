@@ -59,3 +59,14 @@ python scripts/recording/energy_reference_six.py --root . --manifest data/creato
 ```
 
 It reports6/18 useful predictions, including a false confident zero against source-labelled32–36. Five of six useful readings fit source bounds; scalar recovery is4/10. Two attempted windows have unresolved numeric truth. The prototype remains separate and is not ready for wider replay. Flat HP pixels alone do not prove zero completed fast moves.
+
+Wholly non-open sources can use `collection_exclusion.py` after complete coarse coverage, source-reviewed league continuity and decoder evidence, verified stopped reader/orchestrator processes and matching actual source hashes. It explicitly records `reader_detection_completed: false`; it does not manufacture a completed broadcast-label scan or media-cut pass. Only the exact full source is retired; all context frames/coarse data/proofs remain. Accepted sources instead require the normal cut verification and source-byte checks before and after export.
+
+The conservative v4 comparison and newly labelled windows are separately reproducible:
+
+```sh
+python scripts/recording/energy_bounds_eval_v4.py --root . --manifest data/creator_energy_v4_development_manifest_v1.json --out runs/task46-energy-v4-development-reproduced-local.json
+python scripts/recording/energy_bounds_eval_v4.py --root . --manifest data/creator_energy_v4_new_window_validation_manifest_v1.json --out runs/task46-energy-v4-new-window-reproduced-local.json
+```
+
+These produce1/18 and0/6 useful readings. They preserve conservative candidate sets without falsely asserting zero, but do not establish full-game energy coverage or exact accuracy.

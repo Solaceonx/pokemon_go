@@ -183,6 +183,15 @@ def retained_after_retirement(root,sid,manifest):
             raise ValueError('Retained cut or alignment changed')
     return True
 
+def verify_source_input(video,manifest,record,review):
+    """Require the bytes, scan, source record and league witnesses to agree."""
+    expected=manifest.get('fingerprint',{}).get('source_sha256')
+    if not expected or record.get('media',{}).get('sha256')!=expected or review.get('source_sha256')!=expected:
+        raise ValueError('Source record, coarse scan and league review have different byte provenance')
+    if digest(video)!=expected:
+        raise ValueError('Current full source bytes differ from the reviewed coarse scan')
+    return expected
+
 def finish(worker, sid, review_path, export_only=False):
     vod=frozen_modules()
     from vod_verify import verify
@@ -194,6 +203,8 @@ def finish(worker, sid, review_path, export_only=False):
     manifest=selected_manifest(load(run/'battle-candidates.json'),review,root/'witnesses'/sid)
     selected=set(manifest['export_selection']['clip_ids'])
     retirement=root/'receipts'/(sid+'-source-retirement.json')
+    source=root/'sources/twitch'/sid
+    record=load(source/'source.json')
     if retirement.exists() and load(retirement).get('deleted'):
         # Validate existing proof before writing anything: a changed review
         # must not destroy the only retained provenance of a retired source.
@@ -201,12 +212,12 @@ def finish(worker, sid, review_path, export_only=False):
         if review!=load(run/'league-review.json') or manifest!=load(run/'battle-candidates.json'):
             raise ValueError('Cannot replace league evidence after source retirement')
     else:
+        verify_source_input(source/'video.mp4',manifest,record,review)
         if not (run/'battle-candidates-unfiltered.json').exists():
             write(run/'battle-candidates-unfiltered.json',load(run/'battle-candidates.json'))
         write(run/'league-review.json',review)
         write(run/'battle-candidates.json',manifest)
     source_retired=retained_after_retirement(root,sid,manifest)
-    record=load(root/'sources/twitch'/sid/'source.json')
     if not selected:
         resolved=bool(review['decisions']) and all(r['league'] not in {'unknown','unverified'} for r in review['decisions'])
         scanned=manifest.get('scan_coverage',{}).get('full_recording_scanned') is True
@@ -216,7 +227,6 @@ def finish(worker, sid, review_path, export_only=False):
              'league_mix':dict(collections.Counter(r['league'] for r in review['decisions']))})
         verify_freeze()
         return
-    source=root/'sources/twitch'/sid
     layout=manifest['fingerprint']['layout']
     views={r['id']:r for r in layout['views']}
     cuts=root/'cuts'
@@ -230,6 +240,7 @@ def finish(worker, sid, review_path, export_only=False):
         validation=verify(sid,cuts,run)
         if not validation['media_checks_passed']:
             raise ValueError('Full-frame clip alignment validation failed')
+        verify_source_input(source/'video.mp4',manifest,record,review)
     verify_freeze()
     if export_only:
         write(root/'receipts'/(sid+'-cuts.json'),{'source_id':sid,'cuts_verified':True,'cuts_saved':len(selected),
