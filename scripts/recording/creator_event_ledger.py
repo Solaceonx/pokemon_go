@@ -33,12 +33,15 @@ def source_events(timeline, lifecycle, measurements):
             identity_status='observed_actor' if q.get('actor') else 'past_header' if actor else 'unknown',
             method='visible_named_release',charge_index=index,
             source_observation_seconds=sorted(set(announcements)),model_build_used=False)
+        if q.get('cue_conflict'):
+            event['cue_conflict'] = q['cue_conflict']
         events.append(event)
         for a in assignments:
             counter=a['counter']
             events.append(dict(kind='shield',side=defended,t=counter['first_visible_seconds'],
                 confirmed_at_seconds=counter['confirmed_seconds'],
                 associated_attack_seconds=at,associated_attack=q['move'],
+                counter_change_interval_seconds=a.get('counter_change_interval_seconds'),
                 method='independent_visible_shield_decrement',charge_index=index,model_build_used=False))
     for death in lifecycle['faints']:
         support=death.get('independent_support',{})

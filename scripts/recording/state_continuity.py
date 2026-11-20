@@ -120,8 +120,11 @@ class StateContinuity:
             self.begin(side, t, sides)
         if self.attack["move"] is None:
             self.attack.update(move=name, energy_cost=cost, announced_at_seconds=t)
-            self.attack["confirmed_changes"] = [{"side": side, "identity": self.attack["attacker"],
+            self.attack["confirmed_changes"] = ([{"side": side, "identity": self.attack["attacker"],
                                                  "field": "energy", "operation": "spent", "amount": cost}]
+                                                if cost is not None else [])
+            if cost is None:
+                self.attack['energy_cost_status']='unverified_meter'
         self.resolving(t, sides)
 
     @property

@@ -88,6 +88,9 @@ def stable_counter_runs(readings, side, field, required=3, max_gap=.25):
                            'value': value, 'source_pts': run[0]['source_pts'],
                            'source_time_base': run[0]['source_time_base'],
                            'continuity': 'increase_requires_review' if result and value > result[-1]['value'] else 'consistent'})
+        if len(run) >= required and result and result[-1]['value'] == value:
+            result[-1]['last_visible_seconds'] = r['t']
+            result[-1]['last_source_pts'] = r['source_pts']
     return result
 
 
@@ -168,10 +171,16 @@ def reconcile_source_shields(looks, timeline, counters):
     charges = timeline['charged']
     for defending, prefix in [('mine', 'my'), ('theirs', 'foe')]:
         runs = counters[defending]['shields']
-        for before, after in zip(runs, runs[1:]):
+        for position, (before, after) in enumerate(zip(runs, runs[1:])):
             if after['value'] >= before['value']:
                 continue
             drop = before['value']-after['value']
+            earliest = before.get('last_visible_seconds', before['confirmed_seconds'])
+            if earliest > after['first_visible_seconds'] or any(
+                    r.get('continuity') == 'increase_requires_review' for r in runs[:position+2]):
+                unresolved.append({'side': defending, 'counter': after,
+                    'reason': 'shield counter history is contradictory'})
+                continue
             candidates = []
             for i, q in enumerate(charges):
                 if q['side'] == defending:
@@ -181,7 +190,10 @@ def reconcile_source_shields(looks, timeline, counters):
                 end = (max(announcements)+8) if announcements else start+14
                 next_start = origin+charges[i+1]['t'] if i+1 < len(charges) else end
                 end = min(end, next_start+1)
-                if start <= after['first_visible_seconds'] <= end:
+                # A following opposing attack can hide the glyph readback.
+                # Test the whole interval since the last witnessed old count,
+                # rather than dating the spend at the later readable frame.
+                if start <= after['first_visible_seconds'] and earliest <= end:
                     candidates.append((i, q))
             if drop != 1 or len(candidates) != 1:
                 unresolved.append({'side': defending, 'counter': after,
@@ -200,7 +212,17 @@ def reconcile_source_shields(looks, timeline, counters):
                 continue
             targets[0][prefix+'_shields'] = after['value']
             assignments.append({'side': defending, 'charge_index': index, 'tracker_seconds': targets[0]['t'],
-                                'value': after['value'], 'counter': after})
+                                'value': after['value'], 'counter': after,
+                                'counter_change_interval_seconds': [earliest, after['first_visible_seconds']]})
+        repeated = {a['charge_index'] for a in assignments if a['side'] == defending and
+                    sum(b['side'] == defending and b['charge_index'] == a['charge_index'] for b in assignments) > 1}
+        if repeated:
+            for a in assignments:
+                if a['side'] == defending and a['charge_index'] in repeated:
+                    unresolved.append({'side': defending, 'counter': a['counter'],
+                        'reason': 'multiple shield decrements cannot belong to one charged attack',
+                        'candidate_charges': [a['charge_index']]})
+            assignments = [a for a in assignments if a['side'] != defending or a['charge_index'] not in repeated]
         # Rebuild the counter from independent pixels and confirmed assignments,
         # never from cumulative BLOCKED messages.
         current = None

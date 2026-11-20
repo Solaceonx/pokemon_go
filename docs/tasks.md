@@ -1088,3 +1088,23 @@ Both conditions, with numbers. If only one holds, say so.
 
 
 **Task46 completed v15 replay checkpoint, not completion:** all82processed,28strict passes;533tests/1existing skip,108exact;source full-state certification0. Header/form/enhanced-move/charged-faint fixes and another untouched source test remain.
+
+**Task46 v17/v18 continuation, 2026-11-19:** v16 retained failed Mega-model attempts; v17 processes all24 development clips and improves third-source releases45/48->48/48(0extras), with17/18shields and13/17faints still incomplete. Source-only records now survive unavailable simulator rankings with explicit unknown model state.552tests/1skip108exact. V18 faint confirmations558tests/1skip108exact, replay still running; wider-panel experiment no gain/not integrated. Canonical82 remain completev15,28strictpasses,0fullstatecertified; fourth source-only evaluation labels pending. See status.md. In progress.
+
+
+Task46 continuation (Codex,2026-11-19): v20 development24/24process,245/245charges87/87spends86/86faints0extras; all82canonical replay in progress under frozen34-file manifest. Fourth source truth+nativeHP frozen BEFORE predictions (6battles,60charges21spends21faints88anchors,23/24measurableHP fields,21form fields,224RGBwitnesses verified). Fresh evaluation queued behind an existing worker. Do not index/publish mixed canonical exports; preserve all backups/raw/source/failed artifacts and exclude partial Henry2904735277-010. Required next: final82strict comparison with unmodeled/unknown metrics preserved, first fourth-source accuracy/coverage with margins, resolve remaining full-state gaps; tests+108/privacy/protected-input audits before authorized typed-only push. Task46 still IN PROGRESS; full-state certified0.
+
+
+Task46 v21continuation (Codex,2026-11-19): corrected reference error retained separately (AXN002Cramorant notconfirmedfaint; two redpartyicons persist). On the same corrected six clips, v20->v21d:60/60charges unchanged,18/21shieldspends+2extras->21/21+0,17/20faints+1extra->20/20+0,3/6->6/6all-events. Original first-test score retained, later tuning is DEVELOPMENT.605tests/1skip108exact in isolatedcopy; full24latestregression inprogress, main82v20lastrecordpending. HP9/24usable andforms0/21remain blockers; fullstatecertified0. No videos/images/unrestrictedOCR/trainer names in Git; no mixedcanonical index/push. Requirednext: complete82snapshot/index/tests/audits, latest24regression, improve fullstatecoverage and evaluate another untouched cohort. Task46 IN PROGRESS.
+
+
+Task46 continuation v21e/f/g (Codex,2026-11-19): all82 v20 and isolatedD complete27strictpasses, compared with original17 andv15=28; no full-state certification. E/F24development each245charges87spends86faints0extras; correctedsource4six60/21/20. NativeHP9/24->15/24correctusable; Fforms0/21->3/21correctusable, initial unknowns retained. G denser literal-caption acquisition639tests/1skip108exact, footage regression running, no G accuracy claim. See status.md for coverage margins, retained processing failures/retries, source-label correction and reproducibility. MAIN canonical records remain indexedv20; do not publish mixed exports. Full-state certified0; Task46 IN PROGRESS.
+
+
+Task46 Gdevelopment completed245/87/86across24 and60/21/20oncorrectedsource4six,zeroextras;forms12/21correctusable,notfresh. G2all82runningindependently;639tests1skip108exact. Hexact-frametiming44focusedtestspass,fullchecks/source6queuedbehindcanonicalworkers. MAINcanonicalv20retained,fullstate0,INPROGRESS;see status.md.
+
+
+Task46 H2: 646 tests / one skip, 108 exact; 24 development clips preserve 245/87/86 events, corrected six preserve 60/21/20. Forms 13/21 usable, all correct, still development. H first-attempt Windows backup failures retained. G1 readiness: 30 count-correct but only 20 tightly timed, full-state ready 0; energy/stages/clocks and health gaps remain blockers. Temporal HP geometry is experimental in an independent copy; all-82 G2 replay remains in progress. See status.md.
+
+
+Task46 installed checkpoint: all82G2records/localviewers installed with original backups,29strictpasses(v20/D27),including3gainsand1retainedenergyregression.646tests/one skip108exact after install;1,640structured files/privacy and870protected+80reserved+246raw hashes pass. Source state is not certified:0fullready. Independent temporal HP experiment658tests108exact,six clips18/24correctusableHP and60/21/20events;24regressionrunning. Owner confirmed stage reset on switch; source-confirmed stage tracking remains to implement. See status.md.

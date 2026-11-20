@@ -6,7 +6,7 @@ from pathlib import Path
 import random
 
 from evaluate_creator_fullstate import snapshot_at, usable
-from score_creator_events import canon, rows
+from score_creator_events import species_name, rows
 
 
 def count_fields(fields):
@@ -40,7 +40,7 @@ def score(reference, truth, predictions):
             reported=numeric and usable(health) and team.get('active_status') in ('observed','retained')
             measured=expected['status']=='measured'
             reference_species=anchors[(item['record'],item['requested_seconds'])]['expected'][side+'.species']
-            identity_correct=canon(mon.get('species',{}).get('value'))==canon(reference_species)
+            identity_correct=species_name(mon.get('species',{}).get('value'))==species_name(reference_species)
             correct=None
             if measured:
                 lo,hi=expected['fraction_interval']

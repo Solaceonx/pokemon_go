@@ -2,62 +2,6 @@
   "schema": "creator-lifecycle-v1",
   "faints": [
     {
-      "side": "theirs",
-      "species": "Florges",
-      "clip_seconds": 194.28337511469533,
-      "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
-      "confirmed_clip_seconds": 196.25004220430108,
-      "timing_uncertainty_seconds": 0.1,
-      "first_zero": {
-        "t": 194.28337511469533,
-        "clip_pts": 54205061657,
-        "clip_time_base": "1/279000000",
-        "source_pts": 126476910,
-        "source_time_base": "1/90000",
-        "bar": {
-          "bounds": [
-            317,
-            325,
-            461,
-            337
-          ],
-          "width": 138,
-          "live_pixels": 0,
-          "orange_pixels": 0,
-          "live_fraction": 0.0,
-          "outline_method": "edge_contour"
-        },
-        "replacement_bar": false
-      },
-      "confirmed_zero": {
-        "t": 194.35004179569893,
-        "clip_pts": 54223661661,
-        "clip_time_base": "1/279000000",
-        "source_pts": 126482940,
-        "source_time_base": "1/90000",
-        "bar": {
-          "bounds": [
-            317,
-            325,
-            461,
-            337
-          ],
-          "width": 138,
-          "live_pixels": 0,
-          "orange_pixels": 0,
-          "live_fraction": 0.0,
-          "outline_method": "edge_contour"
-        },
-        "replacement_bar": false
-      },
-      "independent_support": {
-        "status": "confirmed",
-        "reason": "independent_party_decrement",
-        "first_visible_seconds": 196.08337550179212,
-        "confirmed_seconds": 196.25004220430108
-      }
-    },
-    {
       "side": "mine",
       "species": "Sableye",
       "clip_seconds": 179.06670517562725,
@@ -196,6 +140,114 @@
           "reason": "independent_party_decrement",
           "first_visible_seconds": 83.41668460573477,
           "confirmed_seconds": 83.58335130824372
+        }
+      }
+    },
+    {
+      "side": "theirs",
+      "species": "Florges",
+      "clip_seconds": 194.00004172043012,
+      "confirmed_clip_seconds": 195.7500420967742,
+      "timing_uncertainty_seconds": 0.08333333333333333,
+      "method": "three_empty_bar_samples_and_independent_party_decrement",
+      "first_zero": {
+        "t": 194.00004172043012,
+        "bar": {
+          "bounds": [
+            317,
+            323,
+            464,
+            339
+          ],
+          "outline_method": "physical_rail_intersection",
+          "side_rail_support": [
+            1.0,
+            1.0
+          ],
+          "horizontal_rail_support": [
+            1.0,
+            1.0
+          ],
+          "interior_width_pixels": 141,
+          "live_pixels": 0,
+          "damage_pixels": 0,
+          "fraction": 0.0,
+          "fraction_interval": [
+            0.0,
+            0.014184
+          ],
+          "pixel_uncertainty": 2,
+          "interior_support": 0.9972,
+          "live_color_pixels": {
+            "cyan": 0,
+            "yellow": 0,
+            "red": 0
+          }
+        },
+        "source_pts": 126451440,
+        "source_time_base": "1/90000"
+      },
+      "zero_frames": 3,
+      "independent_support": {
+        "status": "confirmed",
+        "reason": "independent_party_decrement",
+        "first_visible_seconds": 195.58337539426523,
+        "confirmed_seconds": 195.7500420967742
+      },
+      "supersedes_later_faint": {
+        "side": "theirs",
+        "species": "Florges",
+        "clip_seconds": 194.28337511469533,
+        "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+        "confirmed_clip_seconds": 195.7500420967742,
+        "timing_uncertainty_seconds": 0.1,
+        "first_zero": {
+          "t": 194.28337511469533,
+          "clip_pts": 54205061657,
+          "clip_time_base": "1/279000000",
+          "source_pts": 126476910,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              317,
+              325,
+              461,
+              337
+            ],
+            "width": 138,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "edge_contour"
+          },
+          "replacement_bar": false
+        },
+        "confirmed_zero": {
+          "t": 194.35004179569893,
+          "clip_pts": 54223661661,
+          "clip_time_base": "1/279000000",
+          "source_pts": 126482940,
+          "source_time_base": "1/90000",
+          "bar": {
+            "bounds": [
+              317,
+              325,
+              461,
+              337
+            ],
+            "width": 138,
+            "live_pixels": 0,
+            "orange_pixels": 0,
+            "live_fraction": 0.0,
+            "outline_method": "edge_contour"
+          },
+          "replacement_bar": false
+        },
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 195.58337539426523,
+          "confirmed_seconds": 195.7500420967742
         }
       }
     }
@@ -731,8 +783,8 @@
   ],
   "result_based_faints": 0,
   "native_stream_faint_audit": {
-    "measurement_sha256": "ebb632ba83f1926ab8a6f167b66d7a4bc805207e84091665e44a915c6ae932a6",
-    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "measurement_sha256": "fcfde79d4b8ba15ab8b8dc75da93ad23dd81a9f245ea55204ccbba73f3c00614",
+    "code_sha256": "222dbef7e7102ebf3de5f405a72e96f449745e61ebde54b9f3aa12ebb19ab8db",
     "candidates": [
       {
         "side": "theirs",
@@ -911,20 +963,20 @@
       {
         "side": "theirs",
         "species": "Florges",
-        "clip_seconds": 195.08337528673835,
-        "confirmed_clip_seconds": 196.25004220430108,
+        "clip_seconds": 194.00004172043012,
+        "confirmed_clip_seconds": 195.7500420967742,
         "timing_uncertainty_seconds": 0.08333333333333333,
         "method": "three_empty_bar_samples_and_independent_party_decrement",
         "first_zero": {
-          "t": 195.08337528673835,
+          "t": 194.00004172043012,
           "bar": {
             "bounds": [
-              256,
-              408,
-              400,
-              420
+              317,
+              323,
+              464,
+              339
             ],
-            "outline_method": "closed_physical_contour",
+            "outline_method": "physical_rail_intersection",
             "side_rail_support": [
               1.0,
               1.0
@@ -933,31 +985,87 @@
               1.0,
               1.0
             ],
-            "interior_width_pixels": 138,
+            "interior_width_pixels": 141,
             "live_pixels": 0,
             "damage_pixels": 0,
             "fraction": 0.0,
             "fraction_interval": [
               0.0,
-              0.014493
+              0.014184
             ],
             "pixel_uncertainty": 2,
-            "interior_support": 1.0,
+            "interior_support": 0.9972,
             "live_color_pixels": {
               "cyan": 0,
               "yellow": 0,
               "red": 0
             }
           },
-          "source_pts": 126548910,
+          "source_pts": 126451440,
           "source_time_base": "1/90000"
         },
         "zero_frames": 3,
         "independent_support": {
           "status": "confirmed",
           "reason": "independent_party_decrement",
-          "first_visible_seconds": 196.08337550179212,
-          "confirmed_seconds": 196.25004220430108
+          "first_visible_seconds": 195.58337539426523,
+          "confirmed_seconds": 195.7500420967742
+        },
+        "supersedes_later_faint": {
+          "side": "theirs",
+          "species": "Florges",
+          "clip_seconds": 194.28337511469533,
+          "method": "native_empty_bar_and_fade_with_counter_or_fresh_replacement_header",
+          "confirmed_clip_seconds": 195.7500420967742,
+          "timing_uncertainty_seconds": 0.1,
+          "first_zero": {
+            "t": 194.28337511469533,
+            "clip_pts": 54205061657,
+            "clip_time_base": "1/279000000",
+            "source_pts": 126476910,
+            "source_time_base": "1/90000",
+            "bar": {
+              "bounds": [
+                317,
+                325,
+                461,
+                337
+              ],
+              "width": 138,
+              "live_pixels": 0,
+              "orange_pixels": 0,
+              "live_fraction": 0.0,
+              "outline_method": "edge_contour"
+            },
+            "replacement_bar": false
+          },
+          "confirmed_zero": {
+            "t": 194.35004179569893,
+            "clip_pts": 54223661661,
+            "clip_time_base": "1/279000000",
+            "source_pts": 126482940,
+            "source_time_base": "1/90000",
+            "bar": {
+              "bounds": [
+                317,
+                325,
+                461,
+                337
+              ],
+              "width": 138,
+              "live_pixels": 0,
+              "orange_pixels": 0,
+              "live_fraction": 0.0,
+              "outline_method": "edge_contour"
+            },
+            "replacement_bar": false
+          },
+          "independent_support": {
+            "status": "confirmed",
+            "reason": "independent_party_decrement",
+            "first_visible_seconds": 195.58337539426523,
+            "confirmed_seconds": 195.7500420967742
+          }
         }
       },
       {
@@ -1050,7 +1158,9 @@
             "value": 2,
             "source_pts": 125243910,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 221.66671433691755,
+            "last_source_pts": 128941380
           }
         },
         "zero_frames": 3,
@@ -1276,7 +1386,7 @@
         }
       }
     ],
-    "added": 1,
+    "added": 2,
     "quarantined": [],
     "result_based_faints": 0
   }

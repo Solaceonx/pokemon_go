@@ -13,7 +13,7 @@ from pathlib import Path
 import random
 import statistics
 
-from score_creator_events import KINDS, canon, match, predictions, rates, references, rows
+from score_creator_events import KINDS, canon, species_name, match, predictions, rates, references, rows
 
 
 def visible_species(name, species_table):
@@ -41,7 +41,7 @@ def anchor_fields(state, anchor):
         if name == 'species':
             field = current.get('pokemon', {}).get(current.get('active'), {}).get('species', {})
             valid = usable(field) and current.get('active_status') in ('observed','retained')
-            same = canon(field.get('value')) == canon(expected)
+            same = species_name(field.get('value')) == species_name(expected)
         else:
             field = current.get('left' if name == 'party' else name, {})
             valid = usable(field)

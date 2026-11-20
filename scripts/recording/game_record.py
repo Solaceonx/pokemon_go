@@ -262,9 +262,66 @@ def _fighting(states, k0, k1, last, until, events, looks, steps, final) -> dict 
     return out
 
 
+def source_record(folder: Path) -> dict:
+    """Same record envelope, with observed events and explicit missing model state."""
+    timeline = _json(folder, 'timeline.json') or {}
+    verdict = _json(folder, 'verdict.json') or {}
+    source = _json(folder, 'source.json')
+    snapshots = _rows(folder, 'continuity.jsonl')
+    final = snapshots[-1].get('game_state', {}) if snapshots else {}
+    origin = timeline.get('clip_origin_seconds', 0)
+    teams, left, shields = {}, {}, {}
+    for side, state_side in [('mine', 'mine'), ('theirs', 'opponent')]:
+        state = final.get('sides', {}).get(state_side, {})
+        def value(field):
+            return field.get('value') if (field.get('status') in ('observed', 'retained', 'estimated')
+                and not field.get('pending') and field.get('state_validity') not in
+                ('pending', 'pending_change', 'unconfirmed', 'unconfirmed_at_exit')) else None
+        teams[side] = []
+        for mon in state.get('pokemon', {}).values():
+            name = mon.get('species', {}).get('value')
+            if not name:
+                continue
+            moves = sorted({field['value'] for field in mon.get('charged_moves', {}).values()
+                            if value(field) is not None})
+            teams[side].append(dict(name=name, cp=value(mon.get('cp', {})), cp_from='seen',
+                fast_move=dict(name='unknown', known_from='unknown'),
+                charged_moves=[dict(name=m, known_from='seen') for m in moves],
+                fainted=value(mon.get('fainted', {}))))
+        left[side] = value(state.get('left', {}))
+        shields[side] = value(state.get('shields', {}))
+    actions = []
+    for event in _rows(folder, 'source-events.jsonl'):
+        action = {**event, 'source_only': True, 'source_clip_seconds': event['t'],
+                  't': event['t']-origin, 'state': None}
+        if event.get('confirmed_at_seconds') is not None:
+            action['confirmed_at_seconds'] = event['confirmed_at_seconds']-origin
+        if event.get('timing_interval_seconds') is not None:
+            action['timing_interval_seconds'] = [t-origin for t in event['timing_interval_seconds']]
+        actions.append(action)
+    result = timeline.get('result')
+    return dict(schema=SCHEMA, game=folder.name, source=_source(source, timeline, verdict),
+        model_status='unavailable', model_support=_json(folder, 'model-support.json'),
+        result=dict(value=result, **{'from': 'result screen' if result else 'unknown'}, left=left),
+        seconds=timeline.get('end'), fighting_turns=None,
+        checks=dict(verdict=verdict.get('verdict'), failed=verdict.get('failed', []),
+            notes=verdict.get('notes', [])+['Visible source events only; no model or complete state certification.'],
+            unexplained_health_changes=None),
+        teams=dict(**teams, theirs_unseen=None),
+        summary=dict(charged={s:sum(a['kind']=='charged' and a['side']==s for a in actions) for s in SIDES},
+            charged_shielded={s:sum(a['kind']=='charged' and a['side']==s and a.get('shielded') is True for a in actions) for s in SIDES},
+            shields_left=shields, switches={s:None for s in SIDES},
+            faints={s:sum(a['kind']=='faint' and a['side']==s for a in actions) for s in SIDES}),
+        actions=actions, deductions=[], source_state=final,
+        built_from=sorted(path.name for path in (_path(folder, n) for n in
+            ('source-events.jsonl', 'continuity.jsonl', 'source.json', 'timeline.json', 'model-support.json', 'verdict.json', 'creator-forms.json')) if path))
+
+
 def build(folder: Path) -> dict:
     """The record of the tracked game in this folder."""
     folder = Path(folder)
+    if (_json(folder, 'model-support.json') or {}).get('status') == 'unavailable':
+        return source_record(folder)
     states, events = _rows(folder, "states.jsonl"), _rows(folder, "events.jsonl")
     final = _json(folder, "state.json") or (states[-1] if states else None)
     if not states or not events or final is None:
@@ -375,6 +432,16 @@ def _say(a: dict) -> str:
     we = "We" if a.get("side") == "mine" else "They"
     our = "Our" if a.get("side") == "mine" else "Their"
     kind = a.get("kind")
+    if a.get('source_only'):
+        if kind == 'charged':
+            shield = 'shielded' if a.get('shielded') is True else 'not shielded' if a.get('shielded') is False else 'shield decision unknown'
+            return f"{we} throw {a.get('move') or '?'} ({a.get('pokemon') or '?'}; {shield})"
+        if kind == 'faint':
+            interval = a.get('timing_interval_seconds')
+            timing = f"; observed interval {_clock(interval[0])}–{_clock(interval[1])}" if interval else ''
+            return f"{our} {a.get('pokemon') or '?'} faints{timing}"
+        if kind == 'shield':
+            return f"{we} use a Protect Shield"
     if kind is None:  # a deduction
         if a["what"] == "team member":
             return f". {a['how']}: {a['value']}"
@@ -437,7 +504,8 @@ def text(rec: dict) -> str:
     where = "own recording" if src["kind"] == "own_recording" else \
         "public footage" + (f", {src['view']} view" if src.get("view") else "")
     result = f"{res['value'].upper()} ({res['from']})" if res["value"] else "result unknown"
-    lines = [f"{rec['game']} . {where} . {result} . {_clock(rec['seconds'])}, {rec['fighting_turns']} fighting turns"]
+    turns = rec['fighting_turns'] if rec['fighting_turns'] is not None else '?'
+    lines = [f"{rec['game']} . {where} . {result} . {_clock(rec['seconds'])}, {turns} fighting turns"]
     if src.get("url"):
         start, stop = src["clip_seconds"]
         lines.append(f"Source: {src['url']}, {start}-{stop} s" + (" (starts mid-battle)" if src["incomplete_start"] else "")

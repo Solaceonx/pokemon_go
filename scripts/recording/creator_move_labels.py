@@ -4,12 +4,13 @@ The physical circle cache is reusable. Only exact game vocabulary with a
 unique cost survives; arbitrary OCR and images are never serialized.
 """
 import re
+from visible_vocabulary import move_key
 
 
 def parse_label(text, confidence, vocabulary):
     if confidence < .90:
         return None
-    key=re.sub('[^A-Z]','',text.upper())
+    key=move_key(text)
     for suffix in ('NOTVERYEFFECTIVE','SUPEREFFECTIVE','EFFECTIVE'):
         if key.endswith(suffix):
             key=key[:-len(suffix)]
@@ -62,6 +63,7 @@ def acquire_labels(folder,raw):
     fingerprint=dict(schema='direct-charge-labels-v1',sample_hz=1,
         video_sha256=meta['video_sha256'],geometry_sha256=sha256(geometry),
         code_sha256=hashlib.sha256(Path(__file__).read_bytes().replace(b'\r\n',b'\n')).hexdigest(),
+        vocabulary_code_sha256=sha256(Path(__file__).with_name('visible_vocabulary.py')),
         gamemaster_sha256=sha256(gm))
     target,receipt=raw/'native-direct-labels-1hz.jsonl.gz',raw/'native-direct-labels-acquisition.json'
     if target.exists() and receipt.exists():

@@ -32,7 +32,7 @@
   "notes": [
    "fast move only guessed for electrode"
   ],
-  "unexplained_health_changes": 10
+  "unexplained_health_changes": 11
  },
  "teams": {
   "mine": [
@@ -578,7 +578,7 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Florges",
@@ -592,9 +592,9 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 138,
+     "hp": 139,
      "hp_max": 141,
-     "hp_share": 0.979,
+     "hp_share": 0.986,
      "energy": 27
     },
     "theirs": {
@@ -629,8 +629,8 @@
    "energy_ceiling": 76,
    "target": "Tinkaton",
    "shielded": false,
-   "target_hp_before": 138,
-   "target_hp_after": 138,
+   "target_hp_before": 139,
+   "target_hp_after": 139,
    "target_hp_max": 141,
    "target_bar_read": false,
    "expected_damage": 34,
@@ -641,9 +641,9 @@
      "active": "Tinkaton",
      "shields": 2,
      "left": 3,
-     "hp": 138,
+     "hp": 139,
      "hp_max": 141,
-     "hp_share": 0.979,
+     "hp_share": 0.986,
      "energy": 27
     },
     "theirs": {
@@ -850,7 +850,7 @@
     "fast_moves_if_no_pause": 3,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 3,
    "state": {
     "mine": {
      "active": "Tinkaton",
@@ -1096,9 +1096,9 @@
   {
    "kind": "fighting",
    "t": 82.05,
-   "until": 89.5,
+   "until": 89.0,
    "fighting_turn": 55,
-   "turns": 5,
+   "turns": 4,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
@@ -1140,8 +1140,8 @@
   },
   {
    "kind": "switch",
-   "t": 89.5,
-   "fighting_turn": 60,
+   "t": 89.0,
+   "fighting_turn": 59,
    "side": "theirs",
    "from": "Corsola",
    "to": "Florges",
@@ -1150,10 +1150,10 @@
      "active": "Seismitoad",
      "shields": 2,
      "left": 2,
-     "hp": 151,
+     "hp": 154,
      "hp_max": 154,
-     "hp_share": 0.981,
-     "energy": 18
+     "hp_share": 1.0,
+     "energy": 9
     },
     "theirs": {
      "active": "Florges",
@@ -1172,10 +1172,10 @@
   },
   {
    "kind": "fighting",
-   "t": 89.5,
+   "t": 89.0,
    "until": 94.1,
-   "fighting_turn": 60,
-   "turns": 8,
+   "fighting_turn": 59,
+   "turns": 9,
    "mine": {
     "pokemon": "Seismitoad",
     "fast_move": "Mud Shot",
@@ -1188,7 +1188,7 @@
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1209,10 +1209,10 @@
      "hp_max": 110,
      "hp_share": 0.427,
      "energy": [
-      67,
-      67
+      76,
+      76
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 85
     }
    }
   },
@@ -1254,10 +1254,10 @@
      "hp_max": 110,
      "hp_share": 0.427,
      "energy": [
-      67,
-      67
+      76,
+      76
      ],
-     "energy_ceiling": 76
+     "energy_ceiling": 85
     }
    }
   },
@@ -1299,10 +1299,10 @@
      "hp_max": 110,
      "hp_share": 0.1,
      "energy": [
-      76,
-      76
+      85,
+      85
      ],
-     "energy_ceiling": 85
+     "energy_ceiling": 94
     }
    }
   },
@@ -1317,10 +1317,10 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    76,
-    76
+    85,
+    85
    ],
-   "energy_ceiling": 85,
+   "energy_ceiling": 94,
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 135,
@@ -1348,10 +1348,10 @@
      "hp_max": 110,
      "hp_share": 0.1,
      "energy": [
-      31,
-      31
+      40,
+      40
      ],
-     "energy_ceiling": 40
+     "energy_ceiling": 49
     }
    }
   },
@@ -1393,10 +1393,10 @@
      "hp_max": 110,
      "hp_share": 0.018,
      "energy": [
-      85,
-      85
+      94,
+      94
      ],
-     "energy_ceiling": 94
+     "energy_ceiling": 100
     }
    }
   },
@@ -1554,7 +1554,7 @@
       60,
       60
      ],
-     "energy_ceiling": 71
+     "energy_ceiling": 60
     }
    }
   },
@@ -1572,7 +1572,7 @@
     60,
     60
    ],
-   "energy_ceiling": 71,
+   "energy_ceiling": 60,
    "target": "Fearow",
    "shielded": false,
    "target_hp_before": 66,
@@ -2041,7 +2041,19 @@
    }
   }
  ],
- "deductions": [],
+ "deductions": [
+  {
+   "t": 83.5,
+   "side": "theirs",
+   "pokemon": "Corsola",
+   "what": "fast move",
+   "value": "Bubble",
+   "how": "every other fast move ruled out",
+   "ruled_out": [
+    "Tackle"
+   ]
+  }
+ ],
  "built_from": [
   "events.jsonl.gz",
   "source.json",

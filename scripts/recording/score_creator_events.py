@@ -15,6 +15,7 @@ from pathlib import Path
 import random
 import re
 import sys
+from visible_vocabulary import species_key
 
 ROOT = Path(__file__).resolve().parents[2]
 KINDS = ('charged', 'shield', 'faint')
@@ -33,7 +34,7 @@ def move_name(text):
 
 def species_name(text):
     # The reference grades the visible header species, not unannotated forms.
-    return canon(re.sub(r'\([^)]*\)', '', text or ''))
+    return species_key(text).lower()
 
 
 def rows(path):

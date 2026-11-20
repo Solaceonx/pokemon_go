@@ -5,3 +5,10 @@ games/live/**/enrichment.json -text
 games/live/**/evidence-summary.json -text
 games/live/**/pixel-summary.json -text
 games/live/**/*.gz -text
+# Creator evidence and frozen references use byte hashes; preserve their newlines.
+games/creators/**/*.json -text
+games/creators/**/*.txt -text
+games/creators/**/*.gz -text
+data/creator_*.json -text
+runs/task46-*.json -text
+runs/task46-*.json.gz -text

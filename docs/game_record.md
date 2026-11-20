@@ -209,3 +209,9 @@ Raw logs and hash-covered evidence packages have Git text conversion disabled in
 `.gitattributes`. Their original bytes, including line endings, must survive a
 Windows or Unix checkout so source/package hashes and lossless re-import remain
 valid. Ordinary readable game summaries remain text files.
+
+### Source records when the model is unavailable
+
+Creator footage can show a registered form that has no Great League ranking. Those clips retain typed source events and causal readings; an unavailable model no longer discards the entire source export. `model-support.json` and `game.json.model_status` explicitly identify this case. The consistency verdict remains failed. Model state/event streams are empty, and model HP, energy, move defaults and fighting turns remain unknown. Old local model artifacts are preserved separately before replacement.
+
+The `game-record-v1` envelope still contains `game.json` and `game.txt`, with source-only actions and their measured times/confirmation evidence. Unknown shield decisions remain unknown. A result screen does not add faints. `source_state` retains the typed observation state, including uncertainties. These records are not certified complete game states or validated simulator replays. Supported model records keep their existing format and behavior.

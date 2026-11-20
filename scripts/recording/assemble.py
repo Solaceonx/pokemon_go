@@ -7,21 +7,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from pogo.gamedata import GameData
 from public_transitions import counter_changes, replacement_evidence
-from creator_charge_evidence import actor_for_release, actor_consensus, historical_side, prior_minigame
+from creator_charge_evidence import actor_for_release, actor_consensus, historical_side, prior_minigame, conflicting_incoming_cue
+from visible_vocabulary import header_species_names, legal_release_pairs, display_species, species_key, move_key
 lines = lambda path: (gzip.open(path, "rt", encoding="utf-8") if str(path).endswith(".gz") else open(path, encoding="utf-8"))
 gm = json.load(open(Path(__file__).resolve().parents[2] / "data" / "gamemaster.json"))
 gd = GameData()
-species = sorted({p["speciesName"].split(" (")[0] for p in gm["pokemon"]})
+species = header_species_names(gm)
 moves = sorted({m["name"] for m in gm["moves"]})
-LEGAL_RELEASE_PAIRS = tuple(sorted({(p['speciesName'].split(' (')[0], gd.moves[mid].name.split(' (')[0])
-                                  for p in gd.species.values() for mid in p['chargedMoves'] if mid in gd.moves}))
+LEGAL_RELEASE_PAIRS = legal_release_pairs(gm)
 # The owner's own Pokémon, known before the battle: moves, and IVs and CP where given (data/owner_team.json).
 # Any other Pokémon of ours gets the usual moves until the battle shows otherwise.
 SHEET = json.loads((Path(__file__).resolve().parents[2] / "data" / "owner_team.json").read_text())["pokemon"]
 OWNER_SHEET = {}
 for entry in SHEET:
     OWNER_SHEET.setdefault(entry["species"], []).append(entry)
-canon = lambda s: re.sub(r"[^a-z]", "", s.lower())
+canon = lambda s: re.sub(r"[^a-z+]", "", s.replace('\uff0b', '+').lower())
 
 
 def public_announced_move(text, user):
@@ -34,13 +34,20 @@ def public_announced_move(text, user):
         if len(candidates) == 1:
             return gd.moves[next(iter(candidates))].name
         return 'Weather Ball'
-    return nearest(text, moves, .8)
+    candidate = nearest(text, moves, .8)
+    if user and candidate:
+        allowed = {move_key(move) for actor, move in LEGAL_RELEASE_PAIRS if species_key(actor) == species_key(user)}
+        if allowed and move_key(candidate) not in allowed and move_key(candidate.split(' (')[0]) not in allowed:
+            return None
+    return candidate
 
 
 @lru_cache(maxsize=None)
 def _nearest(word, options, cutoff):
     table = {}
-    for o in sorted(options, key=len, reverse=True): table[canon(o)] = o  # "Surf" wins over "Surf+"
+    for o in sorted(options, key=len, reverse=True):
+        table[canon(o)] = o
+        table[canon(display_species(o))] = o
     hit = difflib.get_close_matches(canon(word), list(table), n=1, cutoff=cutoff)
     return table[hit[0]] if hit else None
 def nearest(word, options, cutoff=0.72):
@@ -140,7 +147,7 @@ def assemble(rows, texts, argv=(), span=None, now=None):
         # Broadcast logos can cover the actor prefix while leaving "used MOVE"
         # readable. An earlier charge cue still establishes the thrower's side.
         announcement = next((canon(item) for item in items if "used" in canon(item)), joined) if PUBLIC else joined
-        m = re.search(r"([a-z]*)used([a-z]+)" if PUBLIC else r"([a-z]{4,})used([a-z]+)", announcement)
+        m = re.search(r"([a-z]*)used([a-z+]+)" if PUBLIC else r"([a-z]{4,})used([a-z+]+)", announcement)
         if m and not (seq and t - seq["start"] < 14):
             # "X used Y!" with no cue read before it (the cue can sit under other text): the cue comes about 7 s
             # earlier. Whose move it was is settled from the name below, or failing that from a shield going.
@@ -279,6 +286,11 @@ def assemble(rows, texts, argv=(), span=None, now=None):
 
     if PUBLIC:
         for q in seqs:
+            previous=max((max(p['announcements']) for p in seqs if p is not q and p.get('announcements')
+                          and q.get('announcements') and max(p['announcements'])<min(q['announcements'])), default=float('-inf'))
+            conflict=conflicting_incoming_cue(q, field, texts, previous+1)
+            if conflict:
+                q.update(conflict)
             if not q.get('late') or q.get('ours') or not q.get('announcements'):
                 continue
             side=historical_side(q.get('user'),field,min(q['announcements']))
@@ -653,11 +665,12 @@ def assemble(rows, texts, argv=(), span=None, now=None):
     rel = lambda t: round(t - T0, 2)
     timeline = {
         "clip_origin_seconds": T0, "public_footage": PUBLIC,
+        **({'replacement_selection_prompt_clip_seconds': sorted(set(prompts))} if PUBLIC else {}),
         "end": rel(end), "result": next((r["result"] for r in rows if r.get("result")), None),
         "field": {side: [{"t": rel(f["t"]), "name": f["name"], "faint": f["faint"],
                            **({"header_seen_clip_seconds": f["seen"], "header_first_visible_clip_seconds": f['first_visible'], "transition_evidence": f["transition_evidence"]} if PUBLIC else {})}
                           for f in field[side]] for side in field},
-        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"], **({"actor": q.get('user'), "actor_confirmed_clip_seconds": q.get('actor_confirmed_clip_seconds'), "side_confirmed_clip_seconds": q.get('side_confirmed_clip_seconds',q['start']), "announcement_clip_seconds": q.get("announcements", []), "side_evidence": q.get('side_evidence',"explicit_cue" if not q.get("late") else "minigame" if q.get("ours") else "named_actor_inference")} if PUBLIC else {})} for q in seqs],
+        "charged": [{"t": rel(q["start"]), "side": q["side"], "move": q["move"], "blocked": q["blocked"], **({"actor": q.get('user'), "actor_confirmed_clip_seconds": q.get('actor_confirmed_clip_seconds'), "side_confirmed_clip_seconds": q.get('side_confirmed_clip_seconds',q['start']), "announcement_clip_seconds": q.get("announcements", []), "side_evidence": q.get('side_evidence',"explicit_cue" if not q.get("late") else "minigame" if q.get("ours") else "named_actor_inference"), **({'cue_conflict':q['cue_conflict']} if q.get('cue_conflict') else {})} if PUBLIC else {})} for q in seqs],
         "left": {side: [[rel(when - 0.5), v] for when, v in left_shown[key]] for side, key in (("mine", "m"), ("theirs", "o"))},
         "steps": {side: [[rel(t), size] for t, size in level_steps[side]] for side in level_steps},
         "own_energy_steps": dict(own_steps),

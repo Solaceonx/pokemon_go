@@ -14,6 +14,16 @@
   "incomplete_end": false,
   "dataset_role": "unassigned"
  },
+ "model_status": "unavailable",
+ "model_support": {
+  "status": "unavailable",
+  "league_cp": 1500,
+  "unranked_visible_species": [
+   "Deoxys"
+  ],
+  "source_observations_usable": true,
+  "model_accuracy_verified": false
+ },
  "result": {
   "value": "win",
   "from": "result screen",
@@ -22,226 +32,154 @@
    "theirs": 2
   }
  },
- "seconds": 186.8,
- "fighting_turns": 1439,
+ "seconds": 187.1,
+ "fighting_turns": null,
  "checks": {
   "verdict": "fail",
   "failed": [
-   "looks: 54 rejected",
-   "moves: 1 charged move(s) without an observed name",
-   "moves: 12 charged moves announced, 6 tracked",
-   "shields: we used 2, but 1 charged move(s) were tracked as blocked",
-   "shields: they used 2, but 1 charged move(s) were tracked as blocked",
-   "ending: result says win, tracker has us on 2 and them on 2"
+   "model: visible species or rules unsupported by the Great League model"
   ],
   "notes": [
-   "final charged-move cue has no observed name; resolution and ending are unverified",
-   "fast move only guessed for drapion"
+   "Source observations and events retained; no model states, assumed HP, energy or moves substituted.",
+   "Visible source events only; no model or complete state certification."
   ],
-  "unexplained_health_changes": 5
+  "unexplained_health_changes": null
  },
  "teams": {
   "mine": [
    {
-    "species": "vigoroth",
     "name": "Vigoroth",
-    "known_from": "team_sheet",
     "cp": 1495,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.531,
+    "cp_from": "seen",
     "fast_move": {
-     "id": "SCRATCH",
-     "name": "Scratch",
-     "turns": 1,
-     "energy_gain": 4,
-     "known_from": "guessed"
+     "name": "unknown",
+     "known_from": "unknown"
     },
     "charged_moves": [
      {
-      "id": "BODY_SLAM",
       "name": "Body Slam",
-      "energy": 40,
-      "known_from": "guessed",
-      "times_used": 0
+      "known_from": "seen"
      },
      {
-      "id": "BULLDOZE",
       "name": "Bulldoze",
-      "energy": 55,
-      "known_from": "seen",
-      "times_used": 1
+      "known_from": "seen"
      }
-    ]
+    ],
+    "fainted": null
    },
    {
-    "species": "mimikyu",
     "name": "Mimikyu",
-    "known_from": "team_sheet",
     "cp": 1499,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.299,
+    "cp_from": "seen",
     "fast_move": {
-     "id": "SHADOW_CLAW",
-     "name": "Shadow Claw",
-     "turns": 2,
-     "energy_gain": 8,
-     "known_from": "guessed"
+     "name": "unknown",
+     "known_from": "unknown"
     },
     "charged_moves": [
      {
-      "id": "SHADOW_SNEAK",
-      "name": "Shadow Sneak",
-      "energy": 50,
-      "known_from": "seen",
-      "times_used": 1
+      "name": "Play Rough",
+      "known_from": "seen"
      },
      {
-      "id": "PLAY_ROUGH",
-      "name": "Play Rough",
-      "energy": 60,
-      "known_from": "seen",
-      "times_used": 1
+      "name": "Shadow Sneak",
+      "known_from": "seen"
      }
-    ]
+    ],
+    "fainted": null
    },
    {
-    "species": "corviknight",
     "name": "Corviknight",
-    "known_from": "team_sheet",
     "cp": 1493,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": true,
-    "hp_share_at_end": 0.0,
+    "cp_from": "seen",
     "fast_move": {
-     "id": "SAND_ATTACK",
-     "name": "Sand Attack",
-     "turns": 1,
-     "energy_gain": 4,
-     "known_from": "guessed"
+     "name": "unknown",
+     "known_from": "unknown"
     },
     "charged_moves": [
      {
-      "id": "AIR_CUTTER",
       "name": "Air Cutter",
-      "energy": 40,
-      "known_from": "guessed",
-      "times_used": 0
+      "known_from": "seen"
      },
      {
-      "id": "IRON_HEAD",
       "name": "Iron Head",
-      "energy": 50,
-      "known_from": "guessed",
-      "times_used": 0
+      "known_from": "seen"
      }
-    ]
+    ],
+    "fainted": true
    }
   ],
   "theirs": [
    {
-    "species": "azumarill",
-    "name": "Azumarill",
-    "known_from": "seen",
+    "name": "Deoxys",
     "cp": 1500,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": false,
-    "hp_share_at_end": 0.209,
+    "cp_from": "seen",
     "fast_move": {
-     "id": "BUBBLE",
-     "name": "Bubble",
-     "turns": 3,
-     "energy_gain": 11,
-     "known_from": "inferred"
+     "name": "unknown",
+     "known_from": "unknown"
     },
     "charged_moves": [
      {
-      "id": "ICE_BEAM",
-      "name": "Ice Beam",
-      "energy": 55,
-      "known_from": "guessed",
-      "times_used": 0
+      "name": "Psycho Boost",
+      "known_from": "seen"
      },
      {
-      "id": "PLAY_ROUGH",
-      "name": "Play Rough",
-      "energy": 60,
-      "known_from": "seen",
-      "times_used": 2
+      "name": "Thunderbolt",
+      "known_from": "seen"
      }
     ],
-    "other_charged_moves": {
-     "Ice Beam": 0.54,
-     "Hydro Pump": 0.46
-    }
+    "fainted": null
    },
    {
-    "species": "drapion",
-    "name": "Drapion",
-    "known_from": "seen",
-    "cp": 1496,
-    "cp_from": "screen",
-    "stats_assumed": true,
-    "fainted": true,
-    "hp_share_at_end": 0.0,
+    "name": "Azumarill",
+    "cp": 1500,
+    "cp_from": "seen",
     "fast_move": {
-     "id": "POISON_STING",
-     "name": "Poison Sting",
-     "turns": 2,
-     "energy_gain": 9,
-     "known_from": "guessed",
-     "odds": {
-      "Poison Sting": 0.38,
-      "Infestation": 0.33,
-      "Bite": 0.29
-     }
+     "name": "unknown",
+     "known_from": "unknown"
     },
     "charged_moves": [
      {
-      "id": "CRUNCH",
-      "name": "Crunch",
-      "energy": 45,
-      "known_from": "guessed",
-      "times_used": 0
-     },
-     {
-      "id": "AQUA_TAIL",
-      "name": "Aqua Tail",
-      "energy": 35,
-      "known_from": "seen",
-      "times_used": 1
+      "name": "Play Rough",
+      "known_from": "seen"
      }
     ],
-    "other_charged_moves": {
-     "Crunch": 0.53,
-     "Sludge Bomb": 0.36,
-     "Fell Stinger": 0.11
-    }
+    "fainted": null
+   },
+   {
+    "name": "Drapion",
+    "cp": 1496,
+    "cp_from": "seen",
+    "fast_move": {
+     "name": "unknown",
+     "known_from": "unknown"
+    },
+    "charged_moves": [
+     {
+      "name": "Aqua Tail",
+      "known_from": "seen"
+     }
+    ],
+    "fainted": true
    }
   ],
-  "theirs_unseen": 1
+  "theirs_unseen": null
  },
  "summary": {
   "charged": {
-   "mine": 3,
-   "theirs": 3
+   "mine": 5,
+   "theirs": 6
   },
   "charged_shielded": {
-   "mine": 1,
+   "mine": 2,
    "theirs": 1
   },
   "shields_left": {
    "mine": 0,
-   "theirs": 0
+   "theirs": null
   },
   "switches": {
-   "mine": 2,
-   "theirs": 48
+   "mine": null,
+   "theirs": null
   },
   "faints": {
    "mine": 1,
@@ -250,2523 +188,1204 @@
  },
  "actions": [
   {
-   "kind": "start",
-   "t": 2.5,
-   "fighting_turn": 9,
-   "mine": "Mimikyu",
-   "theirs": "Azumarill",
-   "incomplete_start": false,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 105,
-     "hp_max": 107,
-     "hp_share": 0.981,
-     "energy": 32
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 191,
-     "hp_max": 191,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 11
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 0.0,
-   "fighting_turn": 9,
-   "side": "mine",
-   "from": "Mimikyu",
-   "to": "Mimikyu",
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 105,
-     "hp_max": 107,
-     "hp_share": 0.981,
-     "energy": 32
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 191,
-     "hp_max": 191,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 11
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 2.5,
-   "until": 11.8,
-   "fighting_turn": 9,
-   "turns": 17,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 8,
-    "hits_seen": 6
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 6
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 75,
-     "hp_max": 107,
-     "hp_share": 0.701,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 149,
-     "hp_max": 191,
-     "hp_share": 0.78,
-     "energy": [
-      66,
-      66
-     ],
-     "energy_ceiling": 66
-    }
-   }
-  },
-  {
    "kind": "charged",
-   "t": 11.8,
-   "fighting_turn": 26,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Play Rough",
-   "move_id": "PLAY_ROUGH",
-   "move_known_from": "seen",
-   "cost": 60,
-   "energy_before": 100,
-   "target": "Azumarill",
+   "t": 19.100004,
+   "confirmed_at_seconds": 19.100004,
    "shielded": false,
-   "target_hp_before": 149,
-   "target_hp_after": 149,
-   "target_hp_max": 191,
-   "target_bar_read": false,
-   "expected_damage": 64,
-   "resolved_t": 21.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 75,
-     "hp_max": 107,
-     "hp_share": 0.701,
-     "energy": 40
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 149,
-     "hp_max": 191,
-     "hp_share": 0.78,
-     "energy": [
-      66,
-      66
-     ],
-     "energy_ceiling": 66
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 21.0,
-   "until": 23.8,
-   "fighting_turn": 26,
-   "turns": 6,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 71,
-     "hp_max": 107,
-     "hp_share": 0.664,
-     "energy": 56
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 79,
-     "hp_max": 191,
-     "hp_share": 0.414,
-     "energy": [
-      77,
-      77
-     ],
-     "energy_ceiling": 88
-    }
-   }
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 30.583338031234,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 0,
+   "source_observation_seconds": [
+    28.000004,
+    29.000004
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 28.000004,
+   "state": null
   },
   {
    "kind": "charged",
-   "t": 23.8,
-   "fighting_turn": 31,
    "side": "theirs",
    "pokemon": "Azumarill",
    "move": "Play Rough",
-   "move_id": "PLAY_ROUGH",
-   "move_known_from": "seen",
-   "cost": 60,
-   "energy_before": [
-    77,
-    77
-   ],
-   "energy_ceiling": 88,
-   "target": "Mimikyu",
+   "t": 32.100006,
+   "confirmed_at_seconds": 32.100006,
    "shielded": false,
-   "target_hp_before": 71,
-   "target_hp_after": 71,
-   "target_hp_max": 107,
-   "target_bar_read": false,
-   "expected_damage": 47,
-   "resolved_t": 34.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 71,
-     "hp_max": 107,
-     "hp_share": 0.664,
-     "energy": 64
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 79,
-     "hp_max": 191,
-     "hp_share": 0.414,
-     "energy": [
-      17,
-      17
-     ],
-     "energy_ceiling": 28
-    }
-   }
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 43.16667329749104,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 1,
+   "source_observation_seconds": [
+    41.000006,
+    42.000006
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 41.000006,
+   "state": null
   },
   {
-   "kind": "fighting",
-   "t": 34.0,
-   "until": 43.8,
-   "fighting_turn": 32,
-   "turns": 19,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 6
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 5
-   },
-   "unexplained_health_changes": 3,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 43,
-     "hp_max": 107,
-     "hp_share": 0.402,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 2,
-     "left": 3,
-     "hp": 44,
-     "hp_max": 191,
-     "hp_share": 0.23,
-     "energy": [
-      83,
-      83
-     ],
-     "energy_ceiling": 94
-    }
-   }
+   "kind": "form",
+   "status": "confirmed",
+   "side": "mine",
+   "pokemon": "Mimikyu",
+   "cp": 1499,
+   "identity": "Mimikyu:1499",
+   "form": "mimikyu_busted",
+   "t": 34.766673000000004,
+   "confirmed_at_seconds": 35.10000675883256,
+   "source_observation_seconds": [
+    43.666673,
+    43.83334
+   ],
+   "source_availability_seconds": [
+    43.666673374295954,
+    43.83334006656426
+   ],
+   "charge_index": 1,
+   "target_header_seen_seconds": 32.000004915514594,
+   "target_proof_anchor_seconds": 33.0,
+   "target_source_pts": 103862940,
+   "target_source_time_base": "1/90000",
+   "method": "repeated_literal_disguise_caption_with_bracketed_causal_target",
+   "model_build_used": false,
+   "target_recovery_seconds": 44.00000675883256,
+   "target_recovery_source_pts": 104942940,
+   "target_recovery_time_base": "1/90000",
+   "target_recovery_identity": "Mimikyu:1499",
+   "source_only": true,
+   "source_clip_seconds": 43.666673,
+   "state": null
   },
   {
    "kind": "charged",
-   "t": 43.8,
-   "fighting_turn": 51,
    "side": "mine",
    "pokemon": "Mimikyu",
    "move": "Shadow Sneak",
-   "move_id": "SHADOW_SNEAK",
-   "move_known_from": "seen",
-   "cost": 50,
-   "energy_before": 100,
-   "target": "Azumarill",
+   "t": 51.100009,
+   "confirmed_at_seconds": 51.100009,
    "shielded": true,
-   "target_hp_before": 44,
-   "target_hp_after": 44,
-   "target_hp_max": 191,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 53.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 43,
-     "hp_max": 107,
-     "hp_share": 0.402,
-     "energy": 50
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 44,
-     "hp_max": 191,
-     "hp_share": 0.23,
-     "energy": [
-      83,
-      83
-     ],
-     "energy_ceiling": 94
-    }
-   }
+   "shield_status": "confirmed_spend",
+   "shield_confirmed_at_seconds": 61.666676139272916,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 2,
+   "source_observation_seconds": [
+    60.000009,
+    61.000009
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 60.000009,
+   "state": null
   },
   {
-   "kind": "fighting",
-   "t": 53.0,
-   "until": 57.8,
-   "fighting_turn": 51,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 32,
-     "hp_max": 107,
-     "hp_share": 0.299,
-     "energy": 82
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
+   "kind": "shield",
+   "side": "theirs",
+   "t": 52.60000944700461,
+   "confirmed_at_seconds": 52.76667613927292,
+   "associated_attack_seconds": 60.000009,
+   "associated_attack": "Shadow Sneak",
+   "counter_change_interval_seconds": [
+    61.416676100870454,
+    61.50000944700461
+   ],
+   "method": "independent_visible_shield_decrement",
+   "charge_index": 2,
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 61.50000944700461,
+   "state": null
   },
   {
    "kind": "charged",
-   "t": 57.8,
-   "fighting_turn": 60,
    "side": "theirs",
    "pokemon": "Azumarill",
    "move": "Play Rough",
-   "move_id": "PLAY_ROUGH",
-   "move_known_from": "seen",
-   "cost": 60,
-   "energy_before": [
-    100,
-    100
-   ],
-   "energy_ceiling": 100,
-   "target": "Mimikyu",
+   "t": 63.100011,
+   "confirmed_at_seconds": 63.100011,
    "shielded": false,
-   "target_hp_before": 32,
-   "target_hp_after": 32,
-   "target_hp_max": 107,
-   "target_bar_read": false,
-   "expected_damage": 47,
-   "resolved_t": 65.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 32,
-     "hp_max": 107,
-     "hp_share": 0.299,
-     "energy": 90
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 65.0,
-   "until": 66.0,
-   "fighting_turn": 60,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Mimikyu",
-    "fast_move": "Shadow Claw",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Mimikyu",
-     "shields": 2,
-     "left": 3,
-     "hp": 32,
-     "hp_max": 107,
-     "hp_share": 0.299,
-     "energy": 90
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 66.0,
-   "fighting_turn": 62,
-   "side": "mine",
-   "from": "Mimikyu",
-   "to": "Corviknight",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 66.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 67.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 67.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 68.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 68.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 69.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 69.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 70.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 70.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 71.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 71.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 72.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 72.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 73.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 73.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 74.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 74.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 83.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 83.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 84.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 84.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 85.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 95.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 95.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 96.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 96.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 97.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 97.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 98.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 98.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 99.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 109.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 109.5,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 110.0,
-   "fighting_turn": 62,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 66.0,
-   "until": 110.42,
-   "fighting_turn": 62,
-   "turns": 1181,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1181,
-    "hits_seen": 7
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 393,
-    "hits_seen": 14
-   },
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 150,
-     "hp_share": 0.787,
-     "energy": 0
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 1,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      40,
-      40
-     ],
-     "energy_ceiling": 51
-    }
-   }
-  },
-  {
-   "kind": "faint",
-   "t": 110.42,
-   "fighting_turn": 1243,
-   "side": "mine",
-   "pokemon": "Corviknight",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 111.5,
-   "fighting_turn": 1243,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 110.42,
-   "until": 112.0,
-   "fighting_turn": 1243,
-   "turns": 2,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 0
-   },
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 112.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 112.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 113.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 113.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 114.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 114.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 115.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 115.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 125.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 125.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 127.5,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 135.0,
-   "fighting_turn": 1245,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Deoxys",
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 111.8,
-   "until": 137.0,
-   "fighting_turn": 1245,
-   "turns": 164,
-   "mine": {
-    "pokemon": "Corviknight",
-    "fast_move": "Sand Attack",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 164,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Azumarill",
-    "fast_move": "Bubble",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 54,
-    "hits_seen": 2
-   },
-   "state": {
-    "mine": {
-     "active": "Corviknight",
-     "shields": 2,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 150,
-     "hp_share": 0.0,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Azumarill",
-     "shields": 0,
-     "left": 3,
-     "hp": 40,
-     "hp_max": 191,
-     "hp_share": 0.209,
-     "energy": [
-      100,
-      100
-     ],
-     "energy_ceiling": 100
-    }
-   }
-  },
-  {
-   "kind": "switch",
-   "t": 137.0,
-   "fighting_turn": 1409,
-   "side": "theirs",
-   "from": "Azumarill",
-   "to": "Drapion",
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 101,
-     "hp_max": 145,
-     "hp_share": 0.697,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 3,
-     "hp": 118,
-     "hp_max": 118,
-     "hp_share": 1.0,
-     "energy": [
-      0,
-      0
-     ],
-     "energy_ceiling": 9
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 137.0,
-   "until": 141.8,
-   "fighting_turn": 1409,
-   "turns": 9,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 1
-   },
-   "theirs": {
-    "pokemon": "Drapion",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 4,
-    "hits_seen": 4
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 1,
-     "left": 2,
-     "hp": 84,
-     "hp_max": 145,
-     "hp_share": 0.579,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 3,
-     "hp": 88,
-     "hp_max": 118,
-     "hp_share": 0.746,
-     "energy": [
-      45,
-      45
-     ],
-     "energy_ceiling": 45
-    }
-   }
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 74.1666780593958,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 3,
+   "source_observation_seconds": [
+    72.000011,
+    73.000011
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 72.000011,
+   "state": null
   },
   {
    "kind": "charged",
-   "t": 141.8,
-   "fighting_turn": 1418,
+   "side": "theirs",
+   "pokemon": "Deoxys",
+   "move": "Thunderbolt",
+   "t": 81.10001399999999,
+   "confirmed_at_seconds": 81.10001399999999,
+   "shielded": false,
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 92.50001420890938,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 4,
+   "source_observation_seconds": [
+    90.000014,
+    91.000014
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 90.000014,
+   "state": null
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "move": "Iron Head",
+   "t": 93.100016,
+   "confirmed_at_seconds": 93.100016,
+   "shielded": true,
+   "shield_status": "confirmed_spend",
+   "shield_confirmed_at_seconds": 103.08334916794675,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 5,
+   "source_observation_seconds": [
+    102.000016,
+    103.000016
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 102.000016,
+   "state": null
+  },
+  {
+   "kind": "shield",
+   "side": "theirs",
+   "t": 94.01668247567844,
+   "confirmed_at_seconds": 94.18334916794674,
+   "associated_attack_seconds": 102.000016,
+   "associated_attack": "Iron Head",
+   "counter_change_interval_seconds": [
+    102.83334912954429,
+    102.91668247567844
+   ],
+   "method": "independent_visible_shield_decrement",
+   "charge_index": 5,
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 102.91668247567844,
+   "state": null
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "move": "Iron Head",
+   "t": 107.10001799999999,
+   "confirmed_at_seconds": 107.10001799999999,
+   "shielded": false,
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 109.00001674347158,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 6,
+   "source_observation_seconds": [
+    116.000018,
+    117.000018
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 116.000018,
+   "state": null
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "pokemon": "Corviknight",
+   "t": 110.71668504096262,
+   "confirmed_at_seconds": 111.43335181771633,
+   "timing_uncertainty_seconds": 0.1,
+   "timing_interval_seconds": null,
+   "occurrence_time_basis": "measured_zero_or_disappearance",
+   "method": "native_fighting_live_to_zero_and_fade",
+   "independent_support": {
+    "status": "confirmed",
+    "reason": "independent_party_decrement",
+    "first_visible_seconds": 120.16668512544803,
+    "confirmed_seconds": 120.33335181771633
+   },
+   "model_build_used": false,
+   "result_used": false,
+   "source_only": true,
+   "source_clip_seconds": 119.61668504096262,
+   "state": null
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "pokemon": "Deoxys",
+   "move": "Psycho Boost",
+   "t": 123.10002,
+   "confirmed_at_seconds": 123.10002,
+   "shielded": true,
+   "shield_status": "confirmed_spend",
+   "shield_confirmed_at_seconds": 133.25002046850997,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 7,
+   "source_observation_seconds": [
+    132.00002,
+    133.00002
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 132.00002,
+   "state": null
+  },
+  {
+   "kind": "shield",
+   "side": "mine",
+   "t": 124.18335377624166,
+   "confirmed_at_seconds": 124.35002046850997,
+   "associated_attack_seconds": 132.00002,
+   "associated_attack": "Psycho Boost",
+   "counter_change_interval_seconds": [
+    133.00002043010753,
+    133.08335377624167
+   ],
+   "method": "independent_visible_shield_decrement",
+   "charge_index": 7,
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 133.08335377624167,
+   "state": null
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "pokemon": "Deoxys",
+   "move": "Psycho Boost",
+   "t": 133.100022,
+   "confirmed_at_seconds": 133.100022,
+   "shielded": false,
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 144.16668881208398,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 8,
+   "source_observation_seconds": [
+    142.000022,
+    143.000022
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 142.000022,
+   "state": null
+  },
+  {
+   "kind": "charged",
    "side": "theirs",
    "pokemon": "Drapion",
    "move": "Aqua Tail",
-   "move_id": "AQUA_TAIL",
-   "move_known_from": "seen",
-   "cost": 35,
-   "energy_before": [
-    45,
-    45
+   "t": 150.100024,
+   "confirmed_at_seconds": 150.100024,
+   "shielded": null,
+   "shield_status": "unknown",
+   "shield_confirmed_at_seconds": null,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 9,
+   "source_observation_seconds": [
+    159.000024
    ],
-   "energy_ceiling": 45,
-   "target": "Vigoroth",
-   "shielded": true,
-   "target_hp_before": 84,
-   "target_hp_after": 84,
-   "target_hp_max": 145,
-   "target_bar_read": false,
-   "expected_damage": 1,
-   "resolved_t": 151.0,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 84,
-     "hp_max": 145,
-     "hp_share": 0.579,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 3,
-     "hp": 88,
-     "hp_max": 118,
-     "hp_share": 0.746,
-     "energy": [
-      10,
-      10
-     ],
-     "energy_ceiling": 19
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 151.0,
-   "until": 154.8,
-   "fighting_turn": 1418,
-   "turns": 6,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 6,
-    "hits_seen": 0
-   },
-   "theirs": {
-    "pokemon": "Drapion",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
-    "hits_seen": 2
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 77,
-     "hp_max": 145,
-     "hp_share": 0.531,
-     "energy": 100
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 3,
-     "hp": 84,
-     "hp_max": 118,
-     "hp_share": 0.712,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 46
-    }
-   }
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 159.000024,
+   "state": null
   },
   {
    "kind": "charged",
-   "t": 154.8,
-   "fighting_turn": 1424,
    "side": "mine",
    "pokemon": "Vigoroth",
    "move": "Bulldoze",
-   "move_id": "BULLDOZE",
-   "move_known_from": "seen",
-   "cost": 55,
-   "energy_before": 100,
-   "target": "Drapion",
+   "t": 162.10002599999999,
+   "confirmed_at_seconds": 162.10002599999999,
    "shielded": false,
-   "target_hp_before": 84,
-   "target_hp_after": 0,
-   "target_hp_max": 118,
-   "target_bar_read": true,
-   "expected_damage": 71,
-   "resolved_t": 162.8,
-   "cue": true,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 77,
-     "hp_max": 145,
-     "hp_share": 0.531,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 46
-    }
-   }
+   "shield_status": "confirmed_no_spend",
+   "shield_confirmed_at_seconds": 164.0000251920123,
+   "identity_status": "observed_actor",
+   "method": "visible_named_release",
+   "charge_index": 10,
+   "source_observation_seconds": [
+    171.000026,
+    172.000026
+   ],
+   "model_build_used": false,
+   "source_only": true,
+   "source_clip_seconds": 171.000026,
+   "state": null
   },
   {
    "kind": "faint",
-   "t": 162.8,
-   "fighting_turn": 1424,
    "side": "theirs",
    "pokemon": "Drapion",
-   "next": null,
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 77,
-     "hp_max": 145,
-     "hp_share": 0.531,
-     "energy": 45
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 46
-    }
-   }
-  },
-  {
-   "kind": "fighting",
-   "t": 162.8,
-   "until": 186.8,
-   "fighting_turn": 1424,
-   "turns": 1,
-   "mine": {
-    "pokemon": "Vigoroth",
-    "fast_move": "Scratch",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
-    "hits_seen": 1
+   "t": 163.10002642089094,
+   "confirmed_at_seconds": 164.10002657450076,
+   "timing_uncertainty_seconds": 0.08333333333333333,
+   "timing_interval_seconds": null,
+   "occurrence_time_basis": "measured_zero_or_disappearance",
+   "method": "three_empty_bar_samples_and_independent_party_decrement",
+   "independent_support": {
+    "status": "confirmed",
+    "reason": "independent_party_decrement",
+    "first_visible_seconds": 172.83335988223246,
+    "confirmed_seconds": 173.00002657450077
    },
-   "theirs": {
-    "pokemon": "Drapion",
-    "fast_move": "Poison Sting",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 0,
-    "hits_seen": 3
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 77,
-     "hp_max": 145,
-     "hp_share": 0.531,
-     "energy": 49
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 46
-    }
-   }
-  },
-  {
-   "kind": "end",
-   "t": 186.8,
-   "fighting_turn": 1439,
-   "result": "win",
-   "result_from": "result screen",
-   "left": {
-    "mine": 2,
-    "theirs": 2
-   },
-   "state": {
-    "mine": {
-     "active": "Vigoroth",
-     "shields": 0,
-     "left": 2,
-     "hp": 77,
-     "hp_max": 145,
-     "hp_share": 0.531,
-     "energy": 49
-    },
-    "theirs": {
-     "active": "Drapion",
-     "shields": 0,
-     "left": 2,
-     "hp": 0,
-     "hp_max": 118,
-     "hp_share": 0.0,
-     "energy": [
-      37,
-      37
-     ],
-     "energy_ceiling": 100
-    }
-   }
+   "model_build_used": false,
+   "result_used": false,
+   "source_only": true,
+   "source_clip_seconds": 172.00002642089095,
+   "state": null
   }
  ],
  "deductions": [],
+ "source_state": {
+  "schema": "public-game-state-v2",
+  "t": 197.9166970686124,
+  "phase": {
+   "value": null,
+   "status": "unknown",
+   "reason": "No current cue or bounded recent scene context"
+  },
+  "incomplete_start": false,
+  "accuracy_verified": false,
+  "battle_clock": {
+   "value": null,
+   "status": "unknown",
+   "reason": "Action start and uninterrupted game clock are not verified"
+  },
+  "switch_cooldown": {
+   "value": null,
+   "status": "unknown",
+   "reason": "Switch cause and timer have not been independently confirmed"
+  },
+  "controls": [],
+  "result": {
+   "value": "win",
+   "status": "retained",
+   "observed_at_seconds": 196.25003014592934,
+   "age_seconds": 1.666667,
+   "source_status": "observed",
+   "state_validity": "carried_forward"
+  },
+  "pending_attack": {
+   "id": 12,
+   "side": "mine",
+   "started_at_seconds": 190.0000291858679,
+   "attacker": "Vigoroth:1495",
+   "defender": "Deoxys:1500",
+   "stage": "charging",
+   "move": null,
+   "announced_at_seconds": null,
+   "energy_cost": null,
+   "confirmed_changes": []
+  },
+  "sides": {
+   "mine": {
+    "active": "Vigoroth:1495",
+    "pokemon": {
+     "Vigoroth:1495": {
+      "species": {
+       "value": "Vigoroth",
+       "status": "retained",
+       "observed_at_seconds": 191.66669610855095,
+       "age_seconds": 6.250001,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1495,
+       "status": "retained",
+       "observed_at_seconds": 191.66669610855095,
+       "age_seconds": 6.250001,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0.381944,
+        0.409722
+       ],
+       "status": "pending",
+       "observed_at_seconds": 189.16669572452636,
+       "units": "fraction",
+       "integer_hp_range": null,
+       "maximum_hp": null,
+       "method": "native_live_pixels",
+       "camera_owner_basis": null,
+       "camera_species": null,
+       "identity_basis": "last_recent_confirmed_header",
+       "age_seconds": 8.750001,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": null,
+        "reason": "Current active HP is unreadable outside a held attack; previous pixels may precede a hit or entry",
+        "since_seconds": 189.91669583973373
+       },
+       "last_known_value": [
+        0.381944,
+        0.409722
+       ]
+      },
+      "energy": {
+       "value": [
+        27,
+        32
+       ],
+       "status": "pending",
+       "observed_at_seconds": 187.333362109575,
+       "units": "whole_energy_units",
+       "integer_ranges": [
+        [
+         27,
+         32
+        ]
+       ],
+       "method": "settled_discs_and_causally_confirmed_move_labels",
+       "fill_uncertainty": 0.08,
+       "accuracy_verified": false,
+       "age_seconds": 10.583335,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": 12,
+        "reason": "Charged attack may spend energy",
+        "since_seconds": 190.0000291858679
+       },
+       "last_known_value": [
+        27,
+        32
+       ]
+      },
+      "charged_moves": {
+       "charge_0": {
+        "value": "Bulldoze",
+        "status": "retained",
+        "observed_at_seconds": 188.00002887864824,
+        "age_seconds": 9.916668,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "charge_1": {
+        "value": "Body Slam",
+        "status": "retained",
+        "observed_at_seconds": 188.00002887864824,
+        "age_seconds": 9.916668,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "used_BULLDOZE": {
+        "value": "Bulldoze",
+        "status": "retained",
+        "observed_at_seconds": 171.0000262672811,
+        "method": "exact_announced_move_name",
+        "age_seconds": 26.916671,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No independent faint confirmation",
+       "age_seconds": 0.0
+      },
+      "form": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Header does not identify the form or Shadow status",
+       "age_seconds": 0.0
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     },
+     "Mimikyu:1499": {
+      "species": {
+       "value": "Mimikyu",
+       "status": "retained",
+       "observed_at_seconds": 64.00000983102919,
+       "age_seconds": 133.916687,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1499,
+       "status": "retained",
+       "observed_at_seconds": 64.00000983102919,
+       "age_seconds": 133.916687,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0.265734,
+        0.293706
+       ],
+       "status": "pending",
+       "observed_at_seconds": 64.25000986943165,
+       "units": "fraction",
+       "integer_hp_range": null,
+       "maximum_hp": null,
+       "method": "native_live_pixels",
+       "camera_owner_basis": null,
+       "camera_species": null,
+       "identity_basis": "last_recent_confirmed_header",
+       "age_seconds": 133.666687,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": 3,
+        "reason": "Current active HP is unreadable outside a held attack; previous pixels may precede a hit or entry",
+        "since_seconds": 64.58334325396825
+       },
+       "last_known_value": [
+        0.265734,
+        0.293706
+       ]
+      },
+      "energy": {
+       "value": [
+        62,
+        69
+       ],
+       "status": "pending",
+       "observed_at_seconds": 50.500007757296466,
+       "units": "whole_energy_units",
+       "integer_ranges": [
+        [
+         62,
+         69
+        ]
+       ],
+       "method": "settled_discs_and_causally_confirmed_move_labels",
+       "fill_uncertainty": 0.08,
+       "accuracy_verified": false,
+       "unconfirmed_at_exit": true,
+       "age_seconds": 147.416689,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": 3,
+        "reason": "Charged attack may spend energy",
+        "since_seconds": 53.00000814132105
+       },
+       "last_known_value": [
+        62,
+        69
+       ]
+      },
+      "charged_moves": {
+       "charge_0": {
+        "value": "Shadow Sneak",
+        "status": "retained",
+        "observed_at_seconds": 64.00000983102919,
+        "age_seconds": 133.916687,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "charge_1": {
+        "value": "Play Rough",
+        "status": "retained",
+        "observed_at_seconds": 64.00000983102919,
+        "age_seconds": 133.916687,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "used_PLAYROUGH": {
+        "value": "Play Rough",
+        "status": "retained",
+        "observed_at_seconds": 28.00000430107527,
+        "method": "exact_announced_move_name",
+        "age_seconds": 169.916693,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "used_SHADOWSNEAK": {
+        "value": "Shadow Sneak",
+        "status": "retained",
+        "observed_at_seconds": 60.00000921658986,
+        "method": "exact_announced_move_name",
+        "age_seconds": 137.916688,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No independent faint confirmation",
+       "age_seconds": 0.0
+      },
+      "form": {
+       "value": "mimikyu_busted",
+       "status": "retained",
+       "observed_at_seconds": 43.666673,
+       "confirmed_at_seconds": 44.00000675883256,
+       "source_observation_seconds": [
+        43.666673,
+        43.83334
+       ],
+       "method": "repeated_literal_disguise_caption_with_bracketed_causal_target",
+       "identity": "Mimikyu:1499",
+       "model_build_used": false,
+       "source_availability_seconds": [
+        43.666673374295954,
+        43.83334006656426
+       ],
+       "age_seconds": 154.250024,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     },
+     "Corviknight:1493": {
+      "species": {
+       "value": "Corviknight",
+       "status": "retained",
+       "observed_at_seconds": 122.6666855094726,
+       "age_seconds": 75.250012,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1493,
+       "status": "retained",
+       "observed_at_seconds": 122.6666855094726,
+       "age_seconds": 75.250012,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0,
+        0
+       ],
+       "status": "stale",
+       "observed_at_seconds": 120.33335181771633,
+       "method": "source_measured_zero_and_confirmation",
+       "units": "fraction",
+       "unconfirmed_at_exit": true,
+       "age_seconds": 77.583345,
+       "source_status": "observed",
+       "state_validity": "unconfirmed"
+      },
+      "energy": {
+       "value": [
+        10,
+        15
+       ],
+       "status": "historical",
+       "observed_at_seconds": 119.66668504864312,
+       "units": "whole_energy_units",
+       "integer_ranges": [
+        [
+         10,
+         15
+        ]
+       ],
+       "method": "settled_discs_and_causally_confirmed_move_labels",
+       "fill_uncertainty": 0.08,
+       "accuracy_verified": false,
+       "unconfirmed_at_exit": true,
+       "age_seconds": 78.250012,
+       "source_status": "estimated",
+       "state_validity": "before_faint",
+       "reason": "Last known reading before confirmed faint"
+      },
+      "charged_moves": {
+       "charge_1": {
+        "value": "Iron Head",
+        "status": "retained",
+        "observed_at_seconds": 120.00001843317972,
+        "age_seconds": 77.916679,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "charge_0": {
+        "value": "Air Cutter",
+        "status": "retained",
+        "observed_at_seconds": 120.00001843317972,
+        "age_seconds": 77.916679,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "used_IRONHEAD": {
+        "value": "Iron Head",
+        "status": "retained",
+        "observed_at_seconds": 102.00001566820276,
+        "method": "exact_announced_move_name",
+        "age_seconds": 95.916681,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": true,
+       "status": "retained",
+       "observed_at_seconds": 120.33335181771633,
+       "method": "source_measured_zero_and_confirmation",
+       "event_seconds": 119.61668504096262,
+       "age_seconds": 77.583345,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "form": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Header does not identify the form or Shadow status",
+       "age_seconds": 0.0
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     }
+    },
+    "shields": {
+     "value": 0,
+     "status": "retained",
+     "observed_at_seconds": 191.66669610855095,
+     "method": "sustained_visible_counter",
+     "age_seconds": 6.250001,
+     "source_status": "observed",
+     "state_validity": "carried_forward"
+    },
+    "left": {
+     "value": 2,
+     "status": "retained",
+     "observed_at_seconds": 191.7500294546851,
+     "method": "sustained_visible_counter",
+     "age_seconds": 6.166668,
+     "source_status": "observed",
+     "state_validity": "carried_forward"
+    },
+    "active_observed_at_seconds": 191.66669610855095,
+    "active_transition_unsettled_until_seconds": 123.50001889400922,
+    "active_status": "retained"
+   },
+   "opponent": {
+    "active": "Deoxys:1500",
+    "pokemon": {
+     "Deoxys:1500": {
+      "species": {
+       "value": "Deoxys",
+       "status": "retained",
+       "observed_at_seconds": 191.00002933947772,
+       "age_seconds": 6.916668,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1500,
+       "status": "retained",
+       "observed_at_seconds": 191.00002933947772,
+       "age_seconds": 6.916668,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0.115646,
+        0.142857
+       ],
+       "status": "pending",
+       "observed_at_seconds": 189.25002907066053,
+       "units": "fraction",
+       "integer_hp_range": null,
+       "maximum_hp": null,
+       "method": "native_live_pixels",
+       "camera_owner_basis": null,
+       "camera_species": null,
+       "identity_basis": "last_recent_confirmed_header",
+       "age_seconds": 8.666668,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": 12,
+        "reason": "Incoming charged damage is not resolved",
+        "since_seconds": 190.0000291858679
+       },
+       "last_known_value": [
+        0.115646,
+        0.142857
+       ]
+      },
+      "energy": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Move costs and settled disc fill required",
+       "age_seconds": 0.0
+      },
+      "charged_moves": {
+       "used_THUNDERBOLT": {
+        "value": "Thunderbolt",
+        "status": "retained",
+        "observed_at_seconds": 90.00001382488479,
+        "method": "exact_announced_move_name",
+        "age_seconds": 107.916683,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       },
+       "used_PSYCHOBOOST": {
+        "value": "Psycho Boost",
+        "status": "retained",
+        "observed_at_seconds": 142.000021812596,
+        "method": "exact_announced_move_name",
+        "age_seconds": 55.916675,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No independent faint confirmation",
+       "age_seconds": 0.0
+      },
+      "form": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Header does not identify the form or Shadow status",
+       "age_seconds": 0.0
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     },
+     "Azumarill:1500": {
+      "species": {
+       "value": "Azumarill",
+       "status": "retained",
+       "observed_at_seconds": 74.0000113671275,
+       "age_seconds": 123.916686,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1500,
+       "status": "retained",
+       "observed_at_seconds": 74.0000113671275,
+       "age_seconds": 123.916686,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0.158621,
+        0.186207
+       ],
+       "status": "pending",
+       "observed_at_seconds": 74.66667813620072,
+       "units": "fraction",
+       "integer_hp_range": null,
+       "maximum_hp": null,
+       "method": "native_live_pixels",
+       "camera_owner_basis": null,
+       "camera_species": null,
+       "identity_basis": "last_recent_confirmed_header",
+       "age_seconds": 123.250019,
+       "source_status": "estimated",
+       "state_validity": "pending_change",
+       "pending_event": {
+        "event_id": 4,
+        "reason": "Current active HP is unreadable outside a held attack; previous pixels may precede a hit or entry",
+        "since_seconds": 74.91667817460318
+       },
+       "last_known_value": [
+        0.158621,
+        0.186207
+       ]
+      },
+      "energy": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Move costs and settled disc fill required",
+       "age_seconds": 0.0
+      },
+      "charged_moves": {
+       "used_PLAYROUGH": {
+        "value": "Play Rough",
+        "status": "retained",
+        "observed_at_seconds": 72.00001105990783,
+        "method": "exact_announced_move_name",
+        "age_seconds": 125.916686,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No independent faint confirmation",
+       "age_seconds": 0.0
+      },
+      "form": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Header does not identify the form or Shadow status",
+       "age_seconds": 0.0
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     },
+     "Drapion:1496": {
+      "species": {
+       "value": "Drapion",
+       "status": "retained",
+       "observed_at_seconds": 185.00002841781875,
+       "age_seconds": 12.916669,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "cp": {
+       "value": 1496,
+       "status": "retained",
+       "observed_at_seconds": 185.00002841781875,
+       "age_seconds": 12.916669,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "health": {
+       "value": [
+        0,
+        0
+       ],
+       "status": "stale",
+       "observed_at_seconds": 173.00002657450077,
+       "method": "source_measured_zero_and_confirmation",
+       "units": "fraction",
+       "unconfirmed_at_exit": true,
+       "age_seconds": 24.91667,
+       "source_status": "observed",
+       "state_validity": "unconfirmed"
+      },
+      "energy": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Move costs and settled disc fill required",
+       "age_seconds": 0.0
+      },
+      "charged_moves": {
+       "used_AQUATAIL": {
+        "value": "Aqua Tail",
+        "status": "retained",
+        "observed_at_seconds": 159.00002442396314,
+        "method": "exact_announced_move_name",
+        "age_seconds": 38.916673,
+        "source_status": "observed",
+        "state_validity": "carried_forward"
+       }
+      },
+      "fast_move": {
+       "value": null,
+       "status": "unknown",
+       "reason": "No fast-move name shown",
+       "age_seconds": 0.0
+      },
+      "attack_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "defense_stage": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Buff history has not been verified",
+       "age_seconds": 0.0
+      },
+      "fainted": {
+       "value": true,
+       "status": "retained",
+       "observed_at_seconds": 173.00002657450077,
+       "method": "source_measured_zero_and_confirmation",
+       "event_seconds": 172.00002642089095,
+       "age_seconds": 24.91667,
+       "source_status": "observed",
+       "state_validity": "carried_forward"
+      },
+      "form": {
+       "value": null,
+       "status": "unknown",
+       "reason": "Header does not identify the form or Shadow status",
+       "age_seconds": 0.0
+      },
+      "maximum_hp": {
+       "value": null,
+       "status": "unknown",
+       "reason": "CP alone does not fix IVs or maximum HP",
+       "age_seconds": 0.0
+      }
+     }
+    },
+    "shields": {
+     "value": 0,
+     "status": "pending",
+     "observed_at_seconds": 191.66669610855095,
+     "method": "sustained_visible_counter",
+     "age_seconds": 6.250001,
+     "source_status": "observed",
+     "state_validity": "pending_change",
+     "pending_event": {
+      "event_id": 12,
+      "reason": "Shield decision is not resolved",
+      "since_seconds": 190.0000291858679
+     },
+     "last_known_value": 0
+    },
+    "left": {
+     "value": 2,
+     "status": "retained",
+     "observed_at_seconds": 191.66669610855095,
+     "method": "sustained_visible_counter",
+     "age_seconds": 6.250001,
+     "source_status": "observed",
+     "state_validity": "carried_forward"
+    },
+    "active_observed_at_seconds": 191.00002933947772,
+    "active_transition_unsettled_until_seconds": 186.50002857142857,
+    "active_status": "retained"
+   }
+  }
+ },
  "built_from": [
-  "events.jsonl.gz",
+  "continuity.jsonl.gz",
+  "creator-forms.json",
+  "model-support.json",
+  "source-events.jsonl.gz",
   "source.json",
-  "state.json",
-  "states.jsonl.gz",
   "timeline.json",
-  "track.json",
   "verdict.json"
  ]
 }

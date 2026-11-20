@@ -4,14 +4,15 @@ Only exact species/move vocabulary and source coordinates are serialized.
 The original OCR files are immutable; supplemental text is a derived input.
 """
 import re
+from visible_vocabulary import species_key, move_key
 
 
 def compact(text):
-    return re.sub('[^A-Z]','',text.upper())
+    return move_key(text)
 
 
 def parse_banner(records,legal_pairs):
-    names={compact(name):name for name,_ in legal_pairs}
+    names={species_key(name):name for name,_ in legal_pairs}
     moves={compact(move):move for _,move in legal_pairs}
     ordered=sorted((r for r in records if r['confidence']>=.90),key=lambda r:(r['bounds'][1],r['bounds'][0]))
     found=[]
@@ -50,6 +51,7 @@ def acquire_releases(folder,raw,timeline):
     fingerprint=dict(schema='missing-native-release-banners-v1',sample_hz=2,windows=windows,
         video_sha256=meta['video_sha256'],alignment_sha256=sha256(folder/'frame_alignment.jsonl.gz'),
         kernel_sha256=hashlib.sha256(Path(__file__).read_bytes().replace(b'\r\n',b'\n')).hexdigest(),
+        vocabulary_sha256=sha256(Path(__file__).with_name('visible_vocabulary.py')),
         gamemaster_sha256=sha256(root/'data/gamemaster.json'),av=av.__version__,cv2=cv2.__version__)
     saved=json.loads(receipt.read_text(encoding='utf8')) if receipt.exists() else {}
     if saved.get('fingerprint')!=fingerprint or not target.exists() or saved.get('data_sha256')!=sha256(target):

@@ -8,6 +8,7 @@ from __future__ import annotations
 import copy
 import re
 from state_continuity import StateContinuity
+from visible_vocabulary import move_key, species_key
 
 
 def unknown(reason):
@@ -47,10 +48,13 @@ def energy_candidates(fills, costs, ready, tolerance=.065):
 
 
 class PublicState:
-    def __init__(self, move_costs, *, incomplete_start=False, legal_moves=None):
+    def __init__(self, move_costs, *, incomplete_start=False, legal_moves=None, extra_moves=(), form_events=()):
+        from creator_forms import FormEvidence
+        self.forms = FormEvidence(form_events)
         self.move_costs = move_costs
         self.incomplete_start = incomplete_start
         self.legal_moves=legal_moves or {}
+        self.extra_moves=set(extra_moves)
         self.sides = {s: {"active": None, "pokemon": {}, "shields": unknown("No confirmed counter"),
                           "left": unknown("No confirmed counter"), "counter_runs": {}}
                       for s in ("mine", "opponent")}
@@ -58,7 +62,7 @@ class PublicState:
         self.charge_owner = None
         self.move_names = {}
         for name in sorted(move_costs, key=len, reverse=True):
-            self.move_names[re.sub(r"[^A-Z]", "", name.upper())] = name
+            self.move_names[move_key(name)] = name
         self.last_charge = {}
         self.continuity = StateContinuity()
         self.result = unknown("No result shown")
@@ -263,17 +267,19 @@ class PublicState:
                         method=constraint['method'], fill_uncertainty=constraint['fill_uncertainty'],
                         accuracy_verified=False)
                     self.continuity.observed(side, identity, 'energy')
+        for side, identity in self.forms.advance(t, self.sides):
+            self.continuity.observed(side, identity, 'form', changed=True)
         if frame.get("text_observation", {}).get("fresh_this_frame"):
             for record in frame["text_observation"]["records"]:
-                key = re.sub(r"[^A-Z]", "", record["text"].upper())
-                if "USED" not in key:
+                parts = re.split('used', record['text'], maxsplit=1, flags=re.I)
+                if len(parts) != 2:
                     continue
-                actor, move = key.split("USED", 1)
+                actor, move = species_key(parts[0]), move_key(parts[1])
                 name = self.move_names.get(move)
                 if name is None:
                     continue
                 matching = [side for side, state in self.sides.items() if state["active"]
-                            and re.sub(r"[^A-Z]", "", state["pokemon"][state["active"]]["species"]["value"].upper()) == actor]
+                            and species_key(state["pokemon"][state["active"]]["species"]["value"]) == actor]
                 owner = matching[0] if len(matching) == 1 else self.charge_owner if self.charge_owner in matching else None
                 if owner:
                     state = self.sides[owner]
@@ -281,7 +287,10 @@ class PublicState:
                     if t - self.last_charge.get(signature, -100) > 5:
                         state["pokemon"][state["active"]]["charged_moves"]["used_" + move] = evidence(name, t,
                             method="exact_announced_move_name", raw_text=record["text"])
-                        self.continuity.announcement(owner, name, self.move_costs[name], t, self.sides)
+                        # An extra Mega move's meter has not been verified from
+                        # these views. Do not assert a spend of normal energy.
+                        cost=None if name in self.extra_moves else self.move_costs[name]
+                        self.continuity.announcement(owner, name, cost, t, self.sides)
                     self.last_charge[signature] = t
         if frame["result"].get("value") is not None and frame["result"].get("status") == "observed":
             self.result = evidence(frame["result"]["value"], t)

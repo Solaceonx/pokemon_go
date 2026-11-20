@@ -23,15 +23,16 @@
   }
  },
  "seconds": 179.1,
- "fighting_turns": 92,
+ "fighting_turns": 95,
  "checks": {
-  "verdict": "pass",
-  "failed": [],
-  "notes": [
-   "unexplained changes in 19% of looks",
-   "fast move only guessed for jumpluff"
+  "verdict": "fail",
+  "failed": [
+   "energy: energy_ball at 69.5s had 26 of 45"
   ],
-  "unexplained_health_changes": 21
+  "notes": [
+   "unexplained changes in 17% of looks"
+  ],
+  "unexplained_health_changes": 20
  },
  "teams": {
   "mine": [
@@ -184,16 +185,11 @@
     "fainted": true,
     "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "FAIRY_WIND",
-     "name": "Fairy Wind",
-     "turns": 2,
-     "energy_gain": 9,
-     "known_from": "guessed",
-     "odds": {
-      "Fairy Wind": 0.49,
-      "Bullet Seed": 0.4,
-      "Infestation": 0.11
-     }
+     "id": "BULLET_SEED",
+     "name": "Bullet Seed",
+     "turns": 3,
+     "energy_gain": 13,
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -318,19 +314,19 @@
    "t": 0.0,
    "until": 6.1,
    "fighting_turn": 0,
-   "turns": 11,
+   "turns": 12,
    "mine": {
     "pokemon": "Ursaluna",
     "fast_move": "Scratch",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 11,
-    "hits_seen": 4
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 7
    },
    "theirs": {
     "pokemon": "Lanturn",
     "fast_move": "Water Gun",
     "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 11,
+    "fast_moves_if_no_pause": 12,
     "hits_seen": 8
    },
    "unexplained_health_changes": 4,
@@ -342,38 +338,38 @@
      "hp": 105,
      "hp_max": 144,
      "hp_share": 0.729,
-     "energy": 44
+     "energy": 48
     },
     "theirs": {
      "active": "Lanturn",
      "shields": 2,
      "left": 3,
-     "hp": 166,
+     "hp": 160,
      "hp_max": 194,
-     "hp_share": 0.856,
+     "hp_share": 0.825,
      "energy": [
-      42,
-      42
+      49,
+      49
      ],
-     "energy_ceiling": 42
+     "energy_ceiling": 49
     }
    }
   },
   {
    "kind": "charged",
    "t": 6.1,
-   "fighting_turn": 11,
+   "fighting_turn": 12,
    "side": "mine",
    "pokemon": "Ursaluna",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 44,
+   "energy_before": 48,
    "target": "Lanturn",
    "shielded": false,
-   "target_hp_before": 166,
-   "target_hp_after": 166,
+   "target_hp_before": 160,
+   "target_hp_after": 160,
    "target_hp_max": 194,
    "target_bar_read": false,
    "expected_damage": null,
@@ -387,20 +383,20 @@
      "hp": 91,
      "hp_max": 144,
      "hp_share": 0.632,
-     "energy": 9
+     "energy": 13
     },
     "theirs": {
      "active": "Lanturn",
      "shields": 2,
      "left": 3,
-     "hp": 166,
+     "hp": 160,
      "hp_max": 194,
-     "hp_share": 0.856,
+     "hp_share": 0.825,
      "energy": [
       49,
       49
      ],
-     "energy_ceiling": 42
+     "energy_ceiling": 49
     }
    }
   },
@@ -408,7 +404,7 @@
    "kind": "fighting",
    "t": 15.5,
    "until": 19.1,
-   "fighting_turn": 11,
+   "fighting_turn": 12,
    "turns": 6,
    "mine": {
     "pokemon": "Ursaluna",
@@ -433,7 +429,7 @@
      "hp": 71,
      "hp_max": 144,
      "hp_share": 0.493,
-     "energy": 33
+     "energy": 37
     },
     "theirs": {
      "active": "Lanturn",
@@ -446,14 +442,14 @@
       70,
       70
      ],
-     "energy_ceiling": 63
+     "energy_ceiling": 70
     }
    }
   },
   {
    "kind": "charged",
    "t": 19.1,
-   "fighting_turn": 17,
+   "fighting_turn": 18,
    "side": "theirs",
    "pokemon": "Lanturn",
    "move": "Surf",
@@ -464,7 +460,7 @@
     70,
     70
    ],
-   "energy_ceiling": 63,
+   "energy_ceiling": 70,
    "target": "Ursaluna",
    "shielded": true,
    "target_hp_before": 71,
@@ -482,7 +478,7 @@
      "hp": 71,
      "hp_max": 144,
      "hp_share": 0.493,
-     "energy": 33
+     "energy": 37
     },
     "theirs": {
      "active": "Lanturn",
@@ -503,7 +499,7 @@
    "kind": "fighting",
    "t": 27.5,
    "until": 32.1,
-   "fighting_turn": 17,
+   "fighting_turn": 18,
    "turns": 8,
    "mine": {
     "pokemon": "Ursaluna",
@@ -528,7 +524,7 @@
      "hp": 35,
      "hp_max": 144,
      "hp_share": 0.243,
-     "energy": 65
+     "energy": 69
     },
     "theirs": {
      "active": "Lanturn",
@@ -548,14 +544,14 @@
   {
    "kind": "charged",
    "t": 32.1,
-   "fighting_turn": 25,
+   "fighting_turn": 26,
    "side": "mine",
    "pokemon": "Ursaluna",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 65,
+   "energy_before": 69,
    "target": "Lanturn",
    "shielded": true,
    "target_hp_before": 49,
@@ -573,7 +569,7 @@
      "hp": 35,
      "hp_max": 144,
      "hp_share": 0.243,
-     "energy": 30
+     "energy": 34
     },
     "theirs": {
      "active": "Lanturn",
@@ -594,7 +590,7 @@
    "kind": "fighting",
    "t": 41.5,
    "until": 53.5,
-   "fighting_turn": 25,
+   "fighting_turn": 26,
    "turns": 6,
    "mine": {
     "pokemon": "Ursaluna",
@@ -619,7 +615,7 @@
      "hp": 4,
      "hp_max": 144,
      "hp_share": 0.028,
-     "energy": 54
+     "energy": 58
     },
     "theirs": {
      "active": "Lanturn",
@@ -639,7 +635,7 @@
   {
    "kind": "switch",
    "t": 53.5,
-   "fighting_turn": 31,
+   "fighting_turn": 32,
    "side": "theirs",
    "from": "Lanturn",
    "to": "Jumpluff",
@@ -651,7 +647,7 @@
      "hp": 4,
      "hp_max": 144,
      "hp_share": 0.028,
-     "energy": 19
+     "energy": 23
     },
     "theirs": {
      "active": "Jumpluff",
@@ -671,14 +667,14 @@
   {
    "kind": "charged",
    "t": 45.1,
-   "fighting_turn": 31,
+   "fighting_turn": 32,
    "side": "mine",
    "pokemon": "Ursaluna",
    "move": "Swift",
    "move_id": "SWIFT",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 54,
+   "energy_before": 58,
    "target": "Lanturn",
    "shielded": false,
    "target_hp_before": 142,
@@ -696,7 +692,7 @@
      "hp": 4,
      "hp_max": 144,
      "hp_share": 0.028,
-     "energy": 19
+     "energy": 23
     },
     "theirs": {
      "active": "Jumpluff",
@@ -717,7 +713,7 @@
    "kind": "fighting",
    "t": 53.5,
    "until": 54.0,
-   "fighting_turn": 31,
+   "fighting_turn": 32,
    "turns": 1,
    "mine": {
     "pokemon": "Ursaluna",
@@ -728,8 +724,8 @@
    },
    "theirs": {
     "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
@@ -741,7 +737,7 @@
      "hp": 4,
      "hp_max": 144,
      "hp_share": 0.028,
-     "energy": 19
+     "energy": 23
     },
     "theirs": {
      "active": "Jumpluff",
@@ -761,7 +757,7 @@
   {
    "kind": "switch",
    "t": 54.0,
-   "fighting_turn": 32,
+   "fighting_turn": 33,
    "side": "mine",
    "from": "Ursaluna",
    "to": "Solrock",
@@ -794,7 +790,7 @@
    "kind": "fighting",
    "t": 54.0,
    "until": 60.1,
-   "fighting_turn": 32,
+   "fighting_turn": 33,
    "turns": 11,
    "mine": {
     "pokemon": "Solrock",
@@ -805,10 +801,10 @@
    },
    "theirs": {
     "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
-    "hits_seen": 1
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 3,
+    "hits_seen": 4
    },
    "state": {
     "mine": {
@@ -828,17 +824,17 @@
      "hp_max": 153,
      "hp_share": 0.732,
      "energy": [
-      45,
-      45
+      26,
+      26
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 52
     }
    }
   },
   {
    "kind": "charged",
    "t": 60.1,
-   "fighting_turn": 42,
+   "fighting_turn": 43,
    "side": "theirs",
    "pokemon": "Jumpluff",
    "move": "Energy Ball",
@@ -846,10 +842,11 @@
    "move_known_from": "seen",
    "cost": 45,
    "energy_before": [
-    45,
-    45
+    26,
+    26
    ],
-   "energy_ceiling": 63,
+   "energy_ceiling": 65,
+   "energy_short_by": 19,
    "target": "Solrock",
    "shielded": false,
    "target_hp_before": 131,
@@ -878,9 +875,9 @@
      "hp_share": 0.732,
      "energy": [
       0,
-      0
+      20
      ],
-     "energy_ceiling": 9
+     "energy_ceiling": 33
     }
    }
   },
@@ -888,7 +885,7 @@
    "kind": "fighting",
    "t": 69.5,
    "until": 74.1,
-   "fighting_turn": 43,
+   "fighting_turn": 44,
    "turns": 6,
    "mine": {
     "pokemon": "Solrock",
@@ -899,9 +896,9 @@
    },
    "theirs": {
     "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 3,
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 2,
     "hits_seen": 0
    },
    "state": {
@@ -922,17 +919,17 @@
      "hp_max": 153,
      "hp_share": 0.588,
      "energy": [
-      9,
-      9
+      0,
+      20
      ],
-     "energy_ceiling": 18
+     "energy_ceiling": 33
     }
    }
   },
   {
    "kind": "charged",
    "t": 74.1,
-   "fighting_turn": 45,
+   "fighting_turn": 46,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Rock Slide",
@@ -967,10 +964,10 @@
      "hp_max": 153,
      "hp_share": 0.02,
      "energy": [
-      27,
-      27
+      26,
+      46
      ],
-     "energy_ceiling": 36
+     "energy_ceiling": 59
     }
    }
   },
@@ -978,7 +975,7 @@
    "kind": "fighting",
    "t": 82.5,
    "until": 85.1,
-   "fighting_turn": 49,
+   "fighting_turn": 50,
    "turns": 2,
    "mine": {
     "pokemon": "Solrock",
@@ -989,9 +986,9 @@
    },
    "theirs": {
     "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 1,
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1013,17 +1010,17 @@
      "hp_max": 153,
      "hp_share": 0.02,
      "energy": [
-      36,
-      36
+      26,
+      46
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "charged",
    "t": 85.1,
-   "fighting_turn": 51,
+   "fighting_turn": 52,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
@@ -1059,17 +1056,17 @@
      "hp_max": 153,
      "hp_share": 0.0,
      "energy": [
-      36,
-      36
+      39,
+      59
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 59
     }
    }
   },
   {
    "kind": "faint",
    "t": 92.43,
-   "fighting_turn": 51,
+   "fighting_turn": 52,
    "side": "theirs",
    "pokemon": "Jumpluff",
    "next": null,
@@ -1091,10 +1088,10 @@
      "hp_max": 153,
      "hp_share": 0.0,
      "energy": [
-      36,
-      36
+      39,
+      59
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 59
     }
    }
   },
@@ -1102,23 +1099,22 @@
    "kind": "fighting",
    "t": 92.43,
    "until": 106.1,
-   "fighting_turn": 51,
-   "turns": 10,
+   "fighting_turn": 52,
+   "turns": 12,
    "mine": {
     "pokemon": "Solrock",
     "fast_move": "Psywave",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 10,
-    "hits_seen": 1
+    "fast_moves_if_no_pause": 12,
+    "hits_seen": 3
    },
    "theirs": {
     "pokemon": "Jumpluff",
-    "fast_move": "Fairy Wind",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 5,
+    "fast_move": "Bullet Seed",
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 4,
     "hits_seen": 1
    },
-   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Solrock",
@@ -1127,37 +1123,37 @@
      "hp": 27,
      "hp_max": 145,
      "hp_share": 0.186,
-     "energy": 28
+     "energy": 52
     },
     "theirs": {
      "active": "Stunfisk",
      "shields": 1,
      "left": 2,
-     "hp": 163,
+     "hp": 147,
      "hp_max": 172,
-     "hp_share": 0.948,
+     "hp_share": 0.855,
      "energy": [
-      18,
-      18
+      45,
+      45
      ],
-     "energy_ceiling": 27
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "charged",
    "t": 106.1,
-   "fighting_turn": 57,
+   "fighting_turn": 64,
    "side": "mine",
    "pokemon": "Solrock",
    "move": "Weather Ball (Fire)",
    "move_id": "WEATHER_BALL_FIRE",
    "move_known_from": "seen",
    "cost": 35,
-   "energy_before": 40,
+   "energy_before": 52,
    "target": "Stunfisk",
    "shielded": false,
-   "target_hp_before": 163,
+   "target_hp_before": 147,
    "target_hp_after": 110,
    "target_hp_max": 172,
    "target_bar_read": true,
@@ -1172,7 +1168,7 @@
      "hp": 27,
      "hp_max": 145,
      "hp_share": 0.186,
-     "energy": 5
+     "energy": 17
     },
     "theirs": {
      "active": "Stunfisk",
@@ -1182,10 +1178,10 @@
      "hp_max": 172,
      "hp_share": 0.64,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 54
     }
    }
   },
@@ -1193,7 +1189,7 @@
    "kind": "fighting",
    "t": 114.5,
    "until": 115.0,
-   "fighting_turn": 61,
+   "fighting_turn": 64,
    "turns": 1,
    "mine": {
     "pokemon": "Solrock",
@@ -1217,7 +1213,7 @@
      "hp": 27,
      "hp_max": 145,
      "hp_share": 0.186,
-     "energy": 5
+     "energy": 17
     },
     "theirs": {
      "active": "Stunfisk",
@@ -1227,17 +1223,17 @@
      "hp_max": 172,
      "hp_share": 0.64,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 54
     }
    }
   },
   {
    "kind": "switch",
    "t": 115.0,
-   "fighting_turn": 62,
+   "fighting_turn": 65,
    "side": "mine",
    "from": "Solrock",
    "to": "Blastoise",
@@ -1259,10 +1255,10 @@
      "hp_max": 172,
      "hp_share": 0.64,
      "energy": [
-      45,
-      45
+      54,
+      54
      ],
-     "energy_ceiling": 54
+     "energy_ceiling": 63
     }
    }
   },
@@ -1270,7 +1266,7 @@
    "kind": "fighting",
    "t": 115.0,
    "until": 118.1,
-   "fighting_turn": 62,
+   "fighting_turn": 65,
    "turns": 5,
    "mine": {
     "pokemon": "Blastoise",
@@ -1300,21 +1296,21 @@
      "active": "Stunfisk",
      "shields": 1,
      "left": 2,
-     "hp": 105,
+     "hp": 106,
      "hp_max": 172,
-     "hp_share": 0.61,
+     "hp_share": 0.616,
      "energy": [
-      63,
-      63
+      72,
+      72
      ],
-     "energy_ceiling": 72
+     "energy_ceiling": 81
     }
    }
   },
   {
    "kind": "charged",
    "t": 118.1,
-   "fighting_turn": 67,
+   "fighting_turn": 70,
    "side": "theirs",
    "pokemon": "Stunfisk",
    "move": "Discharge",
@@ -1322,10 +1318,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    63,
-    63
+    72,
+    72
    ],
-   "energy_ceiling": 72,
+   "energy_ceiling": 81,
    "target": "Blastoise",
    "shielded": false,
    "target_hp_before": 123,
@@ -1349,14 +1345,14 @@
      "active": "Stunfisk",
      "shields": 1,
      "left": 2,
-     "hp": 105,
+     "hp": 106,
      "hp_max": 172,
-     "hp_share": 0.61,
+     "hp_share": 0.616,
      "energy": [
-      23,
-      23
+      32,
+      32
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 41
     }
    }
   },
@@ -1364,7 +1360,7 @@
    "kind": "fighting",
    "t": 126.5,
    "until": 130.1,
-   "fighting_turn": 67,
+   "fighting_turn": 70,
    "turns": 6,
    "mine": {
     "pokemon": "Blastoise",
@@ -1398,17 +1394,17 @@
      "hp_max": 172,
      "hp_share": 0.535,
      "energy": [
-      50,
-      50
+      59,
+      59
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 68
     }
    }
   },
   {
    "kind": "charged",
    "t": 130.1,
-   "fighting_turn": 73,
+   "fighting_turn": 76,
    "side": "mine",
    "pokemon": "Blastoise",
    "move": "Hydro Cannon",
@@ -1443,10 +1439,10 @@
      "hp_max": 172,
      "hp_share": 0.523,
      "energy": [
-      50,
-      50
+      59,
+      59
      ],
-     "energy_ceiling": 59
+     "energy_ceiling": 68
     }
    }
   },
@@ -1454,21 +1450,21 @@
    "kind": "fighting",
    "t": 139.5,
    "until": 144.1,
-   "fighting_turn": 73,
+   "fighting_turn": 76,
    "turns": 8,
    "mine": {
     "pokemon": "Blastoise",
     "fast_move": "Bite",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 8,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Stunfisk",
     "fast_move": "Thunder Shock",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 3
+    "hits_seen": 4
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1485,21 +1481,21 @@
      "active": "Stunfisk",
      "shields": 0,
      "left": 2,
-     "hp": 82,
+     "hp": 79,
      "hp_max": 172,
-     "hp_share": 0.477,
+     "hp_share": 0.459,
      "energy": [
       86,
       86
      ],
-     "energy_ceiling": 95
+     "energy_ceiling": 100
     }
    }
   },
   {
    "kind": "charged",
    "t": 144.1,
-   "fighting_turn": 81,
+   "fighting_turn": 84,
    "side": "theirs",
    "pokemon": "Stunfisk",
    "move": "Discharge",
@@ -1510,7 +1506,7 @@
     86,
     86
    ],
-   "energy_ceiling": 95,
+   "energy_ceiling": 100,
    "target": "Blastoise",
    "shielded": true,
    "target_hp_before": 50,
@@ -1534,9 +1530,9 @@
      "active": "Stunfisk",
      "shields": 0,
      "left": 2,
-     "hp": 82,
+     "hp": 79,
      "hp_max": 172,
-     "hp_share": 0.477,
+     "hp_share": 0.459,
      "energy": [
       46,
       46
@@ -1549,7 +1545,7 @@
    "kind": "fighting",
    "t": 152.5,
    "until": 154.1,
-   "fighting_turn": 81,
+   "fighting_turn": 84,
    "turns": 2,
    "mine": {
     "pokemon": "Blastoise",
@@ -1593,7 +1589,7 @@
   {
    "kind": "charged",
    "t": 154.1,
-   "fighting_turn": 83,
+   "fighting_turn": 86,
    "side": "theirs",
    "pokemon": "Stunfisk",
    "move": "Discharge",
@@ -1643,7 +1639,7 @@
    "kind": "fighting",
    "t": 162.5,
    "until": 162.77,
-   "fighting_turn": 83,
+   "fighting_turn": 86,
    "turns": 1,
    "mine": {
     "pokemon": "Blastoise",
@@ -1687,7 +1683,7 @@
   {
    "kind": "faint",
    "t": 162.77,
-   "fighting_turn": 84,
+   "fighting_turn": 87,
    "side": "mine",
    "pokemon": "Blastoise",
    "next": null,
@@ -1720,7 +1716,7 @@
    "kind": "fighting",
    "t": 162.77,
    "until": 168.97,
-   "fighting_turn": 84,
+   "fighting_turn": 87,
    "turns": 1,
    "mine": {
     "pokemon": "Blastoise",
@@ -1764,7 +1760,7 @@
   {
    "kind": "faint",
    "t": 168.97,
-   "fighting_turn": 85,
+   "fighting_turn": 88,
    "side": "mine",
    "pokemon": "Blastoise",
    "next": null,
@@ -1776,7 +1772,7 @@
      "hp": 0,
      "hp_max": 144,
      "hp_share": 0.0,
-     "energy": 19
+     "energy": 23
     },
     "theirs": {
      "active": "Stunfisk",
@@ -1797,7 +1793,7 @@
    "kind": "fighting",
    "t": 168.97,
    "until": 171.0,
-   "fighting_turn": 85,
+   "fighting_turn": 88,
    "turns": 2,
    "mine": {
     "pokemon": "Ursaluna",
@@ -1822,7 +1818,7 @@
      "hp": 3,
      "hp_max": 144,
      "hp_share": 0.021,
-     "energy": 19
+     "energy": 23
     },
     "theirs": {
      "active": "Stunfisk",
@@ -1842,7 +1838,7 @@
   {
    "kind": "switch",
    "t": 171.0,
-   "fighting_turn": 87,
+   "fighting_turn": 90,
    "side": "theirs",
    "from": "Stunfisk",
    "to": "Lanturn",
@@ -1854,7 +1850,7 @@
      "hp": 27,
      "hp_max": 145,
      "hp_share": 0.186,
-     "energy": 5
+     "energy": 17
     },
     "theirs": {
      "active": "Lanturn",
@@ -1875,7 +1871,7 @@
    "kind": "fighting",
    "t": 171.0,
    "until": 173.6,
-   "fighting_turn": 87,
+   "fighting_turn": 90,
    "turns": 5,
    "mine": {
     "pokemon": "Solrock",
@@ -1900,7 +1896,7 @@
      "hp": 8,
      "hp_max": 145,
      "hp_share": 0.055,
-     "energy": 21
+     "energy": 33
     },
     "theirs": {
      "active": "Lanturn",
@@ -1920,7 +1916,7 @@
   {
    "kind": "faint",
    "t": 173.6,
-   "fighting_turn": 92,
+   "fighting_turn": 95,
    "side": "mine",
    "pokemon": "Solrock",
    "next": null,
@@ -1932,7 +1928,7 @@
      "hp": 0,
      "hp_max": 145,
      "hp_share": 0.0,
-     "energy": 25
+     "energy": 37
     },
     "theirs": {
      "active": "Lanturn",
@@ -1952,7 +1948,7 @@
   {
    "kind": "end",
    "t": 179.1,
-   "fighting_turn": 92,
+   "fighting_turn": 95,
    "result": "loss",
    "result_from": "result screen",
    "left": {
@@ -1967,7 +1963,7 @@
      "hp": 0,
      "hp_max": 145,
      "hp_share": 0.0,
-     "energy": 25
+     "energy": 37
     },
     "theirs": {
      "active": "Lanturn",
@@ -2003,6 +1999,17 @@
    "value": "Water Gun",
    "how": "fits the size and timing of its hits on our bar",
    "ruled_out": []
+  },
+  {
+   "t": 57.5,
+   "side": "theirs",
+   "pokemon": "Jumpluff",
+   "what": "fast move",
+   "value": "Bullet Seed",
+   "how": "fits its hits on our bar best of the moves not ruled out",
+   "ruled_out": [
+    "Fairy Wind"
+   ]
   },
   {
    "t": 128.5,
