@@ -4560,3 +4560,26 @@ Mimikyu / Wigglytuff / Lickilicky (231134); the fourth battle, on 6e7f3d4, was w
   for Jumpluff's Aerial Ace; on Thievul at 95% for Bastiodon's Flamethrower; both on Clodsire at 84% and 79% for
   Lickilicky's Shadow Ball after Snorlax took two unshielded and fainted.
 - **Throws beaten** four times (their charged move first): Clodsire's Earthquake at 38 s in 230719 never went off.
+
+## The creators' shield and bait habits, from task 46's 82 records (Claude, 2026-11-20)
+
+From the records on `task46-creator-footage` at 73d9360d (two Twitch VODs per channel, all Great League by CP;
+clips that start mid-battle left out). A shield choice is any charged move thrown at a side with a shield left.
+"Bait" is a throw of the cheaper of two known charged moves while the model's energy already covered the dearer one
+(energy is the tracker's ledger, not read from the screen, so this column is approximate). Health is the tracker's
+reading before the hit (about 75% of usable readings right on Codex's tuned checks). "Opponents" pools everyone the
+three faced.
+
+| Who (shield choices) | Shielded | First throw faced | With 2 | With last | At HP > 60% | At HP ≤ 60% | Throws the cheaper move | Bait, then shielded |
+|---|---|---|---|---|---|---|---|---|
+| HomeSliceHenry (63) | 51% | 7/18 | 50% | 52% | 47% | 56% | 49% | 14/24 |
+| reis2occasion (66) | 42% | 10/17 | 59% | 30% | 41% | 45% | 86% | 14/34 |
+| ItsAXN (173) | 34% | 14/37 | 38% | 29% | 20% | 51% | 63% | 28/69 |
+| Their opponents (294) | 44% | 35/72 | 46% | 41% | 39% | 51% | 66% | – |
+
+- ItsAXN shields least, and almost never on a healthy Pokémon (20% above 60% health against 51% below).
+- Reis spends the first shield early (59% with two up, 10 of 17 first throws) and keeps the last (30%).
+- Henry shields about half of everything, the most of the three, including 12 of 20 big moves.
+- Bait while the big move was ready drew a shield 41–58% of the time.
+- Small samples from two VODs each, and the cheaper-move share follows each team's movesets. Not yet usable for
+  scoring decisions against the engine: energy and much of the health are model values, not read (see task 46).
