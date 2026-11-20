@@ -4583,3 +4583,25 @@ three faced.
 - Bait while the big move was ready drew a shield 41–58% of the time.
 - Small samples from two VODs each, and the cheaper-move share follows each team's movesets. Not yet usable for
   scoring decisions against the engine: energy and much of the health are model values, not read (see task 46).
+
+## The engine against the creators' decisions, 29 checked battles (Claude, 2026-11-20)
+
+`scripts/real_decisions.py --games 200 --skip-invalid-state` on the 29 creator records that pass every check on
+`task46-creator-footage` at 112a9813 (Henry 6, Reis 8, ItsAXN 15); the bot is the per-decision model
+(runs/general-decide/q.npz), not task 47's engine. 439 decisions, none dropped. Where the two differ, both choices are
+played on 200 times by the bot against the crowd, so the judge is our own simulator, which favours our choices; the
+state is the tracker's, with energy its ledger, not read.
+
+| Decision | Number | Agree | Differ | Bot − player where they differ (95%) |
+|---|---|---|---|---|
+| Switch or stay | 157 | 53% | 74 | +4.7 ± 5.2 |
+| Shield | 114 | 66% | 39 | −1.1 ± 5.7 |
+| Throw or hold, which move | 168 | 52% | 80 | −2.2 ± 5.3 |
+
+- Level within noise on all three, even with our own simulator as the judge. Per creator, too: no gap is outside its
+  interval except Henry's shields (+3.7 ± 3.5, 9 cases).
+- The bot holds where they throw in 49 cases (−2.7 ± 7.4). In four the hold costs 30+ points in its own simulator,
+  three of them outright: Empoleon's Hydro Cannon on Diggersby (1.00 against 0.00), Vigoroth's Body Slam on Florges
+  (0.78 / 0.00), Tinkaton's Bulldoze on Electrode (1.00 / 0.14). That is the live hold fault of 11-09 again, now in the
+  model rather than the hand rule.
+- They switch where the bot stays in 41 cases, the bot's way +7.1 ± 7.3; not settled.
