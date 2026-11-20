@@ -1,0 +1,47 @@
+{
+  "schema": "source-verified-energy-context-v1",
+  "identities": {
+    "mine": "Fearow:1497",
+    "theirs": "Cramorant:1497"
+  },
+  "moves": {
+    "mine": {
+      "id": "PECK",
+      "gain": 8,
+      "turns": 2
+    },
+    "theirs": {
+      "id": "PECK",
+      "gain": 8,
+      "turns": 2
+    }
+  },
+  "initial_zero_at": 9.5,
+  "fast_only_interval": [
+    9.5,
+    15.75
+  ],
+  "charged_releases": [
+    {
+      "side": "mine",
+      "move": "Drill Peck",
+      "cost": 40,
+      "t": 22.0
+    }
+  ],
+  "video_sha256": "b3ef642a9aa715b7e9fcdae15121a6d573a0ba1dba223522ab9404badb2dc5f5",
+  "native_health": "data/creator_energy_pilot_health_v1.jsonl.gz",
+  "baseline_continuity": "data/creator_energy_pilot_baseline_v1.jsonl.gz",
+  "source_assistance": "Timing corridor and moves manually source-verified, no numeric target counts supplied. Fast-only corridor stops before16.0GetReady, excluding22.0chargedrelease and23.5shieldimpact.",
+  "source_input_provenance": {
+    "original_native_health_sha256": "27c3865755dc9b17d994a7d04a4c011adfcc3a61754f229fa2c7a214354d6663",
+    "original_baseline_continuity_sha256": "45efde37679b7c1ec574796ff04e5f18c83f24def62059e0f182c28b4473cb26",
+    "extraction": "Health: whitelist typed physical measurements only within reviewed fast corridor. Baseline: latest original ledger row at each query point, energy and active identity only. No raw text, images or media.",
+    "baseline_query_scope_only": [
+      11.750001355247981,
+      13.750001585928489,
+      14.750001701268744,
+      25.000002883506344
+    ]
+  }
+}

@@ -136,8 +136,7 @@ and `canonical-battle-records` covered the bot's own live games, not this.
 5. **Disk.** Videos stay out of Git. Delete each full source once its cuts are checked; keep the cuts unless the PC
    runs short (then ask the owner). Report the space used.
 
-**Rules.** Never commit videos, frames, or anyone's in-game trainer name (opponents' names on screen, or the creators'
-own); channel names as source labels are fine. Do not touch or tune on the twenty reserved views. Tests and
+**Rules (owner update 2026-11-20).** Never commit videos, frames or unrestricted OCR. Verified public in-game trainer handles may be published in typed gameplay-only sidecars with source witnesses; do not link real-world identities or sensitive attributes. Channel names as source labels remain permitted. Do not touch or tune on the twenty reserved views. Tests and
 `check_pvpoke.py` (108/108) pass before pushing; branch `task46-creator-footage` with a PR; results in
 `docs/status.md`. Report per channel: videos, battles found, battles whose checks pass, wins and losses where the result
 screen shows.
@@ -1123,3 +1122,8 @@ Task46 J4: researched the persistent Busted Mimikyu native Defense baseline, cor
 
 
 Task46 J4 installed checkpoint: all82 processed/installed with G2 backups, strict29→29/82; privacy1,804files0issues, post-install692tests/one skip108exact. Actual installed original-six64/23/21events0extras;2tighttiming. Full-state certification remains0. Native-form switch baseline corrected after primary-source research; documented mechanics will be looked up before asking the owner.
+
+
+Task46 owner direction 2026-11-20: freeze J4/112a981 and stop strict-pass tuning. Two workers collect completed Twitch VODs newest-first, accept only in-game-confirmed open Great League, retain verified cuts and retire full downloads after verification. One separate energy worker must report fixed-reference coverage/accuracy before any wider replay. Public game handles explicitly permitted as verified typed gameplay metadata. See docs/task46-collection-energy.md.
+
+Task46 split checkpoint: 736 tests / one existing skip and 108/108 exact pass with the current durable collection helpers and separate energy prototype. All511 frozen-reader snapshot files remain unchanged. Source-assisted one-battle energy pilot useful coverage0/8→4/8; exact3/7 scalar targets,3/3 covered scalar targets, one further range-compatible output. Original numeric reference accuracy remains unscorable; no wider energy replay. Two newest VODs downloaded/scanning, initial actual selections restricted LAIC, no new accepted games counted yet. Collection and cross-channel reference scoring continue; task in progress.

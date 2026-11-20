@@ -1,0 +1,37 @@
+{
+  "schema": "task46-energy-delivery-v1",
+  "reader_frozen": true,
+  "reader_commit": "112a9813071093ede5c04d7ad26dbbd0455b574a",
+  "integrated": false,
+  "wider_replay": false,
+  "tests": {
+    "unittest": 722,
+    "skipped_existing": 1,
+    "passed": true,
+    "pvpoke_exact": 108,
+    "pvpoke_total": 108,
+    "log_sha256": "8dce698add7863e52c1385251044e611b48c71d3b14aea03b56a45aa0a5dc4e8"
+  },
+  "files_sha256": {
+    "scripts/recording/energy_rebuild.py": "baf31e57840b44abe755e3ae95ae5f1905766585624950acf83c34af2e31bf0c",
+    "scripts/recording/energy_reference_eval.py": "eaf2ff78b76237a2bc865ae0913479d9f179ceafd40a4dfe849da002e981542c",
+    "tests/test_energy_rebuild.py": "85c880a25a9351df1c3709c1b86f837c0829fb7c0cfcaad8122c89a44e997252",
+    "tests/test_energy_reference_eval.py": "3272429a5f01e091310abe4fa2bad849f53e2b83acf56e572866369c01d9b881",
+    "data/creator_energy_source_supplement_v3.json": "5974ac82062bc6f0e4b99d723c0f409f404cf986cd9a332f798849f79df4d1af",
+    "data/creator_energy_pilot_health_v1.jsonl.gz": "a175400ec905e6b8e5b1842aa0bc7e62b67bb8b81a09405ff9d4f4735a9f4f84",
+    "data/creator_energy_pilot_baseline_v1.jsonl.gz": "9c72893557586ed4f46aef2f2cdc05dbc953d8422d2b2aff76c99e93837c7b43",
+    "data/creator_energy_pilot_context_v1.json": "1531ee10d5d3f3a28e6cd6bef490f608bca606740b6c90800355168a86068ae7",
+    "runs/task46-energy-reference-pilot-v1.json": "00d45c8477ef3e9b9325577f7b0a0a780c0c4ed5bcb6cd379155de7da4acf93e",
+    "runs/task46-energy-reference-reproducible-v1.json": "a7307f32e94da2d7845a787e90a1e76d6b7fe97f6a27e32462933e94f1e7d835",
+    "runs/task46-energy-first-attempt-v1.json": "e4bdbf47ef593597919aca53164e8a3f62af7b71ce09475ae38d63aab6062e75"
+  },
+  "result": "Frozen original numeric energy accuracy N/A (no truth); eight-point one-battle development pilot useful coverage0/8 to4/8, automated timing conditioned on source-verified moves/corridor/start/release; exact3/7 scalar targets,3/3covered scalar targets; no promotion.",
+  "reproduction_command": "python scripts/recording/energy_reference_eval.py --root . --context data/creator_energy_pilot_context_v1.json --labels data/creator_energy_source_supplement_v3.json --out runs/task46-energy-reference-reproduced-local.json",
+  "public_typed_inputs": {
+    "health_rows": 75,
+    "baseline_sampled_rows": 4,
+    "images": 0,
+    "unrestricted_text": 0,
+    "video": 0
+  }
+}
