@@ -1,17 +1,17 @@
 {
   "schema": "creator-live-health-input-v1",
-  "native_measurements_sha256": "4b92e98a1fda0e4200859a97e190b35a2070f505ea24122dd9c56674f290b10f",
-  "base_readings_sha256": "47f40a1a42473c062c8eb06a38acf598e91b4707102e7cc6b6e1d7fa3be5830c",
-  "derived_sha256": "d83119d095a3e26899b3e2d212b4f20a1bb07c216ce67c778d688af81ae7cac0",
+  "native_measurements_sha256": "84ed924766d7fea1642726f7cfeeff0b1f7c16ba1ba16e936731118178410582",
+  "base_readings_sha256": "e7b3154466316b2ceaf7fd5c38cc2acb6e9cbc24c703ae2557713e2a1874df02",
+  "derived_sha256": "c1d573b6cd715fbd1b933562375d654cec77f2a8c9918404e496405315bdabfc",
   "measurement_acquisition": {
     "fingerprint": {
       "schema": "native-health-acquisition-v2",
       "video_sha256": "5609fef395633300064501333c7e2aa07e7d7de3afb4d4e4117b1120a8d451a1",
       "context_sha256": "8ad4a97f3448c0d92abac5552fec2854630c8cf0f3d85c005ac4fc5ceb1166ea",
       "alignment_sha256": "80c57e42c7ca55a83ff4454cb55276fc324563f08beed4e25535c34623888a66",
-      "measurement_code_sha256": "24ea2fd0265135298ebd44be0dd19e6b79b9f314246c099c07c208cd3e33f53c",
+      "measurement_code_sha256": "82164079200d25ec24b262c727a20915683f505e5e425c3fb1fa8bebdeea267a",
       "sample_hz": 12,
-      "sampler_code_sha256": "7320ec182d7e90b42137ef983463c9b77e1ee2573503da5f1685122ed8371cdd",
+      "sampler_code_sha256": "1c98a143649adaa6dbb6166d11fa163f4cbecd37d32fedef7f65923ade4ba246",
       "expected_width": 144,
       "normalization": [
         508,
@@ -22,35 +22,39 @@
       "numpy": "2.5.5",
       "PIL": "12.3.0"
     },
-    "data_sha256": "4b92e98a1fda0e4200859a97e190b35a2070f505ea24122dd9c56674f290b10f",
+    "data_sha256": "84ed924766d7fea1642726f7cfeeff0b1f7c16ba1ba16e936731118178410582",
     "sampled_frames": 114,
     "raw_logs_modified": false
   },
   "sampled_frames": 29,
   "health_measurements": {
-    "mine": 6,
-    "theirs": 7
+    "mine": 7,
+    "theirs": 8
   },
   "counters": {
     "mine": {
       "party": [
         {
-          "first_visible_seconds": 1.0000001153402538,
-          "confirmed_seconds": 1.166666801230296,
+          "first_visible_seconds": 0.9166667723952326,
+          "confirmed_seconds": 1.083333458285275,
           "value": 3,
-          "source_pts": 118396470,
+          "source_pts": 118388910,
           "source_time_base": "1/90000",
-          "continuity": "consistent"
+          "continuity": "consistent",
+          "last_visible_seconds": 3.2500003748558246,
+          "last_source_pts": 118598970
         }
       ],
       "shields": [
         {
-          "first_visible_seconds": 1.0000001153402538,
-          "confirmed_seconds": 1.166666801230296,
+          "first_visible_seconds": 0.9166667723952326,
+          "confirmed_seconds": 1.083333458285275,
           "value": 2,
-          "source_pts": 118396470,
+          "source_pts": 118388910,
           "source_time_base": "1/90000",
-          "continuity": "consistent"
+          "continuity": "consistent",
+          "last_visible_seconds": 3.2500003748558246,
+          "last_source_pts": 118598970
         }
       ]
     },
@@ -62,7 +66,9 @@
           "value": 3,
           "source_pts": 118388910,
           "source_time_base": "1/90000",
-          "continuity": "consistent"
+          "continuity": "consistent",
+          "last_visible_seconds": 3.2500003748558246,
+          "last_source_pts": 118598970
         }
       ],
       "shields": [
@@ -72,7 +78,9 @@
           "value": 2,
           "source_pts": 118388910,
           "source_time_base": "1/90000",
-          "continuity": "consistent"
+          "continuity": "consistent",
+          "last_visible_seconds": 3.2500003748558246,
+          "last_source_pts": 118598970
         }
       ]
     }
@@ -87,8 +95,9 @@
       "label_hz": 1,
       "video_sha256": "5609fef395633300064501333c7e2aa07e7d7de3afb4d4e4117b1120a8d451a1",
       "context_sha256": "2d86572b2794470c9ce283f3ddcb5b299360a78b90cf2f7b6d86f1fde54af488",
-      "code_sha256": "589f8d572959eb9d29891cf6566fa6e0a028e7082236845c27ff3ee68e932760",
+      "code_sha256": "68be82ffa7417926942863236cf610607c609b07f1bd2943b34c9018ace45651",
       "disc_code_sha256": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
+      "vocabulary_code_sha256": "2cd5ccef48404a02c8c78e071d8da9458e6f6f52cadd68a3c54b6276b3c4f1de",
       "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
       "av": "19.0.2",
       "cv2": "5.1.0"
@@ -105,15 +114,17 @@
       "sample_hz": 3,
       "video_sha256": "5609fef395633300064501333c7e2aa07e7d7de3afb4d4e4117b1120a8d451a1",
       "alignment_sha256": "80c57e42c7ca55a83ff4454cb55276fc324563f08beed4e25535c34623888a66",
-      "code_sha256": "159aefe169c01ea0898fe2de3f2693d5681a470c5c25dca5dd421d775e2eec69",
-      "geometry_sha256": "de8f32400e9f5b36d1d1dc9e20a0c00e7b48ff80e7890be841a3d54de6bbcfb8",
+      "code_sha256": "961e01860635d797ce2a65c26e313f3ed753887419f201801c08b67a70058985",
+      "vocabulary_code_sha256": "2cd5ccef48404a02c8c78e071d8da9458e6f6f52cadd68a3c54b6276b3c4f1de",
+      "context_sha256": "8ad4a97f3448c0d92abac5552fec2854630c8cf0f3d85c005ac4fc5ceb1166ea",
+      "geometry_sha256": "f81ecc24c03934b86cd9101cbdcbcd8a3dec3346f96cdc53a3b1b86659301987",
       "glyphs_sha256": "7eabd77bca95860ce773fe6dda10262e92ed4ea9ae598e23290acb747ffe6a04",
       "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
       "av": "19.0.2",
       "cv2": "5.1.0",
       "numpy": "2.5.5"
     },
-    "data_sha256": "7feaba3d7a7a43dce7bfecbde10b6cec118503a7401fd90ec393d36e10b6d9dd",
+    "data_sha256": "1b962cda87f91d5d805938c762f0872f56ab05c31fac77d396a2f4e37c8a2163",
     "samples": 29,
     "raw_logs_modified": false
   },
@@ -123,7 +134,8 @@
       "sample_hz": 1,
       "video_sha256": "5609fef395633300064501333c7e2aa07e7d7de3afb4d4e4117b1120a8d451a1",
       "geometry_sha256": "250481449fa38071dcf28cc7dbf764ba9c9a2bb6536f57dfa5a49e6f76938612",
-      "code_sha256": "34652368d82ac0f9d18b3112072101897842c7b095d50b68b7f9c43e4b4b0c9c",
+      "code_sha256": "e1c247cf3fe39dcb558074d57f132c299f8f31f5c90356d87376b13eb828e573",
+      "vocabulary_code_sha256": "2cd5ccef48404a02c8c78e071d8da9458e6f6f52cadd68a3c54b6276b3c4f1de",
       "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba"
     },
     "data_sha256": "e74b587a8274ce94bde48e837ce46e3606ef0aca30e4c4e7195c58f8029b7e85",

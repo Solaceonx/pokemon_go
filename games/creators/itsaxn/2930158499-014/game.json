@@ -23,15 +23,15 @@
   }
  },
  "seconds": 212.17,
- "fighting_turns": 129,
+ "fighting_turns": 130,
  "checks": {
   "verdict": "pass",
   "failed": [],
   "notes": [
    "no result screen read; result taken from who had Pokémon left",
-   "fast move only guessed for dunsparce"
+   "fast move only guessed for electrode"
   ],
-  "unexplained_health_changes": 17
+  "unexplained_health_changes": 15
  },
  "teams": {
   "mine": [
@@ -187,11 +187,15 @@
     "fainted": true,
     "hp_share_at_end": 0.0,
     "fast_move": {
-     "id": "TACKLE",
-     "name": "Tackle",
-     "turns": 1,
-     "energy_gain": 3,
-     "known_from": "inferred"
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "turns": 4,
+     "energy_gain": 16,
+     "known_from": "guessed",
+     "odds": {
+      "Volt Switch": 0.56,
+      "Spark": 0.44
+     }
     },
     "charged_moves": [
      {
@@ -229,11 +233,7 @@
      "name": "Bite",
      "turns": 1,
      "energy_gain": 4,
-     "known_from": "guessed",
-     "odds": {
-      "Astonish": 0.53,
-      "Bite": 0.47
-     }
+     "known_from": "inferred"
     },
     "charged_moves": [
      {
@@ -332,7 +332,7 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 8,
-    "hits_seen": 2
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -565,16 +565,16 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 0
+    "hits_seen": 1
    },
    "state": {
     "mine": {
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 19,
      "hp_max": 124,
-     "hp_share": 0.169,
+     "hp_share": 0.153,
      "energy": 80
     },
     "theirs": {
@@ -617,9 +617,9 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 19,
      "hp_max": 124,
-     "hp_share": 0.169,
+     "hp_share": 0.153,
      "energy": 40
     },
     "theirs": {
@@ -649,9 +649,9 @@
      "active": "Fearow",
      "shields": 2,
      "left": 3,
-     "hp": 21,
+     "hp": 19,
      "hp_max": 124,
-     "hp_share": 0.169,
+     "hp_share": 0.153,
      "energy": 40
     },
     "theirs": {
@@ -689,7 +689,7 @@
     "fast_moves_if_no_pause": 3,
     "hits_seen": 3
    },
-   "unexplained_health_changes": 2,
+   "unexplained_health_changes": 1,
    "state": {
     "mine": {
      "active": "Fearow",
@@ -704,9 +704,9 @@
      "active": "Electrode",
      "shields": 2,
      "left": 2,
-     "hp": 118,
+     "hp": 109,
      "hp_max": 118,
-     "hp_share": 1.0,
+     "hp_share": 0.924,
      "energy": [
       16,
       16
@@ -736,9 +736,9 @@
      "active": "Electrode",
      "shields": 2,
      "left": 2,
-     "hp": 118,
+     "hp": 109,
      "hp_max": 118,
-     "hp_share": 1.0,
+     "hp_share": 0.924,
      "energy": [
       16,
       16
@@ -758,13 +758,13 @@
     "fast_move": "Peck",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 7,
-    "hits_seen": 6
+    "hits_seen": 8
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 14,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 4
    },
    "unexplained_health_changes": 1,
@@ -786,10 +786,10 @@
      "hp_max": 118,
      "hp_share": 0.729,
      "energy": [
-      54,
-      54
+      64,
+      64
      ],
-     "energy_ceiling": 57
+     "energy_ceiling": 80
     }
    }
   },
@@ -804,10 +804,10 @@
    "move_known_from": "seen",
    "cost": null,
    "energy_before": [
-    54,
-    54
+    64,
+    64
    ],
-   "energy_ceiling": 57,
+   "energy_ceiling": 80,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 127,
@@ -835,10 +835,10 @@
      "hp_max": 118,
      "hp_share": 0.729,
      "energy": [
-      14,
-      14
+      24,
+      24
      ],
-     "energy_ceiling": 17
+     "energy_ceiling": 40
     }
    }
   },
@@ -857,9 +857,9 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 2
    },
    "unexplained_health_changes": 1,
@@ -881,10 +881,10 @@
      "hp_max": 118,
      "hp_share": 0.695,
      "energy": [
-      26,
-      26
+      40,
+      40
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 56
     }
    }
   },
@@ -926,10 +926,10 @@
      "hp_max": 118,
      "hp_share": 0.0,
      "energy": [
-      26,
-      26
+      40,
+      40
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 56
     }
    }
   },
@@ -948,9 +948,9 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -971,10 +971,10 @@
      "hp_max": 118,
      "hp_share": 0.0,
      "energy": [
-      26,
-      26
+      40,
+      40
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 56
     }
    }
   },
@@ -1003,10 +1003,10 @@
      "hp_max": 118,
      "hp_share": 0.322,
      "energy": [
-      29,
-      29
+      40,
+      40
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 56
     }
    }
   },
@@ -1025,9 +1025,9 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 1,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 0
    },
    "state": {
@@ -1048,10 +1048,10 @@
      "hp_max": 118,
      "hp_share": 0.305,
      "energy": [
-      32,
-      32
+      40,
+      40
      ],
-     "energy_ceiling": 35
+     "energy_ceiling": 56
     }
    }
   },
@@ -1066,10 +1066,10 @@
    "move_known_from": "seen",
    "cost": null,
    "energy_before": [
-    32,
-    32
+    40,
+    40
    ],
-   "energy_ceiling": 35,
+   "energy_ceiling": 56,
    "target": "Seismitoad",
    "shielded": false,
    "target_hp_before": 154,
@@ -1100,7 +1100,7 @@
       0,
       0
      ],
-     "energy_ceiling": 3
+     "energy_ceiling": 16
     }
    }
   },
@@ -1119,9 +1119,9 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 3,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 0,
     "hits_seen": 1
    },
    "unexplained_health_changes": 1,
@@ -1143,10 +1143,10 @@
      "hp_max": 118,
      "hp_share": 0.28,
      "energy": [
-      6,
-      6
+      0,
+      0
      ],
-     "energy_ceiling": 9
+     "energy_ceiling": 16
     }
    }
   },
@@ -1193,12 +1193,12 @@
     "fast_move": "Mud Shot",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 3,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 7,
     "hits_seen": 2
    },
@@ -1289,7 +1289,7 @@
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 16,
     "hits_seen": 6
    },
@@ -1380,7 +1380,7 @@
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 5,
     "hits_seen": 1
    },
@@ -1475,7 +1475,7 @@
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 1,
     "hits_seen": 0
    },
@@ -1539,21 +1539,21 @@
   {
    "kind": "fighting",
    "t": 142.5,
-   "until": 147.0,
+   "until": 146.5,
    "fighting_turn": 87,
-   "turns": 9,
+   "turns": 8,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
     "fast_moves_if_no_pause": 4,
-    "hits_seen": 1
+    "hits_seen": 2
    },
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 9,
+    "fast_move_known_from": "inferred",
+    "fast_moves_if_no_pause": 8,
     "hits_seen": 3
    },
    "unexplained_health_changes": 3,
@@ -1571,9 +1571,9 @@
      "active": "Dunsparce",
      "shields": 2,
      "left": 2,
-     "hp": 19,
+     "hp": 16,
      "hp_max": 184,
-     "hp_share": 0.103,
+     "hp_share": 0.087,
      "energy": [
       92,
       92
@@ -1584,8 +1584,8 @@
   },
   {
    "kind": "switch",
-   "t": 147.0,
-   "fighting_turn": 96,
+   "t": 146.5,
+   "fighting_turn": 95,
    "side": "theirs",
    "from": "Dunsparce",
    "to": "Electrode",
@@ -1594,9 +1594,9 @@
      "active": "Tinkaton",
      "shields": 1,
      "left": 2,
-     "hp": 69,
+     "hp": 72,
      "hp_max": 141,
-     "hp_share": 0.489,
+     "hp_share": 0.511,
      "energy": 53
     },
     "theirs": {
@@ -1607,31 +1607,31 @@
      "hp_max": 118,
      "hp_share": 0.28,
      "energy": [
-      9,
-      9
+      0,
+      0
      ],
-     "energy_ceiling": 12
+     "energy_ceiling": 16
     }
    }
   },
   {
    "kind": "fighting",
-   "t": 147.0,
+   "t": 146.5,
    "until": 149.5,
-   "fighting_turn": 96,
-   "turns": 4,
+   "fighting_turn": 95,
+   "turns": 6,
    "mine": {
     "pokemon": "Tinkaton",
     "fast_move": "Fairy Wind",
     "fast_move_known_from": "guessed",
-    "fast_moves_if_no_pause": 2,
+    "fast_moves_if_no_pause": 3,
     "hits_seen": 0
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 4,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "state": {
@@ -1642,7 +1642,7 @@
      "hp": 65,
      "hp_max": 141,
      "hp_share": 0.461,
-     "energy": 71
+     "energy": 80
     },
     "theirs": {
      "active": "Electrode",
@@ -1652,24 +1652,24 @@
      "hp_max": 118,
      "hp_share": 0.186,
      "energy": [
-      21,
-      21
+      16,
+      16
      ],
-     "energy_ceiling": 24
+     "energy_ceiling": 48
     }
    }
   },
   {
    "kind": "charged",
    "t": 149.5,
-   "fighting_turn": 100,
+   "fighting_turn": 101,
    "side": "mine",
    "pokemon": "Tinkaton",
    "move": "Bulldoze",
    "move_id": "BULLDOZE",
    "move_known_from": "seen",
    "cost": 55,
-   "energy_before": 71,
+   "energy_before": 80,
    "target": "Electrode",
    "shielded": true,
    "target_hp_before": 22,
@@ -1687,7 +1687,7 @@
      "hp": 60,
      "hp_max": 141,
      "hp_share": 0.426,
-     "energy": 16
+     "energy": 25
     },
     "theirs": {
      "active": "Electrode",
@@ -1697,10 +1697,10 @@
      "hp_max": 118,
      "hp_share": 0.169,
      "energy": [
-      21,
-      21
+      32,
+      32
      ],
-     "energy_ceiling": 24
+     "energy_ceiling": 48
     }
    }
   },
@@ -1708,7 +1708,7 @@
    "kind": "fighting",
    "t": 159.0,
    "until": 162.5,
-   "fighting_turn": 100,
+   "fighting_turn": 101,
    "turns": 7,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1719,9 +1719,9 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 7,
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
     "hits_seen": 1
    },
    "state": {
@@ -1732,7 +1732,7 @@
      "hp": 58,
      "hp_max": 141,
      "hp_share": 0.411,
-     "energy": 43
+     "energy": 52
     },
     "theirs": {
      "active": "Electrode",
@@ -1742,17 +1742,17 @@
      "hp_max": 118,
      "hp_share": 0.102,
      "energy": [
-      42,
-      42
+      48,
+      48
      ],
-     "energy_ceiling": 45
+     "energy_ceiling": 80
     }
    }
   },
   {
    "kind": "charged",
    "t": 162.5,
-   "fighting_turn": 107,
+   "fighting_turn": 108,
    "side": "theirs",
    "pokemon": "Electrode",
    "move": "Discharge",
@@ -1760,10 +1760,10 @@
    "move_known_from": "seen",
    "cost": 40,
    "energy_before": [
-    42,
-    42
+    48,
+    48
    ],
-   "energy_ceiling": 45,
+   "energy_ceiling": 80,
    "target": "Tinkaton",
    "shielded": false,
    "target_hp_before": 58,
@@ -1781,7 +1781,7 @@
      "hp": 0,
      "hp_max": 141,
      "hp_share": 0.0,
-     "energy": 52
+     "energy": 61
     },
     "theirs": {
      "active": "Electrode",
@@ -1791,17 +1791,17 @@
      "hp_max": 118,
      "hp_share": 0.102,
      "energy": [
-      2,
-      2
+      8,
+      8
      ],
-     "energy_ceiling": 5
+     "energy_ceiling": 24
     }
    }
   },
   {
    "kind": "faint",
    "t": 168.37,
-   "fighting_turn": 107,
+   "fighting_turn": 108,
    "side": "mine",
    "pokemon": "Tinkaton",
    "next": null,
@@ -1813,7 +1813,7 @@
      "hp": 0,
      "hp_max": 141,
      "hp_share": 0.0,
-     "energy": 52
+     "energy": 61
     },
     "theirs": {
      "active": "Electrode",
@@ -1823,10 +1823,10 @@
      "hp_max": 118,
      "hp_share": 0.102,
      "energy": [
-      2,
-      2
+      8,
+      8
      ],
-     "energy_ceiling": 5
+     "energy_ceiling": 24
     }
    }
   },
@@ -1834,7 +1834,7 @@
    "kind": "fighting",
    "t": 168.37,
    "until": 174.98,
-   "fighting_turn": 107,
+   "fighting_turn": 108,
    "turns": 9,
    "mine": {
     "pokemon": "Tinkaton",
@@ -1845,10 +1845,10 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 9,
-    "hits_seen": 2
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 2,
+    "hits_seen": 3
    },
    "state": {
     "mine": {
@@ -1868,17 +1868,17 @@
      "hp_max": 118,
      "hp_share": 0.068,
      "energy": [
-      26,
-      26
+      40,
+      40
      ],
-     "energy_ceiling": 29
+     "energy_ceiling": 56
     }
    }
   },
   {
    "kind": "faint",
    "t": 174.98,
-   "fighting_turn": 116,
+   "fighting_turn": 117,
    "side": "theirs",
    "pokemon": "Electrode",
    "next": null,
@@ -1900,10 +1900,10 @@
      "hp_max": 118,
      "hp_share": 0.0,
      "energy": [
-      29,
-      29
+      40,
+      40
      ],
-     "energy_ceiling": 32
+     "energy_ceiling": 56
     }
    }
   },
@@ -1911,7 +1911,7 @@
    "kind": "fighting",
    "t": 174.98,
    "until": 180.5,
-   "fighting_turn": 116,
+   "fighting_turn": 117,
    "turns": 7,
    "mine": {
     "pokemon": "Seismitoad",
@@ -1922,10 +1922,10 @@
    },
    "theirs": {
     "pokemon": "Electrode",
-    "fast_move": "Tackle",
-    "fast_move_known_from": "inferred",
-    "fast_moves_if_no_pause": 7,
-    "hits_seen": 2
+    "fast_move": "Volt Switch",
+    "fast_move_known_from": "guessed",
+    "fast_moves_if_no_pause": 1,
+    "hits_seen": 1
    },
    "unexplained_health_changes": 1,
    "state": {
@@ -1942,9 +1942,9 @@
      "active": "Dunsparce",
      "shields": 1,
      "left": 1,
-     "hp": 19,
+     "hp": 16,
      "hp_max": 184,
-     "hp_share": 0.103,
+     "hp_share": 0.087,
      "energy": [
       100,
       100
@@ -1956,7 +1956,7 @@
   {
    "kind": "charged",
    "t": 180.5,
-   "fighting_turn": 123,
+   "fighting_turn": 124,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
@@ -1966,8 +1966,8 @@
    "energy_before": 100,
    "target": "Dunsparce",
    "shielded": true,
-   "target_hp_before": 19,
-   "target_hp_after": 19,
+   "target_hp_before": 16,
+   "target_hp_after": 16,
    "target_hp_max": 184,
    "target_bar_read": false,
    "expected_damage": 1,
@@ -1987,9 +1987,9 @@
      "active": "Dunsparce",
      "shields": 0,
      "left": 1,
-     "hp": 19,
+     "hp": 16,
      "hp_max": 184,
-     "hp_share": 0.103,
+     "hp_share": 0.087,
      "energy": [
       100,
       100
@@ -2002,7 +2002,7 @@
    "kind": "fighting",
    "t": 189.0,
    "until": 192.5,
-   "fighting_turn": 123,
+   "fighting_turn": 124,
    "turns": 6,
    "mine": {
     "pokemon": "Seismitoad",
@@ -2014,7 +2014,7 @@
    "theirs": {
     "pokemon": "Dunsparce",
     "fast_move": "Bite",
-    "fast_move_known_from": "guessed",
+    "fast_move_known_from": "inferred",
     "fast_moves_if_no_pause": 6,
     "hits_seen": 0
    },
@@ -2046,7 +2046,7 @@
   {
    "kind": "charged",
    "t": 192.5,
-   "fighting_turn": 129,
+   "fighting_turn": 130,
    "side": "mine",
    "pokemon": "Seismitoad",
    "move": "Icy Wind",
@@ -2091,7 +2091,7 @@
   {
    "kind": "faint",
    "t": 199.83,
-   "fighting_turn": 129,
+   "fighting_turn": 130,
    "side": "theirs",
    "pokemon": "Dunsparce",
    "next": null,
@@ -2123,7 +2123,7 @@
   {
    "kind": "end",
    "t": 212.17,
-   "fighting_turn": 129,
+   "fighting_turn": 130,
    "result": "win",
    "result_from": "who had Pokémon left",
    "left": {
@@ -2166,18 +2166,6 @@
    "how": "every other fast move ruled out",
    "ruled_out": [
     "Water Gun"
-   ]
-  },
-  {
-   "t": 67.0,
-   "side": "theirs",
-   "pokemon": "Electrode",
-   "what": "fast move",
-   "value": "Tackle",
-   "how": "fits its hits on our bar best of the moves not ruled out",
-   "ruled_out": [
-    "Spark",
-    "Volt Switch"
    ]
   }
  ],

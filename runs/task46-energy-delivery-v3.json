@@ -1,0 +1,107 @@
+{
+  "schema": "task46-energy-six-reference-delivery-v3",
+  "preserved_previous_deliveries": [
+    {
+      "receipt": "runs/task46-energy-delivery-v1.json",
+      "sha256": "40ae55e9421becd034e8f4bc7b57b6cd6b1b25bf4d312bc235ebaa91378990f2",
+      "all_pinned_bytes_unchanged": true
+    },
+    {
+      "receipt": "runs/task46-energy-delivery-v2.json",
+      "sha256": "44dde12fa372f140384c84a4156d48e0dfeac2b9d64a807d75f19cdf3f1c991f",
+      "all_pinned_bytes_unchanged": true
+    }
+  ],
+  "reader_and_solver_frozen": true,
+  "detector_thresholds_unchanged_after_axn": true,
+  "integrated": false,
+  "wider_replay": false,
+  "source_reference_groups": 6,
+  "attempted_windows": 18,
+  "numeric_labelled_windows": 16,
+  "unscorable_windows": 2,
+  "tests": {
+    "unittest": 745,
+    "existing_skip": 1,
+    "passed": true,
+    "pvpoke_exact": 108,
+    "pvpoke_total": 108,
+    "focused_energy_tests": 28,
+    "log_sha256": "960027f68e5877b9fbb889eef9ebf2b40b6024b893f2f52dfcfb8c44acfba60d"
+  },
+  "witness_recheck": {
+    "checks": [
+      {
+        "label_file": "data/creator_energy_source_supplement_v3.json",
+        "label_sha256": "5974ac82062bc6f0e4b99d723c0f409f404cf986cd9a332f798849f79df4d1af",
+        "pts": 7672950885,
+        "time_base": "1/520200000",
+        "rgb_sha256": "0abbe51e7457c619bd8223f80307ea4c8bdadc91d1881c3620edc5e441a4a339",
+        "persistent_for_matches": true
+      },
+      {
+        "label_file": "data/creator_energy_henry_source_supplement_v1.json",
+        "label_sha256": "e754ee4f61619799c6e71c1c8492847e263bb982f854cfe0861524ff3855da9a",
+        "pts": 3487500750,
+        "time_base": "1/279000000",
+        "rgb_sha256": "a1e39583bab635c717011a254e4d7d3aaaa46e36d8259a56eef3f2f1e8b676ed",
+        "persistent_for_matches": true
+      }
+    ],
+    "all_match": true
+  },
+  "files_sha256": {
+    "scripts/recording/energy_reference_six.py": "273d90bf898f52acc6ffb11aa70f3b1c5331ee1522525a71abcb07ff974068c2",
+    "tests/test_energy_reference_six.py": "e85279e03c536132ebc93726e21a928aa8679c1d41f91ed8b453363b1d76694a",
+    "data/creator_energy_six_reference_eval_manifest_v1.json": "7ec968d8cb7e44ccbb94526ad2eab25d481e33b95cf1e3f370579efcbb96da67",
+    "data/creator_energy_reis2_source_unscorable_v1.json": "de2a68164c75a27f3cb3b39f9d8bc227b02ed0b2868ff7750ad05dd8c68381f5",
+    "runs/task46-energy-six-original-reference-v1.json": "54556d2b40010adf9e6133dcb8fba1540022efbf702282920530a44f5ecd16fa",
+    "data/creator_energy_henry2_source_supplement_v1.json": "ab8015e82cc111c5ebee288de3d884f49b053019d9c056a471bd09521fe5d103",
+    "data/creator_energy_henry2_pilot_context_v1.json": "2c2bbc9b0e4827dacf004977264fdd0539ee659e1d110bed28e87eff4f8cf589",
+    "data/creator_energy_henry2_pilot_health_v1.jsonl.gz": "d4b893fcdc742b9598cc0fb7308f88137a9f91766d8423e13320a9c86c05eebb",
+    "data/creator_energy_henry2_pilot_baseline_v1.jsonl.gz": "eb411095750f0931675fbc68cc53a673e18ff9ee89f22ea15c4dbe0f8efc828a",
+    "data/creator_energy_axn2_source_supplement_v1.json": "dbe9b37d6ba70f9441dc156a42e8306bd4b55970074d111347d5c893aff5e409",
+    "data/creator_energy_axn2_pilot_context_v1.json": "01f1fc13ce2ab566626c235a6293f428decd4a650462c4724fa15b14d33882ab",
+    "data/creator_energy_axn2_pilot_health_v1.jsonl.gz": "69f48dee1dfbe6b162fb3e34b34bdbdbadb646ca963a4a8de316be0db1ec013a",
+    "data/creator_energy_axn2_pilot_baseline_v1.jsonl.gz": "4107bc63bea857e101b3ec9add5b44eaa8cca4719ec13ae5d5690cc1b4b327d0"
+  },
+  "reproduction_command": "python scripts/recording/energy_reference_six.py --root . --manifest data/creator_energy_six_reference_eval_manifest_v1.json --out runs/task46-energy-six-original-reproduced-local.json",
+  "result": {
+    "useful_before": [
+      0,
+      18
+    ],
+    "useful_after": [
+      6,
+      18
+    ],
+    "useful_labelled_only_after": [
+      6,
+      16
+    ],
+    "useful_source_bootstrap_95": [
+      0.08333333333333333,
+      0.4666666666666667
+    ],
+    "covered_predictions_source_bound_compatible": [
+      5,
+      6
+    ],
+    "false_confident_predictions": 1,
+    "exact_scalar_recovery": [
+      4,
+      10
+    ],
+    "covered_scalar_exact_correct": [
+      4,
+      4
+    ],
+    "exact_recovery_source_bootstrap_95": [
+      0,
+      0.75
+    ],
+    "not_analysis_ready": true
+  },
+  "false_confident_failure": "AXN2904685033 opposingRillaboom at7.5s: predicted0, source8\u20139Scratches=>32\u201336. No acceptedHPdrop is not proof of noattack. Retained failure, not tuned away.",
+  "numeric_accuracy_original_frozen_truth": null
+}

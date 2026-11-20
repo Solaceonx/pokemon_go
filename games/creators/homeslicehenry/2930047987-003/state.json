@@ -1,7 +1,7 @@
 {
-  "t": 187.0,
-  "fighting_turns": 123,
-  "warnings": 10,
+  "t": 187.5,
+  "fighting_turns": 122,
+  "warnings": 7,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,10 +34,10 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "MUD_SHOT",
-        "name": "Mud Shot",
-        "type": "ground",
-        "damage": 2,
+        "id": "POISON_STING",
+        "name": "Poison Sting",
+        "type": "poison",
+        "damage": 3,
         "energy_gain": 9,
         "turns": 2
       },
@@ -151,7 +151,7 @@
         "hp": 0,
         "hp_max": 121,
         "hp_share": 0.0,
-        "energy": 74,
+        "energy": 65,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -202,7 +202,7 @@
         "hp": 0,
         "hp_max": 115,
         "hp_share": 0.0,
-        "energy": 67,
+        "energy": 63,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -292,7 +292,7 @@
     "left": 0,
     "unseen": -1,
     "switch_ready_in": 17.5,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 1,
     "pokemon": [
       {
         "species": "annihilape",
@@ -314,20 +314,20 @@
         "hp": 0,
         "hp_max": 140,
         "hp_share": 0.0,
-        "energy": 68,
+        "energy": 52,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "LOW_KICK",
-          "name": "Low Kick",
+          "id": "COUNTER",
+          "name": "Counter",
           "type": "fighting",
           "turns": 2,
-          "energy_gain": 8,
-          "known_from": "guessed",
+          "energy_gain": 6,
+          "known_from": "inferred",
           "misfit": {
-            "LOW_KICK": 0.95,
-            "COUNTER": 0.91
+            "LOW_KICK": 0.32,
+            "COUNTER": 0.28
           }
         },
         "charged_moves": [
@@ -349,20 +349,19 @@
           }
         ],
         "energy_range": [
-          68,
-          68
+          52,
+          52
         ],
-        "energy_by_clock": 84,
+        "energy_by_clock": 58,
         "energy_odds": {
-          "52": 0.08,
-          "60": 0.12,
-          "68": 0.33,
-          "76": 0.33,
-          "84": 0.12
+          "40": 0.08,
+          "46": 0.12,
+          "52": 0.33,
+          "58": 0.33,
+          "64": 0.12
         },
         "fast_move_odds": {
-          "LOW_KICK": 0.61,
-          "COUNTER": 0.39
+          "COUNTER": 1.0
         },
         "charged_move_odds": {
           "ICE_PUNCH": 1.0,
@@ -374,10 +373,10 @@
         },
         "ready_odds": {
           "ICE_PUNCH": 1.0,
-          "CLOSE_COMBAT": 0.34,
+          "CLOSE_COMBAT": 0.31,
           "RAGE_FIST": 0.25,
           "NIGHT_SLASH": 0.16,
-          "SHADOW_BALL": 0.16,
+          "SHADOW_BALL": 0.13,
           "LOW_SWEEP": 0.09
         }
       },
@@ -400,7 +399,7 @@
         "hp": 0,
         "hp_max": 146,
         "hp_share": 0.0,
-        "energy": 64,
+        "energy": 37,
         "fainted": true,
         "attack_stage": 0,
         "defense_stage": 0,
@@ -412,7 +411,7 @@
           "energy_gain": 9,
           "known_from": "inferred",
           "misfit": {
-            "THUNDER_SHOCK": 0.4
+            "THUNDER_SHOCK": 0.5
           }
         },
         "charged_moves": [
@@ -434,16 +433,16 @@
           }
         ],
         "energy_range": [
-          64,
-          65
+          37,
+          38
         ],
-        "energy_by_clock": 65,
+        "energy_by_clock": 47,
         "energy_odds": {
-          "46": 0.08,
-          "55": 0.12,
-          "64": 0.33,
-          "73": 0.33,
-          "82": 0.12
+          "19": 0.08,
+          "28": 0.12,
+          "37": 0.33,
+          "46": 0.33,
+          "55": 0.12
         },
         "fast_move_odds": {
           "THUNDER_SHOCK": 1.0
@@ -458,13 +457,13 @@
           "FLASH_CANNON": 0.06
         },
         "ready_odds": {
-          "DOUBLE_IRON_BASH": 1.0,
-          "DYNAMIC_PUNCH": 0.27,
-          "SUPER_POWER": 0.24,
-          "ROCK_SLIDE": 0.23,
-          "THUNDERBOLT": 0.13,
-          "HYPER_BEAM": 0.01,
-          "FLASH_CANNON": 0.03
+          "DOUBLE_IRON_BASH": 0.79,
+          "DYNAMIC_PUNCH": 0.12,
+          "SUPER_POWER": 0.11,
+          "ROCK_SLIDE": 0.11,
+          "THUNDERBOLT": 0.02,
+          "HYPER_BEAM": 0.0,
+          "FLASH_CANNON": 0.0
         }
       },
       {
@@ -492,15 +491,15 @@
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "MUD_SHOT",
-          "name": "Mud Shot",
-          "type": "ground",
+          "id": "POISON_STING",
+          "name": "Poison Sting",
+          "type": "poison",
           "turns": 2,
           "energy_gain": 9,
-          "known_from": "inferred",
+          "known_from": "guessed",
           "misfit": {
-            "POISON_STING": 0.21,
-            "MUD_SHOT": 0.25
+            "POISON_STING": 0.23,
+            "MUD_SHOT": 0.29
           }
         },
         "charged_moves": [
@@ -534,7 +533,8 @@
           "72": 0.12
         },
         "fast_move_odds": {
-          "MUD_SHOT": 1.0
+          "POISON_STING": 0.57,
+          "MUD_SHOT": 0.43
         },
         "charged_move_odds": {
           "STONE_EDGE": 1.0,

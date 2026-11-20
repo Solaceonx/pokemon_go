@@ -69,6 +69,18 @@ class MarkerTests(unittest.TestCase):
 
 
 class LedgerTests(unittest.TestCase):
+    def test_extra_move_does_not_assert_a_normal_energy_spend(self):
+        ledger=PublicState({'Dark Pulse':50,'Dark Pulse+':40},extra_moves={'Dark Pulse+'})
+        ledger.update(frame(0,name='Houndoom (Mega)'),SLIM)
+        current=frame(.2,name='Houndoom (Mega)')
+        current['text_observation']={'fresh_this_frame':True,'records':[{'text':'Mega Houndoom used Dark Pulse+!'}]}
+        state=ledger.update(current,SLIM)
+        attack=state['pending_attack']
+        self.assertEqual(attack['move'],'Dark Pulse+')
+        self.assertIsNone(attack['energy_cost'])
+        self.assertEqual(attack['confirmed_changes'],[])
+        self.assertEqual(attack['energy_cost_status'],'unverified_meter')
+
     def test_unreadable_current_fighting_hp_cannot_remain_a_current_precise_value(self):
         ledger=PublicState({});ledger.update(frame(0),SLIM)
         current=frame(.2);current['native_source']=dict(pts=12,time_base='1/60')

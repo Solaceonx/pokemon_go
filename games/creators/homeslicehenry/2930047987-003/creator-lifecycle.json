@@ -332,7 +332,7 @@
       },
       "zero_frames": 3,
       "charged_target_anchor": {
-        "cue_seconds": 182.79999999999998,
+        "cue_seconds": 182.8,
         "release_seconds": 190.000037
       },
       "independent_support": {
@@ -483,7 +483,7 @@
       "move": "Hydro Cannon",
       "attack_side": "mine",
       "announced_clip_seconds": 86.000017,
-      "attack_start_clip_seconds": 78.8,
+      "attack_start_clip_seconds": 78.80000000000001,
       "sample_count": 75,
       "target_counter_before": 3,
       "reason": "No continuous positive-to-zero live strip with disappearing tail"
@@ -547,7 +547,7 @@
       "move": "Stone Edge",
       "attack_side": "theirs",
       "announced_clip_seconds": 143.000028,
-      "attack_start_clip_seconds": 135.79999999999998,
+      "attack_start_clip_seconds": 135.8,
       "sample_count": 75,
       "target_counter_before": 2,
       "reason": "No continuous positive-to-zero live strip with disappearing tail"
@@ -641,7 +641,7 @@
       "move": "Stone Edge",
       "attack_side": "theirs",
       "announced_clip_seconds": 190.000037,
-      "attack_start_clip_seconds": 182.79999999999998,
+      "attack_start_clip_seconds": 182.8,
       "sample_count": 75,
       "target_counter_before": 2,
       "reason": "Live strip drains to zero during named centered impact",
@@ -1197,8 +1197,8 @@
   ],
   "result_based_faints": 0,
   "native_stream_faint_audit": {
-    "measurement_sha256": "3ff2923010d2ef50b041710a611da462bfc0debdc0b71cef31f758fe176ba09f",
-    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "measurement_sha256": "5bbba85f6fa036cd443e00caa53d3d027ea455c4f3ac3703279f06a5276b1775",
+    "code_sha256": "222dbef7e7102ebf3de5f405a72e96f449745e61ebde54b9f3aa12ebb19ab8db",
     "candidates": [
       {
         "side": "mine",
@@ -1468,7 +1468,7 @@
         },
         "zero_frames": 3,
         "charged_target_anchor": {
-          "cue_seconds": 182.79999999999998,
+          "cue_seconds": 182.8,
           "release_seconds": 190.000037
         },
         "independent_support": {
@@ -1621,7 +1621,9 @@
             "value": 2,
             "source_pts": 90443910,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 177.75003475073314,
+            "last_source_pts": 96188970
           }
         },
         "zero_frames": 4,
@@ -1720,7 +1722,9 @@
             "value": 1,
             "source_pts": 96301470,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 196.25003836754644,
+            "last_source_pts": 97853970
           }
         },
         "zero_frames": 4,
@@ -1813,11 +1817,68 @@
             "value": 1,
             "source_pts": 96301470,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 196.25003836754644,
+            "last_source_pts": 97853970
           }
         },
         "zero_frames": 4,
         "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Qwilfish",
+        "clip_seconds": 46.083342342782665,
+        "confirmed_clip_seconds": 47.75000933528837,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 46.00000899315738,
+          "bar": {
+            "bounds": [
+              29,
+              700,
+              175,
+              715
+            ],
+            "outline_method": "physical_rail_intersection",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 140,
+            "live_pixels": 0,
+            "damage_pixels": 5,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.014286
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 0.9984,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 84338940,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          46.00000899315738,
+          46.083342342782665
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 47.5833426360378,
+          "confirmed_seconds": 47.75000933528837
+        }
       },
       {
         "side": "mine",
@@ -2098,7 +2159,9 @@
           "value": 2,
           "source_pts": 84473940,
           "source_time_base": "1/90000",
-          "continuity": "consistent"
+          "continuity": "consistent",
+          "last_visible_seconds": 191.25003739002932,
+          "last_source_pts": 97403970
         },
         "zero_frames": 3
       }

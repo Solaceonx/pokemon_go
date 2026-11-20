@@ -9,6 +9,7 @@ import json
 import re
 from pathlib import Path
 from vod_media import sha256, write_json
+from visible_vocabulary import move_key
 
 
 def charge_discs(rgb):
@@ -51,7 +52,7 @@ def move_vocabulary(gamemaster):
         if m['energy'] <= 0:
             continue
         name = re.sub(r'\s*\([^)]*\)', '', m['name'])
-        key = re.sub('[^A-Z]', '', name.upper())
+        key = move_key(name)
         table.setdefault(key, []).append({'name': name, 'cost': m['energy']})
     return {k: values[0] for k, values in table.items()
             if len({v['cost'] for v in values}) == 1}
@@ -71,6 +72,7 @@ def acquire_controls(folder, raw):
     fingerprint = {'schema': 'native-charge-controls-v1', 'sample_hz': 6, 'label_hz': 1,
         'video_sha256': meta['video_sha256'], 'context_sha256': sha256(raw/'screen-refined.jsonl.gz'),
         'code_sha256': sha256(__file__), 'disc_code_sha256': sha256(root/'scripts/recording/buttons.py'),
+        'vocabulary_code_sha256': sha256(Path(__file__).with_name('visible_vocabulary.py')),
         'gamemaster_sha256': sha256(gm), 'av': av.__version__, 'cv2': cv2.__version__}
     target, receipt = raw/'native-controls-6hz.jsonl.gz', raw/'native-controls-acquisition.json'
     if target.exists() and receipt.exists():

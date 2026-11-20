@@ -1,0 +1,977 @@
+{
+  "schema": "energy-v5-transported-controls-development-v1",
+  "promoted": false,
+  "wider_replay": false,
+  "evaluation_scope": "Sixnewannotationtimestampsfrozenafterv5same18+exposed6developmenttradeoff; same3sourceVODsnotindependentholdout",
+  "frozen_reader_modified": false,
+  "original_v1_v2_v3_artifacts_modified": false,
+  "no_hp_delta_counting": true,
+  "control_input_source": "Existing frozen reader numerical pixel measurements, independent from HP; moves/corridors source-verified",
+  "bounds_only": {
+    "mine": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 2,
+      "scalar_truth_contained": 2,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 1,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "theirs": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 1,
+      "scalar_truth_contained": 1,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 2,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "both": {
+      "attempted": 6,
+      "labelled": 6,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 3,
+      "scalar_truth_contained": 3,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 3,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 6,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    }
+  },
+  "controls_and_bounds": {
+    "mine": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 2,
+      "useful_fraction": 0.6666666666666666,
+      "scalar_targets": 2,
+      "scalar_truth_contained": 2,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 1,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 1,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          1.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "theirs": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 1,
+      "scalar_truth_contained": 1,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 2,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "both": {
+      "attempted": 6,
+      "labelled": 6,
+      "unscorable": 0,
+      "useful": 2,
+      "useful_fraction": 0.3333333333333333,
+      "scalar_targets": 3,
+      "scalar_truth_contained": 3,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 3,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 6,
+      "prediction_entirely_within_reference": 1,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.5
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    }
+  },
+  "records": [
+    {
+      "channel": "homeslicehenry",
+      "record": "2904735277-002",
+      "source_vod": "https://www.twitch.tv/videos/2904735277",
+      "labels_sha256": "3e384cc99b027580e06cda30d4619610e161eaea0477227a48288f5d12286418",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 9.500002043010753,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 9.500002043010753,
+          "truth": [
+            12,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 9.500002043010753,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "control_anchor_with_expanding_bank",
+            "anchor_at": 9.333335340501792,
+            "anchor_age_seconds": 0.16666670250896054,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": true,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 9.500002043010753,
+          "truth": [
+            12,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2925297675-001",
+      "source_vod": "https://www.twitch.tv/videos/2925297675",
+      "labels_sha256": "9667ee20aa60255e1b74bd92f35138ee081382581cfa18b8dfee8a49140cb174",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 10.766667294094795,
+          "truth": [
+            12,
+            20
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                28,
+                28
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 10.766667294094795,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 10.766667294094795,
+          "truth": [
+            12,
+            20
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "control_anchor_with_expanding_bank",
+            "anchor_at": 10.500000611888112,
+            "anchor_age_seconds": 0.266666682206683,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": true,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": true,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 10.766667294094795,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2930158499-001",
+      "source_vod": "https://www.twitch.tv/videos/2930158499",
+      "labels_sha256": "a6672b8291e84d1a6065dd8bb9cd87e4910369670d03fc1609e9aab6b5458532",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 27.00000311418685,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 27.00000311418685,
+          "truth": [
+            56,
+            64
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                72,
+                72
+              ],
+              [
+                80,
+                80
+              ],
+              [
+                88,
+                88
+              ],
+              [
+                96,
+                96
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 27.00000311418685,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 27.00000311418685,
+          "truth": [
+            56,
+            64
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                72,
+                72
+              ],
+              [
+                80,
+                80
+              ],
+              [
+                88,
+                88
+              ],
+              [
+                96,
+                96
+              ]
+            ],
+            "exact": false,
+            "status": "constrained",
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "anchor_age_seconds": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "transported_energy_is_current_exact_observation": false,
+            "post_release_queued_credit_allowed": true,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    }
+  ],
+  "distinctions": [
+    "Scalar contained in a candidate set is valid uncertainty, distinct from exact recovery",
+    "Interval fully contained, overlap, and predicted set inside annotation are distinct metrics",
+    "Optional fast completions are only legal upper bounds, never reported as measured attacks",
+    "Narrow disjoint sets identify false confidence; broad valid uncertainty is not a wrong exact prediction",
+    "These are source-derived windows from permitted development VODs, not independent whole-VOD validation"
+  ],
+  "reproduction": {
+    "manifest": {
+      "schema": "energy-v5-new-source-window-validation-manifest-v1",
+      "target_set": "Sixnewannotationtimestampsfrozenafterv5same18+exposed6developmenttradeoff; same3sourceVODsnotindependentholdout",
+      "sources": [
+        {
+          "labels": "data/creator_energy_v5_new_henry_source_labels_v1.json",
+          "base_context": "data/creator_energy_henry_pilot_context_v1.json",
+          "controls": "data/creator_energy_v4_controls_2904735277-002.jsonl.gz",
+          "charge_button_move_ids": [
+            "FOUL_PLAY",
+            "DRAIN_PUNCH"
+          ],
+          "charge_button_costs": [
+            40,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "62962afb63ea599f3687eafc879025042db38751f49730b78c826b8c3dbf06f7",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        },
+        {
+          "labels": "data/creator_energy_v5_new_reis_source_labels_v1.json",
+          "base_context": "data/creator_energy_reis_pilot_context_v1.json",
+          "controls": "data/creator_energy_v4_controls_2925297675-001.jsonl.gz",
+          "charge_button_move_ids": [
+            "FLAMETHROWER",
+            "TWISTER"
+          ],
+          "charge_button_costs": [
+            55,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "5fe3ee11baa08605948bd93533f9a5ceb746788af347bf80011a197b275f0d5f",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        },
+        {
+          "labels": "data/creator_energy_v5_new_axn_source_labels_v1.json",
+          "base_context": "data/creator_energy_v5_new_axn_context_v1.json",
+          "controls": "data/creator_energy_v5_new_axn_controls_v1.jsonl.gz",
+          "charge_button_move_ids": [
+            "DRILL_PECK",
+            "DRILL_RUN"
+          ],
+          "charge_button_costs": [
+            40,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "37d8ea6139a55f2ad102f0467024720d2b1cb3739d065a3f0a58b3b6942b3c42",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        }
+      ]
+    },
+    "evaluator_sha256": "7551992c0392a5e7999ba27655c7364232f651b670e02e3ff3e562970d381c5d",
+    "bounds_sha256": "30a3bd7c2f13f10db06d33cd1e202d41a8f1082ec7cee59a57d996e3e515f7b0"
+  }
+}

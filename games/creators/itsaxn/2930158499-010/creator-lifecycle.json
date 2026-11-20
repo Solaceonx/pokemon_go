@@ -695,8 +695,8 @@
   ],
   "result_based_faints": 0,
   "native_stream_faint_audit": {
-    "measurement_sha256": "98f703e512613e9d56aa8ce7ed6c0e2c3040379bde4690d65a457d2c91a9f920",
-    "code_sha256": "9a8fe5c64d0048747fb5ad5cbb96ad6d8701d69024ae6d4128749462de153ae3",
+    "measurement_sha256": "bcc39d9345b893accbbb42b7bd63c52f7ce31ceb72055e46552b9d0ef70174a7",
+    "code_sha256": "222dbef7e7102ebf3de5f405a72e96f449745e61ebde54b9f3aa12ebb19ab8db",
     "candidates": [
       {
         "side": "mine",
@@ -1076,7 +1076,9 @@
             "value": 1,
             "source_pts": 225001470,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 160.7500185409458,
+            "last_source_pts": 230018970
           }
         },
         "zero_frames": 4,
@@ -1175,11 +1177,68 @@
             "value": 2,
             "source_pts": 226261470,
             "source_time_base": "1/90000",
-            "continuity": "consistent"
+            "continuity": "consistent",
+            "last_visible_seconds": 142.6666831218762,
+            "last_source_pts": 228391410
           }
         },
         "zero_frames": 4,
         "missing_frames": 3
+      },
+      {
+        "side": "mine",
+        "species": "Seismitoad",
+        "clip_seconds": 49.2500056805075,
+        "confirmed_clip_seconds": 49.583339052287585,
+        "timing_uncertainty_seconds": 0.08333333333333333,
+        "method": "tiny_bar_to_measured_disappearance_with_independent_party_support",
+        "last_tiny_bar": {
+          "t": 49.166672337562474,
+          "bar": {
+            "bounds": [
+              31,
+              714,
+              183,
+              727
+            ],
+            "outline_method": "closed_physical_contour",
+            "side_rail_support": [
+              1.0,
+              1.0
+            ],
+            "horizontal_rail_support": [
+              1.0,
+              1.0
+            ],
+            "interior_width_pixels": 146,
+            "live_pixels": 0,
+            "damage_pixels": 0,
+            "fraction": 0.0,
+            "fraction_interval": [
+              0.0,
+              0.013699
+            ],
+            "pixel_uncertainty": 2,
+            "interior_support": 1.0,
+            "live_color_pixels": {
+              "cyan": 0,
+              "yellow": 0,
+              "red": 0
+            }
+          }
+        },
+        "disappearance_source_pts": 219983970,
+        "disappearance_source_time_base": "1/90000",
+        "timing_interval_seconds": [
+          49.166672337562474,
+          49.2500056805075
+        ],
+        "independent_support": {
+          "status": "confirmed",
+          "reason": "independent_party_decrement",
+          "first_visible_seconds": 49.41667236639754,
+          "confirmed_seconds": 49.583339052287585
+        }
       },
       {
         "side": "theirs",

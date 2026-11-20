@@ -1,0 +1,188 @@
+{
+  "schema": "task46-energy-v6-summary-v1",
+  "reader_frozen": true,
+  "promoted": false,
+  "wider82_replay": false,
+  "analysis_ready": false,
+  "training_models_scores": [
+    {
+      "tp": 4,
+      "fp": 1,
+      "fn": 7,
+      "matched_onset_within_150ms": 4,
+      "precision": 0.8,
+      "recall": 0.36363636363636365
+    },
+    {
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "matched_onset_within_150ms": 9,
+      "precision": 1.0,
+      "recall": 0.8181818181818182
+    },
+    {
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "matched_onset_within_150ms": 9,
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  ],
+  "training_scope": "11source-annotatedgestureson2referenceVODs, alltraining/development; not independenttest",
+  "training_label_provenance": "V1counts/first-colouronsetsfrozenbeforeinitialdetectoroutputs. V2keepsparentcounts/onsetsunchangedandaddswhole-gestureextentduringtraining; thisisnotheldoutannotation.",
+  "fresh_gesture_validation": {
+    "score": {
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "matched_onset_within_150ms": 4,
+      "precision": 1.0,
+      "recall": 0.8333333333333334
+    },
+    "attempted_windows": 3,
+    "scorable_windows": 2,
+    "unscorable_windows": 1,
+    "own_peck": {
+      "tp": 3,
+      "fn": 0
+    },
+    "opponent_peck": {
+      "tp": 2,
+      "fn": 1
+    },
+    "scratch_negative_seconds": 3,
+    "scratch_negative_false_events": 0,
+    "scratch_fresh_positive_recall_unmeasured": true,
+    "no_observable_vfx_does_not_prove_zero_attacks": true,
+    "missed_gesture": "OpposingPeck26.2\u201326.6",
+    "source_vod_groups": 2,
+    "positive_validation_vod_groups": 1,
+    "source_bootstrap_margin_95": null,
+    "margin_reason": "OnlyonepositivevalidationVODplusonenegativeVOD; insufficientindependentsourcesformeaningfulpositiverecallmargin",
+    "source_labels_frozen_before_outputs": true,
+    "same_development_vods_not_independent_holdout": true,
+    "independently_human_adjudicated": false
+  },
+  "energy": {
+    "conservative_useful_development": [
+      2,
+      18
+    ],
+    "accepted_vfx_fullstate_energy": 0,
+    "development_raw_diagnostic": {
+      "provided": 8,
+      "attempted": 18,
+      "scalar_point_matches": 7,
+      "source_bound_compatible": [
+        8,
+        8
+      ]
+    },
+    "new_raw_diagnostic": {
+      "provided": 4,
+      "attempted": 4,
+      "scalar_point_matches": 2,
+      "source_bound_compatible": [
+        4,
+        4
+      ]
+    },
+    "new_conservative_useful": [
+      1,
+      4
+    ],
+    "raw_points_not_usable_or_calibrated": true,
+    "energy_credit_phase_verified": false,
+    "missed_peck_can_hide_inside_reference_energy_interval": true,
+    "compatibility_not_exact_opponent_accuracy": true,
+    "no_absent_vfx_to_exact_opponent_zero": true,
+    "unknown_initial_energy_explicitly_withheld": true
+  },
+  "independent_own_controls": {
+    "hp_used": false,
+    "manual_target_counts_used": false,
+    "development_positive_gain_intervals": 7,
+    "axn_single_peck_intervals": 4,
+    "fresh_axn_positive_intervals": 6,
+    "named_Drill_Peck_bank_example": {
+      "before": 32,
+      "after": 8,
+      "spent": 40,
+      "gain_per_fast": 8,
+      "measured_aggregate_fast_count": 2
+    },
+    "individual_fast_timestamps_in_gaps_not_invented": true,
+    "possible_cap_withholds_exact_count": true,
+    "phase_not_independently_verified": true
+  },
+  "tests": {
+    "unittest": 832,
+    "existing_skip": 1,
+    "passed": true,
+    "pvpoke_exact": 108,
+    "pvpoke_total": 108,
+    "v6_focused_tests": 16,
+    "log_sha256": "8f94c925ff1ce9aba2847ed03fd6739833ae9e2e327f781fe0c819f3d6ec1b6b"
+  },
+  "strict_typed_audit": {
+    "files": [
+      {
+        "file": "data/creator_energy_v6_peck_development_features_v1.jsonl.gz",
+        "rows": 94,
+        "sha256": "5b5c95cbbda7119584cc43f2e9bf219cdee4fa441903eddad1b9595f93ffeba6",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_peck_development_features_v2.jsonl.gz",
+        "rows": 94,
+        "sha256": "84406d5288fbc1f306ef7bc1652267cc942e8addfd03079a43163e11b2db9cf1",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_peck_new_validation_features_v1.jsonl.gz",
+        "rows": 45,
+        "sha256": "3d6e5608b837fbd1d5d4aced10e4fb3a435d34a8b51f2a14370d560a4601652c",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_scratch_development_features_v1.jsonl.gz",
+        "rows": 63,
+        "sha256": "85042877bb68979a0fd2001dc4933b63cd43a81c33906ccd069b4c0a0b3854ba",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_scratch_development_features_v2.jsonl.gz",
+        "rows": 63,
+        "sha256": "399ac1270b1ea87d7812277c4085b02a66d09e0849936875b39270fb03cc84ba",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_scratch_negative_validation_features_v1.jsonl.gz",
+        "rows": 45,
+        "sha256": "dc7c7e5860b781490f718a97e97c4ab6f88b2fd98e794de59b52cbdf783102d8",
+        "strict_numeric_game_enums_and_hashes_only": true
+      },
+      {
+        "file": "data/creator_energy_v6_new_energy_controls_v1.jsonl.gz",
+        "rows": 112,
+        "sha256": "5683f222cd31d0fd9089d28a5f59e8bd8268f2d95f833f35e97c18905d7eafd7",
+        "strict_numeric_game_enums_only": true
+      }
+    ],
+    "raw_images_unrestricted_ocr_or_private_media_paths": 0
+  },
+  "reproduction_commands": [
+    "python scripts/recording/fast_vfx_eval_v6.py --root . --model data/creator_energy_v6_animation_model_v3.json --labels data/creator_energy_v6_animation_training_v2.json --manifest data/creator_energy_v6_training_feature_manifest_v2.json --out runs/v6-training-reproduced-local.json",
+    "python scripts/recording/fast_vfx_eval_v6.py --root . --model data/creator_energy_v6_animation_model_v3.json --labels data/creator_energy_v6_animation_new_validation_v1.json --manifest data/creator_energy_v6_new_validation_feature_manifest_v1.json --out runs/v6-new-vfx-reproduced-local.json",
+    "python scripts/recording/fast_controls_v6.py --root . --inputs data/creator_energy_v6_new_energy_input_manifest_v1.json --out runs/v6-controls-reproduced-local.json",
+    "python scripts/recording/fast_energy_v6.py --root . --inputs data/creator_energy_v4_development_manifest_v1.json --features data/creator_energy_v6_energy_feature_manifest_v1.json --model data/creator_energy_v6_animation_model_v3.json --out runs/v6-energy-development-reproduced-local.json",
+    "python scripts/recording/fast_energy_v6.py --root . --inputs data/creator_energy_v6_new_energy_input_manifest_v1.json --features data/creator_energy_v6_energy_feature_manifest_v1.json --model data/creator_energy_v6_animation_model_v3.json --out runs/v6-energy-new-reproduced-local.json"
+  ],
+  "implementation_failures_retained": [
+    "OpenCVN\u00d74vsN\u00d71\u00d74linearraycompatibility",
+    "NumPyscalarboolJSONserialization; fixedbuiltinconversion"
+  ],
+  "final_feature_refresh_all6_byte_identical": true
+}

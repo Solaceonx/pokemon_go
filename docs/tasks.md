@@ -136,8 +136,7 @@ and `canonical-battle-records` covered the bot's own live games, not this.
 5. **Disk.** Videos stay out of Git. Delete each full source once its cuts are checked; keep the cuts unless the PC
    runs short (then ask the owner). Report the space used.
 
-**Rules.** Never commit videos, frames, or anyone's in-game trainer name (opponents' names on screen, or the creators'
-own); channel names as source labels are fine. Do not touch or tune on the twenty reserved views. Tests and
+**Rules (owner update 2026-11-20).** Never commit videos, frames or unrestricted OCR. Verified public in-game trainer handles may be published in typed gameplay-only sidecars with source witnesses; do not link real-world identities or sensitive attributes. Channel names as source labels remain permitted. Do not touch or tune on the twenty reserved views. Tests and
 `check_pvpoke.py` (108/108) pass before pushing; branch `task46-creator-footage` with a PR; results in
 `docs/status.md`. Report per channel: videos, battles found, battles whose checks pass, wins and losses where the result
 screen shows.
@@ -1088,3 +1087,55 @@ Both conditions, with numbers. If only one holds, say so.
 
 
 **Task46 completed v15 replay checkpoint, not completion:** all82processed,28strict passes;533tests/1existing skip,108exact;source full-state certification0. Header/form/enhanced-move/charged-faint fixes and another untouched source test remain.
+
+**Task46 v17/v18 continuation, 2026-11-19:** v16 retained failed Mega-model attempts; v17 processes all24 development clips and improves third-source releases45/48->48/48(0extras), with17/18shields and13/17faints still incomplete. Source-only records now survive unavailable simulator rankings with explicit unknown model state.552tests/1skip108exact. V18 faint confirmations558tests/1skip108exact, replay still running; wider-panel experiment no gain/not integrated. Canonical82 remain completev15,28strictpasses,0fullstatecertified; fourth source-only evaluation labels pending. See status.md. In progress.
+
+
+Task46 continuation (Codex,2026-11-19): v20 development24/24process,245/245charges87/87spends86/86faints0extras; all82canonical replay in progress under frozen34-file manifest. Fourth source truth+nativeHP frozen BEFORE predictions (6battles,60charges21spends21faints88anchors,23/24measurableHP fields,21form fields,224RGBwitnesses verified). Fresh evaluation queued behind an existing worker. Do not index/publish mixed canonical exports; preserve all backups/raw/source/failed artifacts and exclude partial Henry2904735277-010. Required next: final82strict comparison with unmodeled/unknown metrics preserved, first fourth-source accuracy/coverage with margins, resolve remaining full-state gaps; tests+108/privacy/protected-input audits before authorized typed-only push. Task46 still IN PROGRESS; full-state certified0.
+
+
+Task46 v21continuation (Codex,2026-11-19): corrected reference error retained separately (AXN002Cramorant notconfirmedfaint; two redpartyicons persist). On the same corrected six clips, v20->v21d:60/60charges unchanged,18/21shieldspends+2extras->21/21+0,17/20faints+1extra->20/20+0,3/6->6/6all-events. Original first-test score retained, later tuning is DEVELOPMENT.605tests/1skip108exact in isolatedcopy; full24latestregression inprogress, main82v20lastrecordpending. HP9/24usable andforms0/21remain blockers; fullstatecertified0. No videos/images/unrestrictedOCR/trainer names in Git; no mixedcanonical index/push. Requirednext: complete82snapshot/index/tests/audits, latest24regression, improve fullstatecoverage and evaluate another untouched cohort. Task46 IN PROGRESS.
+
+
+Task46 continuation v21e/f/g (Codex,2026-11-19): all82 v20 and isolatedD complete27strictpasses, compared with original17 andv15=28; no full-state certification. E/F24development each245charges87spends86faints0extras; correctedsource4six60/21/20. NativeHP9/24->15/24correctusable; Fforms0/21->3/21correctusable, initial unknowns retained. G denser literal-caption acquisition639tests/1skip108exact, footage regression running, no G accuracy claim. See status.md for coverage margins, retained processing failures/retries, source-label correction and reproducibility. MAIN canonical records remain indexedv20; do not publish mixed exports. Full-state certified0; Task46 IN PROGRESS.
+
+
+Task46 Gdevelopment completed245/87/86across24 and60/21/20oncorrectedsource4six,zeroextras;forms12/21correctusable,notfresh. G2all82runningindependently;639tests1skip108exact. Hexact-frametiming44focusedtestspass,fullchecks/source6queuedbehindcanonicalworkers. MAINcanonicalv20retained,fullstate0,INPROGRESS;see status.md.
+
+
+Task46 H2: 646 tests / one skip, 108 exact; 24 development clips preserve 245/87/86 events, corrected six preserve 60/21/20. Forms 13/21 usable, all correct, still development. H first-attempt Windows backup failures retained. G1 readiness: 30 count-correct but only 20 tightly timed, full-state ready 0; energy/stages/clocks and health gaps remain blockers. Temporal HP geometry is experimental in an independent copy; all-82 G2 replay remains in progress. See status.md.
+
+
+Task46 installed checkpoint: all82G2records/localviewers installed with original backups,29strictpasses(v20/D27),including3gainsand1retainedenergyregression.646tests/one skip108exact after install;1,640structured files/privacy and870protected+80reserved+246raw hashes pass. Source state is not certified:0fullready. Independent temporal HP experiment658tests108exact,six clips18/24correctusableHP and60/21/20events;24regressionrunning. Owner confirmed stage reset on switch; source-confirmed stage tracking remains to implement. See status.md.
+
+
+Task46 continuation 2026-11-19: I health 658 tests / one skip / 108 exact, HP 15/24→18/24 and 59/82→63/82; exact 30-clip readiness remains zero full-state. J3 adds owner-confirmed entry resets plus conservative typed stat notices, 682 tests / one skip / 108 exact, retains all development events. Six positively selected source entry checks match; complete stage accuracy is unestablished. Isolated frozen all-82 J3 replay is running; installed H2/G2 checkpoint remains unchanged. See latest status entry and runs/task46-stage-reset-development-v21j3.json.
+
+
+Task46 latest working tree: tested J3 source copied into MAIN; all-82 separate replay and MAIN verification pending. Source checks match all 28 predicted entry identities in six development clips; subsequent exact stages/reset recall remain unverified. Values-table stage display now respects source uncertainty, 20 focused Node checks pass. No new game packages installed or published.
+
+
+Task46 J3 MAIN checks now PASS: 682 tests / one skip, 108 exact, viewer26 checks. Development readiness still0fullstate; separate all82J3 replay pending. No new game packages installed; keep PR22 draft.
+
+
+Task46 J4: researched the persistent Busted Mimikyu native Defense baseline, corrected the overly broad J3 neutral inference, 692 tests / one skip / 108 exact pass. All30 development events preserved; all82 J3strict29 unchanged and its repaired 1,804-file privacy audit passes, but those known-issue stage packages are not installed. Corrected J4 all82 replay is running; installed G2 remains unchanged. Fresh source5 is selected/source-review-only, frozenJ3, no predictions or frozen labels. See tracker-mechanics.md and latest status.
+
+
+Task46 J4 installed checkpoint: all82 processed/installed with G2 backups, strict29→29/82; privacy1,804files0issues, post-install692tests/one skip108exact. Actual installed original-six64/23/21events0extras;2tighttiming. Full-state certification remains0. Native-form switch baseline corrected after primary-source research; documented mechanics will be looked up before asking the owner.
+
+
+Task46 owner direction 2026-11-20: freeze J4/112a981 and stop strict-pass tuning. Two workers collect completed Twitch VODs newest-first, accept only in-game-confirmed open Great League, retain verified cuts and retire full downloads after verification. One separate energy worker must report fixed-reference coverage/accuracy before any wider replay. Public game handles explicitly permitted as verified typed gameplay metadata. See docs/task46-collection-energy.md.
+
+Task46 split checkpoint: 736 tests / one existing skip and 108/108 exact pass with the current durable collection helpers and separate energy prototype. All511 frozen-reader snapshot files remain unchanged. Source-assisted one-battle energy pilot useful coverage0/8→4/8; exact3/7 scalar targets,3/3 covered scalar targets, one further range-compatible output. Original numeric reference accuracy remains unscorable; no wider energy replay. Two newest VODs downloaded/scanning, initial actual selections restricted LAIC, no new accepted games counted yet. Collection and cross-channel reference scoring continue; task in progress.
+
+Task46 three-channel checkpoint: fixed energy prototype useful0/12→5/12(41.67%,sourcebootstrap95%0–50%), exact4/9scalar targets,4/4coveredscalar correct; broad/unknown cases retained.741tests/one skip108exact pass. Original six-reference numeric truth absent; separate source-only supplement is development, remaining three clips under review, no82energyreplay. Four newest sources downloaded/retained,0VODdone/0acceptedbattle/0sourcebytesretired; scans/context reviews continue. See dated energy/disk reports; task remains in progress.
+
+Task46 six-original-reference energy check:18attempts/16numeric-labelled/2unscorable retained; useful0/18→6/18(33.3%,source95%8.3–46.7%),5/6usefulpredictionssource-compatible,ONEretainedfalseconfident0vs32–36. Exactscalarrecovery4/10; prototype notanalysisready/notpromoted/no82replay.745tests/one skip108exact pass, earlierartifactbytesunchanged. Collection source reviews/guarded early exclusions continue; no reader tuning.
+
+Task46 first-source retirement:1VOD reviewed/excluded,0openGLgames,34restricted detector intervals,4.089GB full source retired with all evidence retained. Other inputs scanning; one5.136GB hash-mismatch source quarantined, not relabelled or imported. New outside-reader guards check actual source bytes before/after export and stopped readers before deletion.777tests/one skip108exact pass. Standaloneenergyv4 removes false narrow zero but useful coverage1/18dev and0/6new timestamps; broad truth containment is not useful full state. Earlier artifacts/readers unchanged; v5 separate work continues, no wider82 energy replay. Ten-VOD report not yet reached.
+
+
+**Task46, Codex, 2026-11-20: frozen-reader collection/energy checkpoint.** J4 and82 records unchanged; strict29/82, certified full state0. Two restricted-only VODs reviewed,0 new saved open Great League games; next28 entry candidates await verified grouping/cuts/tracking. Three source-hash quarantines retained. Experimental V6 fast animation validation5TP/0FP/1FN on one positive source window; accepted VFX-energy integration0, no wider replay. Tests832/one existing skip and108/108 exact. Public in-game handles are authorized with repeated source evidence; no new handles in this checkpoint. Task remains open; see latest status and runs/task46-energy-v6-summary-v1.json.
+
+
+**Task46 first new records, Codex, 2026-11-20:** two canonical friendly Great League records saved with J4 unchanged, both failed checks retained;84creator records total,0new full-state certification. Public in-game handles and source-only roster observations added under revised permission. VOD still partial(26pending), completed-VODcount2. Retainedcuts80.56MB+portabledata1.35MB. Reversible checksum discrepancies documented, original failures preserved, no source-cause claim. Energy adds one displayed0→8 timing bracket; coverage unchanged, no wider replay. See latest status and runs/task46-first-open-gl-records-20261120.json.

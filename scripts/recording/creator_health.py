@@ -6,7 +6,7 @@ import io
 import json
 from pathlib import Path
 
-from native_health import acquisition_digest, measure_frame, header_panels, scene_features
+from native_health import acquisition_digest, measure_frame, measure_with_recent_geometry, header_panels, scene_features
 from vod_media import sha256, write_json
 
 
@@ -45,6 +45,7 @@ def acquire(folder, raw, sample_hz=12):
     aligned = {round(r['clip_seconds'], 6): r for r in rows(folder/'frame_alignment.jsonl.gz')}
     temporary = target.with_name(target.name+'.incomplete')
     count, next_time = 0, None
+    recent_geometry = []
     with temporary.open('wb') as binary, gzip.GzipFile(filename='', fileobj=binary, mode='wb', mtime=0) as packed, io.TextIOWrapper(packed, encoding='utf-8', newline='\n') as output, av.open(str(folder/meta['video_file'])) as media:
         stream = media.streams.video[0]
         stream.codec_context.thread_count = 1
@@ -71,12 +72,15 @@ def acquire(folder, raw, sample_hz=12):
                     seen = cp.get('evidence', {}).get('observed_at_seconds')
                     if cp.get('value') is not None and bounds and seen is not None and 0 <= frame.time-seen <= .9:
                         anchors.append({'side': side, 'bounds': bounds})
+            recent_geometry = [r for r in recent_geometry if 0 < frame.time-r['t'] <= .25]
+            health = measure_with_recent_geometry(rgb, profile['hp_width'], recent_geometry, frame.time)
             measurement = {'t': frame.time, 'frame_index': index,
                 'context_frame_index': context['frame_index'] if context else None,
                 'clip_pts': frame.pts, 'clip_time_base': str(frame.time_base),
                 'source_pts': point['source_pts'], 'source_time_base': point['source_time_base'],
-                'health': measure_frame(rgb, profile['hp_width']), 'header_panels': header_panels(rgb, anchors),
+                'health': health, 'header_panels': header_panels(rgb, anchors),
                 'scene': scene_features(rgb)}
+            recent_geometry.append(dict(t=frame.time, health=health))
             output.write(json.dumps(measurement, separators=(',', ':'))+'\n')
             count += 1
     if wanted is not None:

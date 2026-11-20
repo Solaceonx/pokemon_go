@@ -376,12 +376,23 @@ def publish(folder, game, verdict, reader):
     gm = json.loads((ROOT / "data/gamemaster.json").read_text(encoding="utf-8"))
     move_names={m['moveId']:m['name'] for m in gm['moves']}
     legal_moves={}
+    from visible_vocabulary import display_species
     for pokemon in gm['pokemon']:
-        legal_moves.setdefault(pokemon['speciesName'].split(' (')[0],set()).update(
-            name for mid in pokemon['chargedMoves'] if mid in move_names
+        species_name=pokemon['speciesName']
+        if display_species(species_name)==species_name:
+            species_name=species_name.split(' (')[0]
+        legal_moves.setdefault(species_name,set()).update(
+            name for mid in pokemon['chargedMoves']+pokemon.get('extraChargedMoves',[]) if mid in move_names
             for name in [move_names[mid],move_names[mid].split(' (')[0]])
     ledger = PublicState({m["name"]: m["energy"] for m in gm["moves"] if m["energy"] > 0},
-                         incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves)
+                         incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves,
+                         extra_moves={m['name'] for m in gm['moves'] if m.get('isMegaMove')},
+                         form_events=json.loads((game/'creator-forms.json').read_text(encoding='utf8'))['events']
+                             if (game/'creator-forms.json').exists() else (),
+                         stage_reset_events=json.loads((game/'creator-stage-resets.json').read_text(encoding='utf8'))['events']
+                             if (game/'creator-stage-resets.json').exists() else (),
+                         stat_notice_events=json.loads((game/'creator-stat-notices.json').read_text(encoding='utf8'))['events']
+                             if (game/'creator-stat-notices.json').exists() else ())
     display, statuses = [], Counter()
     at = 0
     if (game/'creator-measurements.json').exists():
@@ -452,10 +463,15 @@ def publish(folder, game, verdict, reader):
                      "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json",
                      "scripts/recording/creator_health.py", "scripts/recording/creator_observations.py",
                      "scripts/recording/creator_frames.py", "scripts/recording/native_health.py",
+                     "scripts/recording/visible_vocabulary.py",
+                     "scripts/recording/creator_model.py",
                      "scripts/recording/native_controls.py", "scripts/recording/creator_controls.py",
                      "scripts/recording/creator_energy.py", "scripts/recording/creator_native_faints.py",
                      "scripts/recording/creator_identity.py", "scripts/recording/creator_faint_support.py",
-                     "scripts/recording/creator_event_ledger.py", "scripts/recording/creator_move_labels.py",
+                     "scripts/recording/creator_event_ledger.py", "scripts/recording/creator_move_labels.py", "scripts/recording/creator_forms.py",
+                     "scripts/recording/creator_form_captions.py",
+                     "scripts/recording/creator_stage_resets.py",
+                     "scripts/recording/creator_stat_notices.py",
                      "scripts/recording/creator_charge_evidence.py", "scripts/recording/creator_announcements.py")}}
     if (game/'creator-measurements.json').exists():
         provenance['ocr_context_sample_interval_seconds'] = provenance['sample_interval_seconds']
@@ -512,7 +528,7 @@ def creator_export(folder, game, meta, root):
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
     allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'source-events.jsonl', 'continuity.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json', 'creator-measurements.json',
-               'state.json', 'track.json', 'timeline.json', 'verdict.json']
+               'state.json', 'track.json', 'timeline.json', 'verdict.json', 'model-support.json', 'creator-forms.json', 'creator-stage-resets.json', 'creator-stat-notices.json']
     for name in allowed:
         path = game / name
         packed = path.with_name(name + '.gz')
@@ -604,23 +620,44 @@ def track_clip(folder, reader, *, creator_root=None):
                 write_json(game/'creator-measurements.json', measurements)
                 from creator_state import update_output_digest
                 update_output_digest(game)
-        tracked = run_step(ROOT / "scripts/track.py", game)
-        (game / "track.log").write_text(tracked["output"], encoding="utf-8")
+        availability = None
         if evidence is not None:
-            from creator_impact import record_faint
-            record_faint(game, terminal)
+            from creator_model import support
+            availability = support(json.loads((game/'timeline.json').read_text(encoding='utf8')),
+                json.loads((game/'team.json').read_text(encoding='utf8')), GameData())
+            write_json(game/'model-support.json', availability)
+        if availability and availability['status'] == 'unavailable':
+            from creator_model import unavailable
+            result = unavailable(game, availability)
+        else:
+            tracked = run_step(ROOT / "scripts/track.py", game)
+            (game / "track.log").write_text(tracked["output"], encoding="utf-8")
+            if evidence is not None:
+                from creator_impact import record_faint
+                record_faint(game, terminal)
+            result = decide(game, GameData())
+            blind = game / "blind"
+            blind.mkdir(exist_ok=True)
+            for name in ("team.json", "observations.jsonl"):
+                shutil.copyfile(game / name, blind / name)
+            run_step(ROOT / "scripts/track.py", blind, "--blind")
+            result["blind_energy_check"] = json.loads((blind / "track.json").read_text())
+        if evidence is not None:
             from creator_event_ledger import source_events
             observable = source_events(json.loads((game/'timeline.json').read_text(encoding='utf8')),
                 json.loads((game/'creator-lifecycle.json').read_text(encoding='utf8')), measurements or {})
+            from creator_forms import derive as derive_forms
+            forms = derive_forms(raw, json.loads((game/'timeline.json').read_text(encoding='utf8')), observable)
+            write_json(game/'creator-forms.json', forms)
+            from creator_stat_notices import derive as derive_stat_notices
+            notices = derive_stat_notices(raw)
+            write_json(game/'creator-stat-notices.json',notices)
+            from creator_stage_resets import derive as derive_resets
+            resets = derive_resets(raw,json.loads((game/'timeline.json').read_text(encoding='utf8')),observable+notices['events']+forms['events'])
+            write_json(game/'creator-stage-resets.json',resets)
+            observable = sorted(observable+forms['events']+resets['events']+notices['events'], key=lambda e: (e['t'], e['kind'], str(e.get('side'))))
             (game/'source-events.jsonl').write_bytes(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in observable).encode('utf8'))
-        result = decide(game, GameData())
         result["paired_move_names_recovered"] = len(paired)
-        blind = game / "blind"
-        blind.mkdir(exist_ok=True)
-        for name in ("team.json", "observations.jsonl"):
-            shutil.copyfile(game / name, blind / name)
-        run_step(ROOT / "scripts/track.py", blind, "--blind")
-        result["blind_energy_check"] = json.loads((blind / "track.json").read_text())
         verify_clip_source(folder,meta)
     except Exception as error:
         if creator_root is not None:

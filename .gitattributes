@@ -5,3 +5,44 @@ games/live/**/enrichment.json -text
 games/live/**/evidence-summary.json -text
 games/live/**/pixel-summary.json -text
 games/live/**/*.gz -text
+# Creator evidence and frozen references use byte hashes; preserve their newlines.
+games/creators/*/*/*.json -text
+games/creators/*/*/*.txt -text
+games/creators/*/*/*.gz -text
+data/creator_*.json -text
+runs/task46-*.json -text
+runs/task46-*.json.gz -text
+# New standalone energy artifacts pin source/test byte hashes for reproduction.
+scripts/recording/energy_rebuild.py -text
+scripts/recording/energy_reference_eval.py -text
+tests/test_energy_rebuild.py -text
+tests/test_energy_reference_eval.py -text
+data/creator_energy_*.jsonl.gz -text
+scripts/recording/energy_reference_batch.py -text
+tests/test_energy_reference_batch.py -text
+scripts/recording/energy_reference_six.py -text
+tests/test_energy_reference_six.py -text
+scripts/recording/collection_exclusion.py -text
+tests/test_collection_exclusion.py -text
+scripts/recording/collection_ops.py text eol=crlf
+tests/test_collection_ops.py text eol=crlf
+scripts/recording/energy_bounds_v4.py -text
+scripts/recording/energy_bounds_eval_v4.py -text
+tests/test_energy_bounds_v4.py -text
+tests/test_energy_bounds_eval_v4.py -text
+scripts/recording/energy_bounds_v5.py -text
+scripts/recording/energy_bounds_eval_v5.py -text
+tests/test_energy_bounds_v5.py -text
+scripts/recording/fast_controls_v6.py -text
+scripts/recording/fast_energy_v6.py -text
+scripts/recording/fast_vfx_eval_v6.py -text
+scripts/recording/fast_vfx_v6.py -text
+tests/test_fast_controls_v6.py -text
+tests/test_fast_energy_v6.py -text
+tests/test_fast_vfx_v6.py -text
+scripts/recording/source_guard.py -text
+scripts/recording/calibrated_collection.py -text
+tests/test_source_guard.py -text
+tests/test_calibrated_collection.py -text
+scripts/recording/collection_archive.py -text
+tests/test_collection_archive.py -text

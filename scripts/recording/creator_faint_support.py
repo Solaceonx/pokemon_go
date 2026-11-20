@@ -13,6 +13,20 @@ def death_state_seconds(death):
     return death['clip_seconds']
 
 
+def queued_counter_deadline(charge, timeline):
+    """Wait for the first visible replacement, within the ordinary eight seconds.
+
+    Occurrence remains the measured empty-bar interval. Delayed counter readback
+    is confirmation, never a replacement-time death or an unlimited search.
+    """
+    released = max(charge['announcement_clip_seconds'])
+    origin = timeline['clip_origin_seconds']
+    entries = [f.get('header_first_visible_clip_seconds', f.get('header_seen_clip_seconds', origin+f['t']))
+               for f in timeline['field'][charge['side']] if f['name'] != charge['actor']]
+    following = [t for t in entries if released < t <= released+8]
+    return min(following) if following else released+3
+
+
 def faint_support(death, timeline, native):
     side, name, at = death['side'], death['species'], death['clip_seconds']
     origin = timeline['clip_origin_seconds']
@@ -49,6 +63,20 @@ def faint_support(death, timeline, native):
     if release:
         return dict(status='unconfirmed',reason='later_release_requires_queue_or_survival_review',
                     confirmed_seconds=min(release['announcement_clip_seconds']))
+    # The exact mandatory prompt is independent game evidence. A normal switch
+    # menu, missing bars, or a replacement by itself cannot satisfy this path.
+    first = death.get('first_zero', {})
+    measured_fade = (death.get('method') == 'native_stream_positive_zero_fade_and_independent_confirmation'
+                     and first.get('bar', {}).get('live_pixels') == 0
+                     and abs(first.get('t', -100)-at) < 1e-6
+                     and death.get('zero_frames', 0) >= 3 and death.get('missing_frames', 0) >= 3)
+    prompts = [t for t in timeline.get('replacement_selection_prompt_clip_seconds', []) if at <= t <= at+4]
+    prior = [f for f in fields if f.get('header_seen_clip_seconds', origin+f['t']) <= at]
+    intervening = [f for f in fields if at < f.get('header_first_visible_clip_seconds',
+                       f.get('header_seen_clip_seconds', origin+f['t'])) <= min(prompts, default=at)]
+    if side == 'mine' and measured_fade and prompts and prior and prior[-1]['name'] == name and not intervening:
+        return dict(status='confirmed', reason='mandatory_replacement_prompt_after_measured_zero_and_fade',
+                    first_visible_seconds=min(prompts), confirmed_seconds=max(min(prompts), death.get('confirmed_clip_seconds', at)))
     before = [r for r in native if at-2 <= r['t'] <= at-.15 and
               r['headers'][side]['party'].get('value') is not None]
     if not before and death.get('charged_target_anchor'):
@@ -89,7 +117,7 @@ def faint_support(death, timeline, native):
     if not before:
         return dict(status='unconfirmed', reason='no_independent_party_count_before_zero')
     previous = max(r['headers'][side]['party']['value'] for r in before)
-    deadline=max(queued['announcement_clip_seconds'])+3 if queued else at+8
+    deadline=queued_counter_deadline(queued, timeline) if queued else at+8
     after = [r for r in native if at+.1 <= r['t'] <= deadline and
              r['headers'][side]['party'].get('value') is not None]
     run = []

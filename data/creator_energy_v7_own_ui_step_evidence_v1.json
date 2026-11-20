@@ -1,0 +1,49 @@
+{
+  "schema": "source-only-own-energy-display-step-v1",
+  "record": "2930158499-001",
+  "side": "mine",
+  "reviewed_before_any_v7_scorer_output": true,
+  "assistant_source_review_not_independent_human_adjudication": true,
+  "source_video_sha256": "b3ef642a9aa715b7e9fcdae15121a6d573a0ba1dba223522ab9404badb2dc5f5",
+  "parent_source_labels": "data/creator_energy_v6_animation_training_v1.json",
+  "parent_source_labels_sha256": "231c0d78afc133617167979b7778da902c3d71b144860f1ca0d228fcd07d9000",
+  "move": "PECK",
+  "gain": 8,
+  "initial_energy": 0,
+  "charge_buttons": ["DRILL_PECK", "DRILL_RUN"],
+  "charge_button_costs": [40, 40],
+  "before": {
+    "t": 10.166667839292579,
+    "pts": 5288700610,
+    "time_base": "1/520200000",
+    "rgb_sha256": "88fe13ab5aac64605e33af3404a70ddbf8ad2852e9f4954468a66e8f0e21be57",
+    "source_observation": "Both own charge circles have no visible horizontal energy fill. Fearow's own Peck effect is on the background Cramorant.",
+    "displayed_energy_interpretation": 0
+  },
+  "after": {
+    "t": 10.233334513648597,
+    "pts": 5323380614,
+    "time_base": "1/520200000",
+    "rgb_sha256": "9a69bc4f57443c397092e3f84d8ef6bca7de1741868dd2926bf2f7c2f404064d",
+    "source_observation": "Both own charge circles show a small horizontal bottom fill, about one fifth full; it persists through the saved 10.5-second frame.",
+    "displayed_energy_interpretation": 8
+  },
+  "measurement": {
+    "kind": "displayed_charge_fill_step",
+    "step_interval_left_open_right_closed": [10.166667839292579, 10.233334513648597],
+    "saved_frame_spacing_seconds": 0.066666674356018,
+    "attributed_own_gesture_onset_window": [10.0, 10.1],
+    "display_step_minus_gesture_onset_seconds_range": [0.066667839292579, 0.233334513648597],
+    "numeric_basis": "First visible fill from verified battle-start zero, source-verified Peck gain 8, and both named charged costs 40. The visible fraction is approximate; this is not numeric game API telemetry.",
+    "server_energy_credit_time_verified": false,
+    "opponent_credit_phase_verified": false,
+    "transfer_to_other_moves_or_cameras_verified": false
+  },
+  "charged_release_edge": {
+    "own_named_release": {"move": "Drill Peck", "cost": 40, "t": 22.0},
+    "queued_credit_resolved": false,
+    "reason": "Existing numeric controls are unknown from 14.666668 through 25.166670 seconds; both controls first show the next settled partial fill at 25.333336. Existing saved release frames are separated by 0.5 seconds. They cannot locate a credit during hidden controls or distinguish a queued credit from the first resumed fast action.",
+    "no_zero_reset_assumption": true
+  },
+  "effect_on_published_coverage_or_accuracy": "None. This labels one displayed own-energy step; it does not calibrate game credit time or validate opposing energy. All V1-V6 labels, outputs, models and code remain unchanged."
+}

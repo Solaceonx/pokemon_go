@@ -121,7 +121,10 @@ def disappearance_faints(native, timeline):
             charges=[q for q in timeline['charged'] if origin+q['t']<=at and q.get('announcement_clip_seconds')]
             if charges:
                 q=charges[-1];first,last=min(q['announcement_clip_seconds']),max(q['announcement_clip_seconds'])
-                if at<first+1 or (q['side']==side and at<=last+3):
+                paired_field = all(
+                    all(sample['health'][s]['status']=='observed' for s in ('mine','theirs'))
+                    and sample['health']['center']['status']!='observed' for sample,_ in previous[-2:])
+                if at<first+1 or (q['side']==side and at<=last+3 and not paired_field):
                     continue
             shown=[f for f in timeline['field'][side]
                    if f.get('header_seen_clip_seconds',origin+f['t'])<=previous[0][0]['t']]
@@ -253,6 +256,7 @@ def queued_charge_faints(native,timeline,counters):
     later decrement confirms the victim, while the entire empty-to-decrement
     interval remains explicit. This does not declare it dead before its move.
     """
+    from creator_faint_support import queued_counter_deadline
     origin=timeline['clip_origin_seconds'];result=[]
     assigned=[(r,health_owners(r,timeline)) for r in native]
     for index,q in enumerate(timeline['charged']):
@@ -262,7 +266,7 @@ def queued_charge_faints(native,timeline,counters):
         fields=[f for f in timeline['field'][side] if f.get('header_seen_clip_seconds',origin+f['t'])<=cue]
         if not fields or fields[-1]['name']!=q['actor']:continue
         drops=[b for a,b in zip(counters[side]['party'],counters[side]['party'][1:])
-               if a['value']-b['value']==1 and released<=b['first_visible_seconds']<=released+3]
+               if a['value']-b['value']==1 and released<=b['first_visible_seconds']<=queued_counter_deadline(q,timeline)]
         if len(drops)!=1:continue
         drop=drops[0];run=[]
         for row,owners in assigned:

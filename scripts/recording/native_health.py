@@ -9,8 +9,12 @@ import json
 
 
 def acquisition_digest():
+    from creator_observations import glyph_row, classify_headers
     code = '\n'.join(inspect.getsource(f) for f in
-                     (palette, rectangle, dim_rectangle, candidates, glyph_features, header_panels, scene_features, measure_frame))
+                     (palette, rectangle, dim_rectangle, candidates, independent_rail_rectangle,
+                      positive_fallback_candidates, glyph_features, header_row_panels,
+                      header_panels, glyph_row, classify_headers, scene_features, measure_frame,
+                      measure_with_recent_geometry))
     return hashlib.sha256(code.replace('\r\n', '\n').encode('utf-8')).hexdigest()
 
 
@@ -189,6 +193,93 @@ def candidates(rgb, expected_width=144):
     return unique
 
 
+def independent_rail_rectangle(rgb, bounds, expected_width):
+    """Positive-only, width-bounded reading when the four rails shade differently.
+
+    Each rail must be coherent and contrast with the adjacent interior. The
+    profile width bounds geometry uncertainty; this path cannot establish zero.
+    """
+    import numpy as np
+    x, y, right, bottom = bounds
+    if (expected_width <= 12 or abs(right-x-expected_width) > 6 or x < 1 or y < 1
+            or right >= rgb.shape[1]-1 or bottom >= rgb.shape[0]-1):
+        return None
+    measurement = palette(rgb, bounds)
+    if measurement is None or measurement['live_pixels'] == 0:
+        return None
+    roi = rgb[y-1:bottom+1, x-1:right+1].astype(float)
+    if min(roi.shape[:2]) < 10:
+        return None
+    rail_sets = [
+        [(roi[3:-3, j], roi[3:-3, j+3]) for j in range(4)],
+        [(roi[3:-3, j], roi[3:-3, j-3]) for j in range(roi.shape[1]-4, roi.shape[1])],
+        [(roi[j, 3:-3], roi[j+3, 3:-3]) for j in range(4)],
+        [(roi[j, 3:-3], roi[j-3, 3:-3]) for j in range(roi.shape[0]-4, roi.shape[0])]]
+    selected = []
+    for options in rail_sets:
+        found = []
+        for pixels, inside in options:
+            color = np.median(pixels, axis=0)
+            if color.max() < 80:
+                continue
+            support = float((np.linalg.norm(pixels-color, axis=1) < 35).mean())
+            contrast = float((np.linalg.norm(pixels-inside, axis=1) > 25).mean())
+            if support >= .65 and contrast >= .65:
+                found.append((support, contrast))
+        if not found:
+            return None
+        selected.append(max(found, key=min))
+    live = measurement['live_pixels']
+    lo, hi = measurement['fraction_interval']
+    measurement['fraction_interval'] = [round(min(lo, max(0, (live-2)/expected_width)), 6),
+        round(max(hi, min(1, (live+2)/(expected_width-12))), 6)]
+    return dict(bounds=list(bounds), outline_method='independent_shaded_rails_positive_only',
+        side_rail_support=[r[0] for r in selected[:2]], horizontal_rail_support=[r[0] for r in selected[2:]],
+        rail_inner_contrast=[r[1] for r in selected], profile_width_guard=expected_width,
+        geometry_width_uncertainty_pixels=6, **measurement)
+
+
+def positive_fallback_candidates(rgb, expected_width):
+    """Find color edges missed by grayscale; all supplemental bars stay positive."""
+    import cv2
+    region = rgb[200:900, 2:506]
+    boxes = set()
+    for channel in range(3):
+        contours, _ = cv2.findContours(cv2.Canny(region[:, :, channel], 35, 90),
+                                      cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            if expected_width-6 <= w <= expected_width+6 and 10 <= h <= 20:
+                boxes.add((x+2, y+200, x+w+2, y+h+200))
+    # A grayscale contour can have the correct geometry despite shaded rails.
+    gray = cv2.cvtColor(region, cv2.COLOR_RGB2GRAY)
+    contours, _ = cv2.findContours(cv2.Canny(gray, 35, 90), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        if expected_width-6 <= w <= expected_width+6 and 10 <= h <= 20:
+            boxes.add((x+2, y+200, x+w+2, y+h+200))
+    found = []
+    for bounds in sorted(boxes):
+        bar = (rectangle(rgb, bounds, 'color_channel_physical_contour')
+               or dim_rectangle(rgb, bounds, expected_width)
+               or independent_rail_rectangle(rgb, bounds, expected_width))
+        if bar and bar['live_pixels'] > 0:
+            found.append(bar)
+    def quality(bar):
+        return (bar['outline_method'] == 'independent_shaded_rails_positive_only',
+                -(bar['interior_support']+min(bar['side_rail_support'])+min(bar['horizontal_rail_support'])),
+                abs(bar['bounds'][3]-bar['bounds'][1]-14), tuple(bar['bounds']))
+    found.sort(key=quality)
+    unique = []
+    for bar in found:
+        a = bar['bounds']
+        if any(abs(a[0]+a[2]-b['bounds'][0]-b['bounds'][2]) <= 14
+               and abs(a[1]+a[3]-b['bounds'][1]-b['bounds'][3]) <= 12 for b in unique):
+            continue
+        unique.append(bar)
+    return unique
+
+
 def measure_frame(rgb, expected_width=144):
     regions = {'mine': [], 'theirs': [], 'center': []}
     for bar in candidates(rgb, expected_width):
@@ -197,16 +288,96 @@ def measure_frame(rgb, expected_width=144):
         side = 'mine' if center < 195 and right <= 242 else 'theirs' if center > 315 and x >= 228 else 'center' if 222 <= center <= 286 else None
         if side:
             regions[side].append(bar)
+    # Preserve existing readings and ambiguities. Supplemental positive pixels
+    # apply only to missing sidebars outside a detected charged close-up.
+    if not regions['center'] and any(not regions[s] for s in ('mine', 'theirs')):
+        supplemental = {'mine': [], 'theirs': []}
+        for bar in positive_fallback_candidates(rgb, expected_width):
+            x, y, right, bottom = bar['bounds']
+            center = (x+right)/2
+            side = 'mine' if center < 195 and right <= 242 else 'theirs' if center > 315 and x >= 228 else None
+            if side and not regions[side]:
+                supplemental[side].append(bar)
+        for side in supplemental:
+            if not regions[side]:
+                regions[side] = supplemental[side]
     return {side: {'status': 'observed' if len(bars) == 1 else 'ambiguous' if bars else 'not_visible',
                    'bar': bars[0] if len(bars) == 1 else None,
                    **({'candidate_count': len(bars)} if len(bars) > 1 else {})}
             for side, bars in regions.items()}
 
 
+def measure_with_recent_geometry(rgb, expected_width=144, previous=(), at=None):
+    """Reuse only a recent rectangle proposal; measure HP from current pixels.
+
+    An animation can break a contour without hiding the physical rails. A
+    proposal from at most a quarter second ago still needs the existing four
+    rails, valid width and positive live prefix in this frame. It cannot add
+    an empty bar, resolve an ambiguity, or replace a current measurement.
+    """
+    import math
+    result = measure_frame(rgb, expected_width)
+    if (not isinstance(at, (int, float)) or isinstance(at, bool) or not math.isfinite(at)
+            or result['center']['status'] != 'not_visible'):
+        return result
+    for side in ('mine', 'theirs'):
+        if result[side]['status'] != 'not_visible':
+            continue
+        proposals = {}
+        for sample in previous:
+            seen = sample.get('t')
+            if (not isinstance(seen, (int, float)) or isinstance(seen, bool) or not math.isfinite(seen)
+                    or not 0 < at-seen <= .25):
+                continue
+            value = sample.get('health', {}).get(side, {})
+            if value.get('status') != 'observed' or not value.get('bar'):
+                continue
+            x, y, right, bottom = value['bar']['bounds']
+            for dx in (-2, -1, 0, 1, 2):
+                for dy in (-2, -1, 0, 1, 2):
+                    bounds = (x+dx, y+dy, right+dx, bottom+dy)
+                    center = (bounds[0]+bounds[2])/2
+                    who = ('mine' if center < 195 and bounds[2] <= 242 else
+                           'theirs' if center > 315 and bounds[0] >= 228 else None)
+                    if who == side and abs(bounds[2]-bounds[0]-expected_width) <= 6:
+                        proof = dict(observed_at_seconds=seen, source_bounds=list(value['bar']['bounds']),
+                                     translation_pixels=[dx,dy], value_carried=False)
+                        if bounds not in proposals or seen > proposals[bounds]['observed_at_seconds']:
+                            proposals[bounds] = proof
+        found = []
+        for bounds, proof in proposals.items():
+            value = (rectangle(rgb, bounds, 'recent_geometry_current_positive_pixels')
+                     or dim_rectangle(rgb, bounds, expected_width)
+                     or independent_rail_rectangle(rgb, bounds, expected_width))
+            if value and value['live_pixels'] > 0:
+                value['geometry_proposal'] = proof
+                found.append(value)
+        found.sort(key=lambda b: (b['outline_method'] == 'independent_shaded_rails_positive_only',
+            -(b['interior_support']+min(b['side_rail_support'])+min(b['horizontal_rail_support'])),
+            abs(b['bounds'][3]-b['bounds'][1]-14), tuple(b['bounds'])))
+        unique = []
+        for value in found:
+            a = value['bounds']
+            if any(abs(a[0]+a[2]-b['bounds'][0]-b['bounds'][2]) <= 14 and
+                   abs(a[1]+a[3]-b['bounds'][1]-b['bounds'][3]) <= 12 for b in unique):
+                continue
+            unique.append(value)
+        if unique:
+            result[side] = dict(status='observed' if len(unique) == 1 else 'ambiguous',
+                bar=unique[0] if len(unique) == 1 else None,
+                **({'candidate_count':len(unique)} if len(unique) > 1 else {}))
+    return result
+
+
 def glyph_features(roi, offset_x, offset_y):
     import cv2
     import numpy as np
-    ink = ((roi[:, :, 2] < 155) | (roi[:, :, 1] > 65)).astype(np.uint8)*255
+    hue, sat, val = roi[:, :, 0], roi[:, :, 1], roi[:, :, 2]
+    # Pale active shields still satisfy the purple classifier below. Include
+    # those same pixels in their contours, otherwise the five-icon locator
+    # loses the entire header (including party count and identity).
+    purple = (hue >= 125) & (hue <= 175) & (sat > 45) & (val > 160)
+    ink = ((val < 155) | (sat > 65) | purple).astype(np.uint8)*255
     ink = cv2.morphologyEx(ink, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
     contours, _ = cv2.findContours(ink, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     glyphs = []
@@ -222,6 +393,42 @@ def glyph_features(roi, offset_x, offset_y):
                        'red_pixels': int(red.sum()), 'purple_pixels': int(purple.sum()),
                        'dark_pixels': int((val < 145).sum()), 'area': w*h})
     return sorted(glyphs, key=lambda g: g['bounds'][0])
+
+
+def header_row_panels(rgb):
+    """Locate a header from fresh five-icon geometry when clouds hide its edge.
+
+    Color seeds only select a row. All five glyphs, their spacing, the pale
+    background and actual name/CP pixels still need separate validation.
+    """
+    import cv2
+    import numpy as np
+    from creator_observations import glyph_row
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
+    output = []
+    for x, right in [(0, 248), (260, 508)]:
+        glyphs = glyph_features(hsv[45:240, x:right], x, 45)
+        seeds = [g for g in glyphs if g['red_pixels'] >= 4 or g['purple_pixels'] >= 4]
+        accepted = []
+        for seed in seeds:
+            cy = (seed['bounds'][1]+seed['bounds'][3])/2
+            near = [g for g in glyphs if abs((g['bounds'][1]+g['bounds'][3])/2-cy) <= 7]
+            row = glyph_row(dict(background_value_median=255, glyphs=near))
+            if row is None:
+                continue
+            center = sum((g['bounds'][1]+g['bounds'][3])/2 for g in row)/5
+            if any(abs(center-old) < 8 for old in accepted):
+                continue
+            top, bottom = max(45, round(center-45)), min(240, round(center+18))
+            panel = hsv[top:bottom, x:right]
+            pale = (panel[:, :, 1] < 105) & (panel[:, :, 2] > 150)
+            if pale.mean() < .55:
+                continue
+            accepted.append(center)
+            output.append(dict(bounds=[x, top, right, bottom], geometry_source='fresh_five_glyph_header_row',
+                background_value_median=float(np.median(panel[:, :, 2][pale])),
+                background_fraction=float(pale.mean()), glyphs=row))
+    return output
 
 
 def header_panels(rgb, anchors=()):
@@ -290,6 +497,16 @@ def header_panels(rgb, anchors=()):
             'geometry_source':'opposite_panel_search_with_fresh_glyph_geometry',
             'background_fraction':round(float(background.mean()),4),
             'background_value_median':float(np.median(roi[:,:,2][background])), 'glyphs':glyphs})
+    # Preserve already valid panel/CP geometry. Appending competing boxes to a
+    # good header can make an otherwise readable text line ambiguous.
+    from creator_observations import classify_headers
+    baseline = classify_headers(result)
+    if any(all(baseline[side][key]['value'] is None for key in ('party', 'shields'))
+           for side in ('mine', 'theirs')):
+        for panel in header_row_panels(rgb):
+            side = 'mine' if panel['bounds'][0] == 0 else 'theirs'
+            if all(baseline[side][key]['value'] is None for key in ('party', 'shields')):
+                result.append(panel)
     return result
 
 

@@ -20,6 +20,71 @@ class PhysicalPixels(unittest.TestCase):
     def frame(self):
         return self.np.zeros((1080, 508, 3), dtype=self.np.uint8)
 
+    def test_pale_purple_shield_contours_keep_the_five_icon_header(self):
+        from native_health import glyph_features
+        from creator_observations import classify_headers
+        hsv = self.np.full((30, 180, 3), (0, 0, 230), dtype=self.np.uint8)
+        for x in (15, 42, 69):
+            hsv[8:21, x:x+15] = (0, 180, 230)
+        for x in (105, 128):
+            hsv[8:21, x:x+13] = (150, 55, 230)
+        glyphs = glyph_features(hsv, 0, 70)
+        headers = classify_headers([dict(background_value_median=230, bounds=[0,60,180,110], glyphs=glyphs)])
+        self.assertEqual(headers['mine']['party']['value'], 3)
+        self.assertEqual(headers['mine']['shields']['value'], 2)
+
+    def test_pale_background_in_other_hues_does_not_become_an_icon(self):
+        from native_health import glyph_features
+        hsv = self.np.full((30, 60, 3), (0, 0, 230), dtype=self.np.uint8)
+        hsv[8:21, 15:30] = (90, 55, 230)
+        self.assertEqual(glyph_features(hsv, 0, 0), [])
+
+    def test_purple_below_the_shield_color_floor_stays_unreadable(self):
+        from native_health import glyph_features
+        hsv = self.np.full((30, 60, 3), (0, 0, 230), dtype=self.np.uint8)
+        hsv[8:21, 15:30] = (150, 35, 230)
+        self.assertEqual(glyph_features(hsv, 0, 0), [])
+
+    def shaded_bar(self,live=50):
+        image=self.frame();self.bar(image,live)
+        image[599:602,29:185]=[120,120,120]
+        image[612:615,29:185]=[210,150,100]
+        image[602:612,29:32]=[180,110,70]
+        image[602:612,182:185]=[90,140,190]
+        return image
+
+    def test_independently_shaded_rails_retain_positive_fraction_uncertainty(self):
+        from native_health import independent_rail_rectangle
+        bar=independent_rail_rectangle(self.shaded_bar(),[30,600,184,614],154)
+        self.assertIsNotNone(bar)
+        self.assertEqual(bar['outline_method'],'independent_shaded_rails_positive_only')
+        lo,hi=bar['fraction_interval']
+        self.assertLessEqual(lo,50/148)
+        self.assertGreaterEqual(hi,50/148)
+        self.assertGreater(hi-lo,4/148)
+        self.assertTrue(all(v>=.65 for v in bar['rail_inner_contrast']))
+
+    def test_shaded_fallback_cannot_establish_zero_hp(self):
+        from native_health import independent_rail_rectangle,positive_fallback_candidates
+        image=self.shaded_bar(live=0)
+        self.assertIsNone(independent_rail_rectangle(image,[30,600,184,614],154))
+        self.assertFalse(any(b['live_pixels']==0 for b in positive_fallback_candidates(image,154)))
+
+    def test_shaded_fallback_requires_an_actual_outline(self):
+        from native_health import independent_rail_rectangle
+        image=self.frame();image[603:611,33:83]=[0,240,170]
+        self.assertIsNone(independent_rail_rectangle(image,[30,600,184,614],154))
+
+    def test_shaded_fallback_rejects_a_short_damage_boundary(self):
+        from native_health import independent_rail_rectangle
+        self.assertIsNone(independent_rail_rectangle(self.shaded_bar(),[30,600,164,614],154))
+
+    def test_uniform_background_does_not_supply_the_four_rails(self):
+        from native_health import independent_rail_rectangle
+        image=self.frame();image[599:615,29:185]=[120,120,120]
+        image[603:611,33:83]=[0,240,170]
+        self.assertIsNone(independent_rail_rectangle(image,[30,600,184,614],154))
+
     def bar(self, image, live, orange=0):
         self.cv2.rectangle(image, (30, 600), (183, 613), (255, 255, 255), 2)
         image[603:611, 33:181] = 0

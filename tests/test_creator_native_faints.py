@@ -74,6 +74,33 @@ class NativeFaintTiming(unittest.TestCase):
         timeline['charged']=[dict(t=0,side='mine',announcement_clip_seconds=[1])]
         self.assertEqual(disappearance_faints(native,timeline),[])
 
+    def paired_after_charge(self,drop=True):
+        native,timeline=self.tiny_fixture(drop=drop)
+        timeline['charged']=[dict(t=-2,side='mine',announcement_clip_seconds=[-.8])]
+        for r in native[:4]:
+            r['health']['theirs']={'status':'observed','bar':{'live_pixels':80,'bounds':[300,500,450,514]}}
+        return native,timeline
+
+    def test_two_field_bars_can_end_the_own_charge_camera_exclusion(self):
+        native,timeline=self.paired_after_charge()
+        death=disappearance_faints(native,timeline)[0]
+        self.assertAlmostEqual(death['clip_seconds'],4/12)
+        self.assertEqual(death['independent_support']['reason'],'independent_party_decrement')
+
+    def test_one_bar_does_not_override_the_own_charge_camera_exclusion(self):
+        native,timeline=self.paired_after_charge()
+        native[2]['health']['theirs']={'status':'not_visible'}
+        self.assertEqual(disappearance_faints(native,timeline),[])
+
+    def test_paired_bars_do_not_override_an_unreleased_attack(self):
+        native,timeline=self.paired_after_charge()
+        timeline['charged'][0]['announcement_clip_seconds']=[1]
+        self.assertEqual(disappearance_faints(native,timeline),[])
+
+    def test_paired_field_fade_still_needs_an_independent_death(self):
+        native,timeline=self.paired_after_charge(drop=False)
+        self.assertEqual(disappearance_faints(native,timeline),[])
+
     def test_old_center_bar_cannot_faint_the_new_header(self):
         native,timeline=self.tiny_fixture()
         timeline['field']['mine'].append(dict(t=.2,name='Replacement'))

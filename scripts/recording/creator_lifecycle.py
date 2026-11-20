@@ -38,7 +38,8 @@ def resolve_forms(game, timeline, gd):
         name = entry['species']
         moves = {q['move'] for q in timeline['charged'] if q['side'] == 'mine' and q['move']
                  and active(timeline, 'mine', q['t']+timeline['clip_origin_seconds']) == name}
-        legal = lambda sid: {gd.moves[m].name for m in gd.species[sid]['chargedMoves'] if m in gd.moves}
+        legal = lambda sid: {gd.moves[m].name for m in
+                            gd.species[sid]['chargedMoves']+gd.species[sid].get('extraChargedMoves', []) if m in gd.moves}
         if name not in names or not moves or moves <= legal(names[name]):
             continue
         candidates = [sid for sid, p in gd.species.items()

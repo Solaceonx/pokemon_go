@@ -1,0 +1,993 @@
+{
+  "schema": "energy-v4-bounds-controls-development-v1",
+  "promoted": false,
+  "wider_replay": false,
+  "evaluation_scope": "Six newly source-annotated timestamps after v4same18pointtradeoff; same3developmentVODs, sourceframespreviouslyreviewed, NOTindependentVODholdout",
+  "frozen_reader_modified": false,
+  "original_v1_v2_v3_artifacts_modified": false,
+  "no_hp_delta_counting": true,
+  "control_input_source": "Existing frozen reader numerical pixel measurements, independent from HP; moves/corridors source-verified",
+  "bounds_only": {
+    "mine": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 2,
+      "scalar_truth_contained": 2,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 1,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "theirs": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 1,
+      "scalar_truth_contained": 1,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 2,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "both": {
+      "attempted": 6,
+      "labelled": 6,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 3,
+      "scalar_truth_contained": 3,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 3,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 6,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    }
+  },
+  "controls_and_bounds": {
+    "mine": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 2,
+      "scalar_truth_contained": 2,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 1,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "theirs": {
+      "attempted": 3,
+      "labelled": 3,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 1,
+      "scalar_truth_contained": 1,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 2,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 3,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    },
+    "both": {
+      "attempted": 6,
+      "labelled": 6,
+      "unscorable": 0,
+      "useful": 0,
+      "useful_fraction": 0.0,
+      "scalar_targets": 3,
+      "scalar_truth_contained": 3,
+      "exact_scalar_recovered": 0,
+      "interval_targets": 3,
+      "interval_fully_contained": 0,
+      "candidate_set_overlaps_reference": 6,
+      "prediction_entirely_within_reference": 0,
+      "false_confident_disjoint_narrow": 0,
+      "coverage_source_bootstrap": {
+        "interval_95": [
+          0.0,
+          0.0
+        ],
+        "source_groups": 3,
+        "enumerated_resamples": 27,
+        "undefined_resamples": 0,
+        "method": "Exact enumeration of source-cluster resampling with replacement; empirical inverse-CDF percentiles",
+        "limitation": "Tiny development sample; conditional on reviewed moves and corridors, not whole-VOD reliability"
+      }
+    }
+  },
+  "records": [
+    {
+      "channel": "homeslicehenry",
+      "record": "2904735277-002",
+      "source_vod": "https://www.twitch.tv/videos/2904735277",
+      "labels_sha256": "2facf793a8ba9df08dbb21d58fa646af4bd40776e646b2c247af4a91a68e4a13",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 10.500002258064516,
+          "truth": [
+            24,
+            24
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 10.500002258064516,
+          "truth": [
+            20,
+            24
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                28,
+                28
+              ],
+              [
+                32,
+                32
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 10.500002258064516,
+          "truth": [
+            24,
+            24
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 10.500002258064516,
+          "truth": [
+            20,
+            24
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                28,
+                28
+              ],
+              [
+                32,
+                32
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2925297675-001",
+      "source_vod": "https://www.twitch.tv/videos/2925297675",
+      "labels_sha256": "5e0c29085b802507a5242567d851064ec9dc81b0f7af80d305958b54c9a1cbfe",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 11.766667352369852,
+          "truth": [
+            20,
+            28
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                28,
+                28
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                36,
+                36
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 11.766667352369852,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 11.766667352369852,
+          "truth": [
+            20,
+            28
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                4
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                12,
+                12
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                28,
+                28
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                36,
+                36
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 11.766667352369852,
+          "truth": [
+            16,
+            16
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2930158499-001",
+      "source_vod": "https://www.twitch.tv/videos/2930158499",
+      "labels_sha256": "d83fa93fcf6ca8b30c4ca06a99635fcf97d86562cfd55fc131a6bdf1919e78ed",
+      "bounds_only": [
+        {
+          "side": "mine",
+          "t": 26.000002998846597,
+          "truth": [
+            8,
+            8
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 26.000002998846597,
+          "truth": [
+            48,
+            56
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                72,
+                72
+              ],
+              [
+                80,
+                80
+              ],
+              [
+                88,
+                88
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ],
+      "controls_and_bounds": [
+        {
+          "side": "mine",
+          "t": 26.000002998846597,
+          "truth": [
+            8,
+            8
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": true,
+          "useful": false,
+          "scalar_truth_contained": true,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        },
+        {
+          "side": "theirs",
+          "t": 26.000002998846597,
+          "truth": [
+            48,
+            56
+          ],
+          "prediction": {
+            "integer_ranges": [
+              [
+                0,
+                0
+              ],
+              [
+                8,
+                8
+              ],
+              [
+                16,
+                16
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                32,
+                32
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                56,
+                56
+              ],
+              [
+                64,
+                64
+              ],
+              [
+                72,
+                72
+              ],
+              [
+                80,
+                80
+              ],
+              [
+                88,
+                88
+              ]
+            ],
+            "status": "constrained",
+            "exact": false,
+            "source": "optional_bank_only",
+            "anchor_at": null,
+            "completion_count_measured": false,
+            "hp_drop_count_used": false,
+            "accuracy_verified": false
+          },
+          "scorable": true,
+          "scalar": false,
+          "useful": false,
+          "scalar_truth_contained": false,
+          "exact_scalar_recovered": false,
+          "interval_fully_contained": false,
+          "overlap": true,
+          "prediction_within_reference": false,
+          "disjoint_narrow": false
+        }
+      ]
+    }
+  ],
+  "distinctions": [
+    "Scalar contained in a candidate set is valid uncertainty, distinct from exact recovery",
+    "Interval fully contained, overlap, and predicted set inside annotation are distinct metrics",
+    "Optional fast completions are only legal upper bounds, never reported as measured attacks",
+    "Narrow disjoint sets identify false confidence; broad valid uncertainty is not a wrong exact prediction",
+    "These are source-derived windows from permitted development VODs, not independent whole-VOD validation"
+  ],
+  "reproduction": {
+    "manifest": {
+      "schema": "energy-v4-new-source-window-validation-manifest-v1",
+      "target_set": "Six newly source-annotated timestamps after v4same18pointtradeoff; same3developmentVODs, sourceframespreviouslyreviewed, NOTindependentVODholdout",
+      "sources": [
+        {
+          "labels": "data/creator_energy_v4_new_henry_source_labels_v1.json",
+          "base_context": "data/creator_energy_henry_pilot_context_v1.json",
+          "controls": "data/creator_energy_v4_controls_2904735277-002.jsonl.gz",
+          "charge_button_move_ids": [
+            "FOUL_PLAY",
+            "DRAIN_PUNCH"
+          ],
+          "charge_button_costs": [
+            40,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "62962afb63ea599f3687eafc879025042db38751f49730b78c826b8c3dbf06f7",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        },
+        {
+          "labels": "data/creator_energy_v4_new_reis_source_labels_v1.json",
+          "base_context": "data/creator_energy_reis_pilot_context_v1.json",
+          "controls": "data/creator_energy_v4_controls_2925297675-001.jsonl.gz",
+          "charge_button_move_ids": [
+            "FLAMETHROWER",
+            "TWISTER"
+          ],
+          "charge_button_costs": [
+            55,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "5fe3ee11baa08605948bd93533f9a5ceb746788af347bf80011a197b275f0d5f",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        },
+        {
+          "labels": "data/creator_energy_v4_new_axn_source_labels_v1.json",
+          "base_context": "data/creator_energy_v4_new_axn_context_v1.json",
+          "controls": "data/creator_energy_v4_new_axn_controls_v1.jsonl.gz",
+          "charge_button_move_ids": [
+            "DRILL_PECK",
+            "DRILL_RUN"
+          ],
+          "charge_button_costs": [
+            40,
+            40
+          ],
+          "initial_zero_verified": true,
+          "provenance": {
+            "full_controls_sha256": "37d8ea6139a55f2ad102f0467024720d2b1cb3739d065a3f0a58b3b6942b3c42",
+            "source_basis": "Source-reviewed button labels and countdown, costsfrompinnedGM; controls numeric features only, no target energy/count supplied"
+          }
+        }
+      ]
+    },
+    "evaluator_sha256": "038096b45caa7143ca7a3242364981410da7a222132c1a7d29308fe511aaa5f2",
+    "bounds_sha256": "5e2aab03683c3a1ca5d6f1c7a6cf01ace689ef41d436320f65471b6cd7793bf4"
+  }
+}
