@@ -1,0 +1,68 @@
+{
+  "schema": "task46-energy-source-channel-supplement-v1",
+  "frozen_before_rebuilder_predictions": true,
+  "development_only": true,
+  "independently_human_adjudicated": false,
+  "review_basis": "Assistant source-only visual completion/count review before any prediction on these windows; solver fixed afterAXNpilot. Numeric energy is derived source count/known gain, not API truth.",
+  "original_reference": "data/creator_ground_truth_v1.json",
+  "original_reference_sha256": "3375c1a4f2fec17d893c2b000ae8d4908d68df42ea5aac28ef27f79e499450f4",
+  "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
+  "battle": {
+    "channel": "homeslicehenry",
+    "record": "2930047987-001",
+    "source_vod": "https://www.twitch.tv/videos/2930047987",
+    "video_sha256": "e14b6f090f2e838165354ffc9308f2b7b552083317b2ce39a5de73db792f671e"
+  },
+  "source_only_moves": {
+    "mine": {
+      "id": "POISON_STING",
+      "gain": 9,
+      "turns": 2
+    },
+    "theirs": {
+      "id": "SCRATCH",
+      "gain": 4,
+      "turns": 1
+    }
+  },
+  "windows": [
+    {
+      "side": "mine",
+      "start_seconds": 1.0,
+      "end_seconds": 6.5000012707722385,
+      "energy_range": [
+        45,
+        45
+      ],
+      "witness": {
+        "t": 6.5000012707722385,
+        "pts": 1994850390,
+        "time_base": "1/306900000",
+        "rgb_sha256": "0d78d53935a303c0fe894242e2fa94fd68befa0c1a69e510016f961035ab327e"
+      },
+      "annotation_basis": "Five own Poison Sting completion cycles by6.5: initial purple projectile1.5 then2.5/3.5/4.5/5.5; fifth credit reflected in ready45-cost Dark Pulse at6.0; next outer-help fill only7.0. Aqua Tail35 readyafterfour supports9gainSting over7gainJab. Opponent repeatedwhiteclawScratch at0.5s,10\u201311creditedcycles by6.5; phaseuncertaintyretained. Nocharge/switch."
+    },
+    {
+      "side": "theirs",
+      "start_seconds": 1.0,
+      "end_seconds": 6.5000012707722385,
+      "energy_range": [
+        40,
+        44
+      ],
+      "witness": {
+        "t": 6.5000012707722385,
+        "pts": 1994850390,
+        "time_base": "1/306900000",
+        "rgb_sha256": "0d78d53935a303c0fe894242e2fa94fd68befa0c1a69e510016f961035ab327e"
+      },
+      "annotation_basis": "Five own Poison Sting completion cycles by6.5: initial purple projectile1.5 then2.5/3.5/4.5/5.5; fifth credit reflected in ready45-cost Dark Pulse at6.0; next outer-help fill only7.0. Aqua Tail35 readyafterfour supports9gainSting over7gainJab. Opponent repeatedwhiteclawScratch at0.5s,10\u201311creditedcycles by6.5; phaseuncertaintyretained. Nocharge/switch."
+    }
+  ],
+  "initial_zero_basis": "Source countdown/GO before first completedfastmove, not replacement default.",
+  "scope_exclusions": [
+    "No arbitrary-VOD validation",
+    "Uncertaincreditphase usesintegerintervals",
+    "Not independently human adjudicated"
+  ]
+}

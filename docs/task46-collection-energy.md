@@ -51,3 +51,11 @@ python scripts/recording/energy_reference_batch.py --root . --manifest data/crea
 ```
 
 Its 5/12 useful checkpoints include four exact scalar readings and one range-compatible reading. This is a small development check with source-assisted metadata and wide source-bootstrap margins, not readiness to replay or certify every game.
+
+The completed original-six check keeps failed and unscorable attempts:
+
+```sh
+python scripts/recording/energy_reference_six.py --root . --manifest data/creator_energy_six_reference_eval_manifest_v1.json --out runs/task46-energy-six-original-reproduced-local.json
+```
+
+It reports6/18 useful predictions, including a false confident zero against source-labelled32–36. Five of six useful readings fit source bounds; scalar recovery is4/10. Two attempted windows have unresolved numeric truth. The prototype remains separate and is not ready for wider replay. Flat HP pixels alone do not prove zero completed fast moves.
