@@ -1,0 +1,1991 @@
+{
+  "schema": "creator-centered-impact-audit-v1",
+  "date": "2026-11-18",
+  "baseline_git_commit": "d856e542895ff23a42f4922353c5f5410bf4ad9e",
+  "records_replayed": 82,
+  "processing_errors": 0,
+  "passes_before": 1,
+  "passes_after": 5,
+  "channels": {
+    "homeslicehenry": {
+      "records": 19,
+      "pass_before": 0,
+      "pass_after": 2
+    },
+    "itsaxn": {
+      "records": 39,
+      "pass_before": 0,
+      "pass_after": 2
+    },
+    "reis2occasion": {
+      "records": 24,
+      "pass_before": 1,
+      "pass_after": 1
+    }
+  },
+  "terminal_sequences_accepted": 4,
+  "accepted_sequences_visually_checked": 4,
+  "result_based_faints": 0,
+  "unexplained_before": 764,
+  "unexplained_after": 764,
+  "ground_truth_file": "data/creator_ground_truth_v1.json",
+  "event_accuracy_file": "runs/task46-event-accuracy-20261118.json",
+  "ground_truth": {
+    "battles": 6,
+    "per_channel": 2,
+    "named_releases": 64,
+    "protect_shields": 23,
+    "visible_faints": 21,
+    "censored_charge_releases": 1,
+    "development_clip": "2904735277-002",
+    "independent_human_adjudication": false
+  },
+  "validation": {
+    "unit_tests_run": 391,
+    "skipped": 1,
+    "reference_duels_exact": 108,
+    "protected_export_files_unchanged": 870,
+    "reserved_views": 20,
+    "reserved_source_files_unchanged": 80,
+    "structured_creator_files_privacy_checked": 1066,
+    "forbidden_fields_found": 0,
+    "media_or_unrestricted_ocr_exported": false
+  },
+  "full_game_state_accuracy_established": false,
+  "task46_complete": false,
+  "records": [
+    {
+      "record": "games/creators/homeslicehenry/2904735277-001",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-002",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": true,
+        "reason": "Live strip drains to zero during named centered impact"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-003",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 14 charged moves announced, 13 tracked",
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 14
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 14 charged moves announced, 13 tracked",
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 14
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-004",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 26 rejected",
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 6 charged moves announced, 3 tracked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 1
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 26 rejected",
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 6 charged moves announced, 3 tracked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 1
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-005",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": true,
+        "reason": "Live strip drains to zero during named centered impact"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-006",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-007",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-008",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-009",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 13 charged moves announced, 12 tracked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 13 charged moves announced, 12 tracked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2904735277-011",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 15
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 15
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-001",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 16
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 16
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-002",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-003",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: double_iron_bash at 68.5s had 18 of 35",
+          "ending: no result screen, and the tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 16
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: double_iron_bash at 68.5s had 18 of 35",
+          "ending: no result screen, and the tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 16
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-004",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-005",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 7 charged moves announced, 6 tracked",
+          "ending: result says loss, tracker has us on 3 and them on 2"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 7 charged moves announced, 6 tracked",
+          "ending: result says loss, tracker has us on 3 and them on 2"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-006",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 3
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 3
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-007",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 37 rejected",
+          "moves: 10 charged moves announced, 6 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says loss, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 37 rejected",
+          "moves: 10 charged moves announced, 6 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says loss, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-008",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 9 charged moves announced, 8 tracked",
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 9 charged moves announced, 8 tracked",
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/homeslicehenry/2930047987-009",
+      "channel": "homeslicehenry",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 10 charged moves announced, 9 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 6
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 10 charged moves announced, 9 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 6
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-001",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-002",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 2
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 2
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-003",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: chilling_water at 45.5s had 27 of 45",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: chilling_water at 45.5s had 27 of 45",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-004",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 39 rejected",
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 6 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 39 rejected",
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 6 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-005",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-006",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: bone_club at 56.5s had 14 of 35; fire_punch at 70.5s had 27 of 40",
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: bone_club at 56.5s had 14 of 35; fire_punch at 70.5s had 27 of 40",
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-007",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-008",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 14
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 14
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-009",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-010",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-011",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-012",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 18
+      },
+      "after": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 18
+      },
+      "terminal_impact": {
+        "accepted": true,
+        "reason": "Live strip drains to zero during named centered impact"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-013",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 3 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-014",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 15
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 15
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2904685033-015",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 6
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 6
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-001",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-002",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-003",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-004",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 22 rejected",
+          "moves: 6 charged moves announced, 3 tracked",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 3
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "looks: 22 rejected",
+          "moves: 6 charged moves announced, 3 tracked",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 3
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-005",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 0
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 0
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-006",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-007",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-008",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: dynamic_punch at 77.5s had 27 of 45; acrobatics at 143.0s had 45 of 55",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 14
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: dynamic_punch at 77.5s had 27 of 45; acrobatics at 143.0s had 45 of 55",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 14
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-009",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 4
+      },
+      "after": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 4
+      },
+      "terminal_impact": {
+        "accepted": true,
+        "reason": "Live strip drains to zero during named centered impact"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-010",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 3
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 3
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-011",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-012",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: body_slam at 40.5s had 28 of 40",
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 16
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: body_slam at 40.5s had 28 of 40",
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 16
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-013",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 11 charged moves announced, 10 tracked",
+          "energy: rage_fist at 73.0s had 24 of 40",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 11 charged moves announced, 10 tracked",
+          "energy: rage_fist at 73.0s had 24 of 40",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-014",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-015",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 13
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 13
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-016",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-017",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 10 charged moves announced, 9 tracked",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 10 charged moves announced, 9 tracked",
+          "ending: result says win, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-018",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 11 tracked",
+          "energy: surf at 102.0s had 26 of 45",
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 11 tracked",
+          "energy: surf at 102.0s had 26 of 45",
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-019",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-020",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 8 charged moves announced, 7 tracked",
+          "ending: no result screen, and the tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 8 charged moves announced, 7 tracked",
+          "ending: no result screen, and the tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-021",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 3 and them on 3"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-022",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 6
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-023",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/itsaxn/2930158499-024",
+      "channel": "itsaxn",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 3"
+        ],
+        "unexplained": 5
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-001",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-002",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: swift at 121.0s had 8 of 35"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: swift at 121.0s had 8 of 35"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-003",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: rock_tomb at 135.0s had 0 of 50"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: rock_tomb at 135.0s had 0 of 50"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-004",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 11 charged moves announced, 7 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 11 charged moves announced, 7 tracked",
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-005",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 13 charged moves announced, 12 tracked",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 13 charged moves announced, 12 tracked",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-006",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 11 tracked",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 14
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 12 charged moves announced, 11 tracked",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 14
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-007",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 1",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: no result screen, and the tracker has us on 1 and them on 1",
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-009",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 7
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "coverage: clip starts mid-match; initial energy, shields and team history are unknown"
+        ],
+        "unexplained": 7
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-010",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 11 charged moves announced, 10 tracked",
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked"
+        ],
+        "unexplained": 5
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 11 charged moves announced, 10 tracked",
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked"
+        ],
+        "unexplained": 5
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2887787713-011",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 3
+      },
+      "after": {
+        "verdict": "pass",
+        "failed": [],
+        "unexplained": 3
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-001",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 2 charged move(s) without an observed name",
+          "energy: sludge_wave at 80.0s had 55 of 65",
+          "ending: result says win, tracker has us on 3 and them on 2"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 2 charged move(s) without an observed name",
+          "energy: sludge_wave at 80.0s had 55 of 65",
+          "ending: result says win, tracker has us on 3 and them on 2"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-002",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "energy: super_power at 117.5s had 8 of 40",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "energy: super_power at 117.5s had 8 of 40",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-003",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-004",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "shields: they used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 9
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-005",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 8
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 8
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-006",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: they used 2, but 0 charged move(s) were tracked as blocked",
+          "energy: ice_beam at 167.5s had 37 of 55",
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: they used 2, but 0 charged move(s) were tracked as blocked",
+          "energy: ice_beam at 167.5s had 37 of 55",
+          "ending: no result screen, and the tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No matching named attack announcement"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-007",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 2, but 1 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-008",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 10
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says loss, tracker has us on 2 and them on 3"
+        ],
+        "unexplained": 10
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-009",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "shields: we used 1, but 0 charged move(s) were tracked as blocked",
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-010",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 11 charged moves announced, 10 tracked",
+          "ending: no result screen, and the tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "moves: 1 charged move(s) without an observed name",
+          "moves: 11 charged moves announced, 10 tracked",
+          "ending: no result screen, and the tracker has us on 2 and them on 1"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No final named charged attack"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-011",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 11
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 2 and them on 2"
+        ],
+        "unexplained": 11
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-012",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 12
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-013",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "energy: discharge at 164.5s had 19 of 40",
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 20
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "energy: discharge at 164.5s had 19 of 40",
+          "ending: result says loss, tracker has us on 1 and them on 2"
+        ],
+        "unexplained": 20
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "Victim not independently observed as last party member"
+      }
+    },
+    {
+      "record": "games/creators/reis2occasion/2925297675-014",
+      "channel": "reis2occasion",
+      "before": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 20
+      },
+      "after": {
+        "verdict": "fail",
+        "failed": [
+          "ending: result says win, tracker has us on 1 and them on 1"
+        ],
+        "unexplained": 20
+      },
+      "terminal_impact": {
+        "accepted": false,
+        "reason": "No continuous positive-to-zero live strip with disappearing tail"
+      }
+    }
+  ],
+  "original_eleven": {
+    "records": 11,
+    "pass_before": 0,
+    "pass_after": 2
+  },
+  "reviewed_six": {
+    "records": 6,
+    "pass_before": 0,
+    "pass_after": 1
+  },
+  "records_with_increased_unexplained": 0
+}

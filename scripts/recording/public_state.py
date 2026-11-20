@@ -47,9 +47,10 @@ def energy_candidates(fills, costs, ready, tolerance=.065):
 
 
 class PublicState:
-    def __init__(self, move_costs, *, incomplete_start=False):
+    def __init__(self, move_costs, *, incomplete_start=False, legal_moves=None):
         self.move_costs = move_costs
         self.incomplete_start = incomplete_start
+        self.legal_moves=legal_moves or {}
         self.sides = {s: {"active": None, "pokemon": {}, "shields": unknown("No confirmed counter"),
                           "left": unknown("No confirmed counter"), "counter_runs": {}}
                       for s in ("mine", "opponent")}
@@ -61,6 +62,8 @@ class PublicState:
         self.last_charge = {}
         self.continuity = StateContinuity()
         self.result = unknown("No result shown")
+        self.source_faint_credit = {'mine': 0, 'opponent': 0}
+        self.source_faint_seen = set()
 
     def counter(self, state, name, field, t):
         value = field.get("value") if field.get("status") == "observed" else None
@@ -91,6 +94,26 @@ class PublicState:
             self.charge_owner = "mine"
         elif phase in ("opponent_charged_warning", "shield_prompt", "opponent_charged_resolution"):
             self.charge_owner = "opponent"
+        for death in frame.get('source_faints', []):
+            who = death['side']
+            key = (who, death['species'], death['clip_seconds'])
+            if key in self.source_faint_seen:
+                continue
+            self.source_faint_seen.add(key)
+            victims = [(i, m) for i, m in self.sides[who]['pokemon'].items()
+                       if m['species']['value'] == death['species']]
+            if len(victims) != 1:
+                continue
+            identity, mon = victims[0]
+            if mon['fainted'].get('value') is not True and self.sides[who]['left'].get('value') is not None:
+                self.source_faint_credit[who] += 1
+            mon['fainted'] = evidence(True, death.get('confirmed_clip_seconds', t),
+                method='source_measured_zero_and_confirmation',
+                event_seconds=death['clip_seconds'])
+            mon['health'] = evidence([0, 0], death.get('confirmed_clip_seconds', t),
+                method='source_measured_zero_and_confirmation', units='fraction')
+            self.continuity.observed(who, identity, 'fainted', changed=True)
+            self.continuity.observed(who, identity, 'health', changed=True)
         for side in ("mine", "opponent"):
             visible, state = frame[side], self.sides[side]
             drop = self.counter(state, "left", visible["pokemon_left"], t)
@@ -99,12 +122,20 @@ class PublicState:
                 if state[key].get("observed_at_seconds") == t:
                     self.continuity.observed(side, None, key, changed=bool(change))
             if drop and drop[1] < drop[0] and drop[2] in state["pokemon"]:
-                state["pokemon"][drop[2]]["fainted"] = evidence(True, t, "inferred", method="party_counter_decreased")
-                for key in ("health", "energy", "attack_stage", "defense_stage"):
-                    self.continuity.observed(side, drop[2], key, changed=True)
+                amount = drop[0]-drop[1]
+                covered = min(amount, self.source_faint_credit[side])
+                self.source_faint_credit[side] -= covered
+                if covered < amount:
+                    state["pokemon"][drop[2]]["fainted"] = evidence(True, t, "inferred", method="party_counter_decreased")
+                    for key in ("health", "energy", "attack_stage", "defense_stage"):
+                        self.continuity.observed(side, drop[2], key, changed=True)
             species, cp = visible["species"], visible["cp"]
             identity = None
-            if species.get("value") and cp.get("value") is not None:
+            species_seen=species.get('evidence',{}).get('observed_at_seconds')
+            cp_seen=cp.get('evidence',{}).get('observed_at_seconds')
+            coherent=(species_seen is not None and cp_seen is not None and abs(species_seen-cp_seen)<=.25
+                      and max(species_seen,cp_seen)<=t)
+            if species.get("value") and cp.get("value") is not None and coherent:
                 identity = f"{species['value']}:{cp['value']}"
                 seen = species.get("evidence", {}).get("observed_at_seconds", t)
                 if seen is not None and 0 <= t - seen <= .75:
@@ -124,6 +155,7 @@ class PublicState:
                     if identity in state["pokemon"]:
                         outgoing = state["pokemon"].get(state["active"])
                         if outgoing and identity != state["active"]:
+                            state['active_transition_unsettled_until_seconds'] = t+.5
                             for key in ("health", "energy"):
                                 field = outgoing[key]
                                 if field.get("value") is not None and t - field.get("observed_at_seconds", t) > .75:
@@ -132,20 +164,80 @@ class PublicState:
                         state["active_observed_at_seconds"] = seen
                         state["pokemon"][identity]["species"] = evidence(species["value"], seen)
                         state["pokemon"][identity]["cp"] = evidence(cp["value"], seen)
+                        pending=state.get('pending_identity_candidate')
+                        if pending and seen>=pending['observed_at_seconds']:
+                            state.pop('pending_identity_candidate',None)
+                        conflict=state.get('active_identity_conflict')
+                        if conflict and seen>conflict['observed_at_seconds']:
+                            state.pop('active_identity_conflict',None)
+            candidate=visible.get('identity_candidate')
+            if candidate:
+                candidate_id=f"{candidate['species']}:{candidate['cp']}"
+                if candidate_id!=state['active']:
+                    state['pending_identity_candidate']={**candidate,'identity':candidate_id}
+            current=state['pokemon'].get(state['active'])
+            if current:
+                if (cp.get('status')=='observed' and cp.get('value') is not None and cp_seen is not None
+                    and 0<=t-cp_seen<=.25 and cp['value']!=current['cp']['value']):
+                    state['active_identity_conflict']=dict(observed_at_seconds=cp_seen,
+                        reason='Fresh CP differs from the last active; replacement identity is unresolved',cp=cp['value'])
+                allowed=self.legal_moves.get(current['species']['value'])
+                labels=frame.get('charge_label_candidates',[]) if side=='mine' else []
+                incompatible=[label for label in labels if allowed is not None and label['name'] not in allowed
+                    and 0<=t-label['observed_at_seconds']<=.25]
+                if incompatible:
+                    state['active_identity_conflict']=dict(observed_at_seconds=max(label['observed_at_seconds'] for label in incompatible),
+                        reason='Fresh physical move labels contradict the last active species',
+                        moves=sorted({label['name'] for label in incompatible}))
         self.continuity.advance(frame, slim, self.sides)
         for side in ("mine", "opponent"):
             visible, state = frame[side], self.sides[side]
             species, cp = visible["species"], visible["cp"]
             identity = f"{species['value']}:{cp['value']}" if species.get("value") and cp.get("value") is not None else None
-            mon = state["pokemon"].get(state["active"])
-            if not mon or identity != state["active"]:
-                continue
             health = visible.get("health_estimate", {})
-            if (not self.continuity.holding and mon["fainted"].get("value") is not True and health.get("status") == "estimated"
-                    and health.get("identity") == f"{side}:{identity}"):
-                mon["health"] = evidence(health["fraction_range"], t, "estimated", units="fraction",
-                                          integer_hp_range=health.get("integer_hp_range"), maximum_hp=health.get("maximum_hp"))
-                self.continuity.observed(side, identity, "health")
+            native_center = (health.get('method') == 'native_live_pixels'
+                             and health.get('camera_owner_basis') in ('charged_attacker', 'charged_target'))
+            if identity is None and native_center:
+                identity = state['active']
+            mon = state["pokemon"].get(state["active"])
+            if not mon:
+                continue
+            health_identity, health_mon = state['active'], mon
+            camera_species = health.get('camera_species')
+            if native_center and camera_species:
+                matches = [(i,m) for i,m in state['pokemon'].items() if m['species'].get('value') == camera_species]
+                if len(matches) == 1:
+                    health_identity, health_mon = matches[0]
+                else:
+                    health_mon = None
+            native = health.get('method') == 'native_live_pixels'
+            identity_seen = species.get('evidence', {}).get('observed_at_seconds')
+            conflicted=bool(state.get('pending_identity_candidate') or state.get('active_identity_conflict'))
+            recent_native=(native and not native_center and not conflicted and identity in (None,state['active'])
+                and 0<=t-state.get('active_observed_at_seconds',-100)<=.75)
+            if recent_native:
+                identity=state['active']
+            attributable_native = native and (native_center or (not conflicted and
+                (recent_native or identity_seen is not None and 0 <= t-identity_seen <= .75)))
+            settled_identity = not native or native_center or t >= state.get('active_transition_unsettled_until_seconds', -1)
+            if (health_mon and settled_identity and ((not native and not self.continuity.holding) or attributable_native)
+                    and health_mon["fainted"].get("value") is not True and health.get("status") == "estimated"
+                    and (health.get("identity") == f"{side}:{identity}" and identity == state['active'] or native_center or recent_native)):
+                health_mon["health"] = evidence(health["fraction_range"], t, "estimated", units="fraction",
+                                          integer_hp_range=health.get("integer_hp_range"), maximum_hp=health.get("maximum_hp"),
+                                          method=health.get('method'), camera_owner_basis=health.get('camera_owner_basis'),
+                                          camera_species=camera_species,
+                                          identity_basis='last_recent_confirmed_header' if recent_native else 'current_header_or_attributed_camera')
+                # A fresh attributed pixel measurement is a readback even while
+                # the rest of a charged attack is still unresolved.
+                self.continuity.observed(side, health_identity, "health", changed=native)
+            if (frame.get('native_source') and health.get('status')!='estimated'
+                and (not self.continuity.holding or self.continuity.attack.get('resolution_started_at_seconds') is not None)
+                and mon['fainted'].get('value') is not True):
+                self.continuity.mark(self.sides,side,state['active'],'health',
+                    'Current active HP is unreadable outside a held attack; previous pixels may precede a hit or entry',t)
+            if identity != state['active'] or conflicted:
+                continue
             if side == "mine":
                 for button in frame["buttons"]:
                     if button.get("identity_status") == "observed" and button.get("move") in self.move_costs:
@@ -153,7 +245,7 @@ class PublicState:
                 names = [mon["charged_moves"].get(f"charge_{i}", {}).get("value") for i in (0, 1)]
                 values = [slim["b"][key] for key in ("l", "r")]
                 seen = species.get("evidence", {}).get("observed_at_seconds", t)
-                if (not self.continuity.holding and mon["fainted"].get("value") is not True and seen is not None and 0 <= t - seen <= .75
+                if ('charge_controls_constraint' not in frame and not self.continuity.holding and mon["fainted"].get("value") is not True and seen is not None and 0 <= t - seen <= .75
                         and all(v[1] for v in values) and all(names)):
                     amounts = energy_candidates([v[0] for v in values], [self.move_costs[n] for n in names], [v[2] for v in values])
                     if amounts:
@@ -161,6 +253,16 @@ class PublicState:
                             units="whole_energy_units", candidates=amounts, method="two_visible_discs_and_observed_move_costs",
                             tolerance_note="Unvalidated pixel tolerance; animation and fill wrap can leave several possibilities")
                         self.continuity.observed(side, identity, "energy")
+                constraint = frame.get('charge_controls_constraint')
+                if (constraint and constraint['status'] == 'constrained' and constraint['identity'] == identity
+                        and not self.continuity.holding and mon['fainted'].get('value') is not True
+                        and 0 <= t-constraint['observed_at_seconds'] <= .25):
+                    ranges = constraint['integer_ranges']
+                    mon['energy'] = evidence([ranges[0][0], ranges[-1][1]], constraint['observed_at_seconds'],
+                        'estimated', units='whole_energy_units', integer_ranges=ranges,
+                        method=constraint['method'], fill_uncertainty=constraint['fill_uncertainty'],
+                        accuracy_verified=False)
+                    self.continuity.observed(side, identity, 'energy')
         if frame.get("text_observation", {}).get("fresh_this_frame"):
             for record in frame["text_observation"]["records"]:
                 key = re.sub(r"[^A-Z]", "", record["text"].upper())
@@ -194,6 +296,12 @@ class PublicState:
             values = {k: copy.deepcopy(v) for k, v in state.items() if k != "counter_runs"}
             age = t - state.get("active_observed_at_seconds", t)
             values["active_status"] = "observed" if age <= .75 else "retained" if self.continuity.holding else "stale"
+            if not state['active']:
+                values['active_status']='unknown'
+            elif state.get('pending_identity_candidate') or state.get('active_identity_conflict'):
+                values['active_status']='pending'
+            elif state['pokemon'][state['active']]['fainted'].get('value') is True:
+                values['active_status']='awaiting_replacement'
             for identity, mon in values["pokemon"].items():
                 for key in tuple(mon):
                     if key == "charged_moves":
@@ -201,7 +309,8 @@ class PublicState:
                                     for slot, field in mon[key].items()}
                     else:
                         mon[key] = self.continuity.decorate(mon[key], side, identity, key, t, bench=identity != state["active"])
-                        if mon["fainted"].get("value") is True and key in ("health", "energy") and mon[key].get("value") is not None:
+                        if (mon["fainted"].get("value") is True and key in ("health", "energy") and mon[key].get("value") is not None
+                                and not (key == 'health' and mon[key].get('method') == 'source_measured_zero_and_confirmation')):
                             mon[key].update(status="historical", state_validity="before_faint",
                                             reason="Last known reading before confirmed faint")
             for key in ("shields", "left"):

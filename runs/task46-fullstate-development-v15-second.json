@@ -1,0 +1,6692 @@
+{
+  "schema": "creator-fullstate-development-aggregate-v1",
+  "battles": 6,
+  "event_source": "source",
+  "truth_sha256": "1aa824425b8b5464de4224e327f8eeed438097180bd42b883ebe3486528dfe92",
+  "completed_runs": 6,
+  "all_reference_events_correct": 6,
+  "events": {
+    "charged": {
+      "tp": 69,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ]
+    },
+    "shield": {
+      "tp": 23,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ]
+    },
+    "faint": {
+      "tp": 23,
+      "fp": 0,
+      "fn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "precision_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "recall_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "shield_decisions": {
+    "reference_charges": 69,
+    "matched_charges": 69,
+    "missing_charges": 0,
+    "correct": 64,
+    "incorrect": 0,
+    "unknown": 5
+  },
+  "fields": {
+    "species": {
+      "total": 188,
+      "reported": 187,
+      "reported_correct": 170,
+      "usable": 159,
+      "usable_correct": 159,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.8457446808510638,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.7065217391304348,
+        0.9627659574468085
+      ]
+    },
+    "party": {
+      "total": 170,
+      "reported": 168,
+      "reported_correct": 167,
+      "usable": 113,
+      "usable_correct": 113,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.6647058823529411,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.5,
+        0.8109756097560976
+      ]
+    },
+    "shields": {
+      "total": 170,
+      "reported": 168,
+      "reported_correct": 166,
+      "usable": 122,
+      "usable_correct": 122,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.7176470588235294,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.5783132530120482,
+        0.8505747126436781
+      ]
+    },
+    "health_fraction": {
+      "total": 28,
+      "reported": 28,
+      "reported_correct": 23,
+      "usable": 11,
+      "usable_correct": 11,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.39285714285714285,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.17857142857142858,
+        0.6071428571428571
+      ]
+    }
+  },
+  "details": [
+    {
+      "channel": "homeslicehenry",
+      "record": "2930763967-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 9,
+              "1": 11,
+              "3": 11
+            },
+            "matched_events": 11,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 2,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.01664800000000355,
+            "p95_absolute_distance_seconds": 0.0166370000000029,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.016648,
+              0.0,
+              0.0,
+              0.0,
+              0.016637,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 4,
+              "3": 5
+            },
+            "matched_events": 5,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 2,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 1.566688206447182,
+            "p95_absolute_distance_seconds": 0.7833687688614646,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              -1.566688,
+              -0.783369
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 12.016664194101509,
+          "requested_seconds": 12,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": null,
+              "status": "unknown",
+              "reported": false,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": null,
+              "status": "unknown",
+              "reported": false,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": null,
+              "status": "unknown",
+              "reported": false,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": null,
+              "status": "unknown",
+              "reported": false,
+              "usable": false,
+              "correct": false
+            }
+          ]
+        },
+        {
+          "t": 28.01666090192044,
+          "requested_seconds": 28,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 40.01665843278464,
+          "requested_seconds": 40,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 54.0166555521262,
+          "requested_seconds": 54,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.076087,
+                0.125
+              ],
+              "actual": [
+                0.088235,
+                0.117647
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 60.0166543175583,
+          "requested_seconds": 60,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 76.01665102537723,
+          "requested_seconds": 76,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 96.0166469101509,
+          "requested_seconds": 96,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 106.2666448010974,
+          "requested_seconds": 106.25,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.532609,
+                0.602273
+              ],
+              "actual": [
+                0.566176,
+                0.595588
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0,
+                0.022727
+              ],
+              "actual": [
+                0.0,
+                0.014815
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 108.01664444101509,
+          "requested_seconds": 108,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 120.01664197187928,
+          "requested_seconds": 120,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 130.0166399142661,
+          "requested_seconds": 130,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 136.01663867969822,
+          "requested_seconds": 136,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Tinkaton",
+              "actual": "Milotic",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 148.0166362105624,
+          "requested_seconds": 148,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Tinkaton",
+              "actual": "Milotic",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 164.01663291838133,
+          "requested_seconds": 164,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 173.26663101508916,
+          "requested_seconds": 173.25,
+          "fields": [
+            {
+              "field": "theirs.species",
+              "expected": "Milotic",
+              "actual": "Milotic",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0,
+                0.022989
+              ],
+              "actual": [
+                0.242647,
+                0.272059
+              ],
+              "status": "historical",
+              "reported": true,
+              "usable": false,
+              "correct": false,
+              "interval_overlap": false,
+              "informative": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "7e19204af2942660668b601c8867cbf201c2ef713cf2ddba83f55cafbfe220f0",
+        "timeline.json": "c52d0bc742029f2be18969c3ce81013b8062ad4586ed66b1f5bfa4a80db44eeb",
+        "continuity.jsonl.gz": "1bc6442b763defa1166dd4d6ebc030fa6e190908960366147c9b30cadc8eb407",
+        "source-events.jsonl.gz": "c5c74e12e165e287a7f850cec9a141be2ff6c23ff0dab5fd0e722f83484b84d9",
+        "events.jsonl.gz": "88e7e64ecfdaee8187eb7c7e5dd5c999e45207541c6a655da68a6a75a1f2662f",
+        "states.jsonl.gz": "3381b93e9bdb550261ab41be6513f5d3655222be61837094989421a77edd49f7"
+      },
+      "shield_decisions": {
+        "reference_charges": 11,
+        "matched_charges": 11,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "homeslicehenry",
+      "record": "2930763967-002",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 14,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 14,
+              "1": 14,
+              "3": 14
+            },
+            "matched_events": 14,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 1,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.16670742455417553,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              -0.166707
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 12.016664194101509,
+          "requested_seconds": 12,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 28.01666090192044,
+          "requested_seconds": 28,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Quagsire",
+              "actual": "Quagsire",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 44.01665760973937,
+          "requested_seconds": 44,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Quagsire",
+              "actual": "Quagsire",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 48.0166567866941,
+          "requested_seconds": 48,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Quagsire",
+              "actual": "Quagsire",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.763441,
+                0.842697
+              ],
+              "actual": [
+                0.786765,
+                0.816176
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.655914,
+                0.730337
+              ],
+              "actual": [
+                0.676471,
+                0.705882
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 60.0166543175583,
+          "requested_seconds": 60,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Quagsire",
+              "actual": "Quagsire",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 72.0166518484225,
+          "requested_seconds": 72,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Quagsire",
+              "actual": "Quagsire",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 76.01665102537723,
+          "requested_seconds": 76,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 88.01664855624142,
+          "requested_seconds": 88,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 102.01664567558299,
+          "requested_seconds": 102,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 114.01664320644718,
+          "requested_seconds": 114,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 124.01664114883403,
+          "requested_seconds": 124,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Greninja",
+              "actual": "Greninja",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            }
+          ]
+        },
+        {
+          "t": 136.01663867969822,
+          "requested_seconds": 136,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 148.0166362105624,
+          "requested_seconds": 148,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Corviknight",
+              "actual": "Corviknight",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.271739,
+                0.329545
+              ],
+              "actual": [
+                0.3,
+                0.328571
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 160.0166337414266,
+          "requested_seconds": 160,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 174.01663086076817,
+          "requested_seconds": 174,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 188.01662798010975,
+          "requested_seconds": 188,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Qwilfish",
+              "actual": "Qwilfish",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 198.5166258196159,
+          "requested_seconds": 198.5,
+          "fields": [
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0,
+                0.022727
+              ],
+              "actual": [
+                0,
+                0
+              ],
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "0e403988949166f7d807277895aa356cd07a8b2c7a03ce71864135423c34e0e8",
+        "timeline.json": "8fb2076344512332b5620b034a78b5c23481e463c35ff419db7c99ab999903d8",
+        "continuity.jsonl.gz": "f650df79d7e6e744eb5a7cdf7610348827df39561584d8a8a2dbd686e7eaa892",
+        "source-events.jsonl.gz": "375b766f2c3c4ad32c186ee97d6f03881a9846bf3e98fa94002ef7bbefddafec",
+        "events.jsonl.gz": "b5c5cb80730bec7f13d1406197efad1ab2675253fd2629177017ed8453fbf3da",
+        "states.jsonl.gz": "b9bbb7faf08362832a3269e3950595252d756bdaddde58168475cd25bca219c2"
+      },
+      "shield_decisions": {
+        "reference_charges": 14,
+        "matched_charges": 14,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 3
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2931023818-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 11,
+              "1": 11,
+              "3": 11
+            },
+            "matched_events": 11,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 3,
+              "3": 3
+            },
+            "matched_events": 3,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 0,
+              "1": 2,
+              "3": 3
+            },
+            "matched_events": 3,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 3,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.15004495833332498,
+            "maximum_absolute_distance_seconds": 1.4833573657407442,
+            "p95_absolute_distance_seconds": 0.15004495833332498,
+            "signed_distances_seconds": [
+              -1.483357,
+              -0.150045,
+              -0.016715
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 16.016662217592593,
+          "requested_seconds": 16,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": null,
+              "status": "unknown",
+              "reported": false,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 20.016661106481482,
+          "requested_seconds": 20,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 34.016657217592595,
+          "requested_seconds": 34,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 36.016656662037036,
+          "requested_seconds": 36,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Marowak",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 50.016652773148145,
+          "requested_seconds": 50,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Marowak",
+              "actual": "Marowak",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.27551,
+                0.329787
+              ],
+              "actual": [
+                0.338129,
+                0.366906
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false,
+              "interval_overlap": false,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.474747,
+                0.536842
+              ],
+              "actual": [
+                0.5,
+                0.527778
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 76.01664555092593,
+          "requested_seconds": 76,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Marowak",
+              "actual": "Marowak",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 96.01663999537037,
+          "requested_seconds": 96,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Annihilape",
+              "actual": "Marowak",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 108.01663666203704,
+          "requested_seconds": 108,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Annihilape",
+              "actual": "Marowak",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 120.0166333287037,
+          "requested_seconds": 120,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Annihilape",
+              "actual": "Marowak",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 122.01663277314815,
+          "requested_seconds": 122,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Marowak",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 132.01662999537038,
+          "requested_seconds": 132,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.565657,
+                0.631579
+              ],
+              "actual": [
+                0.093525,
+                0.122302
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false,
+              "interval_overlap": false,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.173469,
+                0.223404
+              ],
+              "actual": [
+                0.18705,
+                0.215827
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 134.0166294398148,
+          "requested_seconds": 134,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 148.01662555092594,
+          "requested_seconds": 148,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 160.01662221759258,
+          "requested_seconds": 160,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Jumpluff",
+              "actual": "Jumpluff",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 164.0166211064815,
+          "requested_seconds": 164,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Annihilape",
+              "actual": "Jumpluff",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 174.5166181898148,
+          "requested_seconds": 174.5,
+          "fields": [
+            {
+              "field": "theirs.species",
+              "expected": "Annihilape",
+              "actual": "Annihilape",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0,
+                0.021277
+              ],
+              "actual": [
+                0,
+                0
+              ],
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "9294592babf856da32e6b19aa88864f6e2da636168853a5d7f9e8356378ce2be",
+        "timeline.json": "edc80c4f1c7e0cddc48f4554165f4b5738ad7146d923758fa49343eb286a4361",
+        "continuity.jsonl.gz": "afb3e458d680760f4c23339301c79fef8adfd3d06c370e118e9e7c4d86c3d3d1",
+        "source-events.jsonl.gz": "f09ebe8c28f4ffd6826af4bef67fc73af52559b2db00ce51cd8dae326c97d044",
+        "events.jsonl.gz": "2a4fcde59f06cbc5a53f6b97e16bce2587ba06bf9b6b6e777ee6ab01f2772d7b",
+        "states.jsonl.gz": "1237a207620aaadf9a34f7872112cb33692f04d604e49811b5a6581e8552a38b"
+      },
+      "shield_decisions": {
+        "reference_charges": 11,
+        "matched_charges": 11,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "itsaxn",
+      "record": "2931023818-002",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 12,
+              "1": 12,
+              "3": 12
+            },
+            "matched_events": 12,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 5,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 3,
+              "1": 5,
+              "3": 5
+            },
+            "matched_events": 5,
+            "matched_with_timing_uncertainty_over_one_second": 1,
+            "early_outside_interval": 0,
+            "late_outside_interval": 2,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.766613467592606,
+            "p95_absolute_distance_seconds": 0.4333074490740785,
+            "signed_distances_seconds": [
+              0.433307,
+              0.0,
+              0.0,
+              0.0,
+              0.766613
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 10.016663884259259,
+          "requested_seconds": 10,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 14.016662773148148,
+          "requested_seconds": 14,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 28.01665888425926,
+          "requested_seconds": 28,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.44898,
+                0.510638
+              ],
+              "actual": [
+                0.471429,
+                0.5
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.642857,
+                0.712766
+              ],
+              "actual": [
+                0.666667,
+                0.694444
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 46.016653884259256,
+          "requested_seconds": 46,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Cramorant",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 62.01664943981481,
+          "requested_seconds": 62,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 78.01664499537037,
+          "requested_seconds": 78,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 88.01664221759259,
+          "requested_seconds": 88,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.29,
+                0.34375
+              ],
+              "actual": [
+                0.294964,
+                0.323741
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.773196,
+                0.849462
+              ],
+              "actual": [
+                0.784173,
+                0.81295
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 92.01664110648149,
+          "requested_seconds": 92,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 106.01663721759259,
+          "requested_seconds": 106,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Marowak",
+              "actual": "Marowak",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 118.01663388425926,
+          "requested_seconds": 118,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Pangoro",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Marowak",
+              "actual": "Marowak",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 132.01662999537038,
+          "requested_seconds": 132,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Tinkaton",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 146.01662610648148,
+          "requested_seconds": 146,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Tinkaton",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 158.01662277314816,
+          "requested_seconds": 158,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Tinkaton",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 172.01661888425926,
+          "requested_seconds": 172,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Tinkaton",
+              "actual": "Tinkaton",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 184.01661555092593,
+          "requested_seconds": 184,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Pangoro",
+              "actual": "Tinkaton",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 190.01661388425927,
+          "requested_seconds": 190,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 190.51661374537036,
+          "requested_seconds": 190.5,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Cramorant",
+              "actual": "Cramorant",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Mimikyu",
+              "actual": "Mimikyu",
+              "status": "retained",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0,
+                0.021277
+              ],
+              "actual": [
+                0.0,
+                0.014388
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.061224,
+                0.106383
+              ],
+              "actual": [
+                0.143885,
+                0.172662
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": false,
+              "correct": false,
+              "interval_overlap": false,
+              "informative": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "17c22793f5caa321ea6c784ed20d2ca4fcd9bce480ebfdc2e2db4ddd2b4dd0cf",
+        "timeline.json": "f838b2c036bb20512b298f8fc1253749d202fbb079fe3ab34c44d9e75bb58397",
+        "continuity.jsonl.gz": "03ce76a1c636ecfa0eb2a327dc8afe951a60c1054f24dea6d14339568b365727",
+        "source-events.jsonl.gz": "d27593fc91d9b388068ce3af65ef78092e9ab9ea987bbb52db91d70eaf9250dd",
+        "events.jsonl.gz": "a7fdd00876d1e3ae518768923a9b525a98a17884d9a5b0628ad63899ad0780fe",
+        "states.jsonl.gz": "7fc071567a84b88463595b5bb1ee8a7ebe47e6e50cfe5617d1e9fc0bacf347c2"
+      },
+      "shield_decisions": {
+        "reference_charges": 12,
+        "matched_charges": 12,
+        "missing_charges": 0,
+        "correct": 12,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2927121173-001",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 12,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 12,
+              "1": 12,
+              "3": 12
+            },
+            "matched_events": 12,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 2,
+              "1": 3,
+              "3": 3
+            },
+            "matched_events": 3,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 1,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.30003261111111357,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              -0.300033,
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 12.033326648148147,
+          "requested_seconds": 12,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 34.03331442592592,
+          "requested_seconds": 34,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 36.03331331481481,
+          "requested_seconds": 36,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.408602,
+                0.47191
+              ],
+              "actual": [
+                0.431655,
+                0.460432
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.382979,
+                0.444444
+              ],
+              "actual": [
+                0.376812,
+                0.405797
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 48.03330664814815,
+          "requested_seconds": 48,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 62.03329887037037,
+          "requested_seconds": 62,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 66.03329664814815,
+          "requested_seconds": 66,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 80.03328887037037,
+          "requested_seconds": 80,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 92.0332822037037,
+          "requested_seconds": 92,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 104.03327553703704,
+          "requested_seconds": 104,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 108.03327331481482,
+          "requested_seconds": 108,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 124.03326442592592,
+          "requested_seconds": 124,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.516129,
+                0.58427
+              ],
+              "actual": [
+                0.536765,
+                0.566176
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.784946,
+                0.865169
+              ],
+              "actual": [
+                0.80292,
+                0.832117
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 136.03325775925927,
+          "requested_seconds": 136,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 148.0332510925926,
+          "requested_seconds": 148,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 160.03324442592591,
+          "requested_seconds": 160,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": false,
+              "correct": false
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Lunatone",
+              "actual": "Lunatone",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 168.03323998148147,
+          "requested_seconds": 168,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.032609,
+                0.079545
+              ],
+              "actual": [
+                0.059259,
+                0.088889
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 172.03323775925926,
+          "requested_seconds": 172,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Dunsparce",
+              "actual": "Dunsparce",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "ce4f7a0e1f7b87411c1dfb8d931db436e7796deea806e5383e878f121bac88fa",
+        "timeline.json": "17eb9922b0cbfbe2a4e1db7ff279b671aa2434782b5c9c9098421c8d9181d465",
+        "continuity.jsonl.gz": "edae10f9c14d5dc5e10d6f336911a49a6cea2378643e17435e184d112b1c916a",
+        "source-events.jsonl.gz": "ecac5b8895e7724b1590152582cb7f14d784b3b9f4d3e418664c3e0088673c5c",
+        "events.jsonl.gz": "1bbecba57d7743f8737d127498dc19dba86cecf04107c0747ae322aacf1f470e",
+        "states.jsonl.gz": "e738f51aa2dfda65dfc4c503a73df6625b02db0700a138e97749a360f3485680"
+      },
+      "shield_decisions": {
+        "reference_charges": 12,
+        "matched_charges": 12,
+        "missing_charges": 0,
+        "correct": 11,
+        "incorrect": 0,
+        "unknown": 1
+      },
+      "all_reference_events_correct": true
+    },
+    {
+      "channel": "reis2occasion",
+      "record": "2927121173-002",
+      "processing_complete": true,
+      "events": {
+        "charged": {
+          "tp": 9,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 9,
+              "1": 9,
+              "3": 9
+            },
+            "matched_events": 9,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "shield": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 4,
+              "1": 4,
+              "3": 4
+            },
+            "matched_events": 4,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 0,
+            "median_absolute_distance_seconds": 0.0,
+            "maximum_absolute_distance_seconds": 0.0,
+            "p95_absolute_distance_seconds": 0.0,
+            "signed_distances_seconds": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "faint": {
+          "tp": 3,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "missing": [],
+          "extra": [],
+          "timing": {
+            "matches_by_tolerance_seconds": {
+              "0": 1,
+              "1": 3,
+              "3": 3
+            },
+            "matched_events": 3,
+            "matched_with_timing_uncertainty_over_one_second": 0,
+            "early_outside_interval": 0,
+            "late_outside_interval": 2,
+            "median_absolute_distance_seconds": 0.13325687037036005,
+            "maximum_absolute_distance_seconds": 0.16660435185184497,
+            "p95_absolute_distance_seconds": 0.13325687037036005,
+            "signed_distances_seconds": [
+              0.166604,
+              0.133257,
+              0.0
+            ]
+          }
+        }
+      },
+      "anchors": [
+        {
+          "t": 10.03332775925926,
+          "requested_seconds": 10,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Gurdurr",
+              "actual": "Gurdurr",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 12.033326648148147,
+          "requested_seconds": 12,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Gurdurr",
+              "actual": "Gurdurr",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.health_fraction",
+              "expected": [
+                0.634409,
+                0.707865
+              ],
+              "actual": [
+                0.669118,
+                0.698529
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.734043,
+                0.811111
+              ],
+              "actual": [
+                0.779412,
+                0.808824
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 24.03331998148148,
+          "requested_seconds": 24,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Gurdurr",
+              "actual": "Gurdurr",
+              "status": "retained",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 34.03331442592592,
+          "requested_seconds": 34,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Girafarig",
+              "actual": "Girafarig",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 50.03330553703704,
+          "requested_seconds": 50,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Girafarig",
+              "actual": "Girafarig",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 2,
+              "actual": 2,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 62.03329887037037,
+          "requested_seconds": 62,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Girafarig",
+              "actual": "Girafarig",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "stale",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 72.03329331481481,
+          "requested_seconds": 72,
+          "fields": [
+            {
+              "field": "theirs.species",
+              "expected": "Girafarig",
+              "actual": "Girafarig",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0.064516,
+                0.11236
+              ],
+              "actual": [
+                0.081481,
+                0.111111
+              ],
+              "status": "estimated",
+              "reported": true,
+              "usable": true,
+              "correct": true,
+              "interval_overlap": true,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 74.03329220370371,
+          "requested_seconds": 74,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Girafarig",
+              "actual": "Girafarig",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 86.03328553703703,
+          "requested_seconds": 86,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 100.03327775925926,
+          "requested_seconds": 100,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Blastoise",
+              "actual": "Blastoise",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 126.03326331481482,
+          "requested_seconds": 126,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 128.0332622037037,
+          "requested_seconds": 128,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Solrock",
+              "actual": "Solrock",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 138.03325664814815,
+          "requested_seconds": 138,
+          "fields": [
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.health_fraction",
+              "expected": [
+                0,
+                0.022472
+              ],
+              "actual": [
+                0.49635,
+                0.525547
+              ],
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": false,
+              "interval_overlap": false,
+              "informative": true
+            }
+          ]
+        },
+        {
+          "t": 140.03325553703704,
+          "requested_seconds": 140,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "pending",
+              "reported": true,
+              "usable": false,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 144.03325331481483,
+          "requested_seconds": 144,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Gurdurr",
+              "actual": "Gurdurr",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 3,
+              "actual": 3,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        },
+        {
+          "t": 152.03324887037036,
+          "requested_seconds": 152,
+          "fields": [
+            {
+              "field": "mine.species",
+              "expected": "Ursaluna",
+              "actual": "Ursaluna",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.species",
+              "expected": "Toucannon",
+              "actual": "Toucannon",
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.party",
+              "expected": 1,
+              "actual": 1,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.party",
+              "expected": 2,
+              "actual": 2,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "mine.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            },
+            {
+              "field": "theirs.shields",
+              "expected": 0,
+              "actual": 0,
+              "status": "observed",
+              "reported": true,
+              "usable": true,
+              "correct": true
+            }
+          ]
+        }
+      ],
+      "prediction_sha256": {
+        "source.json": "6a4955d64b99976119d67046d0fd32b6ea8f88a430accd7008bca1eb8f31b4a3",
+        "timeline.json": "e0437061057f5b00ca41d037c009860c5f608718217254d6bcd27cdf97bd015a",
+        "continuity.jsonl.gz": "c44e80276bdc9fe7cb07e4cb9ab869b7002d7e32abd11f6f38e61c0ce51a0543",
+        "source-events.jsonl.gz": "d12425eb3be013e6d6f55232e85f54f06fb669fb6cc51fce3aeab661af446049",
+        "events.jsonl.gz": "171495c9e6920d21c7de0c8813fd741d974552406188054e8286717c2f276dfc",
+        "states.jsonl.gz": "603da00ceff17395d4d446a5424fbc7c8b582da3982408c8c609e83a6cb4ddb4"
+      },
+      "shield_decisions": {
+        "reference_charges": 9,
+        "matched_charges": 9,
+        "missing_charges": 0,
+        "correct": 8,
+        "incorrect": 0,
+        "unknown": 1
+      },
+      "all_reference_events_correct": true
+    }
+  ],
+  "limitations": [
+    "These 18 battles have been used for development; all-perfect bootstrap intervals do not establish independent reliability.",
+    "First-fresh coarse HP labels contain known errors. Separate corrected native-coordinate references and historical scores are retained.",
+    "Event success and sampled fields do not certify continuous full game state."
+  ]
+}

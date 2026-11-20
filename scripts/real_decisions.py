@@ -181,6 +181,9 @@ def main() -> None:
     parser.add_argument("--bot", choices=("learner", "planner"), default="learner")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--save", help="write every decision and its scores to this JSON file")
+    parser.add_argument('--eligible', type=Path, help='Optional JSON list of evidence-qualified game/time/kind keys')
+    parser.add_argument('--audit', type=Path, help='Write excluded/rebuild-failed decision denominators')
+    parser.add_argument('--skip-invalid-state', action='store_true', help='Record un-rebuildable states instead of inventing replacements')
     args = parser.parse_args()
     if all(f.endswith(".json") for f in args.folders):  # results saved earlier with --save: just sum them up
         summary([r for f in args.folders for r in json.loads(Path(f).read_text())])
@@ -194,23 +197,43 @@ def main() -> None:
         make_bot = lambda seed: Planner(seed=seed)  # noqa: E731
     rng = random.Random(args.seed)
     rows = []
+    eligible = None
+    if args.eligible:
+        eligible = {(r['game'], round(float(r['t']), 6), r['kind'])
+                    for r in json.loads(args.eligible.read_text(encoding='utf-8'))}
+    audit = {'proposed':0, 'evidence_excluded':0, 'scored':0, 'invalid_state':[],
+             'accuracy_verified':False, 'interpretation':'Conditional simulator comparison, not a verified real-game outcome'}
     for folder in map(Path, args.folders):
         for d in decisions(folder):
-            bot = bot_choice(gd, d, make_bot, pool, rng)
-            agree = same_kind(d, bot) == same_kind(d, d["human"])
-            row = {k: d[k] for k in ("game", "t", "kind", "mine", "theirs")}
-            row.update(human=describe(d, d["human"]), bot=describe(d, bot), agree=agree)
-            if not agree:
-                seeds = [rng.getrandbits(32) for _ in range(args.games)]
-                theirs = [play_on(gd, d, d["human"], make_bot, pool, s) for s in seeds]
-                ours = [play_on(gd, d, bot, make_bot, pool, s) for s in seeds]
-                row.update(human_wins=round(statistics.mean(theirs), 3), bot_wins=round(statistics.mean(ours), 3))
+            audit['proposed'] += 1
+            if eligible is not None and (d['game'], round(float(d['t']),6), d['kind']) not in eligible:
+                audit['evidence_excluded'] += 1
+                continue
+            try:
+                bot = bot_choice(gd, d, make_bot, pool, rng)
+                agree = same_kind(d, bot) == same_kind(d, d["human"])
+                row = {k: d[k] for k in ("game", "t", "kind", "mine", "theirs")}
+                row.update(human=describe(d, d["human"]), bot=describe(d, bot), agree=agree)
+                if not agree:
+                    seeds = [rng.getrandbits(32) for _ in range(args.games)]
+                    theirs = [play_on(gd, d, d["human"], make_bot, pool, s) for s in seeds]
+                    ours = [play_on(gd, d, bot, make_bot, pool, s) for s in seeds]
+                    row.update(human_wins=round(statistics.mean(theirs), 3), bot_wins=round(statistics.mean(ours), 3))
+            except (KeyError, ValueError, IndexError, TypeError) as error:
+                if not args.skip_invalid_state:
+                    raise
+                audit['invalid_state'].append({'game':d['game'],'t':d['t'],'kind':d['kind'],
+                                               'error_type':type(error).__name__})
+                continue
             rows.append(row)
+            audit['scored'] += 1
             print(f"{row['game'][-24:]:>24} {row['t']:6.1f}s {row['kind']:6} {row['mine']:>14} v {row['theirs']:<14} "
                   f"player: {row['human']:<24} bot: {row['bot']:<24}"
                   + ("" if agree else f" win share {row['human_wins']:.2f} player, {row['bot_wins']:.2f} bot"), flush=True)
     if args.save:
         Path(args.save).write_text(json.dumps(rows, indent=1) + "\n")
+    if args.audit:
+        args.audit.write_text(json.dumps(audit,indent=2)+'\n',encoding='utf-8')
     print()
     summary(rows)
 

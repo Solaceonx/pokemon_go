@@ -47,6 +47,13 @@ def discover_segments(rows, source_id, duration, interval=.5, *, min_duration=15
                     break
         reset = total == 6 and minimum_party <= 5 and any(r.get("party") == [3, 3] for r in nearby)
         gap_rows = rows[last_hud_index + 1:index] if last_hud_index is not None and gap > 25 else []
+        short_gap_rows = rows[last_hud_index + 1:index] if last_hud_index is not None and gap > 6 else []
+        opening_rows = [r for r in short_gap_rows if r.get('battle_starting')]
+        opening_digits = [r for r in short_gap_rows if r.get('countdown')]
+        # A new Battle Starting screen corroborated by an opening digit is a
+        # restart even when the lobby is shorter than 25s and party pixels fail.
+        # A lone numeral (attack streak / shield timer) is not enough.
+        corroborated_opening = bool(opening_rows and opening_digits)
         def context_key(r):
             return re.sub(r"[^A-Z0-9]", "", r.get("context_text", "").upper())
         attack_context = any(any(r.get("cp") or []) or any(cue in context_key(r) for cue in
@@ -55,10 +62,14 @@ def discover_segments(rows, source_id, duration, interval=.5, *, min_duration=15
         lobby_context = any(r.get("battle_starting") or any(cue in context_key(r) for cue in
             ("FINDINGOPPONENT", "CHOOSEYOURLEAGUE", "BASICREWARDS", "GOBATTLELEAGUE")) for r in gap_rows)
         new_gap = gap > 25 and (lobby_context or not attack_context or gap > 60)
-        kind = "hud_after_visible_result" if result_since_hud else "hud_after_lobby_gap" if new_gap else "sustained_party_reset" if reset else None
+        kind = 'countdown_context' if corroborated_opening else "hud_after_visible_result" if result_since_hud else "hud_after_lobby_gap" if new_gap else "sustained_party_reset" if reset else None
         if kind:
-            starts.append({"start": max(0, row["t"] - 1.5), "first_hud_seconds": row["t"],
-                           "cues": [{"t": row["t"], "kind": kind, "sample_index": index}],
+            start_at = max(0, min(row['t']-1.5, opening_rows[0]['t']-1)) if corroborated_opening else max(0,row['t']-1.5)
+            cues = [{"t": row["t"], "kind": kind, "sample_index": index}]
+            if corroborated_opening:
+                cues.append({'t':opening_digits[0]['t'],'kind':'countdown','detail':opening_digits[0]['countdown']})
+            starts.append({"start": start_at, "first_hud_seconds": row["t"],
+                           "cues": cues,
                            "start_method": kind, "sampling_resolution_seconds": interval,
                            "start_uncertainty_seconds": max(interval, 1.5), "confidence": "medium"})
             minimum_party, low_run = 6, 0

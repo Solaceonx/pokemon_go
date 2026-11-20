@@ -13,6 +13,7 @@ import hashlib
 import inspect
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import shutil
@@ -38,7 +39,11 @@ def rows(path):
 
 
 def profile_for(reader, meta, output):
-    base = "henry-great.json" if meta["creator"] == "homeslicehenry" else "reis-great.json"
+    base = "henry-great.json" if meta["creator"].casefold() == "homeslicehenry" else "reis-great.json"
+    calibrated = meta.get('vod_intake_fingerprint', {}).get('layout', {}).get('views', [])
+    view = next((v for v in calibrated if v['id'] == meta.get('view_id')), None)
+    if view and view.get('base_profile'):
+        base = view['base_profile']
     path = reader / "profiles" / base
     layout = json.loads(path.read_text(encoding="utf-8"))
     layout.update(id=VERSION + "-" + meta["creator"], viewport=meta["viewport"],
@@ -63,7 +68,20 @@ def fingerprint(reader, profile, meta, fps, text_rate, seconds):
                                   for e in json.loads(profile.read_text())["templates"]}}
 
 
+def verify_clip_source(folder, meta):
+    """A cached measurement must never bypass verification of its media."""
+    folder=Path(folder).resolve()
+    video=(folder/meta['video_file']).resolve()
+    if not video.is_relative_to(folder):
+        raise ValueError('Clip media escaped its battle folder')
+    if sha256(video)!=meta['video_sha256']:
+        raise ValueError('Clip bytes differ from the verified export')
+    return video
+
+
 def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
+    meta = json.loads((folder / "battle.json").read_text(encoding="utf-8"))
+    video=verify_clip_source(folder,meta)
     bootstrap(reader)
     from adaptive_reader import AdaptiveReader
     from vod_ocr import VodOCR
@@ -73,7 +91,6 @@ def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
     import av
     import numpy as np
 
-    meta = json.loads((folder / "battle.json").read_text(encoding="utf-8"))
     raw = folder / "tracking-raw"
     raw.mkdir(exist_ok=True)
     profile = profile_for(reader, meta, raw / "profile.json")
@@ -87,9 +104,6 @@ def read_clip(folder, reader, *, fps=15, text_rate=3, seconds=None):
         return json.loads(receipt.read_text())
     if (raw / "screen.jsonl.gz").exists():
         raise ValueError("Raw readings differ from this reader; use a new version or archive them explicitly")
-    video = folder / meta["video_file"]
-    if sha256(video) != meta["video_sha256"]:
-        raise ValueError("Clip bytes differ from the verified export")
     ocr = VodOCR(profile)
     reader_instance, event_reader = AdaptiveReader(profile, ocr=ocr, ocr_interval=1 / text_rate), EventTracker()
     aligned = iter(rows(folder / "frame_alignment.jsonl.gz"))
@@ -220,6 +234,130 @@ def switch_time_left(remaining, reading_time, state_time):
     return round(max(0, remaining - max(0, reading_time - state_time)), 1) if remaining is not None else None
 
 
+def confirmed_empty_bars(readings, rich):
+    """Require a local counter drop and a continuous, matching bar outline.
+
+    Expanded searches also find battlefield lines during animations. Neither
+    a zero candidate nor a result screen is independent faint evidence.
+    """
+    from public_transitions import counter_changes
+    intervals = [b['t'] - a['t'] for a, b in zip(readings, readings[1:]) if b['t'] > a['t']]
+    if not intervals:
+        return set()
+    step = sorted(intervals)[len(intervals) // 2]
+    detailed = {round(r['timestamp_seconds'], 6): r for r in rich}
+    accepted = set()
+    for key, side in (('m', 'mine'), ('o', 'opponent')):
+        changes = counter_changes(readings, key, 'left', 1 / step)
+        drops = [after for before, after in zip(changes, changes[1:])
+                 if after['value'] == before['value'] - 1]
+        for index, row in enumerate(readings):
+            value = row[key]
+            if value.get('hp') != 0 or value.get('seg') != [] or not value.get('w'):
+                continue
+            if not any(row['t'] - .75 <= c['first'] <= row['t'] + 2 for c in drops):
+                continue
+            current = detailed.get(round(row['t'], 6), {}).get(side, {}).get('health_bar', {}).get('value')
+            bounds = current.get('bounds_px') if current else None
+            if not bounds or index == 0:
+                continue
+            # Do not bridge a missing sample or a camera cut to a different bar.
+            previous = readings[index - 1]
+            bar = detailed.get(round(previous['t'], 6), {}).get(side, {}).get('health_bar', {}).get('value')
+            old_bounds = bar.get('bounds_px') if bar else None
+            if (row['t'] - previous['t'] <= 1.6 * step and previous[key].get('hp') is not None
+                    and 0 < previous[key]['hp'] <= .15 and old_bounds
+                    and all(abs(a - b) <= 6 for a, b in zip(bounds, old_bounds))):
+                accepted.add((round(row['t'], 6), key))
+    return accepted
+
+
+def creator_readings(raw):
+    """Adapt measured empty bars and explicit result text; retain source logs.
+
+    Only independently corroborated zero bars survive as zero-length segments.
+    A result or a surrender dialog never manufactures a knockout.
+    """
+    readings = list(rows(raw / 'readings-refined.jsonl.gz'))
+    rich_path = raw / 'screen-refined.jsonl.gz'
+    confirmed = confirmed_empty_bars(readings, list(rows(rich_path))) if rich_path.exists() else set()
+    zero, rejected_zero, results, surrenders = [], [], [], []
+    by_time = {round(r['t'], 6): r for r in readings}
+    for r in readings:
+        for side in ('m', 'o'):
+            value = r[side]
+            if value.get('hp') == 0 and value.get('seg') == [] and (value.get('w') or 0) > 0:
+                item = {'t': r['t'], 'side': side}
+                if (round(r['t'], 6), side) in confirmed:
+                    value['seg'] = [['cyan', 0]]
+                    zero.append(item)
+                else:
+                    rejected_zero.append(item)
+    for record in rows(raw / 'text.jsonl.gz'):
+        text = ' '.join(part for _, part in record['text'])
+        if re.search(r'\bsurrender\s+and\s+exit\b', text, re.I):
+            surrenders.append(record['t'])
+        matched = [value for expression, value in ((r'\byou\W*win\b', 'win'),
+                    (r'\bgood\W*effort\b', 'loss')) if re.search(expression, text, re.I)]
+        if record['t'] < 20 or len(matched) != 1:
+            continue
+        reading = by_time.get(round(record['t'], 6))
+        if reading is not None and reading.get('result') in (None, matched[0]):
+            reading['result'] = matched[0]
+            results.append({'t': record['t'], 'value': matched[0], 'method': 'explicit_result_words'})
+    target = raw / 'readings-creator.jsonl.gz'
+    data = ''.join(json.dumps(r, separators=(',', ':')) + '\n' for r in readings).encode()
+    target.write_bytes(gzip.compress(data, mtime=0))
+    audit = {'schema': 2, 'source_sha256': sha256(raw / 'readings-refined.jsonl.gz'),
+             'text_sha256': sha256(raw / 'text.jsonl.gz'), 'derived_sha256': sha256(target),
+             'rich_sha256': sha256(rich_path) if rich_path.exists() else None,
+             'empty_bar_measurements_preserved': zero,
+             'uncorroborated_empty_bars_ignored': rejected_zero, 'result_evidence': results,
+             'surrender_dialog_seconds': surrenders, 'knockouts_inferred_from_result': 0,
+             'surrender_dialog_confirms_exit': False,
+             'raw_readings_unchanged': True}
+    write_json(raw / 'creator-evidence.json', audit)
+    return target, audit
+
+
+def retain_counter_looks(game, readings_path):
+    """Keep observed counter changes even when no health/move was visible."""
+    from public_transitions import counter_changes
+    readings = list(rows(readings_path))
+    timeline = json.loads((game / 'timeline.json').read_text(encoding='utf-8'))
+    origin = timeline['clip_origin_seconds']
+    looks = plain_rows(game / 'observations.jsonl')
+    if len(readings) < 2:
+        return
+    intervals = sorted(b['t'] - a['t'] for a, b in zip(readings, readings[1:]) if b['t'] > a['t'])
+    fps = 1 / intervals[len(intervals) // 2]
+    by_time = {round(look['t'], 6): look for look in looks}
+    additions = []
+    for key, prefix in (('m', 'my'), ('o', 'foe')):
+        changes = counter_changes(readings, key, 'left', fps)
+        for change in changes[1:]:
+            at = round(change['t'] - origin, 6)
+            if at < 0 or at > timeline['end']:
+                continue
+            look = by_time.setdefault(at, {'t': at})
+            field = prefix + '_left'
+            look[field] = min(look.get(field, 3), change['value'])
+            additions.append({'t': at, 'side': key, 'value': change['value'],
+                              'first_visible': change['first'], 'confirmed': change['t']})
+    # Counters cannot revive a fainted team member on a later sparse look.
+    minimum = {}
+    ordered = sorted(by_time.values(), key=lambda row: row['t'])
+    for look in ordered:
+        for field in ('my_left', 'foe_left'):
+            if look.get(field) is not None:
+                minimum[field] = min(minimum.get(field, 3), look[field])
+                look[field] = minimum[field]
+    (game / 'observations.jsonl').write_text(''.join(json.dumps(r, separators=(',', ':')) + '\n'
+                                                   for r in ordered), encoding='utf-8')
+    write_json(game / 'counter-evidence.json', {'schema': 1, 'observed_changes': additions,
+                                              'result_based_faints': 0})
+
+
 def publish(folder, game, verdict, reader):
     bootstrap(reader)
     from build_viewer import compact
@@ -236,14 +374,28 @@ def publish(folder, game, verdict, reader):
     observations = [{"t": round(origin + s["t"], 6), "look": s} for s in plain_rows(game / "observations.jsonl")] if (game / "observations.jsonl").exists() else []
     events = [{"t": round(origin + s["t"], 6), "event": s} for s in plain_rows(game / "events.jsonl")] if (game / "events.jsonl").exists() else []
     gm = json.loads((ROOT / "data/gamemaster.json").read_text(encoding="utf-8"))
+    move_names={m['moveId']:m['name'] for m in gm['moves']}
+    legal_moves={}
+    for pokemon in gm['pokemon']:
+        legal_moves.setdefault(pokemon['speciesName'].split(' (')[0],set()).update(
+            name for mid in pokemon['chargedMoves'] if mid in move_names
+            for name in [move_names[mid],move_names[mid].split(' (')[0]])
     ledger = PublicState({m["name"]: m["energy"] for m in gm["moves"] if m["energy"] > 0},
-                         incomplete_start=meta.get("incomplete_start", False))
+                         incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves)
     display, statuses = [], Counter()
     at = 0
-    for raw_frame, slim in zip(rows(raw / "screen-refined.jsonl.gz"), rows(raw / "readings-refined.jsonl.gz"), strict=True):
+    if (game/'creator-measurements.json').exists():
+        from creator_frames import measured_frames
+        source_frames = measured_frames(raw, timeline,
+            json.loads((game/'creator-lifecycle.json').read_text(encoding='utf-8')))
+    else:
+        source_frames = zip(rows(raw / "screen-refined.jsonl.gz"), rows(raw / "readings-refined.jsonl.gz"), strict=True)
+    for raw_frame, slim in source_frames:
         if abs(raw_frame["timestamp_seconds"] - slim["t"]) > .00001:
             raise ValueError("Rich and compact frame logs differ in time")
         frame = compact(raw_frame)
+        if raw_frame.get('native_source'):
+            frame['native_source'] = raw_frame['native_source']
         frame["game_state"] = ledger.update(raw_frame, slim)
         while at + 1 < len(states) and states[at + 1]["t"] <= frame["t"]:
             at += 1
@@ -257,7 +409,8 @@ def publish(folder, game, verdict, reader):
                 active = team["pokemon"][team["active"]] if team["active"] is not None and team["active"] < len(team["pokemon"]) else None
                 # Inferred energy belongs to this active identity only. Never
                 # label a model's default IV-derived HP or moves as observed.
-                if active and visible["species"].get("value") == active["name"] and not meta.get("incomplete_start"):
+                if (not (game/'creator-measurements.json').exists() and active
+                        and visible["species"].get("value") == active["name"] and not meta.get("incomplete_start")):
                     known = active["fast_move"]["known_from"]
                     visible["energy"] = {"value": active["energy"], "status": "inferred",
                         "range": active.get("energy_range"),
@@ -267,6 +420,7 @@ def publish(folder, game, verdict, reader):
                     (public_mon and public_side["active_status"] == "retained" and public_mon["species"]["value"] == active["name"]))
                 if identity_matches:
                     visible["model"] = {"fast_move": active["fast_move"], "charged_moves": active["charged_moves"],
+                        "energy": active['energy'], "energy_range": active.get('energy_range'),
                         "attack_stage": active["attack_stage"], "defense_stage": active["defense_stage"],
                         "switch_ready_in": switch_time_left(team.get("switch_ready_in"), frame["t"], model["t"]), "status": "inferred",
                         "stats_assumed": active["stats_assumed"], "accuracy_verified": False}
@@ -275,6 +429,11 @@ def publish(folder, game, verdict, reader):
                 interval = public_mon["energy"]["value"]
                 visible["energy"] = {"value": interval[0] if interval[0] == interval[1] else None,
                     "range": interval, "status": "estimated", "evidence": public_mon["energy"]}
+            elif (game/'creator-measurements.json').exists():
+                value = public_mon['energy'] if public_mon else {'value': None, 'status': 'unknown', 'reason': 'No confirmed active identity'}
+                interval = value.get('value')
+                visible['energy'] = {'value': None, 'range': interval,
+                    'status': value['status'], 'evidence': value}
             for key in ("species", "cp", "health_bar", "shields_left", "pokemon_left", "energy"):
                 statuses[f"{side}.{key}.{visible[key]['status']}"] += 1
         display.append(frame)
@@ -283,20 +442,32 @@ def publish(folder, game, verdict, reader):
                 for c in timeline.get("charged", [])]
     provenance = {**receipt["fingerprint"], "coverage": receipt["coverage"], "sample_interval_seconds": 1/receipt["fingerprint"]["fps"],
                   "every_decoded_frame": False, "source_start_seconds": meta["source_start_seconds"],
+                  "native_health_sample_hz": 12 if (game/'creator-measurements.json').exists() else None,
                   "maximum_hp_supplied": False, "causal_screen_readings": True,
                   "tracker_timeline": "offline_reconstruction_with_assumptions",
                   "processing_sha256": {name: sha256(ROOT / name) for name in
                     ("scripts/recording/assemble.py", "scripts/recording/public_transitions.py", "scripts/recording/vod_track.py", "scripts/recording/public_state.py",
                      "scripts/recording/state_continuity.py", "scripts/recording/vod_markers.py", "scripts/recording/public_fast.py", "scripts/recording/vod_pairs.py",
                      "scripts/recording/buttons.py", "scripts/recording/verdict.py", "data/vod_tracking_layouts.json",
-                     "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json")}}
+                     "scripts/track.py", "pogo/tracker.py", "data/gamemaster.json",
+                     "scripts/recording/creator_health.py", "scripts/recording/creator_observations.py",
+                     "scripts/recording/creator_frames.py", "scripts/recording/native_health.py",
+                     "scripts/recording/native_controls.py", "scripts/recording/creator_controls.py",
+                     "scripts/recording/creator_energy.py", "scripts/recording/creator_native_faints.py",
+                     "scripts/recording/creator_identity.py", "scripts/recording/creator_faint_support.py",
+                     "scripts/recording/creator_event_ledger.py", "scripts/recording/creator_move_labels.py",
+                     "scripts/recording/creator_charge_evidence.py", "scripts/recording/creator_announcements.py")}}
+    if (game/'creator-measurements.json').exists():
+        provenance['ocr_context_sample_interval_seconds'] = provenance['sample_interval_seconds']
+        provenance['sample_interval_seconds'] = 1/12
     data = {**previous, "readings": display, "states": states, "observations": observations, "events": events,
             "screen_events": list(rows(raw / "screen_events.jsonl.gz")), "origin": origin,
             "bookmarks": bookmarks, "tracking_verdict": verdict, "prediction_provenance": provenance}
     ledger_path = game / "continuity.jsonl.gz"
     with gzip.GzipFile(filename=str(ledger_path), mode="wb", mtime=0) as stream:
         for row in display:
-            stream.write((json.dumps({"t": row["t"], "game_state": row["game_state"]},
+            stream.write((json.dumps({"t": row["t"], "game_state": row["game_state"],
+                                     **({'native_source': row['native_source']} if row.get('native_source') else {})},
                                     separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8"))
     temporary = target.with_name("viewer-data.incomplete.json.gz")
     temporary.write_bytes(gzip.compress(json.dumps(data, separators=(",", ":"), ensure_ascii=False).encode("utf-8"), compresslevel=6, mtime=0))
@@ -319,7 +490,52 @@ def publish(folder, game, verdict, reader):
     return summary
 
 
-def track_clip(folder, reader):
+def without_raw_text(value):
+    """Creator exports contain typed observations, never unrestricted OCR prose."""
+    if isinstance(value, dict):
+        return {k: without_raw_text(v) for k, v in value.items()
+                if k not in {'raw_text', 'text', 'text_observation', 'trainer', 'trainer_name', 'nickname'}}
+    if isinstance(value, list):
+        return [without_raw_text(v) for v in value]
+    return value
+
+
+def creator_export(folder, game, meta, root):
+    """Keep the creator's canonical source-N folder separate from old Twitch views."""
+    ordinal = re.search(r'match-(\d+(?:-r[0-9a-f]{8})?)$', meta['match_id'])
+    if not ordinal:
+        raise ValueError('Creator match requires a numeric battle ordinal')
+    number = ordinal.group(1)
+    name = meta['reference_id'] + '-' + number
+    if meta.get('view_id') != 'pov':
+        name += '-' + meta['view_id']
+    exported = Path(root) / name
+    exported.mkdir(parents=True, exist_ok=True)
+    allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'source-events.jsonl', 'continuity.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json', 'creator-measurements.json',
+               'state.json', 'track.json', 'timeline.json', 'verdict.json']
+    for name in allowed:
+        path = game / name
+        packed = path.with_name(name + '.gz')
+        if not path.exists() and not packed.exists():
+            continue
+        if name.endswith('.jsonl'):
+            values = plain_rows(path)
+            data = ''.join(json.dumps(without_raw_text(v), separators=(',', ':'))+'\n' for v in values).encode()
+            (exported / (name + '.gz')).write_bytes(gzip.compress(data, mtime=0))
+        else:
+            value = load_gz(packed) if not path.exists() else json.loads(path.read_text(encoding='utf-8'))
+            write_json(exported / name, without_raw_text(value))
+    source = {k: meta.get(k) for k in ('id', 'match_id', 'view_id', 'source_url', 'source_sha256',
+              'video_sha256', 'source_start_seconds', 'source_end_seconds', 'source_viewport',
+              'incomplete_start', 'incomplete_end')}
+    source.update(channel=Path(root).name, dataset_role='creator_footage',
+                  privacy={'unrestricted_ocr_text_exported':False, 'video_or_frames_exported':False},
+                  observations_accuracy_verified=False)
+    write_json(exported / 'source.json', source)
+    return exported
+
+
+def track_clip(folder, reader, *, creator_root=None):
     sys.path.insert(0, str(ROOT))
     from pogo.gamedata import GameData
     from verdict import verdict as decide
@@ -330,17 +546,73 @@ def track_clip(folder, reader):
     raw, game = folder / "tracking-raw", folder / "tracker"
     game.mkdir(exist_ok=True)
     try:
+        verify_clip_source(folder,meta)
+        bootstrap(reader)
         refine(folder, raw, rows)
-        assembled = run_step(HERE / "assemble.py", raw / "readings-refined.jsonl.gz", raw / "text.jsonl.gz", game,
+        evidence_path, evidence = creator_readings(raw) if creator_root is not None else (raw / 'readings-refined.jsonl.gz', None)
+        measurements = None
+        text_path=raw/'text.jsonl.gz'
+        if evidence is not None:
+            from creator_identity import acquire_identities, enrich_readings
+            acquire_identities(folder, raw)
+            evidence_path = enrich_readings(evidence_path, raw)
+            from native_controls import acquire_controls
+            acquire_controls(folder, raw)
+            from creator_move_labels import acquire_labels
+            acquire_labels(folder, raw)
+            phase_folder = game / 'source-phase'
+            phase_folder.mkdir(exist_ok=True)
+            run_step(HERE / "assemble.py", evidence_path, raw / "text.jsonl.gz", phase_folder,
+                     "--public-footage", "--single-clip")
+            if not (phase_folder/'timeline.json').exists():
+                raise ValueError('Source phase extraction failed before native health refinement')
+            from creator_announcements import acquire_releases
+            text_path=acquire_releases(folder,raw,json.loads((phase_folder/'timeline.json').read_text(encoding='utf8')))
+            if text_path!=raw/'text.jsonl.gz':
+                run_step(HERE/'assemble.py',evidence_path,text_path,phase_folder,'--public-footage','--single-clip')
+            from creator_health import derive
+            evidence_path, measurements = derive(folder, raw, evidence_path,
+                json.loads((phase_folder/'timeline.json').read_text(encoding='utf-8')))
+            write_json(game/'creator-measurements.json', measurements)
+        assembled = run_step(HERE / "assemble.py", evidence_path, text_path, game,
                              "--public-footage", "--single-clip")
         (game / "assembly.log").write_text(assembled["output"], encoding="utf-8")
         if not (game / "team.json").exists():
             raise ValueError(assembled["output"])
         augment_cp(game, raw)
+        if evidence is not None:
+            retain_counter_looks(game, evidence_path)
+            write_json(game / 'creator-evidence.json', evidence)
+            from creator_impact import apply_impact
+            terminal = apply_impact(folder, raw, game)
+            from creator_lifecycle import apply_lifecycle
+            apply_lifecycle(folder, raw, game, GameData())
+            from creator_native_faints import apply_native_faints
+            apply_native_faints(game, raw)
         paired = reconcile(folder, game)
         prepare_team(game, GameData())
+        if evidence is not None:
+            from creator_state import reconcile_creator_state
+            reconcile_creator_state(game, raw)
+            if measurements is not None:
+                from creator_observations import reconcile_source_shields
+                observed_looks = plain_rows(game/'observations.jsonl')
+                shield_evidence = reconcile_source_shields(observed_looks,
+                    json.loads((game/'timeline.json').read_text(encoding='utf-8')), measurements['counters'])
+                (game/'observations.jsonl').write_bytes(''.join(json.dumps(r)+'\n' for r in observed_looks).encode('utf-8'))
+                measurements['shield_reconciliation'] = shield_evidence
+                write_json(game/'creator-measurements.json', measurements)
+                from creator_state import update_output_digest
+                update_output_digest(game)
         tracked = run_step(ROOT / "scripts/track.py", game)
         (game / "track.log").write_text(tracked["output"], encoding="utf-8")
+        if evidence is not None:
+            from creator_impact import record_faint
+            record_faint(game, terminal)
+            from creator_event_ledger import source_events
+            observable = source_events(json.loads((game/'timeline.json').read_text(encoding='utf8')),
+                json.loads((game/'creator-lifecycle.json').read_text(encoding='utf8')), measurements or {})
+            (game/'source-events.jsonl').write_bytes(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in observable).encode('utf8'))
         result = decide(game, GameData())
         result["paired_move_names_recovered"] = len(paired)
         blind = game / "blind"
@@ -349,7 +621,15 @@ def track_clip(folder, reader):
             shutil.copyfile(game / name, blind / name)
         run_step(ROOT / "scripts/track.py", blind, "--blind")
         result["blind_energy_check"] = json.loads((blind / "track.json").read_text())
+        verify_clip_source(folder,meta)
     except Exception as error:
+        if creator_root is not None:
+            # Keep the previous complete export intact on a diagnostic failure.
+            # Publishing old states with a new error verdict creates a mixed run.
+            write_json(game / 'tracking-error.json', {'game': folder.name,
+                       'error_type': type(error).__name__, 'message': str(error),
+                       'creator_export_updated': False})
+            raise RuntimeError(f'{folder.name}: creator replay failed; previous export retained') from error
         result = {"game": folder.name, "verdict": "fail", "failed": [str(error)], "notes": []}
     result = enforce_coverage(result, meta)
     result["game"] = folder.name
@@ -359,6 +639,18 @@ def track_clip(folder, reader):
         result["failed"].append("coverage: only part of the saved clip was analyzed")
     write_json(game / "verdict.json", result)
     summary = publish(folder, game, result, reader)
+    if creator_root is not None:
+        exported = creator_export(folder, game, meta, creator_root)
+        summary['creator_game_folder'] = exported.relative_to(ROOT).as_posix()
+        for directory in (game, game / 'blind'):
+            for path in directory.glob('*.jsonl'):
+                data = path.read_bytes()
+                packed = path.with_name(path.name + '.gz')
+                packed.write_bytes(gzip.compress(data, mtime=0))
+                if gzip.decompress(packed.read_bytes()) != data:
+                    raise ValueError('Compressed creator log differs from input')
+                path.unlink()
+        return summary
     # Repository exports compress repetitive state logs. Local media and raw
     # OCR stay outside Git; only gzip observations and the reproducible result
     # are copied here, never the video or a runtime installation.
@@ -398,16 +690,18 @@ def main():
     parser.add_argument("--text-rate", type=float, default=3)
     parser.add_argument("--seconds", type=float)
     parser.add_argument("--stage", choices=("read", "track"), default="track")
+    parser.add_argument('--creator', choices=('reis2occasion', 'homeslicehenry', 'itsaxn'))
     args = parser.parse_args()
     if args.jobs < 1 or args.jobs > 4 or args.fps <= 0 or args.text_rate <= 0:
-        parser.error("Use 1–4 workers and positive sampling rates")
+        parser.error("Use 1â€“4 workers and positive sampling rates")
     reader = reader_location(args.reader_dir)
-    folders = sorted(p.parent for p in args.library.glob("tw-*/battle.json")
+    creator_root = ROOT / 'games/creators' / args.creator if args.creator else None
+    folders = sorted(p.parent for p in args.library.glob("*/battle.json")
                      if not args.only or p.parent.name in args.only)
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
         def one(folder):
             read = read_clip(folder, reader, fps=args.fps, text_rate=args.text_rate, seconds=args.seconds)
-            return track_clip(folder, reader) if args.stage == "track" else read
+            return track_clip(folder, reader, creator_root=creator_root) if args.stage == "track" else read
         pending = {pool.submit(one, f): f for f in folders}
         report = []
         for task in as_completed(pending):
@@ -417,7 +711,7 @@ def main():
                               "states": result.get("model_states"), "verdict": result.get("tracking_verdict", {})}), flush=True)
         if args.stage == "track":
             paired = [f for f in folders if json.loads((f / "battle.json").read_text())["view_id"] in ("left", "right")]
-            second = {pool.submit(track_clip, f, reader): f for f in paired}
+            second = {pool.submit(track_clip, f, reader, creator_root=creator_root): f for f in paired}
             revised = {}
             for task in as_completed(second):
                 result = task.result()
@@ -426,7 +720,7 @@ def main():
                                   "recovered_move_names": result["tracking_verdict"].get("paired_move_names_recovered", 0)}), flush=True)
             report = [revised.get(r["id"], r) for r in report]
     if args.stage == "track":
-        path = ROOT / "games/twitch/report.json"
+        path = creator_root / 'report.json' if creator_root else ROOT / "games/twitch/report.json"
         kept = json.loads(path.read_text()) if path.exists() else []
         kept = [r for r in kept if r["id"] not in {r["id"] for r in report}]
         write_json(path, sorted(kept + report, key=lambda r: r["id"]))

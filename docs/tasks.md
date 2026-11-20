@@ -62,6 +62,7 @@ accuracy gain. Results and limits: `docs/battle_evidence.md` and
 
 | # | Task | Needs |
 |---|---|---|
+| **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
@@ -95,6 +96,51 @@ accuracy gain. Results and limits: `docs/battle_evidence.md` and
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 46. Comb the creators' footage — Codex on the owner's PC, taken 2026-11-09 (`task46-creator-footage`)
+
+**Full-state reliability follow-up — Codex, taken 2026-11-18:** apply calibrated live-HP reading throughout each battle; reconcile party/shield counts and uncertainty-aware energy/clock state; independently label fresh battle-level holdouts and publish field accuracy/coverage plus per-segment eligibility. Keep raw media/OCR/names local, preserve reserved footage and report failures. Frozen split: `data/creator_fullstate_eval_split_v1.json`. Work remains in progress until measured reliability gates pass.
+
+**Checkpoint 2026-11-19:** completed v9 replay29/82 strict passes versus17 baseline; v9's18 development clips match197releases69shieldspends69faints, with explicit timing uncertainty and remaining state errors. Second source-separated initial failures and a transparent reference-label correction remain archived. Full v9 corpus replay82/82 completed with0processing errors after the retained-source repair; earlier failed attempts remain documented. Full-state analysis readiness remains0 verified battles; Task46 is in progress. Details and independent margins are in status.md.
+
+**Faint-lifecycle follow-up, Codex, 2026-11-18:** same six frozen reference clips: charged 60/64 -> 64/64; shields 22/23 -> 22/23; faints 8/21 -> 21/21, with 0 unmatched after. Native source zeros are dated before replacement, the Victreebel victim and Qwilfish form/move errors are corrected, and the two late releases match their source windows. All 82 replayed; strict passes 5 -> 17, unexplained 764 -> 885, zero processing errors. 409 tests/1 existing skip, 108/108 duels; reserved/raw/privacy checks pass. All six references are now development clips, not heldout evidence. Full game-state analysis readiness remains unestablished; Task46 stays open. See `runs/task46-lifecycle-event-accuracy-20261118.json`, `runs/task46-lifecycle-audit-20261118.json` and `docs/status.md`.
+
+**Centered-impact and event-reference follow-up, Codex, 2026-11-18:** the creator-only reader now follows a continuous live HP strip into the centered charged-impact view, separates live yellow/red HP from the orange damage trail, and requires measured zero plus a disappearing tail, a named attack and an independently observed last party member. No result-derived knockouts or weakened checks. All 82 records replayed: strict passes 1 -> 5 (Henry 0 -> 2, ItsAXN 0 -> 2, Reis 1 -> 1); original eleven 0 -> 2. A six-battle source-frame reference (two/channel) labels 64 releases, 23 Protect Shields and 21 visible faints, with one censored release left unknown. Timed correct events: charged 59/64 -> 60/64, shields 22/23 unchanged, faints 7/21 -> 8/21; precision/recall and individual errors are in `runs/task46-event-accuracy-20261118.json`. The benchmark improvement is in development clip Henry 002; the other five clips are unchanged. Full state accuracy is not established. Tests: 391 run, one existing skip; 108/108 duels exact; reserved hashes unchanged. See `runs/task46-impact-audit-20261118.json`. Task46's remaining recognition, boundary, duplicate, decision and source-queue work is still open.
+
+**Progress 2026-11-18 (Codex):** collection resumed after interrupted jobs. Seventeen new Twitch archive candidates were found (Reis 3, Henry 6, ItsAXN 8), and one new completed VOD per creator was downloaded. The new Henry source has nine visually reviewed battle midpoints; its cuts are being exported. The earlier pilots now have 37 saved, full-frame-verified cuts: Henry 11, Reis 11, ItsAXN 15 (359,655 checked frames total). They are source-aligned cuts, not independently verified complete states or unique battles. One creator game record is tracked with its strict failed ending verdict retained. Task 46 is **not complete**: the remaining archive queue, all-cut tracking, duplicate review and reliable decision/habit measurements remain. Full sources are retained after the owner delegated the choice: disk space is adequate and review is unfinished. Dated receipt: `runs/task46-progress-20261118.json`.
+
+
+**Why.** The owner wants many real games by strong players, from reis2occasion, HomeSliceHenry and ItsAXN: their
+YouTube uploads and Twitch VODs. So far only one HomeSliceHenry stream (Twitch 2894502346, 15 clips) and two official
+broadcasts have been read. Real players' throws, shields, switches and baits are what task 42 (opponents fitted to
+people) and checks of the engine (`scripts/real_decisions.py`) need. The 2026-11-09 branches `battle-data-enrichment`
+and `canonical-battle-records` covered the bot's own live games, not this.
+
+**What to do.**
+1. **List the sources.** For each channel, the completed videos that show GO Battle League battles (mark the league).
+   Twitch VODs expire, so take those first. Add them to `data/video_sources.csv` (role `creator_footage`). Skip videos
+   that are mostly not battles (tier lists, team talk). A YouTube upload that repeats a VOD's battles (same teams in
+   the same order) is marked as a duplicate, not counted twice.
+2. **Pilot one video per channel** with `Extract all battles.cmd` / `scripts/recording/vod.py URL --download`
+   (`docs/full_vod_extraction.md`). New layouts (face cams, overlays, cropped phones) need a phone rectangle: accept an
+   automatic proposal only after checking frames from several points in the video, and save it in
+   `data/vod_layouts.json`. Tell the owner how many battles each pilot found and how many look clean before running the
+   rest.
+3. **Then every video.** Cut every battle, track each cut (`vod_track.py`) and write game records (`game-record-v1`,
+   as in `games/twitch/`) under `games/creators/<channel>/<source>-<n>/`. Keep each record's own check verdict and do
+   not loosen the checks. So far 0 of 43 public views pass the ending check; say which parts are still reliable
+   (teams, moves, throws, shields, switches) and use only those below.
+4. **Their decisions.** Run `scripts/real_decisions.py` on the creators' battles. Per channel: throws, shields and
+   switches, how often the bot agrees, and where they differ whose choice does better. Add one table of shield and
+   bait habits (when they shield, by energy, shields and Pokémon left) for task 42.
+5. **Disk.** Videos stay out of Git. Delete each full source once its cuts are checked; keep the cuts unless the PC
+   runs short (then ask the owner). Report the space used.
+
+**Rules.** Never commit videos, frames, or anyone's in-game trainer name (opponents' names on screen, or the creators'
+own); channel names as source labels are fine. Do not touch or tune on the twenty reserved views. Tests and
+`check_pvpoke.py` (108/108) pass before pushing; branch `task46-creator-footage` with a PR; results in
+`docs/status.md`. Report per channel: videos, battles found, battles whose checks pass, wins and losses where the result
+screen shows.
 
 ## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **taken: Claude on the owner's PC, 2026-11-08 (branch `task45-live-records`)**
 
@@ -1029,3 +1075,16 @@ camera, on the same battles.
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
 
+
+**Task46 continuing, 2026-11-19 (Codex):** v10/v11 each replay18 development clips with197 releases69 shieldspends69 faints and0extras; full-state readiness remains unestablished. HP camera ownership and border/color errors are being corrected. Original frozen coarse labels remain intact; separate experimental native-coordinate reference versions transparently record post-prediction label corrections. V11 tests516/1 existing skip and108/108 exact. V12 HP pixel changes are awaiting full-battle validation; canonical82 remain v9. Task stays in progress.
+
+**Task46 continuing v13, 2026-11-19:**521tests/1existing skip,108/108 exact; all18 development source-event regressions preserved. Current native HP34/34usableof82 after uncertainty increases; coverage41.46%, not full-state readiness. Full82 replay is running and must finish before indexing/publishing. Three unused source excerpts and six local cuts are prepared for source-only labels before predictions; Henry dual-phone/friendly/embedded-replay context and ending censoring are explicit. Further HP recovery/readback prototypes remain unintegrated. See status.md; task in progress.
+
+
+**Task46 continuing v15, 2026-11-19 (Codex):** v13 canonical82 completed28strict passes (v9=29, original17); consistency is not accuracy. V14 HP recovered raw frame availability but lost one faint; retained failed run. V15 repairs confirmation and restores197charges69shieldspends69faints across18development clips,533tests/1existing skip and108/108 exact. Third source-only6 frozen before predictions:48charges18shieldspends14faints73anchors,9measurable HP fields of12potential. First v15 source test and82corpus replay are running;0full-state-ready verified. See status.md for media repair, uncertainty and source attribution/censoring limits. Task in progress.
+
+
+**Task46 third-source initial test, 2026-11-19:** original first test and two transparent source-reference corrections retained. Same v15 predictions on corrected2:45/48charges(3extras),17/18shieldspends,13/17faints(0extras),2/6all-event counts. These are not detector gains from relabeling. Five Mega identity fields remain wrong; forms/enhanced moves and source-timed missing faints need fixes after the frozen82replay. No full-state-ready certification. See status.md for intervals, unknown coverage and exact code archives; in progress.
+
+
+**Task46 completed v15 replay checkpoint, not completion:** all82processed,28strict passes;533tests/1existing skip,108exact;source full-state certification0. Header/form/enhanced-move/charged-faint fixes and another untouched source test remain.

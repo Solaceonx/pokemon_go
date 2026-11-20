@@ -31,6 +31,13 @@ TURN = 0.5  # seconds
 SWITCH_SECONDS = 45.0
 
 
+def whole_hp(fraction: float, maximum: int) -> int:
+    """A positive observed fraction denotes at least one whole HP."""
+    if not 0 <= fraction <= 1:
+        raise ValueError('Health fraction must be between zero and one')
+    return max(int(fraction > 0), round(fraction*maximum))
+
+
 @dataclass
 class Observation:
     """One look at the screen. Leave a field as None when it could not be read this time."""
@@ -61,6 +68,8 @@ class Observation:
     # then). On the first look to show the new one: how many seconds it has been out. Its fast moves are counted
     # from then, not from this look.
     foe_out_for: float | None = None
+    my_fainted: bool = False  # independently measured zero HP / disappearance
+    foe_fainted: bool = False
 
 
 class Foe:
@@ -193,6 +202,7 @@ class Tracker:
         # immediately used to turn the later replacement into a timed switch.
         self._my_counter_seen = self._foe_counter_seen = False
         self._my_pending_faint = self._foe_pending_faint = None
+        self._reported_faints = set()
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -239,6 +249,14 @@ class Tracker:
 
     def update(self, obs: Observation) -> None:
         me = self.me
+        if not me.team:
+            if obs.my_species is None:
+                self.tick(obs.t)
+                return
+            me.team.append(Mon(self.gd.default(obs.my_species, allow_forms=True)))
+            self.my_moves_known.append(False)
+            self.my_seen_first.append(True)
+            self._note(obs.t, 'my_seen', species=obs.my_species, known_from='first_readable_header')
         thrown = int(obs.foe_charged) + int(obs.my_charged is not None)
         turns = max(0, round((obs.t - self.t - (obs.paused or 0.0)) / TURN) - CHARGED_TURNS * thrown)
         self.turn += turns
@@ -307,7 +325,7 @@ class Tracker:
         # What they did to me, from my health bar. After a switch the drop is measured on the Pokémon now in.
         quiet = not thrown and not i_changed and not they_changed
         if obs.my_hp is not None:
-            hp = round(obs.my_hp * mon.build.hp)
+            hp = whole_hp(obs.my_hp, mon.build.hp)
             drop = mon.hp - hp
             mon.hp = hp
             if they_changed != "faint" and i_changed != "faint":
@@ -332,12 +350,12 @@ class Tracker:
             self._note(obs.t, "my_charged", move=move.id, shielded=blocked)
             expected = 1 if blocked else damage(mon, move, foe.mon)
             if obs.foe_hp is not None and they_changed != "faint":
-                seen = round(obs.foe_hp * foe.mon.build.hp)
+                seen = whole_hp(obs.foe_hp, foe.mon.build.hp)
                 if foe.mon.hp - seen < 0.6 * expected:  # their bar has not caught up with the hit yet
                     foe.mon.hp = max(0, foe.mon.hp - expected)
                     obs = Observation(**{**asdict(obs), "foe_hp": None})
         if obs.foe_hp is not None:
-            hp = round(obs.foe_hp * foe.mon.build.hp)
+            hp = whole_hp(obs.foe_hp, foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
                 landed, self.dealt = _whole_hits(self.dealt + foe.mon.hp - hp, damage(mon, mon.build.fast, foe.mon))
                 if not self.by_rhythm:
@@ -376,6 +394,17 @@ class Tracker:
         if obs.my_switch is not None:
             self.my_switch_at = obs.t + obs.my_switch
         me.switch_wait = max(0, round((self.my_switch_at - obs.t) / TURN))
+        for flag, prefix, victim in ((obs.my_fainted, "my", me.mon),
+                                      (obs.foe_fainted, "foe", self.foe.mon if self.foe else None)):
+            if flag and victim is not None and id(victim) not in self._reported_faints:
+                victim.hp = 0
+                self._reported_faints.add(id(victim))
+                self._note(obs.t, prefix + "_faint", species=victim.build.species_id,
+                           next=None, known_from="source_measured_faint")
+                if prefix == "my":
+                    self._my_pending_faint = victim
+                else:
+                    self._foe_pending_faint = self.foe
         self.t = obs.t
         self._turns.append((obs.t, self.turn))
 
@@ -400,10 +429,11 @@ class Tracker:
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
             self._note(obs.t, "my_seen", species=obs.my_species)
-        if self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left):
+        if self._my_pending_faint is me.mon or (not obs.my_fainted and obs.my_left is not None and obs.my_left < self.my_left):
             how = "faint"
             me.mon.hp = 0
-            self._note(obs.t, "my_faint", next=obs.my_species)
+            if id(me.mon) not in self._reported_faints:
+                self._note(obs.t, "my_faint", next=obs.my_species)
         else:
             how = "switch"
             me.mon.atk_stage = me.mon.def_stage = 0
@@ -419,10 +449,11 @@ class Tracker:
             return None
         how = "first"
         if self.foe is not None:
-            if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
+            if self._foe_pending_faint is self.foe or (not obs.foe_fainted and obs.foe_left is not None and obs.foe_left < self.foe_left):
                 how = "faint"
                 self.foe.mon.hp = 0
-                self._note(obs.t, "foe_faint", next=obs.foe_species)
+                if id(self.foe.mon) not in self._reported_faints:
+                    self._note(obs.t, "foe_faint", next=obs.foe_species)
             else:
                 how = "switch"
                 self.foe.mon.atk_stage = self.foe.mon.def_stage = 0
@@ -785,7 +816,7 @@ def state(tracker: Tracker, full: bool = False) -> dict:
         "t": round(t.t, 2), "fighting_turns": t.turn, "warnings": t.warnings,
         "matchup": _matchup(t, full) if t.foe else None,
         "me": {
-            "active": me.active, "shields": me.shields, "left": t.my_left,
+            "active": me.active if me.team else None, "shields": me.shields, "left": t.my_left,
             "switch_ready_in": round(max(0.0, t.my_switch_at - t.t), 1), "pokemon": mine,
         },
         "opponent": {

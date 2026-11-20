@@ -1,0 +1,111 @@
+{
+  "schema": "creator-next-source-evaluation-split-v1",
+  "predictions_generated": true,
+  "labels_frozen": true,
+  "selection": "First two complete visible battles after the preselected VOD600s excerpt origin. Initial partial battles and non-battle menus are censored by source-only review; no detector output was generated.",
+  "sources": [
+    {
+      "channel": "homeslicehenry",
+      "source_id": "2930763967",
+      "url": "https://www.twitch.tv/videos/2930763967",
+      "saved_source_interval_seconds": [
+        600.0,
+        2220.0
+      ],
+      "source_sha256": "3d94d134dfe054c58fccebf7d1d85fd5e0afe42e540ea4bc4ca2c9ebb7bd05a3",
+      "crop": [
+        470,
+        0,
+        338,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          888,
+          1075
+        ],
+        [
+          1155,
+          1367
+        ]
+      ],
+      "boundary_review": "Native source frames at10s intervals; non-battle margins retained. Henry extension reviewed through1450s.",
+      "privacy": {
+        "media_in_git": false,
+        "unrestricted_ocr_in_git": false,
+        "trainer_names_in_git": false
+      }
+    },
+    {
+      "channel": "itsaxn",
+      "source_id": "2931023818",
+      "url": "https://www.twitch.tv/videos/2931023818",
+      "saved_source_interval_seconds": [
+        600.0,
+        1800.0
+      ],
+      "source_sha256": "e121cf6aa0911c4225ef5e749d9157f6ebbb6fcd20b8dca38e9e0a0aff6eba4b",
+      "crop": [
+        466,
+        0,
+        350,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          136,
+          325
+        ],
+        [
+          344,
+          545
+        ]
+      ],
+      "boundary_review": "Native source frames at10s intervals; non-battle margins retained. Henry extension reviewed through1450s.",
+      "privacy": {
+        "media_in_git": false,
+        "unrestricted_ocr_in_git": false,
+        "trainer_names_in_git": false
+      }
+    },
+    {
+      "channel": "reis2occasion",
+      "source_id": "2927121173",
+      "url": "https://www.twitch.tv/videos/2927121173",
+      "saved_source_interval_seconds": [
+        600.0,
+        1800.0
+      ],
+      "source_sha256": "cd5ecbcacc20a37a69ccc135b818eb466760a8fa85d45960a91b3225a9a7cc14",
+      "crop": [
+        474,
+        0,
+        338,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          170,
+          368
+        ],
+        [
+          498,
+          665
+        ]
+      ],
+      "boundary_review": "Native source frames at10s intervals; non-battle margins retained. Henry extension reviewed through1450s.",
+      "privacy": {
+        "media_in_git": false,
+        "unrestricted_ocr_in_git": false,
+        "trainer_names_in_git": false
+      }
+    }
+  ],
+  "truth_file": "data/creator_fullstate_ground_truth_v2.json",
+  "truth_sha256": "a2d61ff68a6301fc77e9c1a69c328146b8cc043fd7b699529f309d2c8186a762",
+  "current_role": "development",
+  "initial_evaluation_completed": true,
+  "initial_evaluation_report": "runs/task46-fullstate-second-source-initial.json",
+  "reference_correction_audit": "data/creator_fullstate_ground_truth_v2_correction_audit.json",
+  "role_note": "Initial predictions are preserved; source-error investigation and further tuning use this cohort as development. It cannot certify subsequent settings."
+}

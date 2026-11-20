@@ -96,7 +96,11 @@ class StateContinuity:
                 self.begin(cue, t, sides)
         if phase in RESOLUTION:
             self.resolving(t, sides)
-        live = phase == "normal_fighting" and (
+        native_live=(frame.get('normal_fighting_evidence',{}).get('supported') is True
+                     and phase not in CUES
+                     and (not self.attack or self.attack['announced_at_seconds'] is None
+                          or t-self.attack['announced_at_seconds']>.75))
+        live = native_live or phase == "normal_fighting" and (
             all(slim.get("b", {}).get(key, [0, 0])[1] for key in ("l", "r"))
             or all(frame[side].get("health_estimate", {}).get("status") == "estimated" for side in sides))
         if live:

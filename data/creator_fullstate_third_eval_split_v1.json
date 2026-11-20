@@ -1,0 +1,129 @@
+{
+  "schema": "creator-third-source-evaluation-split-v1",
+  "predictions_generated": true,
+  "labels_frozen": true,
+  "selection": "Latest queued public Twitch archive per channel not previously used for detector runs or reference development. Review the source600\u20131800s excerpt and label the first two complete visible battles after600s. Censor initial partial battles and non-battle footage by source-only review. Retain censored boundaries and reasons. Do not choose by detector verdict or prediction quality.",
+  "sources": [
+    {
+      "channel": "homeslicehenry",
+      "source_id": "2927018777",
+      "url": "https://www.twitch.tv/videos/2927018777",
+      "requested_source_interval_seconds": [
+        600,
+        1800
+      ],
+      "upload_date": "20261112",
+      "crop": [
+        420,
+        0,
+        338,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          395,
+          585
+        ],
+        [
+          1021,
+          1170
+        ]
+      ],
+      "source_sha256": "54244a2ede17c12c8456773eb7666e8aa74e869a3972f4d07ff0f7b4d00c8d71",
+      "source_bytes": 504685248,
+      "saved_source_interval_seconds": [
+        600.0,
+        1800.0
+      ],
+      "view_context": "Primary left phone; guest right phone excluded. First sequence follows a friend-battle QR screen. Second is recorded playback on the primary phone; player identity, uniqueness and final outcome require source review. Not eligible for creator habit analysis without separate attribution.",
+      "boundary_review": "Manual source-only native frames every10 seconds, primary phone crop checked at six widely separated points. Fine boundary/outcome censoring remains explicit in labels; no detector predictions generated."
+    },
+    {
+      "channel": "itsaxn",
+      "source_id": "2929169038",
+      "url": "https://www.twitch.tv/videos/2929169038",
+      "requested_source_interval_seconds": [
+        600,
+        1800
+      ],
+      "upload_date": "20261115",
+      "crop": [
+        466,
+        0,
+        350,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          54,
+          165
+        ],
+        [
+          201,
+          347
+        ]
+      ],
+      "source_sha256": "b5945c7932f2cd5fa47a629a0a54e964678b5596782233e76338dfd5a0f72499",
+      "source_bytes": 513261808,
+      "saved_source_interval_seconds": [
+        600.0,
+        1800.0
+      ],
+      "view_context": "Single primary phone; early battle terminations remain source events, not inferred extra faints.",
+      "boundary_review": "Manual source-only native frames every10 seconds, primary phone crop checked at six widely separated points. Fine boundary/outcome censoring remains explicit in labels; no detector predictions generated."
+    },
+    {
+      "channel": "reis2occasion",
+      "source_id": "2924404680",
+      "url": "https://www.twitch.tv/videos/2924404680",
+      "requested_source_interval_seconds": [
+        600,
+        1800
+      ],
+      "upload_date": "20261109",
+      "crop": [
+        474,
+        0,
+        338,
+        720
+      ],
+      "excerpt_local_windows": [
+        [
+          124,
+          274
+        ],
+        [
+          453,
+          634
+        ]
+      ],
+      "source_sha256": "d58be65bcf2966656311c2a027ce3897b978515820d10dd70f7615c9a4d16def",
+      "source_bytes": 356745416,
+      "saved_source_interval_seconds": [
+        600.0,
+        1800.0
+      ],
+      "view_context": "Single primary phone. Initial partial battle at excerpt0\u2013110s excluded; selected first two subsequent action sequences. Outcome coverage requires source review.",
+      "boundary_review": "Manual source-only native frames every10 seconds, primary phone crop checked at six widely separated points. Fine boundary/outcome censoring remains explicit in labels; no detector predictions generated."
+    }
+  ],
+  "privacy": {
+    "media_in_git": false,
+    "unrestricted_ocr_in_git": false,
+    "trainer_names_in_git": false
+  },
+  "purpose": "Freeze source labels before any detector predictions, then evaluate the chosen final settings. Current original six and both earlier fresh cohorts are development data.",
+  "selection_caveat": "The two Henry primary-phone action sequences include friendly play and embedded recorded playback. Preserve source/player-attribution and ending censoring rather than treating the guest phone, replayed footage or unseen outcomes as verified creator GBL games. Boundary review is independent of detector predictions.",
+  "truth_file": "data/creator_fullstate_ground_truth_v3.json",
+  "truth_sha256": "e26140239bf6d9d1c2e5240d7bc26f68594334158674f16bdd807620954ca4ac",
+  "predictions_started_utc": "2026-11-19T10:37:14.812612+00:00",
+  "first_prediction_run": "third-initial-v15",
+  "prediction_status": "initial_six_complete",
+  "first_prediction_report": "runs/task46-fullstate-third-initial-v15.json",
+  "post_prediction_reference_corrections": [
+    "data/creator_fullstate_ground_truth_v3_corrected1.json",
+    "data/creator_fullstate_ground_truth_v3_corrected2.json"
+  ],
+  "cohort_status": "development_after_initial_evaluation_and_root_cause_review",
+  "retains_original_frozen_truth_and_scores": true
+}
