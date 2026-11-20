@@ -91,6 +91,8 @@ def main():
         ROOT / 'scripts/recording/creator_event_ledger.py',
         ROOT / 'scripts/recording/creator_forms.py',
         ROOT / 'scripts/recording/creator_form_captions.py',
+        ROOT / 'scripts/recording/creator_stage_resets.py',
+        ROOT / 'scripts/recording/creator_stat_notices.py',
         ROOT / 'scripts/recording/creator_move_labels.py',
         ROOT / 'scripts/recording/creator_charge_evidence.py',
         ROOT / 'scripts/recording/creator_announcements.py',

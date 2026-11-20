@@ -48,9 +48,13 @@ def energy_candidates(fills, costs, ready, tolerance=.065):
 
 
 class PublicState:
-    def __init__(self, move_costs, *, incomplete_start=False, legal_moves=None, extra_moves=(), form_events=()):
+    def __init__(self, move_costs, *, incomplete_start=False, legal_moves=None, extra_moves=(), form_events=(), stage_reset_events=(), stat_notice_events=()):
         from creator_forms import FormEvidence
+        from creator_stage_resets import StageResetEvidence
         self.forms = FormEvidence(form_events)
+        self.stage_resets = StageResetEvidence(stage_reset_events)
+        from creator_stat_notices import StatNoticeEvidence
+        self.stat_notices = StatNoticeEvidence(stat_notice_events)
         self.move_costs = move_costs
         self.incomplete_start = incomplete_start
         self.legal_moves=legal_moves or {}
@@ -269,6 +273,13 @@ class PublicState:
                     self.continuity.observed(side, identity, 'energy')
         for side, identity in self.forms.advance(t, self.sides):
             self.continuity.observed(side, identity, 'form', changed=True)
+        for side, identity, name in self.stage_resets.advance(t, self.sides):
+            self.continuity.observed(side, identity, name, changed=True)
+            if self.continuity.holding and self.sides[side]['active']==identity:
+                self.continuity.mark(self.sides,side,identity,name,
+                    'Entry reset confirmed while a charged outcome remains unresolved',t)
+        for side, identity, name in self.stat_notices.advance(t, self.sides):
+            self.continuity.observed(side, identity, name, changed=True)
         if frame.get("text_observation", {}).get("fresh_this_frame"):
             for record in frame["text_observation"]["records"]:
                 parts = re.split('used', record['text'], maxsplit=1, flags=re.I)

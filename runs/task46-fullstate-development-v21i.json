@@ -1,0 +1,718 @@
+{
+  "schema": "task46-development-summary-v1",
+  "version": "v21i",
+  "battles": 24,
+  "development_only": true,
+  "full_game_state_certified": false,
+  "default_detector_changed": false,
+  "all82_replayed": false,
+  "code_sha256": {
+    "scripts/recording/replay_creators.py": "83d674128accc7287fdc5823bc8cc63d92baa5b8db6cfad28d6035fb06ad497e",
+    "scripts/recording/vod_track.py": "6d70a884bfd2a3622154ea968d813b42364d527d7972084d333b9daccb3d97a7",
+    "scripts/recording/assemble.py": "7ee7b3810205426ca00feb6fcb6050c7f3430ddef97abe9d49e2350601857590",
+    "scripts/recording/vod_markers.py": "2e2a61e158b930203144e6a9b8dbf27a4e53c8270b17252123a5bbf9dcf05cd1",
+    "scripts/recording/creator_impact.py": "e342b551f8b02d0bd2921e7c3687ea16e0b1b37acea7e981e74b46812dcf97fd",
+    "scripts/recording/creator_lifecycle.py": "b55265ea917f63900cabb418010367f468389b42961b1447fbc708850d1707cf",
+    "scripts/recording/creator_state.py": "a18451c5a9a7f3e54fd00931e5c679f2488e952cbd972fafa067283d01b67f85",
+    "scripts/recording/creator_health.py": "1b4776924d88a9a952e6f0ecd02cf71fe2c9cd9a2b26589f52c402cc968ea62b",
+    "scripts/recording/creator_observations.py": "0534d4162cbabb5add332398ce88564d8d973bddf3d5237836fe14e210373786",
+    "scripts/recording/native_health.py": "70fbafc326e7c8542dce140bf627877f36b6df2d4da6c60a7b7b38f88d1c0e1a",
+    "scripts/recording/creator_frames.py": "090b7d2d56edcf2cb946173f54be015128be7a6c5da322b53fcce7e08ff6c928",
+    "scripts/recording/native_controls.py": "68be82ffa7417926942863236cf610607c609b07f1bd2943b34c9018ace45651",
+    "scripts/recording/creator_controls.py": "6d4973b0767cc857136f4cbc43d219bbcf6b893b88401943c99e7c28a57e286e",
+    "scripts/recording/creator_energy.py": "b6d7567a90acf8341be16d08e87f3d2e5e15411082f99b38a1b68e35f6745ea5",
+    "scripts/recording/buttons.py": "eac868b55049f7d3b85bbadeab3b8bb8cd6e84bfc62cd695e46a87e82ac56888",
+    "scripts/recording/creator_native_faints.py": "222dbef7e7102ebf3de5f405a72e96f449745e61ebde54b9f3aa12ebb19ab8db",
+    "scripts/recording/creator_faint_support.py": "8e4c279d60d58bb3aef72be21f94395ea394c7b003181f8564327ab4c71e284e",
+    "scripts/recording/creator_identity.py": "dff8a88f2117cc5e7c32d11ab6dbd7d90691f872c4cd3b96385d0aeb8b277939",
+    "scripts/recording/creator_event_ledger.py": "1b679d60089060781da253daf676d24b9362aeb19c84974122ee39fdd68d5fcf",
+    "scripts/recording/creator_move_labels.py": "e1c247cf3fe39dcb558074d57f132c299f8f31f5c90356d87376b13eb828e573",
+    "scripts/recording/public_state.py": "dc2d5796177552f94174710bfed7bc224c3ad0898508d45291ca47c2e0d6f979",
+    "scripts/recording/state_continuity.py": "f20a1087030d9f8add4c3ec499fc180e19f13a19edc560610c28ba82a82ee93d",
+    "scripts/track.py": "451ddb2a537e2c63e8be5fe68836ee26d2a874351c1819e1b494a3bf09ef3d63",
+    "scripts/recording/public_transitions.py": "2717d5c65d018d2e6f0dd193e9a8ccf1ab827b5eda89cdb26a3a570ab04a7740",
+    "scripts/recording/game_record.py": "92c8e21f3301bb0ed521c7de02ff962fdb1e59da2b2f7df4c662e57eb85e66c8",
+    "scripts/recording/verdict.py": "1fee6d529578a35c73c22a98297cc82130acbe0c682e4ecdc4fc5a58da56a566",
+    "pogo/tracker.py": "6970851985a8d26f2f51e5fe5056057a3d070ad8d9a43a1d0f08427b58ce1bf3",
+    "scripts/recording/creator_charge_evidence.py": "f3f9cfadbee8c6770ab0d24cfaec209df2f50edf2889a50b51fa35187dbd8db8",
+    "scripts/recording/creator_announcements.py": "92cf49860d6c873f469ce4f6d51f44125762b4a694c98ca0d6e56fac4463edd1",
+    "scripts/recording/visible_vocabulary.py": "2cd5ccef48404a02c8c78e071d8da9458e6f6f52cadd68a3c54b6276b3c4f1de",
+    "scripts/recording/creator_model.py": "940bbb01ac4cfad049d3a1e8484f6ec4c3d76bc603bba40bda5b3935ac0f511d",
+    "scripts/recording/score_creator_events.py": "5b170fc17ea8e12dd3ab2b8af86bd82db9d33dc6c62bd6fef6d9029e70b30c81",
+    "scripts/recording/evaluate_creator_fullstate.py": "c6df1336af934a21208f73c9c06bcded58f7d5fe9651e8f7b6ee620a0515a7a2",
+    "scripts/recording/score_creator_health_reference.py": "6697e54939ee56031b172cdad0c44da17209eb7c33ebb44f3d8d4c4b55d3733f",
+    "scripts/recording/creator_forms.py": "c652679bfdbd0053283764152fe0c5949859ddcf9257ccfdc81b5b7ab781a927",
+    "scripts/recording/creator_form_captions.py": "57d17ae3adebe23a7dcb74138a13cbd7d2d827dee60f042dbc4c443f5e07dc8e"
+  },
+  "events": {
+    "charged": {
+      "tp": 245,
+      "fp": 0,
+      "fn": 0
+    },
+    "shield": {
+      "tp": 87,
+      "fp": 0,
+      "fn": 0
+    },
+    "faint": {
+      "tp": 86,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "cohorts": {
+    "original": {
+      "battles": 6,
+      "completed_runs": 6,
+      "all_reference_events_correct": 6,
+      "events": {
+        "charged": {
+          "tp": 64,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "shield": {
+          "tp": 23,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "faint": {
+          "tp": 21,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "fields": {},
+      "shield_decisions": {
+        "reference_charges": 64,
+        "matched_charges": 64,
+        "missing_charges": 0,
+        "correct": 64,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "truth_sha256": "3375c1a4f2fec17d893c2b000ae8d4908d68df42ea5aac28ef27f79e499450f4",
+      "limitations": [
+        "Six battles from three source archives; clustered intervals are unstable at this size.",
+        "Assistant-reviewed source labels have not been independently adjudicated.",
+        "HP score is overlap with broad visual annotation bounds and predicted width <=0.2, not exact HP accuracy.",
+        "Unknown, stale and pending fields do not count as usable; missing runs remain in every denominator.",
+        "Energy, clock and stage accuracy not established; event scores do not establish full-state readiness."
+      ]
+    },
+    "fresh": {
+      "battles": 6,
+      "completed_runs": 6,
+      "all_reference_events_correct": 6,
+      "events": {
+        "charged": {
+          "tp": 64,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "shield": {
+          "tp": 23,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "faint": {
+          "tp": 25,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "fields": {
+        "species": {
+          "total": 128,
+          "reported": 127,
+          "reported_correct": 122,
+          "usable": 118,
+          "usable_correct": 118,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.921875,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.8787878787878788,
+            0.9603174603174603
+          ]
+        },
+        "party": {
+          "total": 128,
+          "reported": 126,
+          "reported_correct": 126,
+          "usable": 99,
+          "usable_correct": 99,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.7734375,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.640625,
+            0.9098360655737705
+          ]
+        },
+        "shields": {
+          "total": 128,
+          "reported": 126,
+          "reported_correct": 126,
+          "usable": 109,
+          "usable_correct": 109,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.8515625,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.7769230769230769,
+            0.9274193548387096
+          ]
+        },
+        "health_fraction": {
+          "total": 82,
+          "reported": 78,
+          "reported_correct": 66,
+          "usable": 63,
+          "usable_correct": 57,
+          "usable_accuracy": 0.9047619047619048,
+          "usable_coverage": 0.7682926829268293,
+          "usable_accuracy_battle_bootstrap_95": [
+            0.8076923076923077,
+            0.971830985915493
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.6578947368421053,
+            0.8780487804878049
+          ]
+        }
+      },
+      "shield_decisions": {
+        "reference_charges": 64,
+        "matched_charges": 64,
+        "missing_charges": 0,
+        "correct": 64,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "truth_sha256": "5b7e46bf377c3178d67261a7a8d273dce2ac998cc573920780747841e0b6d4b0",
+      "limitations": [
+        "Six battles from three source archives; clustered intervals are unstable at this size.",
+        "Assistant-reviewed source labels have not been independently adjudicated.",
+        "HP score is overlap with broad visual annotation bounds and predicted width <=0.2, not exact HP accuracy.",
+        "Unknown, stale and pending fields do not count as usable; missing runs remain in every denominator.",
+        "Energy, clock and stage accuracy not established; event scores do not establish full-state readiness."
+      ]
+    },
+    "second": {
+      "battles": 6,
+      "completed_runs": 6,
+      "all_reference_events_correct": 6,
+      "events": {
+        "charged": {
+          "tp": 69,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "shield": {
+          "tp": 23,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "faint": {
+          "tp": 23,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "fields": {
+        "species": {
+          "total": 188,
+          "reported": 186,
+          "reported_correct": 169,
+          "usable": 161,
+          "usable_correct": 161,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.8563829787234043,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.7096774193548387,
+            0.9574468085106383
+          ]
+        },
+        "party": {
+          "total": 170,
+          "reported": 169,
+          "reported_correct": 169,
+          "usable": 142,
+          "usable_correct": 142,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.8352941176470589,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.7921348314606742,
+            0.875
+          ]
+        },
+        "shields": {
+          "total": 170,
+          "reported": 169,
+          "reported_correct": 168,
+          "usable": 150,
+          "usable_correct": 150,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.8823529411764706,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.8641975308641975,
+            0.9034090909090909
+          ]
+        },
+        "health_fraction": {
+          "total": 28,
+          "reported": 28,
+          "reported_correct": 25,
+          "usable": 18,
+          "usable_correct": 18,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.6428571428571429,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.42857142857142855,
+            0.8387096774193549
+          ]
+        }
+      },
+      "shield_decisions": {
+        "reference_charges": 69,
+        "matched_charges": 69,
+        "missing_charges": 0,
+        "correct": 69,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "truth_sha256": "1aa824425b8b5464de4224e327f8eeed438097180bd42b883ebe3486528dfe92",
+      "limitations": [
+        "Six battles from three source archives; clustered intervals are unstable at this size.",
+        "Assistant-reviewed source labels have not been independently adjudicated.",
+        "HP score is overlap with broad visual annotation bounds and predicted width <=0.2, not exact HP accuracy.",
+        "Unknown, stale and pending fields do not count as usable; missing runs remain in every denominator.",
+        "Energy, clock and stage accuracy not established; event scores do not establish full-state readiness."
+      ]
+    },
+    "third": {
+      "battles": 6,
+      "completed_runs": 6,
+      "all_reference_events_correct": 6,
+      "events": {
+        "charged": {
+          "tp": 48,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "shield": {
+          "tp": 18,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        },
+        "faint": {
+          "tp": 17,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "precision_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "recall_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "fields": {
+        "species": {
+          "total": 143,
+          "reported": 141,
+          "reported_correct": 138,
+          "usable": 136,
+          "usable_correct": 136,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.951048951048951,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.9029126213592233,
+            0.98
+          ]
+        },
+        "party": {
+          "total": 146,
+          "reported": 145,
+          "reported_correct": 145,
+          "usable": 126,
+          "usable_correct": 126,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.863013698630137,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.8287671232876712,
+            0.9078947368421053
+          ]
+        },
+        "shields": {
+          "total": 146,
+          "reported": 145,
+          "reported_correct": 145,
+          "usable": 133,
+          "usable_correct": 133,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.910958904109589,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.863013698630137,
+            0.958904109589041
+          ]
+        },
+        "health_fraction": {
+          "total": 9,
+          "reported": 9,
+          "reported_correct": 9,
+          "usable": 8,
+          "usable_correct": 8,
+          "usable_accuracy": 1.0,
+          "usable_coverage": 0.8888888888888888,
+          "usable_accuracy_battle_bootstrap_95": [
+            1.0,
+            1.0
+          ],
+          "usable_coverage_battle_bootstrap_95": [
+            0.6666666666666666,
+            1.0
+          ]
+        }
+      },
+      "shield_decisions": {
+        "reference_charges": 48,
+        "matched_charges": 48,
+        "missing_charges": 0,
+        "correct": 48,
+        "incorrect": 0,
+        "unknown": 0
+      },
+      "truth_sha256": "4843a91d5884add18b7e588981a4812bfe96b8233635ac77cbf33d962a00ce63",
+      "limitations": [
+        "Six battles from three source archives; clustered intervals are unstable at this size.",
+        "Assistant-reviewed source labels have not been independently adjudicated.",
+        "HP score is overlap with broad visual annotation bounds and predicted width <=0.2, not exact HP accuracy.",
+        "Unknown, stale and pending fields do not count as usable; missing runs remain in every denominator.",
+        "Energy, clock and stage accuracy not established; event scores do not establish full-state readiness."
+      ]
+    }
+  },
+  "fourth": {
+    "battles": 6,
+    "completed_runs": 6,
+    "all_reference_events_correct": 6,
+    "events": {
+      "charged": {
+        "tp": 60,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "precision_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ],
+        "recall_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ]
+      },
+      "shield": {
+        "tp": 21,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "precision_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ],
+        "recall_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ]
+      },
+      "faint": {
+        "tp": 20,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "precision_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ],
+        "recall_battle_bootstrap_95": [
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "truth_sha256": "093c40ca2b66cc000de81e735f722dde202cc539191f8f15df89effa2d1ac831",
+    "native_health": {
+      "possible": 24,
+      "reference_measured": 23,
+      "usable": 18,
+      "scorable_usable": 18,
+      "correct": 18,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.75,
+      "verified_correct_coverage": 0.75,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.5416666666666666,
+        0.9166666666666666
+      ],
+      "verified_correct_coverage_battle_bootstrap_95": [
+        0.5416666666666666,
+        0.9166666666666666
+      ]
+    },
+    "forms": {
+      "possible": 21,
+      "usable": 13,
+      "correct": 13,
+      "truth_sha256": "9a74190c69389275983f673f7dece33cc10e2eb672b88983244bb551e85f0572"
+    }
+  },
+  "native_health_earlier_references": {
+    "fresh": {
+      "possible": 82,
+      "reference_measured": 80,
+      "usable": 63,
+      "scorable_usable": 63,
+      "correct": 63,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.7682926829268293,
+      "verified_correct_coverage": 0.7682926829268293,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.6527777777777778,
+        0.8780487804878049
+      ],
+      "verified_correct_coverage_battle_bootstrap_95": [
+        0.6527777777777778,
+        0.8780487804878049
+      ]
+    },
+    "third": {
+      "possible": 12,
+      "reference_measured": 9,
+      "usable": 10,
+      "scorable_usable": 8,
+      "correct": 8,
+      "usable_accuracy": 1.0,
+      "usable_coverage": 0.8333333333333334,
+      "verified_correct_coverage": 0.6666666666666666,
+      "usable_accuracy_battle_bootstrap_95": [
+        1.0,
+        1.0
+      ],
+      "usable_coverage_battle_bootstrap_95": [
+        0.6666666666666666,
+        1.0
+      ],
+      "verified_correct_coverage_battle_bootstrap_95": [
+        0.3333333333333333,
+        0.9166666666666666
+      ]
+    }
+  },
+  "before_after_verified_correct_health": {
+    "fourth": {
+      "before": 15,
+      "after": 18,
+      "possible": 24
+    },
+    "fresh": {
+      "before": 59,
+      "after": 63,
+      "possible": 82
+    },
+    "third": {
+      "before": 8,
+      "after": 8,
+      "possible": 12
+    }
+  },
+  "validation": {
+    "tests_run": 658,
+    "existing_skips": 1,
+    "pvpoke_exact": 108
+  },
+  "limitations": [
+    "All cohorts are development data after tuning. No fresh-source accuracy or full-state certification.",
+    "Only current positive live pixels may use recent physical bar geometry; no old HP value or zero is carried.",
+    "The third cohort has two usable outputs whose occluded source HP cannot be adjudicated; neither counts as verified correct."
+  ]
+}

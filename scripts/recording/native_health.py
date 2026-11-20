@@ -13,7 +13,8 @@ def acquisition_digest():
     code = '\n'.join(inspect.getsource(f) for f in
                      (palette, rectangle, dim_rectangle, candidates, independent_rail_rectangle,
                       positive_fallback_candidates, glyph_features, header_row_panels,
-                      header_panels, glyph_row, classify_headers, scene_features, measure_frame))
+                      header_panels, glyph_row, classify_headers, scene_features, measure_frame,
+                      measure_with_recent_geometry))
     return hashlib.sha256(code.replace('\r\n', '\n').encode('utf-8')).hexdigest()
 
 
@@ -304,6 +305,68 @@ def measure_frame(rgb, expected_width=144):
                    'bar': bars[0] if len(bars) == 1 else None,
                    **({'candidate_count': len(bars)} if len(bars) > 1 else {})}
             for side, bars in regions.items()}
+
+
+def measure_with_recent_geometry(rgb, expected_width=144, previous=(), at=None):
+    """Reuse only a recent rectangle proposal; measure HP from current pixels.
+
+    An animation can break a contour without hiding the physical rails. A
+    proposal from at most a quarter second ago still needs the existing four
+    rails, valid width and positive live prefix in this frame. It cannot add
+    an empty bar, resolve an ambiguity, or replace a current measurement.
+    """
+    import math
+    result = measure_frame(rgb, expected_width)
+    if (not isinstance(at, (int, float)) or isinstance(at, bool) or not math.isfinite(at)
+            or result['center']['status'] != 'not_visible'):
+        return result
+    for side in ('mine', 'theirs'):
+        if result[side]['status'] != 'not_visible':
+            continue
+        proposals = {}
+        for sample in previous:
+            seen = sample.get('t')
+            if (not isinstance(seen, (int, float)) or isinstance(seen, bool) or not math.isfinite(seen)
+                    or not 0 < at-seen <= .25):
+                continue
+            value = sample.get('health', {}).get(side, {})
+            if value.get('status') != 'observed' or not value.get('bar'):
+                continue
+            x, y, right, bottom = value['bar']['bounds']
+            for dx in (-2, -1, 0, 1, 2):
+                for dy in (-2, -1, 0, 1, 2):
+                    bounds = (x+dx, y+dy, right+dx, bottom+dy)
+                    center = (bounds[0]+bounds[2])/2
+                    who = ('mine' if center < 195 and bounds[2] <= 242 else
+                           'theirs' if center > 315 and bounds[0] >= 228 else None)
+                    if who == side and abs(bounds[2]-bounds[0]-expected_width) <= 6:
+                        proof = dict(observed_at_seconds=seen, source_bounds=list(value['bar']['bounds']),
+                                     translation_pixels=[dx,dy], value_carried=False)
+                        if bounds not in proposals or seen > proposals[bounds]['observed_at_seconds']:
+                            proposals[bounds] = proof
+        found = []
+        for bounds, proof in proposals.items():
+            value = (rectangle(rgb, bounds, 'recent_geometry_current_positive_pixels')
+                     or dim_rectangle(rgb, bounds, expected_width)
+                     or independent_rail_rectangle(rgb, bounds, expected_width))
+            if value and value['live_pixels'] > 0:
+                value['geometry_proposal'] = proof
+                found.append(value)
+        found.sort(key=lambda b: (b['outline_method'] == 'independent_shaded_rails_positive_only',
+            -(b['interior_support']+min(b['side_rail_support'])+min(b['horizontal_rail_support'])),
+            abs(b['bounds'][3]-b['bounds'][1]-14), tuple(b['bounds'])))
+        unique = []
+        for value in found:
+            a = value['bounds']
+            if any(abs(a[0]+a[2]-b['bounds'][0]-b['bounds'][2]) <= 14 and
+                   abs(a[1]+a[3]-b['bounds'][1]-b['bounds'][3]) <= 12 for b in unique):
+                continue
+            unique.append(value)
+        if unique:
+            result[side] = dict(status='observed' if len(unique) == 1 else 'ambiguous',
+                bar=unique[0] if len(unique) == 1 else None,
+                **({'candidate_count':len(unique)} if len(unique) > 1 else {}))
+    return result
 
 
 def glyph_features(roi, offset_x, offset_y):

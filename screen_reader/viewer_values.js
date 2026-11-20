@@ -2,9 +2,15 @@
 // copied into review inputs; exports preserve nulls and observation statuses.
 function battleStateValues(frame,side){
   const raw=frame?.[side]||{},team=frame?.game_state?.sides?.[side],mon=team?.pokemon?.[team?.active];
-  if(!mon)return raw;
-  const result={...raw,species:mon.species,cp:mon.cp,shields_left:team.shields,pokemon_left:team.left};
+  if(!mon)return team?{...raw,attack_stage:{value:null,status:'unknown'},defense_stage:{value:null,status:'unknown'}}:raw;
+  const result={...raw,species:mon.species,cp:mon.cp,shields_left:team.shields,pokemon_left:team.left,
+    attack_stage:mon.attack_stage||{value:null,status:'unknown'},
+    defense_stage:mon.defense_stage||{value:null,status:'unknown'}};
   if(team.active_status==='stale')result.species={...mon.species,status:'stale'};
+  if(['pending','unknown','awaiting_replacement','stale'].includes(team.active_status)){
+    for(const name of ['attack_stage','defense_stage'])result[name]={...result[name],status:'pending',
+      reason:'The current active identity is unresolved'};
+  }
   if(mon.health.value!==null){
     result.health_estimate={status:mon.health.status,fraction_range:mon.health.value,
       integer_hp_range:mon.health.integer_hp_range??null,maximum_hp:mon.health.maximum_hp??null,
@@ -15,6 +21,16 @@ function battleStateValues(frame,side){
   else if(frame?.game_state?.pending_attack?.side===side&&result.energy&&(result.energy.value!=null||result.energy.range!=null))
     result.energy={...result.energy,status:'pending',evidence:{...result.energy?.evidence,reason:'Model balance before the pending attack'}};
   return result;
+}
+
+function visibleStage(values,name){
+  if(Object.hasOwn(values,name)){
+    const field=values[name];
+    return field&&Number.isInteger(field.value)&&!field.pending&&!field.unconfirmed_at_exit&&
+      ['observed','inferred','estimated','retained'].includes(field.status)&&
+      !['pending','pending_change','unconfirmed','unconfirmed_at_exit','before_faint'].includes(field.state_validity)?field.value:null;
+  }
+  return Number.isInteger(values.model?.[name])?values.model[name]:null;
 }
 
 function createValueSheet({$,esc,time,getSource,video}) {
@@ -40,7 +56,9 @@ function createValueSheet({$,esc,time,getSource,video}) {
       energy_status:v.energy?.status||'unknown',fast_move:v.model?.fast_move?.name??null,
       fast_move_status:v.model?.fast_move?.known_from??'unknown',
       charged_moves:(v.model?.charged_moves||[]).map(m=>`${m.name} · ${m.known_from}`).join(', '),
-      attack_stage:v.model?.attack_stage??null,defense_stage:v.model?.defense_stage??null,
+      attack_stage:visibleStage(v,'attack_stage'),defense_stage:visibleStage(v,'defense_stage'),
+      attack_stage_status:v.attack_stage?.status||(v.model?.attack_stage!=null?'inferred':'unknown'),
+      defense_stage_status:v.defense_stage?.status||(v.model?.defense_stage!=null?'inferred':'unknown'),
       switch_ready_in:v.model?.switch_ready_in??null,tracking_consistency:source.tracking_verdict?.verdict??'not checked',
       pending_attack:frame.game_state?.pending_attack??null,
       reason:e.reason||e.meaning||'No health estimate'};
@@ -55,7 +73,7 @@ function createValueSheet({$,esc,time,getSource,video}) {
       (r.pokemon_left??'Unknown')+(['retained','pending','stale'].includes(r.pokemon_left_status)?' · '+r.pokemon_left_status:''),
       (r.energy_low!==null?`${r.energy_low}–${r.energy_high}`:r.energy??'Unknown')+` · ${r.energy_status}`,
       r.fast_move?`${r.fast_move} · ${r.fast_move_status}`:'Unknown',r.charged_moves||'Unknown',
-      r.attack_stage===null?'Unknown':`${r.attack_stage}/${r.defense_stage} · inferred`,
+      r.attack_stage===null&&r.defense_stage===null?'Unknown':`${r.attack_stage??'?'}/${r.defense_stage??'?'} · ${r.attack_stage_status}/${r.defense_stage_status}`,
       r.switch_ready_in===null?'Unknown':`${r.switch_ready_in}s · inferred`,
       scene+(r.phase===null&&r.phase_estimate?` · ${r.phase_estimate_status}`:''),r.reason];
     return '<tr>'+fields.map(v=>`<td>${esc(v)}</td>`).join('')+'</tr>';

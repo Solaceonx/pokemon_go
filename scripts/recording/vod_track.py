@@ -388,7 +388,11 @@ def publish(folder, game, verdict, reader):
                          incomplete_start=meta.get("incomplete_start", False),legal_moves=legal_moves,
                          extra_moves={m['name'] for m in gm['moves'] if m.get('isMegaMove')},
                          form_events=json.loads((game/'creator-forms.json').read_text(encoding='utf8'))['events']
-                             if (game/'creator-forms.json').exists() else ())
+                             if (game/'creator-forms.json').exists() else (),
+                         stage_reset_events=json.loads((game/'creator-stage-resets.json').read_text(encoding='utf8'))['events']
+                             if (game/'creator-stage-resets.json').exists() else (),
+                         stat_notice_events=json.loads((game/'creator-stat-notices.json').read_text(encoding='utf8'))['events']
+                             if (game/'creator-stat-notices.json').exists() else ())
     display, statuses = [], Counter()
     at = 0
     if (game/'creator-measurements.json').exists():
@@ -466,6 +470,8 @@ def publish(folder, game, verdict, reader):
                      "scripts/recording/creator_identity.py", "scripts/recording/creator_faint_support.py",
                      "scripts/recording/creator_event_ledger.py", "scripts/recording/creator_move_labels.py", "scripts/recording/creator_forms.py",
                      "scripts/recording/creator_form_captions.py",
+                     "scripts/recording/creator_stage_resets.py",
+                     "scripts/recording/creator_stat_notices.py",
                      "scripts/recording/creator_charge_evidence.py", "scripts/recording/creator_announcements.py")}}
     if (game/'creator-measurements.json').exists():
         provenance['ocr_context_sample_interval_seconds'] = provenance['sample_interval_seconds']
@@ -522,7 +528,7 @@ def creator_export(folder, game, meta, root):
     exported = Path(root) / name
     exported.mkdir(parents=True, exist_ok=True)
     allowed = ['team.json', 'observations.jsonl', 'states.jsonl', 'events.jsonl', 'source-events.jsonl', 'continuity.jsonl', 'creator-evidence.json', 'counter-evidence.json', 'terminal-impact.json', 'creator-lifecycle.json', 'creator-state-reconciliation.json', 'creator-measurements.json',
-               'state.json', 'track.json', 'timeline.json', 'verdict.json', 'model-support.json', 'creator-forms.json']
+               'state.json', 'track.json', 'timeline.json', 'verdict.json', 'model-support.json', 'creator-forms.json', 'creator-stage-resets.json', 'creator-stat-notices.json']
     for name in allowed:
         path = game / name
         packed = path.with_name(name + '.gz')
@@ -643,7 +649,13 @@ def track_clip(folder, reader, *, creator_root=None):
             from creator_forms import derive as derive_forms
             forms = derive_forms(raw, json.loads((game/'timeline.json').read_text(encoding='utf8')), observable)
             write_json(game/'creator-forms.json', forms)
-            observable = sorted(observable+forms['events'], key=lambda e: (e['t'], e['kind'], str(e.get('side'))))
+            from creator_stat_notices import derive as derive_stat_notices
+            notices = derive_stat_notices(raw)
+            write_json(game/'creator-stat-notices.json',notices)
+            from creator_stage_resets import derive as derive_resets
+            resets = derive_resets(raw,json.loads((game/'timeline.json').read_text(encoding='utf8')),observable+notices['events'])
+            write_json(game/'creator-stage-resets.json',resets)
+            observable = sorted(observable+forms['events']+resets['events']+notices['events'], key=lambda e: (e['t'], e['kind'], str(e.get('side'))))
             (game/'source-events.jsonl').write_bytes(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in observable).encode('utf8'))
         result["paired_move_names_recovered"] = len(paired)
         verify_clip_source(folder,meta)
