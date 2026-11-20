@@ -1,0 +1,117 @@
+{
+  "schema": "task46-energy-v5-delivery",
+  "preserved_previous_deliveries": [
+    {
+      "file": "runs/task46-energy-delivery-v1.json",
+      "sha256": "40ae55e9421becd034e8f4bc7b57b6cd6b1b25bf4d312bc235ebaa91378990f2",
+      "all_pinned_bytes_unchanged": true
+    },
+    {
+      "file": "runs/task46-energy-delivery-v2.json",
+      "sha256": "44dde12fa372f140384c84a4156d48e0dfeac2b9d64a807d75f19cdf3f1c991f",
+      "all_pinned_bytes_unchanged": true
+    },
+    {
+      "file": "runs/task46-energy-delivery-v3.json",
+      "sha256": "12f3d8601f287655af32ccd4c765e8c0d26eaae2c43e2bb1d19c55fde564a7d1",
+      "all_pinned_bytes_unchanged": true
+    },
+    {
+      "file": "runs/task46-energy-delivery-v4.json",
+      "sha256": "4ea40a5e2ff638c9040b6eca995f5d6667db19f9cf3a7bc8c2e93d163018f40e",
+      "all_pinned_bytes_unchanged": true
+    }
+  ],
+  "reader_and_installed_records_unchanged": true,
+  "promoted": false,
+  "wider_replay": false,
+  "tests": {
+    "unittest": 783,
+    "existing_skip": 1,
+    "passed": true,
+    "pvpoke_exact": 108,
+    "pvpoke_total": 108,
+    "new_focused_tests": 6,
+    "log_sha256": "5a14c1ea8a456401ee052aa750abe1529153a38c620ece845dfe8bda6f5847d1"
+  },
+  "files_sha256": {
+    "scripts/recording/energy_bounds_v5.py": "30a3bd7c2f13f10db06d33cd1e202d41a8f1082ec7cee59a57d996e3e515f7b0",
+    "scripts/recording/energy_bounds_eval_v5.py": "7551992c0392a5e7999ba27655c7364232f651b670e02e3ff3e562970d381c5d",
+    "tests/test_energy_bounds_v5.py": "0b1e3a3b64f95a63b71282065cd742cf5a288865ded35ae43737039ad8b721e7",
+    "runs/task46-energy-v5-development-v1.json": "5e908cc4b83ba30ddfed94d7cb4d33d38d4ace4d1a8b0a9329cbe4fb9bd4aaa5",
+    "runs/task46-energy-v5-exposed-six-development-v1.json": "5d5ad0a9fd60eae689fa85526d40f91100387e271bdffbafffe6a9295aa52249",
+    "runs/task46-energy-v5-new-window-validation-v1.json": "8b4cadad7f312b247e4f2933086a18333d9bcb9fee8abeafc87449116433da95",
+    "data/creator_energy_v5_exposed_six_development_manifest_v1.json": "48dfeac1dcb92f9557a209fd7ec8528c94db7d5f94bc9eb90139a567e55efd57",
+    "data/creator_energy_v5_new_axn_context_v1.json": "0e3702e701aee943d2c11f5a0828026d4d7d95984f38516d653112547c598c72",
+    "data/creator_energy_v5_new_axn_controls_v1.jsonl.gz": "209ba664ad71d68a71532992a12ca85411c9acff5128df32abd9e2e753375c3c",
+    "data/creator_energy_v5_new_axn_source_labels_v1.json": "a6672b8291e84d1a6065dd8bb9cd87e4910369670d03fc1609e9aab6b5458532",
+    "data/creator_energy_v5_new_henry_source_labels_v1.json": "3e384cc99b027580e06cda30d4619610e161eaea0477227a48288f5d12286418",
+    "data/creator_energy_v5_new_reis_source_labels_v1.json": "9667ee20aa60255e1b74bd92f35138ee081382581cfa18b8dfee8a49140cb174",
+    "data/creator_energy_v5_new_window_validation_manifest_v1.json": "98db015627082cb6ded097619ba77b50f0c33acc3ae5345931566cce52da8c01"
+  },
+  "strict_controls_audit": {
+    "file": "data/creator_energy_v5_new_axn_controls_v1.jsonl.gz",
+    "rows": 106,
+    "only_numeric_features_and_game_enums": true,
+    "arbitrary_ocr_images_image_paths": 0,
+    "fixed_game_enums_and_strict_nested_keys": true
+  },
+  "tradeoff": {
+    "same18_development": {
+      "v4_useful": 1,
+      "v5_useful": 2,
+      "attempted": 18,
+      "scalar_truth_contained": [
+        10,
+        10
+      ],
+      "false_confident_narrow": 0,
+      "exact_scalar_recovered": 0
+    },
+    "exposed_v4_six_now_development": {
+      "v4_useful": 0,
+      "v5_useful": 2,
+      "attempted": 6,
+      "scalar_truth_contained": [
+        3,
+        3
+      ],
+      "false_confident_narrow": 0,
+      "exact_scalar_recovered": 0
+    },
+    "new_six_windows": {
+      "labels_frozen_before_v5_predictions": true,
+      "not_independent_vod_holdout": true,
+      "source_frames_previously_reviewed": true,
+      "useful": 2,
+      "attempted": 6,
+      "scalar_truth_contained": [
+        3,
+        3
+      ],
+      "candidate_sets_overlap": [
+        6,
+        6
+      ],
+      "false_confident_narrow": 0,
+      "exact_scalar_recovered": 0,
+      "source_bootstrap_coverage_95": [
+        0,
+        0.5
+      ]
+    }
+  },
+  "method": "Transportsettledown-controlanchorsup to1sasexpandingintegercandidatesoververifiedfightingtime; noHPdeltacounting,nofixedstaleenergy. Queuedcreditmaybeaftercost, cap100preserved; knownspendsneverresetmeter.",
+  "reproduction_commands": [
+    "python scripts/recording/energy_bounds_eval_v5.py --root . --manifest data/creator_energy_v4_development_manifest_v1.json --out runs/task46-energy-v5-development-reproduced-local.json",
+    "python scripts/recording/energy_bounds_eval_v5.py --root . --manifest data/creator_energy_v5_exposed_six_development_manifest_v1.json --out runs/task46-energy-v5-exposed-six-reproduced-local.json",
+    "python scripts/recording/energy_bounds_eval_v5.py --root . --manifest data/creator_energy_v5_new_window_validation_manifest_v1.json --out runs/task46-energy-v5-new-window-reproduced-local.json"
+  ],
+  "limitations": [
+    "Lowavailability,notanalysisready",
+    "Opposingenergyremainsbroadwithoutindependentfastcompletionmeasurement",
+    "Initialzero,movesandfightingcorridorssource-assisted",
+    "Source-derivednewtimestampvalidationonsameVODs,notindependentVODholdout",
+    "Candidatecontainmentisnotexactrecovery"
+  ]
+}

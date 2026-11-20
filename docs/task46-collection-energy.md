@@ -70,3 +70,14 @@ python scripts/recording/energy_bounds_eval_v4.py --root . --manifest data/creat
 ```
 
 These produce1/18 and0/6 useful readings. They preserve conservative candidate sets without falsely asserting zero, but do not establish full-game energy coverage or exact accuracy.
+
+
+The v5/v6 experiment is separate from the frozen reader. `runs/task46-energy-v6-summary-v1.json` contains the exact reproduction commands and interpretation. For example, the frozen gesture model's new-window score can be reproduced from small numeric fixtures without video:
+
+```sh
+python scripts/recording/fast_vfx_eval_v6.py --root . --model data/creator_energy_v6_animation_model_v3.json --labels data/creator_energy_v6_animation_new_validation_v1.json --manifest data/creator_energy_v6_new_validation_feature_manifest_v1.json --out runs/v6-new-vfx-reproduced-local.json
+```
+
+The result is5 true positives,0 false positives and1 missed gesture, with4/5 matched onsets within150ms. This is a small same-source development check, not full-state accuracy. Energy-credit timing has not been calibrated, and no experimental VFX energy is accepted into game records. Missing animation observations never imply zero attacks. The diagnostic API requires verified initial zero; clipped inputs cannot silently initialize energy to zero.
+
+`calibrated_collection.py` permits source-specific phone geometry outside the frozen reader. Preparation is pending-only; approval requires source-bound league, layout, replay-context and continuous-battle review before export. `source_guard.py` preserves the raw download by hardlink before normalization, holds Windows read leases, and compares actual bytes and metadata throughout the job. This guards new inputs without explaining historical hash mismatches. Its accepted-pair retirement path refuses zero accepted cuts. Deleting wholly excluded uncut inputs is awaiting explicit approval; keep those files until approval arrives. Keep all hash-mismatched inputs and their earlier receipts.

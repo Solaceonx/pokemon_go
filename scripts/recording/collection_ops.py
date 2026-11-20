@@ -167,6 +167,7 @@ def retained_after_retirement(root,sid,manifest):
     if not receipt_path.exists():return False
     receipt=load(receipt_path)
     if not receipt.get('deleted'):return False
+    verify_source_calibration_proofs(manifest)
     run=root/'runs'/sid
     if digest(run/'battle-candidates.json')!=receipt['manifest_sha256'] or digest(run/'league-review.json')!=receipt['league_review_sha256']:
         raise ValueError('Retirement provenance changed')
@@ -183,8 +184,18 @@ def retained_after_retirement(root,sid,manifest):
             raise ValueError('Retained cut or alignment changed')
     return True
 
+def verify_source_calibration_proofs(manifest):
+    proofs=manifest.get('source_calibration_proofs_sha256')
+    if manifest.get('schema')=='source-calibrated-reviewed-battles-v1' and not proofs:
+        raise ValueError('Calibrated intake is missing mandatory source review proof')
+    for name,expected in (proofs or {}).items():
+        path=(BASE/name).resolve()
+        if not path.is_relative_to(BASE.resolve()) or digest(path)!=expected:
+            raise ValueError('Source calibration or manual battle/replay proof changed')
+
 def verify_source_input(video,manifest,record,review):
     """Require the bytes, scan, source record and league witnesses to agree."""
+    verify_source_calibration_proofs(manifest)
     expected=manifest.get('fingerprint',{}).get('source_sha256')
     if not expected or record.get('media',{}).get('sha256')!=expected or review.get('source_sha256')!=expected:
         raise ValueError('Source record, coarse scan and league review have different byte provenance')
@@ -272,6 +283,7 @@ def retire(worker,sid):
         raise ValueError('Source deletion target outside intended collection source folder')
     run=root/'runs'/sid
     manifest=load(run/'battle-candidates.json')
+    verify_source_calibration_proofs(manifest)
     selected=set(manifest['export_selection']['clip_ids'])
     if selected:
         validation=load(run/'media-validation.json')

@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -7,6 +8,15 @@ from scripts.recording.collection_progress import summarize
 
 
 class CollectionProgressTests(unittest.TestCase):
+    def test_raw_preservation_hardlink_does_not_double_count_storage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / 'frozen-reader/.vod/collection/worker-b/sources/twitch/123'
+            source.mkdir(parents=True)
+            (source / 'video.mp4').write_bytes(b'one physical source')
+            os.link(source / 'video.mp4', source / 'raw-original.ts')
+            self.assertEqual(summarize(root)['disk']['source_cache_bytes'], len(b'one physical source'))
+
     def test_pending_and_completed_not_double_counted_and_raw_fields_omitted(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

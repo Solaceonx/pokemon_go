@@ -12,7 +12,7 @@ import shutil
 LEAGUES = {"open_great_league", "restricted", "restricted_cup", "restricted_laic_cup",
            "laic_cup", "ultra", "ultra_league", "master_league", "mega_great_league",
            "mega_ultra_league", "mega_master_league", "unknown", "unverified",
-           "not_battle", "other_league"}
+           "not_battle", "other_league", "other_non_open"}
 
 
 def count(value) -> int:
@@ -35,7 +35,13 @@ def load(path: Path) -> dict:
 
 
 def tree_bytes(folder: Path) -> int:
-    return sum(p.stat().st_size for p in folder.rglob("*") if p.is_file()) if folder.exists() else 0
+    unique = {}
+    if folder.exists():
+        for path in folder.rglob("*"):
+            if path.is_file():
+                value = path.stat()
+                unique[(value.st_dev, value.st_ino)] = value.st_size
+    return sum(unique.values())
 
 
 def summarize(work: Path) -> dict:

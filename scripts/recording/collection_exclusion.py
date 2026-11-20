@@ -12,7 +12,7 @@ import sys
 import collection_ops as ops
 
 LEGACY_A_WRAPPER_SHA256='188fee5b16b187a3b7fa2412e0f865c99851608498d1d23cd272e227b9b308b9'
-NONOPEN_LEAGUES={'restricted_laic_cup','restricted_cup','great_league_remix','ultra_league','master_league','little_cup','other_non_open'}
+NONOPEN_LEAGUES={'restricted_laic_cup','restricted_cup','great_league_remix','ultra_league','mega_ultra_league','master_league','mega_master_league','little_cup','other_non_open'}
 
 
 def inactive(pid):

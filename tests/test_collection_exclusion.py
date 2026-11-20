@@ -54,6 +54,12 @@ class ExclusionGuards(unittest.TestCase):
             patch.object(ex,'candidate_manifest',return_value=self.manifest),patch.object(ex,'inactive',return_value=True):
             return ex.exclude('worker-b','123',self.review_path,self.decoder_path,self.stop_path,retire=retire)
     def test_nonopen_context_accepted(self):self.assertTrue(self.validate()['league_review_completed'])
+    def test_actual_master_mega_category_accepted(self):
+        self.review['decisions'][0]['league']='mega_master_league'
+        self.assertTrue(self.validate()['league_review_completed'])
+    def test_actual_ultra_mega_category_accepted(self):
+        self.review['decisions'][0]['league']='mega_ultra_league'
+        self.assertTrue(self.validate()['league_review_completed'])
     def test_open_refused(self):
         self.review['decisions'][0]['league']='open_great_league'
         with self.assertRaises(ValueError):self.validate()

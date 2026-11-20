@@ -1,0 +1,103 @@
+{
+  "schema": "fast-vfx-v6-source-conditional-model-v3",
+  "training_labels_sha256": "231c0d78afc133617167979b7778da902c3d71b144860f1ca0d228fcd07d9000",
+  "normalization": [
+    508,
+    1080
+  ],
+  "not_general_camera_classifier": true,
+  "models": [
+    {
+      "id": "peck_background",
+      "move_id": "PECK",
+      "side": "mine",
+      "record": "2930158499-001",
+      "kind": "orange_glow_component",
+      "box": [
+        273,
+        535,
+        425,
+        630
+      ],
+      "area_range": [
+        40,
+        2000
+      ],
+      "aspect_range": [
+        0.35,
+        2.0
+      ],
+      "minimum_center_y": 565,
+      "occluded_orange_fraction": 0.18,
+      "merge_gap_seconds": 0.25,
+      "min_positive_samples": 2,
+      "minimum_distinct_gesture_spacing_seconds": 0.6
+    },
+    {
+      "id": "peck_foreground",
+      "move_id": "PECK",
+      "side": "theirs",
+      "record": "2930158499-001",
+      "kind": "orange_glow_component",
+      "box": [
+        111,
+        330,
+        445,
+        530
+      ],
+      "area_range": [
+        200,
+        6000
+      ],
+      "aspect_range": [
+        0.35,
+        2.0
+      ],
+      "minimum_center_y": 340,
+      "occluded_orange_fraction": 0.22,
+      "merge_gap_seconds": 0.25,
+      "min_positive_samples": 1,
+      "halo_mode": "both",
+      "halo_blue_b_min": 200,
+      "halo_blue_g_min": 140,
+      "halo_blue_r_max": 140,
+      "halo_blue_min_pixels": 30,
+      "halo_white_min_pixels": 10,
+      "minimum_distinct_gesture_spacing_seconds": 0.6
+    },
+    {
+      "id": "scratch_background",
+      "move_id": "SCRATCH",
+      "side": "mine",
+      "record": "2904685033-001",
+      "kind": "white_parallel_slashes",
+      "box": [
+        273,
+        350,
+        475,
+        650
+      ],
+      "merge_gap_seconds": 0.12,
+      "min_positive_samples": 1,
+      "minimum_distinct_gesture_spacing_seconds": 0.25
+    }
+  ],
+  "colour_parameters": {
+    "orange_r_min": 170,
+    "orange_g_range": [
+      60,
+      190
+    ],
+    "orange_b_max": 100,
+    "r_over_g": 1.35,
+    "g_over_b": 1.4,
+    "halo_white_min": 180,
+    "halo_white_chroma_max": 100,
+    "halo_blue_b_min": 150,
+    "halo_blue_g_min": 70,
+    "halo_blue_r_ratio": 1.4
+  },
+  "phase_note": "VFXonsetisnotenergycompletion; noexactopposingenergyfromthesephaseswithoutvalidation",
+  "parent_model_sha256": "48e1a4af2987bf8c9bc9e254e42bcaef7a1dfa1924d2e4bbf40158a58683dc6f",
+  "training_only_changes": "Strongforegroundwhite+cyanPeckpeakoftenlastsonlyone15Hzframe; acceptone. Mergepositivegesturefragmentscloserthan0.6sforPeck/0.25sforScratch, neverinventperiodicevents. No freshvalidationused."
+}
