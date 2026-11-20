@@ -1,0 +1,63 @@
+{
+  "schema": "task46-energy-channel-delivery-v2",
+  "preserves_v1_receipt_sha256": "40ae55e9421becd034e8f4bc7b57b6cd6b1b25bf4d312bc235ebaa91378990f2",
+  "v1_all_file_bytes_unchanged": true,
+  "detector_and_solver_unchanged_after_axn": true,
+  "integrated": false,
+  "wider_replay": false,
+  "tests": {
+    "unittest": 741,
+    "existing_skip": 1,
+    "pvpoke_exact": 108,
+    "pvpoke_total": 108,
+    "passed": true,
+    "focused_energy_tests": 24,
+    "log_sha256": "4a7181b526c2ee2228a2835a1e9a2d6c206935cd105098996ebbb6036b9bd305"
+  },
+  "files_sha256": {
+    "scripts/recording/energy_reference_batch.py": "a8877d55a8522a3603a829b3d07a9937d360418ae1c99dbb1edabf7135685397",
+    "tests/test_energy_reference_batch.py": "42e7022240dda71c8bed749a260b450739f9f948bc380dc78028cc8a88f99a11",
+    "data/creator_energy_channel_eval_manifest_v1.json": "d1b247352ada3eb0ccf19890006de5e1fb719cab37a3fe3bd2d7bde9c58b479c",
+    "runs/task46-energy-three-channel-reference-v1.json": "856111b7971af2795f9a0f30b35cb6f2a7880b38356bb7e65fccc56d397f248d",
+    "data/creator_energy_henry_source_supplement_v1.json": "e754ee4f61619799c6e71c1c8492847e263bb982f854cfe0861524ff3855da9a",
+    "data/creator_energy_henry_pilot_context_v1.json": "28da76dcfd3c12d7023d1800a89cd72b02ce736784bfe863deaaf56d2b344023",
+    "data/creator_energy_henry_pilot_health_v1.jsonl.gz": "3b7c0d7b64f1dfb2657072134176177253c80b39122287442733bd4c06155458",
+    "data/creator_energy_henry_pilot_baseline_v1.jsonl.gz": "4ec1c575e3629c137e1c6d550b62ad1b3e12469b8b7e6a807685e897fbacd8bd",
+    "data/creator_energy_reis_source_supplement_v1.json": "432da516a1e3e4cd4f34b0ebb8b3ed1cbebe5fe4ba1109d6ebc407fe46827ad8",
+    "data/creator_energy_reis_pilot_context_v1.json": "d44678e9452590473a34353f6c02587569d2028a5edf8b6f15ed445fb6b760f1",
+    "data/creator_energy_reis_pilot_health_v1.jsonl.gz": "be894623537399ea5c928710af75d292997f9f33eb13f58591a1ae4d0f360f10",
+    "data/creator_energy_reis_pilot_baseline_v1.jsonl.gz": "6569d75bb9c3cae7ec5ad53e10be515981089acf5917051da5fccba7d6355df8"
+  },
+  "reproduction_command": "python scripts/recording/energy_reference_batch.py --root . --manifest data/creator_energy_channel_eval_manifest_v1.json --out runs/task46-energy-three-channel-reproduced-local.json",
+  "score": {
+    "useful_before": [
+      0,
+      12
+    ],
+    "useful_after": [
+      5,
+      12
+    ],
+    "useful_source_bootstrap_95": [
+      0,
+      0.5
+    ],
+    "exact_recovered_scalar_targets": [
+      4,
+      9
+    ],
+    "covered_exact_scalar_targets_correct": [
+      4,
+      4
+    ],
+    "exact_recovery_source_bootstrap_95": [
+      0,
+      1
+    ],
+    "development_only": true,
+    "source_groups": 3,
+    "battles": 3,
+    "source_assisted_scope": true
+  },
+  "post_axn_changes": "New source-only labels and unchanged detector replay. Batch wrapper corrects per-context charge prose and interval guarantee semantics; no threshold/solver/accounting changes."
+}

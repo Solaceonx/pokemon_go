@@ -1,0 +1,68 @@
+{
+  "schema": "task46-energy-source-channel-supplement-v1",
+  "frozen_before_rebuilder_predictions": true,
+  "development_only": true,
+  "independently_human_adjudicated": false,
+  "review_basis": "Assistant source-only visual attack-count/animation review before scoring these windows. Derived numeric energy, not game API readings. No threshold/solver tuning after the AXN pilot.",
+  "original_reference": "data/creator_ground_truth_v1.json",
+  "original_reference_sha256": "3375c1a4f2fec17d893c2b000ae8d4908d68df42ea5aac28ef27f79e499450f4",
+  "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
+  "battle": {
+    "channel": "homeslicehenry",
+    "record": "2904735277-002",
+    "video_sha256": "8b9dc32e2ddabdec86a6c97edf889f73eb12bcb635bff183d3f61d684e9a74ce"
+  },
+  "source_only_moves": {
+    "mine": {
+      "id": "SHADOW_CLAW",
+      "gain": 8,
+      "turns": 2
+    },
+    "theirs": {
+      "id": "DRAGON_BREATH",
+      "gain": 4,
+      "turns": 1
+    }
+  },
+  "initial_zero_basis": "Source countdown/GO with initially full bars before first completed fast attack.",
+  "windows": [
+    {
+      "side": "mine",
+      "start_seconds": 7.25,
+      "end_seconds": 12.500002688172042,
+      "energy_range": [
+        40,
+        40
+      ],
+      "witness": {
+        "t": 12.500002688172042,
+        "pts": 3487500750,
+        "time_base": "1/279000000",
+        "rgb_sha256": "a1e39583bab635c717011a254e4d7d3aaaa46e36d8259a56eef3f2f1e8b676ed"
+      },
+      "annotation_basis": "Own five purple-claw impacts through11.75, fifth energy credit by12.25 (first ready40-cost controls). No sixth claw until12.75. Opponent ten pink dragon-breath bursts through12.25; one uncertain ongoing completion ->9\u201310 credited attacks. No charge/switch before this sample."
+    },
+    {
+      "side": "theirs",
+      "start_seconds": 7.25,
+      "end_seconds": 12.500002688172042,
+      "energy_range": [
+        36,
+        40
+      ],
+      "witness": {
+        "t": 12.500002688172042,
+        "pts": 3487500750,
+        "time_base": "1/279000000",
+        "rgb_sha256": "a1e39583bab635c717011a254e4d7d3aaaa46e36d8259a56eef3f2f1e8b676ed"
+      },
+      "annotation_basis": "Own five purple-claw impacts through11.75, fifth energy credit by12.25 (first ready40-cost controls). No sixth claw until12.75. Opponent ten pink dragon-breath bursts through12.25; one uncertain ongoing completion ->9\u201310 credited attacks. No charge/switch before this sample."
+    }
+  ],
+  "scope_exclusions": [
+    "No full-state or arbitrary-VOD validation",
+    "Intervals retain uncertain completion phase",
+    "No independent human adjudication",
+    "Only one battle/channel; not untouched test data"
+  ]
+}

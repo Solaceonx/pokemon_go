@@ -43,3 +43,11 @@ python scripts/recording/energy_reference_eval.py --root . --context data/creato
 ```
 
 This pilot covers one development battle, with source-assisted move/phase metadata. It has not established general energy accuracy. The original frozen references have no numeric energy targets; their accuracy remains unscorable.
+
+The unchanged detector's three-channel extension is independently reproducible from typed inputs:
+
+```sh
+python scripts/recording/energy_reference_batch.py --root . --manifest data/creator_energy_channel_eval_manifest_v1.json --out runs/task46-energy-three-channel-reproduced-local.json
+```
+
+Its 5/12 useful checkpoints include four exact scalar readings and one range-compatible reading. This is a small development check with source-assisted metadata and wide source-bootstrap margins, not readiness to replay or certify every game.

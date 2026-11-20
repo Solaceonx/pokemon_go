@@ -1,0 +1,68 @@
+{
+  "schema": "task46-energy-source-channel-supplement-v1",
+  "frozen_before_rebuilder_predictions": true,
+  "development_only": true,
+  "independently_human_adjudicated": false,
+  "review_basis": "Assistant source-only visual attack-count/animation review before scoring these windows. Derived numeric energy, not game API readings. No threshold/solver tuning after the AXN pilot.",
+  "original_reference": "data/creator_ground_truth_v1.json",
+  "original_reference_sha256": "3375c1a4f2fec17d893c2b000ae8d4908d68df42ea5aac28ef27f79e499450f4",
+  "gamemaster_sha256": "3aae88b31108dd89bd7cd7af57eecbe5aeccd6152f15951b990302dca71aa0ba",
+  "battle": {
+    "channel": "reis2occasion",
+    "record": "2925297675-001",
+    "video_sha256": "9d5c2a0e2a82f1491442801fc7ae03c71bd7b81aee12a3abdb679252b1f5bc04"
+  },
+  "source_only_moves": {
+    "mine": {
+      "id": "DRAGON_BREATH",
+      "gain": 4,
+      "turns": 1
+    },
+    "theirs": {
+      "id": "VOLT_SWITCH",
+      "gain": 16,
+      "turns": 4
+    }
+  },
+  "initial_zero_basis": "Source countdown/GO with initially full bars before first completed fast attack.",
+  "windows": [
+    {
+      "side": "mine",
+      "start_seconds": 8.25,
+      "end_seconds": 12.76666741064491,
+      "energy_range": [
+        28,
+        36
+      ],
+      "witness": {
+        "t": 12.76666741064491,
+        "pts": 6572280383,
+        "time_base": "1/514800000",
+        "rgb_sha256": "f29025207a477b564b4fbf90f4d019bdf26d7f6964e34e3a608bd6d2e2c4daeb"
+      },
+      "annotation_basis": "Own fast pink dragon-breath bursts at half-second rhythm; startup/credit phase ambiguous ->7\u20139 credited attacks. Opponent two full large yellow Volt Switch cycles (9.5/11.5 effect peaks), third effect only13.25; two completed by12.767 ->32. No charge/switch. Initial countdown/GO8.25 visible."
+    },
+    {
+      "side": "theirs",
+      "start_seconds": 8.25,
+      "end_seconds": 12.76666741064491,
+      "energy_range": [
+        32,
+        32
+      ],
+      "witness": {
+        "t": 12.76666741064491,
+        "pts": 6572280383,
+        "time_base": "1/514800000",
+        "rgb_sha256": "f29025207a477b564b4fbf90f4d019bdf26d7f6964e34e3a608bd6d2e2c4daeb"
+      },
+      "annotation_basis": "Own fast pink dragon-breath bursts at half-second rhythm; startup/credit phase ambiguous ->7\u20139 credited attacks. Opponent two full large yellow Volt Switch cycles (9.5/11.5 effect peaks), third effect only13.25; two completed by12.767 ->32. No charge/switch. Initial countdown/GO8.25 visible."
+    }
+  ],
+  "scope_exclusions": [
+    "No full-state or arbitrary-VOD validation",
+    "Intervals retain uncertain completion phase",
+    "No independent human adjudication",
+    "Only one battle/channel; not untouched test data"
+  ]
+}
