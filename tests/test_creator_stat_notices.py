@@ -68,3 +68,22 @@ class LiteralStatNotices(unittest.TestCase):
                        dict(target_identity='Mimikyu:1498'),dict(stage_delta=-1),dict(stat='energy')):
             event=copy.deepcopy(self.event());event.update(update)
             self.assertFalse(StatNoticeEvidence([event]).events,update)
+
+    def test_client_wording_distinguishes_single_and_double_step_messages(self):
+        for text,steps,resource in [('Attack rose!',[1],'combat_buff_lvl1'),
+                ('Defense fell!',[-1],'combat_debuff_lvl1'),
+                ('Attack rose sharply!',[2],'combat_buff_lvl2'),
+                ('Defense harshly fell!',[-2],'combat_debuff_lvl2')]:
+            notice=parse(text)
+            self.assertEqual(notice['message_change_step_candidates'],steps)
+            self.assertEqual(notice['wording_resource_id'],resource)
+            self.assertIsNone(notice['stage_delta'])
+
+    def test_severe_message_retains_larger_change_ambiguity(self):
+        self.assertEqual(parse('Defense severely fell!')['message_change_step_candidates'],[-4,-3])
+        self.assertEqual(parse('Attack rose drastically!')['message_change_step_candidates'],[3,4])
+        self.assertIsNone(parse('Defense severely fell!')['stage_delta'])
+
+    def test_incompatible_modifier_and_direction_are_not_game_messages(self):
+        for text in ('Attack harshly rose!','Defense fell sharply!','Defense severely rose!'):
+            self.assertIsNone(parse(text))

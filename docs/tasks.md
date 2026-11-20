@@ -1117,3 +1117,9 @@ Task46 latest working tree: tested J3 source copied into MAIN; all-82 separate r
 
 
 Task46 J3 MAIN checks now PASS: 682 tests / one skip, 108 exact, viewer26 checks. Development readiness still0fullstate; separate all82J3 replay pending. No new game packages installed; keep PR22 draft.
+
+
+Task46 J4: researched the persistent Busted Mimikyu native Defense baseline, corrected the overly broad J3 neutral inference, 692 tests / one skip / 108 exact pass. All30 development events preserved; all82 J3strict29 unchanged and its repaired 1,804-file privacy audit passes, but those known-issue stage packages are not installed. Corrected J4 all82 replay is running; installed G2 remains unchanged. Fresh source5 is selected/source-review-only, frozenJ3, no predictions or frozen labels. See tracker-mechanics.md and latest status.
+
+
+Task46 J4 installed checkpoint: all82 processed/installed with G2 backups, strict29→29/82; privacy1,804files0issues, post-install692tests/one skip108exact. Actual installed original-six64/23/21events0extras;2tighttiming. Full-state certification remains0. Native-form switch baseline corrected after primary-source research; documented mechanics will be looked up before asking the owner.

@@ -38,7 +38,8 @@ class SourceStageResets(unittest.TestCase):
         self.assertEqual(event['exit_identity_status'],'unresolved')
         self.assertEqual(event['t'],10.033333333)
         self.assertEqual(event['confirmed_at_seconds'],10.2)
-        self.assertEqual((event['attack_stage'],event['defense_stage']),(0,0))
+        self.assertIs(event['ordinary_modifiers_cleared'],True)
+        self.assertNotIn('defense_stage',event)
         self.assertEqual(len(StageResetEvidence([event]).events),1)
 
     def test_first_clipped_header_and_a_header_without_go_do_not_reset(self):
@@ -119,7 +120,7 @@ class SourceStageResets(unittest.TestCase):
         self.assertFalse(StageResetEvidence([event]).advance(10.2,state))
 
     def test_malformed_timing_cp_stages_or_source_witness_is_rejected(self):
-        for change in (dict(confirmed_at_seconds=9),dict(cp=True),dict(attack_stage=False),
+        for change in (dict(confirmed_at_seconds=9),dict(cp=True),dict(ordinary_modifiers_cleared=False),
                        dict(last_pre_entry_header_seconds=10.3),dict(header_source_pts=True),
                        dict(header_source_time_base='0'),dict(source_time_base='1/0'),
                        dict(last_pre_entry_header_identity='Tinkaton:1499'),dict(last_pre_entry_header_identity='unknown')):
@@ -136,3 +137,60 @@ class SourceStageResets(unittest.TestCase):
             self.assertEqual(mon['attack_stage']['value'],0)
             self.assertEqual(mon['defense_stage']['value'],0)
         self.assertEqual(state['mine']['pokemon']['Lapras:1497']['attack_stage']['exit_identity_status'],'unresolved')
+
+    def mimikyu(self,*,known=True,confirmed=8,form_identity='Mimikyu:1499'):
+        event=self.event();event.update(pokemon='Mimikyu',identity='Mimikyu:1499')
+        state=team(self.event());mon=state['mine']['pokemon'].pop('Tinkaton:1499')
+        mon.update(species={'value':'Mimikyu'},form=dict(value='mimikyu_busted' if known else None,
+            status='observed' if known else 'unknown',observed_at_seconds=7,
+            confirmed_at_seconds=confirmed,identity=form_identity))
+        state['mine']['active']=event['identity'];state['mine']['pokemon'][event['identity']]=mon
+        return event,state
+
+    def test_busted_form_restores_native_defense_penalty_instead_of_zero(self):
+        event,state=self.mimikyu();mon=state['mine']['pokemon'][event['identity']]
+        mon['attack_stage']={'value':3};mon['defense_stage']={'value':-3}
+        StageResetEvidence([event]).advance(10.2,state)
+        self.assertEqual(mon['attack_stage']['value'],0)
+        self.assertEqual(mon['defense_stage']['value'],-1)
+        self.assertEqual(mon['defense_stage']['form_baseline_candidates'],[-1])
+
+    def test_unknown_mimikyu_form_keeps_defense_unknown_but_attack_can_reset(self):
+        event,state=self.mimikyu(known=False)
+        StageResetEvidence([event]).advance(10.2,state)
+        mon=state['mine']['pokemon'][event['identity']]
+        self.assertEqual(mon['attack_stage']['value'],0)
+        self.assertIsNone(mon['defense_stage']['value'])
+        self.assertEqual(mon['defense_stage']['form_baseline_candidates'],[-1,0])
+
+    def test_late_form_proof_or_other_cp_cannot_resolve_an_earlier_entry(self):
+        for kwargs in (dict(confirmed=10.15),dict(form_identity='Mimikyu:1498')):
+            event,state=self.mimikyu(**kwargs)
+            StageResetEvidence([event]).advance(10.2,state)
+            self.assertIsNone(state['mine']['pokemon'][event['identity']]['defense_stage']['value'])
+
+    def test_native_penalty_does_not_stack_on_repeated_returns(self):
+        event,state=self.mimikyu()
+        StageResetEvidence([event]).advance(10.2,state)
+        later=copy.deepcopy(event)
+        for name in ('t','confirmed_at_seconds','first_new_header_seconds','last_pre_entry_header_seconds'):later[name]+=10
+        StageResetEvidence([later]).advance(20.2,state)
+        self.assertEqual(state['mine']['pokemon'][event['identity']]['defense_stage']['value'],-1)
+
+    def test_bench_mimikyu_keeps_native_penalty_or_form_uncertainty(self):
+        event=self.event()
+        for known in (True,False):
+            _,mimi_state=self.mimikyu(known=known);state=team(event)
+            state['mine']['pokemon']['Mimikyu:1499']=mimi_state['mine']['pokemon']['Mimikyu:1499']
+            StageResetEvidence([event]).advance(10.2,state)
+            self.assertEqual(state['mine']['pokemon']['Mimikyu:1499']['defense_stage']['value'],-1 if known else None)
+
+    def test_missing_or_malformed_native_data_never_supplies_default_zero(self):
+        for gm in ({'pokemon':[]},{'pokemon':[dict(speciesName='Tinkaton',nativeStatBuffs=[False,0])]}):
+            event=self.event();state=team(event)
+            StageResetEvidence([event],gamemaster=gm).advance(10.2,state)
+            self.assertIsNone(state['mine']['pokemon'][event['identity']]['attack_stage']['value'])
+
+    def test_intervening_form_change_blocks_a_late_reset(self):
+        args=inputs();args[4]=[dict(kind='form',t=10.1)]
+        self.assertFalse(collect(*args)['events'])

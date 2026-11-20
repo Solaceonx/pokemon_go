@@ -653,7 +653,7 @@ def track_clip(folder, reader, *, creator_root=None):
             notices = derive_stat_notices(raw)
             write_json(game/'creator-stat-notices.json',notices)
             from creator_stage_resets import derive as derive_resets
-            resets = derive_resets(raw,json.loads((game/'timeline.json').read_text(encoding='utf8')),observable+notices['events'])
+            resets = derive_resets(raw,json.loads((game/'timeline.json').read_text(encoding='utf8')),observable+notices['events']+forms['events'])
             write_json(game/'creator-stage-resets.json',resets)
             observable = sorted(observable+forms['events']+resets['events']+notices['events'], key=lambda e: (e['t'], e['kind'], str(e.get('side'))))
             (game/'source-events.jsonl').write_bytes(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in observable).encode('utf8'))

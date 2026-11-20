@@ -1,7 +1,7 @@
 {
   "t": 173.6,
   "fighting_turns": 95,
-  "warnings": 20,
+  "warnings": 25,
   "matchup": {
     "ours": {
       "fast": {
@@ -34,12 +34,12 @@
     "theirs": {
       "stats_assumed": true,
       "fast": {
-        "id": "WATER_GUN",
-        "name": "Water Gun",
-        "type": "water",
+        "id": "SPARK",
+        "name": "Spark",
+        "type": "electric",
         "damage": 4,
-        "energy_gain": 3,
-        "turns": 1
+        "energy_gain": 7,
+        "turns": 2
       },
       "charged": [
         {
@@ -285,7 +285,7 @@
     "left": 2,
     "unseen": 0,
     "switch_ready_in": 42.4,
-    "fast_move_turns_left": 0,
+    "fast_move_turns_left": 1,
     "pokemon": [
       {
         "species": "lanturn",
@@ -307,21 +307,21 @@
         "hp": 20,
         "hp_max": 194,
         "hp_share": 0.103,
-        "energy": 82,
+        "energy": 88,
         "fainted": false,
         "attack_stage": 0,
         "defense_stage": 0,
         "fast_move": {
-          "id": "WATER_GUN",
-          "name": "Water Gun",
-          "type": "water",
-          "turns": 1,
-          "energy_gain": 3,
-          "known_from": "inferred",
+          "id": "SPARK",
+          "name": "Spark",
+          "type": "electric",
+          "turns": 2,
+          "energy_gain": 7,
+          "known_from": "guessed",
           "misfit": {
-            "CHARGE_BEAM": 0.76,
-            "WATER_GUN": 0.3,
-            "SPARK": 0.68
+            "CHARGE_BEAM": 1.72,
+            "WATER_GUN": 2.02,
+            "SPARK": 1.67
           }
         },
         "charged_moves": [
@@ -343,19 +343,21 @@
           }
         ],
         "energy_range": [
-          82,
-          82
+          88,
+          88
         ],
-        "energy_by_clock": 85,
+        "energy_by_clock": 88,
         "energy_odds": {
-          "76": 0.08,
-          "79": 0.12,
-          "82": 0.33,
-          "85": 0.33,
-          "88": 0.12
+          "74": 0.08,
+          "81": 0.12,
+          "88": 0.33,
+          "95": 0.33,
+          "100": 0.12
         },
         "fast_move_odds": {
-          "WATER_GUN": 1.0
+          "SPARK": 0.47,
+          "CHARGE_BEAM": 0.35,
+          "WATER_GUN": 0.17
         },
         "charged_move_odds": {
           "SURF": 1.0,
@@ -367,7 +369,7 @@
           "SURF": 1.0,
           "THUNDERBOLT": 0.59,
           "THUNDER": 0.25,
-          "HYDRO_PUMP": 0.16
+          "HYDRO_PUMP": 0.15
         }
       },
       {

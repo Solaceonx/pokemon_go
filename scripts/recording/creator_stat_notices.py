@@ -13,10 +13,19 @@ from creator_stage_resets import number
 def parse(text):
     if not isinstance(text,str):return None
     words=' '.join(text.lower().strip(' !.\t\r\n').split())
-    match=re.fullmatch(r'(attack|defense) (?:(sharply|harshly|drastically) )?(rose|fell)(?: (sharply|harshly|drastically))?',words)
+    match=re.fullmatch(r'(attack|defense) (?:(sharply|harshly|drastically|severely) )?(rose|fell)(?: (sharply|harshly|drastically|severely))?',words)
     if not match or (match[2] and match[4]):return None
-    return dict(stat=match[1]+'_stage',direction='increase' if match[3]=='rose' else 'decrease',
-                wording_modifier=match[2] or match[4],stage_delta=None)
+    modifier=match[2] or match[4]
+    direction='increase' if match[3]=='rose' else 'decrease'
+    category={("increase",None):1,("decrease",None):1,
+              ("increase","sharply"):2,("decrease","harshly"):2,
+              ("increase","drastically"):3,("decrease","severely"):3}.get((direction,modifier))
+    if category is None:return None
+    sign=1 if direction=='increase' else -1
+    return dict(stat=match[1]+'_stage',direction=direction,wording_modifier=modifier,
+                message_change_step_candidates=[sign*category] if category<3 else sorted([sign*3,sign*4]),
+                wording_resource_id='combat_'+('buff' if sign==1 else 'debuff')+'_lvl'+str(category),
+                stage_delta=None,change_application='unresolved; a banner can redisplay a form-native effect')
 
 
 def collect(text_rows,alignment):
@@ -36,7 +45,7 @@ def collect(text_rows,alignment):
                 status='observed',side=None,target_identity=None,**notice,
                 method='literal_stat_banner_without_spatial_owner',
                 occurrence_semantics='first_sampled_literal_banner',accuracy_verified=False))
-    return dict(schema='literal-stat-notices-v1',events=events,side_attribution_established=False,
+    return dict(schema='literal-stat-notices-v2',events=events,side_attribution_established=False,
                 exact_stages_established=False,accuracy_verified=False)
 
 
