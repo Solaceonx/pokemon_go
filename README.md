@@ -1,5 +1,5 @@
 # Pokémon GO battle bot
-
+ALL GPT HAHAAHHAAHAHHA
 A bot that plays Pokémon GO trainer battles (Great League, three against three). It is
 being built brain first, in a simulator: the rules engine, the players and the training
 all run on a laptop with no phone attached. Reading the phone screen and sending taps
