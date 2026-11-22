@@ -1007,9 +1007,17 @@ class Player:
                 self.active = mine
                 self.energy_read = self._energy_raw = None
             return
+        if mine is not None and mine == self.active:
+            # the header names the one we think is out: its type icons are not asked against it (2026-11-22, the last
+            # Pokemon sent in after Feraligatr fainted: the header said Virizion, the type icons, misread, said the
+            # fainted Feraligatr for 3 s, and the bot played Feraligatr's moves); nor for 8 s after, while the name is
+            # not read again
+            self.header_confirmed_at = time.time()
+            return
         # Our header's type icons: in training the header shows nicknames, which can be the same for two of ours
         ts = getattr(self, "types_seen", None)
-        if ts is not None and ts[1] > self.active_changed_at + 0.3 and (ts, self.active) != getattr(self, "types_checked", None):
+        if ts is not None and ts[1] > self.active_changed_at + 0.3 and (ts, self.active) != getattr(self, "types_checked", None) \
+                and time.time() - getattr(self, "header_confirmed_at", 0.0) > 8.0:
             self.types_checked = (ts, self.active)
             if ts[0] != self.active:
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types")
