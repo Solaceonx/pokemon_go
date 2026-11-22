@@ -12,7 +12,9 @@ heads (joined by "+", for example
 temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
 team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
-overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
+overrides), and people_shield (shield calls copied from good players, pogo.people_shield; "bot,people_shield=PATH"
+gives the trained bot alone with it). Data-file paths are relative to the repository root unless absolute. The
+setting "bot" is the trained bot alone.
 "website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
 With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
@@ -67,6 +69,14 @@ def parse(spec: str) -> dict | None:
     if spec.strip() == "bot":
         return None
     parts = list(filter(None, (p.strip() for p in spec.split(","))))
+    if parts and parts[0] == "bot":  # the trained bot alone with a setting of its own: "bot,people_shield=PATH"
+        bot = {"_bot": True}
+        for part in parts[1:]:
+            key, value = part.split("=", 1)
+            if key not in ("people_shield", "people_add", "ko_wait"):
+                raise SystemExit(f"the bot alone takes only people_shield, people_add and ko_wait, not {key!r}")
+            bot[key] = float(value) if key == "people_add" else (value not in ("0", "") if key == "ko_wait" else value)
+        return bot
     out = dict(CONFIRMED)
     if parts and parts[0] == "website":
         out.update(WEBSITE, pool=50)
@@ -77,16 +87,17 @@ def parse(spec: str) -> dict | None:
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon", "pool"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust"):
+        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust", "people_add"):
             out[key] = float(value)
         elif key == "shield_toward":
             if value not in ("0", "1"):
                 raise SystemExit("shield_toward must be 0 or 1")
             out[key] = bool(int(value))
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
-                     "stay_after_replace"):
+                     "stay_after_replace", "ko_wait"):
             out[key] = value not in ("0", "false", "False", "")
-        elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge"):
+        elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge",
+                     "people_shield"):
             out[key] = value
         elif key == "mid_swap_search":
             if value not in ("ready", "hit", "both"):
@@ -141,8 +152,9 @@ def network(path: str | None) -> QNet:
 
 def pilot(settings: dict | None, seed: int, cls=RealTime):
     s = _state
-    if settings is None:
-        return Learner(q=s["net"], margin=0.02, seed=seed)
+    if settings is None or settings.get("_bot"):
+        return Learner(q=s["net"], margin=0.02, seed=seed, people_shield=(settings or {}).get("people_shield"),
+                       people_add=(settings or {}).get("people_add"), ko_wait=(settings or {}).get("ko_wait", False))
     kw = dict(settings)
     # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
     ev = Evaluator(evaluator(kw.pop("eval", None)).model)
