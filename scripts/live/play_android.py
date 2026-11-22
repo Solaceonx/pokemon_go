@@ -2070,12 +2070,18 @@ class Player:
         view = self.view()
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
+        foe_hi = self.tracker.foe.hi if self.tracker.foe else None
+        if view is not None and foe_hi is not None and view.foe.build.charged:
+            # A prompt means they have paid for a charged move, so the call is never made on less energy than their
+            # cheapest costs (2026-11-22: in 14 of 83 logged prompts of 2026-11-09 the count stood below every move
+            # they were believed to have, and the engine weighed a throw that could not land)
+            foe_hi = max(foe_hi, min(m.energy for m in view.foe.build.charged))
         if view is not None and view.me.shields > 0:
             # The engine's own call on the tracker's estimate of their energy, no margin added and no override
             # (2026-11-08, docs/status.md "Live shield calls measured": the owner withdrew the override that shielded
             # any hit of 35% or more, which cost 7 to 13 points in simulation; the margin was worth nothing)
             try:
-                shield = bool(self.engine.shield(view, self.tracker.foe.hi))
+                shield = bool(self.engine.shield(view, foe_hi))
                 self.engine_calls += 1
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
@@ -2098,7 +2104,7 @@ class Player:
             except Exception as error:  # noqa: BLE001
                 seen = {"error": str(error)}
         self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None,
-                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None)
+                 view=seen, foe_hi=foe_hi, counted_hi=self.tracker.foe.hi if self.tracker.foe else None)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
         self.touch(SHIELD_YES if shield else SHIELD_NO, "shield" if shield else "no shield")
