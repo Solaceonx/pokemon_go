@@ -4705,3 +4705,17 @@ strip looks as at the first tap (under 40: an ignored tap left it 17 to 31, a sw
 stay held 1.6 s after each tap. `POGO_SPAM_SWITCH=0` turns it off; each repeat logs `switch_retap` with the strip's
 difference. Unit-tested on the Mac (no OpenCV there). For the PC: replay recordings with switches through it
 (`scripts/live/replay.py`) to check the threshold before playing it live.
+
+## The live player set up on the Mac (2026-11-22)
+
+The phones are on the owner's Mac (MacBook Pro, M4 Pro). Set up there, no phone touched: scrcpy-server v5.0.1
+from the official GitHub release (733,930 bytes, SHA-256 checked against the release's digest, `764eb6f7…`) in a
+folder with a link to Homebrew's adb, used as `POGO_SCRCPY_DIR`; a venv (Python 3.14) with `numpy opencv-python av
+rapidocr_onnxruntime` from PyPI (286 MB). Both live in the session's scratch folder, which a reboot clears: rebuild
+with the same commands. All 343 tests pass in it (the 7 skipped without OpenCV run too). OpenCV and PyAV each bundle
+libavdevice, so macOS warns of duplicate camera classes at import; the player uses no camera.
+
+Speed on saved frames at the player's 540 x 1200: `screen.read` 11 ms a frame; the top-box OCR (`screen.cue`) 106 ms
+a read, against 300 to 400 ms on the PC. Waits in `play_android.py` that were set by the PC's slower reads may want
+retuning once it runs here. The Moto G Stylus 5G here is 1080 x 2400, the size the reader was calibrated on; the
+Galaxy S8+ (1080 x 2220) is not calibrated. Not yet run against a phone: the owner was using both.
