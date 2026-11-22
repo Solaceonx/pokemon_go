@@ -39,6 +39,7 @@ class Runner:
         self.ocr = RapidOCR()
         self.wins = self.losses = self.battles = 0
         self.last_why, self.same = None, 0  # the last menu tap, and how many times running
+        self.cp = 1500  # the league: 1500 Great (whatever cup holds the words GREAT LEAGUE), 2500 Ultra
         self.expect: list = []  # words the party screen must show before USE THIS PARTY (the party's names)
         self.team = None  # the team file passed to play_android
         self.party_swipes = 0
@@ -134,7 +135,7 @@ class Runner:
 
     def play(self, start_tap=None) -> str | None:
         cmd = [sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", self.serial, "--live",
-               "--frames", str(self.media)]
+               "--frames", str(self.media), "--cp", str(self.cp)]
         if self.team:
             cmd += ["--team", self.team]
         for flag, value in (("--account", self.account), ("--team-key", self.team_key), ("--league", self.league),
@@ -189,7 +190,9 @@ class Runner:
             elif "USETHISPARTY" in flat:
                 # Only the party the team file is for (2026-11-08: a second party was saved, and the party screens
                 # show the newest first): else the next saved party, a swipe left, and stop after three.
-                missing = [w for w in self.expect if w not in flat]
+                digits = lambda x: "".join(ch for ch in x if ch.isdigit())
+                # by the CPs' digits too: on Ultra League cards the reader drops letters of 'CP' (2026-11-22)
+                missing = [w for w in self.expect if w not in flat and digits(w) not in digits(flat)]
                 if missing:
                     self.log("party_check", missing=missing, text=text[:200])
                     if self.party_swipes >= 3:
@@ -203,12 +206,13 @@ class Runner:
             elif "NEXTBATTLE" in flat:
                 self.tap(NEXT_BATTLE, "next battle", words)
             elif "CHOOSEYOURLEAGUE" in flat:
-                card = next(((x, y) for t, x, y in words if "GREATLEAGUE" in re.sub("[^A-Z]", "", t.upper())), None)
+                key = "ULTRALEAGUE" if self.cp == 2500 else "GREATLEAGUE"
+                card = next(((x, y) for t, x, y in words if key in re.sub("[^A-Z]", "", t.upper())), None)
                 if card is None:
-                    return self.stop("no Great League card", a)
-                name = next((t for t, x, y in words if "GREATLEAGUE" in re.sub("[^A-Z]", "", t.upper())), "")
+                    return self.stop(f"no {key} card", a)
+                name = next((t for t, x, y in words if key in re.sub("[^A-Z]", "", t.upper())), "")
                 self.league = re.sub(r"\s+", " ", name.replace(":", ": ")).strip().title().replace(": ", ": ")
-                self.tap((0.5, card[1] + 0.02), "great league", words)
+                self.tap((0.5, card[1] + 0.02), key.lower(), words)
             elif "LETSGO" in flat:
                 self.tap(LETS_GO, "let's go", words)
             elif "TRAINING" in flat and "BLANCHE" in flat and "GOBATTLELEAGUE" not in flat:
@@ -261,6 +265,7 @@ def main() -> None:
     ap.add_argument("--team", help="the party's team file (play_android); default: the account's league party's")
     ap.add_argument("--account", help="data/accounts/<NAME>.json (default: data/accounts/current.txt)")
     ap.add_argument("--party-key", help="the account's party to play (default: its league party)")
+    ap.add_argument("--cp", type=int, default=1500, choices=(1500, 2500), help="Great (1500) or Ultra (2500) League")
     ap.add_argument("--expect", nargs="*", default=[], help="words the party screen must show, as read with spaces taken out: its CPs in order, CP1498CP1499CP1499 (it shows nicknames, not species)")
     a = ap.parse_args()
     media = Path(a.media) / time.strftime("%Y%m%d")
@@ -279,6 +284,7 @@ def main() -> None:
     import accounts
     chosen = accounts.party(a.account, a.party_key)
     runner.expect = [w.upper() for w in a.expect] or [chosen["expect"]]
+    runner.cp = a.cp
     runner.team = a.team or chosen["team"]
     runner.account = a.account or accounts.current()
     runner.team_key = f"{runner.account}/{chosen['key']}"
