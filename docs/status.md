@@ -4744,3 +4744,12 @@ Ultra League team search over the owner's 32 Ultra League Pokémon (all 4,960 th
 threes from PvPoke's UL top 50; 30 battles each, then the top 40 with every lead at 400, then the top 10 at 3,000):
 Registeel / Skeledirge / Blastoise 64%, Registeel / Shadow Walrein / Jellicent 62%, Steelix / Blastoise / Skeledirge
 61%; Alolan Ninetales / Shadow Snorlax / Virizion 39%. Teams with Virizion averaged 40%, Shadow Snorlax 43%.
+
+**First Ultra League GO Battle League game (2026-11-22, stopped by the owner).** They led Giratina (Origin); the bot
+switched Virizion to Shadow Snorlax at 0.6 s; they switched to Cobalion at 5.4 s, and Snorlax stayed in against it
+until it fainted at 58 s. A Body Slam retap (the 11-18 charged spam) landed on the replacement prompt's right card as
+it came up and sent in Feraligatr; the bot, believing its own choice (Virizion) in, switched 0.4 s later to
+"Feraligatr", the bench spot holding Virizion, so Feraligatr went straight back out. Fixed on `ultra-league`
+(retaps only on fresh frames with our bar at 20% or more; no switch after a replacement until the header names who
+is in). Still open: the engine chose Virizion as the replacement and wanted Feraligatr 0.4 s later, and it left
+Snorlax in against Cobalion for 50 s.
