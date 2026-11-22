@@ -544,7 +544,7 @@ class Tracker:
         forms = [sid for sid, sp in self.gd.species.items()
                  if sid.split("_")[0] == base and sid != build.species_id and not sid.endswith("_shadow")
                  and any(name in (i, self.gd.moves[i].name) for i in sp.get("chargedMoves", []) if i in self.gd.moves)]
-        ranked = {e["speciesId"] for e in self.gd.rankings(1500)}
+        ranked = {e["speciesId"] for e in self.gd.rankings()}
         if len(forms) > 1 and any(f in ranked for f in forms):
             forms = [f for f in forms if f in ranked]  # Avalanche: Galarian Darmanitan, not its unranked Zen mode
         if len(forms) != 1:

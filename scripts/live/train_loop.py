@@ -126,6 +126,22 @@ def party_words(im) -> str:
     return re.sub("[^A-Z0-9]", "", " ".join(r[1] for r in (res or [])).upper())
 
 
+def league_card(im, word: str):
+    """Where to tap the league chooser's card whose title holds `word` (ULTRA), by reading the screen's text: the
+    middle of the words' box, in the screen's pixels; None if no such words."""
+    global _ocr
+    import numpy as np
+    if _ocr is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _ocr = RapidOCR()
+    res, _ = _ocr(np.asarray(im))
+    for box, text, _score in res or []:
+        if word in text.upper().replace(" ", "") and "LEAGUE" in text.upper().replace(" ", "") or text.upper().strip() == word:
+            xs, ys = [q[0] for q in box], [q[1] for q in box]
+            return int(sum(xs) / 4), int(sum(ys) / 4)
+    return None
+
+
 def find_party(adb: str, serial: str, shot, expect: str, swipes: int = 6) -> bool:
     """On the party screen, swipe left until the middle card shows the party's CPs in order (the cards show
     nicknames, not species; 2026-11-08: each account keeps several Great League parties). False if none does."""
@@ -154,6 +170,7 @@ def main() -> None:
     ap.add_argument("--practise", nargs="*", default=[], help="move ids thrown in place of the engine's (play_android)")
     ap.add_argument("--open-with", help="species switched in at the start (play_android)")
     ap.add_argument("--stay", action="store_true", help="no switches but the opening one (play_android)")
+    ap.add_argument("--cp", type=int, default=1500, choices=(1500, 2500), help="Great (1500) or Ultra (2500) League")
     a = ap.parse_args()
     sys.path.insert(0, str(ROOT / "scripts" / "live"))
     import accounts
@@ -191,8 +208,17 @@ def main() -> None:
         leader = a.leaders[k % len(a.leaders)]
         tap(LEADERS[leader]); time.sleep(2.2)
         tap(LEADER_BATTLE); time.sleep(2.2)
-        tap(GREAT_LEAGUE); time.sleep(2.6)
-        for _ in range(2):
+        if a.cp == 2500:
+            card = league_card(shot(), "ULTRA")
+            if card is None:
+                path = media / f"stopped-{time.strftime('%H%M%S')}.png"
+                shot().save(path)
+                print(json.dumps({"stopped": "no Ultra League card on the league chooser", "frame": str(path)}), flush=True)
+                break
+            tap(card); time.sleep(2.6)
+        else:
+            tap(GREAT_LEAGUE); time.sleep(2.6)
+        for _ in range(2 if a.cp == 1500 else 0):
             # the league cards can come up after the tap (2026-11-09, a new account's first round: the tap was lost
             # and the round stopped on Choose Your League): tap again while the Great League card is still there
             im, c = pixel(*GREAT_LEAGUE)
@@ -218,7 +244,7 @@ def main() -> None:
         done = subprocess.run([sys.executable, str(ROOT / "scripts" / "live" / "play_android.py"), "--serial", a.serial,
                                "--live", "--start-tap", "0.5", "0.871", "--frames", str(media), "--team", a.team,
                                "--account", a.account or accounts.current(), "--team-key",
-                               f"{a.account or accounts.current()}/{chosen['key']}"]
+                               f"{a.account or accounts.current()}/{chosen['key']}", "--cp", str(a.cp)]
                               + (["--practise", *a.practise] if a.practise else [])
                               + (["--open-with", a.open_with] if a.open_with else [])
                               + (["--stay"] if a.stay else []),

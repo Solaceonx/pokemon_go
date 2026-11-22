@@ -2252,9 +2252,10 @@ def main() -> None:
     ap.add_argument("--team-key", help="account/party, as in games/live/our_teams.json")
     ap.add_argument("--league", help="the league as read on screen")
     ap.add_argument("--season", help="the season as read on screen")
+    ap.add_argument("--cp", type=int, default=1500, choices=(1500, 2500), help="the league's CP cap: 1500 Great, 2500 Ultra")
     ap.add_argument("--standing", help="rank and rating read just before, as JSON")
     a = ap.parse_args()
-    gd = GameData()
+    gd = GameData(league=a.cp)  # the engine's opponents and the guessed movesets are the league's
     team = load_team(gd, Path(a.team))
     stamp = time.strftime("%Y%m%d-%H%M%S")
     log = Log(ROOT / "runs" / "live" / f"{stamp}.jsonl")
