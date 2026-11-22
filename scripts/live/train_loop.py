@@ -142,11 +142,20 @@ def league_card(im, word: str):
     return None
 
 
-def find_party(adb: str, serial: str, shot, expect: str, swipes: int = 6) -> bool:
+def digits(text: str) -> str:
+    return "".join(ch for ch in text if ch.isdigit())
+
+
+def find_party(adb: str, serial: str, shot, expect: str, swipes: int = 6, save: Path | None = None) -> bool:
     """On the party screen, swipe left until the middle card shows the party's CPs in order (the cards show
     nicknames, not species; 2026-11-08: each account keeps several Great League parties). False if none does."""
     for k in range(swipes + 1):
-        if expect in party_words(shot()):
+        im = shot()
+        words = party_words(im)
+        if save is not None:  # --survey: every card kept and its words printed, none chosen
+            im.save(save / f"party-{k}.png")
+            print(json.dumps({"party_card": k, "words": words}), flush=True)
+        elif expect in words or digits(expect) in digits(words):  # the reader drops some of the C and P letters
             return True
         if k < swipes:
             if not game_in_front(adb, serial):
@@ -170,6 +179,7 @@ def main() -> None:
     ap.add_argument("--practise", nargs="*", default=[], help="move ids thrown in place of the engine's (play_android)")
     ap.add_argument("--open-with", help="species switched in at the start (play_android)")
     ap.add_argument("--stay", action="store_true", help="no switches but the opening one (play_android)")
+    ap.add_argument("--survey", action="store_true", help="stop on the party screen after saving each party card")
     ap.add_argument("--cp", type=int, default=1500, choices=(1500, 2500), help="Great (1500) or Ultra (2500) League")
     a = ap.parse_args()
     sys.path.insert(0, str(ROOT / "scripts" / "live"))
@@ -230,6 +240,10 @@ def main() -> None:
                 raise SystemExit(1)
             subprocess.run([adb, "-s", a.serial, "shell", "input", "swipe", "900", "1700", "180", "1700", "400"])
             time.sleep(1.5)
+        if a.survey:
+            find_party(adb, a.serial, shot, "", save=media)
+            print(json.dumps({"stopped": "survey: the party cards are saved, none chosen"}), flush=True)
+            break
         if expect is not None and not find_party(adb, a.serial, shot, expect):
             path = media / f"stopped-{time.strftime('%H%M%S')}.png"
             shot().save(path)
