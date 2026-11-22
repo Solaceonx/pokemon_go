@@ -1879,7 +1879,8 @@ class Player:
         # that (2.9 s at most), and a late one is still watched for and swiped (watch_queued); a tap the count
         # wrongly said was paid for stopped the fast taps for the whole wait (37 times in 13 battles)
         wait = 2.3 if count_only else 3.0
-        while time.time() - tapped < wait:
+        off_since = None  # the fight off the screen since (a frame time), with no word of theirs
+        while time.time() - tapped < (4.0 if paid_seen else wait):  # paid for: it can start 3 s after the tap
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
                 continue
@@ -1898,7 +1899,9 @@ class Player:
             if screen.replace_prompt(rgb):  # ours fainted first: the loop answers the prompt
                 self.log("throw_fainted", self.now(), move=move.id)
                 return
-            said = "theirs" if screen.shield_prompt(rgb) else None if on else screen.cue(self.names.ocr, rgb)
+            # both buttons gone: a close-up, ours or theirs (the minigame keeps a health bar up, so `on` can stay true)
+            hidden = screen.button_rim(rgb, 0) < 10 and screen.button_rim(rgb, 1) < 10
+            said = "theirs" if screen.shield_prompt(rgb) else None if on and not hidden else screen.cue(self.names.ocr, rgb)
             if said == "theirs":
                 # Theirs goes first; ours still waits and plays when theirs is over (2026-11-07: a Body Slam went
                 # off after Plusle's Discharge, unswiped). The loop watches for its Get Ready!.
@@ -1908,6 +1911,18 @@ class Player:
                 return
             if said == "mine":
                 since, started = when, True
+                break
+            # The game does not always say Get Ready! (2026-11-22, Spark's Jolteon: three Leaf Blades with their
+            # buttons paid for went off 2.5 to 3 s after the tap, the camera panning to the sky with no words, and went
+            # unswiped; the minigame screen shows their health bar, so the fight looked on). Both buttons gone and their
+            # bar alone for 0.8 s after a paid-for tap, with no prompt and no word of theirs, is our move.
+            # ours shows their bar alone; theirs keeps both bars up (2026-11-22 recording: Jolteon's Thunder, 2 s of hidden
+            # buttons with both bars, then the shield prompt; our Leaf Blade, only theirs at 0.949 throughout)
+            ours_shown = hidden and "theirs" in bars and "mine" not in bars
+            off_since = None if not ours_shown or said == "theirs" else (off_since or when)
+            if paid_seen and off_since is not None and when - off_since >= 0.8 and time.time() - tapped > 0.5:
+                since, started = off_since, True
+                self.log("minigame_seen", self.now(), move=move.id, by="buttons gone, their bar alone 0.8 s")
                 break
             if time.time() - tapped > 0.3:
                 icon_frames = icon_frames + 1 if minigame_on(rgb, move) else 0
