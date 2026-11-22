@@ -4690,3 +4690,18 @@ simulator and against the creators' switch decisions; the owner's call before ad
 
 
 **The owner, 2026-11-22:** no to a rule keeping the lead while their switch is free ("I don't think that's good either"); unsure about the shield calls. Neither is to be built or adopted.
+
+## Tap reliability in the live battles, and switches tapped until they show (Claude, 2026-11-22)
+
+From the 71 league battles of 2026-11-08 to 10 with full logs: a charged tap was not taken 78 times (in 42 battles)
+and a queued throw dropped 39 times (29 battles); throws that went off started a median 1.4 s after the tap (1 in 10
+over 2.3 s, the longest 14 s). A switch tap was not taken 35 times (25 battles); a switch showed a median 1.5 s after
+the tap (1 in 10 over 3 s, the longest 9 s). Their charged move went before ours 92 times, about 1.3 a battle (ties
+included). The charged-move fix of 11-18 (tapped every 0.2 s) has not been played live yet.
+
+Branch `switch-tap-until-seen` (off `task40-android`; the owner: "yes"): the switch's bench portrait is tapped
+again every 0.2 s for up to 3 s while the switch is unconfirmed, only on fighting frames and only while the bench
+strip looks as at the first tap (under 40: an ignored tap left it 17 to 31, a switch moves it 60 to 75); fast taps
+stay held 1.6 s after each tap. `POGO_SPAM_SWITCH=0` turns it off; each repeat logs `switch_retap` with the strip's
+difference. Unit-tested on the Mac (no OpenCV there). For the PC: replay recordings with switches through it
+(`scripts/live/replay.py`) to check the threshold before playing it live.
