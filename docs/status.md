@@ -4625,12 +4625,50 @@ searched shield head, 48 imagined battles, task 47's evaluation, blind and with 
   players is open.
 
 **Throws** (524): 24 flagged where another move hit twice as hard or knocked out; most are fine (the cheaper move
-also knocks out, or a bait into shields). The fault, 4 times, with no shields on their side: the cheap move that
-does not knock out, when waiting for the one that does knocks out sooner (counted in turns: Snorlax's Body Slam left
-Thievul on 24, which Psywave takes 24 turns to finish, with Earthquake 1 turn away; Thievul's Night Slash into
-Morpeko, 14 turns against 2; Clodsire's Stone Edge into Alolan Raichu, 6 against 2, and Heliolisk, 8 against 4).
-Today's engine makes the same throw on each logged view, 4 times in 4: the engine, not the reading. Not a fault:
-Clodsire's Stone Edge left Torracat on 1 HP, finished by the next Poison Sting as soon as Earthquake would have, with
-more energy left (counted wrongly as one at first). The live `better_soon` rule covers this only below 35% health.
+also knocks out, or a bait into shields). Counted in turns to the knock-out, 4 looked like faults, but in 3 of
+them we had no shields and their charged move was paid for, so waiting a fast move risked fainting first: throwing
+at once was right (Clodsire into Alolan Raichu and Heliolisk, Thievul into Morpeko). One real fault: Snorlax's Body
+Slam left Thievul on 24, which Psywave takes 24 turns to finish, with Earthquake 1 turn away. Torracat on 1 HP after
+Stone Edge was no fault either. So the engine's move choice is sound on these views; the knock-out wait below fixes
+the one case.
 
 **Switches:** not checked yet; staying in logs no view.
+
+## Shields learned from the creators, and a knock-out wait, measured (Claude, 2026-11-22, overnight)
+
+The owner: "why don't you learn from the behavior of the youtubers?" Branch `people-shields` (off
+`shield-prompt-energy`): both are options, off by default.
+
+**Shield calls copied from the creators** (`pogo/people_shield.py`, `scripts/people_shield.py`): a small network on
+what a player sees at the prompt (our health, how hard their hardest and cheapest moves hit, shields and Pokémon
+left on both sides), fitted on 560 decisions in 74 creator records, the creators' and their opponents', our last
+Pokémon left out. Their energy is not an input: the footage does not show it.
+- Copies 68% of their calls on battles kept out of the fit (never shielding: 59%). On the 254 creator decisions the
+  trained bot was asked on (`real_decisions.py`), it copied 71% and the bot 63%.
+- In the simulator, every way of shielding more loses (trained bot alone, 2,000 pairings both ways, 2,000 crowd,
+  1,000 PvPoke; `engine_versus.py`, seeds 4402-4403):
+
+| Shield calls | Shields per prompt | Head to head | Crowd | PvPoke |
+|---|---|---|---|---|
+| The bot's (shield head) | 36-40% | - | - | - |
+| The creators' wherever they shield 80%+ of the time, else the bot's | 44-47% | 48.4% ± 1.0 | -4.3 ± 1.5 | -2.5 ± 2.0 |
+| ... 70%+ | 46-52% | 47.6% ± 1.1 | -5.8 ± 1.8 | -3.1 ± 2.3 |
+| ... 60%+ | 49-56% | 46.9% ± 1.2 | -6.7 ± 2.0 | -5.8 ± 2.6 |
+| The creators' throughout | 46-53% | 44.8% ± 1.3 | -8.0 ± 2.1 | -5.7 ± 2.9 |
+
+  As task 41 found, more shielding loses against bots. The simulator's opponents are bots, so this does not settle
+  it against people; not adopted.
+
+**Knock-out wait** (`Learner(ko_wait=True)`): with their shields down, a move that does not knock out is not thrown
+when another knocks out sooner (fast moves to pay for it against those needed to finish) and we cannot faint
+meanwhile. Trained bot alone: 50.4% ± 0.6 head to head, +0.0 crowd, +0.1 PvPoke: it rarely fires. On the logged live
+views it changes only the Snorlax throw above. Not adopted (the owner's call).
+
+**Their movesets.** Of 163 charged moves thrown at us in the live league battles, 50% were in the moveset the
+tracker assumed (PvPoke's recommended, `data/rankings-1500.json` of 2026-10-09) and 57% in the two moves PvPoke's
+simulations use most. Among the creators' opponents the recommended set holds 88%. At low ranks people run other
+moves: the misses are Umbreon's Foul Play 8, Greninja's Night Slash 8, Alolan Raichu's Thunder Punch 4, and so on.
+The tracker learns a move once named; before that, decisions weigh only the assumed two. Open: weigh every plausible
+move (the tracker already has odds for each), and give the simulator's opponents varied movesets so that can be
+measured.
+
