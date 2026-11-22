@@ -1863,6 +1863,7 @@ class Player:
         tapped = last_tap = time.time()
         costs = [m.energy for m in self.team[self.active].charged]
         short = 0  # frames in a row on which the buttons say the move is not paid for
+        paid_seen, taps_sent = False, 1  # for the log: did the buttons ever say paid for, and taps sent
         # A tapped move waits for the fast move under way to end (1.5 s for Hex). The game says "Get Ready!" when our move starts and "Attack incoming!" for theirs, so the
         # box at the top is read until one shows. Fight bars going missing is not enough (ours hides behind
         # Jellicent often).
@@ -1924,6 +1925,8 @@ class Player:
                     SPAM_CHARGED or (e is not None and e >= move.energy) or named):
                 self.touch(point, f"charged move {k + 1} again: {move.name}")
                 last_tap = time.time()
+                taps_sent += 1
+            paid_seen = paid_seen or bool(named) or (e is not None and e >= move.energy)
             short = short + 1 if e is not None and e < move.energy - 3 else 0
             if short >= 3:  # not paid for: no use waiting with the fast moves stopped
                 break
@@ -1935,7 +1938,7 @@ class Player:
             self.queued_retapped = False
             read = self.energy()
             self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy, count_only=count_only,
-                     read=None if read is None else round(read, 1))
+                     read=None if read is None else round(read, 1), paid_seen=paid_seen, taps=taps_sent)
             self.tracker.me.mon.energy = min(self.tracker.me.mon.energy, move.energy - 1)  # the button says not yet
             self.energy_read = None
             return
