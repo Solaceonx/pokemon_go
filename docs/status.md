@@ -4605,3 +4605,31 @@ state is the tracker's, with energy its ledger, not read.
   (0.78 / 0.00), Tinkaton's Bulldoze on Electrode (1.00 / 0.14). That is the live hold fault of 11-09 again, now in the
   model rather than the hand rule.
 - They switch where the bot stays in 41 cases, the bot's way +7.1 ± 7.3; not settled.
+
+## Shields and throws asked again on the logged live views (Claude, 2026-11-22)
+
+Views are logged only from 2026-11-09 midday: 35 league battles of the third account (20 won). Scripts on branch
+`shield-prompt-energy`: `scripts/live/shield_worth.py` (each prompt's worth of shielding against taking it, by the
+searched shield head, 48 imagined battles, task 47's evaluation, blind and with the move they threw) and
+`scripts/live/weaker_throws.py`.
+
+**Shields** (83 prompts followed by a named move, not our last Pokémon):
+- The bot shielded 20 (24%). The creators shield 34 to 51% (2026-11-20).
+- 21 times (25%) the move thrown was not in the moveset the tracker gave them (Mega Greninja's Surf, Ninetales's
+  Scorching Sands, Drifblim's Mystical Fire, Trevenant's Foul Play, Talonflame's Flame Charge).
+- 14 times their energy was believed below every move they were thought to have, though the prompt shows they paid
+  for one. Fixed on the branch (the call uses at least the cheapest cost); it changes 2 of 24 such calls.
+- With the right moveset and energy it still took 22 hits of 40% or more of its health unshielded and shielded 7.
+  The look-ahead mostly agrees: shield clearly better on 3, taking it on 7, within 0.03 on 12. The under-shielding
+  is how our simulator values a shield against health, not a reading fault. Whether that holds against good
+  players is open.
+
+**Throws** (524): 24 flagged where another move hit twice as hard or knocked out; most are fine (the cheaper move
+also knocks out, or a bait into shields). The fault, 5 times, with no shields on their side: the cheap move that
+does not knock out, thrown one or two fast moves before the one that does (Clodsire's Stone Edge left Torracat on
+1 HP with Earthquake one Poison Sting away; Thievul's Night Slash into Morpeko with Play Rough one fast move from a
+knock-out; also Snorlax into Thievul, Clodsire into Alolan Raichu and Heliolisk). Today's engine makes the same
+throw on each logged view, 4 times in 4: the engine, not the reading. The live `better_soon` rule covers this only
+below 35% health.
+
+**Switches:** not checked yet; staying in logs no view.
