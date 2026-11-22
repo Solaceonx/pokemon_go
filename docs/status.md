@@ -4688,3 +4688,5 @@ The bot gives up its switch three times as often as good players, and good playe
 switching while their switch is still free (the existing `switch_edge`, early in the battle only), measured in the
 simulator and against the creators' switch decisions; the owner's call before adopting.
 
+
+**The owner, 2026-11-22:** no to a rule keeping the lead while their switch is free ("I don't think that's good either"); unsure about the shield calls. Neither is to be built or adopted.
