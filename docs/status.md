@@ -4672,3 +4672,19 @@ The tracker learns a move once named; before that, decisions weigh only the assu
 move (the tracker already has odds for each), and give the simulator's opponents varied movesets so that can be
 measured.
 
+**Staying in bad matchups** (the losses of 2026-11-09 morning; no views were logged then). These were mostly not
+stays the engine chose: the bot switched out of its lead within seconds (Jellicent to Stunfisk at 3.5 and 4.6 s),
+they switched at once to its counter (Hariyama at 10.3 s, Serperior at 9.4 s) and our 45 s switch timer kept us in.
+Against grass, Stunfisk and Jellicent are both weak, so only Vigoroth answers it (Tropius came in at 163.7 s with
+Vigoroth on 9%). Early lead switches, from the game records (live league battles; task 46's 84 creator records):
+
+| | Battles | Lead switched within 12 s | Then they switched within 15 s |
+|---|---|---|---|
+| Our bot, live | 110 (64 won) | 46 (42%) | 15: won 5, lost 10 (not countered: 17-14) |
+| The creators | 84 | 11 (13%) | 6: 3-3 |
+| Their opponents | 84 | 11 (13%) | 3 |
+
+The bot gives up its switch three times as often as good players, and good players punish it. Open: a cost on
+switching while their switch is still free (the existing `switch_edge`, early in the battle only), measured in the
+simulator and against the creators' switch decisions; the owner's call before adopting.
+
