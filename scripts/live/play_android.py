@@ -1596,7 +1596,11 @@ class Player:
             self.switch_wanted = self.decision - SWITCH[0]
         if self.switch_wanted is not None and self.switching is None and self.decision == FAST and t >= 1.5:
             self.decision = SWITCH[0] + self.switch_wanted  # still wanted: tap it now
-        if self.decision in SWITCH and time.time() >= self.switch_ready_at and t >= 1.5:
+        if getattr(self, "replace_unconfirmed", False) and (self.header_says() == self.active
+                                                            or time.time() - self.replace_tapped > 8.0):
+            self.replace_unconfirmed = False  # the header names who is in (the loop corrects self.active by it)
+        if self.decision in SWITCH and time.time() >= self.switch_ready_at and t >= 1.5 \
+                and not getattr(self, "replace_unconfirmed", False):
             slot = self.decision - SWITCH[0]
             order = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
             if slot not in order:
@@ -1921,7 +1925,11 @@ class Player:
             # tap there would land on the field as a fast move and take the throw's place; and once the game has the
             # move the buttons go, which ends it. 0.2 s apart: touches within 0.1 s of another are dropped.
             drawn = screen.button_rim(rgb, k) >= 10
-            if drawn and time.time() - last_tap > (0.2 if SPAM_CHARGED else 0.6) and (
+            # Not on an old frame, and not with ours low or its bar unread: as ours faints the replacement prompt comes
+            # up, and its right card is where the right button is (2026-11-22, the owner's first Ultra League battle:
+            # a Body Slam retap 0.05 s before the prompt was seen sent in Feraligatr, not the Virizion chosen)
+            safe = time.time() - when < 0.12 and bars.get("mine", 0.0) >= 0.2
+            if drawn and safe and time.time() - last_tap > (0.2 if SPAM_CHARGED else 0.6) and (
                     SPAM_CHARGED or (e is not None and e >= move.energy) or named):
                 self.touch(point, f"charged move {k + 1} again: {move.name}")
                 last_tap = time.time()
@@ -2154,6 +2162,11 @@ class Player:
         self.log("replace", t, to=self.team[slot].name, bench=[self.team[j].name for j in bench])
         self.touch(point, f"send in {self.team[slot].name}")
         self.replace_point, self.replace_tapped = point, time.time()
+        # No switch until the header shows who came in: a tap can choose for us (2026-11-22: a charged-move retap
+        # chose Feraligatr; believing Virizion in, the bot switched 0.4 s later to 'Feraligatr' and sent Virizion
+        # back in, the switch spent)
+        self.switch_ready_at = max(self.switch_ready_at, time.time() + 2.5)
+        self.replace_unconfirmed = True
         self.tracker.me.team[self.active].hp = 0  # the one that fainted, whatever the header said
         self.active = slot
         self.replacements += 1
