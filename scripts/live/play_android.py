@@ -61,6 +61,11 @@ PRECOMPUTE_MS = 500
 # A charged move's button tapped again every 0.2 s until the game has the move (Player.throw); POGO_SPAM_CHARGED=0
 # goes back to a second tap every 0.6 s while the buttons read it paid for
 SPAM_CHARGED = _os.environ.get("POGO_SPAM_CHARGED", "1") != "0"
+# A switch's bench portrait tapped again every 0.2 s until the switch shows, for up to SWITCH_SPAM_S after the first
+# tap (Player.check_switch); POGO_SPAM_SWITCH=0 goes back to one tap and one retry once it is seen not to be taken
+SPAM_SWITCH = _os.environ.get("POGO_SPAM_SWITCH", "1") != "0"
+SWITCH_SPAM_S = 3.0  # 9 in 10 switches showed within 3 s of the tap (2026-11-08 to 10, 144 switches)
+STRIP_SAME = 40  # the bench strip as at the tap: an ignored tap left it within 17 to 31, a switch moves it 60 to 75
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
@@ -595,6 +600,7 @@ class Player:
         # frames looked at). The game sometimes ignores the tap (2026-11-07: Jellicent stayed out; the player took
         # Stunfisk for out for 36 s and pressed Stunfisk's moves on Jellicent's buttons).
         self.switching = None
+        self.switch_point, self.switch_last_tap = None, 0.0  # where the switch was tapped, and when last (SPAM_SWITCH)
         self._switch_fits = []  # which Pokémon's costs the energy reading fitted, the last three frames of a switch check
         self.last_not_taken = 0.0  # when a charged tap last came to nothing
         self.fight_frames = 0  # frames in a row with the fight on screen
@@ -1078,10 +1084,24 @@ class Player:
             if not self.switch_retried:  # the game ignored it: once more
                 self.switch_retried, self.switch_wanted = True, slot
             return
-        if float(np.abs(screen.bench_strip(rgb) - before).mean()) > 45 and (since or time.time() - tapped < 2.0):
+        strip_diff = float(np.abs(screen.bench_strip(rgb) - before).mean())
+        if strip_diff > 45 and (since or time.time() - tapped < 2.0):
             since = since or time.time()
         else:
             since = None
+        if SPAM_SWITCH and self.switch_point is not None and time.time() - tapped < SWITCH_SPAM_S \
+                and strip_diff < STRIP_SAME and time.time() - self.switch_last_tap >= 0.2:
+            # Tapped again until it shows (the owner, 2026-11-22, as charged moves are since 11-18): in 71 league
+            # battles of 2026-11-08 to 10, 35 switch taps were not taken (in 25 battles), and a switch showed a
+            # median 1.5 s after its tap, 1 in 10 over 3 s, the longest 9 s. Only with the fight on the screen (this
+            # is called on fighting frames) and the bench strip as at the tap: once it has changed the switch has
+            # gone or the camera has cut, and a tap there could land on the field as a fast move, which takes the
+            # switch's place. Fast taps stay held 1.6 s after each tap, as after the first.
+            self.touch(self.switch_point, f"switch to {self.team[slot].name} again")
+            self.log("switch_retap", t, to=self.team[slot].name, after_tap_s=round(time.time() - tapped, 2),
+                     strip=round(strip_diff, 1))
+            self.switch_last_tap = time.time()
+            self.hold_taps_until = max(self.hold_taps_until, time.time() + 1.6)
         if time.time() - tapped > 5.0:
             # Nothing said in 5 s: taken as not taken. The bench strip alone was wrong (2026-11-08: "seen" at 14.9 s,
             # Jellicent still out); if it did go, the names under the buttons correct it (check_active).
@@ -1589,6 +1609,7 @@ class Player:
                     self.open_with = None
                 self.switch_wanted = None
                 self.switching = (slot, time.time(), before, None, 0)  # self.active changes once it is seen
+                self.switch_point, self.switch_last_tap = BENCH[order.index(slot)], time.time()
                 # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
                 # takes its place (2026-11-08: Stunfisk's portrait tapped at 6.6 s, fast taps every 0.15 s after, no
                 # switch). No fast taps for 1.6 s: the longest of our fast moves is 1.5 s.
