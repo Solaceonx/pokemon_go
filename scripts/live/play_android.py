@@ -2135,6 +2135,27 @@ class Player:
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
         self.touch(SHIELD_YES if shield else SHIELD_NO, "shield" if shield else "no shield")
 
+    def settled_replacement(self, t: float, view, slot: int, bench: list) -> int:
+        """The replacement the engine would not switch away from at once. Its replace search scores 'send in A, then
+        switch to B' about as high as 'send in B', so it can pick A and want B a moment later, spending the switch
+        (2026-11-22: Virizion sent in against Cobalion, and the engine, asked again 8 times on that view, wanted
+        Feraligatr 7 times). So the engine is asked, as it will be once A is in, whether it would switch; if it would,
+        to a Pokemon on the bench, that one is sent in instead."""
+        try:
+            from engine_view import LoggedView
+            rec = view_record(view)
+            rec["me"]["team"][self.active]["hp"] = 0  # the one that fainted
+            rec["me"]["active"] = slot
+            after = self.engine.act(LoggedView(self.gd, rec))
+            self.engine_calls += 1
+        except Exception as error:  # noqa: BLE001
+            self.log("engine_error", t, error=f"settled_replacement: {error}")
+            return slot
+        if after in SWITCH and after - SWITCH[0] in bench and after - SWITCH[0] != slot:
+            self.log("replace_changed", t, was=self.team[slot].name, now=self.team[after - SWITCH[0]].name)
+            return after - SWITCH[0]
+        return slot
+
     def on_replace_prompt(self, t: float, look) -> None:
         if self.replaced:
             if self.replace_point and time.time() - self.replace_tapped > 0.5:  # tapped again until the prompt goes
@@ -2158,6 +2179,8 @@ class Player:
             slot = bench[0]
         if slot is None:
             return
+        if view is not None and len(bench) > 1:
+            slot = self.settled_replacement(t, view, slot, bench)
         point = controls.REPLACE_ONE if len(bench) == 1 else controls.REPLACE_TWO[bench.index(slot)]
         self.log("replace", t, to=self.team[slot].name, bench=[self.team[j].name for j in bench])
         self.touch(point, f"send in {self.team[slot].name}")
