@@ -4719,3 +4719,28 @@ Speed on saved frames at the player's 540 x 1200: `screen.read` 11 ms a frame; t
 a read, against 300 to 400 ms on the PC. Waits in `play_android.py` that were set by the PC's slower reads may want
 retuning once it runs here. The Moto G Stylus 5G here is 1080 x 2400, the size the reader was calibrated on; the
 Galaxy S8+ (1080 x 2220) is not calibrated. Not yet run against a phone: the owner was using both.
+
+## Ultra League from the Mac, and the minigames on it (2026-11-22)
+
+Branch `ultra-league` (off `switch-tap-until-seen`): `--cp 2500` for play_android, train_loop and run_gbl. GameData
+takes a league that its methods default to, so the engine's opponent pool, guessed movesets and builds are Ultra
+League's (data/rankings-2500.json, PvPoke, 2026-11-22). The networks are still Great League's. The owner's Ultra
+League party (data/team_owner_ul.json, account 'owner' party 'ultra', CPs 2496/2499/2497): Virizion, Shadow Snorlax,
+Feraligatr. Button order read off the first recordings (OCR of the move names under the buttons): Virizion and Snorlax
+had their two charged moves the other way round from PvPoke's listing (Sacred Sword and Earthquake are on the left),
+so the first battles swiped Fighting minigames with Grass's sweep and rated Great. Feraligatr's matched.
+
+The Moto G Stylus 2024 (the PC's phone) now runs from the owner's Mac. First Great League training battle from the
+Mac: won, 4 throws all taken on the first tap, started a median 0.97 s after the tap (1.44 s on the PC, Nov 8-10).
+
+Grass had no pattern on this phone. `scripts/live/icon_map.py` (new: the PC's scratch version was never pushed)
+takes icon sightings from a battle's log and recording; `learn_type_pattern.py` on 11 Leaf Blade minigames: on 5 held
+out the learnt path passes over 79% of sightings, the sweep 64%. Leaf Blade rated Excellent 6 times in 9 on the sweep,
+4 in 4 with the pattern. Every minigame since (6 training battles, all won): 23 Excellent in 24 (Sacred Sword 7/7,
+Hydro Cannon 6/6, Leaf Blade 4/4, Earthquake 3/3, Ice Beam 2/2, Body Slam 1/2). Types still without a pattern
+learnt on this phone: Fire, Flying, Bug, Psychic, Dragon (none of our moves yet).
+
+Ultra League team search over the owner's 32 Ultra League Pokémon (all 4,960 threes, trained bot both sides, random
+threes from PvPoke's UL top 50; 30 battles each, then the top 40 with every lead at 400, then the top 10 at 3,000):
+Registeel / Skeledirge / Blastoise 64%, Registeel / Shadow Walrein / Jellicent 62%, Steelix / Blastoise / Skeledirge
+61%; Alolan Ninetales / Shadow Snorlax / Virizion 39%. Teams with Virizion averaged 40%, Shadow Snorlax 43%.
