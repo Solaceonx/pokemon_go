@@ -4625,11 +4625,12 @@ searched shield head, 48 imagined battles, task 47's evaluation, blind and with 
   players is open.
 
 **Throws** (524): 24 flagged where another move hit twice as hard or knocked out; most are fine (the cheaper move
-also knocks out, or a bait into shields). The fault, 5 times, with no shields on their side: the cheap move that
-does not knock out, thrown one or two fast moves before the one that does (Clodsire's Stone Edge left Torracat on
-1 HP with Earthquake one Poison Sting away; Thievul's Night Slash into Morpeko with Play Rough one fast move from a
-knock-out; also Snorlax into Thievul, Clodsire into Alolan Raichu and Heliolisk). Today's engine makes the same
-throw on each logged view, 4 times in 4: the engine, not the reading. The live `better_soon` rule covers this only
-below 35% health.
+also knocks out, or a bait into shields). The fault, 4 times, with no shields on their side: the cheap move that
+does not knock out, when waiting for the one that does knocks out sooner (counted in turns: Snorlax's Body Slam left
+Thievul on 24, which Psywave takes 24 turns to finish, with Earthquake 1 turn away; Thievul's Night Slash into
+Morpeko, 14 turns against 2; Clodsire's Stone Edge into Alolan Raichu, 6 against 2, and Heliolisk, 8 against 4).
+Today's engine makes the same throw on each logged view, 4 times in 4: the engine, not the reading. Not a fault:
+Clodsire's Stone Edge left Torracat on 1 HP, finished by the next Poison Sting as soon as Earthquake would have, with
+more energy left (counted wrongly as one at first). The live `better_soon` rule covers this only below 35% health.
 
 **Switches:** not checked yet; staying in logs no view.
