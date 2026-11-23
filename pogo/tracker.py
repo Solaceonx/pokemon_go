@@ -209,8 +209,11 @@ class Tracker:
         # immediately used to turn the later replacement into a timed switch.
         self._my_counter_seen = self._foe_counter_seen = False
         self._my_pending_faint = self._foe_pending_faint = None
-        # the last change of ours taken for a switch: (time, the Pokémon that left, the switch time before it)
+        # the last change of ours taken for a switch: (time, the Pokémon that left, the switch time before it, whether
+        # a fall of the counter however late says it fainted: a change the player found that was no switch of ours)
         self._last_switch = None
+        self._last_foe_switch = None  # the same for theirs: (time, the one that left, their switch time before it)
+        self._my_correction = None  # see my_active_corrected
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -272,10 +275,17 @@ class Tracker:
         was_mine, was_theirs = me.mon, self.foe
         i_changed = self._my_active(obs)
         they_changed = self._their_active(obs)
+        self._my_correction = None  # for the change at this look only
         if obs.my_left is not None:
             recent = self._last_switch
-            if (self._my_counter_seen and obs.my_left < self.my_left and not i_changed and recent is not None
-                    and obs.t - recent[0] < 3.0 and recent[1] is not me.mon):
+            # A fall the faints already taken account for is the counter catching up, not a faint to come (it lags the
+            # change by a look to 10 s: 2026-11-22, 163241, Snorlax's faint at the prompt was counted 2 s later, and
+            # Feraligatr, just in, was taken for fainting at our next switch and put at 0 with 80 HP left; 12 of ours
+            # alive at 0 that day). The one out is left out: its bar can read empty before the faint shows.
+            down = sum(1 for m in me.team if m is not me.mon and m.hp <= 0)
+            unexplained = self._my_counter_seen and obs.my_left < self.my_left and obs.my_left < len(me.team) - down
+            if (unexplained and not i_changed and recent is not None
+                    and (obs.t - recent[0] < 3.0 or recent[3]) and recent[1] is not me.mon):
                 # The counter of Pokémon left lagged the header (2026-11-08: Vigoroth fainted, Stunfisk showed at
                 # 103.0 s, the counter fell at 104.1 s): the change taken for a switch was a faint. The one that
                 # left is out, and the switch timer it started is undone.
@@ -283,12 +293,23 @@ class Tracker:
                 self.my_switch_at = recent[2]
                 self._last_switch = None
                 self._note(obs.t, "my_faint", next=me.mon.build.species_id, counter_late=True)
-            elif self._my_counter_seen and obs.my_left < self.my_left and not i_changed:
+            elif unexplained and not i_changed:
                 self._my_pending_faint = was_mine
             self.my_left = obs.my_left
             self._my_counter_seen = True
         if obs.foe_left is not None:
-            if self._foe_counter_seen and obs.foe_left < self.foe_left and not they_changed and was_theirs:
+            recent = self._last_foe_switch
+            down = sum(1 for f in self.foes.values() if f is not self.foe and f.mon.hp <= 0)
+            unexplained = self._foe_counter_seen and obs.foe_left < self.foe_left and obs.foe_left < 3 - down
+            if (unexplained and not they_changed and recent is not None and obs.t - recent[0] < 3.0
+                    and recent[1] is not self.foe):
+                # Their counter lagged the name (141 of 283 faints of theirs in November's logs, most by a look or
+                # two): the change taken for a switch was a faint. The one that left is out, its switch timer undone.
+                recent[1].mon.hp = 0
+                self.foe_switch_at = recent[2]
+                self._last_foe_switch = None
+                self._note(obs.t, "foe_faint", next=self.foe.mon.build.species_id, counter_late=True)
+            elif unexplained and not they_changed and was_theirs:
                 self._foe_pending_faint = was_theirs
             self.foe_left = obs.foe_left
             self._foe_counter_seen = True
@@ -365,14 +386,16 @@ class Tracker:
             if obs.foe_hp is not None and they_changed != "faint":
                 seen = round(obs.foe_hp * foe.mon.build.hp)
                 if foe.mon.hp - seen < 0.6 * expected:  # their bar has not caught up with the hit yet
-                    foe.mon.hp = max(0, foe.mon.hp - expected)
+                    foe.mon.hp = max(1, foe.mon.hp - expected)  # 1 at least, as for ours (_their_attacks)
                     obs = Observation(**{**asdict(obs), "foe_hp": None})
             elif obs.foe_hp is None and not they_changed and (obs.foe_shields is not None or foe_shields_before == 0) \
                     and not _disguised(foe.mon):
                 # Their bar was not read this look (it is often still hidden as fighting resumes): take the hit
                 # off by the rules, as when the bar lags, instead of leaving their health as it was before the move.
                 # Only when the shield counter was read, so that whether it was blocked is known.
-                foe.mon.hp = max(0, foe.mon.hp - expected)
+                # 1 at least: an estimate (2026-11-22: 21 of theirs put at 0 this way came back with health, a shield
+                # counted late or Darmanitan on 48% after a Hydro Cannon); only the game says they fainted
+                foe.mon.hp = max(1, foe.mon.hp - expected)
         if obs.foe_hp is not None:
             hp = round(obs.foe_hp * foe.mon.build.hp)
             if obs.my_charged is None and not i_changed and they_changed != "faint":
@@ -452,6 +475,14 @@ class Tracker:
         self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
         return how
 
+    def my_active_corrected(self, kind: str) -> None:
+        """The player found another of ours out than it believed, with no switch of ours tapped: the change the next
+        look shows is no switch (no switch timer). kind "faint": the one believed out fainted and the game sent in the
+        next (our last, sent in unasked; the counter of ours lags it by up to 10 s); "unsure": it may have, and a later
+        fall of the counter says so; "none": no faint in it (the game sent in another than the one chosen at the
+        replacement prompt, whose faint is already counted)."""
+        self._my_correction = kind
+
     def my_fainted(self) -> None:
         """Ours has fainted (the player saw the prompt to send in the next one): the coming change is a faint."""
         self._my_pending_faint = self.me.mon
@@ -470,14 +501,22 @@ class Tracker:
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
             self._note(obs.t, "my_seen", species=obs.my_species)
-        if self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left):
+        if (self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left)
+                or self._my_correction == "faint"):
             how = "faint"
             me.mon.hp = 0
+            self._last_switch = None  # a change before this one is no longer the one a counter fall could be for
             self._note(obs.t, "my_faint", next=obs.my_species)
+        elif self._my_correction is not None:
+            # not a switch of ours (my_active_corrected): no switch timer
+            how = "corrected"
+            me.mon.atk_stage = me.mon.def_stage = 0
+            self._last_switch = (obs.t, me.mon, self.my_switch_at, self._my_correction == "unsure")
+            self._note(obs.t, "my_corrected", to=obs.my_species, unsure=self._my_correction == "unsure")
         else:
             how = "switch"
             me.mon.atk_stage = me.mon.def_stage = 0
-            self._last_switch = (obs.t, me.mon, self.my_switch_at)
+            self._last_switch = (obs.t, me.mon, self.my_switch_at, False)
             self.my_switch_at = obs.t + SWITCH_SECONDS
             self._note(obs.t, "my_switch", to=obs.my_species)
         me.active = slot
@@ -504,10 +543,12 @@ class Tracker:
             if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
                 how = "faint"
                 self.foe.mon.hp = 0
+                self._last_foe_switch = None
                 self._note(obs.t, "foe_faint", next=obs.foe_species)
             else:
                 how = "switch"
                 self.foe.mon.atk_stage = self.foe.mon.def_stage = 0
+                self._last_foe_switch = (obs.t, self.foe, self.foe_switch_at)
                 self.foe_switch_at = obs.t + SWITCH_SECONDS
                 self._note(obs.t, "foe_switch", to=obs.foe_species)
         if obs.foe_species not in self.foes:
@@ -846,7 +887,7 @@ class Tracker:
                 expected = 1 if shielded else damage(foe.mon, named[0], mon)
                 extra = min(1, max(0, round((drop - expected) / per_hit)))
                 if drop < 0.6 * expected:  # the bar is still showing the health from before the hit
-                    mon.hp = max(0, mon.hp + drop - expected)
+                    mon.hp = max(1, mon.hp + drop - expected)  # 1 at least: see below
         elif shielded:
             if drop is not None:
                 extra = min(1, max(0, round((drop - 1) / per_hit)))
@@ -858,7 +899,11 @@ class Tracker:
             # No reading of my bar this look: take the hit off by the rules, as when the bar lags behind it,
             # instead of leaving my health as it was before the move. An unnamed move is taken only when it is
             # the one move they could afford.
-            mon.hp = max(0, mon.hp - (1 if shielded else damage(foe.mon, moves[0], mon)))
+            # 1 at least: a hit by the rules is an estimate (their stats are guessed), and only the game says ours
+            # fainted (the replacement prompt, the count of ours left). 2026-11-22, 191734: Tinkaton's Bulldoze, our bar
+            # unread, put Melmetal from 76 to 0; it lived on 1%, was left off the bench at the next prompt, and the
+            # bot tapped for one card where there were two, 21 times, until the game sent in Melmetal itself.
+            mon.hp = max(1, mon.hp - (1 if shielded else damage(foe.mon, moves[0], mon)))
         self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
         if foe.by_move:
             # Hits counted frame by frame: a fast move that would have left it short of the cheapest move it could

@@ -1029,8 +1029,9 @@ class Player:
         if mine is not None and key != self.header_checked:
             self.header_checked = key
             if mine != self.active:
+                kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
-                         header=self.names.my_name)
+                         header=self.names.my_name, kind=kind)
                 self.corrected_from = (self.active, time.time())
                 self.active = mine
                 self.energy_read = self._energy_raw = None
@@ -1048,7 +1049,9 @@ class Player:
                 and time.time() - getattr(self, "header_confirmed_at", 0.0) > 8.0:
             self.types_checked = (ts, self.active)
             if ts[0] != self.active:
-                self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types")
+                kind = self.tell_correction()
+                self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types",
+                         kind=kind)
                 self.corrected_from = (self.active, time.time())
                 self.active = ts[0]
                 self.energy_read = self._energy_raw = None
@@ -1059,8 +1062,28 @@ class Player:
         self.labels_checked = (at, self.active)
         best = self.labels_say()
         if best is not None and best != self.active:
-            self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[best].name, labels=self.names.labels)
+            kind = self.tell_correction()
+            self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[best].name, labels=self.names.labels,
+                     kind=kind)
             self.active = best
+
+    def tell_correction(self) -> str | None:
+        """Before a correction of which of ours is out: tell the tracker how the change came about, so it starts no
+        switch timer for a change that was no switch of ours (Tracker.my_active_corrected). Within 6 s of a switch tap
+        it is that switch, and the tracker takes it as one; within 15 s of a replacement tap the game sent in another
+        than the one chosen ("none": the faint is counted); else the one believed out fainted and the game sent in
+        the next: "faint" when that is the only other one alive (our last, sent in unasked), else "unsure", left to
+        the counter of ours (2026-11-22: 12 corrections of this kind; the counter fell up to 10 s after the header,
+        and meanwhile the tracker had the fainted one alive on the bench and a switch timer running)."""
+        if self.switching is not None or time.time() - self.switch_last_tap < 6.0:
+            return None
+        if time.time() - self.replace_tapped < 15.0:
+            kind = "none"
+        else:
+            others = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
+            kind = "faint" if len(others) == 1 else "unsure"
+        self.tracker.my_active_corrected(kind)
+        return kind
 
     def header_now(self, look) -> tuple:
         if look.header and look.my_left and look.foe_left:

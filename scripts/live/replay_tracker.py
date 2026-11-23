@@ -28,6 +28,16 @@ Tracker.SEEN_LAG, Tracker.RESTART_LAG, Tracker.RESYNC = a.seen_lag, a.restart_la
 margins = []
 TEAMS = {'melmetal': 'data/team_owner_ul.json', 'virizion': 'data/team_owner_ul_virizion.json'}
 fields = set(Observation.__dataclass_fields__)
+COUNTS = ('my_left', 'foe_left', 'my_shields', 'foe_shields')
+
+
+def obs_of(raw):
+    """A logged observation as the player gave it: the header's counts were numpy integers, logged as text."""
+    o = {x: v for x, v in raw.items() if x in fields}
+    for x in COUNTS:
+        if isinstance(o.get(x), str):
+            o[x] = int(o[x]) if o[x].isdigit() else None
+    return o
 scored = short = short1 = 0
 drift = []
 for f in sorted(glob.glob(f'runs/live/{a.day}-*.jsonl')):
@@ -66,7 +76,7 @@ for f in sorted(glob.glob(f'runs/live/{a.day}-*.jsonl')):
                 print('   short:', f[-21:-6], round(e['t'], 1), prompt[1], e['move'], cost, 'we', prompt[2], prompt[3])
             prompt = None
         elif k == 'look':
-            o = {x: v for x, v in e['obs'].items() if x in fields}
+            o = obs_of(e['obs'])
             if 'my_shields' in o and str(o['my_shields']).isdigit():
                 shields = int(o['my_shields'])
             if a.countdown_fix and countdown_since is not None and o.get('foe_charged') and not o.get('foe_move'):

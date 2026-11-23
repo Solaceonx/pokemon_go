@@ -130,5 +130,32 @@ class ThrowOnTheOneOut(unittest.TestCase):
         self.assertFalse(p.foe_now(1.1, "shield prompt"))
 
 
+class TellCorrection(unittest.TestCase):
+    """Player.tell_correction: how a change of ours the player found came about, told to the tracker."""
+
+    def kind(self, switch_ago=60.0, replace_ago=60.0, alive=(True, True, True)):
+        import time
+        p = object.__new__(pa.Player)
+        p.switching, p.active = None, 0
+        p.switch_last_tap, p.replace_tapped = time.time() - switch_ago, time.time() - replace_ago
+        p.team = [GD.default("melmetal"), GD.default("altaria"), GD.default("jellicent")]
+        p.tracker = Tracker(GD, list(p.team))
+        for m, up in zip(p.tracker.me.team, alive):
+            m.hp = m.hp if up else 0
+        return p.tell_correction()
+
+    def test_our_switch_is_left_to_the_tracker(self):
+        self.assertIsNone(self.kind(switch_ago=2.0))
+
+    def test_after_a_replacement_tap_no_faint(self):
+        self.assertEqual(self.kind(replace_ago=5.0), "none")
+
+    def test_our_last_sent_in(self):
+        self.assertEqual(self.kind(alive=(True, False, True)), "faint")
+
+    def test_two_others_alive_left_to_the_counter(self):
+        self.assertEqual(self.kind(), "unsure")
+
+
 if __name__ == "__main__":
     unittest.main()
