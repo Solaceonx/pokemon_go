@@ -133,15 +133,18 @@ class ThrowOnTheOneOut(unittest.TestCase):
 class TellCorrection(unittest.TestCase):
     """Player.tell_correction: how a change of ours the player found came about, told to the tracker."""
 
-    def kind(self, switch_ago=60.0, replace_ago=60.0, alive=(True, True, True)):
+    def kind(self, switch_ago=60.0, replace_ago=60.0, alive=(True, True, True), low=False, throw_ago=60.0):
         import time
         p = object.__new__(pa.Player)
         p.switching, p.active = None, 0
         p.switch_last_tap, p.replace_tapped = time.time() - switch_ago, time.time() - replace_ago
         p.team = [GD.default("melmetal"), GD.default("altaria"), GD.default("jellicent")]
         p.tracker = Tracker(GD, list(p.team))
+        p.their_throw_at = time.time() - throw_ago
         for m, up in zip(p.tracker.me.team, alive):
             m.hp = m.hp if up else 0
+        if low:
+            p.tracker.me.team[0].hp = 10
         return p.tell_correction()
 
     def test_our_switch_is_left_to_the_tracker(self):
@@ -151,7 +154,11 @@ class TellCorrection(unittest.TestCase):
         self.assertEqual(self.kind(replace_ago=5.0), "none")
 
     def test_our_last_sent_in(self):
-        self.assertEqual(self.kind(alive=(True, False, True)), "faint")
+        self.assertEqual(self.kind(alive=(True, False, True), low=True), "faint")
+        self.assertEqual(self.kind(alive=(True, False, True), throw_ago=3.0), "faint")
+
+    def test_no_faint_where_none_was_likely(self):
+        self.assertEqual(self.kind(alive=(True, False, True)), "unsure")
 
     def test_two_others_alive_left_to_the_counter(self):
         self.assertEqual(self.kind(), "unsure")

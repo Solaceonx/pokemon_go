@@ -1035,7 +1035,7 @@ class Player:
             if mine != self.active:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
-                         header=self.names.my_name, kind=kind)
+                         header=self.names.my_name, how=kind)
                 self.corrected_from = (self.active, time.time())
                 self.active = mine
                 self.energy_read = self._energy_raw = None
@@ -1055,7 +1055,7 @@ class Player:
             if ts[0] != self.active:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types",
-                         kind=kind)
+                         how=kind)
                 self.corrected_from = (self.active, time.time())
                 self.active = ts[0]
                 self.energy_read = self._energy_raw = None
@@ -1068,7 +1068,7 @@ class Player:
         if best is not None and best != self.active:
             kind = self.tell_correction()
             self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[best].name, labels=self.names.labels,
-                     kind=kind)
+                     how=kind)
             self.active = best
 
     def tell_correction(self) -> str | None:
@@ -1085,7 +1085,11 @@ class Player:
             kind = "none"
         else:
             others = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
-            kind = "faint" if len(others) == 1 else "unsure"
+            out = self.tracker.me.team[self.active]
+            # a faint only where one was likely: the one believed out low, or their charged move just now (a replay of
+            # 2026-11-22, 191031: a switch shown 8 s after its tap, Melmetal on 45%, would have been taken for its faint)
+            likely = out.hp <= 0.35 * out.build.hp or time.time() - self.their_throw_at < 10.0
+            kind = "faint" if len(others) == 1 and likely else "unsure"
         self.tracker.my_active_corrected(kind)
         return kind
 
