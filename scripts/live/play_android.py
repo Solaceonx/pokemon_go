@@ -71,11 +71,18 @@ STRIP_SAME = 40  # the bench strip as at the tap: an ignored tap left it within 
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
 
+# The owner's preferred charged move of a Pokémon (the team file's "prefer"), by species id: thrown in place of the
+# engine's other move whenever paid for, unless not very effective on the one out (Player.owner_prefers)
+PREFER: dict[str, str] = {}
+
+
 def load_team(gd: GameData, path: Path):
     by_name = {m.name: m.id for m in gd.moves.values()}
     team = []
     for entry in json.loads(path.read_text(encoding="utf-8"))["pokemon"]:
         sid = next(k for k, v in gd.species.items() if v["speciesName"] == entry["species"])
+        if entry.get("prefer"):
+            PREFER[sid] = by_name[entry["prefer"]]
         # the exact level and IVs when the team file gives them (read off the appraisals), else PvPoke's default
         exact = {"level": entry["level"], "ivs": tuple(entry["ivs"])} if "level" in entry and "ivs" in entry else {}
         team.append(gd.build(sid, [by_name[entry["fast"]], *(by_name[m] for m in entry["charged"])], **exact))
@@ -1476,7 +1483,11 @@ class Player:
                 self.pause_hold_until = 0.0  # decided on the energy as it is: the fast taps go on
             if self.decision == FAST:
                 self.fast_decided_at = time.time()
+                self.paid_fast_streak = getattr(self, "paid_fast_streak", 0) + 1 if self.slow_paid() else 0
+            else:
+                self.paid_fast_streak = 0
             self.no_weaker_move(t, view)
+            self.owner_prefers(t, view)
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
                 self.armed = None
@@ -1836,6 +1847,29 @@ class Player:
                      damage=[hit.get(k), hit[j]])
             self.decision = CHARGED[0] + j
 
+    def owner_prefers(self, t: float, view) -> None:
+        """The owner's rule (2026-11-22, after Blastoise threw Skull Bash at Cresselia with Hydro Cannon paid for:
+        "shouldnt we just throw hc unless its not very effective?"): the team file's preferred move, when paid for,
+        in place of the engine's other charged move, unless it is not very effective on the one out. The engine's
+        trained bot (Great League) chose Skull Bash 6 times in 6 there; its search rated Hydro Cannon higher, by less
+        than the 0.03 it needs to overrule the bot."""
+        from pogo.gamedata import effectiveness
+        if self.decision not in CHARGED or self.tracker.foe is None:
+            return
+        mon = self.team[self.active]
+        want = PREFER.get(mon.species_id)
+        k = self.decision - CHARGED[0]
+        if want is None or k >= len(mon.charged) or mon.charged[k].id == want:
+            return
+        have = self.energy()
+        bounds = self.paid_bounds()
+        have = max(have if have is not None else self.tracker.me.mon.energy, bounds[0] if bounds else 0)
+        j = next((i for i, m in enumerate(mon.charged) if m.id == want), None)
+        if j is None or have < mon.charged[j].energy or effectiveness(mon.charged[j].type, view.foe.build.types) < 1.0:
+            return
+        self.log("owner_prefers", t, chose=mon.charged[k].id, now=want, foe=view.foe.build.species_id)
+        self.decision = CHARGED[0] + j
+
     @contextlib.contextmanager
     def engine_sees(self):
         """Within it the tracker shows the engine their energy FOE_MARGIN fast moves higher, and ours at least what
@@ -1918,14 +1952,21 @@ class Player:
         tap only within 0.35 s of the engine answering 'fast'. With decisions every 0.5 s, the taps between the button
         lighting and the engine's throw started a whole Incinerate first (2026-11-22, 172555: Torch Song paid at
         56.8 s, decided at 57.5 s, fast taps at 57.51 and 57.67, the throw after them; again at 65.4 s)."""
+        # Two 'fast' answers in a row on the energy paid, not one: the capped search flips between them, and each
+        # 'fast' commits 2.5 s (2026-11-22, 174237: Torch Song paid at 73.7 s, 'fast' at 51 energy, three taps, the
+        # throw 0.5 s later went after another Incinerate)
+        return self.slow_paid() and (getattr(self, "paid_fast_streak", 0) < 2
+                                     or time.time() - getattr(self, "fast_decided_at", 0.0) > 0.35)
+
+    def slow_paid(self) -> bool:
+        """A long fast move out and a charged move shown paid for (the buttons' reading or the names under them)."""
         mon = self.team[self.active]
         if mon.fast.turns < SLOW_FAST_TURNS:
             return False
         cheapest = min(m.energy for m in mon.charged)
         e = self.energy()
         bounds = self.paid_bounds()
-        paid = (e is not None and e >= cheapest) or (bounds is not None and bounds[0] >= cheapest)
-        return paid and time.time() - getattr(self, "fast_decided_at", 0.0) > 0.35
+        return (e is not None and e >= cheapest) or (bounds is not None and bounds[0] >= cheapest)
 
     def slow_pause_for(self, t: float, mon, have: float, soon: float) -> None:
         """A long fast move (Skeledirge's Incinerate: 5 turns, 2.5 s) under way pays for a charged move and the engine,
