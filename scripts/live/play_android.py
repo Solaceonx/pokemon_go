@@ -1039,6 +1039,10 @@ class Player:
                 self.corrected_from = (self.active, time.time())
                 self.active = mine
                 self.energy_read = self._energy_raw = None
+                # the header has just said who is out: its type icons are not asked against it for 8 s either
+                # (2026-11-22, 151353: corrected to Virizion by the header, then back to the fainted Feraligatr by the
+                # icons 7 s later, and Virizion's bar was put to Feraligatr)
+                self.header_confirmed_at = time.time()
             return
         if mine is not None and mine == self.active:
             # the header names the one we think is out: its type icons are not asked against it (2026-11-22, the last
@@ -1052,7 +1056,9 @@ class Player:
         if ts is not None and ts[1] > self.active_changed_at + 0.3 and (ts, self.active) != getattr(self, "types_checked", None) \
                 and time.time() - getattr(self, "header_confirmed_at", 0.0) > 8.0:
             self.types_checked = (ts, self.active)
-            if ts[0] != self.active:
+            if ts[0] != self.active and self.tracker.me.team[ts[0]].hp <= 0:
+                self.log("types_ignored", t, said=self.team[ts[0]].name, why="fainted")  # it cannot be out
+            elif ts[0] != self.active:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types",
                          how=kind)

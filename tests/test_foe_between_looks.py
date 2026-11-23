@@ -164,5 +164,30 @@ class TellCorrection(unittest.TestCase):
         self.assertEqual(self.kind(), "unsure")
 
 
+class TypesGuard(unittest.TestCase):
+    """Player.check_active: our header's type icons do not bring back one the tracker has fainted (2026-11-22, 151353:
+    misread icons put Feraligatr, fainted, back out for 3 s, and Virizion's bar was put to it)."""
+
+    def test_a_fainted_one_is_not_taken_for_out(self):
+        import threading
+        import time
+        p = object.__new__(pa.Player)
+        p.logged = []
+        p.log = lambda kind, t, **kw: p.logged.append(kind)
+        p.switching, p.active, p._last_active, p.active_changed_at = None, 0, 0, 0.0
+        p.names = types.SimpleNamespace(my_name_at=None, labels_at=None, _lock=threading.Lock(), _mine_sig=None,
+                                        _label_sig=None, my_name="", labels=[])
+        p.header_checked = p.types_checked = p.labels_checked = None
+        p.header_says = lambda: None
+        p.header_confirmed_at = 0.0
+        p.team = [GD.default("melmetal"), GD.default("altaria"), GD.default("jellicent")]
+        p.tracker = Tracker(GD, list(p.team))
+        p.tracker.me.team[2].hp = 0
+        p.types_seen = (2, 5.0)
+        p.check_active(5.5)
+        self.assertEqual(p.active, 0)
+        self.assertIn("types_ignored", p.logged)
+
+
 if __name__ == "__main__":
     unittest.main()

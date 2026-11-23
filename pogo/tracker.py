@@ -637,8 +637,13 @@ class Tracker:
             self.my_seen_first.append(True)
             slot = len(me.team) - 1
             self._note(obs.t, "my_seen", species=obs.my_species)
-        if (self._my_pending_faint is me.mon or (obs.my_left is not None and obs.my_left < self.my_left)
-                or self._my_correction == "faint"):
+        # the counter falling at this look says the one leaving fainted, unless the faints taken already account for
+        # the fall (2026-11-22, 191734: Skeledirge's faint, counted 13 s late as the game sent in Melmetal for the
+        # Blastoise chosen, put Blastoise at 0)
+        down = sum(1 for m in me.team if m is not me.mon and m.hp <= 0)
+        counter_says = obs.my_left is not None and obs.my_left < self.my_left and obs.my_left < len(me.team) - down
+        if (self._my_pending_faint is me.mon or self._my_correction == "faint"
+                or (counter_says and self._my_correction != "none")):
             how = "faint"
             me.mon.hp = 0
             self._last_switch = None  # a change before this one is no longer the one a counter fall could be for
@@ -676,7 +681,9 @@ class Tracker:
             return None
         how = "first"
         if self.foe is not None:
-            if self._foe_pending_faint is self.foe or (obs.foe_left is not None and obs.foe_left < self.foe_left):
+            down = sum(1 for f in self.foes.values() if f is not self.foe and f.mon.hp <= 0)
+            counter_says = obs.foe_left is not None and obs.foe_left < self.foe_left and obs.foe_left < 3 - down
+            if self._foe_pending_faint is self.foe or counter_says:
                 how = "faint"
                 self.foe.mon.hp = 0
                 self._last_foe_switch = None
