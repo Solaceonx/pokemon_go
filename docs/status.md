@@ -4831,3 +4831,17 @@ move only with no shields left. Of 23 holds, in 10 they threw first, 9 of them w
 and a shield up: 5 shields spent, 5 hits taken, one faint (Torch Song paid). Now it reads the top plus one fast move and
 does not farm with any charged move of theirs in reach, whatever the shields (`tests/test_farm_down.py`). Not yet
 played.
+
+**Their energy: what makes the count wrong (2026-11-23, branch `ultra-league` 0b9935c4).** A replay of the tracker on
+the logged looks (`scripts/live/replay_tracker.py`, under a second for a day; same count as logged at 91% of looks)
+scores it at their named throws. (1) The countdown disc was taken for their throw after nearly every throw of ours (it
+is up while they choose whether to shield ours): 57 of 62 countdowns had no move of theirs after, and each put their
+energy at nothing. Now only with no shield of ours and no throw of ours in 18 s (`countdown_is_theirs`): short at 18
+of 91 throws (was 22), by more than a fast move at 7 (was 10). (2) The turn clock matches the fight time; the rest of
+the shortfall is the rhythm restarting late: a new Pokémon counts from the look that reads its name, a charged move from
+the first look after it, and a hit seen resyncs to the look's turn, each a turn or two after the event. Restarting two
+turns earlier and resyncing one turn earlier cut the short throws to 4 of 91, but the count's surplus at their throws
+rises (median 18 to 40), and with their energy never on screen the logs cannot tell holding from overcounting: the
+knobs (`Tracker.SEEN_LAG`, `RESTART_LAG`, `RESYNC`) stay at the old behaviour until there is a truth to fit them on.
+(3) One big miss was who is out: Talonflame came in for Florges and was taken for Florges until its name was read 7 s
+later.
