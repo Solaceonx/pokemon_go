@@ -4917,6 +4917,16 @@ if we shielded). Replays at the end: their energy at their throws short at 1 of 
 fast move); Pokémon wrongly at 0 HP, ours 1 and theirs 1 (both beliefs of the old logs, fixed in code since); dry runs
 complete.
 
+**What our decisions saw, and the margin (2026-11-23, `ultra-league` bfc4d60d).** Scored on the tracker's health after
+each look's update, from the look that brings their move until our bar shows the hit, with the old logs' false
+"their throw" after our own throws filtered as `countdown_is_theirs` now does: a decision saw our health over 20% off
+after 16 of 109 throws of theirs, now 8 (3 in code the old logs predate, 2 in battles before the name area's fix):
+their unnamed move's least damage is taken off at once, the named one's when named. The margin: with none, 8 of 91 of
+their throws come short of the count (none by more than a fast move but one); 5 are Pokémon whose fast move was only
+guessed, but counting those at the fastest likely rate leaves 6; a restart 2 turns earlier matches the margin at their
+throws but makes our health worse (more moves affordable, the wrong one guessed). `FOE_MARGIN` 1 stays: it is the
+engine's allowance for a fast move of timing the screen does not give.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
