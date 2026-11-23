@@ -135,12 +135,20 @@ def _damage_mask(row: np.ndarray) -> np.ndarray:
     return (r > 200) & (g >= 125) & (g <= 182) & (b < 60)
 
 
-def _fill_mask(row: np.ndarray) -> np.ndarray:
+def _fill_mask(row: np.ndarray, pale: bool = False) -> np.ndarray:
+    """A bar's fill. pale: the yellow with blue up to 135 as well, as the phone shows it at a third of the bar or so
+    ((253, 249, 122) on 2026-11-22, where the yellow of 120 or under left a run of a few pixels: Venusaur on 36% read
+    0.013); a run of it counts only within PALE_SHARE of the bar (bar_places), as a gold Pokémon is that colour too
+    (Melmetal's body, (255, 253, 160) and under)."""
     r, g, b = row[:, 0], row[:, 1], row[:, 2]
     green = (g > 180) & (r < 130) & (g > b)
-    yellow = (r > 180) & (g > 150) & (b < 120)
+    yellow = (r > 180) & (g > 150) & (b < (PALE_BLUE if pale else 120))
     red = (r > 180) & (g < 140) & (b < 120)
     return (green | yellow | red) & ~_damage_mask(row)
+
+
+PALE_BLUE = 135
+PALE_SHARE = (0.12, 0.55)  # a bar in the pale yellow: only in its yellow stage
 
 
 def _empty_mask(row: np.ndarray) -> np.ndarray:
@@ -163,19 +171,23 @@ def bar_places(a: np.ndarray) -> dict:
     found = []  # (y, x0, fill length)
     for y in range(lo, hi, 2):
         row = a[y].astype(int)
-        xs = np.nonzero(_fill_mask(row))[0]
+        strict = _fill_mask(row)
+        xs = np.nonzero(_fill_mask(row, pale=True))[0]
         if not len(xs):
             continue
         for run in np.split(xs, np.nonzero(np.diff(xs) > 4)[0] + 1):  # a blended pixel or two is bridged
             x0, length = int(run[0]), int(run[-1] - run[0] + 1)
             if length > full + 5 * sx or x0 < 4 or x0 + full > a.shape[1] + 3 * sx:
                 continue  # too long for a bar, or a bar starting here would run off the screen
+            pale = strict[run].mean() < 0.8
+            if pale and not PALE_SHARE[0] * full <= length <= PALE_SHARE[1] * full:
+                continue  # mostly the pale yellow, at a length a yellow bar does not have
             rest = row[x0 + length + int(3 * sx):int(x0 + full)]
             if len(rest) > 8 * sx and ((rest.max(1) < 150) | _damage_mask(rest)).mean() < 0.7:
                 continue  # the part after the fill is not the bar's dark, see-through empty part
             border = row[x0 - 4:x0].min(1).max()  # the light border a few pixels left of the fill
             if border > 150:
-                found.append((y, x0, length))
+                found.append((y, x0, length, pale))
     groups: list[list] = []
     for run in found:
         for g in groups:
@@ -191,7 +203,9 @@ def bar_places(a: np.ndarray) -> dict:
         return any((a[y, span].astype(int).min(1) > 140).mean() > 0.7 for y in range(max(0, y0 - 6), y0))
 
     out = {}
-    for g in sorted(groups, key=len, reverse=True):
+    # a bar of the usual colours before one in the pale yellow (2026-11-22: a yellow flash beside Tinkaton's green bar
+    # on 50% stood taller than it, and was read 0.202), then the deepest
+    for g in sorted(groups, key=lambda g: (sum(r[3] for r in g) * 2 > len(g), -len(g))):
         if not 3 <= len(g) <= 9 or not framed(g):  # a bar is about 10 pixels deep: 3 to 9 rows sampled every 2
             continue
         side = "mine" if g[0][1] / sx < W / 3 else "theirs"

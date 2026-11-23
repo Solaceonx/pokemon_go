@@ -106,6 +106,33 @@ class Drops(unittest.TestCase):
         self.assertAlmostEqual(screen.bars_held(frame(1.0), 0.05)["mine"], 1.0, delta=0.01)
 
 
+class PaleYellow(unittest.TestCase):
+    """The phone's yellow at a third of the bar or so, (253, 249, 122): blue over 120 (2026-11-22: Venusaur on 36% read
+    0.013); a gold Pokémon is that colour too, so only at a yellow bar's length, and after a bar of the usual colours."""
+    PALE = (253, 249, 122)
+
+    def setUp(self):
+        screen._HINTS.clear()
+        screen._ACCEPTED.clear()
+        screen._DROPS.clear()
+
+    def test_read_at_a_yellow_bars_length(self):
+        got = screen.bar_places(frame(0.36, colour=self.PALE))
+        self.assertAlmostEqual(got["mine"][0], 0.36, delta=0.02)
+
+    def test_not_at_a_length_no_yellow_bar_has(self):
+        self.assertNotIn("mine", screen.bar_places(frame(0.07, colour=self.PALE)))
+        self.assertNotIn("mine", screen.bar_places(frame(0.9, colour=self.PALE)))
+
+    def test_a_green_bar_before_a_pale_one(self):
+        a = frame(0.5, y=780)
+        b = frame(0.3, colour=self.PALE, y=600)
+        a[590:615] = b[590:615]
+        a[597:612, 30:33] = (245, 245, 245)
+        got = screen.bar_places(a)
+        self.assertAlmostEqual(got["mine"][0], 0.5, delta=0.02)
+
+
 if __name__ == "__main__":
     unittest.main()
 
