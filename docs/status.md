@@ -4889,6 +4889,23 @@ at the first correction of which of ours is out (a log field named `kind`); fixe
 shadows (their aura is not readable in the field view, and no clean hits of a shadow of theirs to check damage
 against), and their health after shielded throws of ours (the shield shows only once their bar is back).
 
+**Closing the rest before real battles (2026-11-23, branch `ultra-league` f8d39aa6 to 95cbaa37).** (1) Header counts
+of Pokémon left and of shields: two readings in a row agreeing on fewer are taken at once, not when three of five do
+(31 falls on four recordings seen 0.5 to 1.6 s sooner, none that did not hold). With the pale-yellow bars, after 11
+throws of ours they shielded their health was known as the fight came back in 10, 0.27 s after in the 11th. (2)
+Shadows of theirs from the damage of their charged moves on ours (two or more measured hits, median 1.13 or more of
+the rules'; their hits on our Shadow Snorlax came to 1.16 and 1.21): replaying the day, Raikou in 185258 (1.21,
+1.35), in purple flames on the recording; the live player's dry run named it raikou_shadow. (3) A counter fall
+already accounted for is no faint at a change either, and our header's type icons do not bring back a fainted one:
+ours wrongly at 0 HP, 2 -> 1 (the last a misread in the old log's own beliefs). Theirs, 1: Steelix for their
+Blastoise for 80 s in 184812, from the name area before 589dbeff (the old area reads "Blastoise" as nothing). (4)
+The throw dropped when theirs changes, on the real frames of 172555 (Luxray to Magnezone): dropped after 3 taps, 1 s,
+not the 3 s of taps and the throw at Magnezone of the real battle; also once in the dry run of 185258. (5) A restart
+of their count 2 turns earlier in place of `FOE_MARGIN` 1 scored the same at their throws (2 of 91 short) but made our
+health worse after their throws (17 -> 21: more of their moves affordable, the wrong one guessed): kept the margin.
+(6) Task 48's files merged into `ultra-league` (317abec6); its evaluation is used only with
+`POGO_EVAL=runs/ul-eval/eval.npz`, the owner's choice. Dry runs of 191031, 162928 and 185258 complete.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
