@@ -4832,6 +4832,161 @@ and a shield up: 5 shields spent, 5 hits taken, one faint (Torch Song paid). Now
 does not farm with any charged move of theirs in reach, whatever the shields (`tests/test_farm_down.py`). Not yet
 played.
 
+## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
+
+Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
+Everything used `POGO_LEAGUE=2500`, including the shipped Great League networks used as the baseline, and
+`OMP_NUM_THREADS=1`. **Difference from the brief:** 30 workers instead of 14, at Marco's direction on
+November 22 at 9:25 pm to run at full power at once. The fixed 120-minute collection budget therefore requested
+60 worker-thread-hours, not the brief's 28 core-hours; the actual example counts are below. All score margins
+are 95%; crowd differences are paired points on the same battles, as printed, not subtraction of rounded scores.
+
+**Step 1, the trained bot** (`runs/task48_decide.out`). Started collection with the shipped
+`runs/general-decide/q.npz`, random threes from the Ultra League top 50; half the varied rulebook opponents
+also used the shipped learned decisions. All collected examples were retained, including task 20's `mid_swap`
+head. Minutes are the log's collection/save time per round, before fitting and margin selection.
+
+| Round | Battles | Minutes | Shield examples | Throw | Swap | Replace | Mid-swap | Total examples |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 77,011 | 40.3 | 578,934 | 205,405 | 348,740 | 72,271 | 1,442,875 | 2,648,225 |
+| 2 | 77,452 | 40.6 | 590,023 | 207,192 | 357,063 | 72,504 | 1,307,577 | 2,534,359 |
+| 3 | 71,644 | 40.8 | 562,274 | 199,303 | 327,028 | 67,370 | 1,397,697 | 2,553,672 |
+| Total | 226,107 | 121.7 | 1,731,231 | 611,900 | 1,032,831 | 212,145 | 4,148,149 | 7,736,256 |
+
+The margin choice uses 1,000 separate validation battles per setting each round. Cells are trained-minus-rulebook
+points against the training crowd. **0.02 won each round** and is saved in `runs/ul-decide/margin.txt`.
+
+| Round | Margin 0.02 | Margin 0.05 | Margin 0.10 | Chosen margin |
+|---|---|---|---|---|
+| 1 | +10.5 ± 3.4 | +7.8 ± 3.1 | +2.2 ± 2.3 | 0.02 |
+| 2 | +10.3 ± 3.1 | +6.3 ± 2.8 | +0.5 ± 2.1 | 0.02 |
+| 3 | +9.8 ± 3.4 | +9.0 ± 3.0 | +4.0 ± 2.2 | 0.02 |
+
+Closing tests, 3,000 fresh battles each, trained bot and rulebook on the same teams and opponents:
+
+| Opponents | New trained bot | Rulebook | Paired difference |
+|---|---|---|---|
+| Training crowd, half with shipped learned decisions | 63.9% ± 1.7 | 53.8% ± 1.8 | +10.2 ± 1.9 points |
+| Old crowd, rulebook variations only (fixed yardstick) | 67.8% ± 1.7 | 58.8% ± 1.8 | +9.0 ± 1.9 points |
+
+These establish the new bot's edge over the rulebook, not over the shipped trained bot.
+
+**Step 2, the evaluation** (`runs/task48_eval.out`, `runs/ul-eval/report.json`). Requested 40,000
+battles played by the new bot against itself and the varied rulebook; the log reports 875,678 positions from
+40,019 battles in 0.9 min. The report's `battles: 40000` is the requested count; its total elapsed time,
+including both fits, is 1.6 min. Held back 4,001 whole battles, 87,550 positions. The narrow model was fitted on
+the same training positions; this is a bench-input comparison, not a comparison with the shipped evaluation.
+
+| Picks the eventual winner | Early | Middle | Late | All | Off by, on average |
+|---|---|---|---|---|---|
+| Wide, with bench inputs (`eval.npz`) | 65.5% | 77.5% | 88.4% | 75.7% | 0.178 |
+| Narrow, same positions (`eval-narrow.npz`) | 64.2% | 73.6% | 84.4% | 72.8% | 0.193 |
+| Wide, one of theirs up and off the field | 69.6% | 77.0% | 86.9% | 77.6% | 0.170 |
+| Narrow, one of theirs up and off the field | 67.2% | 71.6% | 80.5% | 72.8% | 0.195 |
+| Material count | 56.5% | 68.4% | 78.7% | 66.5% | 0.260 |
+
+The off-field subset has 50,676 held-out positions. Calibration, briefly: positions rated 0.6–0.7 won 76%
+of 13,319, and those rated 0.7–0.8 won 93% of 11,695. Their mean outcomes were 0.651 and 0.749 respectively:
+the evaluation predicts decisiveness, not a literal win probability.
+
+**Step 3, website engine screen** (`runs/task48_versus.out`, `runs/engine_versus/ul-nets.json`).
+Seed 4801, standard field in Ultra League, 1,500 head-to-head pairings played both ways (3,000 battles) per
+candidate and 1,500 crowd battles per setting; no PvPoke battles. “New bot” is `runs/ul-decide/q.npz`;
+“new evaluation” is `runs/ul-eval/eval.npz`. Baseline is `website` with both shipped networks.
+
+| Setting | Head to head against baseline | Crowd | Crowd points on baseline | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| Shipped networks (baseline) | — | 77.6% ± 2.1 | — | — |
+| New bot + new evaluation | 50.5% ± 1.5 | 76.3% ± 2.1 | -1.3 ± 2.5 | 188 / 1,078 / 2,156 |
+| New bot only | 48.1% ± 1.5 | 74.3% ± 2.2 | -3.3 ± 2.6 | 172 / 1,062 / 2,062 |
+| New evaluation only | 50.5% ± 1.4 | 77.0% ± 2.1 | -0.7 ± 2.1 | 141 / 688 / 2,109 |
+
+Each activity cell is **swaps / mid-matchup searches / all searches / search seconds per battle**. The swap
+counter counts voluntary switches after turn zero, excluding replacements; the mid-matchup search counter
+counts the `mid_swap` head. Head-to-head baseline activity depends on the candidate it faces.
+
+| Setting | Head to head, candidate | Head to head, baseline | Crowd |
+|---|---|---|---|
+| Shipped networks (baseline) | — | — | 1.825 / 0.000 / 29.33 / 5.971 |
+| New bot + new evaluation | 2.737 / 7.485 / 36.50 / 7.742 | 2.305 / 0.000 / 27.76 / 4.935 | 2.391 / 11.475 / 41.93 / 10.869 |
+| New bot only | 2.700 / 6.368 / 35.08 / 7.081 | 2.457 / 0.000 / 27.75 / 4.810 | 2.413 / 10.221 / 40.17 / 10.212 |
+| New evaluation only | 2.248 / 0.000 / 27.58 / 4.810 | 2.074 / 0.000 / 27.14 / 4.769 | 1.797 / 0.000 / 29.78 / 5.888 |
+
+**Step 4 confirmed the new evaluation alone**, `website,eval=runs/ul-eval/eval.npz`, as the best of the
+screen: it tied the full pair's head-to-head score against the baseline at the printed 50.5%, did better
+against the crowd and cost less to search. The candidates were not played directly against each other.
+Fresh seed 4802, 2,000 pairings both ways (4,000 battles), 1,000 crowd battles, no PvPoke
+(`runs/task48_confirm.out`, `runs/engine_versus/ul-nets-confirm.json`).
+
+| Setting, seed 4802 | Head to head against baseline | Crowd | Crowd points on baseline | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| Shipped networks (baseline) | — | 75.3% ± 2.7 | — | — |
+| New evaluation only | 51.5% ± 1.2 | 77.0% ± 2.6 | +1.6 ± 2.5 | 141 / 672 / 1,531 |
+
+Head to head, candidate/baseline search seconds per battle were 4.823/4.766; against the crowd, 5.814/5.887.
+Mid-matchup searches stayed at zero. Candidate/baseline swaps per battle were 2.248/2.065 head to head and
+1.782/1.795 against the crowd.
+
+**Diagnostic, remove the new bot's mid-matchup head.** The new bot has task 20's `mid_swap` head; the shipped
+bot has none. That makes the website engine search mid-matchup swaps with the new bot, as the screen's counters
+show, even though task 43 found such searches lose against bots. `runs/ul-decide/q-no-midswap.npz` is
+`q.npz` with only that head removed; every other head's arrays are identical (checked). Played it with the
+new evaluation on step 3's seed 4801 and the same 1,500 pairings both ways / 1,500 crowd battles
+(`runs/task48_nomid.out`, `runs/engine_versus/ul-nets-nomid.json`). This is a diagnostic on reused
+battles, not another fresh-seed confirmation.
+
+| Setting, seed 4801 | Head to head against baseline | Crowd | Crowd points on baseline | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| Shipped networks (baseline) | — | 77.6% ± 2.1 | — | — |
+| New bot without `mid_swap` + new evaluation | 51.1% ± 1.5 | 77.5% ± 2.1 | -0.1 ± 2.4 | 141 / 703 / 1,938 |
+
+Mid-matchup searches fell to zero. Candidate/baseline swaps per battle were 2.181/2.064 head to head and
+1.825/1.825 against the crowd; all searches were 28.99/27.50 and 30.50/29.33 respectively, taking 5.396/4.964
+and 6.273/5.946 search seconds per battle. Against the new evaluation alone's 50.5% on these same baseline
+battles, 51.1% establishes no added gain. Paired differences computed from the saved JSON battle scores
+(diagnostic minus evaluation alone) are +0.6 ± 1.8 points head to head against the baseline and +0.5 ± 2.4
+against the crowd. This does not measure a direct contest between those candidates.
+
+**What it means.** The brief's rule is above 50% head to head beyond the margin, and no worse against the
+crowd beyond the margin, confirmed on a fresh seed. **The new evaluation alone passes on seed 4802**
+(51.5 ± 1.2 head to head; crowd +1.6 ± 2.5), though its screen result, 50.5 ± 1.4, did not clear the margin:
+the gain is small. The new trained bot adds nothing measurable once its `mid_swap` head is out; with that
+head in, the new bot alone loses beyond the margin both head to head (48.1 ± 1.5) and against the crowd
+(-3.3 ± 2.6). The Mac setting to try is **`POGO_LEAGUE=2500 POGO_EVAL=runs/ul-eval/eval.npz` with the shipped
+`runs/general-decide/q.npz`** (leave `POGO_Q` unset or pointing to that shipped file), rather than the
+brief's new `POGO_Q` + `POGO_EVAL` pair. **The owner decides whether to adopt it.** These are simulator
+results, not a measurement in live games.
+
+**Cost, Marco's Ryzen 9 9950X3D, 16 physical cores / 32 hardware threads, 30 workers.** Steps 1–3 ran about
+9:28 pm November 22 to 1:12 am November 23: 224 min, **112.0 worker-thread-hours / 59.7 physical-core-hours**.
+Step 4 and the diagnostic ran about 1:14–2:11 am: 57 min, **28.5 worker-thread-hours / 15.2 physical-core-hours**.
+Together, excluding the gap: about 281 min, **140.5 worker-thread-hours / 74.9 physical-core-hours**.
+
+Costs are elapsed hours × 30 configured worker threads or × 16 physical cores: capacity estimates, not measured
+CPU utilisation (fitting and serial work do not keep every worker busy). Within those totals, step 1's logged
+rounds sum to 121.7 min, **60.85 thread-hours / 32.45 physical-core-hours**, including collection/save overhead.
+Step 3 logged 5,180.7 s (**43.17 / 23.03**); step 4, 1,722.9 s (**14.36 / 7.66**); the diagnostic, 1,696.1 s
+(**14.13 / 7.54**), in the same units. Step 2's report records 1.6 min including fitting; a separate total elapsed
+time for step 1 including fitting, margin choice and closing tests is not logged. These component costs overlap
+the batch totals and must not be added to them.
+
+**Commands as run** (Windows `cmd`; `runs/task48-steps123.cmd`, then `runs/task48-step4.cmd`).
+The first script skips steps 1 and 2 when their `.done` markers exist; both scripts stop on errors.
+Shared setup and the executed Python commands:
+
+```cmd
+cd /d "C:\Users\marco\Developer\pokemon_go-task48"
+set "POGO_LEAGUE=2500"
+set "OMP_NUM_THREADS=1"
+set "PY=C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe"
+"%PY%" -X utf8 -u scripts\decide.py --start runs/general-decide/q.npz --opponents runs/general-decide/q.npz --minutes 120 --rounds 3 --workers 30 --run ul-decide >> runs\task48_decide.out 2>&1
+"%PY%" -X utf8 -u scripts\train_eval.py --wide --battles 40000 --workers 30 --q runs/ul-decide/q.npz --out runs/ul-eval/eval.npz >> runs\task48_eval.out 2>&1
+"%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets --baseline website --candidates "website,q=runs/ul-decide/q.npz,eval=runs/ul-eval/eval.npz" "website,q=runs/ul-decide/q.npz" "website,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 30 --seed 4801 >> runs\task48_versus.out 2>&1
+"%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-confirm --baseline website --candidates "website,eval=runs/ul-eval/eval.npz" --pairings 2000 --crowd 1000 --pvpoke 0 --workers 30 --seed 4802 >> runs\task48_confirm.out 2>&1
+"%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-nomid --baseline website --candidates "website,q=runs/ul-decide/q-no-midswap.npz,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 30 --seed 4801 >> runs\task48_nomid.out 2>&1
+```
+
+
 **Their energy: what makes the count wrong (2026-11-23, branch `ultra-league` 0b9935c4).** A replay of the tracker on
 the logged looks (`scripts/live/replay_tracker.py`, under a second for a day; same count as logged at 91% of looks)
 scores it at their named throws. (1) The countdown disc was taken for their throw after nearly every throw of ours (it
