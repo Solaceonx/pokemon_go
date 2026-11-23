@@ -48,6 +48,24 @@ class OurBar(unittest.TestCase):
         tr.their_move_named(10.3, move.id)
         self.assertEqual(tr.me.mon.hp, max(1, full - damage(tr.foe.mon, move, tr.me.mon)))
 
+    def test_the_bar_from_before_their_move_lands_is_not_taken(self):
+        tr = battle()
+        full = tr.me.mon.hp
+        move = tr.foe.mon.build.charged[0]
+        look(tr, 10.0, foe_charged=True, foe_move=move.id)  # our bar unread: the move taken off by the rules
+        after = tr.me.mon.hp
+        self.assertLess(after, full)
+        look(tr, 10.5, my_hp=1.0)  # the bar still from before it, its banner up
+        self.assertEqual(tr.me.mon.hp, after)
+        look(tr, 11.5, my_hp=after / tr.me.mon.build.hp)
+        self.assertEqual(tr.me.mon.hp, after)
+
+    def test_a_shielded_move_leaves_no_room_for_a_big_drop(self):
+        tr = battle()
+        tr.my_shield_used()
+        look(tr, 10.0, my_hp=0.04, foe_charged=True, foe_move=tr.foe.mon.build.charged[0].id)  # a close-up's bar
+        self.assertGreater(tr.me.mon.hp, 0.5 * tr.me.mon.build.hp)
+
 
 if __name__ == "__main__":
     unittest.main()

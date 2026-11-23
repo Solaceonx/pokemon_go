@@ -224,6 +224,7 @@ class Tracker:
         self._their_hit_unapplied = None  # their unnamed charged move on ours: (time, ours, shielded, its HP before)
         self._my_bar_doubt = self._foe_bar_doubt = None  # a reading held back: (whose, HP read)
         self._my_bar = None  # the last reading of our bar given to the count: (turn, ours, HP)
+        self._hit_ahead = None  # their charged hit taken off by the rules before our bar showed it: (time, ours, HP, hit)
         self._hit_check = None  # their charged move whose damage our bar will measure: see _measure_hit
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
@@ -387,9 +388,18 @@ class Tracker:
         # A bar read far below what their fast moves could have done since the last look is doubted until a second
         # reading agrees: the bar of one coming in fills from empty (2026-11-22, 174620: Skeledirge, sent in at full
         # health, read at 7% half a second later, was taken for nearly gone for 11 s; it was at 86%).
-        if obs.my_hp is not None and not obs.foe_charged and foe is not None:
+        if obs.my_hp is not None and foe is not None:
             hp = round(obs.my_hp * mon.build.hp)
-            if self._doubted(mon, hp, turns, foe.mon, mon, "_my_bar_doubt"):
+            # at the look that brings their charged move, room for that move as well: 1 if ours shielded it (the
+            # player said so), else the hardest they could afford (2026-11-22, 191415: Blastoise, shielded, read at 4%
+            # in the move's close-up and taken for nearly gone, at 90%)
+            extra = 0
+            if obs.foe_charged:
+                shielded = self._my_shielding or me.shields < my_shields_before
+                extra = 1 if shielded else max((damage(foe.mon, m, mon) for m in foe.mon.build.charged
+                                                if m.energy <= max(foe.hi, min(c.energy for c in foe.mon.build.charged))),
+                                               default=mon.build.hp)
+            if self._doubted(mon, hp + extra, turns, foe.mon, mon, "_my_bar_doubt"):
                 self._note(obs.t, "my_bar_doubted", read=hp, counted=mon.hp)
                 obs = Observation(**{**asdict(obs), "my_hp": None})
         if self.FOE_BAR_DOUBT and obs.foe_hp is not None and obs.my_charged is None and foe is not None:
@@ -398,6 +408,18 @@ class Tracker:
                 self._note(obs.t, "foe_bar_doubted", read=hp, counted=foe.mon.hp)
                 obs = Observation(**{**asdict(obs), "foe_hp": None})
 
+        ahead = self._hit_ahead
+        if ahead is not None and obs.my_hp is not None and not obs.foe_charged:
+            if ahead[1] is not mon or obs.t - ahead[0] > 3.0:
+                self._hit_ahead = None
+            elif round(obs.my_hp * mon.build.hp) > ahead[2] + 0.6 * ahead[3]:
+                # Our bar still from before their move: it lands a second or so after the look that brings it, the
+                # banner still up (2026-11-22, 192148: Crunch taken off Skeledirge, 160 to 55, put back to 160 by the bar
+                # at 0.889 under "Arcanine used Crunch!"; 1.6 s later it read 0.397)
+                self._note(obs.t, "my_bar_before_hit", read=round(obs.my_hp, 3), counted=mon.hp)
+                obs = Observation(**{**asdict(obs), "my_hp": None})
+            else:
+                self._hit_ahead = None  # the bar shows it now
         hit = self._their_hit_unapplied
         if hit is not None and len(hit) == 4 and obs.my_hp is not None and not obs.foe_charged and hit[1] is mon:
             self._their_hit_unapplied = (*hit, True)  # our bar read since (it may not have caught up yet)
@@ -750,6 +772,8 @@ class Tracker:
             hurt = 1 if hit[2] else damage(foe.mon, move, mon)
             if not bar_since:
                 mon.hp = max(1, before - hurt)  # the rules, in place of any guess
+                if not hit[2]:
+                    self._hit_ahead = (t, mon, mon.hp, hurt)
             elif before - mon.hp < 0.6 * hurt:
                 mon.hp = max(1, min(mon.hp, before - hurt))  # the bar read since had not caught up
             self._note(t, "their_hit_named", move=move.id, shielded=hit[2], hp=mon.hp)
@@ -1049,6 +1073,8 @@ class Tracker:
                 extra = min(1, max(0, round((drop - expected) / per_hit)))
                 if drop < 0.6 * expected:  # the bar is still showing the health from before the hit
                     mon.hp = max(1, mon.hp + drop - expected)  # 1 at least: see below
+                    if not shielded:
+                        self._hit_ahead = (obs.t, mon, mon.hp, expected)
         elif shielded:
             if drop is not None:
                 extra = min(1, max(0, round((drop - 1) / per_hit)))
@@ -1074,6 +1100,8 @@ class Tracker:
             # bot tapped for one card where there were two, 21 times, until the game sent in Melmetal itself.
             before = mon.hp
             mon.hp = max(1, mon.hp - (1 if shielded else damage(foe.mon, moves[0], mon)))
+            if not shielded:
+                self._hit_ahead = (obs.t, mon, mon.hp, before - mon.hp)
             if not named:  # a guess at the move: put right when the screen names it (their_move_named)
                 self._their_hit_unapplied = (obs.t, mon, shielded, before)
         elif drop is None and unread and not _disguised(mon):

@@ -1336,8 +1336,17 @@ class Player:
             # Our bar is not credited to the one believed out while a switch is under way: it can be the one coming
             # in (2026-11-22, 181223: the game had Blastoise in at full health 2 s before the header named it, and
             # Melmetal, at 30%, was put at 186 of 187; 48 s later the engine sent it in against Walrein's Earthquake)
+            mine_bar = look.bars.get("mine") if self.switching is None else None
+            believed = self.tracker.me.team[self.active] if self.tracker.foe is not None else None
+            if (mine_bar is not None and believed is not None and time.time() - self.switch_last_tap < 6.0
+                    and mine_bar > believed.hp / believed.build.hp + 0.25):
+                # Health does not come back: so far over the one believed out, soon after a switch tap, it is the bar of
+                # the one coming in, the header behind it (2026-11-22, 191031: the switch to Skeledirge given up on the
+                # header's word, Skeledirge's full bar was put to Melmetal on 24%)
+                self.log("bar_not_ours", t, read=round(mine_bar, 3), believed=self.team[self.active].name)
+                mine_bar = None
             obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
-                              my_hp=look.bars.get("mine") if self.switching is None else None,
+                              my_hp=mine_bar,
                               foe_hp=look.bars.get("theirs"), my_shields=my_sh,
                               foe_shields=foe_sh, my_left=my_left, foe_left=foe_left, my_energy=self.energy(look),
                               my_charged=self.pending_mine, foe_charged=self.pending_theirs, paused=paused,

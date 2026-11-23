@@ -189,5 +189,19 @@ class TypesGuard(unittest.TestCase):
         self.assertIn("types_ignored", p.logged)
 
 
+class NewcomersBar(unittest.TestCase):
+    """give_look: soon after a switch tap, a bar far over the one believed out is the newcomer's (health does not come
+    back), not credited to it (2026-11-22, 191031: Skeledirge's full bar put to Melmetal on 24%)."""
+
+    def test_not_credited(self):
+        import time
+        p = player("stunfisk")
+        p.tracker.me.team[0].hp = round(0.24 * p.tracker.me.team[0].build.hp)
+        p.switching, p.switch_last_tap = None, time.time() - 2.0
+        bar = 0.997
+        believed = p.tracker.me.team[p.active]
+        self.assertTrue(time.time() - p.switch_last_tap < 6.0 and bar > believed.hp / believed.build.hp + 0.25)
+
+
 if __name__ == "__main__":
     unittest.main()
