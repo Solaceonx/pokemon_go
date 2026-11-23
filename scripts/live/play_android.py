@@ -44,7 +44,11 @@ LOOK = 0.5  # seconds between looks given to the tracker (a turn)
 # throws (2026-11-08), the count fell short by a fast move or two at 3 of 8, and Dachsbun threw Psychic Fangs (35) on
 # a count of 16; believing them further from a move than they were, the engine farmed on (the owner's rule: until
 # they are about to get one) and threw late, and saw no need to shield (the owner: "you're attacking too late").
-FOE_MARGIN = 2
+# 1 since 2026-11-23: replaying 2026-11-22's 91 named throws of theirs, the engine's view at their throw (the count, the
+# fast move under way and those the fight had time for, as its simulation adds them) was short of the move with no
+# margin at 8 (one by more than a fast move), with 1 at 1, with 2 at none; 2 put them a median 46 over the cost, where
+# the owner's recordings show players throwing about one fast move past it. Applied at the shield prompt too.
+FOE_MARGIN = 1
 # Turns from our decision to the game having the throw (the fight stops: both buttons gone), our own fast move aside:
 # 0.43 s median from the decision's frame to the tap on the PC (2026-11-18, 368 throws; 0.1 s less since), and 0.31 s
 # at the fastest from the tap to the buttons going (10th percentile of 48 recorded throws; median 0.63 s with our fast
@@ -1941,6 +1945,25 @@ class Player:
         return True
 
     @contextlib.contextmanager
+    def at_their_throw(self, margin: int = 0):
+        """Within it the tracker shows their energy as they throw (Tracker.their_energy_at_throw): the count at the
+        last look, the fast move under way counted (a charged move goes only once it has ended), and the fast moves of
+        the fight seen since that look, up to the last frame showing it. Replaying 2026-11-22, the count at the prompt
+        was short of the move named at 18 of 91 throws (7 by more than a fast move); this way at 3 (1). The prompt's
+        call has no margin added, so those went straight into shield calls."""
+        foe = self.tracker.foe
+        kept = (foe.mon.energy, foe.lo, foe.hi) if foe is not None else None
+        try:
+            if foe is not None:
+                lo, hi = self.tracker.their_energy_at_throw(max(0.0, self.fight_frame_t - self.last_look))
+                hi = min(100, hi + margin * foe.mon.build.fast.energy_gain)
+                foe.mon.energy, foe.lo, foe.hi = min(100, foe.mon.energy + hi - foe.hi), lo, hi
+            yield
+        finally:
+            if kept is not None:
+                foe.mon.energy, foe.lo, foe.hi = kept
+
+    @contextlib.contextmanager
     def engine_sees(self):
         """Within it the tracker shows the engine their energy FOE_MARGIN fast moves higher, and ours at least what
         the names under the buttons show paid for; both are put back after."""
@@ -2358,13 +2381,20 @@ class Player:
         self.foe_now(t, "shield prompt")
         self.pending_theirs = True
         self.their_throw_at = time.time()
+        counted = (self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None
+        with self.at_their_throw(margin=FOE_MARGIN):
+            self._prompt_call(t, look, counted)
+
+    def _prompt_call(self, t: float, look, counted) -> None:
+        """The shield call at their prompt, made on their energy as they throw (at_their_throw)."""
         view = self.view()
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
         if view is not None and view.me.shields > 0:
-            # The engine's own call on the tracker's estimate of their energy, no margin added and no override
-            # (2026-11-08, docs/status.md "Live shield calls measured": the owner withdrew the override that shielded
-            # any hit of 35% or more, which cost 7 to 13 points in simulation; the margin was worth nothing)
+            # The engine's own call on the tracker's estimate of their energy as they throw (at_their_throw, with
+            # FOE_MARGIN since 2026-11-23: with none, 8 of 91 throws came short) and no override (2026-11-08,
+            # docs/status.md "Live shield calls measured": the owner withdrew the override that shielded any hit of
+            # 35% or more, which cost 7 to 13 points in simulation)
             try:
                 shield = bool(self.engine.shield(view, self.tracker.foe.hi))
                 self.engine_calls += 1
@@ -2389,7 +2419,7 @@ class Player:
             except Exception as error:  # noqa: BLE001
                 seen = {"error": str(error)}
         self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None,
-                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None)
+                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None, counted=counted)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
         if shield:

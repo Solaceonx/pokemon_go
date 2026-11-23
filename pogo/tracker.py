@@ -500,6 +500,21 @@ class Tracker:
         self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
         return how
 
+    def their_energy_at_throw(self, fight_seconds: float = 0.0) -> tuple[int, int]:
+        """Their energy as they throw, asked between looks (at the shield prompt): the count at the last look plus the
+        fast moves their rhythm has landed since, the one under way counted, since a charged move goes only once the
+        fast move under way has ended (as for ours: in_air in update). fight_seconds: the fight on the screen since
+        the last look."""
+        foe = self.foe
+        if foe is None:
+            return 0, 0
+        if not self.by_rhythm:
+            return foe.lo, foe.hi
+        fast = foe.mon.build.fast
+        done = self.turn + max(0, round(fight_seconds / TURN)) - self.beat
+        add = max(0, -(-done // fast.turns)) * fast.energy_gain
+        return min(ENERGY_CAP, foe.lo + add), min(ENERGY_CAP, foe.hi + add)
+
     def my_shield_used(self) -> None:
         """The player shielded their charged move: the look that brings the move takes it as shielded and our shields
         as one fewer, whatever the header says yet (it lags; readings of more are ignored for 8 s)."""
