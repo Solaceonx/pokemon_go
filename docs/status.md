@@ -4805,3 +4805,17 @@ Still open: a shadow opponent is taken for the regular form (the header shows no
 Raikou), so damage both ways is 20% off; it could be told from our hits on its bar. Shields: the trained bot spent
 both on Melmetal at 58 and 45 HP against Jellicent and the back line met Shadow Raikou with none; the Ultra League
 networks (task 48) are the fix to try first.
+
+**The day's 26 Ultra League league games (2026-11-22, scratch `day_review.py` over the logs): 12-14.** Virizion /
+Shadow Snorlax / Feraligatr 3-4, Melmetal / Blastoise / Skeledirge 9-10 (each with one win by the opponent leaving).
+Minigames, in the sets scanned: 90 Excellent in 94. Melmetal team, 128 throws: median 1.35 s from tap to throw, 12%
+over 2.2 s (the Virizion team 28%), 4 not taken. Where the logs show what lost:
+- **Their charged move first when both threw: 26 times in 19 games** (9 in 7 with Virizion). Not yet split into
+  charged-move-priority ties against our own lateness.
+- **Fainted holding a paid charged move: 7 times in 19 games** (Melmetal 3 with Double Iron Bash, Blastoise 2 with
+  Hydro Cannon, Skeledirge 2 with Shadow Ball); throw-before-fainting did not fire in time.
+- **Who is out lost after a faint in most games** (`active_corrected` 1-3 a game, `fainted_unprompted` in 8 of 19):
+  the game sends the last Pokémon in without a prompt and the bot notices seconds later.
+- Shields: both spent in 9 of 10 losses, sometimes early (both on Melmetal at 58 and 45 HP against Jellicent).
+- Against: Tinkaton 6-0, Skeledirge 3-4, Giratina (Origin) 1-3; Ampharos, Venusaur, Jellicent, Cresselia, Melmetal,
+  Blastoise 0-2 each.
