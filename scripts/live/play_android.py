@@ -1284,8 +1284,12 @@ class Player:
             if self.names.read_at is not None:
                 out_for = max(0.0, t - self.names.read_at)  # read from a frame that long ago
         with self.pending_lock:  # the "used" reading thread sets pending_theirs and foe_move_seen
+            # Our bar is not credited to the one believed out while a switch is under way: it can be the one coming
+            # in (2026-11-22, 181223: the game had Blastoise in at full health 2 s before the header named it, and
+            # Melmetal, at 30%, was put at 186 of 187; 48 s later the engine sent it in against Walrein's Earthquake)
             obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
-                              my_hp=look.bars.get("mine"), foe_hp=look.bars.get("theirs"), my_shields=my_sh,
+                              my_hp=look.bars.get("mine") if self.switching is None else None,
+                              foe_hp=look.bars.get("theirs"), my_shields=my_sh,
                               foe_shields=foe_sh, my_left=my_left, foe_left=foe_left, my_energy=self.energy(look),
                               my_charged=self.pending_mine, foe_charged=self.pending_theirs, paused=paused,
                               foe_hits=self.hits_since_look, foe_move=self.foe_move_seen if self.pending_theirs else None,
