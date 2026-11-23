@@ -19,7 +19,8 @@ BALL_Y = 115
 BALLS = {"mine": (29, 58, 88), "theirs": (452, 482, 511)}
 SHIELDS = {"mine": (128, 153), "theirs": (387, 413)}
 HEADER_PATCHES = ((195, 124), (340, 124))  # inside the two header boxes, clear of text and icons
-FOE_NAME = (395, 76, 536, 106)  # x0, y0, x1, y1: their Pokémon's name, right-aligned in their header box
+FOE_NAME = (395, 70, 536, 112)  # x0, y0, x1, y1: their Pokémon's name, right-aligned in their header box (6 px above and below
+# the text: cut at 76-106 the reader saw nothing in "Blastoise" for 100 s, 2026-11-22 184812, and the bot kept to Steelix)
 # Ours, left-aligned in our header box. In GO Battle League it is the species ("Jellicent": online battles hide
 # nicknames); against the Team Leaders it is the nickname (".gl1" on the owner's spare account).
 MY_NAME = (4, 76, 130, 106)
