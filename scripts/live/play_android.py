@@ -1098,7 +1098,16 @@ class Player:
             self.history = (self.history + [(look.my_left, look.foe_left, look.my_shields, look.foe_shields)])[-5:]
         if not self.history:
             return None, None, None, None
-        return tuple(max(set(col), key=col.count) for col in zip(*self.history))
+        most = [max(set(col), key=col.count) for col in zip(*self.history)]
+        if len(self.history) >= 2:
+            # The counts only fall: two readings in a row agreeing on fewer are taken at once, not when three of five
+            # do (on four battles' recordings, 2026-11-22: 31 falls seen 0.5 to 1.6 s sooner, none that did not hold;
+            # their shields after a throw of ours are counted that much sooner)
+            for k in range(4):
+                a, b = self.history[-1][k], self.history[-2][k]
+                if a is not None and a == b and most[k] is not None and a < most[k]:
+                    most[k] = a
+        return tuple(most)
 
     def check_switch(self, t: float, rgb) -> None:
         """Whether the switch tapped went through, from what only a switch changes: the buttons become the new
