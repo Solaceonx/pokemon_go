@@ -4753,3 +4753,42 @@ it came up and sent in Feraligatr; the bot, believing its own choice (Virizion) 
 (retaps only on fresh frames with our bar at 20% or more; no switch after a replacement until the header names who
 is in). Still open: the engine chose Virizion as the replacement and wanted Feraligatr 0.4 s later, and it left
 Snorlax in against Cobalion for 50 s.
+
+**Second Ultra League set, Virizion / Shadow Snorlax / Feraligatr (2026-11-22): 2-3.** 24 of 26 minigames Excellent.
+Game 5 the owner put down to Virizion's throw timing against Florges, and the log agrees: its first Leaf Blade was
+paid for as a Double Kick landed (72.7 s), but a fast tap went in during the engine's 85 ms decision and started
+another Double Kick (1.5 s); look_ahead had not armed (no button reading for 3 s before, and its capped answer
+varies: a replay armed at the same point). The second Leaf Blade went off as paid for and lost the charged-move tie to
+Florges's Disarming Voice.
+
+**The team after: Melmetal / Blastoise / Skeledirge** (the owner's choice; Registeel needs Zap Cannon TM'd off).
+Team search for the lead, 1,500 battles each with Skeledirge and Blastoise, trained bot both sides (±0.025):
+Registeel (Lock On, Flash Cannon, Focus Blast) 0.63, Melmetal (Thunder Shock, Double Iron Bash, Dynamic Punch) 0.63,
+Melmetal DIB / Superpower 0.61, Dynamic Punch / Rock Slide 0.57, Superpower / Rock Slide 0.53; the Virizion team
+0.43. Button sides off the recordings: Melmetal DIB left, Dynamic Punch right; Blastoise Hydro Cannon left, Skull
+Bash right (fast move Water Gun: the buttons rose by 6.3, 8.9, 9.4, 18.9, steps of 3); Skeledirge Shadow Ball left,
+Torch Song right.
+
+Fire pattern (`data/minigame/android/type_fire.json`) from 7 Torch Song minigames: on 3 held out it passes over 83% of
+sightings, the sweep 54%. Torch Song on the sweep: 5 Excellent in 7. Since the pattern: 39 of 40 minigames Excellent
+in training (one Skull Bash Great), then 33 of 33 in the league set.
+
+**Long fast moves (Skeledirge's Incinerate, 5 turns, 2.5 s).** The owner: "do not over tap". A fast tap late in the
+Incinerate that pays for a throw puts a whole Incinerate before it. Tried first and dropped: holding the taps until
+near the end of each Incinerate counted from our hit seen on their bar; Incinerate steps their bar two or three times
+(0.5-0.8 s apart), and one battle had no fast move for 7 s. What stands: no fast taps while the Incinerate under way
+pays for a charged move (on the count when the buttons give no reading: they did on about 1 frame in 10 for
+Skeledirge; hits under 1.5 s apart not counted); none while a throw decided on the count waits for the buttons; once
+paid, a fast tap only after two 'fast' answers in a row (the capped search flips between them). Armed holds and
+pauses need a fast tap since the last one ended: Skeledirge once stood armed for 6 s with no move under way, re-armed
+every 3 s. Skeledirge's throws, time from tap to throw: before, 3 of 7 an Incinerate late (2.5-3.4 s); in the last
+training battles and the league set, 1.0-1.7 s but for one (3.25 s, the flip that the two-answer rule is for).
+
+**League set with Melmetal / Blastoise / Skeledirge: 2-3.** Lost to Skeledirge / Galarian Moltres / Feraligatr,
+Skeledirge / Poliwrath / Jellicent, Talonflame / Cresselia / Venusaur. Blastoise threw Skull Bash with Hydro Cannon
+paid for, at Poliwrath (Hydro Cannon resisted) and at Cresselia (78 HP, a shield: Hydro Cannon 44 for 40 energy and
+a second two Water Guns later, against Skull Bash 59 for 75). The engine's trained bot (Great League) chose Skull Bash
+6 of 6 on both; the search rated Hydro Cannon above it at Cresselia (0.192 to 0.175) but by less than the 0.03 edge it
+needs to overrule the bot (Skull Bash also raises Blastoise's defence, which the bot may value). The owner's rule,
+now in (`prefer` in the team file, `Player.owner_prefers`): Hydro Cannon whenever paid for unless not very effective
+on the one out. The lasting fix is Ultra League networks.
