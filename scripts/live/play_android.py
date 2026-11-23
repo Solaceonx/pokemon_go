@@ -2392,6 +2392,8 @@ class Player:
                  view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
+        if shield:
+            self.tracker.my_shield_used()  # the header counts it seconds later
         self.touch(SHIELD_YES if shield else SHIELD_NO, "shield" if shield else "no shield")
 
     def settled_replacement(self, t: float, view, slot: int, bench: list) -> int:

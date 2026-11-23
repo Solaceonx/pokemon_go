@@ -214,6 +214,9 @@ class Tracker:
         self._last_switch = None
         self._last_foe_switch = None  # the same for theirs: (time, the one that left, their switch time before it)
         self._my_correction = None  # see my_active_corrected
+        self._my_shielding = False  # the player shielded their charged move: the look that brings it is told (my_shield_used)
+        self._my_shields_settle = -1.0  # until then a reading of more shields of ours than counted is the header lagging
+        self._my_throw_open = None  # a throw of ours whose shield is not yet known: (time, target, their shields, its HP before)
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -266,10 +269,31 @@ class Tracker:
         if self.foe:
             self.foe.clock += turns
         my_shields_before, foe_shields_before = me.shields, self.foe_shields
-        if obs.my_shields is not None:
+        if obs.my_shields is not None and not (obs.my_shields > me.shields and obs.t < self._my_shields_settle):
             me.shields = obs.my_shields
+        if obs.foe_charged and self._my_shielding:
+            # Shielded by the player: the header counts it a look to 5 s later (2026-11-22: 341 of 342 shields of ours
+            # were not yet counted at the look that brought their move, so its whole damage came off our health)
+            me.shields = max(0, min(me.shields, my_shields_before - 1))
+            self._my_shields_settle = obs.t + 8.0
+            self._my_shielding = False
         if obs.foe_shields is not None:
             self.foe_shields = obs.foe_shields
+        thrown_open = self._my_throw_open
+        if thrown_open is not None and obs.my_charged is None:
+            when, target, shields, hp_before = thrown_open
+            if target is not self.foe or obs.foe_charged or obs.t - when > 8.0:
+                self._my_throw_open = None
+            elif self.foe_shields < shields:
+                # Their counter shows the throw of ours was shielded. It is handed over as our minigame ends, before
+                # they choose, and their counter falls 0.5 to 5 s after that (215 of 222 shields in November): the
+                # hit was taken off in full. Their bar, if read since, has it right; if not, it goes back.
+                if obs.foe_hp is None and target.mon.hp < hp_before - 1:
+                    target.mon.hp = max(1, hp_before - 1)
+                self._note(obs.t, "my_charged_shielded", late=round(obs.t - when, 2))
+                self._my_throw_open = None
+            elif obs.foe_hp is not None:
+                self._my_throw_open = None  # their bar is the witness now
 
         # A Pokémon that just fainted to a fast move still paid out energy for that last hit.
         was_mine, was_theirs = me.mon, self.foe
@@ -383,6 +407,7 @@ class Tracker:
             blocked = self.foe_shields < foe_shields_before
             self._note(obs.t, "my_charged", move=move.id, shielded=blocked)
             expected = 1 if blocked else damage(mon, move, foe.mon)
+            self._my_throw_open = None if blocked or foe_shields_before == 0 else (obs.t, foe, foe_shields_before, foe.mon.hp)
             if obs.foe_hp is not None and they_changed != "faint":
                 seen = round(obs.foe_hp * foe.mon.build.hp)
                 if foe.mon.hp - seen < 0.6 * expected:  # their bar has not caught up with the hit yet
@@ -474,6 +499,11 @@ class Tracker:
         self.hp_turn = self.turn
         self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
         return how
+
+    def my_shield_used(self) -> None:
+        """The player shielded their charged move: the look that brings the move takes it as shielded and our shields
+        as one fewer, whatever the header says yet (it lags; readings of more are ignored for 8 s)."""
+        self._my_shielding = True
 
     def my_active_corrected(self, kind: str) -> None:
         """The player found another of ours out than it believed, with no switch of ours tapped: the change the next
