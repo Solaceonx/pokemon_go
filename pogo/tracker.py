@@ -176,6 +176,7 @@ class Tracker:
     SEEN_LAG = 0
     RESTART_LAG = 0
     RESYNC = True
+    LEAST_HIT = True  # their unnamed charged move: the least it could be taken off at once
     FOE_BAR_DOUBT = True  # their bar's big drops held back for a second reading, as ours
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
                  moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True,
@@ -1085,7 +1086,10 @@ class Tracker:
             if len(moves) == 1:
                 mon.hp = max(1, mon.hp + drop - damage(foe.mon, moves[0], mon))
             else:
-                self._their_hit_unapplied = (obs.t, mon, shielded, mon.hp + drop)
+                before = mon.hp + drop
+                if self.LEAST_HIT:
+                    mon.hp = max(1, before - min(damage(foe.mon, m, mon) for m in moves))
+                self._their_hit_unapplied = (obs.t, mon, shielded, before)
         elif drop is not None:
             best = min(((abs(drop - damage(foe.mon, m, mon) - j * per_hit), k, j)
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
@@ -1105,8 +1109,11 @@ class Tracker:
             if not named:  # a guess at the move: put right when the screen names it (their_move_named)
                 self._their_hit_unapplied = (obs.t, mon, shielded, before)
         elif drop is None and unread and not _disguised(mon):
-            # which move is not known yet: taken off when the screen names it (their_move_named)
-            self._their_hit_unapplied = (obs.t, mon, shielded, mon.hp)
+            # which move is not known yet: the least of them now, the named one's in its place when the screen names it
+            before = mon.hp
+            if not shielded and self.LEAST_HIT:
+                mon.hp = max(1, mon.hp - min(damage(foe.mon, m, mon) for m in moves))
+            self._their_hit_unapplied = (obs.t, mon, shielded, before)
         self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
         if foe.by_move:
             # Hits counted frame by frame: a fast move that would have left it short of the cheapest move it could

@@ -43,8 +43,9 @@ class OurBar(unittest.TestCase):
         tr = battle()
         full = tr.me.mon.hp
         look(tr, 10.0, my_hp=1.0, foe_charged=True)  # the bar from before the hit; the move not named yet
-        self.assertEqual(tr.me.mon.hp, full)
-        move = tr.foe.mon.build.charged[0]
+        least = min(damage(tr.foe.mon, m, tr.me.mon) for m in tr.foe.mon.build.charged)
+        self.assertEqual(tr.me.mon.hp, full - least)  # the least it could be, at once
+        move = max(tr.foe.mon.build.charged, key=lambda m: damage(tr.foe.mon, m, tr.me.mon))
         tr.their_move_named(10.3, move.id)
         self.assertEqual(tr.me.mon.hp, max(1, full - damage(tr.foe.mon, move, tr.me.mon)))
 
