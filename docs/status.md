@@ -4832,6 +4832,63 @@ and a shield up: 5 shields spent, 5 hits taken, one faint (Torch Song paid). Now
 does not farm with any charged move of theirs in reach, whatever the shields (`tests/test_farm_down.py`). Not yet
 played.
 
+
+**Their energy: what makes the count wrong (2026-11-23, branch `ultra-league` 0b9935c4).** A replay of the tracker on
+the logged looks (`scripts/live/replay_tracker.py`, under a second for a day; same count as logged at 91% of looks)
+scores it at their named throws. (1) The countdown disc was taken for their throw after nearly every throw of ours (it
+is up while they choose whether to shield ours): 57 of 62 countdowns had no move of theirs after, and each put their
+energy at nothing. Now only with no shield of ours and no throw of ours in 18 s (`countdown_is_theirs`): short at 18
+of 91 throws (was 22), by more than a fast move at 7 (was 10). (2) The turn clock matches the fight time; the rest of
+the shortfall is the rhythm restarting late: a new Pokémon counts from the look that reads its name, a charged move from
+the first look after it, and a hit seen resyncs to the look's turn, each a turn or two after the event. Restarting two
+turns earlier and resyncing one turn earlier cut the short throws to 4 of 91, but the count's surplus at their throws
+rises (median 18 to 40), and with their energy never on screen the logs cannot tell holding from overcounting: the
+knobs (`Tracker.SEEN_LAG`, `RESTART_LAG`, `RESYNC`) stay at the old behaviour until there is a truth to fit them on.
+(3) One big miss was who is out: Talonflame came in for Florges and was taken for Florges until its name was read 7 s
+later.
+
+**Who is out and who fainted (2026-11-23, branch `ultra-league` f5b35e63, 887e8af3).** (1) Of 575 changes of theirs in
+308 logged battles, 34 reached the tracker over 2 s late: the name was read just before a charged move and handed over
+only at the look after it. 25 had a throw of ours go at the newcomer (Leaf Blade meant for Swampert hit Giratina), 2 a
+shield call made on the one gone. A new name of theirs now gives a look at once, is handed over at the shield prompt
+(`Tracker.their_active_seen`), and drops a throw of ours still waiting to start unless ours is low. (2) The counters of
+Pokémon left lag the names by a look to 10 s. A fall the tracker had already counted was taken for a faint to come, and
+the next one to leave was put at 0 HP; a change of theirs followed by the counter was kept as a switch; a hit taken off
+by the rules (bar unread, a shield counted late) put Pokémon at 0 that lived on. Replaying 2026-11-22's 57 battles,
+Pokémon put at 0 HP that later came out with health: ours 20, now 2; theirs 21, now 1. One of these left Melmetal, alive
+on 1%, off the bench at a replacement prompt, and the bot tapped for one card where there were two until the game chose.
+A change of ours found with no switch tapped (our last sent in unasked) no longer starts a switch timer.
+
+**Shields counted late (2026-11-23, branch `ultra-league` 70e246a0).** The header's shield counters lag. 341 of 342
+shields of ours (2026-11-22) were not yet counted at the look that brought their move, so its whole damage came off our
+health until our bar was read again; the player now tells the tracker when it shields (`Tracker.my_shield_used`). Our
+throws reach the tracker as our minigame ends, before they choose to shield, and their counter fell 0.5 to 5 s later in
+215 of 222 cases in November; if it falls before their bar is read, their health goes back. Replaying 2026-11-22, our
+health off by over 20% of max at the first bar reading after their throws: 46 of 153, now 30. Theirs barely changed
+(56 to 53 of 251): 20 of the 33 big misses were shields their bar showed before the counter (the bar then sets it right,
+1 to 5 s after the throw), and 13 are our damage estimated too high (their stats are guessed).
+
+**Their energy against the truth; health; bars; a crash (2026-11-23, branch `ultra-league` 57c0245a to c8e765ea).**
+(1) Truth: the owner's recordings, players' own energy off their buttons at their throws (the cleanest, 23 throws),
+show them throwing about one fast move past the cost (quartiles -2 / 10 / 22; the buttons lag a hit). The public
+clips' buttons were too noisy (a third below cost), and counting their hits frame by frame too (the bar flickers 2%).
+Against it the live count was not low on balance (median 18 over at their throws) but short at 18 of 91: moving the
+restart timing earlier would only add to the surplus. (2) The shield prompt's call (no margin) used the count of the
+last look, a median 1.7 s before, without the fast move under way or the fight since; now `their_energy_at_throw`
+(short at 2 of 91 in the replay). (3) The engine's view at their throw, as its simulation adds the move under way,
+was short with no margin at 8 of 91, with 1 at 1, with 2 at 0 (2 put them a median 46 over the cost): `FOE_MARGIN`
+2 -> 1, at the prompt too. (4) Our health after their throws, over 20% off the next bar reading: 46 of 153 before
+the shield fix, 30 after, now 17: a move named after its look now has its damage taken off or put right, a bar still
+showing the health from before the hit waits for the name, and a reading far below what their fast moves could do
+(a bar filling as ours comes in) waits for a second one. Their charged damage on ours, where our bar was read
+before and after, came to 0.97-1.06 of the rules in 12 of 15 hits: the damage model is right. (5) The bar reader,
+checked on frames of the live battles' own recordings: the phone's yellow at a third of the bar is (253, 249, ~122),
+past the reader's blue limit of 120, so bars read 1 to 3% or not at all; now read (our bar on 62% of fight frames,
+was 52%; theirs 56%, was 51%). (6) A dry run of the live player on a recording (`scripts/live/replay.py`) stopped
+at the first correction of which of ours is out (a log field named `kind`); fixed, both dry runs complete. Not done:
+shadows (their aura is not readable in the field view, and no clean hits of a shadow of theirs to check damage
+against), and their health after shielded throws of ours (the shield shows only once their bar is back).
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
@@ -4985,60 +5042,3 @@ set "PY=C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe"
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-confirm --baseline website --candidates "website,eval=runs/ul-eval/eval.npz" --pairings 2000 --crowd 1000 --pvpoke 0 --workers 30 --seed 4802 >> runs\task48_confirm.out 2>&1
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-nomid --baseline website --candidates "website,q=runs/ul-decide/q-no-midswap.npz,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 30 --seed 4801 >> runs\task48_nomid.out 2>&1
 ```
-
-
-**Their energy: what makes the count wrong (2026-11-23, branch `ultra-league` 0b9935c4).** A replay of the tracker on
-the logged looks (`scripts/live/replay_tracker.py`, under a second for a day; same count as logged at 91% of looks)
-scores it at their named throws. (1) The countdown disc was taken for their throw after nearly every throw of ours (it
-is up while they choose whether to shield ours): 57 of 62 countdowns had no move of theirs after, and each put their
-energy at nothing. Now only with no shield of ours and no throw of ours in 18 s (`countdown_is_theirs`): short at 18
-of 91 throws (was 22), by more than a fast move at 7 (was 10). (2) The turn clock matches the fight time; the rest of
-the shortfall is the rhythm restarting late: a new Pokémon counts from the look that reads its name, a charged move from
-the first look after it, and a hit seen resyncs to the look's turn, each a turn or two after the event. Restarting two
-turns earlier and resyncing one turn earlier cut the short throws to 4 of 91, but the count's surplus at their throws
-rises (median 18 to 40), and with their energy never on screen the logs cannot tell holding from overcounting: the
-knobs (`Tracker.SEEN_LAG`, `RESTART_LAG`, `RESYNC`) stay at the old behaviour until there is a truth to fit them on.
-(3) One big miss was who is out: Talonflame came in for Florges and was taken for Florges until its name was read 7 s
-later.
-
-**Who is out and who fainted (2026-11-23, branch `ultra-league` f5b35e63, 887e8af3).** (1) Of 575 changes of theirs in
-308 logged battles, 34 reached the tracker over 2 s late: the name was read just before a charged move and handed over
-only at the look after it. 25 had a throw of ours go at the newcomer (Leaf Blade meant for Swampert hit Giratina), 2 a
-shield call made on the one gone. A new name of theirs now gives a look at once, is handed over at the shield prompt
-(`Tracker.their_active_seen`), and drops a throw of ours still waiting to start unless ours is low. (2) The counters of
-Pokémon left lag the names by a look to 10 s. A fall the tracker had already counted was taken for a faint to come, and
-the next one to leave was put at 0 HP; a change of theirs followed by the counter was kept as a switch; a hit taken off
-by the rules (bar unread, a shield counted late) put Pokémon at 0 that lived on. Replaying 2026-11-22's 57 battles,
-Pokémon put at 0 HP that later came out with health: ours 20, now 2; theirs 21, now 1. One of these left Melmetal, alive
-on 1%, off the bench at a replacement prompt, and the bot tapped for one card where there were two until the game chose.
-A change of ours found with no switch tapped (our last sent in unasked) no longer starts a switch timer.
-
-**Shields counted late (2026-11-23, branch `ultra-league` 70e246a0).** The header's shield counters lag. 341 of 342
-shields of ours (2026-11-22) were not yet counted at the look that brought their move, so its whole damage came off our
-health until our bar was read again; the player now tells the tracker when it shields (`Tracker.my_shield_used`). Our
-throws reach the tracker as our minigame ends, before they choose to shield, and their counter fell 0.5 to 5 s later in
-215 of 222 cases in November; if it falls before their bar is read, their health goes back. Replaying 2026-11-22, our
-health off by over 20% of max at the first bar reading after their throws: 46 of 153, now 30. Theirs barely changed
-(56 to 53 of 251): 20 of the 33 big misses were shields their bar showed before the counter (the bar then sets it right,
-1 to 5 s after the throw), and 13 are our damage estimated too high (their stats are guessed).
-
-**Their energy against the truth; health; bars; a crash (2026-11-23, branch `ultra-league` 57c0245a to c8e765ea).**
-(1) Truth: the owner's recordings, players' own energy off their buttons at their throws (the cleanest, 23 throws),
-show them throwing about one fast move past the cost (quartiles -2 / 10 / 22; the buttons lag a hit). The public
-clips' buttons were too noisy (a third below cost), and counting their hits frame by frame too (the bar flickers 2%).
-Against it the live count was not low on balance (median 18 over at their throws) but short at 18 of 91: moving the
-restart timing earlier would only add to the surplus. (2) The shield prompt's call (no margin) used the count of the
-last look, a median 1.7 s before, without the fast move under way or the fight since; now `their_energy_at_throw`
-(short at 2 of 91 in the replay). (3) The engine's view at their throw, as its simulation adds the move under way,
-was short with no margin at 8 of 91, with 1 at 1, with 2 at 0 (2 put them a median 46 over the cost): `FOE_MARGIN`
-2 -> 1, at the prompt too. (4) Our health after their throws, over 20% off the next bar reading: 46 of 153 before
-the shield fix, 30 after, now 17: a move named after its look now has its damage taken off or put right, a bar still
-showing the health from before the hit waits for the name, and a reading far below what their fast moves could do
-(a bar filling as ours comes in) waits for a second one. Their charged damage on ours, where our bar was read
-before and after, came to 0.97-1.06 of the rules in 12 of 15 hits: the damage model is right. (5) The bar reader,
-checked on frames of the live battles' own recordings: the phone's yellow at a third of the bar is (253, 249, ~122),
-past the reader's blue limit of 120, so bars read 1 to 3% or not at all; now read (our bar on 62% of fight frames,
-was 52%; theirs 56%, was 51%). (6) A dry run of the live player on a recording (`scripts/live/replay.py`) stopped
-at the first correction of which of ours is out (a log field named `kind`); fixed, both dry runs complete. Not done:
-shadows (their aura is not readable in the field view, and no clean hits of a shadow of theirs to check damage
-against), and their health after shielded throws of ours (the shield shows only once their bar is back).
