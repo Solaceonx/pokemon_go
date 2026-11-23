@@ -4857,3 +4857,12 @@ by the rules (bar unread, a shield counted late) put Pokémon at 0 that lived on
 Pokémon put at 0 HP that later came out with health: ours 20, now 2; theirs 21, now 1. One of these left Melmetal, alive
 on 1%, off the bench at a replacement prompt, and the bot tapped for one card where there were two until the game chose.
 A change of ours found with no switch tapped (our last sent in unasked) no longer starts a switch timer.
+
+**Shields counted late (2026-11-23, branch `ultra-league` 70e246a0).** The header's shield counters lag. 341 of 342
+shields of ours (2026-11-22) were not yet counted at the look that brought their move, so its whole damage came off our
+health until our bar was read again; the player now tells the tracker when it shields (`Tracker.my_shield_used`). Our
+throws reach the tracker as our minigame ends, before they choose to shield, and their counter fell 0.5 to 5 s later in
+215 of 222 cases in November; if it falls before their bar is read, their health goes back. Replaying 2026-11-22, our
+health off by over 20% of max at the first bar reading after their throws: 46 of 153, now 30. Theirs barely changed
+(56 to 53 of 251): 20 of the 33 big misses were shields their bar showed before the counter (the bar then sets it right,
+1 to 5 s after the throw), and 13 are our damage estimated too high (their stats are guessed).
