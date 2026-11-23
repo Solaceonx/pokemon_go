@@ -1783,18 +1783,23 @@ class Player:
         theirs = foe.build.fast
         landing = -(-(n * mon.fast.turns) // theirs.turns)  # their fast moves that can land meanwhile, at most
         incoming = landing * damage(foe, theirs, me)
-        # their energy by the hits seen (the bottom of the tracker's range), not the clock's ceiling or the engine's
-        # margin: over a few fast moves of ours the count is good enough (2026-11-08: the ceiling, 50 five seconds
-        # after Talonflame's Flame Charge, made it look ready to Fly; the count said 0 to 10, and it threw nothing
-        # for 12 s)
-        hi = self.tracker.foe.lo + landing * theirs.energy_gain
+        # Their energy: the top of the count plus one fast move. The count runs about a fast move behind at the moment
+        # they throw (2026-11-22, 138 named throws of theirs in Ultra League: the top short of the move 36 times, by
+        # more than one fast move 17); the bottom of the range, used here before, held Shadow Ball on Darmanitan at
+        # 24 to 27 with Rock Slide (45) "out of reach" at 42, and it came.
+        hi = self.tracker.foe.hi + (landing + 1) * theirs.energy_gain
         ready = [m for m in foe.build.charged if m.energy <= hi]
-        if ready and view.me.shields == 0:
-            incoming += max(damage(foe, m, me) for m in ready)
         if time.time() - self.farm_checked > 1.0:
             self.farm_checked = time.time()
             self.log("farm_down_check", self.now(), foe=foe.build.species_id, foe_hp=foe.hp, hit=hit, n=n,
-                     incoming=incoming, our_hp=me.hp, their_energy_top=hi, ready=[m.id for m in ready])
+                     incoming=incoming, our_hp=me.hp, their_energy_top=hi, ready=[m.id for m in ready],
+                     shields=view.me.shields)
+        if ready:
+            # A charged move of theirs within reach before it falls: not farmed, whatever our shields. With a shield
+            # up this used to farm, the shield taken to cover it (2026-11-22: 23 holds; in 10 they threw first, 9 of
+            # them with the move already counted in reach: 5 shields spent, 5 hits taken, one of ours fainted with
+            # Torch Song paid for).
+            return False
         return incoming < me.hp
 
     def save_the_low_one(self, t: float, view, mon, have: float):
