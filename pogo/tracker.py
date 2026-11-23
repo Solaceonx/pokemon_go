@@ -173,6 +173,7 @@ class Tracker:
     SEEN_LAG = 0
     RESTART_LAG = 0
     RESYNC = True
+    FOE_BAR_DOUBT = True  # their bar's big drops held back for a second reading, as ours
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
                  moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True,
                  foe_fast: dict | None = None):
@@ -217,6 +218,8 @@ class Tracker:
         self._my_shielding = False  # the player shielded their charged move: the look that brings it is told (my_shield_used)
         self._my_shields_settle = -1.0  # until then a reading of more shields of ours than counted is the header lagging
         self._my_throw_open = None  # a throw of ours whose shield is not yet known: (time, target, their shields, its HP before)
+        self._their_hit_unapplied = None  # their unnamed charged move on ours: (time, ours, shielded, its HP before)
+        self._my_bar_doubt = self._foe_bar_doubt = None  # a reading held back: (whose, HP read)
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -376,6 +379,23 @@ class Tracker:
         if they_changed == "faint" and obs.my_charged is None and i_changed != "faint":
             was_mine.energy = min(ENERGY_CAP, was_mine.energy + was_mine.build.fast.energy_gain)
         mon, foe = me.mon, self.foe
+        # A bar read far below what their fast moves could have done since the last look is doubted until a second
+        # reading agrees: the bar of one coming in fills from empty (2026-11-22, 174620: Skeledirge, sent in at full
+        # health, read at 7% half a second later, was taken for nearly gone for 11 s; it was at 86%).
+        if obs.my_hp is not None and not obs.foe_charged and foe is not None:
+            hp = round(obs.my_hp * mon.build.hp)
+            if self._doubted(mon, hp, turns, foe.mon, mon, "_my_bar_doubt"):
+                self._note(obs.t, "my_bar_doubted", read=hp, counted=mon.hp)
+                obs = Observation(**{**asdict(obs), "my_hp": None})
+        if self.FOE_BAR_DOUBT and obs.foe_hp is not None and obs.my_charged is None and foe is not None:
+            hp = round(obs.foe_hp * foe.mon.build.hp)
+            if self._doubted(foe.mon, hp, turns, mon, foe.mon, "_foe_bar_doubt"):
+                self._note(obs.t, "foe_bar_doubted", read=hp, counted=foe.mon.hp)
+                obs = Observation(**{**asdict(obs), "foe_hp": None})
+
+        hit = self._their_hit_unapplied
+        if hit is not None and len(hit) == 4 and obs.my_hp is not None and not obs.foe_charged and hit[1] is mon:
+            self._their_hit_unapplied = (*hit, True)  # our bar read since (it may not have caught up yet)
 
         # What they did to me, from my health bar. After a switch the drop is measured on the Pokémon now in.
         quiet = not thrown and not i_changed and not they_changed
@@ -499,6 +519,19 @@ class Tracker:
         self.hp_turn = self.turn
         self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
         return how
+
+    def _doubted(self, target: Mon, hp: int, turns: int, attacker: Mon, whose: Mon, slot: str) -> bool:
+        """A reading of target's bar at hp is held back when it is lower than the tracker's count by more than the
+        attacker's fast moves could have done in these turns (two more for the timing, and 15% of the bar at least),
+        unless the last reading held back was the same within 5%."""
+        fast = attacker.build.fast
+        room = max((turns // fast.turns + 2) * max(1, damage(attacker, fast, target)), 0.15 * target.build.hp)
+        held = getattr(self, slot)
+        if target.hp - hp <= room or (held is not None and held[0] is whose and abs(held[1] - hp) <= 0.05 * target.build.hp):
+            setattr(self, slot, None)
+            return False
+        setattr(self, slot, (whose, hp))
+        return True
 
     def their_energy_at_throw(self, fight_seconds: float = 0.0) -> tuple[int, int]:
         """Their energy as they throw, asked between looks (at the shield prompt): the count at the last look plus the
@@ -632,11 +665,26 @@ class Tracker:
         """The screen named a charged move of their active Pokémon after the tracker had already had that throw (its
         shield prompt came first): learn the move, and the form it shows, without counting the throw again."""
         foe = self.foe
-        if foe is None or any(name in (m.id, m.name) for m in foe.mon.build.charged):
+        if foe is None:
             return
-        move = self._learn_move(t, foe, name)
-        if move is not None:
+        known = next((m for m in foe.mon.build.charged if name in (m.id, m.name)), None)
+        move = known or self._learn_move(t, foe, name)
+        if move is not None and known is None:
             foe.used[move.id] = foe.used.get(move.id, 0) + 1
+        hit, self._their_hit_unapplied = self._their_hit_unapplied, None
+        if move is not None and hit is not None and t - hit[0] < 8.0 and hit[1] is self.me.mon:
+            # The move went with our bar unread and could have been either of theirs: its damage now it is named
+            # (2026-11-22, 184442: Sceptile's Earthquake left Skeledirge on 5%, believed untouched for 3 s; 20 of 153
+            # first readings after their throws were over 20% under what the tracker had)
+            # (and 2026-11-22, 192542: a guessed move's 20 came off Skeledirge for Snorlax's Earthquake, 105).
+            # A bar read since that shows most of the hit is believed; otherwise the hit by the rules.
+            mon, before, bar_since = self.me.mon, hit[3], len(hit) > 4
+            hurt = 1 if hit[2] else damage(foe.mon, move, mon)
+            if not bar_since:
+                mon.hp = max(1, before - hurt)  # the rules, in place of any guess
+            elif before - mon.hp < 0.6 * hurt:
+                mon.hp = max(1, min(mon.hp, before - hurt))  # the bar read since had not caught up
+            self._note(t, "their_hit_named", move=move.id, shielded=hit[2], hp=mon.hp)
 
     def _screen_name(self, species_id: str) -> str:
         name = self.gd.species[species_id]["speciesName"]
@@ -936,6 +984,14 @@ class Tracker:
         elif shielded:
             if drop is not None:
                 extra = min(1, max(0, round((drop - 1) / per_hit)))
+        elif drop is not None and drop < 0.6 * min(damage(foe.mon, m, mon) for m in moves) and not _disguised(mon):
+            # Our bar still shows the health from before the hit (it lands after the prompt), and which move is not
+            # known: taken off when the screen names it, or now if they could afford one move only (2026-11-22,
+            # 185650: Bulldoze left Skeledirge on 55%, believed on 99% until the bar was read 2.5 s later)
+            if len(moves) == 1:
+                mon.hp = max(1, mon.hp + drop - damage(foe.mon, moves[0], mon))
+            else:
+                self._their_hit_unapplied = (obs.t, mon, shielded, mon.hp + drop)
         elif drop is not None:
             best = min(((abs(drop - damage(foe.mon, m, mon) - j * per_hit), k, j)
                         for k, m in enumerate(moves) for j in (0, 1, 2)))
@@ -948,7 +1004,13 @@ class Tracker:
             # fainted (the replacement prompt, the count of ours left). 2026-11-22, 191734: Tinkaton's Bulldoze, our bar
             # unread, put Melmetal from 76 to 0; it lived on 1%, was left off the bench at the next prompt, and the
             # bot tapped for one card where there were two, 21 times, until the game sent in Melmetal itself.
+            before = mon.hp
             mon.hp = max(1, mon.hp - (1 if shielded else damage(foe.mon, moves[0], mon)))
+            if not named:  # a guess at the move: put right when the screen names it (their_move_named)
+                self._their_hit_unapplied = (obs.t, mon, shielded, before)
+        elif drop is None and unread and not _disguised(mon):
+            # which move is not known yet: taken off when the screen names it (their_move_named)
+            self._their_hit_unapplied = (obs.t, mon, shielded, mon.hp)
         self._rule_out_fast(obs.t, foe, min(m.energy for m in moves))
         if foe.by_move:
             # Hits counted frame by frame: a fast move that would have left it short of the cheapest move it could

@@ -28,8 +28,9 @@ class OurHealthFloor(unittest.TestCase):
     def test_a_reading_of_nothing_still_counts(self):
         tr = Tracker(GD, [GD.default("melmetal"), GD.default("altaria"), GD.default("jellicent")])
         tr.update(Observation(t=0.0, my_species="melmetal", foe_species="stunfisk_galarian", my_left=3, foe_left=3))
-        tr.update(Observation(t=0.5, my_species="melmetal", foe_species="stunfisk_galarian", my_left=3, foe_left=3,
-                              my_hp=0.0))
+        for t in (0.5, 1.0):  # a drop past what their fast moves could do is believed on a second reading
+            tr.update(Observation(t=t, my_species="melmetal", foe_species="stunfisk_galarian", my_left=3, foe_left=3,
+                                  my_hp=0.0))
         self.assertEqual(tr.me.mon.hp, 0)
 
 

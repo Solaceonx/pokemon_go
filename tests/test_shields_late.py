@@ -54,6 +54,7 @@ class TheirShield(unittest.TestCase):
         tr.me.mon.energy = 100
         look(tr, 10.5, my_charged=0)
         look(tr, 12.0, foe_hp=0.5)
+        look(tr, 12.5, foe_hp=0.5)  # a drop past the count, believed on a second reading
         look(tr, 13.0, foe_shields=1)
         self.assertEqual(tr.foe.mon.hp, round(0.5 * tr.foe.mon.build.hp))
 
