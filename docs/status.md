@@ -4792,3 +4792,16 @@ a second two Water Guns later, against Skull Bash 59 for 75). The engine's train
 needs to overrule the bot (Skull Bash also raises Blastoise's defence, which the bot may value). The owner's rule,
 now in (`prefer` in the team file, `Player.owner_prefers`): Hydro Cannon whenever paid for unless not very effective
 on the one out. The lasting fix is Ultra League networks.
+
+**Later sets the same evening (Melmetal / Blastoise / Skeledirge): 1-3 (plus a matchmaking timeout the game counted
+for us, 2-3 on its card), then 3-2.** Two tracking faults found in the losses and fixed on `ultra-league`:
+- Our bar was credited to the Pokémon believed out while a switch was still unconfirmed: the game had Blastoise in at
+  full health 2 s before the header named it, and Melmetal, at 30%, was put at 186 of 187; 48 s later the engine sent
+  it in against Walrein's Earthquake. Now no bar reading for ours while a switch is under way (b81dda20).
+- Their name was cut too tight (`FOE_NAME` 76-106): after Steelix switched to Blastoise the reader found no text for
+  100 s, so the bot kept to Steelix, left Skeledirge in against Hydro Cannon and declined six shield prompts while
+  Skeledirge and our Blastoise fainted. With 6 px above and below (70-112) the same frames read Blastoise (589dbeff).
+Still open: a shadow opponent is taken for the regular form (the header shows no sign: "CP 2486 Raikou" for a Shadow
+Raikou), so damage both ways is 20% off; it could be told from our hits on its bar. Shields: the trained bot spent
+both on Melmetal at 58 and 45 HP against Jellicent and the back line met Shadow Raikou with none; the Ultra League
+networks (task 48) are the fix to try first.
