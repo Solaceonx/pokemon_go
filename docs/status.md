@@ -4845,3 +4845,15 @@ rises (median 18 to 40), and with their energy never on screen the logs cannot t
 knobs (`Tracker.SEEN_LAG`, `RESTART_LAG`, `RESYNC`) stay at the old behaviour until there is a truth to fit them on.
 (3) One big miss was who is out: Talonflame came in for Florges and was taken for Florges until its name was read 7 s
 later.
+
+**Who is out and who fainted (2026-11-23, branch `ultra-league` f5b35e63, 887e8af3).** (1) Of 575 changes of theirs in
+308 logged battles, 34 reached the tracker over 2 s late: the name was read just before a charged move and handed over
+only at the look after it. 25 had a throw of ours go at the newcomer (Leaf Blade meant for Swampert hit Giratina), 2 a
+shield call made on the one gone. A new name of theirs now gives a look at once, is handed over at the shield prompt
+(`Tracker.their_active_seen`), and drops a throw of ours still waiting to start unless ours is low. (2) The counters of
+Pokémon left lag the names by a look to 10 s. A fall the tracker had already counted was taken for a faint to come, and
+the next one to leave was put at 0 HP; a change of theirs followed by the counter was kept as a switch; a hit taken off
+by the rules (bar unread, a shield counted late) put Pokémon at 0 that lived on. Replaying 2026-11-22's 57 battles,
+Pokémon put at 0 HP that later came out with health: ours 20, now 2; theirs 21, now 1. One of these left Melmetal, alive
+on 1%, off the bench at a replacement prompt, and the bot tapped for one card where there were two until the game chose.
+A change of ours found with no switch tapped (our last sent in unasked) no longer starts a switch timer.
