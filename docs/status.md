@@ -4866,3 +4866,24 @@ throws reach the tracker as our minigame ends, before they choose to shield, and
 health off by over 20% of max at the first bar reading after their throws: 46 of 153, now 30. Theirs barely changed
 (56 to 53 of 251): 20 of the 33 big misses were shields their bar showed before the counter (the bar then sets it right,
 1 to 5 s after the throw), and 13 are our damage estimated too high (their stats are guessed).
+
+**Their energy against the truth; health; bars; a crash (2026-11-23, branch `ultra-league` 57c0245a to c8e765ea).**
+(1) Truth: the owner's recordings, players' own energy off their buttons at their throws (the cleanest, 23 throws),
+show them throwing about one fast move past the cost (quartiles -2 / 10 / 22; the buttons lag a hit). The public
+clips' buttons were too noisy (a third below cost), and counting their hits frame by frame too (the bar flickers 2%).
+Against it the live count was not low on balance (median 18 over at their throws) but short at 18 of 91: moving the
+restart timing earlier would only add to the surplus. (2) The shield prompt's call (no margin) used the count of the
+last look, a median 1.7 s before, without the fast move under way or the fight since; now `their_energy_at_throw`
+(short at 2 of 91 in the replay). (3) The engine's view at their throw, as its simulation adds the move under way,
+was short with no margin at 8 of 91, with 1 at 1, with 2 at 0 (2 put them a median 46 over the cost): `FOE_MARGIN`
+2 -> 1, at the prompt too. (4) Our health after their throws, over 20% off the next bar reading: 46 of 153 before
+the shield fix, 30 after, now 17: a move named after its look now has its damage taken off or put right, a bar still
+showing the health from before the hit waits for the name, and a reading far below what their fast moves could do
+(a bar filling as ours comes in) waits for a second one. Their charged damage on ours, where our bar was read
+before and after, came to 0.97-1.06 of the rules in 12 of 15 hits: the damage model is right. (5) The bar reader,
+checked on frames of the live battles' own recordings: the phone's yellow at a third of the bar is (253, 249, ~122),
+past the reader's blue limit of 120, so bars read 1 to 3% or not at all; now read (our bar on 62% of fight frames,
+was 52%; theirs 56%, was 51%). (6) A dry run of the live player on a recording (`scripts/live/replay.py`) stopped
+at the first correction of which of ours is out (a log field named `kind`); fixed, both dry runs complete. Not done:
+shadows (their aura is not readable in the field view, and no clean hits of a shadow of theirs to check damage
+against), and their health after shielded throws of ours (the shield shows only once their bar is back).
