@@ -168,6 +168,11 @@ class TrackedView:
 
 
 class Tracker:
+    # Turns by which a look comes after what it shows (experiment knobs, 0 = as before): SEEN_LAG for a hit of
+    # theirs seen landing, RESTART_LAG for their rhythm restarting after a charged move or a change of their Pokémon.
+    SEEN_LAG = 0
+    RESTART_LAG = 0
+    RESYNC = True
     def __init__(self, gd: GameData, my_team: list[Build], path: Path | None = None,
                  moves_known: list[bool] | None = None, energy: str = "rhythm", trust_my_energy: bool = True,
                  foe_fast: dict | None = None):
@@ -392,7 +397,7 @@ class Tracker:
 
         if thrown or i_changed or they_changed:
             if thrown or they_changed or not self.by_rhythm:
-                self.beat = self.turn  # they start afresh after a charged move or a change of their Pokémon
+                self.beat = self.turn - self.RESTART_LAG  # they start afresh after a charged move or a change of theirs
             if came_out is not None and not thrown:
                 self.beat = came_out + (they_changed == "switch")  # a switch costs its turn
                 self._their_rhythm(self.foe)
@@ -793,9 +798,10 @@ class Tracker:
                 self.ahead -= landed
                 if self.ahead < 0:  # more seen than counted: the rhythm was running behind
                     foe.gain(-self.ahead * fast.energy_gain)
-                    self.ahead, self.beat = 0, self.turn
-                elif landed and self.turn - self.hp_turn == 1 and (self.turn - self.beat) % fast.turns:
-                    self.beat = self.turn  # one was seen landing this very turn: their next begins now
+                    self.ahead, self.beat = 0, self.turn - self.SEEN_LAG
+                elif (self.RESYNC and landed and self.turn - self.hp_turn == 1
+                      and (self.turn - self.SEEN_LAG - self.beat) % fast.turns):
+                    self.beat = self.turn - self.SEEN_LAG  # one was seen landing this very turn: their next begins now
             self._fit_fast(obs.t, foe)
             return
 

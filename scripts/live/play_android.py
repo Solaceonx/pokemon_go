@@ -760,16 +760,16 @@ class Player:
                 self.on_replace_prompt(t, look)
                 continue
             if look.countdown:
-                # Their charged move's countdown with no prompt (we have no shields left): the fight is not on,
-                # whatever the header and bars say (2026-11-09, 124910: through Beedrill's 5 s our count ran 41 to 68
-                # and a Stone Edge was tapped that could not go off). No taps, no turns, and theirs is told to the
-                # tracker as thrown, once.
+                # A charged move's countdown (theirs with no prompt, or ours while they choose to shield): the fight
+                # is not on, whatever the header and bars say (2026-11-09, 124910: through Beedrill's 5 s our count
+                # ran 41 to 68 and a Stone Edge was tapped that could not go off). No taps, no turns; told to the
+                # tracker as their throw, once, only when it can be theirs (countdown_is_theirs).
                 self.tapping = False
                 self.armed = None
                 self.fight_frames = 0
                 self.fight_since = None
                 with self.pending_lock:
-                    if not self.pending_theirs and time.time() - max(self.prompt_seen, self.their_throw_at) > 10.0:
+                    if self.countdown_is_theirs():
                         self.pending_theirs = True
                         self.their_throw_at = time.time()
                         self.log("their_charged_countdown", t)
@@ -1879,6 +1879,16 @@ class Player:
             return
         self.log("owner_prefers", t, chose=mon.charged[k].id, now=want, foe=view.foe.build.species_id)
         self.decision = CHARGED[0] + j
+
+    def countdown_is_theirs(self) -> bool:
+        """The countdown disc is told to the tracker as their throw only with no shield of ours left (a throw of theirs
+        otherwise brings the prompt) and no throw of ours in the last 18 s: the same disc is up while they choose
+        whether to shield ours. 2026-11-22: of 62 countdowns, 57 had no move of theirs named after, nearly all within
+        13 s of our minigame, and each put their energy at nothing (Galarian Moltres from 42 to 0 at 85 s, after our
+        Torch Song; its Payback, 60, came at 90 s with the count at 21). The one this keeps was a real throw."""
+        now = time.time()
+        return (not self.pending_theirs and now - max(self.prompt_seen, self.their_throw_at) > 10.0
+                and self.tracker.me.shields == 0 and now - self.my_throw_at > 18.0)
 
     @contextlib.contextmanager
     def engine_sees(self):
