@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import itertools
 import json
+import os
 import math
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -154,8 +155,10 @@ def spread(weights: dict, total: float) -> dict:
 
 
 class GameData:
-    def __init__(self, folder: Path = DATA, league: int = 1500):
-        self.league = league  # the CP cap every method defaults to (1500 Great, 2500 Ultra)
+    def __init__(self, folder: Path = DATA, league: int | None = None):
+        # the CP cap every method defaults to (1500 Great, 2500 Ultra); unless given, POGO_LEAGUE in the environment,
+        # so that training's worker processes and every GameData() made inside them follow one setting (task 40)
+        self.league = league or int(os.environ.get("POGO_LEAGUE", "1500"))
         gm = json.loads((folder / "gamemaster.json").read_text())
         self.species = {p["speciesId"]: p for p in gm["pokemon"]}
         self.moves = {m["moveId"]: _move(m) for m in gm["moves"] if "damageMethod" not in m}

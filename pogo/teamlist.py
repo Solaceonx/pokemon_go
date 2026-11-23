@@ -34,9 +34,15 @@ def drawer(gd: GameData, pool: list, path: Path = TEAMS, share: float = 0.5, sty
     towards those met more often in real games (the "seen" count), or with explicit mixture
     weights when supplied; otherwise a random legal three.
     """
-    listed = json.loads(Path(path).read_text())["teams"]
+    if gd.league != 1500 and Path(path) == TEAMS:
+        # the list is Great League's: in another league (POGO_LEAGUE) its own list if there is one, else every team
+        # a random legal three from that league's pool (task 40, Ultra League training)
+        path = TEAMS.with_name(f"teams-{gd.league}.json")
+        if not path.exists():
+            share = 0.0
+    listed = json.loads(Path(path).read_text())["teams"] if share > 0 else []
     teams = [[gd.default(s) for s in entry["team"]] for entry in listed]
-    weights = weights_for(listed)
+    weights = weights_for(listed) if listed else []
     dex = {b.species_id: gd.species[b.species_id]["dex"] for b in pool}
 
     shaped = None

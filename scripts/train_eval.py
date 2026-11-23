@@ -49,12 +49,12 @@ MODEL = ROOT / "runs" / "general-decide" / "q.npz"
 
 def positions(job) -> dict:
     """Play `count` battles; return the positions seen, with both sides' features and how each battle ended."""
-    seed, count, sample = job
+    seed, count, sample, model = job
     low_priority()
     gd = GameData()
     pool = gd.meta(50)
     draw = drawer(gd, pool)
-    net = QNet.load(str(MODEL))
+    net = QNet.load(str(model))
     rng = random.Random(seed)
     evaluator = Evaluator()
     xs, labels, phases, counts, battles, known = [], [], [], [], [], []
@@ -101,11 +101,12 @@ def main() -> None:
     parser.add_argument("--sample", type=float, default=0.1, help="chance of recording the position on any one turn")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--out", default=str(ROOT / "runs" / "eval" / "eval.npz"))
+    parser.add_argument("--q", default=str(MODEL), help="the trained bot that plays the battles (default the shipped one)")
     parser.add_argument("--wide", action="store_true", help="also read their Pokemon off the field (see the notes)")
     args = parser.parse_args()
     started = time.time()
     per = -(-args.battles // args.workers)
-    jobs = [(args.seed * 1000 + w + 1, per, args.sample) for w in range(args.workers)]
+    jobs = [(args.seed * 1000 + w + 1, per, args.sample, args.q) for w in range(args.workers)]
     with multiprocessing.get_context("spawn").Pool(args.workers) as pool:
         parts = pool.map(positions, jobs)
     data = {k: np.concatenate([p[k] for p in parts]) for k in parts[0]}

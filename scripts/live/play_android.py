@@ -565,8 +565,9 @@ class Player:
         charged_ids = {i for sp in gd.species.values() for i in sp.get("chargedMoves", [])}
         self.used_names = {n: [i for i in ids if i in charged_ids] for n, ids in self.used_names.items()}
         self.used_names = {n: ids for n, ids in self.used_names.items() if ids}
-        ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
-        self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
+        # POGO_EVAL / POGO_Q: other networks, paths from the repository root (task 48: Ultra League's)
+        ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/eval/eval.npz"))
+        self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
                                seed=int(time.time()) % 100000, **WEBSITE, turn_ms=500, cap_ms=300, clock=time.perf_counter)
         self.names = screen.NameReader(gd)
         self.active = 0
