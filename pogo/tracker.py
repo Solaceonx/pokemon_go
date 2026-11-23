@@ -425,6 +425,33 @@ class Tracker:
         nxt = self._turns[k + 1][1] if k + 1 < len(self._turns) else self.turn
         return min(nxt, turn + max(0, round((t - when) / TURN)))
 
+    def their_active_seen(self, t: float, species: str, out_for: float | None = None) -> str | None:
+        """Their name, read between looks, says another Pokémon is out: taken now, so a call made before the next look
+        (a shield prompt, a throw of ours waiting to start) is made on the one out. The turns since the last look are
+        left to the next look, which credits them to the one now out (2026-11-22: 7 of 154 changes of theirs reached
+        the tracker 7 to 11 s late, read before a charged move and handed over only at the look after it; Talonflame's
+        Flame Charge was met with Florges's count of 0). Returns what _their_active says."""
+        if self.foe is None:
+            return None
+        was = self.foe
+        how = self._their_active(Observation(t=t, foe_species=species))
+        if how not in ("switch", "faint"):
+            return how
+        if self.by_rhythm:
+            came_out = min(self.turn, self._turn_when(t - (out_for or 0.0)))
+            if came_out < self.beat:
+                # as in update: looks since then credited the old one with the new one's fast moves
+                over = (self.beat - came_out) // was.mon.build.fast.turns
+                was.lo = max(0, was.lo - over * was.mon.build.fast.energy_gain)
+                was.hi = max(0, was.hi - over * was.mon.build.fast.energy_gain)
+                was.mon.energy = (was.lo + was.hi) // 2
+            self.beat = came_out + (how == "switch")  # a switch costs its turn
+        self.ahead = 0
+        self.taken = self.dealt = 0.0
+        self.hp_turn = self.turn
+        self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
+        return how
+
     def my_fainted(self) -> None:
         """Ours has fainted (the player saw the prompt to send in the next one): the coming change is a faint."""
         self._my_pending_faint = self.me.mon

@@ -853,7 +853,9 @@ class Player:
                         self.pending_theirs = True
                         self.their_throw_at = time.time()
                         self.log("their_charged_unprompted", t, gap=round(t - self.last_fight, 2))
-                if t - self.last_look >= LOOK or (t - self.last_look >= 0.12 and (self.energy_crossed() or self.at_our_hit(t))):
+                # a look at once for a new name of theirs too: the engine's next call is on the one now out
+                if t - self.last_look >= LOOK or (t - self.last_look >= 0.12 and (
+                        self.energy_crossed() or self.at_our_hit(t) or self.foe_name_new())):
                     self.give_look(t, look, rgb)
                 self.act(t, look, rgb)
                 self.last_fight = t
@@ -1649,7 +1651,7 @@ class Player:
                 self.armed = None
                 # on the count alone: no reading and no name under the buttons saying it is paid for
                 count_only = self.energy() is None and not (bounds is not None and bounds[0] >= mon.charged[k].energy)
-                self.throw(t, k, mon.charged[k], count_only=count_only)
+                self.throw(t, k, mon.charged[k], count_only=count_only, stick=urgent)
                 self.decision = FAST
                 return
             if (mon.fast.turns >= SLOW_FAST_TURNS and have >= mon.charged[k].energy and self.unsure_hold is None
@@ -1890,6 +1892,31 @@ class Player:
         return (not self.pending_theirs and now - max(self.prompt_seen, self.their_throw_at) > 10.0
                 and self.tracker.me.shields == 0 and now - self.my_throw_at > 18.0)
 
+    def foe_name_new(self) -> bool:
+        """Their name has been read as another Pokémon since the tracker was last told."""
+        return self.names.species is not None and self.names.species != self.foe_seen_species
+
+    def foe_now(self, t: float, why: str) -> bool:
+        """Hand a new name of theirs to the tracker now, between looks (Tracker.their_active_seen). 2026-11-22: 7 of 154
+        changes of theirs were read before a charged move and reached the tracker only at the look after it, 7 to
+        11 s on; meanwhile throws of ours went at the newcomer (Leaf Blade at Giratina, meant for Swampert), its hits
+        were put to the one gone (Luxray's fast move "learned" from Magnezone's Sparks), and Talonflame's Flame Charge
+        was met with Florges's count of 0. True when it changed."""
+        if not self.foe_name_new() or self.tracker.foe is None:
+            return False
+        sp, at = self.names.species, self.names.read_at
+        was = self.tracker.foe.mon.build.species_id
+        out_for = max(0.0, t - at) if at is not None else None
+        self.foe_seen_species = sp
+        try:
+            how = self.tracker.their_active_seen(t, sp, out_for)
+        except Exception as error:  # noqa: BLE001 - a bad reading must not stop the battle
+            self.log("tracker_error", t, error=str(error))
+            return False
+        self.log("foe_changed_between_looks", t, was=was, now=sp, how=how, why=why,
+                 out_for=None if out_for is None else round(out_for, 2))
+        return True
+
     @contextlib.contextmanager
     def engine_sees(self):
         """Within it the tracker shows the engine their energy FOE_MARGIN fast moves higher, and ours at least what
@@ -2004,7 +2031,9 @@ class Player:
         self.tapping = False
         self.log("slow_pause", t, read=round(have, 1), soon=round(soon, 1))
 
-    def throw(self, t: float, k: int, move, count_only: bool = False) -> None:
+    def throw(self, t: float, k: int, move, count_only: bool = False, stick: bool = False) -> None:
+        """stick: ours is low, so the move goes even if theirs changes before it starts (a look to decide again could
+        come too late); otherwise a new name of theirs drops it, and the next look decides on the one out."""
         self.queued = None  # a new tap stands for any move still waiting
         self.practised[move.id] = self.practised.get(move.id, 0) + 1
         # No fast taps from here until the move starts: a tap on the field after the charged tap takes its place
@@ -2036,6 +2065,10 @@ class Player:
             # fainted chose Jellicent on the replacement prompt, where Jellicent's portrait sits over the button).
             self.log("throw_cancelled", t, move=move.id, why="prompt")
             return
+        if not stick and self.foe_name_new():
+            # decided on the one that has gone: the next look (at once, see foe_name_new) decides on the one out
+            self.log("throw_cancelled", t, move=move.id, why="their Pokémon changed", now=self.names.species)
+            return
         self.touch(point, f"charged move {k + 1}: {move.name}")
         tapped = last_tap = time.time()
         costs = [m.energy for m in self.team[self.active].charged]
@@ -2058,6 +2091,17 @@ class Player:
             if when <= last:
                 continue
             last = when
+            if not stick and self.foe_name_new():
+                # Theirs changed while ours waited (the game takes no move during a switch or a faint, so the taps
+                # were not yet taken): no more taps, and fast taps again take the place of any it has. The next look
+                # decides on the one out; a move that goes anyway is watched for and swiped (watch_queued), not
+                # tapped again. 2026-11-22: Leaf Blade meant for Swampert went at Giratina, Shadow Ball at Magnezone
+                # after 3 s of taps through Luxray's switch.
+                self.log("throw_dropped", self.now(), move=move.id, why="their Pokémon changed",
+                         now=self.names.species, taps=taps_sent, after_tap_s=round(time.time() - tapped, 2))
+                self.queued, self.cue_found = (k, move, tapped, time.time() + 40, self.now()), None
+                self.queued_retapped = True
+                return
             # The top box is read (0.3 to 0.4 s a read) only once the fight is off the screen, as it is within a
             # tenth of a second of Get Ready!; meanwhile every frame gets the quick looks, so a re-tap is on time.
             bars = screen.bars(rgb)
@@ -2069,6 +2113,8 @@ class Player:
             if on:  # their fast moves keep landing while ours waits to start (2026-11-08: two went uncounted)
                 self.fight_frame_t = bt
                 self.watch_hits(bt, bars)
+                if not stick:
+                    self.names.offer(rgb, bt)  # their name, read in the background: a change drops the move (above)
             if screen.replace_prompt(rgb):  # ours fainted first: the loop answers the prompt
                 self.log("throw_fainted", self.now(), move=move.id)
                 return
@@ -2285,6 +2331,8 @@ class Player:
                 self.prompt_tapped = time.time()
             return
         self.prompt_answered = True
+        # their name read since the last look is the one throwing: the call is made on it (see foe_now)
+        self.foe_now(t, "shield prompt")
         self.pending_theirs = True
         self.their_throw_at = time.time()
         view = self.view()
