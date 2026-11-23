@@ -1,0 +1,44 @@
+900 jobs to run on 30 workers
+  220 results, 1 min
+  525 results, 2 min
+  830 results, 3 min
+  1135 results, 4 min
+  1445 results, 5 min
+  1505 results, 6 min
+  1635 results, 7 min
+  1670 results, 8 min
+  1800 results, 10 min
+  1915 results, 11 min
+  1980 results, 12 min
+  2090 results, 13 min
+  2160 results, 14 min
+  2250 results, 15 min
+  2360 results, 16 min
+  2425 results, 17 min
+  2530 results, 18 min
+  2600 results, 19 min
+  2700 results, 20 min
+  2785 results, 21 min
+  2885 results, 22 min
+  3050 results, 23 min
+  3345 results, 24 min
+  3615 results, 25 min
+  3925 results, 26 min
+  4200 results, 27 min
+  4495 results, 28 min
+
+baseline: website
+  head to head, all candidates: baseline shields / shield prompts 5451 / 17942 (30.4%)
+  against the crowd: 77.6% ± 2.1
+    baseline: 1.825 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1500 battles; 29.33 total searches/battle, 5.946 search seconds/battle); shields / shield prompts 2566 / 9406 (27.3%)
+
+candidate 1: website,q=runs/ul-decide/q-no-midswap.npz,eval=runs/ul-eval/eval.npz
+  head to head against the baseline, 1500 pairings both ways: 51.1% ± 1.5
+    candidate: 2.181 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (3000 battles; 28.99 total searches/battle, 5.396 search seconds/battle); shields / shield prompts 5321 / 18202 (29.2%)
+    baseline:  2.064 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (3000 battles; 27.50 total searches/battle, 4.964 search seconds/battle); shields / shield prompts 5451 / 17942 (30.4%)
+  against the crowd: 77.5% ± 2.1, -0.1 ± 2.4 points on the baseline
+    candidate: 1.825 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1500 battles; 30.50 total searches/battle, 6.273 search seconds/battle); shields / shield prompts 2561 / 9585 (26.7%)
+  search time per searched decision: median 141 ms, 99th percentile 703, worst 1938 (this machine)
+
+elapsed: 1696.1 seconds
+results: runs\engine_versus\ul-nets-nomid.json
