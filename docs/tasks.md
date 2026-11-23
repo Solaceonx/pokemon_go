@@ -73,6 +73,53 @@ and push that before starting.
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
 
+## 48. Ultra League networks — for Marco's PC (the owner, 2026-11-22)
+
+**Why.** The bot now plays Ultra League GO Battle League on the owner's main account (branch `ultra-league`, task 40):
+Melmetal / Blastoise / Skeledirge, every minigame Excellent (33 of 33 in the last set), throws on time. It still
+loses about 3 games in 5 to ordinary players, on decisions: Blastoise left in for 50 s against Virizion's Leaf Blades
+with Skeledirge on the bench; Skeledirge sent into Giratina (Origin) and into Swampert; Skull Bash thrown with Hydro
+Cannon paid for (the trained bot chose it 6 of 6; the search preferred Hydro Cannon by less than its 0.03 edge). Both
+networks the engine uses, the trained bot (`runs/general-decide/q.npz`) and the evaluation (`runs/eval/eval.npz`, wide),
+were trained on Great League only. `status.md` ("Ultra League from the Mac", 2026-11-22) has the games.
+
+How much training helps (Great League, `status.md`): about 1 core-hour of examples gave a bot 4 to 6 points worse
+than the 11-core-hour one; 12 core-hours (task 19, 1.2 million shield examples) beat that by 2 to 3 points; more
+time, a bigger network or more inputs gained nothing measurable. Starting from a trained network (`--start`) gets
+there sooner. So this is a 4 to 8 hour job on the 9950X (16 cores), not a bigger one.
+
+**Setup.** Branch `ultra-league` has everything: `POGO_LEAGUE=2500` makes every `GameData()` Ultra League's (pool,
+default builds, the crowd), the Great League team list is replaced by random threes from the UL top 50,
+`train_eval.py --q`, and `play_android` reads `POGO_Q` / `POGO_EVAL`. Smoke-tested on the owner's Mac (all three
+scripts below, tiny sizes). 14 workers leaves two cores free; the owner has said this machine may use them.
+
+```
+cd /d "C:\Users\marco\Developer\pokemon_go" && git fetch origin && git worktree add ..\pokemon_go-task48 origin/ultra-league && cd /d ..\pokemon_go-task48 && git switch -c task48-ul-networks
+```
+
+Each step below runs from `C:\Users\marco\Developer\pokemon_go-task48` with
+`set "POGO_LEAGUE=2500" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u`
+in front of the script; logs go to `runs\task48_*.out`.
+
+1. **The trained bot** (about 2.5 hours: 28 core-hours of examples, then the 1,000-battle margin choice and the
+   3,000-battle closing test against the rulebook). Task 19's adopted recipe, started from the Great League network:
+   `scripts\decide.py --start runs/general-decide/q.npz --opponents runs/general-decide/q.npz --minutes 120 --rounds 3 --workers 14 --run ul-decide >> runs\task48_decide.out 2>&1`
+2. **The evaluation** (about 45 minutes), positions from battles the new bot plays:
+   `scripts\train_eval.py --wide --battles 40000 --workers 14 --q runs/ul-decide/q.npz --out runs/ul-eval/eval.npz >> runs\task48_eval.out 2>&1`
+3. **The live engine, old networks against new** (about 1.5 hours), all in Ultra League, the website engine
+   (`WEBSITE` settings) on each pair of networks; three candidates so the table shows which network matters:
+   `scripts\engine_versus.py --tag ul-nets --baseline website --candidates "website,q=runs/ul-decide/q.npz,eval=runs/ul-eval/eval.npz" "website,q=runs/ul-decide/q.npz" "website,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 14 --seed 4801 >> runs\task48_versus.out 2>&1`
+   (resumable: the same command again skips what is done).
+4. **Confirm the best on fresh battles** (about 30 minutes), the best candidate of step 3 alone:
+   `scripts\engine_versus.py --tag ul-nets-confirm --baseline website --candidates "<best>" --pairings 2000 --crowd 1000 --pvpoke 0 --workers 14 --seed 4802 >> runs\task48_confirm.out 2>&1`
+
+**Done when** the tables of steps 1, 3 and 4 are in `status.md` with these commands, and the branch is pushed with
+`runs/ul-decide/q.npz`, `margin.txt`, `runs/ul-eval/` (`eval.npz`, `eval-narrow.npz`, `report.json`),
+`runs/engine_versus/ul-nets*.json` and the `runs/task48_*.out` logs (not `examples.npz`: too big for git). The usual
+rule decides: a candidate ships if it is above 50% head to head beyond the margin and no worse against the crowd
+beyond the margin, confirmed on the fresh seed. Then the owner's Mac plays with
+`POGO_Q=runs/ul-decide/q.npz POGO_EVAL=runs/ul-eval/eval.npz` (task 40 notes the GBL command).
+
 ## 47. An evaluation that sees their bench — Claude on the owner's PC (the owner, 2026-11-18) — **done 2026-11-18 (branch `task40-android`): stronger in the simulator; adopted there 2026-11-19**
 
 **Result** (`docs/status.md` on `task40-android`, "An evaluation that sees their bench").
