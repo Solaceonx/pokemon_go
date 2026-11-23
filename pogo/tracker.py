@@ -89,6 +89,9 @@ class Foe:
         # have, from those hits and its charged moves. A move that could not have paid for a charged move it threw
         # is not its fast move.
         self.by_move: dict[str, int] = {}
+        # Their charged hits on ours with our bar read just before and after: health lost over the rules' damage. A
+        # shadow shows about 1.2 (Tracker._maybe_shadow).
+        self.hit_ratios: list[float] = []
 
     def gain(self, amount: int) -> None:
         self.lo, self.hi = min(ENERGY_CAP, self.lo + amount), min(ENERGY_CAP, self.hi + amount)
@@ -220,6 +223,8 @@ class Tracker:
         self._my_throw_open = None  # a throw of ours whose shield is not yet known: (time, target, their shields, its HP before)
         self._their_hit_unapplied = None  # their unnamed charged move on ours: (time, ours, shielded, its HP before)
         self._my_bar_doubt = self._foe_bar_doubt = None  # a reading held back: (whose, HP read)
+        self._my_bar = None  # the last reading of our bar given to the count: (turn, ours, HP)
+        self._hit_check = None  # their charged move whose damage our bar will measure: see _measure_hit
         self.t = 0.0
         self.turn = 0  # fighting turns so far; charged moves stop this clock
         self.beat = 0  # fighting turn on which their fast-move rhythm last restarted
@@ -399,10 +404,12 @@ class Tracker:
 
         # What they did to me, from my health bar. After a switch the drop is measured on the Pokémon now in.
         quiet = not thrown and not i_changed and not they_changed
+        bar_before = self._my_bar
         if obs.my_hp is not None:
             hp = round(obs.my_hp * mon.build.hp)
             drop = mon.hp - hp
             mon.hp = hp
+            self._my_bar = (self.turn, mon, hp)
             if they_changed != "faint" and i_changed != "faint":
                 if quiet and self.quiet and self.turn > self.hp_turn:
                     foe.steps.append((mon, self.turn - self.hp_turn, drop, not self.stretch))
@@ -416,6 +423,14 @@ class Tracker:
             # is taken off by the rules.
             self._their_attacks(obs, None, my_shields_before,
                                 unread=not i_changed and (obs.my_shields is not None or my_shields_before == 0))
+
+        if obs.foe_charged and they_changed != "faint" and foe is not None:
+            named = next((m.id for m in foe.mon.build.charged if obs.foe_move in (m.id, m.name)), None)
+            fresh = bar_before is not None and bar_before[1] is mon and self.turn - bar_before[0] <= 3
+            self._hit_check = dict(turn=self.turn, mon=mon, foe=foe, before=bar_before[2] if fresh else None,
+                                   move=named, shielded=me.shields < my_shields_before)
+        elif obs.my_hp is not None:
+            self._measure_hit(obs.t, mon, foe)
 
         # What I did to them, from their health bar and my own energy.
         if obs.my_charged is not None and i_changed != "faint" and obs.my_charged < len(mon.build.charged):
@@ -519,6 +534,49 @@ class Tracker:
         self.hp_turn = self.turn
         self.quiet = self.stretch = False  # the next look's drop in our health spans both: no step for the fit
         return how
+
+    def _measure_hit(self, t: float, mon: Mon, foe: Foe | None) -> None:
+        """Their last charged move's damage, from our bar read before it (within 3 fighting turns) and now (within 4
+        after), once the bar shows most of it: a ratio for the Pokémon that threw it (Foe.hit_ratios)."""
+        check = self._hit_check
+        if check is None:
+            return
+        if self.turn - check["turn"] > 4 or check["mon"] is not mon or check["foe"] is not foe:
+            self._hit_check = None
+            return
+        if check["before"] is None or check["shielded"] or check["move"] is None:
+            return
+        expected = damage(foe.mon, self.gd.moves[check["move"]], mon)
+        lost = check["before"] - mon.hp
+        if expected < 25 or lost < 0.6 * expected:
+            return  # too small to tell, or the bar has not caught up yet
+        foe.hit_ratios.append(round(lost / expected, 3))
+        self._hit_check = None
+        self._maybe_shadow(t, foe)
+
+    def _maybe_shadow(self, t: float, foe: Foe) -> None:
+        """Their Pokémon is a shadow when its charged moves hit ours for 1.13 or more of the rules' damage, by the
+        median of two or more measured hits (a shadow does 1.2 times: 2026-11-22, their hits on our Shadow Snorlax
+        came to 1.16 and 1.21 of a plain one's; on our others 1.01 to 1.06, single hits up to 1.32). Its health
+        share, energy and stages carry over; the name read stays the plain one (form_of)."""
+        r = sorted(foe.hit_ratios)
+        n = len(r)
+        build = foe.mon.build
+        shadow = build.species_id + "_shadow"
+        if n < 2 or (r[(n - 1) // 2] + r[n // 2]) / 2 < 1.13 or build.species_id.endswith("_shadow") \
+                or shadow not in self.gd.species:
+            return
+        try:
+            new = self.gd.build(shadow, [build.fast.id, *(m.id for m in build.charged)], allow_forms=True)
+        except (KeyError, ValueError):
+            return
+        old, mon = build.species_id, foe.mon
+        foe.mon = Mon(new, round(max(0, mon.hp) / build.hp * new.hp), mon.energy)
+        foe.mon.atk_stage, foe.mon.def_stage = mon.atk_stage, mon.def_stage
+        self.form_of[old] = shadow
+        self.foes[shadow] = self.foes.pop(old, foe)
+        self.order = [shadow if x == old else x for x in self.order]
+        self._note(t, "foe_shadow", species=shadow, ratios=r)
 
     def _doubted(self, target: Mon, hp: int, turns: int, attacker: Mon, whose: Mon, slot: str) -> bool:
         """A reading of target's bar at hp is held back when it is lower than the tracker's count by more than the
@@ -671,6 +729,9 @@ class Tracker:
         move = known or self._learn_move(t, foe, name)
         if move is not None and known is None:
             foe.used[move.id] = foe.used.get(move.id, 0) + 1
+        check = self._hit_check
+        if move is not None and check is not None and check["move"] is None and check["foe"] is foe:
+            check["move"] = move.id
         hit, self._their_hit_unapplied = self._their_hit_unapplied, None
         if move is not None and hit is not None and t - hit[0] < 8.0 and hit[1] is self.me.mon:
             # The move went with our bar unread and could have been either of theirs: its damage now it is named
