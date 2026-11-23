@@ -4906,6 +4906,17 @@ health worse after their throws (17 -> 21: more of their moves affordable, the w
 (6) Task 48's files merged into `ultra-league` (317abec6); its evaluation is used only with
 `POGO_EVAL=runs/ul-eval/eval.npz`, the owner's choice. Dry runs of 191031, 162928 and 185258 complete.
 
+**Our health after their charged moves, last round (2026-11-23, `ultra-league` d33a0583).** Measured against our bar
+1.5 s or more after the look that brings their move (it lands a second or so after that look, its banner still up;
+the first reading is often the bar from before it): over 20% off at 10 of 144, now 7 (mean 5.1% of max HP). Of the 7,
+3 are fixed in code the old logs predate (the name area, the switch-bar fix b81dda20, the newcomer's bar now not
+credited within 6 s of a switch tap); 4 are two of their moves affordable and none named until the next look. Taking
+off the lesser meanwhile made it worse (16 of 144), so the damage waits for the name. A reading under 40% of a hit
+just taken off is held 3 s as the bar from before it; at the look that brings their move the doubt allows only it (1
+if we shielded). Replays at the end: their energy at their throws short at 1 of 91 (FOE_MARGIN 1, none by more than a
+fast move); Pokémon wrongly at 0 HP, ours 1 and theirs 1 (both beliefs of the old logs, fixed in code since); dry runs
+complete.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
