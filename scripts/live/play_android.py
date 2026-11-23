@@ -65,6 +65,8 @@ SPAM_CHARGED = _os.environ.get("POGO_SPAM_CHARGED", "1") != "0"
 # tap (Player.check_switch); POGO_SPAM_SWITCH=0 goes back to one tap and one retry once it is seen not to be taken
 SPAM_SWITCH = _os.environ.get("POGO_SPAM_SWITCH", "1") != "0"
 SWITCH_SPAM_S = 3.0  # 9 in 10 switches showed within 3 s of the tap (2026-11-08 to 10, 144 switches)
+# Fast moves this many turns or longer: no fast taps while the one under way pays for a charged move (Player.slow_pause_for)
+SLOW_FAST_TURNS = int(_os.environ.get("POGO_SLOW_FAST_TURNS", "4"))
 STRIP_SAME = 40  # the bench strip as at the tap: an ignored tap left it within 17 to 31, a switch moves it 60 to 75
 TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": "fairy"}  # types the library lacks
 
@@ -528,6 +530,10 @@ class Player:
         self.fast_carry = 0.0  # the part of a fast move counted at no look yet (the count with no reading)
         self.clock_frame_t = -9.0  # the last frame the turn clock counted
         self.hold_taps_until = 0.0  # no fast taps before this (after a switch tap)
+        self.slow_pause = None  # (slot, until, reading, since): no fast taps while a long fast move pays (slow_pause_for)
+        self.pause_hold_until = 0.0  # after the pause, no fast taps before the engine has decided on the energy paid
+        self.hold_ended_at = 0.0  # when the last armed hold or slow pause ended
+        self.unsure_hold = None  # (slot, until, since): a throw decided on the count alone, no fast taps (long fast moves)
         # A switch the engine chose that has yet to be tapped: one chosen during "GO!" (the engine searches its first
         # decision fully and wanted Stunfisk in; its next ones, on a short deadline, fell back to fast moves), or one
         # the game ignored, tapped once more.
@@ -804,7 +810,8 @@ class Player:
             # A frame or two without the bars in the middle of the fight (they are missed now and then) does not stop
             # the fast taps: they go on until the fight has been off for 0.4 s. Prompts stop them at once (above).
             self.tapping = (bool(fighting) or (self.tapping and t - self.fight_frame_t < 0.4)) \
-                and time.time() >= self.hold_taps_until and self.armed is None
+                and time.time() >= self.hold_taps_until and self.armed is None and self.slow_pause is None \
+                and time.time() >= self.pause_hold_until and self.unsure_hold is None and not self.slow_paid_wait()
             if fighting:
                 self.watch_hits(t, look.bars)
                 if "mine" in look.bars and self.switching is None:
@@ -926,10 +933,21 @@ class Player:
             self.hits_key = key
         self.last_fight_frame = t
         theirs = bars.get("theirs")
+        mon = self.team[self.active]
         if theirs is not None and foe is not None and self.my_steps.add(t, theirs * screen.BAR_INSIDE) is not None:
+            last = getattr(self, "my_hit_at", None)
+            if mon.fast.turns >= SLOW_FAST_TURNS and last is not None and 0 <= t - last < 0.3 * mon.fast.turns:
+                # A long fast move lands once in 2.5 s; Incinerate's flames step their bar twice or more (2026-11-22:
+                # 'hits' 0.5 to 0.8 s apart, each adding 20 to the count, which ran a move ahead of the buttons)
+                self.log("my_hit_ignored", t, since=round(t - last, 2))
+                return self._their_side(t, bars, foe, key)
             self.my_hits_since_look += 1
             self.my_hit_at = t  # our fast move landed: the next has just begun
             self.log("my_hit", t)
+        self._their_side(t, bars, foe, key)
+
+    def _their_side(self, t: float, bars: dict, foe, key) -> None:
+        """watch_hits for their fast moves landing on our bar."""
         px = bars.get("mine")
         if px is None or foe is None:
             return
@@ -1454,6 +1472,10 @@ class Player:
             if ready is not None:
                 extra["precomputed"] = True
             self.log("decision", t, action=self.name(self.decision), ms=round((time.perf_counter() - t0) * 1000), **extra)
+            if self.decision == FAST and self.slow_pause is None:
+                self.pause_hold_until = 0.0  # decided on the energy as it is: the fast taps go on
+            if self.decision == FAST:
+                self.fast_decided_at = time.time()
             self.no_weaker_move(t, view)
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
@@ -1466,6 +1488,31 @@ class Player:
             # Stunfisk seen 0.2 s later, and Stunfisk's Discharge tapped with no energy)
             self.log("decision_dropped", t, was=self.name(self.decision), why="active changed")
             self.decision, self.armed = FAST, None
+        if self.slow_pause is not None:
+            slot, until, read0, since = self.slow_pause
+            e = self.energy()
+            bounds = self.paid_bounds()
+            rose = (e is not None and e >= read0 + 0.5 * mon.fast.energy_gain) or (
+                getattr(self, "my_hit_at", None) is not None and self.t0 is not None and self.t0 + self.my_hit_at > since)
+            paid = bounds is not None and any(bounds[0] >= m.energy > read0 for m in mon.charged)
+            why = ("switch" if slot != self.active or self.switching is not None else "decided" if self.decision != FAST
+                   else "rose" if rose else "paid" if paid else "time" if time.time() > until else None)
+            if why is not None:
+                self.log("slow_pause_end", t, why=why, read=e, waited=round(time.time() - since, 2))
+                self.slow_pause = None
+                self.hold_ended_at = time.time()
+                if why in ("rose", "paid"):  # a fast tap now could start the next Incinerate before the engine throws
+                    self.pause_hold_until = time.time() + 0.6
+        if self.unsure_hold is not None:
+            slot, until, since = self.unsure_hold
+            sure_now = self.energy() is not None or self.paid_bounds() is not None
+            landed = getattr(self, "my_hit_at", None) is not None and self.t0 is not None and self.t0 + self.my_hit_at > since
+            why = ("switch" if slot != self.active or self.switching is not None else "fast" if self.decision == FAST
+                   else "read" if sure_now else "landed" if landed else "time" if time.time() > until else None)
+            if why is not None:
+                self.log("unsure_hold_end", t, why=why, waited=round(time.time() - since, 2))
+                self.unsure_hold = None
+                self.hold_ended_at = time.time()
         if self.armed is not None:
             k, until = self.armed
             e = self.energy()
@@ -1476,6 +1523,7 @@ class Player:
             if time.time() > until or self.switching is not None or rose:
                 self.log("armed_expired", t, move=mon.charged[k].id, read=e, rose=rose)
                 self.armed = None
+                self.hold_ended_at = time.time()
                 self.decision = FAST
             else:
                 self.decision = CHARGED[0] + k
@@ -1588,6 +1636,16 @@ class Player:
                 self.throw(t, k, mon.charged[k], count_only=count_only)
                 self.decision = FAST
                 return
+            if (mon.fast.turns >= SLOW_FAST_TURNS and have >= mon.charged[k].energy and self.unsure_hold is None
+                    and self.armed is None and self.last_fast_tap > self.hold_ended_at
+                    and time.time() - self.last_fast_tap < 0.6):
+                # A throw decided on the count, the buttons not read yet: a fast tap now would put a whole Incinerate
+                # before it (2026-11-22, 172017: Torch Song decided at 30.6 s with no reading, the taps went on 2 s
+                # until one came, and the throw went 2.5 s after its tap). No fast taps until the buttons read, our
+                # move lands, or one fast move's time.
+                self.unsure_hold = (self.active, time.time() + mon.fast.turns * 0.5 + 0.3, time.time())
+                self.tapping = False
+                self.log("unsure_hold", t, move=mon.charged[k].id, have=have)
         # Not before 1.5 s: until then "GO!" is on the screen and the game takes no switch (2026-11-08: the opening
         # switch to Stunfisk at 0.8 s and 0.97 s was ignored both times).
         if self.open_with is not None and (self.open_with == self.active or self.tracker.me.team[self.open_with].hp <= 0):
@@ -1808,7 +1866,19 @@ class Player:
         mon = self.team[self.active]
         have = self.energy()
         bounds = self.paid_bounds()
+        slow = mon.fast.turns >= SLOW_FAST_TURNS
+        # Never again without a fast tap since the last hold ended, and only with one just made (a move in flight):
+        # armed with none, Skeledirge stood 3 s for an Incinerate never begun and was armed again at once, from 60
+        # to 66 s and on (2026-11-22, 170719)
+        if self.last_fast_tap <= self.hold_ended_at or time.time() - self.last_fast_tap > (0.6 if slow else 1.0):
+            return
+        if have is None and slow and self.tracker.foe is not None:
+            # long fast moves: the count stands in (the buttons gave a reading on 1 frame in 10 for Skeledirge, and a
+            # tap during the paying Incinerate costs 2.5 s); with the hits it counts debounced (watch_hits)
+            have = float(self.tracker.me.mon.energy)
         if have is None:
+            if self.tracker.me.mon.energy + mon.fast.energy_gain >= min(m.energy for m in mon.charged) > self.tracker.me.mon.energy:
+                self.log("ahead_not_armed", t, read=None, counted=self.tracker.me.mon.energy)
             return  # only on the buttons' reading: the count can run a fast move or two ahead
         if bounds is not None:
             have = max(have, bounds[0])
@@ -1829,15 +1899,49 @@ class Player:
         finally:
             me.energy, self.engine.cap_ms = kept, cap
         if ahead not in CHARGED:
+            self.log("ahead_not_armed", t, read=round(have, 1), soon=round(soon, 1), answer=self.name(ahead))
+            self.slow_pause_for(t, mon, have, soon)
             return
         k = ahead - CHARGED[0]
         if not have < mon.charged[k].energy <= soon:
+            self.log("ahead_not_armed", t, read=round(have, 1), soon=round(soon, 1), answer=self.name(ahead))
+            self.slow_pause_for(t, mon, have, soon)
             return  # paid for already: the usual way
         # the move under way and a little: if the button has not lit by then, the fast taps go on
         self.armed = (k, time.time() + mon.fast.turns * 0.5 + 0.3)
         self.armed_at, self.armed_read = time.time(), have
         self.tapping = False
         self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1))
+
+    def slow_paid_wait(self) -> bool:
+        """A long fast move and a charged move shown paid for (the buttons' reading, or the names under them): a fast
+        tap only within 0.35 s of the engine answering 'fast'. With decisions every 0.5 s, the taps between the button
+        lighting and the engine's throw started a whole Incinerate first (2026-11-22, 172555: Torch Song paid at
+        56.8 s, decided at 57.5 s, fast taps at 57.51 and 57.67, the throw after them; again at 65.4 s)."""
+        mon = self.team[self.active]
+        if mon.fast.turns < SLOW_FAST_TURNS:
+            return False
+        cheapest = min(m.energy for m in mon.charged)
+        e = self.energy()
+        bounds = self.paid_bounds()
+        paid = (e is not None and e >= cheapest) or (bounds is not None and bounds[0] >= cheapest)
+        return paid and time.time() - getattr(self, "fast_decided_at", 0.0) > 0.35
+
+    def slow_pause_for(self, t: float, mon, have: float, soon: float) -> None:
+        """A long fast move (Skeledirge's Incinerate: 5 turns, 2.5 s) under way pays for a charged move and the engine,
+        asked ahead, would not throw it: no more fast taps until the button lights, then the engine decides on the
+        energy paid. The owner, 2026-11-22: "skeledirge has 2.5s long fast moves so do not over tap". The last tap
+        made during a move is the next action, so a fast tap late in the paying Incinerate puts a whole Incinerate
+        (2.5 s) before the throw; the engine's answer asked ahead with a capped search flips between the fast move
+        and the throw (2026-11-22, 165658: Torch Song at 47.7 energy, 'fast' 9 times and the throw twice in 3 s), so
+        the pause does not wait on it. Only with the buttons read and fast taps under way (a move in flight)."""
+        if mon.fast.turns < SLOW_FAST_TURNS or self.slow_pause is not None or time.time() - self.last_fast_tap > 0.6:
+            return
+        if not any(have < m.energy <= soon for m in mon.charged):
+            return
+        self.slow_pause = (self.active, time.time() + mon.fast.turns * 0.5 + 0.3, have, time.time())
+        self.tapping = False
+        self.log("slow_pause", t, read=round(have, 1), soon=round(soon, 1))
 
     def throw(self, t: float, k: int, move, count_only: bool = False) -> None:
         self.queued = None  # a new tap stands for any move still waiting
