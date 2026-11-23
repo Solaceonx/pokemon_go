@@ -4819,3 +4819,15 @@ over 2.2 s (the Virizion team 28%), 4 not taken. Where the logs show what lost:
 - Shields: both spent in 9 of 10 losses, sometimes early (both on Melmetal at 58 and 45 HP against Jellicent).
 - Against: Tinkaton 6-0, Skeledirge 3-4, Giratina (Origin) 1-3; Ampharos, Venusaur, Jellicent, Cresselia, Melmetal,
   Blastoise 0-2 each.
+
+**Their energy at their throws, and farming down (2026-11-23, logs of 2026-11-22, branch `ultra-league` 879e2888).**
+At 138 named charged moves of theirs in the Ultra League games, the top of the tracker's range was short of the move's
+cost 36 times (26%), by more than one fast move 17 times, by more than two (the engine's `FOE_MARGIN`) 7 times. Guessed
+and inferred fast moves were short about as often (24% and 28%). Their hits were seen almost only while the turn clock
+ran (506 against 5), so the clock's stops look like real pauses; the shortfall at the throw is mostly the look before it
+coming late. The 7 big misses (18 to 50 short) look like a Pokémon coming back in, or who is out being lost. What it
+cost: `farm_down` (hold a paid move, finish them with fast moves) read the bottom of the range and counted their charged
+move only with no shields left. Of 23 holds, in 10 they threw first, 9 of them with the move already counted in reach
+and a shield up: 5 shields spent, 5 hits taken, one faint (Torch Song paid). Now it reads the top plus one fast move and
+does not farm with any charged move of theirs in reach, whatever the shields (`tests/test_farm_down.py`). Not yet
+played.
