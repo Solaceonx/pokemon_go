@@ -1011,7 +1011,10 @@ class Player:
         mon = self.team[self.active]
         if theirs is not None and foe is not None and self.my_steps.add(t, theirs * screen.BAR_INSIDE) is not None:
             last = getattr(self, "my_hit_at", None)
-            if mon.fast.turns >= SLOW_FAST_TURNS and last is not None and 0 <= t - last < 0.3 * mon.fast.turns:
+            self.my_step_at = t  # any step down of their bar, a flame's or the hit's: holds end on it
+            # 0.4 s a turn, not 0.3 (2026-11-23, 232848: a step 1.53 s after Incinerate's hit was taken for the next
+            # hit, and the real one 1.31 s later was ignored; a long move's hits come 2.5 s apart)
+            if mon.fast.turns >= SLOW_FAST_TURNS and last is not None and 0 <= t - last < 0.4 * mon.fast.turns:
                 # A long fast move lands once in 2.5 s; Incinerate's flames step their bar twice or more (2026-11-22:
                 # 'hits' 0.5 to 0.8 s apart, each adding 20 to the count, which ran a move ahead of the buttons)
                 self.log("my_hit_ignored", t, since=round(t - last, 2))
@@ -1632,8 +1635,11 @@ class Player:
             slot, until, read0, since = self.slow_pause
             e = self.energy()
             bounds = self.paid_bounds()
+            # risen by the reading, or a step down of their bar since the pause began (2026-11-23, 232848: the hit at
+            # 83.7 s ignored as a flame's, the reading 27.8 to 36.9, short of half a move by 0.9: 3 s with no taps)
+            step = max(getattr(self, "my_hit_at", None) or -1.0, getattr(self, "my_step_at", None) or -1.0)
             rose = (e is not None and e >= read0 + 0.5 * mon.fast.energy_gain) or (
-                getattr(self, "my_hit_at", None) is not None and self.t0 is not None and self.t0 + self.my_hit_at > since)
+                step >= 0 and self.t0 is not None and self.t0 + step > since)
             paid = bounds is not None and any(bounds[0] >= m.energy > read0 for m in mon.charged)
             why = ("switch" if slot != self.active or self.switching is not None else "decided" if self.decision != FAST
                    else "rose" if rose else "paid" if paid else "time" if time.time() > until else None)
@@ -1660,6 +1666,12 @@ class Player:
             # is still not paid for: the taps go on at once, not at the hold's end (2026-11-09: with Poison Sting
             # 12 holds of 17 ran out, 1.6 to 1.8 s of no fast taps each; those that paid threw within 0.34 s)
             rose = e is not None and e >= self.armed_read + 0.5 * mon.fast.energy_gain and e < mon.charged[k].energy
+            # or a step down of their bar 0.4 s ago or more (the reading's time to catch up) and still not paid
+            step = getattr(self, "my_step_at", None)
+            landed = (step is not None and self.t0 is not None and self.t0 + step > self.armed_at
+                      and time.time() - (self.t0 + step) > 0.4 and e is not None and e < mon.charged[k].energy)
+            # (with no reading, the buttons may be flashing as the move becomes paid for: the timer decides)
+            rose = rose or landed
             if time.time() > until or self.switching is not None or rose:
                 self.log("armed_expired", t, move=mon.charged[k].id, read=e, rose=rose)
                 self.armed = None
@@ -2096,7 +2108,11 @@ class Player:
         # to 66 s and on (2026-11-22, 170719)
         if self.last_fast_tap <= self.hold_ended_at or time.time() - self.last_fast_tap > (0.6 if slow else 1.0):
             return
-        if have is None and slow and self.tracker.foe is not None:
+        # The count stands in only with the buttons read in the last 1.5 s: with none since a charged move (the
+        # fight not back, taps not taken), the count held the taps 3.5 s for a move never begun (2026-11-23, 232848,
+        # 92.8 to 96.3 s, after Giratina's Ominous Wind)
+        read_lately = self.energy_read is not None and time.time() - self.energy_read[1] < 1.5
+        if have is None and slow and self.tracker.foe is not None and read_lately:
             # long fast moves: the count stands in (the buttons gave a reading on 1 frame in 10 for Skeledirge, and a
             # tap during the paying Incinerate costs 2.5 s); with the hits it counts debounced (watch_hits)
             have = float(self.tracker.me.mon.energy)
