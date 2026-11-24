@@ -4927,6 +4927,15 @@ guessed, but counting those at the fastest likely rate leaves 6; a restart 2 tur
 throws but makes our health worse (more moves affordable, the wrong one guessed). `FOE_MARGIN` 1 stays: it is the
 engine's allowance for a fast move of timing the screen does not give.
 
+**Their fast-move timing (2026-11-23, `ultra-league` 541a4865).** On every frame of eight recordings: the fast move
+assumed was rarely why the count fell short (at 6 of the 8 throws short with no margin it already charged as fast as
+any they could have; Arcanine's Fire Fang for a likely Snarl is the exception). Their hits were the trouble: the
+detector on our bar (2 px falls) found 61% of those landing while our bar showed, as many of their fast moves take 1
+to 2% of it. A finer one (`FineSteps`: 1 px, median of 0.23 s, held 0.07 s, timed at its first reading) finds 86%; with
+its hits the count at their named throws in those battles fell short with no margin at 3 of 33, not 8, at the same
+median over the cost (4 at half the frame rate). Now live for their hits; `FOE_MARGIN` stays 1 until live battles
+with it show the shorts at no margin.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
