@@ -50,9 +50,9 @@ import random
 
 from ..arena import decisive
 from ..battle import CHARGED, FAST, SWITCH
-from ..engine import _First, imagine
+from ..engine import _First, _FirstShield, imagine
 from ..learner import Learner, describe, form_state, known_foes
-from ..realtime import RealTime
+from .engines import ModelledEngine
 
 
 def bot_values(agent: Learner, head: str, view, mask: tuple, advice: int, foe_energy: int | None = None):
@@ -71,7 +71,7 @@ def bot_values(agent: Learner, head: str, view, mask: tuple, advice: int, foe_en
         v = [max(v[0], v[3], v[4]), v[1], v[2]]
     v = [float(u) for u in v[:len(mask)]]
     best = max((k for k in range(len(mask)) if mask[k]), key=lambda k: v[k])
-    margin = agent.shield_margin if head == "shield" else agent.margin
+    margin = agent._head_margin(head, view)
     choice = best if v[best] - v[advice] > margin else advice
     if head == "shield" and agent.shield_toward and advice:
         choice = advice
@@ -197,7 +197,7 @@ class TreeLearner(Learner):
         advice = planner_choice()
         pick, values = bot_values(self, head, view, mask, advice, foe_energy)
         if node is None:
-            margin = self.shield_margin if head == "shield" else self.margin
+            margin = self._head_margin(head, view)
             node = s.nodes[key] = Node(len(mask), prior_logits(values, advice, len(mask), margin, s.temp), values)
             s.expanded = True
             choice = pick
@@ -209,7 +209,7 @@ class TreeLearner(Learner):
         return choice
 
 
-class TreeEngine(RealTime):
+class TreeEngine(ModelledEngine):
     def __init__(self, *args, depth: int = 0, root: str = "flat", sims: int | None = None, c_puct: float = 0.5,
                  prior_temp: float = 0.1, k0: float = 1.0, gumbel: float = 0.0, gscale: float = 1.0,
                  adversary: bool = False, protect_pick: bool = True, closed: bool = True,
@@ -243,11 +243,14 @@ class TreeEngine(RealTime):
         finally:
             self._last_pair, self._last_foe_free = pair, view.foe_switch_wait == 0
 
-    def _decide(self, head, view, mask, planner_choice, foe_energy=None):
+    def _search_decision(self, head, view, mask, planner_choice, foe_energy=None):
+        # Keep Engine._decide's hypothetical-shield guard and completed-swap marker.
+        if head == "throw":
+            self.last_throw_probability = 1.0
         if self.stay_after_replace and head in ("swap", "mid_swap") and view.turn == self._replaced_at:
             return 0
         if self._mix_fallback or head in self.forced or head not in self.heads:
-            return super()._decide(head, view, mask, planner_choice, foe_energy)
+            return Learner._decide(self, head, view, mask, planner_choice, foe_energy)
         options = [k for k in range(len(mask)) if mask[k]]
         memo = []
 
@@ -262,11 +265,26 @@ class TreeEngine(RealTime):
         self.mid_swap_searches += head == "mid_swap"
         self._foe_energy = foe_energy if foe_energy is not None else view.foe.energy
         _, values = bot_values(self, head, view, mask, advice(), foe_energy)
-        margin = self.shield_margin if head == "shield" else self.margin
+        margin = self._head_margin(head, view)
         logits = prior_logits(values, advice(), len(mask), margin, self.prior_temp)
         self._search = Search(self.depth, self.c_puct, self.k0, self.prior_temp, self.tree_heads, self.closed)
+        shared_choice = (
+            (head == "shield" and (self.shield_mix is not None or self.shield_floor > 0))
+            or (head == "throw" and (self.throw_mix is not None or self.equilibrium or self.no_tell_bait))
+            or (head in ("swap", "mid_swap") and self.switch_edge != 0)
+            or self.temperature > 0
+        )
         try:
-            choice, worth, battles = self._halving(view, head, options, pick, logits)
+            theirs = self._mixed_actions(head, view)
+            if theirs:
+                seeds = [self.rng.getrandbits(32) for _ in range(self.samples)]
+                mixed = self._mixed(view, head, options, seeds, theirs, pick)
+                if mixed is not None:
+                    return mixed
+            seeds = []
+            choice, worth, battles = self._halving(view, head, options, pick, logits, seeds)
+            if choice is not None and shared_choice:
+                choice = self._choose_worth(view, head, options, pick, worth, seeds)
         finally:
             nodes = len(self._search.nodes)
             self.nodes_made += nodes
@@ -275,14 +293,15 @@ class TreeEngine(RealTime):
         if choice is None:
             self.fell_back += 1
             choice = pick
-        self.changed += choice != pick
+        if not shared_choice:
+            self.changed += choice != pick
         self.last = dict(turn=view.turn, head=head, options=options, pick=pick, choice=choice, q=values,
                          worth=worth, battles=battles, nodes=nodes)
         if self.record is not None:
             self.record.append(self.last)
         return choice
 
-    def _halving(self, view, head: str, options: list, pick: int, logits: list):
+    def _halving(self, view, head: str, options: list, pick: int, logits: list, searched_seeds=None):
         """Sequential halving at the root ("flat": one round, every option on every seed). Returns the choice (None
         with no complete round), each option's mean worth and its number of imagined battles."""
         m = len(options)
@@ -297,6 +316,8 @@ class TreeEngine(RealTime):
         for r in range(rounds):
             per = max(1, (budget - used) // (len(alive) * (rounds - r)))
             seeds = [self.rng.getrandbits(32) for _ in range(per)]
+            if searched_seeds is not None:
+                searched_seeds.extend(seeds)
             for s in seeds:
                 done = {}
                 for k in alive:
@@ -346,7 +367,10 @@ class TreeEngine(RealTime):
         """Engine._look, with tree players for us (and, with adversary, for them) while a search is running."""
         search = self._search
         if search is None:
-            return super()._look(view, head, option, seed)
+            if not (self.fix_stay or self.fix_judged):
+                return super()._look(view, head, option, seed)
+            # Direct looks and simultaneous switch matrices also use the opt-in fixes.
+            search = Search(0, self.c_puct, self.k0, self.prior_temp, self.tree_heads, self.closed)
         rng = random.Random(seed)
         others = [j for j in range(3) if j != view.me.active]
         first = None
@@ -366,6 +390,8 @@ class TreeEngine(RealTime):
             them = self._imagined_opponent(rng)
         if self._their_first is not None and head != "shield":
             them = _First(them, self._their_first)
+        if self._their_shield is not None:
+            them = _FirstShield(them, self._their_shield, view.turn)
         stays = self.fix_stay and head in ("swap", "mid_swap") and option == 0
         battle = imagine(view, rng, self.pool, _Stay(us) if stays else _First(us, first), them, teams=self._teams,
                          team_builds=self._team_builds)
@@ -383,9 +409,11 @@ class TreeEngine(RealTime):
         act, even where the real one settled that matchup long ago: we may swap out right after the throw being judged,
         and they may swap at the first step of every look. Carry over what was settled: our own judgement of the
         matchup in play, and theirs when the matchup stood at our previous decision with their switch free."""
-        if head in ("throw", "shield") and self._judged == (view.me.active, view.foe.build.uid):
+        if head in ("throw", "shield", "mid_swap") and self._judged == (view.me.active, view.foe.build.uid):
             us._judged = self._judged
         player = getattr(them, "inner", them)
+        while hasattr(player, "inner"):
+            player = player.inner
         if self._foe_settled and head != "replace" and hasattr(player, "_judged"):
             foes = battle.sides[1]
             player._judged = (foes.active, battle.sides[0].mon.build.uid)

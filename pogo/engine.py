@@ -567,6 +567,10 @@ class Engine(Learner):
             return pick
         self.cut += rounds < len(seeds)
         worth = self._robust_worth(by_style, options) if by_style else {k: totals[k] / rounds for k in options}
+        return self._choose_worth(view, head, options, pick, worth, seeds)
+
+    def _choose_worth(self, view, head, options, pick, worth, seeds):
+        """Apply the shared choice controls after either flat or tree search values its options."""
         if self.switch_edge and head in ("swap", "mid_swap"):
             worth = {k: v - (self.switch_edge if k else 0.0) for k, v in worth.items()}  # option 0 stays
         tau = self.shield_mix if head == "shield" else self.throw_mix if head == "throw" else None

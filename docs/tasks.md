@@ -4,6 +4,24 @@ Open work on the bot, each brief self-contained. Read `AGENTS.md` first (setup, 
 task), then `docs/status.md` for every result so far. To take a task, put your name after its title here
 and push that before starting.
 
+## Engine lab: combine best pieces (2026-11-24) — built and validated locally; branch import pending
+
+Merged `lab-search`, then `lab-tactics`, onto the `lab-best`/`lab-int` starting
+point. The A-E tree/tactics specs compose, with opt-in fixes for shield advice,
+shield priors, searched swap marking and mid-matchup look state. Defaults stay
+unchanged. Final checks: 505 tests, no failures, three expected OCR errors and
+seven skips; all 83 lab tests pass; PvPoke 108/108. One-worker smoke: two pairings
+both ways for each of A-E against website, all 75.0% ± 49.0, 20 battles in 123.9 s.
+No strength gain established. The requested 16-worker screen is written, not run,
+in `runs/lab-best-screen.cmd` (seed 5501).
+
+The sandbox cannot write this worktree's external Git metadata. Merges and the
+integration commit are on `lab-best` in `runs/lab-best/git`, supplied in a local
+bundle for import; the registered branch has not advanced. Report, exact specs,
+checks, smoke output and import instructions: `runs/lab-best/REPORT.md`.
+No push. Remaining work: import the bundle, run the screen, then confirm any
+selected candidate on fresh battles before considering adoption.
+
 ## Where things stand (2026-10-17)
 
 - **The bot**: hand-written rules (`Planner`, `pogo/agents.py`) plus a learned layer that may overrule

@@ -5761,3 +5761,53 @@ The eight-worker screen is written as one line in [`runs/lab-tactics-league.cmd`
 seed 5401, website reference, four single-key candidates and their combination. Roughly 4–6 hours from the smoke,
 subject to contention. It has not been launched; no default is promoted. The report records the exact
 throw-before-swap condition and remaining questions about reader resistance, energy use and live timing.
+
+## Combined engine lab (2026-11-24): tree, mixed, learned and tactic keys integrated
+
+`lab-best` starts at `57116741` (the integrated league, creator exam, mixed and
+learning branches), then merges `lab-search` and `lab-tactics`. The search merge
+conflicted in the lab key registry and `engine_versus.py`'s player factory; both
+the tree settings and learned-opponent construction are retained. Tactics merged
+without conflicts. Defaults, shipped models and the website are unchanged.
+
+TreeEngine's `_decide` override bypassed the shared hypothetical-shield guard and
+the completed-swap marker, making `swap_after_throw` inert. Moving its search to
+`_search_decision` restores both. Tree and flat searches share final mixed-choice
+handling; shield priors now use the per-shield-count margins. `finish_safe` and
+`bait_mix` already acted through inherited methods and are covered by the new
+tests. `fix_judged` now includes mid-matchup looks, and direct looks also honor
+`fix_stay`/`fix_judged`. Learned opponents and fixed shield matrix columns work
+inside tree looks. Existing game digests and two pre-fix tree games still match
+with the tactic keys off.
+
+Baseline: 469 tests, zero failures, three expected missing-OCR errors, seven
+skips after the documented temporary-directory ACL workaround (the first plain
+run had 16 additional sandbox ACL errors). First merged verification: 504 full
+tests with the same three errors/seven skips, and 82 lab tests passed. A final
+regression confines `switch_edge`/`no_tell_bait` to their decision heads: **505
+full tests, zero failures, three expected OCR errors, seven skips; all 83 lab
+tests pass**, including 8 tree, 16 tactics and 12 new integration tests.
+Before and after: **108 of 108 PvPoke battles reproduced exactly**.
+
+One-worker smoke, seed 5502, mixed field, website baseline, two pairings both ways
+per candidate; no crowd/people/PvPoke/reader battles in this smoke:
+
+| Candidate | Spec additions, cumulative | H2H, 95% margin | Shields/prompts |
+|---|---|---|---|
+| A | `website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh` | 75.0% ± 49.0 | 7/17 |
+| B | `shield_mix=0` | 75.0% ± 49.0 | 8/19 |
+| C | `finish_safe=1` | 75.0% ± 49.0 | 8/19 |
+| D | `shield_two=0.05,shield_one=0` | 75.0% ± 49.0 | 8/19 |
+| E | `swap_after_throw=1` | 75.0% ± 49.0 | 8/19 |
+
+Exit 0: **20 battles in 123.9 s**. E's swap override did not fire in its four
+games; targeted tests exercise both searched swap heads. These tiny samples
+establish no gain. The requested one-line `runs/lab-best-screen.cmd` uses 16
+workers, seed 5501 and all eight requested measures; it was not launched.
+Estimated 3-5 hours on 16 workers, subject to contention. Full report, command,
+timings and output: [`runs/lab-best/REPORT.md`](../runs/lab-best/REPORT.md).
+
+The sandbox denied writes to the registered worktree's Git metadata outside
+this directory. The merges and final commit use local metadata under
+`runs/lab-best/git`, with a delivery bundle and import instructions in the
+report. The registered `lab-best` branch still needs that import. No push.

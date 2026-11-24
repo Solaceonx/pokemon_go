@@ -1,0 +1,59 @@
+..........................................................................  eval: 82 positions; held-out log loss 0.7915 new against 0.5511 before
+  q shield: 13 decisions, 7 held back (0 the engine overrode); fit 0.3860 new against 0.3005 before; agreement 57.1% against 100.0%, where the engine overrode - against -; old bot's picks replayed 100.0%
+  q throw: 48 decisions, 37 held back (5 the engine overrode); fit 0.1595 new against 0.2144 before; agreement 81.1% against 86.5%, where the engine overrode 0.0% against 0.0%; old bot's picks replayed 100.0%
+  q swap: 13 decisions, 6 held back (2 the engine overrode); fit 0.6789 new against 0.3668 before; agreement 50.0% against 66.7%, where the engine overrode 0.0% against 0.0%; old bot's picks replayed 100.0%
+  q replace: 2 decisions, 1 held back (1 the engine overrode); fit 1.3520 new against 0.3790 before; agreement 100.0% against 0.0%, where the engine overrode 100.0% against 0.0%; old bot's picks replayed 100.0%
+tmpse2z78y6: self-play of runs/general-decide/q.npz with runs/eval/eval.npz, 2 games (2 already saved), seed 7, 1 workers
+................................................................EEE.....................................................................................................................................................................................................................................................................................................................................................sssssss................
+======================================================================
+ERROR: test_one_icon_that_fits_a_form_does_not_undo_two (test_form_icons.FormIcons.test_one_icon_that_fits_a_form_does_not_undo_two)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 36, in test_one_icon_that_fits_a_form_does_not_undo_two
+    r = reader()
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 18, in reader
+    NameReader.__init__(r, GD)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 687, in __init__
+    self._ocr_engine = self._new_ocr()
+                       ~~~~~~~~~~~~~^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 669, in _new_ocr
+    from rapidocr_onnxruntime import RapidOCR
+ModuleNotFoundError: No module named 'rapidocr_onnxruntime'
+
+======================================================================
+ERROR: test_the_usual_form_when_its_icon_shows (test_form_icons.FormIcons.test_the_usual_form_when_its_icon_shows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 41, in test_the_usual_form_when_its_icon_shows
+    r = reader()
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 18, in reader
+    NameReader.__init__(r, GD)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 687, in __init__
+    self._ocr_engine = self._new_ocr()
+                       ~~~~~~~~~~~~~^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 669, in _new_ocr
+    from rapidocr_onnxruntime import RapidOCR
+ModuleNotFoundError: No module named 'rapidocr_onnxruntime'
+
+======================================================================
+ERROR: test_two_icons_then_one_keeps_the_form (test_form_icons.FormIcons.test_two_icons_then_one_keeps_the_form)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 30, in test_two_icons_then_one_keeps_the_form
+    r = reader()
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\tests\test_form_icons.py", line 18, in reader
+    NameReader.__init__(r, GD)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 687, in __init__
+    self._ocr_engine = self._new_ocr()
+                       ~~~~~~~~~~~~~^^
+  File "C:\Users\marco\Developer\pokemon_go-lab-best\pogo\android_screen.py", line 669, in _new_ocr
+    from rapidocr_onnxruntime import RapidOCR
+ModuleNotFoundError: No module named 'rapidocr_onnxruntime'
+
+----------------------------------------------------------------------
+Ran 505 tests in 58.945s
+
+FAILED (errors=3, skipped=7)
