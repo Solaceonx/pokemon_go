@@ -503,6 +503,49 @@ class HitSteps:
         return None
 
 
+class FineSteps:
+    """Their fast moves landing on our bar, for counting and timing them: a fall of 1 pixel or more (of 148.5) in the
+    median of the readings of the last 0.23 s, held 0.07 s and 3 readings; timed at the first reading below; falls
+    within 0.3 s are one hit. On every frame of eight of 2026-11-22's battles (the frame-by-frame bar), it found 86% of
+    the hits that would have landed while our bar showed against HitSteps's 61%, and with its hits in place of the
+    logged ones the count at their named throws fell short with no margin at 4 of 33, not 8. self.at: the hit's time."""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self) -> None:
+        self.vals: list = []
+        self.level = None
+        self.first = None
+        self.n = 0
+        self.last_hit = -9.0
+        self.at = None
+
+    def add(self, t: float, px: float):
+        """The size of a hit that landed by this reading, in pixels, or None; self.at is when it landed."""
+        self.vals = [(u, v) for u, v in self.vals if t - u <= 0.23] + [(t, px)]
+        med = float(np.median([v for _, v in self.vals]))
+        if self.level is None or len(self.vals) < 4:
+            self.level = med if self.level is None else max(self.level, med)
+            return None
+        if med >= self.level + 3:  # back up: a misread before, or another Pokémon
+            self.level, self.n = med, 0
+            return None
+        if self.level - med >= 1.0:
+            if self.n == 0:
+                self.first = t
+            self.n += 1
+            if self.n >= 3 and t - self.first >= 0.07:
+                size, self.level, self.n = self.level - med, med, 0
+                if self.first - self.last_hit < 0.3:
+                    return None
+                self.last_hit = self.at = self.first
+                return size
+        else:
+            self.n = 0
+        return None
+
+
 class Log:
     def __init__(self, path: Path):
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -633,7 +676,7 @@ class Player:
         # Their fast moves landing on our bar, frame by frame (HitSteps): the times of those in the current unbroken
         # stretch of fighting, and every gap between hits so far for each of their Pokémon. The gaps tell the tracker
         # how many turns their fast move takes.
-        self.their_steps = HitSteps()
+        self.their_steps = FineSteps()  # theirs landing on our bar (2026-11-23: HitSteps found 61% of them)
         self.my_steps = HitSteps()  # ours landing on their bar
         self.my_hits_since_look = 0
         self.their_hits: list = []
@@ -968,6 +1011,7 @@ class Player:
         size = self.their_steps.add(t, px * screen.BAR_INSIDE)
         if size is None:
             return
+        t = getattr(self.their_steps, "at", None) or t  # when it landed: the first reading below
         self.log("their_hit", t, px=round(size, 1), foe=key[1])
         self.hits_since_look += 1
         if self.their_hits:
