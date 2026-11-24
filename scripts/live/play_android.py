@@ -2324,7 +2324,9 @@ class Player:
         """(team slot, move index) of the move button k shows paid for, by the button's colour
         (pogo.android_screen.paid_type), or None when it cannot be told."""
         kind = screen.paid_type(rgb, k)
-        if kind is None:
+        if kind is None or kind == "normal":
+            # Normal's grey is a button not lit up as well (2026-11-23: Melmetal's Dynamic Punch read as Blastoise's
+            # Skull Bash 3 times in 10 training battles, Blastoise believed out for 10 s each time)
             return None
         hits = [(slot, k) for slot, b in enumerate(self.team) if len(b.charged) > k and b.charged[k].type == kind]
         return hits[0] if len(hits) == 1 else None

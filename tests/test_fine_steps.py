@@ -43,5 +43,24 @@ class FineSteps(unittest.TestCase):
         self.assertEqual(len(hits(series)), 3)
 
 
+
+class LabelMove(unittest.TestCase):
+    """Player.label_move: a button read as Normal's grey says nothing (it is also a button not lit up)."""
+
+    def test_normal_says_nothing(self):
+        from pogo.gamedata import GameData
+        gd = GameData(league=2500)
+        p = object.__new__(pa.Player)
+        p.team = pa.load_team(gd, ROOT / "data" / "team_owner_ul.json")
+        old = pa.screen.paid_type
+        try:
+            pa.screen.paid_type = lambda rgb, k: "normal"
+            self.assertIsNone(p.label_move(None, 1))
+            pa.screen.paid_type = lambda rgb, k: "water"
+            self.assertIsNotNone(p.label_move(None, 0))
+        finally:
+            pa.screen.paid_type = old
+
+
 if __name__ == "__main__":
     unittest.main()
