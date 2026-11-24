@@ -971,8 +971,15 @@ class Tracker:
             else:
                 hits, left_over = _whole_hits(left_over + lost, damage(foe.mon, move, target))
             gained += hits * move.energy_gain
+        old_hi, old_turns = foe.hi, build.fast.turns
         foe.lo, foe.hi = foe.base
         foe.gain(foe.clock // move.turns * move.energy_gain if self.by_rhythm else gained)
+        if foe.hi < old_hi and move.turns == old_turns:
+            # A move of the same length that charges slower, told apart only by the size of its hits: the top of the
+            # range stays where the one believed till now had it, until a charged move of theirs settles it (2026-11-23, 224221: Walrein's Powder Snow refitted as Frost Breath from
+            # hits of a pixel or two on our bar, its count put from 64 to 35, and its Earthquake, 65, came 3 s later)
+            foe.hi = old_hi
+            foe.mon.energy = (foe.lo + foe.hi) // 2
         if foe is self.foe:
             self.taken, self.beat = left_over, self.turn
         self._note(t, "foe_fast_learned", species=build.species_id, move=move.id, misfit=foe.misfit,
