@@ -4936,6 +4936,14 @@ its hits the count at their named throws in those battles fell short with no mar
 median over the cost (4 at half the frame rate). Now live for their hits; `FOE_MARGIN` stays 1 until live battles
 with it show the shorts at no margin.
 
+**Training battles on the moto g stylus (2024), 2026-11-23 (`ultra-league` a0059cd0).** Five Ultra League battles
+against the Team Leaders, all won, no errors; their hits seen live as on every frame of the recording (9 and 10).
+Three faults, fixed: a night arena's ground and court lines after our Double Iron Bash taken for the replacement prompt
+on 2 frames (Melmetal put down as fainted, "Skeledirge" tapped; the prompt must now be up 0.3 s, real ones stayed 0.59
+to 2 s); the type icons held off from Melmetal, out, for 7 s by that false faint (now only when the count of ours left
+shows the faint); the newcomer's-bar check refusing Skeledirge's own bar after its switch was seen (now only while
+the switch is not). The Team Leaders threw few charged moves (2 named after a prompt): too few to judge the margin.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
