@@ -22,6 +22,7 @@ ap.add_argument('--quiet', action='store_true')
 ap.add_argument('--seen-lag', type=int, default=0)
 ap.add_argument('--restart-lag', type=int, default=0)
 ap.add_argument('--no-resync', action='store_true')
+ap.add_argument('--margin-turns', type=int, default=0, help='turns of their energy rate added, in whole fast moves rounded up')
 ap.add_argument('--margin', type=int, default=0, help='fast moves added to the top of the count, as FOE_MARGIN')
 ap.add_argument('--at-throw', type=float, default=None, help='score their_energy_at_throw, with the time since the last look less this many seconds as fight')
 a = ap.parse_args()
@@ -76,7 +77,8 @@ for f in sorted(glob.glob(f'runs/live/{a.day}-*.jsonl')):
             if tr.foe and a.at_throw is not None:
                 lo, hi = tr.their_energy_at_throw(max(0.0, e['t'] - tr.t - a.at_throw))
             if tr.foe and hi is not None:
-                hi = min(100, hi + a.margin * tr.foe.mon.build.fast.energy_gain)
+                fm = tr.foe.mon.build.fast
+                hi = min(100, hi + a.margin * fm.energy_gain + -(-a.margin_turns // fm.turns) * fm.energy_gain)
             prompt = (e['t'], tr.foe.mon.build.species_id if tr.foe else None, lo, hi,
                       tr.foe.mon.build.fast.energy_gain if tr.foe else None)
         elif k == 'their_charged_named' and prompt and e['t'] - prompt[0] < 8 and prompt[3] is not None:

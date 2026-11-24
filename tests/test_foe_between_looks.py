@@ -213,5 +213,18 @@ class NewcomersBar(unittest.TestCase):
         self.assertTrue(time.time() - p.switch_last_tap < 6.0 and bar > believed.hp / believed.build.hp + 0.25)
 
 
+class MarginInTurns(unittest.TestCase):
+    """foe_margin: at least two turns of their fast move (2026-11-23: the count's error is in turns)."""
+
+    def test_short_moves_get_two(self):
+        fast = types.SimpleNamespace(turns=1, energy_gain=3)
+        self.assertEqual(pa.foe_margin(fast), 6)
+
+    def test_long_moves_get_one(self):
+        for turns in (2, 3, 4):
+            fast = types.SimpleNamespace(turns=turns, energy_gain=9)
+            self.assertEqual(pa.foe_margin(fast), max(pa.FOE_MARGIN, 1) * 9)
+
+
 if __name__ == "__main__":
     unittest.main()

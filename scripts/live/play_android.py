@@ -49,6 +49,15 @@ LOOK = 0.5  # seconds between looks given to the tracker (a turn)
 # margin at 8 (one by more than a fast move), with 1 at 1, with 2 at none; 2 put them a median 46 over the cost, where
 # the owner's recordings show players throwing about one fast move past it. Applied at the shield prompt too.
 FOE_MARGIN = 1
+# 2026-11-23: the count's error is in turns, not fast moves (a turn or two of phase), so the margin is at least
+# FOE_MARGIN_TURNS turns' worth: for a 1-turn move (Psywave, Lick, Bite) two moves, for longer ones one. Replaying
+# 2026-11-22's 91 named throws: short at none, not 1, at a median 42 over the cost, not 40.
+FOE_MARGIN_TURNS = 2
+
+
+def foe_margin(fast) -> int:
+    """Energy added to their count for the engine: FOE_MARGIN fast moves, or FOE_MARGIN_TURNS turns' worth if more."""
+    return max(FOE_MARGIN, -(-FOE_MARGIN_TURNS // fast.turns)) * fast.energy_gain
 # Turns from our decision to the game having the throw (the fight stops: both buttons gone), our own fast move aside:
 # 0.43 s median from the decision's frame to the tap on the PC (2026-11-18, 368 throws; 0.1 s less since), and 0.31 s
 # at the fastest from the tap to the buttons going (10th percentile of 48 recorded throws; median 0.63 s with our fast
@@ -1693,7 +1702,7 @@ class Player:
                 # move that would hurt (a third of our health or more), throw ours first.
                 from pogo.battle import damage
                 foe = self.tracker.foe
-                ready = [m for m in foe.mon.build.charged if foe.hi + FOE_MARGIN * foe.mon.build.fast.energy_gain >= m.energy]
+                ready = [m for m in foe.mon.build.charged if foe.hi + foe_margin(foe.mon.build.fast) >= m.energy]
                 hurt = max((damage(foe.mon, m, view.me.mon) for m in ready), default=0)
                 k = max(affordable, key=lambda j: damage(view.me.mon, mon.charged[j], view.foe))
                 # Worth its energy: half the damage per energy of our best charged move or more, unless theirs would
@@ -2044,7 +2053,7 @@ class Player:
         try:
             if foe is not None:
                 lo, hi = self.tracker.their_energy_at_throw(max(0.0, self.fight_frame_t - self.last_look))
-                hi = min(100, hi + margin * foe.mon.build.fast.energy_gain)
+                hi = min(100, hi + (foe_margin(foe.mon.build.fast) if margin else 0))
                 foe.mon.energy, foe.lo, foe.hi = min(100, foe.mon.energy + hi - foe.hi), lo, hi
             yield
         finally:
@@ -2053,7 +2062,7 @@ class Player:
 
     @contextlib.contextmanager
     def engine_sees(self):
-        """Within it the tracker shows the engine their energy FOE_MARGIN fast moves higher, and ours at least what
+        """Within it the tracker shows the engine their energy foe_margin() higher, and ours at least what
         the names under the buttons show paid for; both are put back after."""
         me, foe = self.tracker.me.mon, self.tracker.foe
         kept = (me.energy, foe.mon.energy, foe.lo, foe.hi) if foe is not None else (me.energy,)
@@ -2062,7 +2071,7 @@ class Player:
             if bounds is not None:
                 me.energy = max(me.energy, bounds[0])
             if foe is not None:
-                extra = FOE_MARGIN * foe.mon.build.fast.energy_gain
+                extra = foe_margin(foe.mon.build.fast)
                 foe.mon.energy, foe.lo, foe.hi = (min(100, x + extra) for x in (foe.mon.energy, foe.lo, foe.hi))
             yield
         finally:
