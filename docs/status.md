@@ -4979,6 +4979,21 @@ went before fainting. Galarian Weezing was named plain Weezing at two looks and 
 icons fade in one at a time, and one icon fits no form, which gave back the usual one. The reader now keeps a form
 unless icons that fit a form, no fewer than before, say otherwise; a dry run of that battle read no plain Weezing.
 
+**Skeledirge stopping its fast taps, 2026-11-23 and 24 (`ultra-league` 8ccf618f, 625b6af7, f90417eb).** The owner
+noticed Skeledirge often not tapping. Its stops over 1 s with no charged move, shield or switch inside were holds of
+about 3 s each, longer than an Incinerate, of two kinds. The slow pauses on the count (232848, 83 and 93 s) went
+with 8ccf618f: none in the three battles since. The rest were holds armed for a throw that the move under way
+would pay for, made at the very reading that showed Incinerate landing: the taps before it were the landed move's,
+the hold stopped the rest, and no move was under way. In 235319, played with both earlier fixes, Skeledirge was
+armed for Shadow Ball as the buttons rose 18 to 37 (read right: the recording's buttons stay at 37) and stood until
+the hold ran out 2.9 s later. Over 11-22 and 11-23, 42 of Skeledirge's 143 holds were armed at a landing; most ran
+out (23, against 8 that fired), where those armed mid-move mostly fired (45, against 29). A long fast move is now
+armed only after a fast tap a turn after the reading last moved by half a fast move or came back from 1.5 s unread,
+measured from the reading at that change, as the fill rises over several frames. Dry runs: 235319 armed 0.75 s
+after the landing and has no stops left; 234155's two holds that fired live fire at the same moments in two runs;
+234825's holds as live. Not yet seen in live battles. Two dry runs of 234825 stalled (no frames, then the timeout)
+and a third ran through: the replay harness, not the player.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
