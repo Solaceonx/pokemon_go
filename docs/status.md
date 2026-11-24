@@ -4953,6 +4953,15 @@ Melmetal's faint; at the prompt the bot tapped for one card 20 times until the g
 we tapped is never reread as a faint, and the prompt's two cards are read by name (it only comes with two to choose
 from). No more ranked sets until the owner says so.
 
+**The screen reader, 2026-11-23 (`ultra-league` 60583ae8).** Health bars over bright Pokémon (our bar over Melmetal,
+read on 55% of its fight frames): the cream border is low in blue; a border's mean now counts if the bar is closed at
+its right end. Through `bars_held` on every 2nd frame of three battles: our bar given out on 75% of fight frames (73%
+before), theirs 79% (77%). With the pale-yellow fix earlier, both were ~62-67% on 2026-11-22's looks. The rest, on
+the frames checked, are covered: our Shadow Snorlax's purple flames over its bar, move effects, words over a bar, a
+Pokémon coming in, camera angles. Our energy reads on ~75%: the misses are see-through empty buttons over dark
+ground (measured near-full, rejected by the names, which say not paid) and lit buttons whose icon breaks the fill
+(rejected though the names say paid); paid or not stays known from the names.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
