@@ -817,10 +817,12 @@ def creator_exam(specs: list, workers: int, seed: int) -> tuple[dict, str]:
     path = ROOT / "scripts" / "lab" / "creator_exam.py"
     if not path.exists():
         return {}, "skipped: scripts/lab/creator_exam.py not found"
-    loader = importlib.util.spec_from_file_location("creator_exam", path)
-    module = importlib.util.module_from_spec(loader)
+    # A plain import by name: its worker processes unpickle creator_exam's functions by module name, which fails
+    # for a module loaded from a file location without a sys.modules entry. Spawned workers inherit sys.path.
+    if str(path.parent) not in sys.path:
+        sys.path.insert(0, str(path.parent))
     try:
-        loader.loader.exec_module(module)
+        import creator_exam as module
     except Exception as e:  # another agent's script: report, do not stop the league
         return {}, f"failed to import creator_exam.py: {e!r}"
     scores = getattr(module, "league_scores", None)
