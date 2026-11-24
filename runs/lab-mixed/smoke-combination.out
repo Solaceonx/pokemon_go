@@ -1,0 +1,26 @@
+9 jobs to run on 1 workers
+  25 results, 1 min
+
+baseline: website
+  head to head, all candidates: baseline shields / shield prompts 8 / 19 (42.1%)
+  against the crowd: 100.0% ± 0.0
+    baseline: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 23.50 total searches/battle, 1.703 search seconds/battle); mean P(chosen) 1.000 (46 shield/throw-head choices); shields / shield prompts 4 / 10 (40.0%)
+  against the pvpoke: 100.0% ± 0.0
+    baseline: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 28.50 total searches/battle, 3.031 search seconds/battle); mean P(chosen) 1.000 (58 shield/throw-head choices); shields / shield prompts 4 / 9 (44.4%)
+  against the reader: 66.7% ± 32.7
+    baseline: 1.667 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (6 battles; 24.17 total searches/battle, 3.122 search seconds/battle); mean P(chosen) 1.000 (148 shield/throw-head choices); shields / shield prompts 12 / 31 (38.7%)
+
+candidate 1: website,shield_mix=0.05,throw_mix=0.03
+  head to head against the baseline, 2 pairings both ways: 25.0% ± 49.0
+    candidate: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 24.25 total searches/battle, 2.844 search seconds/battle); mean P(chosen) 0.711 (75 shield/throw-head choices); shields / shield prompts 8 / 17 (47.1%)
+    baseline:  1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 23.00 total searches/battle, 2.727 search seconds/battle); mean P(chosen) 1.000 (92 shield/throw-head choices); shields / shield prompts 8 / 19 (42.1%)
+  against the crowd: 100.0% ± 0.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 30.50 total searches/battle, 3.070 search seconds/battle); mean P(chosen) 0.730 (43 shield/throw-head choices); shields / shield prompts 4 / 8 (50.0%)
+  against the pvpoke: 50.0% ± 98.0, -50.0 ± 98.0 points on the baseline
+    candidate: 0.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 27.50 total searches/battle, 3.070 search seconds/battle); mean P(chosen) 0.749 (43 shield/throw-head choices); shields / shield prompts 4 / 11 (36.4%)
+  against the reader: 33.3% ± 32.7, -33.3 ± 65.3 points on the baseline
+    candidate: 1.833 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (6 battles; 24.33 total searches/battle, 3.760 search seconds/battle); mean P(chosen) 0.651 (110 shield/throw-head choices); shields / shield prompts 11 / 26 (42.3%)
+  search time per searched decision: median 78 ms, 99th percentile 500, worst 547 (this machine)
+
+elapsed: 62.0 seconds
+results: runs\engine_versus\lab-mixed-smoke.json

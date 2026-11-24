@@ -733,6 +733,18 @@ edge against the bot itself; report it).
 
 ## 29. Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain — Marco
 
+**2026-11-24 engine lab follow-up, branch `lab-mixed`: review fixes validated; full screen pending.** Added opt-in
+`shield_mix`, `shield_floor`, `throw_mix`, and exact bait/shield `equilibrium`, seeded private dice, probability
+counters and 23 tests. Hypothetical shields retain the Learner answer, last-Pokemon shields retain the rulebook,
+CMP cannot carry a fixed shield into a later turn, and double-faint replacements are simultaneous. Legacy random
+choices are excluded from the probability counter; conflicting legacy/lab keys fail clearly. Full suite: 445 tests,
+no assertion failures, three expected missing-OCR errors, seven skips; PvPoke 108/108.
+All seven screen candidates completed a fresh-seed one-worker smoke (92 battles, 455.7 seconds); no strength
+gain established, and equilibrium lost its four reader smoke battles. Details and all results:
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md); the coordinator's 10-worker screen, now including
+the deterministic `website,shield_mix=0` control first, is
+`runs/lab-mixed-screen.cmd`. No commit or push from this worktree.
+
 **Why.** Both players choose at once, every turn. The engine always takes the single best-looking option, so a player
 who reads it (when it baits, when it shields, when it throws) can exploit it. The owner wants it hard to read: mix at
 the mind-game moments and randomise a lot elsewhere.

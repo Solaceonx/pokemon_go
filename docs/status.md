@@ -5646,3 +5646,80 @@ set "PY=C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe"
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-confirm --baseline website --candidates "website,eval=runs/ul-eval/eval.npz" --pairings 2000 --crowd 1000 --pvpoke 0 --workers 30 --seed 4802 >> runs\task48_confirm.out 2>&1
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-nomid --baseline website --candidates "website,q=runs/ul-decide/q-no-midswap.npz,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 30 --seed 4801 >> runs\task48_nomid.out 2>&1
 ```
+
+
+## Mixed engine lab (2026-11-24): opt-in controls built; smoke only, no gain established
+
+Branch `lab-mixed`: `shield_mix=tau`, `shield_floor=p`, `throw_mix=tau`, and `equilibrium=1`, with defaults
+unchanged. Head-specific softmax uses searched worth plus the existing edge bonus for the bot's pick;
+tau zero keeps the strict deterministic search rule. The floor bounds only close shield calls. Exact 2x2
+bait/shield play reuses task 29's paired cell searches and `agents.solve_2x2`; ordinary search keeps the
+hold/throw decision. After review, shield controls search real prompts and preserve the last-Pokemon rule. New dice replay
+across processes, and `engine_versus` prints average probability assigned to the chosen shield/throw option.
+The full design, limitations, raw smoke output, fixtures and test logs are in
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md).
+
+**Initial one-worker functionality smoke (before review, retained for history)**, Great League, WEBSITE models
+and 32 samples, mixed field, seed 5100:
+two H2H pairings both ways, two crowd battles, two PvPoke battles, three reader pairings both ways per
+candidate. All margins printed below are 95%; this tiny normal-approximation sample is not strength evidence.
+
+| Setting on website | H2H score | Crowd | PvPoke | Reader |
+|---|---:|---:|---:|---:|
+| Default | — | 100.0% ± 0.0 | 100.0% ± 0.0 | 66.7% ± 32.7 |
+| `shield_mix=0.05` | 50.0% ± 98.0 | 100.0% ± 0.0 | 100.0% ± 0.0 | 33.3% ± 32.7 |
+| `shield_mix=0.05,throw_mix=0.03` | 25.0% ± 49.0 | 100.0% ± 0.0 | 50.0% ± 98.0 | 33.3% ± 32.7 |
+| `equilibrium=1` | 25.0% ± 49.0 | 100.0% ± 0.0 | 100.0% ± 0.0 | 66.7% ± 32.7 |
+
+Reader paired differences versus baseline in candidate order: -33.3 ± 32.7, -33.3 ± 65.3, +0.0 ± 56.6 points.
+All-smoke candidate shields/prompts: 27/61, 27/62, 27/62; mean assigned choice probabilities: 0.9486, 0.6955,
+0.9936. Baseline outside opponents: 20/50 shields, probability 1.0000. The combination randomizes much more,
+but no reader benefit is established; equilibrium is nearly pure in these positions. These negative/inconclusive
+results are retained. Three resumed invocations took 98.1 + 62.0 + 70.8 seconds (52 actual battles).
+
+Before/after: 422/436 tests, zero assertion failures, three expected missing-OCR errors and seven skips after
+a test-process-only workaround for Windows sandbox temporary-directory ACLs. Literal suite runs had those
+three plus 15 temporary-directory permission errors; no tests were omitted. All 14 new tests pass, including
+three game digests recorded before editing, empirical frequencies and exact equilibrium fixtures. Before and
+after: `108 of 108 PvPoke battles reproduced exactly`.
+
+Full screen **not run here**: `runs/lab-mixed-screen.cmd`, updated after review to 10 workers, seed 5101,
+1,500 H2H pairings both ways, 1,500 crowd, 750 PvPoke, 250 reader pairs, seven candidates including the
+deterministic `website,shield_mix=0` control first (43,000 actual battles).
+A winner needs fresh-seed confirmation. No defaults, models or website changed; no commit or push.
+
+**Independent-review fixes, 2026-11-24.** Engine decision-depth guards keep hypothetical shields on the ordinary
+Learner answer without lab search or mixing draws, including the throw planner and Learner timing post-check.
+The last-Pokemon rule is retained. A fixed shield response expires after its intended throw's step, including
+CMP knockouts. Shield landing chooses both replacements before either enters; a Gulp Missile double-faint
+test matches `Battle.step`. Legacy random decisions are excluded from `mean P(chosen)` and the printout
+labels the exclusion. Legacy/lab key conflicts raise clear errors, and the counting version rejects old totals.
+All 23 mixed tests pass, including 30-seed regressions and unchanged default game digests. Full suite before/after
+review: 436/445 tests (42.111/40.948 seconds), no assertion failures, three expected missing-OCR errors and seven
+skips using the test-process temp-directory workaround. PvPoke before/after: `108 of 108 PvPoke battles reproduced
+exactly`. The initial targeted post-check regression failed because its fixture had not enabled `respect_timing`;
+enabling that existing option made the intended branch execute and the regression pass.
+
+**Post-review smoke**, seed 5102, tag `lab-mixed-review-smoke`, one worker and one NumPy thread, mixed field,
+WEBSITE models and 32 samples. All seven screen candidates ran with two H2H pairings both ways, two crowd,
+two PvPoke and two reader pairings both ways: 62 jobs, **92 actual battles in 455.7 seconds**, completed without
+errors. Percentages below include the script's printed 95% margins; tiny-sample zero margins or intervals
+outside 0..100% do not indicate precision. No strength gain is established.
+
+| Setting on website | H2H | Crowd | PvPoke | Reader | Mean P(chosen), pooled candidate choices |
+|---|---:|---:|---:|---:|---:|
+| Default | — | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 1.0000 |
+| `shield_mix=0` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 1.0000 |
+| `shield_mix=0.02` | 25.0 ± 49.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.9767 |
+| `shield_mix=0.05` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.9563 |
+| `shield_mix=0.1` | 50.0 ± 0.0 | 50.0 ± 98.0 | 100.0 ± 0.0 | 75.0 ± 49.0 | 0.9343 |
+| `throw_mix=0.03` | 50.0 ± 98.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.7758 |
+| `equilibrium=1` | 25.0 ± 49.0 | 100.0 ± 0.0 | 50.0 ± 98.0 | 0.0 ± 0.0 | 0.9855 |
+| `shield_mix=0.05,throw_mix=0.03` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.7170 |
+
+Equilibrium's paired reader change is -75.0 ± 49.0 points (four losses in two pairings); every other candidate's
+reader change is +0.0 ± 0.0 in this smoke. Candidate shields/prompts in table order are 21/54, 21/53, 22/57,
+23/52, 22/69, 22/53 and 24/57. Full output, timings, counts and commands:
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md), `runs/lab-mixed/smoke-review.out`, and
+`runs/lab-mixed/smoke-review-scores.json`. Full screen remains pending, with a rough 6–9-hour estimate on
+10 workers from this smoke; shared-PC overhead is unknown. No code was edited during the smoke.
