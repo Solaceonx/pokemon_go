@@ -26,6 +26,7 @@ import numpy as np
 
 from .agents import Planner, _matchup_table, disguised, duel, fasts_to_wait
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, View, damage
+from .people_shield import cached as people
 
 # Decisions judged option by option. For a throw: hold for one more fast move, throw the first
 # charged move, throw the second, hold for four fast moves, hold for ten.
@@ -270,8 +271,19 @@ class Learner(Planner):
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
                  forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False,
-                 shield_margin: float | None = None, shield_toward: bool = False, **settings):
+                 shield_margin: float | None = None, shield_toward: bool = False,
+                 people_shield: str | None = None, people_add: float | None = None, ko_wait: bool = False,
+                 **settings):
         super().__init__(**settings)
+        # Shield calls copied from good players (pogo.people_shield, task 46's creator records): the path to its
+        # fitted network; None keeps the shield head. With people_add, the shield head still decides and a shield is
+        # added where players shield at least this often
+        self.people = people(people_shield) if people_shield else None
+        self.people_add = people_add
+        # With their shields down: a charged move that does not knock out is not thrown when another knocks out
+        # sooner, counting the fast moves to pay for it against those needed to finish after the throw (2026-11-22,
+        # the live views of 2026-11-09: Night Slash into Morpeko with Play Rough one fast move from a knock-out)
+        self.ko_wait = ko_wait
         # The owner: farm right up until they have a move. True: when the rulebook is still farming towards that
         # moment (Planner._hold_plan), the networks may not throw early.
         self.respect_hold = respect_hold
@@ -352,6 +364,10 @@ class Learner(Planner):
     def shield(self, view: View, foe_energy: int) -> bool:
         if view.me.left() == 1:  # never part of the networks' training: the rulebook decides (Planner.last_always)
             return True if self.last_always else bool(Planner.shield(self, view, foe_energy))
+        if self.people is not None and self.people_add is None:
+            return self.people(view)
+        if self.people is not None and self.people.probability(view) >= self.people_add:
+            return True
         return bool(self._decide("shield", view, (True, True),
                                  lambda: int(Planner.shield(self, view, foe_energy)), foe_energy))
 
@@ -387,7 +403,38 @@ class Learner(Planner):
                 and damage(mon, moves[choice - 1], foe) < foe.hp and self._hold_plan(view):
             self.overruled_hold = getattr(self, "overruled_hold", 0) + 1
             return FAST  # the rulebook is still farming until they are about to have a move
+        if choice and self.ko_wait and view.foe_shields == 0:
+            sooner = self._ko_sooner(view, choice - 1)
+            if sooner is not None:
+                self.ko_waits = getattr(self, "ko_waits", 0) + 1
+                return sooner
         return FAST if choice == 0 else CHARGED[choice - 1]
+
+    def _ko_sooner(self, view: View, k: int) -> int | None:
+        """A knock-out sooner than throwing charged move k and finishing with fast moves: that move (paid for) or a
+        fast move towards it, when we cannot faint meanwhile. None when move k is as good."""
+        mon, foe = view.me.mon, view.foe
+        moves, fast = mon.build.charged, mon.build.fast
+        hit = damage(mon, moves[k], foe)
+        if hit >= foe.hp:
+            return None
+        per = damage(mon, fast, foe)
+        after = -(-(foe.hp - hit) // per) * fast.turns if per > 0 else 10 ** 6  # turns to finish after the throw
+        best = None
+        for j, move in enumerate(moves):
+            if j == k or damage(mon, move, foe) < foe.hp:
+                continue
+            need = max(0, -(-(move.energy - mon.energy) // fast.energy_gain)) if fast.energy_gain > 0 else 10 ** 6
+            wait = need * fast.turns
+            if wait + fast.turns > after or mon.energy + need * fast.energy_gain > ENERGY_CAP:
+                continue  # not at least a fast move sooner
+            if need and self._may_faint(view, wait):
+                continue
+            if best is None or wait < best[0]:
+                best = (wait, j, need)
+        if best is None:
+            return None
+        return FAST if best[2] else CHARGED[best[1]]
 
     def _swap_choice(self, view: View) -> int | None:
         me = view.me
