@@ -1,0 +1,1 @@
+cd /d C:\Users\marco\Developer\pokemon_go-lab-bench && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\lab\league.py website bot "website,temperature=0.02" "website,mix=1" --preset screen --workers 14 --tag screen-1 >> runs\lab-bench-screen.out 2>&1
