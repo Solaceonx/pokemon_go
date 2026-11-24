@@ -219,6 +219,7 @@ class Tracker:
         self._last_switch = None
         self._last_foe_switch = None  # the same for theirs: (time, the one that left, their switch time before it)
         self._my_correction = None  # see my_active_corrected
+        self._my_switch_tap = -99.0  # when the player last tapped a switch (my_switch_tapped)
         self._my_shielding = False  # the player shielded their charged move: the look that brings it is told (my_shield_used)
         self._my_shields_settle = -1.0  # until then a reading of more shields of ours than counted is the header lagging
         self._my_throw_open = None  # a throw of ours whose shield is not yet known: (time, target, their shields, its HP before)
@@ -318,7 +319,9 @@ class Tracker:
             # alive at 0 that day). The one out is left out: its bar can read empty before the faint shows.
             down = sum(1 for m in me.team if m is not me.mon and m.hp <= 0)
             unexplained = self._my_counter_seen and obs.my_left < self.my_left and obs.my_left < len(me.team) - down
-            if (unexplained and not i_changed and recent is not None
+            # (2026-11-23, 214336: Skeledirge, switched in by us, fainted 2.6 s later, and Melmetal, switched out on
+            # 67 HP, was put down as the faint: left off the bench, the game sent it into Charizard)
+            if (unexplained and not i_changed and recent is not None and not recent[4]
                     and (obs.t - recent[0] < 3.0 or recent[3]) and recent[1] is not me.mon):
                 # The counter of Pokémon left lagged the header (2026-11-08: Vigoroth fainted, Stunfisk showed at
                 # 103.0 s, the counter fell at 104.1 s): the change taken for a switch was a faint. The one that
@@ -629,6 +632,10 @@ class Tracker:
         add = max(0, -(-done // fast.turns)) * fast.energy_gain
         return min(ENERGY_CAP, foe.lo + add), min(ENERGY_CAP, foe.hi + add)
 
+    def my_switch_tapped(self, t: float) -> None:
+        """The player tapped a switch of ours at battle time t: the change it brings is a switch, not a faint."""
+        self._my_switch_tap = t
+
     def my_shield_used(self) -> None:
         """The player shielded their charged move: the look that brings the move takes it as shielded and our shields
         as one fewer, whatever the header says yet (it lags; readings of more are ignored for 8 s)."""
@@ -675,12 +682,13 @@ class Tracker:
             # not a switch of ours (my_active_corrected): no switch timer
             how = "corrected"
             me.mon.atk_stage = me.mon.def_stage = 0
-            self._last_switch = (obs.t, me.mon, self.my_switch_at, self._my_correction == "unsure")
+            self._last_switch = (obs.t, me.mon, self.my_switch_at, self._my_correction == "unsure", False)
             self._note(obs.t, "my_corrected", to=obs.my_species, unsure=self._my_correction == "unsure")
         else:
             how = "switch"
             me.mon.atk_stage = me.mon.def_stage = 0
-            self._last_switch = (obs.t, me.mon, self.my_switch_at, False)
+            # a switch we tapped is one for sure: a fall of the counter soon after is the one now out fainting
+            self._last_switch = (obs.t, me.mon, self.my_switch_at, False, obs.t - self._my_switch_tap < 8.0)
             self.my_switch_at = obs.t + SWITCH_SECONDS
             self._note(obs.t, "my_switch", to=obs.my_species)
         me.active = slot

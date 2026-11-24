@@ -99,5 +99,26 @@ class OursCorrected(unittest.TestCase):
         self.assertEqual(hp(tr, "melmetal"), 0)
 
 
+
+class OurTappedSwitch(unittest.TestCase):
+    def test_the_counter_after_our_switch_is_the_newcomer_fainting(self):
+        # 2026-11-23, 214336: we switch Melmetal out for Altaria; Altaria faints 2.6 s later, the counter falls first
+        tr = tracker()
+        look(tr, 0.0)
+        tr.my_switch_tapped(0.5)
+        look(tr, 1.0, me="altaria")
+        look(tr, 3.6, me="altaria", my_left=2)
+        self.assertGreater(hp(tr, "melmetal"), 0)
+        look(tr, 5.0, me="jellicent", my_left=2)
+        self.assertEqual(hp(tr, "altaria"), 0)
+
+    def test_an_untapped_change_then_the_counter_is_still_a_late_faint(self):
+        tr = tracker()
+        look(tr, 0.0)
+        look(tr, 1.0, me="altaria")
+        look(tr, 2.0, me="altaria", my_left=2)
+        self.assertEqual(hp(tr, "melmetal"), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -67,7 +67,7 @@ class LoggedView:
 
 def engine(gd: GameData, seed: int) -> RealTime:
     """As scripts/live/play_android.Player builds it."""
-    ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
+    ev = Evaluator.load(ROOT / __import__("os").environ.get("POGO_EVAL", "runs/eval/eval.npz"))
     return RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
                     seed=seed, **WEBSITE, turn_ms=500, cap_ms=300, clock=time.perf_counter)
 
@@ -89,7 +89,7 @@ def main() -> None:
     gd = GameData()
     # A fresh engine for each asking (docs/status.md, 2026-11-09: one engine reused for a whole log carried its
     # state over, and a switch fresh engines pick 1 time in 6 came out 8 times in 8). Built once, its parts reused.
-    ev = Evaluator.load(ROOT / "runs" / "eval" / "eval.npz")
+    ev = Evaluator.load(ROOT / __import__("os").environ.get("POGO_EVAL", "runs/eval/eval.npz"))
     q = QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz"))
     meta = gd.meta(50)
 

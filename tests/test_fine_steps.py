@@ -62,5 +62,26 @@ class LabelMove(unittest.TestCase):
             pa.screen.paid_type = old
 
 
+class ReplaceCards(unittest.TestCase):
+    """Player.replace_cards: the replacement prompt's two cards, left to right, by their names."""
+
+    def player(self, words):
+        import numpy as np
+        from pogo.gamedata import GameData
+        gd = GameData(league=2500)
+        p = object.__new__(pa.Player)
+        p.team = pa.load_team(gd, ROOT / "data" / "team_owner_ul.json")
+        p.names = types.SimpleNamespace(ocr=lambda crop: ([[[[x, 0], [x + 10, 0], [x + 10, 5], [x, 5]], w, 0.9] for x, w in words], None))
+        return p, np.zeros((1200, 540, 3), np.uint8)
+
+    def test_two_names_read(self):
+        p, a = self.player([(300, "Blastoise"), (40, "Melmetal")])
+        self.assertEqual(p.replace_cards(a), [0, 1])  # Melmetal left, Blastoise right
+
+    def test_nicknames_say_nothing(self):
+        p, a = self.player([(40, "UL #3"), (300, "UL #1")])
+        self.assertIsNone(p.replace_cards(a))
+
+
 if __name__ == "__main__":
     unittest.main()

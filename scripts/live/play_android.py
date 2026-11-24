@@ -612,8 +612,11 @@ class Player:
         charged_ids = {i for sp in gd.species.values() for i in sp.get("chargedMoves", [])}
         self.used_names = {n: [i for i in ids if i in charged_ids] for n, ids in self.used_names.items()}
         self.used_names = {n: ids for n, ids in self.used_names.items() if ids}
-        # POGO_EVAL / POGO_Q: other networks, paths from the repository root (task 48: Ultra League's)
-        ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/eval/eval.npz"))
+        # POGO_EVAL / POGO_Q: other networks, paths from the repository root. In Ultra League the evaluation trained
+        # there (task 48: 51.5% +/- 1.2 head to head on a fresh seed; 2026-11-23, 214336: asked again where the shipped
+        # one sent Skeledirge on 17 HP into Charizard, it sent Blastoise)
+        ul = getattr(gd, "league", None) == 2500 and (ROOT / "runs" / "ul-eval" / "eval.npz").exists()
+        ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/ul-eval/eval.npz" if ul else "runs/eval/eval.npz"))
         self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
                                seed=int(time.time()) % 100000, **WEBSITE, turn_ms=500, cap_ms=300, clock=time.perf_counter)
         self.names = screen.NameReader(gd)
@@ -810,7 +813,7 @@ class Player:
                 self.queued = None  # our Pokémon fainted: a move it had waiting went with it
                 self.switching = self.switch_wanted = None
                 self.fight_since = None
-                self.on_replace_prompt(t, look)
+                self.on_replace_prompt(t, look, rgb)
                 continue
             if look.countdown:
                 # A charged move's countdown (theirs with no prompt, or ours while they choose to shield): the fight
@@ -1808,6 +1811,7 @@ class Player:
                 self.switch_wanted = None
                 self.switching = (slot, time.time(), before, None, 0)  # self.active changes once it is seen
                 self.switch_tapped_to = slot
+                self.tracker.my_switch_tapped(t)
                 self.switch_point, self.switch_last_tap = BENCH[order.index(slot)], time.time()
                 # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
                 # takes its place (2026-11-08: Stunfisk's portrait tapped at 6.6 s, fast taps every 0.15 s after, no
@@ -2533,17 +2537,51 @@ class Player:
             return after - SWITCH[0]
         return slot
 
-    def on_replace_prompt(self, t: float, look) -> None:
+    def replace_cards(self, rgb) -> list | None:
+        """The replacement prompt's two cards, left to right, as team slots, by the names under them (read once a
+        prompt). None unless both are read as two of ours (in training the cards can show nicknames)."""
+        if rgb is None:
+            return None
+        canon = lambda s: "".join(ch for ch in s.upper() if ch.isalpha())
+        h, w = rgb.shape[:2]
+        crop = rgb[int(0.885 * h):int(0.945 * h), int(0.10 * w):int(0.90 * w)]
+        try:
+            res, _ = self.names.ocr(crop)
+        except Exception:  # noqa: BLE001
+            return None
+        found = []
+        for r in res or []:
+            read = canon(r[1])
+            slot = next((j for j, b in enumerate(self.team) if read and (canon(b.name) in read or read in canon(b.name))), None)
+            if slot is not None:
+                found.append(((r[0][0][0] + r[0][1][0]) / 2, slot))
+        slots = [j for _, j in sorted(found)]
+        return slots if len(slots) == 2 and slots[0] != slots[1] else None
+
+    def on_replace_prompt(self, t: float, look, rgb=None) -> None:
         if self.replaced:
             if self.replace_point and time.time() - self.replace_tapped > 0.5:  # tapped again until the prompt goes
                 self.touch(self.replace_point, "send in again")
                 self.replace_tapped = time.time()
             return
         self.replaced = True
+        # The prompt comes only with two of ours left to choose from (with one, the game sends it in itself): its two
+        # cards are the bench, read by their names, and failing that the two not believed out, whatever the tracker
+        # had (2026-11-23, 214336, and 2026-11-22, 191734: one of the two put down as fainted, the bot tapped for one
+        # card 20 times between the two, and after 12 s the game sent in the one left off: Melmetal into Charizard).
+        cards = self.replace_cards(rgb)
+        if cards is not None and self.active in cards:
+            gone = next(j for j in range(len(self.team)) if j not in cards)
+            self.log("replace_active_fixed", t, was=self.team[self.active].name, now=self.team[gone].name)
+            self.active = gone  # the one out was the one not on a card
+        bench = cards or [j for j in range(len(self.team)) if j != self.active]
+        for j in bench:
+            if self.tracker.me.team[j].hp <= 0:  # on a card: alive
+                self.tracker.me.team[j].hp = max(1, round(0.1 * self.tracker.me.team[j].build.hp))
+                self.log("hp_restored", t, who=self.team[j].name, hp=self.tracker.me.team[j].hp, by="replacement card")
         # only a faint brings the prompt: the tracker must not take the change for a switch and start the switch
         # timer (2026-11-08: the counter of Pokémon left lagged, and the engine thought it could not switch for 45 s)
         self.tracker.my_fainted()
-        bench = [j for j in range(len(self.team)) if j != self.active and self.tracker.me.team[j].hp > 0]
         view = self.view()
         slot = bench[0] if bench else None
         if view is not None:
