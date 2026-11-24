@@ -9,7 +9,8 @@ A setting is "key=value,key=value" on top of the confirmed engine (samples 4, ho
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, shield_margin (float), shield_toward (0 | 1),
 heads (joined by "+", for example
 "throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
-temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
+temperature, shield_mix/throw_mix (nonnegative logit temperatures; 0 uses search argmax), shield_floor (0..0.5),
+equilibrium (0 | 1; exact bait/shield game), mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
 team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
 overrides), and people_shield (shield calls copied from good players, pogo.people_shield; "bot,people_shield=PATH"
@@ -59,7 +60,7 @@ from scripts.wide_teams import run_jobs  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
-COUNTING = "per-battle-v2"  # shield prompts and mid-matchup swaps, both sides of h2h
+COUNTING = "per-battle-v3-mixed"  # exclude legacy random choices from the lab probability diagnostic
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
 _state: dict = {}
 
@@ -87,14 +88,18 @@ def parse(spec: str) -> dict | None:
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon", "pool"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust", "people_add"):
+        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust", "people_add",
+                     "shield_mix", "throw_mix", "shield_floor"):
             out[key] = float(value)
+            if key in ("shield_mix", "throw_mix", "shield_floor"):
+                if not math.isfinite(out[key]) or out[key] < 0 or (key == "shield_floor" and out[key] > 0.5):
+                    raise SystemExit(f"invalid {key}: {value}")
         elif key == "shield_toward":
             if value not in ("0", "1"):
                 raise SystemExit("shield_toward must be 0 or 1")
             out[key] = bool(int(value))
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
-                     "stay_after_replace", "ko_wait"):
+                     "stay_after_replace", "ko_wait", "equilibrium"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge",
                      "people_shield"):
@@ -105,6 +110,11 @@ def parse(spec: str) -> dict | None:
             out[key] = value
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")
+    from pogo.lab.mixed import validate_mixing
+    try:
+        validate_mixing(**out)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     return out
 
 
@@ -182,12 +192,19 @@ class Counted:
     def __init__(self, inner):
         self.inner, self.mid_swaps = inner, 0
         self.shields, self.prompts = 0, 0
+        self.choice_probability_sum, self.probability_choices = 0.0, 0
 
     def __getattr__(self, name):
         return getattr(self.inner, name)
 
     def act(self, view):
+        if hasattr(self.inner, "last_throw_probability"):
+            self.inner.last_throw_probability = None
         action = self.inner.act(view)
+        probability = getattr(self.inner, "last_throw_probability", None)
+        if probability is not None:
+            self.choice_probability_sum += probability
+            self.probability_choices += 1
         # replace() is a different call; turn zero is the lead decision.
         self.mid_swaps += action in SWITCH and view.turn > 0
         return action
@@ -196,6 +213,10 @@ class Counted:
         answer = self.inner.shield(view, energy, *move)
         self.prompts += 1
         self.shields += bool(answer)
+        probability = getattr(self.inner, "last_shield_probability", None)
+        if probability is not None:
+            self.choice_probability_sum += probability
+            self.probability_choices += 1
         return answer
 
     def counts(self) -> dict:
@@ -203,7 +224,8 @@ class Counted:
                     mid_swap_searches=getattr(self.inner, "mid_swap_searches", 0),
                     searches=getattr(self.inner, "looks", 0),
                     search_seconds=sum(r[3] for r in getattr(self.inner, "rows", [])) / 1000,
-                    shields=self.shields, prompts=self.prompts)
+                    shields=self.shields, prompts=self.prompts,
+                    choice_probability_sum=self.choice_probability_sum, probability_choices=self.probability_choices)
 
 
 def add_counts(total: dict, counts: dict) -> None:
@@ -285,10 +307,13 @@ def activity_summary(rows: dict, side: str = "ours") -> str:
     n = totals.get("battles", 0)
     if not n:
         return "no battles"
+    choices = totals.get("probability_choices", 0)
+    probability = f"{totals['choice_probability_sum'] / choices:.3f}" if choices else "n/a"
     return (f"{totals['mid_swaps'] / n:.3f} mid-matchup swaps/battle, "
             f"{totals['mid_swap_searches'] / n:.3f} mid-matchup searches/battle "
             f"({n} battles; {totals['searches'] / n:.2f} total searches/battle, "
-            f"{totals['search_seconds'] / n:.3f} search seconds/battle)")
+            f"{totals['search_seconds'] / n:.3f} search seconds/battle); "
+            f"mean P(chosen) {probability} ({choices} shield/throw-head choices; legacy random choices excluded)")
 
 
 def estimate(values: list) -> tuple[float, float]:
@@ -327,7 +352,7 @@ def main() -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
     if saved.get("results") and saved.get("counting") != COUNTING:
-        raise SystemExit(f"{path} has no combined shield and switch counts; use a new tag")
+        raise SystemExit(f"{path} has incompatible decision counts; use a new tag")
     if saved and saved.get("evaluator_cache") not in (CACHE_POLICY, "per_player"):  # task 29 wrote "per_player"
         raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
