@@ -1,0 +1,40 @@
+COMMAND: C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts/lab/bot_habits.py --player bot,shield_two=.05,shield_one=0 --battles 400 --seed 5402
+400 battles, 5194 charged moves, 11 s; player 'bot,shield_two=.05,shield_one=0' against 'bot'
+
+  shields by the player: 38% ± 2 (766/1993); not the last Pokémon 34% ± 2 (624/1851)
+    with 2 shields                         35% ± 3 (369/1042)
+    with 1 shield                          32% ± 3 (255/809)
+    first charged move faced               30% ± 5 (122/400)
+    hit < 30% of health                    8% ± 4 (16/192)
+    hit 30-60%                             17% ± 3 (106/608)
+    hit 60%+, no knock-out                 45% ± 4 (222/495)
+    would knock out                        50% ± 4 (280/556)
+    a bait (cheaper, dearer affordable)    31% ± 4 (202/654)
+    predictability: {'n': 1851, 'rate': 0.337, 'entropy_bits': 0.922, 'entropy_given_bucket_bits': 0.786, 'covered': 1847, 'copy_by_bucket_loro': 0.696, 'copy_never': 0.663, 'buckets_4plus': 16, 'buckets_4plus_mixed_20_80': 12}
+    repeated situations: {'situations_repeated': 226, 'pairs': 880, 'same_call': 0.628}
+
+  shields by its opponent: 39% ± 2 (768/1951); not the last Pokémon 33% ± 2 (594/1777)
+    with 2 shields                         32% ± 3 (359/1132)
+    with 1 shield                          36% ± 4 (235/645)
+    first charged move faced               26% ± 4 (103/400)
+    hit < 30% of health                    4% ± 3 (6/159)
+    hit 30-60%                             18% ± 3 (107/607)
+    hit 60%+, no knock-out                 44% ± 4 (204/467)
+    would knock out                        51% ± 4 (277/544)
+    a bait (cheaper, dearer affordable)    32% ± 4 (203/627)
+    predictability: {'n': 1777, 'rate': 0.334, 'entropy_bits': 0.919, 'entropy_given_bucket_bits': 0.796, 'covered': 1775, 'copy_by_bucket_loro': 0.696, 'copy_never': 0.666, 'buckets_4plus': 15, 'buckets_4plus_mixed_20_80': 9}
+    repeated situations: {'situations_repeated': 197, 'pairs': 970, 'same_call': 0.663}
+
+  throws by the player: 2604; spare energy median 10, quartiles 2 to 25; 20+ spare 34% ± 2 (891/2604)
+    both moves affordable, defender has a shield: cheaper move 58% ± 3 (706/1209)
+    of those where the dearer move hits 1.3x+ harder and the cheaper does not knock out: cheaper 23% ± 4 (109/475)
+    bait predictability: {'n': 1209, 'rate': 0.584, 'entropy_bits': 0.98, 'entropy_given_bucket_bits': 0.954, 'covered': 1201, 'copy_by_bucket_loro': 0.596, 'copy_never': 0.584, 'buckets_4plus': 14, 'buckets_4plus_mixed_20_80': 13}
+
+  throws by its opponent: 2590; spare energy median 10, quartiles 2 to 24; 20+ spare 32% ± 2 (840/2590)
+    both moves affordable, defender has a shield: cheaper move 57% ± 3 (715/1261)
+    of those where the dearer move hits 1.3x+ harder and the cheaper does not knock out: cheaper 21% ± 4 (109/517)
+    bait predictability: {'n': 1261, 'rate': 0.567, 'entropy_bits': 0.987, 'entropy_given_bucket_bits': 0.961, 'covered': 1256, 'copy_by_bucket_loro': 0.579, 'copy_never': 0.567, 'buckets_4plus': 15, 'buckets_4plus_mixed_20_80': 15}
+
+  switches by the player (after the lead, voluntary): 579 in 400 battles; lead switched in the first 12 s in 18% ± 4 (71/400) of battles; within 2 s of play after its own charged move: 48% ± 4 (278/579)
+
+  switches by its opponent (after the lead, voluntary): 549 in 400 battles; lead switched in the first 12 s in 14% ± 3 (58/400) of battles; within 2 s of play after its own charged move: 51% ± 4 (279/549)

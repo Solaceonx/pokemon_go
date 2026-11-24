@@ -1,0 +1,58 @@
+COMMAND: C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts/lab/creator_exam.py website,finish_safe=1 website --opponent people --limit 60 --workers 1
+60 decisions ({'hold': 24, 'shield': 12, 'switch': 11, 'throw': 13}) from 27 records; 0 throws given the energy the ledger lacked
+  values ready (1 s)
+  website,finish_safe=1: asking at 60 decisions on 1 workers
+
+website,finish_safe=1  (10 s; mean 173 ms, worst 734 ms per answer)
+  switch agrees 54.5 ± 30.9 (11)%; regret against the player (engine − player, points) +0.5 ± 15.5 (11); where they differ +1.1 ± 36.3 (5); short of the best: engine 8.9 ± 11.9 (11), player 9.4 ± 10.9 (11); near best (within the --near): engine 63.6 ± 29.8 (11)%, player 63.6 ± 29.8 (11)%
+  shield agrees 75.0 ± 25.6 (12)%; regret against the player (engine − player, points) +1.7 ± 4.3 (12); where they differ +6.8 ± 18.5 (3); short of the best: engine 4.8 ± 6.1 (12), player 6.5 ± 6.5 (12); near best (within the --near): engine 75.0 ± 25.6 (12)%, player 66.7 ± 27.9 (12)%
+  throw  agrees 30.8 ± 26.1 (13)%; regret against the player (engine − player, points) +2.9 ± 13.9 (13); where they differ +4.2 ± 20.4 (9); short of the best: engine 8.0 ± 10.1 (13), player 10.9 ± 7.6 (13); near best (within the --near): engine 69.2 ± 26.1 (13)%, player 46.2 ± 28.2 (13)%
+  hold   agrees 33.3 ± 19.3 (24)%; regret against the player (engine − player, points) +4.3 ± 7.3 (24); where they differ +6.4 ± 10.9 (16); short of the best: engine 3.7 ± 4.4 (24), player 8.0 ± 5.3 (24); near best (within the --near): engine 83.3 ± 15.2 (24)%, player 66.7 ± 19.3 (24)%
+  all    agrees 45.0 ± 12.7 (60)%; regret against the player (engine − player, points) +2.8 ± 5.0 (60); where they differ +5.0 ± 9.1 (33); short of the best: engine 5.8 ± 3.7 (60), player 8.6 ± 3.5 (60); near best (within the --near): engine 75.0 ± 11.0 (60)%, player 61.7 ± 12.4 (60)%
+  homeslicehenry agrees 55.6 ± 34.4 (9)%; regret +0.4 ± 7.2 (9)
+  itsaxn         agrees 41.2 ± 16.8 (34)%; regret +3.1 ± 6.7 (34)
+  reis2occasion  agrees 47.1 ± 24.5 (17)%; regret +3.4 ± 11.4 (17)
+  the engine's costliest differences (by the play-outs):
+    reis2occasion/2887787713-011@104.00:switch: player stay, engine switch to Kingdra: -67
+    itsaxn/2930158499-003@104.50:throw: player throw Icy Wind, engine switch to Tinkaton: -67
+    itsaxn/2904685033-011@94.50:hold: player hold, engine switch to Vigoroth: -47
+    homeslicehenry/2904735277-011@30.50:hold: player hold, engine switch to Jumpluff: -23
+    itsaxn/2930158499-008@115.00:shield: player shield, engine no shield: -12
+  the engine's best differences:
+    reis2occasion/2887787713-002@43.50:throw: player throw Swift, engine switch to Turtonator: +50
+    reis2occasion/2887787713-011@47.00:switch: player stay, engine switch to Victreebel: +44
+    itsaxn/2904685033-003@105.50:hold: player hold, engine throw Iron Head: +44
+
+website  (0 s; mean 159 ms, worst 682 ms per answer)
+  switch agrees 54.5 ± 30.9 (11)%; regret against the player (engine − player, points) +1.0 ± 16.1 (11); where they differ +2.2 ± 37.7 (5); short of the best: engine 8.3 ± 11.8 (11), player 9.4 ± 10.9 (11); near best (within the --near): engine 63.6 ± 29.8 (11)%, player 63.6 ± 29.8 (11)%
+  shield agrees 75.0 ± 25.6 (12)%; regret against the player (engine − player, points) +1.7 ± 4.3 (12); where they differ +6.8 ± 18.5 (3); short of the best: engine 4.8 ± 6.1 (12), player 6.5 ± 6.5 (12); near best (within the --near): engine 75.0 ± 25.6 (12)%, player 66.7 ± 27.9 (12)%
+  throw  agrees 28.2 ± 24.4 (13)%; regret against the player (engine − player, points) +2.7 ± 13.9 (13); where they differ +3.5 ± 18.3 (10); short of the best: engine 8.3 ± 10.1 (13), player 10.9 ± 7.6 (13); near best (within the --near): engine 61.5 ± 27.5 (13)%, player 46.2 ± 28.2 (13)%
+  hold   agrees 29.2 ± 18.6 (24)%; regret against the player (engine − player, points) +3.2 ± 6.9 (24); where they differ +4.6 ± 9.8 (17); short of the best: engine 4.7 ± 4.5 (24), player 8.0 ± 5.3 (24); near best (within the --near): engine 75.0 ± 17.7 (24)%, player 66.7 ± 19.3 (24)%
+  all    agrees 42.8 ± 12.5 (60)%; regret against the player (engine − player, points) +2.4 ± 5.0 (60); where they differ +4.1 ± 8.5 (35); short of the best: engine 6.2 ± 3.7 (60), player 8.6 ± 3.5 (60); near best (within the --near): engine 70.0 ± 11.7 (60)%, player 61.7 ± 12.4 (60)%
+  homeslicehenry agrees 40.7 ± 32.3 (9)%; regret -0.3 ± 7.2 (9)
+  itsaxn         agrees 41.2 ± 16.8 (34)%; regret +2.4 ± 6.4 (34)
+  reis2occasion  agrees 47.1 ± 24.5 (17)%; regret +3.8 ± 11.7 (17)
+  the engine's costliest differences (by the play-outs):
+    reis2occasion/2887787713-011@104.00:switch: player stay, engine switch to Kingdra, switch to Kingdra, switch to Kingdra: -67
+    itsaxn/2930158499-003@104.50:throw: player throw Icy Wind, engine switch to Tinkaton, switch to Tinkaton, switch to Tinkaton: -67
+    itsaxn/2904685033-011@94.50:hold: player hold, engine switch to Vigoroth, switch to Vigoroth, switch to Vigoroth: -47
+    homeslicehenry/2904735277-011@30.50:hold: player hold, engine switch to Jumpluff, switch to Jumpluff, switch to Jumpluff: -23
+    itsaxn/2930158499-008@115.00:shield: player shield, engine no shield, no shield, no shield: -12
+  the engine's best differences:
+    reis2occasion/2887787713-011@47.00:switch: player stay, engine switch to Victreebel, switch to Victreebel, switch to Turtonator: +50
+    reis2occasion/2887787713-002@43.50:throw: player throw Swift, engine switch to Turtonator, switch to Turtonator, switch to Turtonator: +50
+    itsaxn/2904685033-003@105.50:hold: player hold, engine switch to Mimikyu, switch to Mimikyu, switch to Mimikyu: +41
+
+website against website,finish_safe=1, the same 60 decisions:
+  switch value difference +0.5 ± 1.0 (11) points; near best +0.0 ± 0.0 (11) points; they choose alike 100.0 ± 0.0 (11)%
+  shield value difference +0.0 ± 0.0 (12) points; near best +0.0 ± 0.0 (12) points; they choose alike 100.0 ± 0.0 (12)%
+  throw  value difference -0.3 ± 0.4 (13) points; near best -7.7 ± 15.1 (13) points; they choose alike 84.6 ± 20.4 (13)%
+  hold   value difference -1.0 ± 1.7 (24) points; near best -8.3 ± 11.3 (24) points; they choose alike 83.3 ± 15.2 (24)%
+  all    value difference -0.4 ± 0.7 (60) points; near best -5.0 ± 5.6 (60) points; they choose alike 90.0 ± 7.7 (60)%
+
+shield calls, predictability from the coarse situation (same positions for everyone):
+  player: {'n': 12, 'rate': 0.333, 'entropy_bits': 0.918, 'entropy_given_bucket_bits': None, 'covered': 0, 'copy_by_bucket_loro': 0.417, 'copy_never': 0.667, 'buckets_4plus': 0, 'buckets_4plus_mixed_20_80': 0}
+  website,finish_safe=1: {'n': 12, 'rate': 0.25, 'entropy_bits': 0.811, 'entropy_given_bucket_bits': None, 'covered': 0, 'copy_by_bucket_loro': 0.583, 'copy_never': 0.75, 'buckets_4plus': 0, 'buckets_4plus_mixed_20_80': 0}
+  website: {'n': 12, 'rate': 0.25, 'entropy_bits': 0.811, 'entropy_given_bucket_bits': None, 'covered': 0, 'copy_by_bucket_loro': 0.583, 'copy_never': 0.75, 'buckets_4plus': 0, 'buckets_4plus_mixed_20_80': 0}
+
+opponent in the play-outs: people; 100 play-outs per action; value seed 1; engine seed 1; 12 s in all

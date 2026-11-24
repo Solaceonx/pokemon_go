@@ -21,6 +21,7 @@ Training is in two stages: imitate the Planner, then improve by self-play
 from __future__ import annotations
 
 from pathlib import Path
+import math
 
 import numpy as np
 
@@ -273,8 +274,19 @@ class Learner(Planner):
                  forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False,
                  shield_margin: float | None = None, shield_toward: bool = False,
                  people_shield: str | None = None, people_add: float | None = None, ko_wait: bool = False,
+                 finish_safe: bool = False, bait_mix: float | None = None,
+                 shield_two: float | None = None, shield_one: float | None = None,
                  **settings):
         super().__init__(**settings)
+        for name, value in (("shield_two", shield_two), ("shield_one", shield_one), ("bait_mix", bait_mix)):
+            if value is not None and (not math.isfinite(value) or value < 0 or (name == "bait_mix" and value > 1)):
+                raise ValueError(f"invalid {name}: {value}")
+        self.finish_safe, self.bait_mix = finish_safe, bait_mix
+        self.shield_two, self.shield_one = shield_two, shield_one
+        self.bait_opportunities = self.baits_thrown = 0
+        if bait_mix is not None:
+            from .lab.mixed import private_rng
+            self._mix_rng = private_rng(self.rng)
         # Shield calls copied from good players (pogo.people_shield, task 46's creator records): the path to its
         # fitted network; None keeps the shield head. With people_add, the shield head still decides and a shield is
         # added where players shield at least this often
@@ -311,7 +323,17 @@ class Learner(Planner):
     def clone(self) -> Learner:
         twin = super().clone()
         twin.log, twin.forced = None, dict(self.forced)
+        if self.bait_mix is not None:
+            from .lab.mixed import private_rng
+            twin._mix_rng = private_rng(self.rng)
+            twin._mix_rng.setstate(self._mix_rng.getstate())
         return twin
+
+    def _head_margin(self, head: str, view: View) -> float:
+        if head != "shield":
+            return self.margin
+        margin = self.shield_two if view.me.shields == 2 else self.shield_one if view.me.shields == 1 else None
+        return self.shield_margin if margin is None else margin
 
     def force(self, head: str, option: int) -> None:
         """Make its next decision of this kind come out as the given option (numbered as in Q_HEADS)."""
@@ -346,7 +368,7 @@ class Learner(Planner):
             if head == "throw":  # holding is worth whatever the best length of hold is worth
                 v = [max(v[0], v[3], v[4]), v[1], v[2]]
             best = max((k for k in range(len(mask)) if mask[k]), key=lambda k: v[k])
-            margin = self.shield_margin if head == "shield" else self.margin
+            margin = self._head_margin(head, view)
             choice = best if v[best] - v[advice] > margin else advice
             if head == "shield" and self.shield_toward and advice:
                 choice = advice
@@ -372,13 +394,34 @@ class Learner(Planner):
                                  lambda: int(Planner.shield(self, view, foe_energy)), foe_energy))
 
     def _pick_move(self, view: View) -> int:
+        return self._bait_action(view, self._choose_move(view))
+
+    def _bait_action(self, view: View, action: int) -> int:
+        # The fallback of a simultaneous engine search is advice, not its final action.
+        if self.bait_mix is None or action not in CHARGED or getattr(self, "_mix_fallback", False):
+            return action
+        from .lab.mixed import bait_pair
+        pair = bait_pair(view)
+        if pair is None:
+            return action
+        bait = self._mix_rng.random() < self.bait_mix
+        self.bait_opportunities += 1
+        self.baits_thrown += bait
+        # A preceding search's P(chosen) no longer describes the final charged move.
+        self.last_throw_probability = None
+        return CHARGED[pair[0 if bait else 1]]
+
+    def _choose_move(self, view: View) -> int:
         if self._hold > 0:
             self._hold -= 1
             return FAST
         mon, foe = view.me.mon, view.foe
         moves = mon.build.charged
         ready = [mon.energy >= move.energy for move in moves]
-        if not any(ready) or foe.hp <= damage(mon, mon.build.fast, foe):
+        if not any(ready):
+            return FAST
+        if foe.hp <= damage(mon, mon.build.fast, foe) and not (
+                self.finish_safe and self._doomed(view, mon.build.fast.turns)):
             return FAST
         if self.disguise and disguised(foe):  # the owner's rule, not the head's: the Disguise takes any hit
             return CHARGED[min((k for k in range(len(moves)) if ready[k]), key=lambda k: moves[k].energy)]

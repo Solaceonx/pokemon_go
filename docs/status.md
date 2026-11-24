@@ -5723,3 +5723,41 @@ reader change is +0.0 ± 0.0 in this smoke. Candidate shields/prompts in table o
 [`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md), `runs/lab-mixed/smoke-review.out`, and
 `runs/lab-mixed/smoke-review-scores.json`. Full screen remains pending, with a rough 6–9-hour estimate on
 10 workers from this smoke; shared-PC overhead is unknown. No code was edited during the smoke.
+
+## Tactics engine lab (2026-11-24): opt-in controls built; screen pending
+
+On `lab-tactics`, built `finish_safe=1`, `bait_mix=p`, `shield_two=a,shield_one=b`, `swap_after_throw=1`,
+`engine_versus --people N`, and `opponents=people`. No default/model/website change or commit.
+Exact gates, changed functions, every command/result and limitations:
+[`runs/lab-tactics/REPORT.md`](../runs/lab-tactics/REPORT.md).
+
+The Henry Empoleon–Diggersby fixture holds by default and throws Hydro Cannon with `finish_safe`, for both bot
+and website; website now reaches one throw search. All three old game digests also match with the new keys off.
+Full discovery: 485 tests, no failures, 3 expected missing-OCR errors, 7 skips. A process-local temporary-directory
+ACL workaround avoids 16 additional Windows sandbox errors seen in the plain baseline run (469 tests).
+Before and after: `108 of 108 PvPoke battles reproduced exactly`.
+
+Shield selection count (200 bot-v-bot battles, seed 5400): non-final-Pokemon shields were 34% ± 3 by default,
+35% ± 3 at margins .05/0, 36% ± 3 at .1/0. Picked .05/0 for the closer total-rate match. Fresh seed 5402,
+400 battles each: both total rates 34% ± 2; two-shield rate 32% ± 3 to 35% ± 3, one-shield rate 36% ± 4 to
+32% ± 3. First-move shielding 27% ± 4 to 30% ± 5. These are prompt-level margins, not battle-clustered;
+this supports a rate-matching guess, not a strength improvement.
+
+One-worker mixed-field engine-versus smoke, seed 5403: 80 battles in 434.2 seconds, all keys and the combination
+completed, including people as both field and imagined opponent. Only two H2H pairings / crowd / people / PvPoke
+observations and one reader pairing per candidate: no improvement can be established. H2H scores in order
+finish, bait, shield, swap, combination, imagined people: 50% ± 0, 50% ± 98, 75% ± 49, 50% ± 0, 100% ± 0,
+75% ± 49. Full field and paired tables are in the report and `smoke.out`; these tiny normal margins are not
+evidence of precision. Bait chose cheap 9/19 times alone and 10/20 combined; throw-before-swap fired once in
+the combination and zero times standalone. The conservative swap rule still needs a larger activity count.
+
+Both requested 60-decision creator smokes against people passed. Initial seed-1 results reused a website cache
+with three asks against one for each candidate; retained but not treated as controlled comparisons. Reran on fresh
+engine seed 5404 with one ask each: finish_safe value change on website +0.2 ± 1.7 points; bait_mix +0.3 ± 1.8.
+Near-best shares: website 76.7% ± 10.8, finish 73.3% ± 11.3, bait 75.0% ± 11.0. No gain established. Positions and
+values are paired, but creator_exam seeds search dice by spec; some answer differences are search noise.
+
+The eight-worker screen is written as one line in [`runs/lab-tactics-league.cmd`](../runs/lab-tactics-league.cmd),
+seed 5401, website reference, four single-key candidates and their combination. Roughly 4–6 hours from the smoke,
+subject to contention. It has not been launched; no default is promoted. The report records the exact
+throw-before-swap condition and remaining questions about reader resistance, energy use and live timing.

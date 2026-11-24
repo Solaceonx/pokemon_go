@@ -182,8 +182,11 @@ class Engine(Learner):
                  shield_margin: float | None = None, shield_toward: bool = False,
                  mid_swap_search: str | None = None, shield_mix: float | None = None,
                  throw_mix: float | None = None, shield_floor: float = 0.0,
-                 equilibrium: bool = False, **settings):
+                 equilibrium: bool = False, swap_after_throw: bool = False, **settings):
         super().__init__(shield_margin=shield_margin, shield_toward=shield_toward, **settings)
+        self.swap_after_throw = swap_after_throw
+        self.swap_after_throws = 0
+        self._swap_throw_pending = False
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
         for name, tau in (("shield_mix", shield_mix), ("throw_mix", throw_mix)):
@@ -262,12 +265,11 @@ class Engine(Learner):
         self._loglik = {name: 0.0 for name in (self._styles or {})}
         self._pending = self._pending_shield = self._their_throw = None
         self._mix_rng = random.Random(hash(self.rng.getstate()))  # for mixing only; does not touch self.rng
-        if self._lab_shield or throw_mix is not None:
+        if self._lab_shield or throw_mix is not None or self.bait_mix is not None:
             # hash(getstate()) contains None, whose hash varies between Python processes. Derive the new
             # options' private stream from a COPY of the player's RNG so workers and restarts replay.
-            dice = random.Random()
-            dice.setstate(self.rng.getstate())
-            self._mix_rng.seed(dice.getrandbits(128))
+            from .lab.mixed import private_rng
+            self._mix_rng = private_rng(self.rng)
         self._their_first = None  # the opponent's first action in each look, when fixed (mixed tables, readers)
         self._foe_energy = None  # the attacker's energy, for shield looks
         self.looks = 0  # decisions searched
@@ -379,6 +381,9 @@ class Engine(Learner):
         return {name: 0.9 * w / total + 0.1 * self._styles[name]["weight"] / prior for name, w in weights.items()}
 
     def _imagined_opponent(self, rng: random.Random):
+        if self.opponents == "people":
+            from .lab.people import people_player
+            return people_player(rng, self.q, self.pool)
         if self.opponents != "mix":
             return Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32))
         if self._forced_style is not None:
@@ -437,7 +442,20 @@ class Engine(Learner):
     def _act(self, view: View) -> int:
         theirs = self._mixed_actions("simultaneous", view) if self.switches and "mid_swap" in self.heads else []
         if not theirs:
-            return super().act(view)
+            self._searched_swap = False
+            pending, self._swap_throw_pending = self._swap_throw_pending, False
+            action = super().act(view)
+            if (self.swap_after_throw and not pending and action in SWITCH and view.turn > 0
+                    and self._searched_swap):
+                from .lab.tactics import before_swap
+                throw = before_swap(view)
+                if throw is not None:
+                    self._swap_throw_pending = True
+                    self.swap_after_throws += 1
+                    self._hold = 0
+                    self._judged = None  # reopen the swap question after our throw
+                    return self._bait_action(view, throw)
+            return action
         # The whole first action is simultaneous: staying can mean a fast move or either ready throw.
         # First obtain the trained bot's fallback and update its remembered matchup/hold as usual.
         self._mix_fallback = True
@@ -451,17 +469,18 @@ class Engine(Learner):
         if choice is None:
             self.looks += 1
             self.fell_back += 1
-            return pick
+            return self._bait_action(view, pick)
         # The fallback throw head's probability does not describe the simultaneous action mix.
         self.last_throw_probability = None
         if choice == FAST:
             self._fasted = (view.me.active, view.foe.build.uid)
         else:
             self._hold = 0
-        return choice
+        return self._bait_action(view, choice)
 
     def replace(self, view: View) -> int:
         self._swap_hit = None
+        self._swap_throw_pending = False
         self._replaced_at = view.turn
         return super().replace(view)
 
@@ -484,7 +503,12 @@ class Engine(Learner):
             return super()._decide(head, view, mask, planner_choice, foe_energy)
         self._decision_depth += 1
         try:
-            return self._search_decision(head, view, mask, planner_choice, foe_energy)
+            looks, fallback = self.looks, self.fell_back
+            choice = self._search_decision(head, view, mask, planner_choice, foe_energy)
+            if (self.swap_after_throw and head in ("swap", "mid_swap") and choice
+                    and self.looks > looks and self.fell_back == fallback):
+                self._searched_swap = True
+            return choice
         finally:
             self._decision_depth -= 1
 

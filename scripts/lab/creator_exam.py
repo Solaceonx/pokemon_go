@@ -75,13 +75,11 @@ from real_decisions import Forced, decisions, lines, same_kind  # noqa: E402
 from real_decisions import describe as _describe  # noqa: E402
 from pogo.agents import varied  # noqa: E402
 from pogo.battle import CHARGED, DRAW, FAST, SWITCH  # noqa: E402
-from pogo.engine import human_settings  # noqa: E402
 from pogo.learner import Learner  # noqa: E402
-from pogo.people_shield import cached as people_net  # noqa: E402
+from pogo.lab.people import PEOPLE, PeopleLike, people_player  # noqa: E402,F401
 
 CREATORS = ROOT / "games" / "creators"
 OUT = ROOT / "runs" / "lab-creators" / "exam"
-PEOPLE = "runs/people-shield/shield.npz"
 _w: dict = {}
 
 
@@ -210,22 +208,6 @@ def seed_of(key: str, seed: int) -> int:
 
 # --- players ----------------------------------------------------------------------------------------------------------
 
-class PeopleLike(Learner):
-    """The "human" style of pogo.engine, shielding as often as the creators' shield network says players do there
-    (drawn, not thresholded: the creators' calls look mixed on what the network sees). The last Pokémon keeps the
-    rulebook's call, as the network was fitted without it."""
-
-    def __init__(self, rng: random.Random, **kw):
-        super().__init__(**kw)
-        self._draw = random.Random(rng.getrandbits(32))
-        self._people = people_net(PEOPLE)
-
-    def shield(self, view, foe_energy, *move):
-        if view.me.left() == 1:
-            return super().shield(view, foe_energy)
-        return self._draw.random() < self._people.probability(view)
-
-
 def opponent(kind: str, rng: random.Random):
     if kind == "crowd":
         return varied(rng, _w["pool"])
@@ -233,8 +215,7 @@ def opponent(kind: str, rng: random.Random):
     if kind == "bot":
         return Learner(q=net, margin=0.02, seed=rng.getrandbits(32))
     if kind == "people":
-        settings = human_settings(rng, _w["pool"])
-        return PeopleLike(rng, q=net, margin=rng.choice((0.02, 0.05)), **settings)
+        return people_player(rng, net, _w["pool"])
     raise SystemExit(f"unknown opponent {kind!r}")
 
 
