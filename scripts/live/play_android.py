@@ -665,6 +665,11 @@ class Player:
         # agree, and the last frame's own reading. The count from our fast moves drifts 20 to 50 off (2026-11-07).
         self.energy_read = None
         self._energy_raw = None
+        # When the reading last moved by half a fast move or more from where it stood then (reading_base), or came
+        # back after 1.5 s unread: a fast move of ours has just landed, or the fight is just back from a close-up
+        # (look_ahead). Measured from that reading, not the one before: the fill rises over several frames, 5 or so
+        # each (2026-11-23, 235319, 70.8 s: 18 to 37 in steps, none of them 10)
+        self.reading_new_at, self.reading_base = 0.0, 0.0
         self.queued = None  # (button, move, time tapped, deadline, battle time set): a move of ours still to start
         self.pre = None  # a search run ahead (Player.precompute)
         self.engine_calls = 0  # calls to the engine: a search run ahead on a copy is used only if none came since
@@ -1282,6 +1287,10 @@ class Player:
                     e = one
         prev, self._energy_raw = self._energy_raw, ((e, when) if e is not None else None)
         if e is not None and prev is not None and when - prev[1] < 0.25 and abs(e - prev[0]) <= 5:
+            last = self.energy_read
+            if (last is None or when - last[1] > 1.5
+                    or abs(e - self.reading_base) >= 0.5 * self.team[self.active].fast.energy_gain):
+                self.reading_new_at, self.reading_base = when, e
             self.energy_read = (e, when)
             self.last_reading_t = when - (self.t0 or when)  # battle time of the last reading
         names = screen.button_labels(rgb)
@@ -2104,6 +2113,13 @@ class Player:
         # to 66 s and on (2026-11-22, 170719)
         if self.last_fast_tap <= self.hold_ended_at or time.time() - self.last_fast_tap > (0.6 if slow else 1.0):
             return
+        # A long fast move: nor before a fast tap a turn after the reading last moved or came back. The taps before
+        # it were made during the move that has just landed, or before the fight was back, and none of them starts
+        # the next one. Armed at the very reading that showed Incinerate landing, Skeledirge stood 2.9 s with no move
+        # under way (2026-11-23, 235319, 70.8 s: 18 to 37, the buttons at 37 until the hold ran out); at 83.6 s, one
+        # tap 0.1 s after the buttons came back from Hydro Cannon's close-up. Short fast moves land too often for this.
+        if slow and self.last_fast_tap < self.reading_new_at + 0.5:
+            return
         # The count stands in only with the buttons read in the last 1.5 s: with none since a charged move (the
         # fight not back, taps not taken), the count held the taps 3.5 s for a move never begun (2026-11-23, 232848,
         # 92.8 to 96.3 s, after Giratina's Ominous Wind)
@@ -2147,7 +2163,9 @@ class Player:
         self.armed = (k, time.time() + mon.fast.turns * 0.5 + 0.3)
         self.armed_at, self.armed_read = time.time(), have
         self.tapping = False
-        self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1))
+        self.log("armed", t, move=mon.charged[k].id, read=round(have, 1), soon=round(soon, 1),
+                 since_new=round(time.time() - self.reading_new_at, 2),
+                 tap_after_new=round(self.last_fast_tap - self.reading_new_at, 2))
 
     def slow_paid_wait(self) -> bool:
         """A long fast move and a charged move shown paid for (the buttons' reading, or the names under them): a fast
