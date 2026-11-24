@@ -4944,6 +4944,15 @@ to 2 s); the type icons held off from Melmetal, out, for 7 s by that false faint
 shows the faint); the newcomer's-bar check refusing Skeledirge's own bar after its switch was seen (now only while
 the switch is not). The Team Leaders threw few charged moves (2 named after a prompt): too few to judge the margin.
 
+**Ranked loss, 2026-11-23 (214336, `ultra-league` a1192d50).** Against Excadrill, Giratina and Charizard: Skeledirge
+on 17 HP and then Melmetal on 67 went into Charizard with Blastoise full on the bench (the owner: "we should've just
+brought in Blastoise and killed it"). Skeledirge was the engine (the Great League evaluation); the Ultra League one
+from task 48, asked on the same view, sends Blastoise, and is now the default in Ultra League. Melmetal was the
+tracker: Skeledirge fainted 2.6 s after our switch, and the rule for a counter lagging a change took our switch for
+Melmetal's faint; at the prompt the bot tapped for one card 20 times until the game sent Melmetal in. Fixed: a switch
+we tapped is never reread as a faint, and the prompt's two cards are read by name (it only comes with two to choose
+from). No more ranked sets until the owner says so.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
