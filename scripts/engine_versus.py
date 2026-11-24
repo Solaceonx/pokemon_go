@@ -16,6 +16,9 @@ overrides), and people_shield (shield calls copied from good players, pogo.peopl
 gives the trained bot alone with it). Data-file paths are relative to the repository root unless absolute. The
 setting "bot" is the trained bot alone.
 "website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
+Engine lab (pogo/lab): "website,engine=tree,depth=2,root=sh" plays pogo.lab.tree.TreeEngine; its own keys are depth,
+sims, root (flat | sh), c_puct, prior_temp, k0, gumbel, gscale, adversary, protect_pick, closed, tree_heads and
+fix_stay.
 With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
@@ -50,6 +53,7 @@ from pogo.arena import low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, SWITCH, Battle  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
+from pogo.lab import KEYS as LAB_KEYS, engine_class as lab_engine, setting as lab_setting  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 from pogo.reader import Reader  # noqa: E402
@@ -103,6 +107,11 @@ def parse(spec: str) -> dict | None:
             if value not in ("ready", "hit", "both"):
                 raise SystemExit(f"unknown mid_swap_search {value!r}")
             out[key] = value
+        elif key in LAB_KEYS:  # engine lab (pogo/lab): engine=tree and its settings
+            try:
+                out[key] = lab_setting(key, value)
+            except ValueError as e:
+                raise SystemExit(f"{e} in {spec!r}")
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")
     return out
@@ -167,7 +176,13 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
             s["pools"][n] = s["gd"].meta(n)
         pool = s["pools"][n]
     kw.setdefault("rollout", "bot")
-    extra = NO_LIMIT if cls is RealTime else {}
+    extra = NO_LIMIT if cls is RealTime else {}  # a RealTime subclass passed in keeps its own deadlines
+    lab = kw.pop("engine", None)
+    if lab is not None and issubclass(cls, RealTime):
+        engine = lab_engine(lab)  # engine lab (pogo/lab); with a subclass such as a live-timing one, both
+        cls = engine if cls is RealTime else type(f"{cls.__name__}_{engine.__name__}", (engine, cls), {})
+    elif lab is None and any(key in LAB_KEYS for key in kw):
+        raise SystemExit(f"lab settings {sorted(k for k in kw if k in LAB_KEYS)} need engine=<name>")
     return cls(ev, pool, q=q, margin=margin, seed=seed, **kw, **extra)
 
 
