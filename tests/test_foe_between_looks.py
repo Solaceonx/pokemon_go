@@ -168,10 +168,10 @@ class TypesGuard(unittest.TestCase):
     """Player.check_active: our header's type icons do not bring back one the tracker has fainted (2026-11-22, 151353:
     misread icons put Feraligatr, fainted, back out for 3 s, and Virizion's bar was put to it)."""
 
-    def test_a_fainted_one_is_not_taken_for_out(self):
+    def setup(self, left):
         import threading
-        import time
         p = object.__new__(pa.Player)
+        p.my_left_seen = left
         p.logged = []
         p.log = lambda kind, t, **kw: p.logged.append(kind)
         p.switching, p.active, p._last_active, p.active_changed_at = None, 0, 0, 0.0
@@ -184,9 +184,19 @@ class TypesGuard(unittest.TestCase):
         p.tracker = Tracker(GD, list(p.team))
         p.tracker.me.team[2].hp = 0
         p.types_seen = (2, 5.0)
+        p.tell_correction = lambda: None
         p.check_active(5.5)
+        return p
+
+    def test_a_fainted_one_is_not_taken_for_out(self):
+        p = self.setup(left=2)  # the count of ours left shows the faint
         self.assertEqual(p.active, 0)
         self.assertIn("types_ignored", p.logged)
+
+    def test_unless_the_count_does_not_show_the_faint(self):
+        p = self.setup(left=3)  # 2026-11-23, 205934: a faint from a false prompt
+        self.assertEqual(p.active, 2)
+        self.assertNotIn("types_ignored", p.logged)
 
 
 class NewcomersBar(unittest.TestCase):

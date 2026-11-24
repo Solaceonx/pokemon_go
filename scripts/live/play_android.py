@@ -644,6 +644,7 @@ class Player:
         self._last_active, self.active_changed_at = 0, -1.0
         self.last_reading_t = -1.0  # battle time of the buttons' last energy reading
         self.replace_run = 0  # frames in a row on which the replacement prompt was read
+        self.replace_since = 0.0  # and the time of the first of them
         self.replacements = 0  # replacement prompts answered: our faints
         self.prompt_shield, self.prompt_tapped = False, 0.0  # the answer to the shield prompt up now, and when tapped
         self.prompt_first = 0.0
@@ -795,7 +796,12 @@ class Player:
             # times in a battle (2026-11-09, 231134), and "send in" was tapped beside our move buttons; the real
             # prompt stays up a second or more
             self.replace_run = self.replace_run + 1 if look.replace_prompt else 0
-            if look.replace_prompt and self.replace_run < 2:
+            # and up 0.3 s unbroken (2026-11-23, 205934: after our Double Iron Bash the camera swept a night arena's
+            # ground and court lines, taken for the prompt on 2 frames 0.03 s apart; Melmetal was put down as fainted
+            # and "Skeledirge" tapped. Real prompts on yesterday's recordings stayed up 0.59 to 2 s unbroken)
+            if look.replace_prompt and self.replace_run == 1:
+                self.replace_since = t
+            if look.replace_prompt and (self.replace_run < 2 or t - self.replace_since < 0.3):
                 continue
             if look.replace_prompt:
                 self.tapping = False
@@ -1100,8 +1106,11 @@ class Player:
         if ts is not None and ts[1] > self.active_changed_at + 0.3 and (ts, self.active) != getattr(self, "types_checked", None) \
                 and time.time() - getattr(self, "header_confirmed_at", 0.0) > 8.0:
             self.types_checked = (ts, self.active)
-            if ts[0] != self.active and self.tracker.me.team[ts[0]].hp <= 0:
-                self.log("types_ignored", t, said=self.team[ts[0]].name, why="fainted")  # it cannot be out
+            down = sum(1 for m in self.tracker.me.team if m.hp <= 0)
+            if ts[0] != self.active and self.tracker.me.team[ts[0]].hp <= 0 and self.my_left_seen <= len(self.team) - down:
+                # fainted, and the count of ours left says so too: it cannot be out (2026-11-23, 205934: a faint the
+                # count did not show, from a false replacement prompt, held the icons off Melmetal, out, for 7 s)
+                self.log("types_ignored", t, said=self.team[ts[0]].name, why="fainted")
             elif ts[0] != self.active:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types",
@@ -1383,10 +1392,12 @@ class Player:
             mine_bar = look.bars.get("mine") if self.switching is None else None
             believed = self.tracker.me.team[self.active] if self.tracker.foe is not None else None
             if (mine_bar is not None and believed is not None and time.time() - self.switch_last_tap < 6.0
+                    and getattr(self, "switch_tapped_to", self.active) != self.active
                     and mine_bar > believed.hp / believed.build.hp + 0.25):
-                # Health does not come back: so far over the one believed out, soon after a switch tap, it is the bar of
-                # the one coming in, the header behind it (2026-11-22, 191031: the switch to Skeledirge given up on the
-                # header's word, Skeledirge's full bar was put to Melmetal on 24%)
+                # Health does not come back: so far over the one believed out, soon after a switch tap to another, it is
+                # the bar of the one coming in, the header behind it (2026-11-22, 191031: the switch to Skeledirge given
+                # up on the header's word, Skeledirge's full bar was put to Melmetal on 24%). Not once the switch is seen:
+                # the one out is the one tapped (2026-11-23, 205934: Skeledirge's own full bar refused 5 s)
                 self.log("bar_not_ours", t, read=round(mine_bar, 3), believed=self.team[self.active].name)
                 mine_bar = None
             obs = Observation(t=t, my_species=self.team[self.active].species_id, foe_species=self.names.species,
@@ -1796,6 +1807,7 @@ class Player:
                     self.open_with = None
                 self.switch_wanted = None
                 self.switching = (slot, time.time(), before, None, 0)  # self.active changes once it is seen
+                self.switch_tapped_to = slot
                 self.switch_point, self.switch_last_tap = BENCH[order.index(slot)], time.time()
                 # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
                 # takes its place (2026-11-08: Stunfisk's portrait tapped at 6.6 s, fast taps every 0.15 s after, no
