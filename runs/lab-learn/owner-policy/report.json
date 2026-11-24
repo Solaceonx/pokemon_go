@@ -1,0 +1,68 @@
+{
+ "source": "owner",
+ "settings": {
+  "source": "owner",
+  "out": "runs/lab-learn/owner-policy/policy.npz",
+  "hidden": 16,
+  "epochs": 60,
+  "batch": 64,
+  "rate": 0.002,
+  "decay": 0.003,
+  "bot_input": true,
+  "folds": 5,
+  "swap_window": 6,
+  "seed": 0
+ },
+ "games": null,
+ "held_back": {
+  "shield": {
+   "decisions": 170,
+   "departed": 48,
+   "policy_top1": 0.7294117647058823,
+   "bot_top1": 0.7176470588235294,
+   "policy_top1_where_departed": 0.2265032679738562,
+   "policy_predicts_departure": 0.11764705882352941,
+   "policy_departure_precision": 0.6731372549019609,
+   "policy_log_loss": 0.5559857585935695,
+   "bot_log_loss": 0.5976868937520148,
+   "policy_mean_prob_departure": 0.2937466291338837
+  },
+  "throw": {
+   "decisions": 661,
+   "departed": 240,
+   "policy_top1": 0.6747352496217852,
+   "bot_top1": 0.6369137670196672,
+   "policy_top1_where_departed": 0.315800984709346,
+   "policy_predicts_departure": 0.20121028744326777,
+   "policy_departure_precision": 0.5783988908913319,
+   "policy_log_loss": 0.7276278010578047,
+   "bot_log_loss": 0.852584232010921,
+   "policy_mean_prob_departure": 0.36499125085432377
+  },
+  "swap": {
+   "decisions": 157,
+   "departed": 54,
+   "policy_top1": 0.7261146496815286,
+   "bot_top1": 0.6560509554140127,
+   "policy_top1_where_departed": 0.47222543910442,
+   "policy_predicts_departure": 0.27388535031847133,
+   "policy_departure_precision": 0.6261146496815286,
+   "policy_log_loss": 0.6980127517045887,
+   "bot_log_loss": 0.8015284788665665,
+   "policy_mean_prob_departure": 0.3829607584736858
+  },
+  "replace": {
+   "decisions": 33,
+   "departed": 14,
+   "policy_top1": 0.5757575757575758,
+   "bot_top1": 0.5757575757575758,
+   "policy_top1_where_departed": 0.5303030303030303,
+   "policy_predicts_departure": 0.42424242424242425,
+   "policy_departure_precision": 0.5404040404040403,
+   "policy_log_loss": 0.7870980726153957,
+   "bot_log_loss": 0.7252726865673159,
+   "policy_mean_prob_departure": 0.4352749516225127
+  }
+ },
+ "minutes": 0.0
+}

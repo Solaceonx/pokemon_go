@@ -16,6 +16,10 @@ team_file (listed unseen-team prior), and style_file (calibrated mixture with op
 overrides), and people_shield (shield calls copied from good players, pogo.people_shield; "bot,people_shield=PATH"
 gives the trained bot alone with it). Data-file paths are relative to the repository root unless absolute. The
 setting "bot" is the trained bot alone.
+Engine lab (lab-learn, all opt-in): opp_q (path) and opp_policy (path to a pogo.lab.policy.PolicyNet; opp_sample 0 | 1,
+default 1) give the engine a learned imagined opponent (pogo.lab.engines.ModelledEngine); the bot alone also takes q,
+margin, policy (play a PolicyNet; sample 0 | 1), anchor with lam (piKL, pogo.lab.policy.PolicyPlayer) and temperature,
+for example "bot,q=runs/lab-learn/population/q.npz" or "bot,anchor=runs/lab-learn/owner-policy/policy.npz,lam=0.02".
 "website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
 With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
@@ -62,6 +66,7 @@ CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
 COUNTING = "per-battle-v3-mixed"  # exclude legacy random choices from the lab probability diagnostic
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
+LAB_BOT_KEYS = ("q", "margin", "policy", "anchor", "lam", "sample", "temperature")  # the bot alone, engine lab (lab-learn)
 _state: dict = {}
 
 
@@ -74,8 +79,13 @@ def parse(spec: str) -> dict | None:
         bot = {"_bot": True}
         for part in parts[1:]:
             key, value = part.split("=", 1)
+            if key in LAB_BOT_KEYS:  # engine lab (lab-learn)
+                bot[key] = float(value) if key in ("margin", "lam", "temperature") else (
+                    value not in ("0", "") if key == "sample" else value)
+                continue
             if key not in ("people_shield", "people_add", "ko_wait"):
-                raise SystemExit(f"the bot alone takes only people_shield, people_add and ko_wait, not {key!r}")
+                raise SystemExit(f"the bot alone takes only people_shield, people_add, ko_wait and {', '.join(LAB_BOT_KEYS)}, "
+                                 f"not {key!r}")
             bot[key] = float(value) if key == "people_add" else (value not in ("0", "") if key == "ko_wait" else value)
         return bot
     out = dict(CONFIRMED)
@@ -99,10 +109,10 @@ def parse(spec: str) -> dict | None:
                 raise SystemExit("shield_toward must be 0 or 1")
             out[key] = bool(int(value))
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
-                     "stay_after_replace", "ko_wait", "equilibrium"):
+                     "stay_after_replace", "ko_wait", "equilibrium", "opp_sample"):
             out[key] = value not in ("0", "false", "False", "")
         elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge",
-                     "people_shield"):
+                     "people_shield", "opp_q", "opp_policy"):
             out[key] = value
         elif key == "mid_swap_search":
             if value not in ("ready", "hit", "both"):
@@ -163,8 +173,15 @@ def network(path: str | None) -> QNet:
 def pilot(settings: dict | None, seed: int, cls=RealTime):
     s = _state
     if settings is None or settings.get("_bot"):
-        return Learner(q=s["net"], margin=0.02, seed=seed, people_shield=(settings or {}).get("people_shield"),
-                       people_add=(settings or {}).get("people_add"), ko_wait=(settings or {}).get("ko_wait", False))
+        st = settings or {}
+        people = dict(people_shield=st.get("people_shield"), people_add=st.get("people_add"), ko_wait=st.get("ko_wait", False))
+        if any(k in st for k in LAB_BOT_KEYS):  # engine lab (lab-learn)
+            from pogo.lab.policy import PolicyPlayer, cached
+            return PolicyPlayer(pnet=cached(st["policy"]) if st.get("policy") else None,
+                                anchor=cached(st["anchor"]) if st.get("anchor") else None, lam=st.get("lam", 0.0),
+                                sample=st.get("sample", False), temperature=st.get("temperature", 0.0),
+                                q=network(st.get("q")), margin=st.get("margin", 0.02), seed=seed, **people)
+        return Learner(q=s["net"], margin=0.02, seed=seed, **people)
     kw = dict(settings)
     # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
     ev = Evaluator(evaluator(kw.pop("eval", None)).model)
@@ -178,6 +195,14 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
         pool = s["pools"][n]
     kw.setdefault("rollout", "bot")
     extra = NO_LIMIT if cls is RealTime else {}
+    if cls is RealTime and ("opp_q" in kw or "opp_policy" in kw):  # engine lab (lab-learn): a learned imagined opponent
+        from pogo.lab.engines import ModelledEngine
+        from pogo.lab.policy import cached
+        cls = ModelledEngine
+        if "opp_q" in kw:
+            kw["opp_q"] = network(kw["opp_q"])
+        if "opp_policy" in kw:
+            kw["opp_policy"] = cached(kw["opp_policy"])
     return cls(ev, pool, q=q, margin=margin, seed=seed, **kw, **extra)
 
 

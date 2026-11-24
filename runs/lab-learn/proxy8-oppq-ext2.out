@@ -1,0 +1,17 @@
+32 jobs to run on 2 workers
+  675 results, 1 min
+  715 results, 3 min
+  750 results, 4 min
+  785 results, 5 min
+
+baseline: website,samples=8
+  head to head, all candidates: baseline shields / shield prompts 1207 / 3244 (37.2%)
+
+candidate 1: website,samples=8,q=runs/engine-loop/round_2/q.npz,opp_q=runs/general-decide/q.npz
+  head to head against the baseline, 320 pairings both ways: 49.1% ± 3.3
+    candidate: 1.919 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (640 battles; 22.65 total searches/battle, 0.993 search seconds/battle); shields / shield prompts 1192 / 3267 (36.5%)
+    baseline:  2.022 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (640 battles; 21.78 total searches/battle, 0.959 search seconds/battle); shields / shield prompts 1207 / 3244 (37.2%)
+  search time per searched decision: median 31 ms, 99th percentile 172, worst 312 (this machine)
+
+elapsed: 311.2 seconds
+results: runs\engine_versus\lab-learn-proxy8-oppq.json
