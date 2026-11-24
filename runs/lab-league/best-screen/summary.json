@@ -1,0 +1,885 @@
+{
+ "reference": "website",
+ "specs": {
+  "website": {
+   "round_robin": {
+    "score": 0.36839999999999995,
+    "margin": 0.020560667740223023,
+    "n": 500,
+    "opponents": 5
+   },
+   "crowd": {
+    "score": 0.7525,
+    "margin": 0.02667177109554919,
+    "n": 1000
+   },
+   "pvpoke": {
+    "score": 0.851,
+    "margin": 0.0310584373376981,
+    "n": 500
+   },
+   "reader": {
+    "gain": 0.019,
+    "margin": 0.029625831450891406,
+    "n": 250,
+    "plain": 0.554,
+    "read": 0.535
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9763888888888889,
+     "margin": 0.01128436908279359,
+     "varies": 0.08888888888888889,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9833333333333333,
+     "margin": 0.01468486875563995,
+     "varies": 0.08333333333333333,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.9458333333333333,
+     "margin": 0.03182206752367736,
+     "varies": 0.18333333333333332,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 1.0,
+     "margin": 0.0,
+     "varies": 0.0,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2197,
+    "live": true,
+    "crowd_live": {
+     "score": 0.75,
+     "margin": 0.08415305920605247
+    },
+    "median_ms": 125.0,
+    "p99_ms": 532.4519999999989,
+    "worst_ms": 796.9,
+    "cut": 0.056440600819299046,
+    "fallback": 0.0013654984069185253,
+    "p99_interval": [
+     515.6,
+     578.1
+    ],
+    "cut_interval": [
+     0.038802791529628025,
+     0.07653558437294343
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 5.767169811320755,
+    "margin": 2.535199945151995,
+    "n": 318,
+    "blunders": 8.80503144654088,
+    "act": 6.236888888888889,
+    "shield": 3.125
+   },
+   "creator": {
+    "score": 0.7534246575342466,
+    "margin": 0.03298366332624096,
+    "n": 657,
+    "agree": 0.4307458143074581,
+    "agree_margin": 0.03789376879374681,
+    "regret": 0.04566971080669711,
+    "regret_margin": 0.016899869230934967,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "reference"
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+   "h2h": {
+    "score": 0.6065,
+    "margin": 0.02470558553674506,
+    "n": 500
+   },
+   "crowd": {
+    "score": 0.8215,
+    "margin": 0.02360419323633702,
+    "n": 1000,
+    "diff": 0.069,
+    "diff_margin": 0.027047249325875933,
+    "diff_n": 1000
+   },
+   "pvpoke": {
+    "score": 0.856,
+    "margin": 0.030554258135002406,
+    "n": 500,
+    "diff": 0.005,
+    "diff_margin": 0.03346570523466833,
+    "diff_n": 500
+   },
+   "reader": {
+    "gain": -0.007,
+    "margin": 0.026553345685021934,
+    "n": 250,
+    "plain": 0.636,
+    "read": 0.643,
+    "diff": -0.026,
+    "diff_margin": 0.03606882524032169,
+    "diff_n": 250
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9701388888888889,
+     "margin": 0.012488395333433162,
+     "varies": 0.1111111111111111,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9625,
+     "margin": 0.024703322988348486,
+     "varies": 0.15,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.9479166666666666,
+     "margin": 0.03178274594516362,
+     "varies": 0.18333333333333332,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 1.0,
+     "margin": 0.0,
+     "varies": 0.0,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2177,
+    "live": true,
+    "crowd_live": {
+     "score": 0.805,
+     "margin": 0.07742256868261438
+    },
+    "median_ms": 125.0,
+    "p99_ms": 546.9,
+    "worst_ms": 703.1,
+    "cut": 0.06384933394579696,
+    "fallback": 0.002756086357372531,
+    "p99_interval": [
+     531.2,
+     593.8
+    ],
+    "cut_interval": [
+     0.044574916606471136,
+     0.08201692046277591
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 4.954779874213836,
+    "margin": 2.335254274117096,
+    "n": 318,
+    "blunders": 8.176100628930817,
+    "act": 5.280074074074074,
+    "shield": 3.125,
+    "diff": -0.8123899371069183,
+    "diff_margin": 1.1986932817616596,
+    "diff_n": 318
+   },
+   "creator": {
+    "score": 0.7595129375951294,
+    "margin": 0.0327052594250681,
+    "n": 657,
+    "agree": 0.4444444444444444,
+    "agree_margin": 0.0380256494363437,
+    "regret": 0.047488584474885846,
+    "regret_margin": 0.015861359659942054,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "pass: confirm on a fresh seed"
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+   "h2h": {
+    "score": 0.638,
+    "margin": 0.024615559932318485,
+    "n": 500
+   },
+   "crowd": {
+    "score": 0.8045,
+    "margin": 0.024534192756522768,
+    "n": 1000,
+    "diff": 0.052,
+    "diff_margin": 0.029401373341297412,
+    "diff_n": 1000
+   },
+   "pvpoke": {
+    "score": 0.86,
+    "margin": 0.030445214766928626,
+    "n": 500,
+    "diff": 0.009,
+    "diff_margin": 0.03276172648448932,
+    "diff_n": 500
+   },
+   "reader": {
+    "gain": 0.022,
+    "margin": 0.027499533811309554,
+    "n": 250,
+    "plain": 0.686,
+    "read": 0.664,
+    "diff": 0.003,
+    "diff_margin": 0.037519013953356085,
+    "diff_n": 250
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9486111111111111,
+     "margin": 0.01637487002430118,
+     "varies": 0.19444444444444445,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9458333333333333,
+     "margin": 0.03285328637938564,
+     "varies": 0.18333333333333332,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.93125,
+     "margin": 0.03579618714177376,
+     "varies": 0.25,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 0.96875,
+     "margin": 0.021315625789025707,
+     "varies": 0.15,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2717,
+    "live": true,
+    "crowd_live": {
+     "score": 0.795,
+     "margin": 0.07891183931349201
+    },
+    "median_ms": 140.6,
+    "p99_ms": 531.2,
+    "worst_ms": 687.5,
+    "cut": 0.05631210894368789,
+    "fallback": 0.002576370997423629,
+    "p99_interval": [
+     500.0,
+     562.5
+    ],
+    "cut_interval": [
+     0.041199242235429076,
+     0.07060402962799181
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 4.954779874213836,
+    "margin": 2.335254274117096,
+    "n": 318,
+    "blunders": 8.176100628930817,
+    "act": 5.280074074074074,
+    "shield": 3.125,
+    "diff": -0.8123899371069183,
+    "diff_margin": 1.1986932817616596,
+    "diff_n": 318
+   },
+   "creator": {
+    "score": 0.76103500761035,
+    "margin": 0.032634248067780806,
+    "n": 657,
+    "agree": 0.4398782343987823,
+    "agree_margin": 0.037984954701144574,
+    "regret": 0.045898021308980214,
+    "regret_margin": 0.016018898368988607,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "pass: confirm on a fresh seed"
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+   "h2h": {
+    "score": 0.642,
+    "margin": 0.02475278885929069,
+    "n": 500
+   },
+   "crowd": {
+    "score": 0.8075,
+    "margin": 0.02438988266426012,
+    "n": 1000,
+    "diff": 0.055,
+    "diff_margin": 0.02931485836433328,
+    "diff_n": 1000
+   },
+   "pvpoke": {
+    "score": 0.86,
+    "margin": 0.030445214766928626,
+    "n": 500,
+    "diff": 0.009,
+    "diff_margin": 0.03276172648448932,
+    "diff_n": 500
+   },
+   "reader": {
+    "gain": 0.022,
+    "margin": 0.02693265926231123,
+    "n": 250,
+    "plain": 0.688,
+    "read": 0.666,
+    "diff": 0.003,
+    "diff_margin": 0.03668738145783822,
+    "diff_n": 250
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9486111111111111,
+     "margin": 0.01637487002430118,
+     "varies": 0.19444444444444445,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9458333333333333,
+     "margin": 0.03285328637938564,
+     "varies": 0.18333333333333332,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.93125,
+     "margin": 0.03579618714177376,
+     "varies": 0.25,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 0.96875,
+     "margin": 0.021315625789025707,
+     "varies": 0.15,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2711,
+    "live": true,
+    "crowd_live": {
+     "score": 0.785,
+     "margin": 0.08032522529182111
+    },
+    "median_ms": 140.6,
+    "p99_ms": 546.9,
+    "worst_ms": 765.6,
+    "cut": 0.05717447436370343,
+    "fallback": 0.0022132054592401327,
+    "p99_interval": [
+     515.6,
+     573.4238999999973
+    ],
+    "cut_interval": [
+     0.04115842543118799,
+     0.07306830246090398
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 4.011383647798742,
+    "margin": 1.959130990894854,
+    "n": 318,
+    "blunders": 7.232704402515723,
+    "act": 4.168962962962963,
+    "shield": 3.125,
+    "diff": -1.7557861635220127,
+    "diff_margin": 1.488003859161527,
+    "diff_n": 318
+   },
+   "creator": {
+    "score": 0.7595129375951294,
+    "margin": 0.0327052594250681,
+    "n": 657,
+    "agree": 0.4398782343987823,
+    "agree_margin": 0.037984954701144574,
+    "regret": 0.049117199391172,
+    "regret_margin": 0.016046034108176555,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "pass: confirm on a fresh seed"
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+   "h2h": {
+    "score": 0.641,
+    "margin": 0.024405588833967217,
+    "n": 500
+   },
+   "crowd": {
+    "score": 0.8075,
+    "margin": 0.02438988266426012,
+    "n": 1000,
+    "diff": 0.055,
+    "diff_margin": 0.02924919615092824,
+    "diff_n": 1000
+   },
+   "pvpoke": {
+    "score": 0.857,
+    "margin": 0.030653245932076172,
+    "n": 500,
+    "diff": 0.006,
+    "diff_margin": 0.03259032468888049,
+    "diff_n": 500
+   },
+   "reader": {
+    "gain": 0.027,
+    "margin": 0.028193470547736837,
+    "n": 250,
+    "plain": 0.694,
+    "read": 0.667,
+    "diff": 0.008,
+    "diff_margin": 0.038672205890454905,
+    "diff_n": 250
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9479166666666666,
+     "margin": 0.016404071357402877,
+     "varies": 0.18888888888888888,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9354166666666667,
+     "margin": 0.034884032415886106,
+     "varies": 0.21666666666666667,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.93125,
+     "margin": 0.03579618714177376,
+     "varies": 0.25,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 0.9770833333333333,
+     "margin": 0.01957588215220548,
+     "varies": 0.1,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2729,
+    "live": true,
+    "crowd_live": {
+     "score": 0.785,
+     "margin": 0.08032522529182111
+    },
+    "median_ms": 140.6,
+    "p99_ms": 546.9,
+    "worst_ms": 765.6,
+    "cut": 0.0575302308537926,
+    "fallback": 0.002565042139978014,
+    "p99_interval": [
+     500.0,
+     578.1
+    ],
+    "cut_interval": [
+     0.04134985271183504,
+     0.07334070366191668
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 3.854150943396226,
+    "margin": 1.9494603941998763,
+    "n": 318,
+    "blunders": 6.918238993710692,
+    "act": 4.168962962962963,
+    "shield": 2.083333333333333,
+    "diff": -1.9130188679245284,
+    "diff_margin": 1.5098485458346294,
+    "diff_n": 318
+   },
+   "creator": {
+    "score": 0.7640791476407914,
+    "margin": 0.032490507104381054,
+    "n": 657,
+    "agree": 0.4337899543378995,
+    "agree_margin": 0.03792561936976972,
+    "regret": 0.04833333333333333,
+    "regret_margin": 0.01639001691096174,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "pass: confirm on a fresh seed"
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+   "h2h": {
+    "score": 0.6305,
+    "margin": 0.02479299433986693,
+    "n": 500
+   },
+   "crowd": {
+    "score": 0.796,
+    "margin": 0.024873090781908167,
+    "n": 1000,
+    "diff": 0.0435,
+    "diff_margin": 0.029438086441433885,
+    "diff_n": 1000
+   },
+   "pvpoke": {
+    "score": 0.854,
+    "margin": 0.030857629451900247,
+    "n": 500,
+    "diff": 0.003,
+    "diff_margin": 0.03288743861167776,
+    "diff_n": 500
+   },
+   "reader": {
+    "gain": 0.015,
+    "margin": 0.02805743106114678,
+    "n": 250,
+    "plain": 0.681,
+    "read": 0.666,
+    "diff": -0.004,
+    "diff_margin": 0.038781362973163085,
+    "diff_n": 250
+   },
+   "predict": {
+    "all": {
+     "modal": 0.9506944444444444,
+     "margin": 0.01627557302411729,
+     "varies": 0.18333333333333332,
+     "positions": 180
+    },
+    "throw": {
+     "modal": 0.9395833333333333,
+     "margin": 0.0334193664052137,
+     "varies": 0.21666666666666667,
+     "positions": 60
+    },
+    "switch": {
+     "modal": 0.9354166666666667,
+     "margin": 0.03535877458022004,
+     "varies": 0.23333333333333334,
+     "positions": 60
+    },
+    "shield": {
+     "modal": 0.9770833333333333,
+     "margin": 0.01957588215220548,
+     "varies": 0.1,
+     "positions": 60
+    },
+    "asks": 8,
+    "battles": 60
+   },
+   "timing": {
+    "battles": 100,
+    "decisions": 2701,
+    "live": true,
+    "crowd_live": {
+     "score": 0.775,
+     "margin": 0.08166666666666667
+    },
+    "median_ms": 140.6,
+    "p99_ms": 531.2,
+    "worst_ms": 796.9,
+    "cut": 0.060718252499074414,
+    "fallback": 0.0018511662347278786,
+    "p99_interval": [
+     500.0,
+     578.1039249999999
+    ],
+    "cut_interval": [
+     0.04413839673390816,
+     0.07662180445989247
+    ],
+    "release_ok": true
+   },
+   "endgame": {
+    "points": 3.906572327044025,
+    "margin": 2.011018920815072,
+    "n": 318,
+    "blunders": 6.60377358490566,
+    "act": 4.230703703703704,
+    "shield": 2.083333333333333,
+    "diff": -1.8605974842767294,
+    "diff_margin": 1.5884340826585748,
+    "diff_n": 318
+   },
+   "creator": {
+    "score": 0.7640791476407914,
+    "margin": 0.032490507104381054,
+    "n": 657,
+    "agree": 0.4337899543378995,
+    "agree_margin": 0.03792561936976972,
+    "regret": 0.04833333333333333,
+    "regret_margin": 0.01639001691096174,
+    "opponent": "crowd",
+    "games": 100
+   },
+   "verdict": "pass: confirm on a fresh seed"
+  }
+ },
+ "matrix": {
+  "website": {
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+    "score": 0.3935,
+    "margin": 0.024705585536745064,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+    "score": 0.362,
+    "margin": 0.024615559932318485,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+    "score": 0.358,
+    "margin": 0.02475278885929069,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+    "score": 0.359,
+    "margin": 0.024405588833967217,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+    "score": 0.3695,
+    "margin": 0.02479299433986693,
+    "n": 500
+   }
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+   "website": {
+    "score": 0.6065,
+    "margin": 0.02470558553674506,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   }
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+   "website": {
+    "score": 0.638,
+    "margin": 0.024615559932318485,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   }
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+   "website": {
+    "score": 0.642,
+    "margin": 0.02475278885929069,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   }
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+   "website": {
+    "score": 0.641,
+    "margin": 0.024405588833967217,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   }
+  },
+  "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": {
+   "website": {
+    "score": 0.6305,
+    "margin": 0.02479299433986693,
+    "n": 500
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   },
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": {
+    "score": NaN,
+    "margin": NaN,
+    "n": 0
+   }
+  }
+ },
+ "cycles": [],
+ "elapsed_seconds": 6928.3,
+ "unit_cpu_seconds": {
+  "endgame": {
+   "website": 0.012327044025157233,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 0.012861635220125785,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 0.013773584905660377,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 0.014308176100628931,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 0.013459119496855347,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 0.013679245283018867
+  },
+  "predict": {
+   "website": 6.3805,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 6.5521666666666665,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 8.573,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 8.573166666666667,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 8.572333333333335,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 8.470833333333333
+  },
+  "reader": {
+   "website": 13.05988,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 14.09228,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 17.52796,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 17.48488,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 17.68872,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 17.45324
+  },
+  "timing": {
+   "website": 3.5497,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 3.6837,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 4.6228,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 4.586,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 4.6141000000000005,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 4.5653
+  },
+  "crowd": {
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 4.12507,
+   "website": 3.92144,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 4.98384,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 4.996020000000001,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 4.997,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 4.97587
+  },
+  "pvpoke": {
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh": 3.85108,
+   "website": 3.95744,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0": 4.52118,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1": 4.54684,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0": 4.53526,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1": 4.54096
+  },
+  "h2h": {
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh | website": 14.00674,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1 | website": 15.4873,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1 | website": 15.47142,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0 | website": 15.39704,
+   "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0 | website": 15.34702
+  }
+ },
+ "projected": {
+  "smoke": {
+   "cpu_hours": 0.3408740888888888,
+   "unknown": [],
+   "wall_hours_at": {
+    "14": 0.0243481492063492,
+    "2": 0.1704370444444444
+   }
+  },
+  "screen": {
+   "cpu_hours": 30.158936111111117,
+   "unknown": [],
+   "wall_hours_at": {
+    "14": 2.1542097222222227,
+    "2": 15.079468055555559
+   }
+  },
+  "confirm": {
+   "cpu_hours": 95.24873055555555,
+   "unknown": [],
+   "wall_hours_at": {
+    "14": 6.803480753968254,
+    "2": 47.62436527777778
+   }
+  }
+ }
+}

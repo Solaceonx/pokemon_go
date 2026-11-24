@@ -1,0 +1,169 @@
+{
+ "arguments": {
+  "run": "lab-learn/population",
+  "generations": 3,
+  "minutes": 180.0,
+  "workers": 8,
+  "weights": "rulebook=0.3,past=0.45,people=0.25",
+  "past": null,
+  "imitation": "runs/lab-learn/owner-policy/policy.npz",
+  "engine_samples": 4,
+  "both_sides": 0.2,
+  "pvpoke_share": 0.05,
+  "start": "runs/general-decide/q.npz",
+  "field": "mixed",
+  "teams": null,
+  "score": "result",
+  "horizon": 0,
+  "hidden": 48,
+  "margin": 0.02,
+  "check": 2000,
+  "seed": 4242
+ },
+ "generations": [
+  {
+   "generation": 1,
+   "battles": 99417,
+   "pvpoke_battles": 5055,
+   "new_examples": {
+    "shield": 698876,
+    "throw": 225248,
+    "swap": 494112,
+    "replace": 108188
+   },
+   "all_examples": {
+    "shield": 698876,
+    "throw": 225248,
+    "swap": 494112,
+    "replace": 108188
+   },
+   "population": [
+    "runs/general-decide/q.npz",
+    "runs/general-decide/q_v1.npz",
+    "runs/general-decide/q_v2.npz",
+    "runs/general-decide/q_v3.npz",
+    "runs/general-decide/q_v4.npz",
+    "runs/general-decide/q_v5.npz",
+    "runs/engine-loop/round_1/q.npz",
+    "runs/engine-loop/round_2/q.npz"
+   ],
+   "minutes": 60.9,
+   "check": {
+    "pairings": 2000,
+    "head_to_head": [
+     0.513375,
+     0.012858772721587886
+    ],
+    "crowd_new": [
+     0.69275,
+     0.020123571676482016
+    ],
+    "crowd_base": [
+     0.67225,
+     0.0205363072120319
+    ],
+    "crowd_change": [
+     0.0205,
+     0.021999012752417786
+    ]
+   }
+  },
+  {
+   "generation": 2,
+   "battles": 98331,
+   "pvpoke_battles": 4963,
+   "new_examples": {
+    "shield": 731602,
+    "throw": 220882,
+    "swap": 482446,
+    "replace": 107417
+   },
+   "all_examples": {
+    "shield": 1430478,
+    "throw": 446130,
+    "swap": 976558,
+    "replace": 215605
+   },
+   "population": [
+    "runs/general-decide/q.npz",
+    "runs/general-decide/q_v1.npz",
+    "runs/general-decide/q_v2.npz",
+    "runs/general-decide/q_v3.npz",
+    "runs/general-decide/q_v4.npz",
+    "runs/general-decide/q_v5.npz",
+    "runs/engine-loop/round_1/q.npz",
+    "runs/engine-loop/round_2/q.npz",
+    "runs/lab-learn/population/gen_1/q.npz"
+   ],
+   "minutes": 61.8,
+   "check": {
+    "pairings": 2000,
+    "head_to_head": [
+     0.53225,
+     0.01301531010381809
+    ],
+    "crowd_new": [
+     0.69525,
+     0.020101117118327086
+    ],
+    "crowd_base": [
+     0.6865,
+     0.02025423341392097
+    ],
+    "crowd_change": [
+     0.00875,
+     0.022301316398512294
+    ]
+   }
+  },
+  {
+   "generation": 3,
+   "battles": 98726,
+   "pvpoke_battles": 4812,
+   "new_examples": {
+    "shield": 710914,
+    "throw": 240693,
+    "swap": 495172,
+    "replace": 108097
+   },
+   "all_examples": {
+    "shield": 2141392,
+    "throw": 686823,
+    "swap": 1471730,
+    "replace": 323702
+   },
+   "population": [
+    "runs/general-decide/q.npz",
+    "runs/general-decide/q_v1.npz",
+    "runs/general-decide/q_v2.npz",
+    "runs/general-decide/q_v3.npz",
+    "runs/general-decide/q_v4.npz",
+    "runs/general-decide/q_v5.npz",
+    "runs/engine-loop/round_1/q.npz",
+    "runs/engine-loop/round_2/q.npz",
+    "runs/lab-learn/population/gen_1/q.npz",
+    "runs/lab-learn/population/gen_2/q.npz"
+   ],
+   "minutes": 62.6,
+   "check": {
+    "pairings": 2000,
+    "head_to_head": [
+     0.538125,
+     0.013184404668043428
+    ],
+    "crowd_new": [
+     0.6885,
+     0.020206736755477184
+    ],
+    "crowd_base": [
+     0.67125,
+     0.02048212385102493
+    ],
+    "crowd_change": [
+     0.01725,
+     0.02151308318963514
+    ]
+   }
+  }
+ ]
+}
