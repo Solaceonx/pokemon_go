@@ -8,7 +8,7 @@ from __future__ import annotations
 # The settings each lab engine adds on top of the Engine's, with how to read them from "key=value" text.
 _INT = ("depth", "sims")
 _FLOAT = ("c_puct", "prior_temp", "k0", "gumbel", "gscale")
-_BOOL = ("adversary", "protect_pick", "closed", "fix_stay")
+_BOOL = ("adversary", "protect_pick", "closed", "fix_stay", "fix_judged")
 _TEXT = ("root", "tree_heads")
 KEYS = frozenset(("engine",) + _INT + _FLOAT + _BOOL + _TEXT)
 

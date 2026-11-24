@@ -28,7 +28,8 @@ class LabTree(unittest.TestCase):
 
     def engine(self, cls=TreeEngine, seed=3, **kw):
         kw.setdefault("samples", 2)
-        return cls(Evaluator(self.ev.model), self.pool, rollout="bot", horizon=6, edge=0.03, q=self.net, margin=0.02,
+        kw.setdefault("horizon", 6)
+        return cls(Evaluator(self.ev.model), self.pool, rollout="bot", edge=0.03, q=self.net, margin=0.02,
                    seed=seed, **NO_LIMIT, **kw)
 
     def game(self, a, b, g=0):
@@ -80,6 +81,31 @@ class LabTree(unittest.TestCase):
         for g in range(2):
             self.game(e, Learner(q=self.net, margin=0.02, seed=9), g)
         self.assertTrue(any(r["head"] == "swap" for r in e.record))
+
+    def test_judged_matchups_carry_into_the_look(self):
+        # The Rage Fist position (scripts/lab/search_positions.py): a fresh imagined Altaria swaps to Jellicent at the
+        # first step of every look, so both throws score the same; with fix_judged it stays and they differ.
+        gd = self.gd
+
+        def mon(species, share, energy):
+            from pogo.battle import Mon
+            build = gd.default(species)
+            return Mon(build, max(1, round(share * build.hp)), energy)
+
+        worth = {}
+        for fix in (False, True):
+            ours = [mon("annihilape_shadow", 0.64, 72), mon("tinkaton", 1, 0), mon("carbink", 0.38, 45)]
+            theirs = [mon("melmetal", 1, 0), mon("altaria", 0.89, 36), mon("jellicent", 0.14, 62)]
+            e = self.engine(fix_judged=fix, samples=4, horizon=20)
+            e.record = []
+            battle = Battle(ours, theirs, e, Learner(q=self.net, margin=0.02, seed=7), seed=1, shields=(0, 1))
+            battle.sides[1].active, battle.sides[1].shown, battle.turn = 1, [0, 2, 1], 179
+            e._judged = e._last_pair = (0, battle.sides[1].mon.build.uid)
+            e._last_foe_free = True
+            e.act(battle.views[0])
+            worth[fix] = [r["worth"] for r in e.record if r["head"] == "throw"][0]
+        self.assertAlmostEqual(worth[False][1], worth[False][2])
+        self.assertNotAlmostEqual(worth[True][1], worth[True][2])
 
     def test_halving_spends_more_on_the_last_two(self):
         e = self.engine(root="sh", samples=4)

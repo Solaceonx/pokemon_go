@@ -301,8 +301,9 @@ def hand(args) -> None:
                 e = website(1000 + s, **change)
                 e.record = []
                 battle = setup_battle(ours, theirs, active, foe_active, shields, turn, shown, (e, bot(7)))
-                if head != "swap":  # mid-battle: the matchup was judged when it began
+                if head != "swap":  # mid-battle: the matchup was judged when it began, and stood at the last decision
                     e._judged = (active, battle.sides[1].mon.build.uid)
+                    e._last_pair, e._last_foe_free = e._judged, True
                 start = time.process_time()
                 e.act(battle.views[0])
                 ms.append(1000 * (time.process_time() - start))

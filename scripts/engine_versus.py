@@ -17,8 +17,8 @@ gives the trained bot alone with it). Data-file paths are relative to the reposi
 setting "bot" is the trained bot alone.
 "website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
 Engine lab (pogo/lab): "website,engine=tree,depth=2,root=sh" plays pogo.lab.tree.TreeEngine; its own keys are depth,
-sims, root (flat | sh), c_puct, prior_temp, k0, gumbel, gscale, adversary, protect_pick, closed, tree_heads and
-fix_stay.
+sims, root (flat | sh), c_puct, prior_temp, k0, gumbel, gscale, adversary, protect_pick, closed, tree_heads,
+fix_stay and fix_judged.
 With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways

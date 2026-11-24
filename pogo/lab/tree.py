@@ -30,6 +30,12 @@ Engine / RealTime with the same settings and seed (tests/test_lab_tree.py):
   first action, so the fresh imagined bot asks the same swap question again and, when the trained bot's pick is a
   switch, makes that switch: in the website engine "stay" is then scored as the bot's switch (equal worths, to the last
   digit, in every such search checked) and the engine can never overrule a switch of the bot's by staying.
+- fix_judged=1: imagined players are fresh, so each asks its matchup's swap question again at its first free act. The
+  opponent in a look can then swap at its first step where its real counterpart settled the matchup long ago (the
+  Rage Fist position: the imagined Altaria swaps to Jellicent before our throw lands, so both throws score the same),
+  and after a throw our own imagined bot can swap out. This carries over our judgement of the matchup in play (throw
+  and shield decisions) and treats theirs as settled when the matchup stood at our previous decision with their
+  switch free.
 - closed=0 drops "what we see" from node keys (pure open loop: one node per sequence of our own choices).
 - tree_heads: which of our decisions inside the look-ahead become nodes (default the searched heads, without
   shields; "throw+swap+mid_swap+replace+shield" adds our shield calls).
@@ -207,7 +213,7 @@ class TreeEngine(RealTime):
     def __init__(self, *args, depth: int = 0, root: str = "flat", sims: int | None = None, c_puct: float = 0.5,
                  prior_temp: float = 0.1, k0: float = 1.0, gumbel: float = 0.0, gscale: float = 1.0,
                  adversary: bool = False, protect_pick: bool = True, closed: bool = True,
-                 tree_heads: tuple | None = None, fix_stay: bool = False, **kwargs):
+                 tree_heads: tuple | None = None, fix_stay: bool = False, fix_judged: bool = False, **kwargs):
         super().__init__(*args, **kwargs)
         if root not in ("flat", "sh"):
             raise ValueError(f"unknown root {root!r}")
@@ -215,7 +221,8 @@ class TreeEngine(RealTime):
             raise ValueError("adversary needs opponents='bot' (the imagined opponent must be the trained bot)")
         self.depth, self.root, self.sims, self.c_puct, self.prior_temp, self.k0 = depth, root, sims, c_puct, prior_temp, k0
         self.gumbel, self.gscale, self.adversary, self.protect_pick, self.closed = gumbel, gscale, adversary, protect_pick, closed
-        self.fix_stay = fix_stay
+        self.fix_stay, self.fix_judged = fix_stay, fix_judged
+        self._last_pair, self._last_foe_free, self._foe_settled = None, False, False
         self.tree_heads = tuple(tree_heads) if tree_heads is not None else tuple(h for h in self.heads if h != "shield")
         self._search: Search | None = None
         self.nodes_made = 0  # tree nodes over all searches, for reports
@@ -226,6 +233,15 @@ class TreeEngine(RealTime):
         twin = super().clone()
         twin._search, twin.record, twin.last = None, None, None
         return twin
+
+    def act(self, view):
+        # fix_judged: the opponent has settled this matchup when it stood at our last decision with their switch free
+        pair = (view.me.active, view.foe.build.uid)
+        self._foe_settled = self.fix_judged and self._last_pair == pair and self._last_foe_free
+        try:
+            return super().act(view)
+        finally:
+            self._last_pair, self._last_foe_free = pair, view.foe_switch_wait == 0
 
     def _decide(self, head, view, mask, planner_choice, foe_energy=None):
         if self.stay_after_replace and head in ("swap", "mid_swap") and view.turn == self._replaced_at:
@@ -353,12 +369,26 @@ class TreeEngine(RealTime):
         stays = self.fix_stay and head in ("swap", "mid_swap") and option == 0
         battle = imagine(view, rng, self.pool, _Stay(us) if stays else _First(us, first), them, teams=self._teams,
                          team_builds=self._team_builds)
+        if self.fix_judged:
+            self._settle(view, head, us, them, battle)
         value = self._play(battle, view, head, option, others, rng)
         for node, k in us.trail:
             node.update(k, value)
         for node, k in getattr(them, "trail", ()):
             node.update(k, 1.0 - value)
         return value
+
+    def _settle(self, view, head: str, us, them, battle) -> None:
+        """fix_judged=1: imagined players start fresh, so each asks its matchup's swap question again at its first free
+        act, even where the real one settled that matchup long ago: we may swap out right after the throw being judged,
+        and they may swap at the first step of every look. Carry over what was settled: our own judgement of the
+        matchup in play, and theirs when the matchup stood at our previous decision with their switch free."""
+        if head in ("throw", "shield") and self._judged == (view.me.active, view.foe.build.uid):
+            us._judged = self._judged
+        player = getattr(them, "inner", them)
+        if self._foe_settled and head != "replace" and hasattr(player, "_judged"):
+            foes = battle.sides[1]
+            player._judged = (foes.active, battle.sides[0].mon.build.uid)
 
     def _play(self, battle, view, head: str, option: int, others: list, rng) -> float:
         if head == "replace":
