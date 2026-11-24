@@ -46,6 +46,7 @@ from pogo.battle import DRAW, Battle  # noqa: E402
 from pogo.engine import Engine  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
+from pogo.lab import engine_class  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
 from pogo.realtime import RealTime  # noqa: E402
 from pogo.teamlist import drawer  # noqa: E402
@@ -70,12 +71,17 @@ def job(task) -> dict:
     ev = Evaluator.load(confirmed.pop("eval", ROOT / "runs" / "eval" / "eval.npz"))
     confirmed.setdefault("margin", 0.02)
     confirmed.update(rollout="bot", q=net)
+    confirmed.pop("pool", None)  # "website" names the top-50 pool, which this script uses anyway
+    lab = confirmed.pop("engine", None)  # engine lab (pogo/lab): the same engine, timed and unhurried
+    timed = RealTime if lab is None else engine_class(lab)
 
     def realtime(s):
         timer = time.perf_counter if clock == "wall" else time.process_time
-        return RealTime(Evaluator(ev.model), pool, seed=s, clock=timer, **confirmed, **pauses)
+        return timed(Evaluator(ev.model), pool, seed=s, clock=timer, **confirmed, **pauses)
 
     def engine(s):
+        if lab is not None:
+            return timed(Evaluator(ev.model), pool, seed=s, **confirmed, **{k: 1e9 for k in PAUSES if k != "see_and_tap_ms"})
         return Engine(Evaluator(ev.model), pool, seed=s, **confirmed)
 
     out = {"rows": [], "head": [], "rt": [], "engine": [], "bot": [], "timing_games": []}

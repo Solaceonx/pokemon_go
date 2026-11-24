@@ -1,0 +1,22 @@
+
+== Tinkaton lead against the owner's Quagsire (website game 2026-11-04, status.md task 43)
+   status.md: the engine rated stay 54%, Florges 37%, Rillaboom 38%; bot both sides with both real teams, 300 games each: Florges 77% ± 5, stay 27% ± 5, Rillaboom 21% ± 5
+   truth (both real teams, trained bot both sides, to the end): stay 0.210 / 0% won, switch 1 0.174 / 0% won, switch 2 0.246 / 3% won
+   website                                    chose switch 1 x6; worth stay 0.530, switch 1 0.595, switch 2 0.518; 328 ms
+   fix_stay=1                                 chose switch 1 x6; worth stay 0.530, switch 1 0.595, switch 2 0.518; 73 ms
+   fix_stay=1,root=sh                         chose stay x1, switch 1 x5; worth stay 0.529, switch 1 0.590, switch 2 0.505; 104 ms
+   fix_stay=1,depth=3                         chose switch 1 x6; worth stay 0.518, switch 1 0.597, switch 2 0.528; 117 ms
+   fix_stay=1,depth=3,root=sh                 chose switch 1 x5, switch 2 x1; worth stay 0.517, switch 1 0.593, switch 2 0.515; 81 ms
+   fix_stay=1,depth=3,root=sh,gumbel=1        chose switch 1 x6; worth stay 0.517, switch 1 0.596, switch 2 0.518; 78 ms
+   fix_stay=1,depth=3,root=sh,adversary=1     chose switch 1 x4, switch 2 x2; worth stay 0.530, switch 1 0.613, switch 2 0.566; 310 ms
+
+== Annihilape's Rage Fist into Altaria (website game 2026-10-28 14:19, turn 179; bench health guessed)
+   runs/bot_losses_web.out: chose Rage Fist (21%), Ice Punch wins 96% (replayed with the real game's state); here Tinkaton 100%, Carbink 38%, Melmetal 100% and Jellicent 14% are guesses
+   truth (both real teams, trained bot both sides, to the end): fast 0.183 / 0% won, charged 1 0.779 / 100% won, charged 2 0.226 / 0% won
+   website                                    chose charged 1 x6; worth fast 0.232, charged 1 0.398, charged 2 0.398; 57 ms
+   fix_stay=1                                 chose charged 1 x6; worth fast 0.232, charged 1 0.398, charged 2 0.398; 55 ms
+   fix_stay=1,root=sh                         chose charged 1 x6; worth fast 0.232, charged 1 0.398, charged 2 0.398; 55 ms
+   fix_stay=1,depth=3                         chose charged 1 x6; worth fast 0.204, charged 1 0.634, charged 2 0.435; 78 ms
+   fix_stay=1,depth=3,root=sh                 chose charged 1 x6; worth fast 0.204, charged 1 0.624, charged 2 0.424; 73 ms
+   fix_stay=1,depth=3,root=sh,gumbel=1        chose charged 1 x6; worth fast 0.204, charged 1 0.624, charged 2 0.424; 76 ms
+   fix_stay=1,depth=3,root=sh,adversary=1     chose charged 1 x6; worth fast 0.225, charged 1 0.440, charged 2 0.350; 78 ms
