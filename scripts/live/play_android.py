@@ -1666,12 +1666,8 @@ class Player:
             # is still not paid for: the taps go on at once, not at the hold's end (2026-11-09: with Poison Sting
             # 12 holds of 17 ran out, 1.6 to 1.8 s of no fast taps each; those that paid threw within 0.34 s)
             rose = e is not None and e >= self.armed_read + 0.5 * mon.fast.energy_gain and e < mon.charged[k].energy
-            # or a step down of their bar 0.4 s ago or more (the reading's time to catch up) and still not paid
-            step = getattr(self, "my_step_at", None)
-            landed = (step is not None and self.t0 is not None and self.t0 + step > self.armed_at
-                      and time.time() - (self.t0 + step) > 0.4 and e is not None and e < mon.charged[k].energy)
-            # (with no reading, the buttons may be flashing as the move becomes paid for: the timer decides)
-            rose = rose or landed
+            # Not on a step of their bar: Incinerate's flames step it before the hit, and the reading lags the move
+            # becoming paid; ended on them, the taps went on 0.3 to 0.7 s before Torch Song lit (2026-11-23, 234155)
             if time.time() > until or self.switching is not None or rose:
                 self.log("armed_expired", t, move=mon.charged[k].id, read=e, rose=rose)
                 self.armed = None
