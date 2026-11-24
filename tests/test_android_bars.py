@@ -133,6 +133,34 @@ class PaleYellow(unittest.TestCase):
         self.assertAlmostEqual(got["mine"][0], 0.5, delta=0.02)
 
 
+class CreamBorderOverGold(unittest.TestCase):
+    """Our bar over Melmetal (2026-11-23): its cream border is low in blue, read by its mean, and the bar, closed at its
+    right end, is found; a run with no right end and no sharp border is not."""
+
+    def setUp(self):
+        screen._HINTS.clear()
+        screen._ACCEPTED.clear()
+        screen._DROPS.clear()
+
+    def bar(self, share, right_end=True):
+        a = frame(share)
+        y, x0, full = 780, 34, int(screen.BAR_INSIDE)
+        a[y - 30:y + 40, 0:540] = (170, 130, 50)  # gold behind
+        a[y - 3:y + 11, x0 - 4:x0 + full + 4] = (240, 215, 165) if right_end else (170, 130, 50)
+        a[y - 3:y, x0 - 4:x0 + full] = (240, 215, 165)  # the top border
+        a[y - 3:y + 11, x0 - 4:x0] = (230, 170, 140)  # the left border: blue under 150, its mean over
+        a[y:y + 8, x0:x0 + full] = (100, 70, 30)  # the see-through empty part, darkened gold
+        a[y:y + 8, x0:x0 + int(round(share * screen.BAR_INSIDE))] = GREEN
+        return a
+
+    def test_found(self):
+        got = screen.bar_places(self.bar(0.85))
+        self.assertAlmostEqual(got["mine"][0], 0.85, delta=0.02)
+
+    def test_not_without_its_right_end(self):
+        self.assertNotIn("mine", screen.bar_places(self.bar(0.85, right_end=False)))
+
+
 if __name__ == "__main__":
     unittest.main()
 

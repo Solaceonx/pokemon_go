@@ -148,6 +148,8 @@ def _fill_mask(row: np.ndarray, pale: bool = False) -> np.ndarray:
 
 
 PALE_BLUE = 135
+BORDER_MEAN = True  # see bar_places
+X0_SLACK = 3  # a bar's fill starts within this many pixels from row to row
 PALE_SHARE = (0.12, 0.55)  # a bar in the pale yellow: only in its yellow stage
 
 
@@ -185,13 +187,16 @@ def bar_places(a: np.ndarray) -> dict:
             rest = row[x0 + length + int(3 * sx):int(x0 + full)]
             if len(rest) > 8 * sx and ((rest.max(1) < 150) | _damage_mask(rest)).mean() < 0.7:
                 continue  # the part after the fill is not the bar's dark, see-through empty part
-            border = row[x0 - 4:x0].min(1).max()  # the light border a few pixels left of the fill
-            if border > 150:
-                found.append((y, x0, length, pale))
+            # the light border a few pixels left of the fill: by its weakest channel, or (BORDER_MEAN) its mean, as
+            # the cream border over a gold Pokémon is low in blue (2026-11-23: our bar over Melmetal, 139 to 148)
+            part = row[x0 - 4:x0]
+            sharp = part.min(1).max() > 150
+            if sharp or (BORDER_MEAN and part.mean(1).max() > 150):
+                found.append((y, x0, length, pale, sharp))
     groups: list[list] = []
     for run in found:
         for g in groups:
-            if 0 < run[0] - g[-1][0] <= 4 and abs(g[-1][1] - run[1]) <= 3:
+            if 0 < run[0] - g[-1][0] <= 4 and abs(g[-1][1] - run[1]) <= X0_SLACK:
                 g.append(run)
                 break
         else:
@@ -203,9 +208,24 @@ def bar_places(a: np.ndarray) -> dict:
         return any((a[y, span].astype(int).min(1) > 140).mean() > 0.7 for y in range(max(0, y0 - 6), y0))
 
     out = {}
+    def closed(g) -> bool:
+        """The bar's light right end, a full bar's length on from the fill's start, on half its rows or more."""
+        hits = 0
+        for y, x0, *_ in g:
+            seg = a[y, int(x0 + full - 2 * sx):int(x0 + full + 5 * sx)].astype(int)
+            hits += bool(len(seg)) and seg.mean(1).max() > 150
+        return hits * 2 >= len(g)
+
     # a bar of the usual colours before one in the pale yellow (2026-11-22: a yellow flash beside Tinkaton's green bar
-    # on 50% stood taller than it, and was read 0.202), then the deepest
-    for g in sorted(groups, key=lambda g: (sum(r[3] for r in g) * 2 > len(g), -len(g))):
+    # on 50% stood taller than it, and was read 0.202), then one found by the strict tests, then the deepest. One whose
+    # left border passed only by its mean (BORDER_MEAN) or whose rows wander past 3 pixels must be closed at its right
+    # end, and comes after those found by the strict tests (2026-11-23: preferring closed ones read Giratina's full bar,
+    # its right end hidden, as a 'closed' run below it at 0.114).
+    def loose(g) -> bool:  # not a bar by the strict tests alone: under 3 rows with the sharp border, or wandering
+        return sum(r[4] for r in g) < 3 or max(r[1] for r in g) - min(r[1] for r in g) > 3
+    groups = [g for g in groups if not loose(g) or closed(g)]
+    for g in sorted(groups, key=lambda g: (sum(r[3] for r in g) * 2 > len(g), loose(g), -sum(r[4] for r in g), not closed(g),
+                                           -len(g))):
         if not 3 <= len(g) <= 9 or not framed(g):  # a bar is about 10 pixels deep: 3 to 9 rows sampled every 2
             continue
         side = "mine" if g[0][1] / sx < W / 3 else "theirs"
