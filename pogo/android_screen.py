@@ -690,6 +690,7 @@ class NameReader:
         self.names = species_lookup(gd)
         self.types = []  # their Pokémon's types as the header's icons last showed
         self.resolved = {}  # a name's usual form -> the form its type icons showed
+        self._resolved_by = {}  # a name's usual form -> how many icons told its form
         self.species = None  # the last name read, as a species id
         self.read_at = None  # time of the frame it was read from
         self.labels, self.labels_at = [], None  # the last button labels read
@@ -717,7 +718,13 @@ class NameReader:
             text = " ".join(words).strip()
             sid = self.match(text)
             if sid and types:
-                self.resolved[sid] = form_by_types(self.gd, sid, types)
+                # Only a form the icons fit, from no fewer icons than told it before: icons part-read as they fade in
+                # (one of two) fit no form and gave back the usual one (2026-11-23, 231509: Galarian Weezing, told
+                # apart from the start, named "weezing" at two looks and two shield prompts)
+                form = form_by_types(self.gd, sid, types)
+                fits = {x for x in self.gd.species[form]["types"] if x != "none"} == set(types)
+                if fits and len(types) >= self._resolved_by.get(sid, 0):
+                    self.resolved[sid], self._resolved_by[sid] = form, len(types)
                 self.types = types
             if sid:
                 # a name once told apart by its type icons stays so when they are hidden on a later reading
