@@ -1,0 +1,120 @@
+{
+ "arguments": {
+  "run": "lab-learn/smoke",
+  "generations": 2,
+  "minutes": 2.0,
+  "workers": 2,
+  "weights": "rulebook=0.3,past=0.45,people=0.25",
+  "past": null,
+  "imitation": "runs/lab-learn/owner-policy/policy.npz",
+  "engine_samples": 4,
+  "both_sides": 0.2,
+  "pvpoke_share": 0.05,
+  "start": "runs/general-decide/q.npz",
+  "field": "mixed",
+  "teams": null,
+  "score": "result",
+  "horizon": 0,
+  "hidden": 48,
+  "margin": 0.02,
+  "check": 60,
+  "seed": 4242
+ },
+ "generations": [
+  {
+   "generation": 1,
+   "battles": 487,
+   "pvpoke_battles": 23,
+   "new_examples": {
+    "shield": 3387,
+    "throw": 1129,
+    "swap": 2389,
+    "replace": 542
+   },
+   "all_examples": {
+    "shield": 3387,
+    "throw": 1129,
+    "swap": 2389,
+    "replace": 542
+   },
+   "population": [
+    "runs/general-decide/q.npz",
+    "runs/general-decide/q_v1.npz",
+    "runs/general-decide/q_v2.npz",
+    "runs/general-decide/q_v3.npz",
+    "runs/general-decide/q_v4.npz",
+    "runs/general-decide/q_v5.npz",
+    "runs/engine-loop/round_1/q.npz",
+    "runs/engine-loop/round_2/q.npz"
+   ],
+   "minutes": 1.0,
+   "check": {
+    "pairings": 60,
+    "head_to_head": [
+     0.30833333333333335,
+     0.08666298340717342
+    ],
+    "crowd_new": [
+     0.5,
+     0.12758513276120736
+    ],
+    "crowd_base": [
+     0.7,
+     0.11693370568584462
+    ],
+    "crowd_change": [
+     -0.2,
+     0.15310215931344887
+    ]
+   }
+  },
+  {
+   "generation": 2,
+   "battles": 458,
+   "pvpoke_battles": 22,
+   "new_examples": {
+    "shield": 3238,
+    "throw": 1033,
+    "swap": 2194,
+    "replace": 489
+   },
+   "all_examples": {
+    "shield": 6625,
+    "throw": 2162,
+    "swap": 4583,
+    "replace": 1031
+   },
+   "population": [
+    "runs/general-decide/q.npz",
+    "runs/general-decide/q_v1.npz",
+    "runs/general-decide/q_v2.npz",
+    "runs/general-decide/q_v3.npz",
+    "runs/general-decide/q_v4.npz",
+    "runs/general-decide/q_v5.npz",
+    "runs/engine-loop/round_1/q.npz",
+    "runs/engine-loop/round_2/q.npz",
+    "runs/lab-learn/smoke/gen_1/q.npz"
+   ],
+   "minutes": 1.0,
+   "check": {
+    "pairings": 60,
+    "head_to_head": [
+     0.36666666666666664,
+     0.07316858741671482
+    ],
+    "crowd_new": [
+     0.5416666666666666,
+     0.12606992200919653
+    ],
+    "crowd_base": [
+     0.6666666666666666,
+     0.12028841673871424
+    ],
+    "crowd_change": [
+     -0.125,
+     0.13304994601875347
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,10 @@
+engine_versus.py --tag lab-learn-proxy8 --baseline "website,samples=8" --candidates "website,samples=8,opp_policy=runs/lab-learn/engine-policy/policy.npz" --pairings 300 --crowd 0 --pvpoke 0 --workers 2 --seed 7201 --field mixed (summary lines)
+  head to head against the baseline, 300 pairings both ways: 49.0% ± 3.2
+    candidate: 1.948 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 21.86 total searches/battle, 1.227 search seconds/battle); shields / shield prompts 1130 / 3068 (36.8%)
+    baseline:  1.897 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 22.10 total searches/battle, 0.991 search seconds/battle); shields / shield prompts 1137 / 3039 (37.4%)
+  search time per searched decision: median 47 ms, 99th percentile 203, worst 359 (this machine)
+
+elapsed: 462.8 seconds
+results: runs\engine_versus\lab-learn-proxy8.json
+
+[exited with code 0]

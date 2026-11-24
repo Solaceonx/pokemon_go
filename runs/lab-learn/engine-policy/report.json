@@ -1,0 +1,70 @@
+{
+ "source": "engine",
+ "settings": {
+  "source": "engine",
+  "out": "runs/lab-learn/engine-policy/policy.npz",
+  "hidden": 64,
+  "epochs": 6,
+  "batch": 1024,
+  "rate": 0.002,
+  "decay": 1e-05,
+  "bot_input": true,
+  "folds": 5,
+  "swap_window": 6,
+  "seed": 0
+ },
+ "games": [
+  "C:/Users/marco/Developer/pokemon_go/runs/engine-loop/round_1/games"
+ ],
+ "held_back": {
+  "shield": {
+   "decisions": 9129,
+   "departed": 0,
+   "policy_top1": 1.0,
+   "bot_top1": 1.0,
+   "policy_top1_where_departed": null,
+   "policy_predicts_departure": 0.0,
+   "policy_departure_precision": null,
+   "policy_log_loss": 0.00013922969073248235,
+   "bot_log_loss": 0.0010005003335835341,
+   "policy_mean_prob_departure": 0.00013918815492975286
+  },
+  "throw": {
+   "decisions": 35109,
+   "departed": 5252,
+   "policy_top1": 0.8504087271070095,
+   "bot_top1": 0.8504087271070095,
+   "policy_top1_where_departed": 0.0017136329017517135,
+   "policy_predicts_departure": 0.0005126890540886952,
+   "policy_departure_precision": 0.5,
+   "policy_log_loss": 0.4504072443826288,
+   "bot_log_loss": 0.4870180249748578,
+   "policy_mean_prob_departure": 0.13478077538333627
+  },
+  "swap": {
+   "decisions": 8620,
+   "departed": 1389,
+   "policy_top1": 0.8372389791183295,
+   "bot_top1": 0.8388631090487239,
+   "policy_top1_where_departed": 0.0251979841612671,
+   "policy_predicts_departure": 0.011136890951276101,
+   "policy_departure_precision": 0.3645833333333333,
+   "policy_log_loss": 0.4209752319721493,
+   "bot_log_loss": 0.5204367672360155,
+   "policy_mean_prob_departure": 0.17243282570914822
+  },
+  "replace": {
+   "decisions": 1922,
+   "departed": 464,
+   "policy_top1": 0.7585848074921956,
+   "bot_top1": 0.7585848074921956,
+   "policy_top1_where_departed": 0.002155172413793104,
+   "policy_predicts_departure": 0.001040582726326743,
+   "policy_departure_precision": 0.5,
+   "policy_log_loss": 0.5511665223881994,
+   "bot_log_loss": 0.5543800788062372,
+   "policy_mean_prob_departure": 0.22336919287623824
+  }
+ },
+ "minutes": 0.1
+}
