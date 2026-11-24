@@ -194,7 +194,7 @@ class PolicyPlayer(Learner):
         x = describe(self, view, foe_energy) + [float(advice == k) for k in range(3)]
         legal = [k for k in range(len(mask)) if mask[k]]
         values, bot = None, advice
-        margin = self.shield_margin if head == "shield" else self.margin
+        margin = self._head_margin(head, view)
         if self.q is not None and head in self.q.params:
             values = bot_values(self.q, head, x)
             bot = bot_pick(values, legal, advice, margin)

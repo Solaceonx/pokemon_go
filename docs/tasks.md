@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| Lab tactics | Creator-inspired opt-in tactics and PeopleLike field, branch `lab-tactics` (2026-11-24): built and smoke-tested; brief and results in `runs/lab-tactics/REPORT.md` | Coordinator screen pending; `runs/lab-tactics-league.cmd`, 8 workers |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
@@ -1015,4 +1016,19 @@ camera, on the same battles.
 **Done when.** From the rough camera the new bot scores higher than the current bot by
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
+
+## Engine lab tactics (2026-11-24, branch `lab-tactics`)
+
+**State:** implementation and local verification complete; full league screen pending. No commits or default changes.
+The assigned work was opt-in `finish_safe`, `bait_mix`, separate `shield_two`/`shield_one` margins,
+`swap_after_throw`, and the creator exam's PeopleLike as an engine-versus field and imagined opponent.
+All are built. Regression tests include the Henry finishing-fast position and pre-mixed default game digests.
+The selected shield-rate guess is `shield_two=0.05,shield_one=0`, checked on fresh seed 5402.
+Full measurements, commands, assumptions and files/functions are in
+[`runs/lab-tactics/REPORT.md`](../runs/lab-tactics/REPORT.md).
+
+**Next:** the coordinator runs [`runs/lab-tactics-league.cmd`](../runs/lab-tactics-league.cmd): website reference,
+four individual candidates and all four together, screen preset, seed 5401, eight workers, about 4–6 hours.
+It measures h2h, crowd, PvPoke, reader, predictability, timing, endgame and creator decisions. No screen or adoption
+is claimed; any selected candidate still needs confirmation on a fresh seed and the owner's usual field checks.
 

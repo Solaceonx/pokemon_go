@@ -1,7 +1,29 @@
 """Small distributions for the engine lab. No global dice or learned weights."""
 import math
+import random
 
 from pogo.agents import solve_2x2
+from pogo.battle import damage
+
+
+def private_rng(rng: random.Random) -> random.Random:
+    """A process-stable private stream without advancing the player's search dice."""
+    copy = random.Random()
+    copy.setstate(rng.getstate())
+    return random.Random(copy.getrandbits(128))
+
+
+def bait_pair(view) -> tuple[int, int] | None:
+    """Cheap/dear move indices for a real bait, as defined by the creator report."""
+    mon, foe = view.me.mon, view.foe
+    moves = mon.build.charged
+    if len(moves) != 2 or view.foe_shields <= 0 or any(mon.energy < m.energy for m in moves):
+        return None
+    cheap, dear = sorted(range(2), key=lambda k: moves[k].energy)
+    low, high = damage(mon, moves[cheap], foe), damage(mon, moves[dear], foe)
+    if moves[cheap].energy == moves[dear].energy or low >= foe.hp or high < 1.3 * low:
+        return None
+    return cheap, dear
 
 
 def validate_mixing(**settings) -> None:

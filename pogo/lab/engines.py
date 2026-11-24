@@ -10,7 +10,7 @@ to head inside the engine while it plays as well alone. ModelledEngine keeps the
                 the website engine's own choices, drawn from its probabilities (opp_sample, the default) or the
                 likeliest option taken; its bot inputs come from opp_q, else q
 
-Only with opponents="bot" (the default); with opponents="mix" the styles stay as they are. Everything else is the
+Only with opponents="bot" (the default); other opponent styles stay as they are. Everything else is the
 engine as it was.
 """
 from __future__ import annotations
@@ -27,7 +27,7 @@ class ModelledEngine(RealTime):
         self.opp_policy, self.opp_q, self.opp_sample = opp_policy, opp_q, opp_sample
 
     def _imagined_opponent(self, rng):
-        if self.opponents == "mix" or (self.opp_policy is None and self.opp_q is None):
+        if self.opponents != "bot" or (self.opp_policy is None and self.opp_q is None):
             return super()._imagined_opponent(rng)
         q = self.opp_q if self.opp_q is not None else self.q
         if self.opp_policy is None:
