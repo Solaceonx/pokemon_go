@@ -4962,6 +4962,16 @@ Pokémon coming in, camera angles. Our energy reads on ~75%: the misses are see-
 ground (measured near-full, rejected by the names, which say not paid) and lit buttons whose icon breaks the fill
 (rejected though the names say paid); paid or not stays known from the names.
 
+**Ranked 2 and 3, 2026-11-23 (`ultra-league` da2deca6).** A win (224221) over Venusaur, Cresselia and Walrein, with
+the new Ultra League evaluation (task 48's `runs/ul-eval/eval.npz`, now the default when the league is 2500), and a
+loss (225724) to Talonflame, Snorlax and Walrein. Melmetal led into Talonflame and stayed in for 37 s; the engine
+rated staying even. Simulated one on one from the start: Melmetal -0.04, Blastoise +0.66, Skeledirge -0.23. Snorlax
+came in during our Double Iron Bash and its name was read 8 s late; its Earthquake (65) came when our count said 48
+to 56 and was not shielded. Snorlax's fast move takes one turn, so a turn of error is a whole move: the margin on
+their count is now at least two turns of their fast move (one move for longer ones). Replaying 2026-11-22's 91 named
+throws, that left none short (one move: 1 short) at a median 42 over the cost (40). Snorlax's Earthquake stays short
+under every margin tried; the count was off because the name came late.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
