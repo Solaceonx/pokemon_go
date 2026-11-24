@@ -4972,6 +4972,13 @@ their count is now at least two turns of their fast move (one move for longer on
 throws, that left none short (one move: 1 short) at a median 42 over the cost (40). Snorlax's Earthquake stays short
 under every margin tried; the count was off because the name came late.
 
+**Ranked 4 and 5, 2026-11-23 (`ultra-league` 06500e58): the set ends 3-2.** 231238: Articuno and Politoed's player
+quit at 90 s (we had three left and a shield, they two and both shields). 231509: a full win over Galarian Weezing,
+Feraligatr and Virizion in 230 s; all six of their charged moves came at or over the count at the throw, four of ours
+went before fainting. Galarian Weezing was named plain Weezing at two looks and two shield prompts: its two type
+icons fade in one at a time, and one icon fits no form, which gave back the usual one. The reader now keeps a form
+unless icons that fit a form, no fewer than before, say otherwise; a dry run of that battle read no plain Weezing.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
