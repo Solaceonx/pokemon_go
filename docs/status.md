@@ -6162,3 +6162,10 @@ percentile 588 ms, 3.1% cut short; 48 → 776 ms (interval 719-858), 10.6% cut s
 64 → 938 ms, 16.9% cut short, over the limit. So 48 imagined battles buy about 2 points if the browser has the time; on
 slower phones more searches would be cut short and the gain would shrink. Left as an option (`samples=48`), not proposed
 as the default. (`scripts/realtime_trial.py --settings` cannot load a `q=PATH` network; the league's timing can.)
+
+**Fresh-seed check of 32 against 48 imagined battles (2026-11-25, `runs/lab-best48-confirm.out`, seed 6301, 2,000 pairings
+both ways, 2,000 crowd, 1,000 PvPoke, 14 workers), against the website engine:** P (32) **65.7% ± 1.3**, crowd +5.4 ± 2.1,
+PvPoke +3.2 ± 2.5, search 125 / 594 ms; P with `samples=48` **66.1% ± 1.3**, crowd +6.2 ± 2.1, PvPoke +4.2 ± 2.5, search 188 /
+844 ms (unhurried). The extra search buys about half a point against the website engine for half again the search time
+and a 99th percentile at the edge of the release limit, so the recommendation stays at 32. P is confirmed a third time
+(65.0-65.8% on seeds 5502, 5801 and 6301).
