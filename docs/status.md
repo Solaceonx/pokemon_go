@@ -5142,7 +5142,12 @@ owner's two remarks:
   55 energy) was 11 away; asked again the engine holds, 6 of 6, but the throw came from a decision searched ahead
   during the fast move (`precomputed`), 0.01 s after a held one. At 172.4 s, on 12% with 40 energy, the low-health
   rule threw Body Slam where Bulldoze would have knocked Tinkaton (58 HP) out: the wait flipped off as two of
-  Tinkaton's fast moves came to Vigoroth's 18 HP. Not yet changed.
+  Tinkaton's fast moves came to Vigoroth's 18 HP (believed Rock Smash, 9 a hit: exactly lethal; left as it is).
+- **`hold_for_better` (`ultra-league`, after 09d730a5).** The 147.6 s throw: the engine, asked at the position one
+  Scratch on (48 energy), rated Body Slam 0.03 over holding (0.55 to 0.57 against 0.52 to 0.54), past its edge once
+  Tinkaton neared Heavy Slam. The same mistake as Stone Edge into Kingambit and Body Slam into Empoleon. Now: their
+  shields down, ours above 35%, a move at least twice as strong 8 turns or less away: hold (or throw it, if paid
+  for). Dry run of 000629: held for Bulldoze at 147.2 and 148.2 s.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
