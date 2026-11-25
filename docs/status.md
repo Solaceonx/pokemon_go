@@ -5086,6 +5086,13 @@ owner's two remarks:
     Task 35's simulator grid (8 samples, older build): head to head 50.2% ± 1.8, crowd +0.9 ± 2.9, PvPoke +4.2 ± 3.5.
   - `POGO_ENGINE="judge=turn,horizon=40"` runs it live (ultra-league); the default is unchanged until the owner says.
     Not measured at the live 32 samples on a fresh seed.
+  - **On by default live since `ultra-league` d81dea84** (the owner: "turn it on"); `POGO_ENGINE=""` for the website's.
+- **Bad leads (the owner's rule 5; the owner: "it should switch out of an empoleon lead").** At the start the engine
+  kept Clodsire in against Empoleon (staying 0.53 to 0.59 against 0.46, for Earthquake's one hit) though the
+  one-on-one is -0.55 (Snorlax -0.08, Thievul -0.12). `safe_swap` (`ultra-league` 4th commit after d81dea84): at the
+  first look naming their lead, ours at -0.3 or worse in `agents.duel` and a bench Pokémon 0.3 better: switch to the
+  best. On the day's 14 ranked leads it fires for Palossand and Jynx (the engine had switched at 1.6 s anyway) and
+  Empoleon. Dry run of 204342: switch to Snorlax tapped at 1.7 s. Not yet seen live.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
