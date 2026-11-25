@@ -493,8 +493,16 @@ def choreography(move_id: str, move_type: str = "") -> list:
 # 125 degrees, 0.61 to 0.88 s a loop. Replaying the longest swipe as recorded rated Great or Nice 6 times in 6.
 # Drawn faster than the owner's (the owner: "you probably need to do them way faster"): 0.3 s a loop, about 6
 # widths a second, the finger allowed OVAL_SPEED to keep up.
-OVALS = {"rock": (0.62, 0.62, 0.43, 0.12, 121.0, 0.30, -1)}
+# Ground (2026-11-25): Earthquake rated Great 4 times in 15 on the day with the chase and the sweep, the other moves
+# 3 in 91. Its icons come up in place for 0.7 s along a band at 0.64 to 0.77 of the height, 0.12 to 0.92 of the width
+# (data/minigame/android/type_ground.json): a flat oval 0.08 widths across passes within an icon's radius of all of
+# it, each point twice a loop. In team-leader training, Clodsire's Earthquake with it: Excellent 14 times in 14.
+OVALS = {"rock": (0.62, 0.62, 0.43, 0.12, 121.0, 0.30, -1), "ground": (0.52, 0.715, 0.42, 0.08, 0.0, 0.30, 1)}
 OVAL_SPEED = 15.0
+# Ovals to try in training, as POGO_OVALS="water=...;..." (the numbers as above).
+for _spec in filter(None, __import__("os").environ.get("POGO_OVALS", "").split(";")):
+    _kind, _, _nums = _spec.partition("=")
+    OVALS[_kind.strip()] = tuple(float(v) for v in _nums.split(","))
 
 
 def oval_point(spec, s: float) -> tuple:
