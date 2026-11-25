@@ -2050,11 +2050,17 @@ class Player:
             # the check counted their fast moves' damage only; Mud Bomb, reached during the wait, took our last
             # shield): it costs a shield, or us
             reach = foe.hi + hits * them.build.fast.energy_gain
-            if any(reach >= c.energy for c in them.build.charged):
+            # With a shield left and the bigger move a knock-out, a charged move of theirs meanwhile costs the shield,
+            # not us: wait (the owner, 2026-11-24, 213612: "we could have one shot the kingambit with earthquake
+            # instead of throwing resisted stone edges": Clodsire on 56 HP with 55 energy and a shield threw Stone
+            # Edge, 35 damage, where Earthquake, two Poison Stings away, did 128 to Kingambit's 102)
+            if any(reach >= c.energy for c in them.build.charged) and not (view.me.shields > 0 and big >= them.hp):
                 continue
             if (big >= them.hp or big >= 2.5 * now) and hits * hit < hp:
-                self.log("waiting_for_better", t, move=m.id, now=now, then=big, fast_moves=more, their_hits=hits,
-                         hp=round(hp, 1))
+                if t - getattr(self, "_waiting_logged", -9.0) > 1.0:  # once a second, not every look
+                    self._waiting_logged = t
+                    self.log("waiting_for_better", t, move=m.id, now=now, then=big, fast_moves=more, their_hits=hits,
+                             hp=round(hp, 1))
                 return True
         return False
 
@@ -2140,7 +2146,17 @@ class Player:
                          switch_in_s=round(self.switch_ready_at - time.time(), 1), switch_wait=view.me.switch_wait)
             return None
         from pogo.agents import duel
-        best = max(healthy, key=lambda j: duel(view.me.team[j], view.foe, view.me.shields, view.foe_shields, coming_in=True))
+        scores = {j: duel(view.me.team[j], view.foe, view.me.shields, view.foe_shields, coming_in=True) for j in healthy}
+        best = max(healthy, key=lambda j: scores[j])
+        # Not when the low one wins the matchup from here, or does as well as the best coming in (the owner,
+        # 2026-11-24, 213612: "thievul should've stayed in against the palossand": Thievul on 25% with both shields
+        # against a shieldless Palossand, its Dark moves super effective, one on one +0.06; Clodsire coming in -0.04)
+        stay = duel(view.me.mon, view.foe, view.me.shields, view.foe_shields)
+        if stay >= 0 or stay >= scores[best]:
+            self.saved_for = sid
+            self.log("save_the_low_one_not", t, against=sid, why="it wins the matchup", stay=round(stay, 2),
+                     best=round(scores[best], 2), hp=round(hp, 3), energy=round(have, 1))
+            return None
         self.saved_for = sid
         self.log("save_the_low_one", t, out=self.team[self.active].name, to=self.team[best].name, against=sid,
                  hp=round(self.hp_now(t, view), 3), energy=round(have, 1))
