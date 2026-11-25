@@ -83,8 +83,20 @@ SWITCH_SPAM_S = 3.0  # 9 in 10 switches showed within 3 s of the tap (2026-11-08
 # re-taps were over before the fight came back (2026-11-25, 103647, 133.5 s: Thievul to Clodsire tapped as
 # Stunfisk threw, re-tapped in the animation, no tap once the fight was back at 138 s, Thievul left in to faint; 7
 # of 19 switches not taken on 2026-11-24/25 came just after their move). The switch check waits this long after
-# the move's last countdown frame or the prompt, and its re-tap window starts afresh.
+# the move's last countdown frame or the prompt, and its re-tap window starts afresh. Charged taps wait too
+# (2026-11-25, 105943, 26.7 s: Snorlax's Body Slam tapped 0.7 s after the prompt for Vigoroth's Bulldoze, not taken,
+# the count put under the cost, and fast taps for 3 s after the fight was back, on 13 HP, before the throw).
+# After the prompt 6 s, shielded or not (310 prompts of 2026-11-24/25: the first fast move landed 8.6 s after a
+# shielded one at the median, 8.7 s after one not shielded, 7.3 s at the 10th percentile; taps were taken 5.3 s after
+# it in 103647 and 5.7 s in 094325, but in 103647 at 97.5 s, shielded, not before 104 s); 2 s after their move's name
+# shows (the fight back about then), which carries a longer one.
 SWITCH_PAUSE_S = 3.5
+PROMPT_PAUSE_S = 6.0
+NAMED_PAUSE_S = 2.0
+# The owner's shield calls for the battle under way ("this battle you should just double shield the thievul",
+# 2026-11-25): {"shield": {"thievul": true}} shields at every prompt while that one is out and a shield is left
+# (false: never). Read at each prompt; written and cleared by hand, not in git.
+OVERRIDE_FILE = ROOT / "runs" / "live" / "override.json"
 # Fast moves this many turns or longer: no fast taps while the one under way pays for a charged move (Player.slow_pause_for)
 SLOW_FAST_TURNS = int(_os.environ.get("POGO_SLOW_FAST_TURNS", "4"))
 STRIP_SAME = 40  # the bench strip as at the tap: an ignored tap left it within 17 to 31, a switch moves it 60 to 75
@@ -120,6 +132,16 @@ def safe_swap(team: list, active: int, foe_build):
     if best is not None and scores[active] <= LEAD_BAD and scores[best] - scores[active] >= LEAD_GAIN:
         return best, scores
     return None, scores
+
+
+def owner_shield(species_id: str):
+    """The owner's call for this one at a shield prompt (OVERRIDE_FILE): True, False, or None for none."""
+    try:
+        calls = json.loads(OVERRIDE_FILE.read_text(encoding="utf-8")).get("shield", {})
+    except (OSError, ValueError, AttributeError):
+        return None
+    call = calls.get(species_id) if isinstance(calls, dict) else None
+    return call if isinstance(call, bool) else None
 
 
 PLAYERS_SHIELD = ROOT / "runs" / "people-shield" / "shield.npz"  # fitted on the creators' calls (pogo/people_shield.py)
@@ -865,6 +887,7 @@ class Player:
         self.lead_judged = False  # the owner's bad-lead rule asked (safe_swap)
         self.switch_fight_s, self.switch_fight_last = 0.0, 0.0  # seconds of fight on screen since the switch tap
         self.switch_pause_until = 0.0  # a charged move came in over a switch under way (SWITCH_PAUSE_S)
+        self.their_move_until = 0.0  # their charged move playing out: no charged taps till then (pause_switch)
         self._switch_fits = []  # which Pokémon's costs the energy reading fitted, the last three frames of a switch check
         self.last_not_taken = 0.0  # when a charged tap last came to nothing
         self.fight_frames = 0  # frames in a row with the fight on screen
@@ -1180,9 +1203,11 @@ class Player:
                 # The words of a throw whose shield prompt the tracker has already had (the fight showed between):
                 # the same throw, not another.
                 self.log("their_charged_named", t, move=move, text=text[:40], counted_already=True)
+                self.pause_switch(NAMED_PAUSE_S)
                 self.late_move = move  # its name still tells the move, and the form (given at the next look)
                 return
             self.foe_move_seen = move
+            self.pause_switch(NAMED_PAUSE_S)
             self.log("their_charged_named", t, move=move, text=text[:40], prompted=self.pending_theirs)
             self.pending_theirs = True
             self.their_throw_at = time.time()
@@ -1933,7 +1958,9 @@ class Player:
                 self.decision = CHARGED[0] + k
                 self.armed = None
                 self.decided_for = self.active
-                self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share, view=view_record(view))
+                if time.time() >= getattr(self, "their_move_until", 0.0) or t - getattr(self, "_tbf_logged", -9.0) > 1.0:
+                    self._tbf_logged = t  # once a second while their move plays out and the throw waits
+                    self.log("throw_before_fainting", t, move=mon.charged[k].id, hp=hp_share, view=view_record(view))
             elif (affordable and view.me.shields == 0 and self.tracker.foe is not None
                   and not self.farm_down(view, mon, have, t, self.hardest(view, mon, affordable))):
                 # The owner, 2026-11-08 (Stunfisk held Discharge and Mud Bomb with no shields left, took Kabutops's
@@ -2017,6 +2044,14 @@ class Player:
                 self.armed = None
                 # on the count alone: no reading and no name under the buttons saying it is paid for
                 count_only = self.energy() is None and not (bounds is not None and bounds[0] >= mon.charged[k].energy)
+                if time.time() < getattr(self, "their_move_until", 0.0):
+                    # their move is playing out: a tap now would come to nothing (PROMPT_PAUSE_S); decided again after
+                    if t - getattr(self, "_waits_logged", -9.0) > 1.0:
+                        self._waits_logged = t
+                        self.log("throw_waits", t, move=mon.charged[k].id,
+                                 for_s=round(self.their_move_until - time.time(), 1))
+                    self.decision = FAST
+                    return
                 self.throw(t, k, mon.charged[k], count_only=count_only, stick=urgent)
                 self.decision = FAST
                 return
@@ -2665,7 +2700,10 @@ class Player:
             read = self.energy()
             self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy, count_only=count_only,
                      read=None if read is None else round(read, 1), paid_seen=paid_seen, taps=taps_sent)
-            self.tracker.me.mon.energy = min(self.tracker.me.mon.energy, move.energy - 1)  # the button says not yet
+            if not paid_seen and time.time() > getattr(self, "their_move_until", 0.0) + 3.0:
+                # the button says not yet; not when it showed the move paid for, or their move had just played out
+                # (the game was taking no taps: 105943, the count put under Body Slam's cost and 3 s of fast taps)
+                self.tracker.me.mon.energy = min(self.tracker.me.mon.energy, move.energy - 1)
             self.energy_read = None
             return
         self.pending_mine = k
@@ -2825,15 +2863,18 @@ class Player:
         with self.at_their_throw(margin=FOE_MARGIN):
             self._prompt_call(t, look, counted)
 
-    def pause_switch(self) -> None:
-        """A charged move is under way: a switch tapped and not yet seen waits for it (SWITCH_PAUSE_S)."""
+    def pause_switch(self, seconds: float = SWITCH_PAUSE_S) -> None:
+        """A charged move is under way: no charged tap until it has played out, and a switch tapped and not yet
+        seen waits for it, its re-tap window starting afresh (SWITCH_PAUSE_S)."""
+        until = time.time() + seconds
+        self.their_move_until = max(getattr(self, "their_move_until", 0.0), until)
         if self.switching is not None:
-            self.switch_pause_until = time.time() + SWITCH_PAUSE_S
+            self.switch_pause_until = max(getattr(self, "switch_pause_until", 0.0), until)
             self.switch_fight_s = 0.0
 
     def _prompt_call(self, t: float, look, counted) -> None:
         """The shield call at their prompt, made on their energy as they throw (at_their_throw)."""
-        self.pause_switch()
+        self.pause_switch(PROMPT_PAUSE_S)
         view = self.view()
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
@@ -2877,6 +2918,10 @@ class Player:
             if share is not None:
                 shield = True
                 self.log("shield_like_players", t, share=round(share, 2), hp=view.me.mon.hp, their_hp=view.foe.hp)
+        owner = owner_shield(self.team[self.active].species_id)
+        if owner is not None and (have_shield or not owner) and owner != shield:
+            shield = owner
+            self.log("shield_by_owner", t, shield=shield, mon=self.team[self.active].species_id)
         seen = None
         if view is not None:
             try:

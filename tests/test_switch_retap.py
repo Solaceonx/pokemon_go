@@ -185,3 +185,31 @@ class SwitchWentLate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TheirMovePause(unittest.TestCase):
+    """105943, 26.7 s: Body Slam tapped 0.7 s after the prompt for Vigoroth's Bulldoze; the game took no tap."""
+
+    def test_charged_taps_wait_for_their_move(self):
+        p = player(np.zeros((4, 4, 3), np.int16))
+        p.switching = None
+        p.pause_switch(pa.PROMPT_PAUSE_S)
+        self.assertGreater(p.their_move_until, time.time() + 5.0)
+        p.pause_switch(pa.NAMED_PAUSE_S)  # the name read later never shortens it
+        self.assertGreater(p.their_move_until, time.time() + 5.0)
+
+
+class OwnerShield(unittest.TestCase):
+    def test_read_from_the_file(self):
+        import json as _json
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "override.json"
+            with patch.object(pa, "OVERRIDE_FILE", path):
+                self.assertIsNone(pa.owner_shield("thievul"))  # no file
+                path.write_text(_json.dumps({"shield": {"thievul": True, "snorlax": False}}))
+                self.assertIs(pa.owner_shield("thievul"), True)
+                self.assertIs(pa.owner_shield("snorlax"), False)
+                self.assertIsNone(pa.owner_shield("clodsire"))
+                path.write_text("not json")
+                self.assertIsNone(pa.owner_shield("thievul"))
