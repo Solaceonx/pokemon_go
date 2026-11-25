@@ -152,3 +152,51 @@ git reset --mixed FETCH_HEAD
 The files are already in this worktree; this imports the commits and advances
 the registered branch and index without replacing working files or pushing.
 Run the screen only after importing, so the league records the correct commit.
+
+## Exam variant factory follow-up (2026-11-25)
+
+`scripts/exam_variants.py` delegates to the versus parser/factory. Its adapter
+keeps 32 samples for bare specs, the old `stay_after_replace` interpretation and
+the old invalid-mid-swap exception. `scripts/engine_versus.py` accepts optional
+worker state in `pilot`, `evaluator` and `network`, so the exam supplies its own
+models/pool without overwriting versus globals. Website reference construction,
+replay dice, variant seed offsets, and exam-key checks stay unchanged.
+
+`tests/test_exam_variants.py` builds the four lab specs below and the legacy
+`switch_edge=0.1`, then calls action/shield decisions on a constructed position.
+It checks the selected classes/settings, both Q models, evaluator isolation and
+the exam pool/seeds. A second test compares 12 legacy specs at seeds 7 and 17
+against the previous direct Engine construction: action, shield, replacement,
+search count and both random states match in all 24 cases.
+
+Validation, one worker and `OMP_NUM_THREADS=1`, repository venv with `-X utf8`:
+
+| Check | Result |
+|---|---|
+| Initial plain baseline discovery | 511 tests, 0 failures, 19 errors, 7 skips |
+| Baseline with documented temporary-directory workaround | 511 tests, 0 failures, 3 expected OCR errors, 7 skips; 45.607 s |
+| New test module | 2 tests pass; 11.797 s |
+| Five-variant smoke alone | 1 test passes; 1.432 s |
+| Final full discovery, same workaround | 513 tests, 0 failures, 3 expected OCR errors, 7 skips; 56.238 s |
+| PvPoke before and after | 108 of 108 reproduced exactly |
+
+The three expected errors are missing `rapidocr_onnxruntime` in `test_form_icons`.
+The first plain baseline also hit the 16 documented Windows temporary-directory
+ACL errors. The same process-local `os.mkdir` wrapper documented above removed
+those environment errors; temporary files stayed under `runs/lab-best/tmp`.
+Logs: `exam-baseline-tests.out` and `exam-tests.out`. No package installations,
+test suppressions, model changes, commits or pushes. `git pull --ff-only` was
+denied access to the registered worktree's external `FETCH_HEAD`.
+
+No private answer files were used and no exam score or strength gain is claimed.
+No long run is proposed here. Luke can run this from the repository root on his
+Mac, replacing the two positional filenames with his actual answer files:
+
+```bash
+OMP_NUM_THREADS=1 nice python3 -X utf8 scripts/exam_variants.py ANSWERS_1.json ANSWERS_2.json --variants \
+  'website,engine=tree,fix_stay=1' \
+  'website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh' \
+  'website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1' \
+  'website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz' \
+  --workers 1
+```

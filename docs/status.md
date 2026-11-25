@@ -6128,3 +6128,28 @@ own website games, drawn / likeliest), points on the website engine:
 The tree engines' gain is not only against bots: against these person-like opponents too they win more often than the
 website engine. These opponents are imitations (the owner's is a weak player in the simulator, `runs/lab-learn/REPORT.md`),
 so the owner's exam remains the real judge against people.
+
+## Exam variant factory (2026-11-25): lab engines supported, private exam not scored here
+
+`scripts/exam_variants.py` now uses `engine_versus.parse()`/`pilot()` for variants,
+including tree/tactic keys and separate `q`/`opp_q` models. The shared factory can
+receive the exam's model/pool state without changing the versus worker's state.
+The exam's website reference, `seed + 2` variant dice, replay logic and key checks
+are unchanged; bare specs still use 32 samples and the legacy `stay_after_replace`
+interpretation. Each engine retains its own evaluator cache.
+
+Two new tests need no answer files. All five requested variants build and search
+a constructed position (standalone smoke: 1.432 s). Twelve old-style settings at
+both exam side offsets match the previous direct Engine construction for action,
+shield, replacement, search count and random states (24 comparisons). Both tests
+pass, 11.797 s together. Full suite before/after: 511/513 tests, zero failures,
+three expected `rapidocr_onnxruntime` import errors and seven skips; final 56.238 s.
+PvPoke before/after: **108 of 108 reproduced exactly**.
+
+The first plain baseline had 19 errors: those three OCR errors plus 16 documented
+Windows temporary-directory permission errors. Baseline and final discovery used
+the existing process-local inherited-ACL workaround, one worker and one NumPy
+thread; no tests were suppressed. Logs: `runs/lab-best/exam-baseline-tests.out` and
+`runs/lab-best/exam-tests.out`. No private exam score or strength claim. No commit
+or push; the sandbox denied `git pull --ff-only` when opening external worktree
+metadata. The Mac scoring command is in `runs/lab-best/REPORT.md`.

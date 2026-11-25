@@ -173,27 +173,30 @@ def setup(field: str = "standard", pause: str | None = None, team_pool: int | No
                   team_pool=team_pool, pools={})
 
 
-def evaluator(path: str | None) -> Evaluator:
+def evaluator(path: str | None, *, state: dict | None = None) -> Evaluator:
+    s = _state if state is None else state
     path = path or str(ROOT / "runs" / "eval" / "eval.npz")
-    if path not in _state["evals"]:
-        _state["evals"][path] = Evaluator.load(ROOT / path).model
+    if path not in s["evals"]:
+        s["evals"][path] = Evaluator.load(ROOT / path).model
     # Share immutable weights only: the evaluator's outlook cache belongs to one player
     # in one battle, otherwise prior jobs and the opposing player's searches affect it.
-    return Evaluator(_state["evals"][path])
+    return Evaluator(s["evals"][path])
 
 
-def network(path: str | None) -> QNet:
+def network(path: str | None, *, state: dict | None = None) -> QNet:
     """The trained bot's networks: the website's, or those at a path (task 39's rounds)."""
+    s = _state if state is None else state
     if path is None:
-        return _state["net"]
-    nets = _state.setdefault("nets", {})
+        return s["net"]
+    nets = s.setdefault("nets", {})
     if path not in nets:
         nets[path] = QNet.load(str(ROOT / path))
     return nets[path]
 
 
-def pilot(settings: dict | None, seed: int, cls=RealTime):
-    s = _state
+def pilot(settings: dict | None, seed: int, cls=RealTime, *, state: dict | None = None):
+    """Build a player, optionally using another screen's models and pool instead of the versus worker's."""
+    s = _state if state is None else state
     if settings is None or settings.get("_bot"):
         st = settings or {}
         people = dict(people_shield=st.get("people_shield"), people_add=st.get("people_add"), ko_wait=st.get("ko_wait", False))
@@ -203,12 +206,12 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
             return PolicyPlayer(pnet=cached(st["policy"]) if st.get("policy") else None,
                                 anchor=cached(st["anchor"]) if st.get("anchor") else None, lam=st.get("lam", 0.0),
                                 sample=st.get("sample", False), temperature=st.get("temperature", 0.0),
-                                q=network(st.get("q")), margin=st.get("margin", 0.02), seed=seed, **people)
+                                q=network(st.get("q"), state=s), margin=st.get("margin", 0.02), seed=seed, **people)
         return Learner(q=s["net"], margin=0.02, seed=seed, **people)
     kw = dict(settings)
     # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
-    ev = Evaluator(evaluator(kw.pop("eval", None)).model)
-    q = network(kw.pop("q", None))
+    ev = Evaluator(evaluator(kw.pop("eval", None), state=s).model)
+    q = network(kw.pop("q", None), state=s)
     margin = kw.pop("margin")
     n = kw.pop("pool", None)
     pool = s["pool"]
@@ -230,7 +233,7 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
         if not issubclass(cls, ModelledEngine):
             cls = ModelledEngine if cls is RealTime else type(f"{cls.__name__}_Modelled", (cls, ModelledEngine), {})
         if "opp_q" in kw:
-            kw["opp_q"] = network(kw["opp_q"])
+            kw["opp_q"] = network(kw["opp_q"], state=s)
         if "opp_policy" in kw:
             kw["opp_policy"] = cached(kw["opp_policy"])
     return cls(ev, pool, q=q, margin=margin, seed=seed, **kw, **extra)

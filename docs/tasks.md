@@ -4,6 +4,18 @@ Open work on the bot, each brief self-contained. Read `AGENTS.md` first (setup, 
 task), then `docs/status.md` for every result so far. To take a task, put your name after its title here
 and push that before starting.
 
+## Exam screen: lab engine variants (2026-11-25) — complete locally
+
+`scripts/exam_variants.py` now delegates variant parsing and construction to
+`engine_versus`, supplying the exam's existing evaluator, pool and seed offsets.
+The website reference and replay/key checks remain unchanged. Bare settings keep
+32 samples and their legacy boolean interpretation. Two answer-free tests cover
+the four requested lab engines plus `switch_edge=0.1`, and legacy decision/dice
+parity. Full suite: 513 tests, zero failures, three expected OCR errors, seven
+skips; PvPoke 108/108. No commit or push. Luke's private exam scoring remains to
+be run on his Mac; command and validation details: `runs/lab-best/REPORT.md`,
+"Exam variant factory follow-up".
+
 ## Engine lab: combine best pieces (2026-11-24) — built and validated locally; branch import pending
 
 Merged `lab-search`, then `lab-tactics`, onto the `lab-best`/`lab-int` starting
