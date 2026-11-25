@@ -137,6 +137,10 @@ def shield_saves_the_matchup(us, them, foe_energy: float, shields: int, foe_shie
     return None
 
 
+# Player.hold_for_better: a move this many times as strong, at most this many turns of our fast moves away
+HOLD_RATIO, HOLD_TURNS = 2.0, 8
+
+
 def engine_settings(text: str) -> dict:
     """The engine's settings over the website's, from POGO_ENGINE ("judge=turn,horizon=40"): words as they are, whole
     numbers as int, others as float. 2026-11-24 (docs/status.md, the Mega Catch Cup loss): judged at the same turn,
@@ -1810,6 +1814,7 @@ class Player:
                 self.paid_fast_streak = 0
             self.no_weaker_move(t, view)
             self.owner_prefers(t, view)
+            self.hold_for_better(t, view)
             if self.armed is not None and self.decision != FAST:
                 self.log("armed_replaced", t, by=self.name(self.decision))  # a switch now, or a move paid for now
                 self.armed = None
@@ -2212,6 +2217,48 @@ class Player:
             self.log("move_dominated", t, chose=mon.charged[k].id, now=mon.charged[j].id,
                      damage=[hit.get(k), hit[j]])
             self.decision = CHARGED[0] + j
+
+    def hold_for_better(self, t: float, view) -> None:
+        """No cheap throw into no shields when a move twice as strong is a few fast moves away: hold for it, or throw
+        it if it is paid for too. The owner, again and again on 2026-11-24/25: Stone Edge (35) into Kingambit with
+        Earthquake (128) two Poison Stings away; Body Slam (25%) into a shieldless Empoleon with Earthquake (95%) 25
+        energy away; Vigoroth's Body Slam (27, resisted) into Tinkaton with Bulldoze (69) 11 away (000629, 147.6 s: the
+        engine's search rated the throw 0.03 over holding, a call it makes at any thinking time). With their shields
+        up the cheap move is a bait, the engine's call; below 35% health the low-health rules decide; with no shield
+        of ours, not while a charged move of theirs paid for would knock us out."""
+        if self.decision not in CHARGED or self.tracker.foe is None or view is None or view.foe_shields > 0:
+            return
+        from pogo.battle import damage
+        mon = self.team[self.active]
+        k = self.decision - CHARGED[0]
+        if k >= len(mon.charged) or getattr(mon.charged[k], "buff_chance", 0) or self.hp_now(t, view) < 0.35:
+            return
+        have = self.energy()
+        bounds = self.paid_bounds()
+        have = max(have if have is not None else self.tracker.me.mon.energy, bounds[0] if bounds else 0)
+        us, them = view.me.mon, view.foe
+        now = damage(us, mon.charged[k], them)
+        if now >= them.hp:
+            return  # the move in hand knocks them out
+        for j, m in enumerate(mon.charged):
+            big = damage(us, m, them)
+            if j == k or big < HOLD_RATIO * now:  # a stat change of the bigger move's (Bulldoze lowers theirs) is no bar
+                continue
+            if have >= m.energy:
+                self.log("hold_for_better", t, chose=mon.charged[k].id, now=m.id, paid=True, damage=[now, big])
+                self.decision = CHARGED[0] + j
+                return
+            turns = math.ceil((m.energy - have) / mon.fast.energy_gain) * mon.fast.turns
+            if turns > HOLD_TURNS:
+                continue
+            if view.me.shields == 0 and any(self.tracker.foe.hi >= c.energy and damage(them, c, us) >= us.hp
+                                            for c in them.build.charged):
+                continue
+            if t - getattr(self, "_held_logged", -9.0) > 1.0:
+                self._held_logged = t
+                self.log("hold_for_better", t, chose=mon.charged[k].id, now=m.id, turns=turns, damage=[now, big])
+            self.decision = FAST
+            return
 
     def owner_prefers(self, t: float, view) -> None:
         """The owner's rule (2026-11-22, after Blastoise threw Skull Bash at Cresselia with Hydro Cannon paid for:

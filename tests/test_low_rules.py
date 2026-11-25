@@ -98,3 +98,40 @@ class ShieldToWin(unittest.TestCase):
 
     def test_no_shield_no_call(self):
         self.assertIsNone(pa.shield_saves_the_matchup(Mon(self.th, hp=41, energy=32), Mon(self.tr, hp=16), 60, 0, 1))
+
+
+class HoldForBetter(unittest.TestCase):
+    """000629, 147.6 s: Vigoroth (53/145, 44 energy) threw Body Slam (27, resisted) into a shieldless Tinkaton with
+    Bulldoze (69, 55 energy) 11 away."""
+
+    def ask(self, energy=44, foe_shields=0, hp=53, me="vigoroth", moves=("SCRATCH", "BULLDOZE", "BODY_SLAM"),
+            foe="tinkaton", foe_hp=110, k=1):
+        b = GD.build(me, list(moves))
+        p = player()
+        p.team, p.active, p.decision = [b], 0, pa.CHARGED[0] + k
+        foe_mon = Mon(GD.default(foe), hp=foe_hp)
+        p.tracker = NS(foe=NS(mon=foe_mon, hi=42), me=NS(mon=Mon(b, hp=hp, energy=energy)))
+        p.energy = lambda: energy
+        p.paid_bounds = lambda: None
+        p.hp_now = lambda t, view: hp / b.hp
+        view = NS(me=NS(mon=Mon(b, hp=hp, energy=energy), shields=2), foe=foe_mon, foe_shields=foe_shields)
+        p.hold_for_better(1.0, view)
+        return p.decision, p.logged
+
+    def test_holds_for_bulldoze(self):
+        decision, logged = self.ask()
+        self.assertEqual(decision, pa.FAST)
+        self.assertIn("hold_for_better", logged)
+
+    def test_throws_bulldoze_once_paid(self):
+        decision, _ = self.ask(energy=56)
+        self.assertEqual(decision, pa.CHARGED[0] + 0)  # Bulldoze, the left button
+
+    def test_bait_into_shields_left_to_the_engine(self):
+        decision, _ = self.ask(foe_shields=1)
+        self.assertEqual(decision, pa.CHARGED[0] + 1)
+
+    def test_snorlax_holds_for_earthquake_on_empoleon(self):
+        decision, _ = self.ask(energy=40, hp=174, me="snorlax", moves=("PSYWAVE", "BODY_SLAM", "EARTHQUAKE"),
+                               foe="empoleon", foe_hp=85, k=0)
+        self.assertEqual(decision, pa.FAST)
