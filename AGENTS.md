@@ -12,6 +12,8 @@ people work on it; the owner is short on assistant usage, so work that one comma
 3. Pick a task from `docs/tasks.md`. Put your name after its title and push that before starting, so two
    agents do not take the same one. Work on a branch named for the task and open a pull request; small
    fixes to documents can go straight to `main`. `git pull` before you start and before you push.
+4. To play on the owner's phone (GO Battle League or Team Leader battles), follow `docs/live_runbook.md`: set-up,
+   commands, the after-set review and the owner's rules. The live player's code is on branch `ultra-league`.
 
 ## Rules
 
