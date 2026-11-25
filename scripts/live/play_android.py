@@ -13,6 +13,7 @@ frames of the minigames go to the scratch folder given by --frames, never to git
 from __future__ import annotations
 
 import argparse
+import bisect
 import collections
 import contextlib
 import json
@@ -363,6 +364,29 @@ def choreography(move_id: str, move_type: str = "") -> list:
     return [tuple(x) for x in json.loads(path.read_text(encoding="utf-8"))["icons"]]
 
 
+_owner_paths: dict = {}
+
+
+def owner_path(move_type: str):
+    """The owner's own swipe for a type (data/minigame/android/owner_type_<type>.json: [t, x, y] every 0.01 s from
+    the touch down), or None. Stone Edge: the owner loops a narrow tilted oval mid-screen and lets the rocks come to
+    it, Excellent 4 of 4 (2026-11-24, watch_owner.py), where every stroke of ours that chased or swept them made two
+    in three at best."""
+    if move_type not in _owner_paths:
+        f = ROOT / "data" / "minigame" / "android" / f"owner_type_{move_type.lower()}.json"
+        _owner_paths[move_type] = json.loads(f.read_text(encoding="utf-8"))["path"] if move_type and f.exists() else None
+    return _owner_paths[move_type]
+
+
+def owner_point(path, s: float) -> tuple:
+    """The owner's path at s seconds from its start, round again from the start once it has run out."""
+    s = s % path[-1][0] if path[-1][0] > 0 else 0.0
+    k = min(len(path) - 1, max(1, bisect.bisect_left([q[0] for q in path], s)))
+    (ta, xa, ya), (tb, xb, yb) = path[k - 1], path[k]
+    f = min(1.0, max(0.0, (s - ta) / max(1e-6, tb - ta)))
+    return xa + f * (xb - xa), ya + f * (yb - ya)
+
+
 def first_icon_s(move_id: str) -> float:
     """Seconds from Get Ready! to the first icons of a move's minigame (its learnt choreography; 1.0 if none)."""
     return min((x[0] for x in choreography(move_id) if x[4] >= 0.5), default=1.0)
@@ -398,7 +422,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     # curve again and again, and Body Slam rated Great twice).
     route = list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone or ((cx, cy), (spx, spy))))
     leg = 0
-    x, y = route[0]
+    owner = owner_path(move_type)  # the owner's own swipe, followed in place of the chase and the sweep
+    x, y = owner[0][1:] if owner else route[0]
     phone._send(DOWN, x, y)
     start = last_seen = time.perf_counter()
     chased, step = 0, 0.010
@@ -462,6 +487,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         (cx, cy), (spx, spy) = zone
                         route, leg = (list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone))), 0
                         predicted, done = list(choreography(alt.id, alt.type)), set()
+                        owner = owner_path(move_type)
                         icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
                 if move_type in PREDICTED_FIRST and predicted and ready_at is not None:
                     icons = []  # seen, to tell which move's minigame this is; the learnt icons are chased instead
@@ -497,6 +523,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
         if target is None and math.hypot(route[leg][0] - x, (route[leg][1] - y) * 2.2) < 0.01:
             leg = (leg + 1) % len(route)  # this waypoint of the sweep reached: on to the next
         goal = target[:2] if target else route[leg]
+        if owner:
+            goal, target = owner_point(owner, now - start), None  # the owner's swipe, as it went
         dx, dy = goal[0] - x, goal[1] - y
         dist = math.hypot(dx, dy * 2.2)  # the screen is 2.2 times taller than wide
         move = speed * step
