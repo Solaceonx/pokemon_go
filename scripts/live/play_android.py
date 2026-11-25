@@ -178,6 +178,12 @@ SWEEP_BOX = {"normal": (0.08, 0.93, 0.52, 0.90), "ground": (0.05, 0.95, 0.54, 0.
              "rock": (0.03, 0.66, 0.22, 0.88),  # rock: 16 Stone Edge minigames (2026-11-09), the left half mostly
              "fairy": (0.10, 0.90, 0.25, 0.90)}  # fairy: 11 Play Rough minigames (2026-11-09), low in the middle
 SWEEP_ONLY: set = set()  # types whose icons no detector finds: the predicted ones and the sweep alone
+# Types whose icons are found but not chased: the learnt icons and the sweep only, the detector kept to tell which
+# move's minigame it is. Stone Edge's rocks fly in from the left edge at about 0.9 of the width a second and settle a
+# third of the way across; on a frame 0.1 to 0.2 s old the finger chased where they had been, behind them. On 8 ranked
+# Stone Edges of 2026-11-24 (3 Great) the live stroke passed over 61% of the icons' sightings; the learnt path alone,
+# icons of 2026-11-09 only, 82% (all 8 higher), with today's icons too, each minigame's own left out, 86%.
+PREDICTED_FIRST = {"rock"}
 
 
 def sweep_path(box, spacing: float = 0.09) -> list:
@@ -420,6 +426,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         route, leg = sweep_path(sweep_box(move_type, zone)), 0
                         predicted, done = list(choreography(alt.id, alt.type)), set()
                         icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
+                if move_type in PREDICTED_FIRST and predicted and ready_at is not None:
+                    icons = []  # seen, to tell which move's minigame this is; the learnt icons are chased instead
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
