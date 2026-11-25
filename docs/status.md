@@ -5198,6 +5198,31 @@ runner and engine as the day before.
   (2026-10-11) is that letting a lethal move through with a shield in hand depends on the other matchups, so no
   blanket rule was added; asked the owner.
 - The engine's start odds (`win_chances.py`) were 0.54 to 0.70 in set 1 and 0.50 to 0.62 in set 2.
+- The owner, after set 2: "i think overall we just need the engine to be better about shield choices", and the rule
+  left to me. **Both shields up and a charged move paid for that knocks ours out: the creators' call**
+  (`players_shield`, `pogo/people_shield.py` from `people-shields`, the network fitted on 560 creator decisions; it
+  shields 17 of the 19 such hits the engine let through on 2026-11-24/25). Everything else stays the engine's. Not
+  measurable against bots (shielding more loses there); watched live.
+- **Taps during their charged move** (the owner: "you forgot to tap again on thievul vs fisk", "you overtapped on a
+  move with the snorlax"): 19 of 168 switch taps on the two days were not taken, 7 of them just after their move
+  (6 of 7 on the 25th). 103647, 133.5 s: Thievul to Clodsire tapped as Galarian Stunfisk threw; the re-taps ran out
+  in the move's animation and none went once the fight was back. 105943, 26.7 s: Body Slam tapped 0.7 s after the
+  prompt for Vigoroth's Bulldoze, not taken, the count put under its cost, and 3 s of fast taps on 13 HP once the
+  fight was back. Fixed (`ultra-league` 490e0b60, f0acf67c): a switch under way waits out their move and its re-tap
+  window starts afresh (one more try after the 5 s verdict too); no charged tap for 6 s after a prompt (310 prompts:
+  the first fast move landed 8.6 s after a shielded one at the median, 8.7 s unshielded), 3.5 s after their
+  countdown, 2 s after their move's name; a tap not taken then, or with the button showing it paid for, keeps the
+  count. Dry runs on both recordings: the switch re-tapped from 138.3 s, Body Slam held through Bulldoze and went
+  a second earlier. `runs/live/override.json` (not in git) takes the owner's shield call for one of ours mid-battle.
+- Set 3 (103647 to 110221): **4-1**; the last won in 8 s (Malamar's player left). Set 4 (111814 to 112955 and one
+  more): 2-2 before its last battle; 112139 never became a battle (the runner counted it). In set 4 21 throws waited
+  out their move, 6 of 6 switches went. No clear bot error in its losses (Umbreon, Tinkaton, Altaria; Gourgeist,
+  Alolan Golem, Wigglytuff).
+- **Earthquake Great** (the owner: "you just got a great charge on earthquake vs azumarill"): the day's ratings off the
+  recordings (`grade_each.py`): Earthquake Excellent 11, Great 4 (one a mid-stroke switch to Body Slam's sweep);
+  Body Slam 32 and 2, Stone Edge 27 and 1, Night Slash 29 and 0. Ground's icons come up in place for 0.7 s along a
+  band (0.64 to 0.77 of the height): a fast flat oval over it (centre 0.52, 0.715; semi-axes 0.42 and 0.08 widths;
+  0.3 s a loop) went **Excellent 14 of 14** in four team-leader battles (all won); made the default (48e6ccc0).
 
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
