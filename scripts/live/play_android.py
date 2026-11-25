@@ -198,8 +198,9 @@ LEAD_TYPES, LEAD_LAG, LEAD_MAX = set(), 0.10, 0.35
 # the left edge along five rows, y 0.22 to 0.75, at up to 0.9 of the width a second, and slow to a stop a third of the
 # way across (2026-11-24, every recorded minigame): a finger at x 0.12 meets each one as it comes in, whatever the
 # detector sees and however old the frame.
-LANE = {"rock": ((0.12, 0.22), (0.12, 0.78))}
-CHASE_FROM_X = {"rock": 0.26}
+# In training it was worse: Excellent 7 times in 16 (190053 to 190516): off, kept for a type it helps.
+LANE: dict = {}
+CHASE_FROM_X: dict = {}
 
 
 def lead_icons(icons, prev, dt: float, behind: float, finger, speed: float) -> list:

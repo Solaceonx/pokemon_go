@@ -1,6 +1,6 @@
-"""The minigame stroke for Rock: its lane swept up and down, only icons past it chased (play_android.LANE,
-CHASE_FROM_X; Stone Edge's rocks come in from the left edge at up to 0.9 of the width a second), and the lead
-(LEAD_TYPES, off since it made no difference live) that aims at where an icon will be."""
+"""Two ways of stroking a minigame tried for Stone Edge and left off (they did not beat chasing what is seen): a lane
+swept up and down with only icons past it chased (play_android.LANE, CHASE_FROM_X), and the lead that aims at where
+an icon will be (LEAD_TYPES). Both checked here as written, switched on for the test."""
 import importlib.util
 import math
 import sys
@@ -86,7 +86,9 @@ class Lane(unittest.TestCase):
                 sent.append((x, y))
 
         with patch.object(pa.screen, "shield_prompt", return_value=False), \
-                patch.object(pa, "find_icons", return_value=seen), patch.object(pa, "has_template", return_value=False):
+                patch.object(pa, "find_icons", return_value=seen), patch.object(pa, "has_template", return_value=False), \
+                patch.object(pa, "LANE", {"rock": ((0.12, 0.22), (0.12, 0.78))}), \
+                patch.object(pa, "CHASE_FROM_X", {"rock": 0.26}):
             pa.minigame_stroke(Phone(), seconds=0.6, zone=((0.5, 0.6), (0.3, 0.2)), move_type="rock")
         return sent
 
