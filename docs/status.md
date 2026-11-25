@@ -5123,6 +5123,8 @@ owner's two remarks:
   their move knocks us out and, shielded, we win the one on one from here, shield. The 9.0 s Seed Bomb (to 50%,
   not shielding +0.65 against +0.30) and 213313's Flying Press on Snorlax are left to the engine. Dry run: shielded
   at 33.4 s (there the engine did, on a lower estimate of Trevenant's energy).
+- **Set 6 (225655 to 231000), everything above on: 5-0.** Minigames 29 of 29 Excellent. `waiting_for_better`
+  (Earthquake) in 3 battles, `shield_to_win` twice (Super Power, Aerial Ace), `save_the_low_one` twice; all won.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
