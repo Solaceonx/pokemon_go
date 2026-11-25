@@ -5160,6 +5160,9 @@ owner's two remarks:
   Set 6 (012902 to 014453): **4-1**. The loss (Clefable, Charjabug, Marowak): a grind against Charjabug's X-Scissors;
   Stunfisk's Discharges into it were a bait into its shield and, at 9% health, the move in hand (Mud Bomb, 1.9 times
   as strong, 5 energy away, not a knock-out). Shield calls the engine's. Not changed.
+  Set 7 (015339 to 020728): **4-1**. The loss (Corviknight, Azumarill, Tinkaton): the Jellicent lead took Payback
+  unshielded (75% to 7%) and fell; Stunfisk, last, lost to Tinkaton on 33%. The flagged Body Slam into Tinkaton in
+  015640 was at 6% health with Bulldoze six Scratches away: right. Not changed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
