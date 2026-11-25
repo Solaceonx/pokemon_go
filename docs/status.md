@@ -6107,3 +6107,24 @@ ordered with no cycle: each engine beats every earlier one (5 against 4: 52.1 ±
 fewer exact-endgame points the more of the lab's changes they carry. The creator exam (decision quality on the creators'
 positions, a bot-continued judge) is level across them (74.4-76.9 ± 3.3). The reader gains about as much against each
 (+0.0 to +3.8 ± 3.1): these engines are not much easier or harder to read than today's.
+
+**Round 4 (2026-11-25 night, `runs/lab-tune-3.out`, `runs/lab-people-set.out`, 14 workers).**
+
+Tree settings against the best engine P (seed 5901, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke): `c_puct=1.0` 49.2%
+± 1.8 (PvPoke -3.1 ± 2.5), `c_puct=0.25` 47.7% ± 1.7 (worse beyond the margin), `prior_temp=0.05` 50.1% ± 1.7, `prior_temp=0.2`
+50.1% ± 1.6. The defaults (c_puct 0.5, prior_temp 0.1) stay; with rounds 2 and 3 this is the plateau against bots.
+
+Against person-like opponents (`scripts/lab/versus_people.py`, seed 6101, 1,000 battles per engine over three opponents:
+`human` = the bot with human settings and the creators' shield calls; `owner` / `owner_top` = an imitation of the owner's
+own website games, drawn / likeliest), points on the website engine:
+
+| Engine | human | owner (drawn) | owner (likeliest) |
+|---|---|---|---|
+| website (score) | 71.9% ± 4.8 | 88.6% ± 3.4 | 88.1% ± 3.5 |
+| tree + fix_stay + fix_judged | **+10.0 ± 4.5** | **+4.2 ± 3.4** | +1.1 ± 3.5 |
+| + shield_mix=0, finish_safe | +4.3 ± 5.0 | +3.5 ± 3.7 | **+5.3 ± 3.6** |
+| + population q (best) | **+7.0 ± 5.1** | **+5.1 ± 3.9** | **+5.1 ± 3.6** |
+
+The tree engines' gain is not only against bots: against these person-like opponents too they win more often than the
+website engine. These opponents are imitations (the owner's is a weak player in the simulator, `runs/lab-learn/REPORT.md`),
+so the owner's exam remains the real judge against people.
