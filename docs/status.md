@@ -5153,6 +5153,10 @@ owner's two remarks:
   the engine switched Stunfisk (35%) out, rightly, but to Jellicent (49%; one on one against it -0.27) rather than
   Vigoroth (full; +0.02); 6 of 6 asked again, its search rating Jellicent 0.42 against 0.32. Jellicent fell to Seed
   Bomb, then Stunfisk (the owner: "careful with grass types"). A 3v3 call of the engine's, seen once: not changed.
+  Set 5 (011003 to 012151): **4-1**. The loss (Flamigo, Kecleon, Turtonator) was on matchups and timing: Stunfisk
+  switched out of Kecleon to Vigoroth as they brought in Flamigo, whose Upper Hand (super effective) took both of
+  Vigoroth's shields with the switch timer running; Jellicent, last, fell to Brutal Swing with Turtonator on 26%.
+  Nothing flagged by the review; not changed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
