@@ -6081,3 +6081,10 @@ Every variant plays level with it, so these settings sit on a plateau:
 
 Search time is unchanged (median 125-141 ms, 99th percentile 594-609 ms unhurried). Further gains against bots need a
 different lever than these knobs; the next judge is the owner's exam, against people.
+
+**Round 3, more population training (2026-11-24 night, `runs/lab-learn-population-2.out` on lab-learn, `runs/lab-tune-2.out`).**
+Generations 4-6 (60 min of examples each, 14 workers, resumed after generation 3): against the shipped bot 52.9 / 53.5 /
+53.3% ± 1.3 (2,000 pairs both ways; generation 3 was 53.8%), crowd +3.4 / +0.8 / +1.6 ± 2.2. Inside the best engine,
+generation 6's q against generation 3's (seed 5701, 1,000 pairings both ways): 50.2% ± 1.9, crowd -0.4 ± 2.3, PvPoke -0.8
+± 2.7. The population training has plateaued at generation 3 too; generation 3 (`runs/lab-pop-q.npz`) stays the network
+of the best engine.
