@@ -5028,14 +5028,21 @@ owner's two remarks:
 - **Live with the fixes, the set's last battle (181307): won, the set 4-0.** Both switches taken: 1.0 s after the tap,
   and one decided right after Body Slam's minigame in 3.8 s (three re-taps, the attack's animation included), against
   2.9 to 6.4 s and a retry before. Minigames 4 of 5 Excellent; Stone Edge Great again (6 of 9 in ranked today).
-- **Stone Edge (`ultra-league` 8ed4e9e9).** Its rocks fly in from the left edge at about 0.9 of the width a second
-  along four or five rows and settle a third of the way across. The detector finds them nearly all the time, so the
-  stroke chased them, and on a frame 0.1 to 0.2 s old the finger came in behind each one; the learnt icons were
-  hardly ever used. On the 8 ranked Stone Edges the live stroke passed over 61% of the icons' sightings; the learnt
-  path alone, with the 11-09 icons only, 82% (higher on all 8); with today's icons too, each minigame's own left out,
-  86%. Rock now chases the learnt icons and the sweep (`PREDICTED_FIRST`), the detector kept only to tell which
-  move's minigame it is. The replay harness does not run the stroke: checked by `tests/test_rock_stroke.py` and the
-  scores above. Not yet seen live.
+- **Stone Edge: three strokes tried, none better than chasing what is seen.** The rocks fly in from the left edge
+  along five rows (y 0.22 to 0.75) at up to 0.9 of the width a second and settle a third of the way across; frames
+  reach the player 0.1 to 0.2 s old. Ratings, Excellent of all:
+
+  | Stroke | Where | Excellent |
+  |---|---|---|
+  | Chase the rocks seen (as before, now again) | ranked 173604 to 181307 | 6 of 9 |
+  | Learnt path only (`PREDICTED_FIRST`, 8ed4e9e9) | ranked 184005, 184319 | 0 of 4 |
+  | Chase, led by each rock's speed (`LEAD_TYPES`, 55d859b8) | training 184901 to 185313 | 9 of 14 |
+  | Sweep the lane at x 0.12, chase past x 0.26 (`LANE`, 1a048935) | training 190053 to 190516 | 7 of 16 |
+
+  The learnt path scored 82 to 86% of the icons' sightings passed over against 61% for the live chase, and was the
+  worst live: that score does not tell the rating for Rock. A rock template (`cut_icon_template.py`) matched the
+  symbol but scored as high on the status bar and the ground. All three are off; the code is kept with tests. The
+  rest of the set (3 of 5, all won) waits. Next: learn from the owner's own Stone Edge swipes.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
