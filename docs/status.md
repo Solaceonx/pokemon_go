@@ -5258,6 +5258,20 @@ Cancel; and a storage search per family for its PvP names, candy and XL candy). 
 season's top 40 in each league is in the owner's own workbook (sheet "Next season"), not in the repo. The read-only
 inspection lists only the Pokémon that are not favourites (123 of 289), so the favourites' IVs come from their names.
 
+**Teams for next season from the third account's keepers** (2026-11-25; scratch `.session_scratch/2026-11-25_kim/
+next_teams.py`): next season's moves and ranks (PvPoke preview), the trained bot both sides, against random threes
+from PvPoke's next-season meta group (47 Pokémon each league, with its movesets); every three screened (48 battles),
+the best 20 x 3 leads (240), the best 6 line-ups on a fresh seed (2,000, ± 2.2), then 600 against threes that include
+Clefable at a random place. Great: the current Clodsire / Thievul / Snorlax **47.6%** (47% with Clefable); Clodsire /
+Snorlax / Vigoroth **62.7%** (64%), the best without Elite TMs; Clodsire / Vigoroth / Corviknight (Air Cutter, Iron
+Head) 65.2% (73%); Corviknight / Annihilape / Altaria (Rage Fist, Moonblast) 65.5% but **38% against teams with
+Clefable** (the owner's objection; each of the three loses Clefable one on one). Ultra: Ampharos / Tinkaton /
+Clefable 65.6% (63%) without Elite TMs, 67.8% with Gigaton Hammer; Melmetal (Double Iron Bash) / Clefable / Ampharos
+66.3%. Clefable is in all the best Ultra teams (Mystical Fire comes as a normal TM; level 47.5 needs about 199 XL,
+the account has 163). A first run against random threes from the top 50 put Clefable in too few teams; a check
+that always led with the forced Clefable read 71% for the Altaria team (fixed: shuffled). PvPoke default IVs except
+the three built Great League ones; the opponents are a field, not usage.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
