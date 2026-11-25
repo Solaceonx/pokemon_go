@@ -6169,3 +6169,18 @@ PvPoke +3.2 ± 2.5, search 125 / 594 ms; P with `samples=48` **66.1% ± 1.3**, c
 844 ms (unhurried). The extra search buys about half a point against the website engine for half again the search time
 and a 99th percentile at the edge of the release limit, so the recommendation stays at 32. P is confirmed a third time
 (65.0-65.8% on seeds 5502, 5801 and 6301).
+
+**Mixed decisions and creator tactics judged against person-like opponents (2026-11-25, `runs/lab-people-mixed.out`,
+`scripts/lab/versus_people.py`, seed 6401, 1,500 battles per engine over `human` / `owner` / `owner_top`, 500 each).**
+Baseline: the best engine P (human 77.6% ± 3.6, owner 89.9% ± 2.6, owner_top 92.9% ± 2.2). Points on P:
+
+| On top of P | human | owner (drawn) | owner (likeliest) |
+|---|---|---|---|
+| `shield_mix=0.05` (instead of 0) | -1.1 ± 3.2 | **-2.9 ± 2.2** | **-3.2 ± 2.0** |
+| `throw_mix=0.03` | **-4.5 ± 3.4** | -1.5 ± 2.6 | -0.8 ± 2.3 |
+| `bait_mix=0.4` | **-2.7 ± 2.6** | -1.1 ± 1.6 | -0.3 ± 1.4 |
+| `shield_two=0.05,shield_one=0` | -0.7 ± 1.6 | -0.2 ± 1.0 | -0.8 ± 1.0 |
+
+Mixing (probabilistic shields, throws or baits) costs points against these person-like opponents too, not only against
+bots; front-loaded shield margins are level. The opponents are imitations and cannot punish predictability the way a
+person who learns the engine over many games can, so the owner's exam and live games remain the test of that.
