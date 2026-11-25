@@ -191,7 +191,15 @@ PREDICTED_FIRST: set = set()
 # to the frame and the touch to the game, and the finger's way there), at most LEAD_MAX s. Stone Edge's rocks fly in
 # from the left at up to 0.9 of the width a second and settle a third of the way across (2026-11-24: on frames 0.1 to
 # 0.2 s old the finger came in 0.1 to 0.2 behind them; 6 of 9 Excellent chased as seen, 0 of 4 on the learnt path).
-LEAD_TYPES, LEAD_LAG, LEAD_MAX = {"rock"}, 0.10, 0.35
+# Led, Stone Edge rated Excellent 9 times in 14 in training (184901 to 185313), as chased as seen (6 of 9): off.
+LEAD_TYPES, LEAD_LAG, LEAD_MAX = set(), 0.10, 0.35
+# Types whose icons all come in through one lane: the stroke sweeps it up and down in place of the sweep box, and
+# chases only icons seen at CHASE_FROM_X or beyond (the ones settled past the lane). Stone Edge's rocks come in from
+# the left edge along five rows, y 0.22 to 0.75, at up to 0.9 of the width a second, and slow to a stop a third of the
+# way across (2026-11-24, every recorded minigame): a finger at x 0.12 meets each one as it comes in, whatever the
+# detector sees and however old the frame.
+LANE = {"rock": ((0.12, 0.22), (0.12, 0.78))}
+CHASE_FROM_X = {"rock": 0.26}
 
 
 def lead_icons(icons, prev, dt: float, behind: float, finger, speed: float) -> list:
@@ -387,7 +395,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     # With no icon to chase, the finger sweeps the box the type's icons come up in, row by row (the owner,
     # 2026-11-08: a fixed pattern rather than relearning each time; the figure of eight it replaces went over one
     # curve again and again, and Body Slam rated Great twice).
-    route = sweep_path(sweep_box(move_type, zone or ((cx, cy), (spx, spy))))
+    route = list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone or ((cx, cy), (spx, spy))))
     leg = 0
     x, y = route[0]
     phone._send(DOWN, x, y)
@@ -451,7 +459,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         move_id, move_type = alt.id, alt.type
                         colour, zone = icon_colour(alt.type), icon_zone(alt.type)
                         (cx, cy), (spx, spy) = zone
-                        route, leg = sweep_path(sweep_box(move_type, zone)), 0
+                        route, leg = (list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone))), 0
                         predicted, done = list(choreography(alt.id, alt.type)), set()
                         icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
                 if move_type in PREDICTED_FIRST and predicted and ready_at is not None:
@@ -461,6 +469,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         lead_prev, lead_dt = lead_last, (got - lead_got if lead_got else 0.0)
                         lead_last, lead_got = list(icons), got
                     icons = lead_icons(icons, lead_prev, lead_dt, time.time() - got + LEAD_LAG, (x, y), speed)
+                if move_type in CHASE_FROM_X:
+                    icons = [p for p in icons if p[0] >= CHASE_FROM_X[move_type]]  # those in the lane: the sweep's
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
