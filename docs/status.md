@@ -5089,10 +5089,22 @@ owner's two remarks:
   - **On by default live since `ultra-league` d81dea84** (the owner: "turn it on"); `POGO_ENGINE=""` for the website's.
 - **Bad leads (the owner's rule 5; the owner: "it should switch out of an empoleon lead").** At the start the engine
   kept Clodsire in against Empoleon (staying 0.53 to 0.59 against 0.46, for Earthquake's one hit) though the
-  one-on-one is -0.55 (Snorlax -0.08, Thievul -0.12). `safe_swap` (`ultra-league` 4th commit after d81dea84): at the
+  one-on-one is -0.55 (Snorlax -0.08, Thievul -0.12). `safe_swap` (`ultra-league` 55facf52): at the
   first look naming their lead, ours at -0.3 or worse in `agents.duel` and a bench Pokémon 0.3 better: switch to the
   best. On the day's 14 ranked leads it fires for Palossand and Jynx (the engine had switched at 1.6 s anyway) and
   Empoleon. Dry run of 204342: switch to Snorlax tapped at 1.7 s. Not yet seen live.
+- **Next set, with both on (213313 to 214006): 1-2, stopped after 3.** The second loss (213612: Kingambit,
+  Gastrodon, Palossand), the owner: "so many opportunities to win. thievul should've stayed in against the palossand.
+  we could have one shot the kingambit with earthquake instead of throwing resisted stone edges". Both were the live
+  player's low-health rules, not the engine (`ultra-league` 40a7c3de):
+  - `save_the_low_one` switched Thievul (25%, both shields) out of a shieldless Palossand, which its Dark moves hit
+    super effectively; one on one +0.06 staying, Clodsire coming in -0.04. Now it stays in when it wins from here
+    (duel >= 0) or does as well as the best coming in.
+  - `better_soon` threw Stone Edge (35 damage, resisted) with Clodsire on 56 HP, 55 energy and a shield, where
+    Earthquake, two Poison Stings away, did 128 to Kingambit's 102: it gave up the wait because Kingambit could reach
+    Foul Play meanwhile. Now, with a shield left and the bigger move a knock-out, it waits.
+  - Dry run of 213612: Thievul kept in at 94.6 s; Earthquake waited for at 139.7 s. Clodsire's Stone Edge into Palossand
+    at 121 s (resisted) was the engine's and is not changed. The first loss (213313) is not yet looked at.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
