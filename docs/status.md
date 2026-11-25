@@ -5157,6 +5157,9 @@ owner's two remarks:
   switched out of Kecleon to Vigoroth as they brought in Flamigo, whose Upper Hand (super effective) took both of
   Vigoroth's shields with the switch timer running; Jellicent, last, fell to Brutal Swing with Turtonator on 26%.
   Nothing flagged by the review; not changed.
+  Set 6 (012902 to 014453): **4-1**. The loss (Clefable, Charjabug, Marowak): a grind against Charjabug's X-Scissors;
+  Stunfisk's Discharges into it were a bait into its shield and, at 9% health, the move in hand (Mud Bomb, 1.9 times
+  as strong, 5 energy away, not a knock-out). Shield calls the engine's. Not changed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
