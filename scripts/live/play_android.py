@@ -680,6 +680,7 @@ class Player:
         # Stunfisk for out for 36 s and pressed Stunfisk's moves on Jellicent's buttons).
         self.switching = None
         self.switch_point, self.switch_last_tap = None, 0.0  # where the switch was tapped, and when last (SPAM_SWITCH)
+        self.switch_fight_s, self.switch_fight_last = 0.0, 0.0  # seconds of fight on screen since the switch tap
         self._switch_fits = []  # which Pokémon's costs the energy reading fitted, the last three frames of a switch check
         self.last_not_taken = 0.0  # when a charged tap last came to nothing
         self.fight_frames = 0  # frames in a row with the fight on screen
@@ -1106,6 +1107,7 @@ class Player:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[mine].name,
                          header=self.names.my_name, how=kind)
+                self.switch_went_late(t, mine)
                 self.corrected_from = (self.active, time.time())
                 self.active = mine
                 self.energy_read = self._energy_raw = None
@@ -1135,6 +1137,7 @@ class Player:
                 kind = self.tell_correction()
                 self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[ts[0]].name, by="types",
                          how=kind)
+                self.switch_went_late(t, ts[0])
                 self.corrected_from = (self.active, time.time())
                 self.active = ts[0]
                 self.energy_read = self._energy_raw = None
@@ -1148,7 +1151,19 @@ class Player:
             kind = self.tell_correction()
             self.log("active_corrected", t, was=self.team[self.active].name, now=self.team[best].name, labels=self.names.labels,
                      how=kind)
+            self.switch_went_late(t, best)
             self.active = best
+
+    def switch_went_late(self, t: float, now_slot: int) -> None:
+        """A correction to the one our last switch tap was for, within the switch timer of that tap, with no switch
+        being checked: the switch went through after all, so our switch timer runs from that tap (2026-11-24, 173951:
+        Snorlax tapped at 112.9 s as Mantine threw, judged not taken at 119.9 s, named by the header at 124.7 s; with
+        no timer started, a switch at 142.8 s was tapped ten times while the game's ran)."""
+        if self.switching is None and now_slot == getattr(self, "switch_tapped_to", None) \
+                and 0.0 < time.time() - self.switch_last_tap < 45.0:
+            self.switch_ready_at = max(self.switch_ready_at, self.switch_last_tap + 45)
+            self.log("switch_seen_late", t, to=self.team[now_slot].name,
+                     ready_in_s=round(self.switch_ready_at - time.time(), 1))
 
     def tell_correction(self) -> str | None:
         """Before a correction of which of ours is out: tell the tracker how the change came about, so it starts no
@@ -1195,10 +1210,26 @@ class Player:
         after the tap say it did not. The bench strip (pogo.android_screen.bench_strip) changes too, but so does any
         cut of the camera (2026-11-07: a tap during "Stunfisk used Mud Bomb!" was ignored, the cut to Gengar changed
         the strip, and the player took Vigoroth for out for 4.5 s). It decides only if neither has said anything in 5
-        s: a change of over 45 held for 0.6 s, starting within 2 s of the tap. Until then no charged tap goes."""
+        s: a change of over 45 held for 0.6 s, starting within 2 s of the tap. Until then no charged tap goes.
+        The re-tap window, the "not taken" verdicts and the 5 s are counted in fight time (self.switch_fight_s: this
+        runs on fighting frames only), not on the clock: the game ignores a switch tapped while a charged move plays
+        out, and on the clock the window ran out in the close-up (2026-11-24, 174318: tapped 0.3 s after Stone Edge's
+        minigame, ignored, no tap when the fight came back 3 s later, Snorlax in 6.4 s late; 173604 and 173951 the
+        same, 4.7 and 2.9 s)."""
         slot, tapped, before, since, looked = self.switching
         looked += 1
         tapped_t = tapped - (self.t0 or tapped)  # the tap in battle time, as the label readings are timed
+        last_tap_t = self.switch_last_tap - (self.t0 or self.switch_last_tap)
+        now = time.time()
+        if now - self.switch_fight_last > 0.5:
+            # the fight back after time off the screen: the strip as it was at a tap in the move's animation is no
+            # yardstick (the dry run of 174318: 40 and more from it all through the 3 s after the close-up, so no
+            # re-tap); compared with the strip as the fight shows it now. A switch that went in the meantime has the
+            # game's switch timer running, so a re-tap does nothing
+            before, since = screen.bench_strip(rgb), None
+        self.switch_fight_s += min(0.25, max(0.0, now - self.switch_fight_last))
+        self.switch_fight_last = now
+        window_done = self.switch_fight_s >= SWITCH_SPAM_S  # the re-taps have had their fight time
         old_costs = [m.energy for m in self.team[self.active].charged]
         new_costs = [m.energy for m in self.team[slot].charged]
         e_new, e_old = screen.my_energy(rgb, new_costs), screen.my_energy(rgb, old_costs)
@@ -1209,7 +1240,8 @@ class Player:
         how = None
         if header == slot:
             how = "header"
-        elif header is not None and header == self.active and (self.names.my_name_at or -1) > tapped_t + 1.5:
+        elif header is not None and header == self.active and (self.names.my_name_at or -1) > last_tap_t + 1.5 \
+                and window_done:
             self.log("switch_not_taken", t, to=self.team[slot].name, by="header")
             self.switching = None
             if not self.switch_retried:
@@ -1232,8 +1264,8 @@ class Player:
             self.switching = None
             self.energy_read = self._energy_raw = None  # those were the other Pokémon's buttons
             return
-        if (said == self.active and (self.names.labels_at or -1) > tapped_t + 1.0) or \
-                (self._switch_fits == ["old"] * 3 and time.time() - tapped > 1.5):
+        if window_done and ((said == self.active and (self.names.labels_at or -1) > last_tap_t + 1.0) or
+                            (self._switch_fits == ["old"] * 3 and now - self.switch_last_tap > 1.5)):
             self.log("switch_not_taken", t, to=self.team[slot].name, by="names" if said == self.active else "buttons")
             self.switching = None
             if not self.switch_retried:  # the game ignored it: once more
@@ -1244,7 +1276,7 @@ class Player:
             since = since or time.time()
         else:
             since = None
-        if SPAM_SWITCH and self.switch_point is not None and time.time() - tapped < SWITCH_SPAM_S \
+        if SPAM_SWITCH and self.switch_point is not None and not window_done \
                 and strip_diff < STRIP_SAME and time.time() - self.switch_last_tap >= 0.2:
             # Tapped again until it shows (the owner, 2026-11-22, as charged moves are since 11-18): in 71 league
             # battles of 2026-11-08 to 10, 35 switch taps were not taken (in 25 battles), and a switch showed a
@@ -1257,8 +1289,8 @@ class Player:
                      strip=round(strip_diff, 1))
             self.switch_last_tap = time.time()
             self.hold_taps_until = max(self.hold_taps_until, time.time() + 1.6)
-        if time.time() - tapped > 5.0:
-            # Nothing said in 5 s: taken as not taken. The bench strip alone was wrong (2026-11-08: "seen" at 14.9 s,
+        if self.switch_fight_s > 5.0 or now - tapped > 20.0:
+            # Nothing said in 5 s of fight: taken as not taken. The bench strip alone was wrong (2026-11-08: "seen" at 14.9 s,
             # Jellicent still out); if it did go, the names under the buttons correct it (check_active).
             seen = False
             self.log("switch_seen" if seen else "switch_not_taken", t, to=self.team[slot].name, by="bench strip")
@@ -1839,6 +1871,7 @@ class Player:
                 self.switch_tapped_to = slot
                 self.tracker.my_switch_tapped(t)
                 self.switch_point, self.switch_last_tap = BENCH[order.index(slot)], time.time()
+                self.switch_fight_s, self.switch_fight_last = 0.0, time.time()  # fight time since the tap (check_switch)
                 # A switch, like a charged move, waits for the fast move under way to end, and a fast tap after it
                 # takes its place (2026-11-08: Stunfisk's portrait tapped at 6.6 s, fast taps every 0.15 s after, no
                 # switch). No fast taps for 1.6 s: the longest of our fast moves is 1.5 s.
