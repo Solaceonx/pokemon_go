@@ -5149,6 +5149,10 @@ owner's two remarks:
   shields down, ours above 35%, a move at least twice as strong 8 turns or less away: hold (or throw it, if paid
   for). Dry run of 000629: held for Bulldoze at 147.2 and 148.2 s.
   Spare account set 3 with it (002800 to 004045): **5-0**; minigames 29 of 31 Excellent (one Great, one unread).
+  Set 4 (004726 to 005854): **4-1**. The loss (Rapidash, Mega Sableye, Toedscruel): at 79.35 s Toedscruel came in and
+  the engine switched Stunfisk (35%) out, rightly, but to Jellicent (49%; one on one against it -0.27) rather than
+  Vigoroth (full; +0.02); 6 of 6 asked again, its search rating Jellicent 0.42 against 0.32. Jellicent fell to Seed
+  Bomb, then Stunfisk (the owner: "careful with grass types"). A 3v3 call of the engine's, seen once: not changed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
