@@ -4994,7 +4994,26 @@ after the landing and has no stops left; 234155's two holds that fired live fire
 234825's holds as live. Not yet seen in live battles. Two dry runs of 234825 stalled (no frames, then the timeout)
 and a third ran through: the replay harness, not the player.
 
-## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
+## Mega Catch Cup: Great League Edition (2026-11-24, `ultra-league` 84250acf): **3 training wins, 3 ranked wins**
+
+The owner's party: Clodsire 1499 (lead), Thievul 1499, Snorlax 1500 (`data/team_owner_mcc.json`, party `owner/mcc`;
+run with `--cp 1500 --party-key mcc`; `run_gbl.py` finds the cup's card by its "Great League" words). Moves read off
+the training recordings, not the defaults: Clodsire's buttons are Stone Edge left, Earthquake right (with the defaults'
+order the bot threw Earthquake each time it meant Stone Edge); Thievul's right button is Play Rough (the fills stand
+1.75 to 1, so it costs 60; the default was Icy Wind), Sucker Punch (+7 a step); Snorlax Psywave (+4 a turn), Body
+Slam, Earthquake. Clodsire's fast move is Poison Sting or Mud Shot (the same energy; not yet told apart).
+
+Spark, Candela and Blanche beaten; the three ranked battles of the set won (set at 4 of 5), then stopped on the
+owner's two remarks:
+- **Great on charged moves.** 29 minigames: Stone Edge Excellent 9 of 14, Earthquake 3 of 4; Night Slash 8 of 8,
+  Body Slam 3 of 3. The detector counted 87 to 100 icons per Stone Edge and Earthquake minigame against 32 to 55 for
+  the others: probably Clodsire's brown body taken for Rock and Ground icons (not yet checked on frames).
+- **Not attacking after moves.** Our taps start again 0.1 s after the minigame and about 0.3 s after the fight is
+  back (114.3 s to 114.6 s on 174318); after their moves at the fight's return. The stand-stills are switches decided
+  right after our own throw: the bench taps go during the attack's animation and the game ignores them, the 3 s
+  re-tap window runs out in the close-up, and the switch shows only after the 5 s "not taken" and a retry (174318:
+  decided 111.1 s, Snorlax in at 117.5 s). Five switches not taken in the three battles.
+, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
 Everything used `POGO_LEAGUE=2500`, including the shipped Great League networks used as the baseline, and
