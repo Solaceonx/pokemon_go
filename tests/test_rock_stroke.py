@@ -1,6 +1,6 @@
-"""The minigame stroke for Rock (play_android.PREDICTED_FIRST): the learnt icons are chased and the icons the detector
-finds are not (2026-11-24: Stone Edge's rocks fly in from the left edge, and the finger chasing where a frame 0.1 to
-0.2 s old had them came in behind them, 3 Great in 8); other types still chase what is found."""
+"""The minigame stroke for Rock (play_android.LEAD_TYPES): icons are chased where they will be, from their speed
+between looks and how far behind the frame is (2026-11-24: Stone Edge's rocks fly in from the left edge at up to
+0.9 of the width a second, and chasing where a frame 0.1 to 0.2 s old had them, the finger came in behind them)."""
 import importlib.util
 import math
 import sys
@@ -23,41 +23,53 @@ finally:
     if _stub:
         del sys.modules["cv2"]
 
-SEEN, LEARNT = (0.92, 0.15), (0.20, 0.75)  # a detected icon (outside the rock sweep box) and a learnt one
+
+class LeadIcons(unittest.TestCase):
+    def test_ahead_by_its_speed(self):
+        led = pa.lead_icons([(0.30, 0.40)], [(0.25, 0.40)], 0.05, 0.2, (0.30, 0.40), 6.5)
+        self.assertAlmostEqual(led[0][0], 0.50, places=3)  # 1.0 a second for 0.2 s
+        self.assertAlmostEqual(led[0][1], 0.40, places=3)
+
+    def test_as_seen_without_a_match(self):
+        self.assertEqual(pa.lead_icons([(0.30, 0.40)], [(0.70, 0.80)], 0.05, 0.2, (0, 0), 6.5), [(0.30, 0.40)])
+        self.assertEqual(pa.lead_icons([(0.30, 0.40)], [(0.25, 0.40)], 0.0, 0.2, (0, 0), 6.5), [(0.30, 0.40)])
+
+    def test_capped(self):
+        led = pa.lead_icons([(0.30, 0.40)], [(0.25, 0.40)], 0.05, 5.0, (0.30, 0.40), 6.5)
+        self.assertAlmostEqual(led[0][0], 0.30 + pa.LEAD_MAX, places=3)
 
 
-class Phone:
-    def __init__(self):
-        self.sent = []
+class StaleFrames(unittest.TestCase):
+    """A rock moving right at 0.9 a second, on frames 0.15 s old: led, the finger reaches where it is; chased as
+    seen (a type not led), it stays behind."""
+    AGE, V = 0.15, 0.9
 
-    def frame(self):
-        return np.zeros((40, 20, 3), np.uint8), time.time()
+    def run_stroke(self, move_type):
+        t0 = time.time()
+        shown = {"t": t0}
+        pos = lambda t: (0.10 + self.V * (t - t0), 0.50)
+        sent = []
 
-    def _send(self, kind, x, y):
-        self.sent.append((x, y))
+        class Phone:
+            def frame(self_):
+                shown["t"] = time.time() - StaleFrames.AGE
+                return np.zeros((40, 20, 3), np.uint8), shown["t"]
 
+            def _send(self_, kind, x, y):
+                sent.append((time.time(), x, y))
 
-def stroke(move_type):
-    phone, trace = Phone(), []
-    with patch.object(pa.screen, "shield_prompt", return_value=False), \
-            patch.object(pa, "find_icons", return_value=[SEEN]), \
-            patch.object(pa, "has_template", return_value=False):
-        pa.minigame_stroke(phone, seconds=0.7, zone=((0.5, 0.6), (0.3, 0.2)), move_type=move_type, trace=trace,
-                           predicted=[(0.0, 5.0, LEARNT[0], LEARNT[1], 0.9)], ready_at=time.time() - 1.2,
-                           move_id="")
-    near = lambda p: min(math.hypot(x - p[0], (y - p[1]) * 2.2) for x, y in phone.sent)  # every touch sent
-    return near(SEEN), near(LEARNT)
+        with patch.object(pa.screen, "shield_prompt", return_value=False), \
+                patch.object(pa, "find_icons", side_effect=lambda *a, **k: [pos(shown["t"])]), \
+                patch.object(pa, "has_template", return_value=False), patch.object(pa, "LEAD_LAG", 0.0):
+            pa.minigame_stroke(Phone(), seconds=0.5, zone=((0.5, 0.6), (0.3, 0.2)), move_type=move_type)
+        late = [(t, x, y) for t, x, y in sent if t - t0 > 0.15]
+        return min(math.hypot(x - pos(t)[0], (y - pos(t)[1]) * 2.2) for t, x, y in late)
 
+    def test_rock_reaches_it(self):
+        self.assertLess(self.run_stroke("rock"), 0.04)
 
-class RockStroke(unittest.TestCase):
-    def test_rock_goes_to_the_learnt_icon_not_the_seen_one(self):
-        seen, learnt = stroke("rock")
-        self.assertLess(learnt, 0.03)
-        self.assertGreater(seen, 0.2)
-
-    def test_other_types_chase_what_is_seen(self):
-        seen, _ = stroke("fire")
-        self.assertLess(seen, 0.03)
+    def test_not_led_stays_behind(self):
+        self.assertGreater(self.run_stroke("fire"), 0.08)
 
 
 if __name__ == "__main__":

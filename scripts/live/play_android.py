@@ -183,7 +183,33 @@ SWEEP_ONLY: set = set()  # types whose icons no detector finds: the predicted on
 # third of the way across; on a frame 0.1 to 0.2 s old the finger chased where they had been, behind them. On 8 ranked
 # Stone Edges of 2026-11-24 (3 Great) the live stroke passed over 61% of the icons' sightings; the learnt path alone,
 # icons of 2026-11-09 only, 82% (all 8 higher), with today's icons too, each minigame's own left out, 86%.
-PREDICTED_FIRST = {"rock"}
+# Live it was worse: Stone Edge Great 4 times in 4 (2026-11-24, 184005 and 184319), so the share of sightings passed
+# over does not tell the rating for Rock's moving icons. Off again; kept for a type it helps.
+PREDICTED_FIRST: set = set()
+# Types whose icons are chased where they will be, not where the frame had them: each icon's speed from the look
+# before (the same icon, the nearest within 0.1), times how far behind the frame is (its age, LEAD_LAG for the screen
+# to the frame and the touch to the game, and the finger's way there), at most LEAD_MAX s. Stone Edge's rocks fly in
+# from the left at up to 0.9 of the width a second and settle a third of the way across (2026-11-24: on frames 0.1 to
+# 0.2 s old the finger came in 0.1 to 0.2 behind them; 6 of 9 Excellent chased as seen, 0 of 4 on the learnt path).
+LEAD_TYPES, LEAD_LAG, LEAD_MAX = {"rock"}, 0.10, 0.35
+
+
+def lead_icons(icons, prev, dt: float, behind: float, finger, speed: float) -> list:
+    """Where the icons seen will be `behind` s on plus the finger's travel time to each: their speed from `prev`
+    (the icons on the frame dt s earlier), the nearest within 0.1 (widths, the height times 2.2), else none."""
+    out = []
+    for x, y in icons:
+        q = min(prev, key=lambda p: math.hypot(p[0] - x, (p[1] - y) * 2.2), default=None) if 0.02 < dt < 0.3 else None
+        if q is None or math.hypot(q[0] - x, (q[1] - y) * 2.2) > 0.10:
+            out.append((x, y))
+            continue
+        vx, vy = (x - q[0]) / dt, (y - q[1]) / dt
+        if math.hypot(vx, vy * 2.2) > 3.0:  # not the same icon
+            out.append((x, y))
+            continue
+        ahead = min(LEAD_MAX, behind + math.hypot(x - finger[0], (y - finger[1]) * 2.2) / speed)
+        out.append((min(0.98, max(0.02, x + vx * ahead)), min(0.90, max(0.15, y + vy * ahead))))
+    return out
 
 
 def sweep_path(box, spacing: float = 0.09) -> list:
@@ -385,11 +411,13 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     seen_own = False
     alternatives = list(alternatives or [])
     alt_seen = None  # (move, first look time) of another type showing two icons or more, looks running
+    # LEAD_TYPES: the icons on the newest frame and on the one before, the newest one's arrival, the time between
+    lead_last, lead_prev, lead_got, lead_dt = [], [], 0.0, 0.0
     while (now := time.perf_counter()) - start < seconds:
         if now - last_seen >= 0.05:
             last_seen = now
             try:
-                rgb = phone.frame()[0]
+                rgb, got = phone.frame()
                 if screen.shield_prompt(rgb):
                     phone._send(UP, x, y)
                     return -1
@@ -428,6 +456,11 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
                 if move_type in PREDICTED_FIRST and predicted and ready_at is not None:
                     icons = []  # seen, to tell which move's minigame this is; the learnt icons are chased instead
+                if move_type in LEAD_TYPES:
+                    if got != lead_got:  # a new frame: the speeds are from the one before it
+                        lead_prev, lead_dt = lead_last, (got - lead_got if lead_got else 0.0)
+                        lead_last, lead_got = list(icons), got
+                    icons = lead_icons(icons, lead_prev, lead_dt, time.time() - got + LEAD_LAG, (x, y), speed)
             except Exception:  # noqa: BLE001
                 icons = []
             while trail and now - trail[0][0] > 0.4:
