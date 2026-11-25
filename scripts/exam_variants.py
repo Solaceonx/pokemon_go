@@ -41,6 +41,12 @@ def parse(spec: str) -> dict:
             if v not in ("ready", "hit", "both"):
                 raise ValueError(f"unknown mid_swap_search {v!r}")
             out[k] = v
+        elif k == "judge":
+            if v not in ("steps", "turn", "end"):
+                raise ValueError(f"unknown judge {v!r}")
+            out[k] = v
+        elif k in ("horizon", "samples"):
+            out[k] = int(v)
         else:
             out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
     return out

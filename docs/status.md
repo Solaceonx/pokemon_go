@@ -5070,8 +5070,22 @@ owner's two remarks:
     view (`engine_view.py 20261124-204342 66.5 5`): Body Slam 5 times in 5. Snorlax threw Body Slam 4 times in the
     battle and Earthquake never, Beedrill (Ground super effective) included; it ended on 2%.
   - Thievul was left against Tinkaton, which resists all three of its moves (Night Slash 15%, Play Rough 23%), and
-    lost. Not yet asked of the owner: switch the lead out of Empoleon to keep Clodsire for Tinkaton; and why the
-    engine takes the cheap resisted move over a near knock-out 3 s away.
+    lost. Not yet asked of the owner: switch the lead out of Empoleon to keep Clodsire for Tinkaton.
+- **Why the engine threw Body Slam (the owner: look into it).** Its look-ahead plays each option 20 steps on and
+  judges where it stops. After holding, Snorlax's Earthquake knocks Empoleon out inside the look and the position is
+  judged on an imagined next matchup (worth 0.50); after Body Slam the look stops mid-fight, Empoleon on 17 HP, before
+  the cost of the slower kill comes due (0.63). The trained bot alone would have held. Judged at the same game turn
+  for both, 40 turns on (`judge="turn", horizon=40`, an existing setting): hold 0.66 against 0.48; played to the end:
+  0.53 against 0.55.
+  - On today's 84 logged throws it changes 17, with a pattern: against no shields it saves for the big move (Body
+    Slam into Empoleon, Beedrill, Chimecho; Night Slash into Minior), against shields it baits with the cheap one
+    (Body Slam over Earthquake into Skarmory and Abomasnow with 2 shields up).
+  - Under the live 300 ms cap it is cheaper: 22 ms a decision (median; worst 51) against 55 (worst 298), every look done.
+  - The exam (`scripts/exam_variants.py`, its parser now takes words and whole numbers), 36 positions: the owner's
+    answer 16 against 13 for the live engine, KingMagikarp's 22 against 20, both agreeing 15 of 26 against 13.
+    Task 35's simulator grid (8 samples, older build): head to head 50.2% ± 1.8, crowd +0.9 ± 2.9, PvPoke +4.2 ± 3.5.
+  - `POGO_ENGINE="judge=turn,horizon=40"` runs it live (ultra-league); the default is unchanged until the owner says.
+    Not measured at the live 32 samples on a fresh seed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
