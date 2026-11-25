@@ -6088,3 +6088,22 @@ Generations 4-6 (60 min of examples each, 14 workers, resumed after generation 3
 generation 6's q against generation 3's (seed 5701, 1,000 pairings both ways): 50.2% ± 1.9, crowd -0.4 ± 2.3, PvPoke -0.8
 ± 2.7. The population training has plateaued at generation 3 too; generation 3 (`runs/lab-pop-q.npz`) stays the network
 of the best engine.
+
+**The set of engines judged together (2026-11-24 night, `runs/lab-league/engine-set/table.md`, fresh seed 5801, league
+screen preset, every measure, 14 workers).** Reference: website. Engines: 1 bot; 2 tree + fix_stay; 3 + fix_judged, depth 3,
+root sh; 4 + shield_mix=0, finish_safe; 5 + the population q (opp_q on the shipped q).
+
+| # | Head to head vs website | Crowd Δ | PvPoke Δ | Round robin (mean) | Reader's gain ↓ | Predictable | Live ms median / p99, cut | Endgame points lost Δ | Creator exam |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 bot | 26.6 ± 2.4 | -10.2 ± 3.2 | -0.7 ± 3.7 | 21.9 ± 2.3 | +1.0 ± 1.3 | 100.0% | – | – | – |
+| 2 | 52.2 ± 2.3 | -0.2 ± 1.4 | +0.4 ± 1.4 | 48.7 ± 1.8 | +2.4 ± 3.2 | 98.3% | 109 / 516, 4.3% | +0.00 | 75.2 ± 3.3 |
+| 3 | 60.5 ± 2.4 | +4.0 ± 2.7 | +5.9 ± 3.0 | 57.6 ± 2.2 | +2.4 ± 3.1 | 97.8% | 109 / 516, 3.6% | -0.81 ± 1.20 | 75.0 ± 3.3 |
+| 4 | 62.6 ± 2.5 | +4.0 ± 2.9 | +6.0 ± 3.1 | 61.3 ± 2.2 | +0.0 ± 3.1 | 97.1% | 125 / 531, 4.5% | -1.76 ± 1.49 | 76.9 ± 3.2 |
+| 5 | 65.5 ± 2.5 | +5.7 ± 3.0 | +4.4 ± 3.1 | 63.7 ± 2.7 (best) | +3.8 ± 3.0 | 95.5% | 125 / 543, 5.0% | -2.18 ± 1.71 | 74.7 ± 3.3 |
+
+Website itself: crowd 76.0 ± 2.6, PvPoke 84.1 ± 3.2, creator exam 74.4 ± 3.3, live 109 / 531 ms, 3.9% cut. The round robin is
+ordered with no cycle: each engine beats every earlier one (5 against 4: 52.1 ± 3.9; 4 against 3: 54.9 ± 4.1; 3 against 2:
+58.2 ± 3.7). All four tree engines stay inside the release limits (p99 under 800 ms, cut short under 20%) and give away
+fewer exact-endgame points the more of the lab's changes they carry. The creator exam (decision quality on the creators'
+positions, a bot-continued judge) is level across them (74.4-76.9 ± 3.3). The reader gains about as much against each
+(+0.0 to +3.8 ± 3.1): these engines are not much easier or harder to read than today's.
