@@ -5163,6 +5163,7 @@ owner's two remarks:
   Set 7 (015339 to 020728): **4-1**. The loss (Corviknight, Azumarill, Tinkaton): the Jellicent lead took Payback
   unshielded (75% to 7%) and fell; Stunfisk, last, lost to Tinkaton on 33%. The flagged Body Slam into Tinkaton in
   015640 was at 6% health with Bulldoze six Scratches away: right. Not changed.
+  Then the daily limit (2026-11-25, 05:18). **Spare account: 30-5 in 7 sets** (5-0, 4-1, 5-0, 4-1, 4-1, 4-1, 4-1).
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
