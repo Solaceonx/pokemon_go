@@ -13,7 +13,6 @@ frames of the minigames go to the scratch folder given by --frames, never to git
 from __future__ import annotations
 
 import argparse
-import bisect
 import collections
 import contextlib
 import json
@@ -364,27 +363,24 @@ def choreography(move_id: str, move_type: str = "") -> list:
     return [tuple(x) for x in json.loads(path.read_text(encoding="utf-8"))["icons"]]
 
 
-_owner_paths: dict = {}
+# Types swiped as a smooth oval, the owner's way: (centre x, y; semi-axes along and across, in widths; the long
+# axis's tilt in degrees, x right and y down with the height counted 2.2 widths; seconds a loop; +1 or -1 for the way
+# round). Stone Edge: the owner's 4 swipes in training (2026-11-24, scripts/live/watch_owner.py; the longest kept in
+# data/minigame/android/owner_type_rock.json), all Excellent, were 7 to 9 loops of one oval mid-screen, the rocks
+# let come to it; fitted, centres (0.59 to 0.72, 0.55 to 0.65), semi-axes 0.42 to 0.51 and 0.10 to 0.17, tilt 118 to
+# 125 degrees, 0.61 to 0.88 s a loop. Replaying the longest swipe as recorded rated Great or Nice 6 times in 6.
+OVALS = {"rock": (0.62, 0.62, 0.43, 0.12, 121.0, 0.74, -1)}
 
 
-def owner_path(move_type: str):
-    """The owner's own swipe for a type (data/minigame/android/owner_type_<type>.json: [t, x, y] every 0.01 s from
-    the touch down), or None. Stone Edge: the owner loops a narrow tilted oval mid-screen and lets the rocks come to
-    it, Excellent 4 of 4 (2026-11-24, watch_owner.py), where every stroke of ours that chased or swept them made two
-    in three at best."""
-    if move_type not in _owner_paths:
-        f = ROOT / "data" / "minigame" / "android" / f"owner_type_{move_type.lower()}.json"
-        _owner_paths[move_type] = json.loads(f.read_text(encoding="utf-8"))["path"] if move_type and f.exists() else None
-    return _owner_paths[move_type]
-
-
-def owner_point(path, s: float) -> tuple:
-    """The owner's path at s seconds from its start, round again from the start once it has run out."""
-    s = s % path[-1][0] if path[-1][0] > 0 else 0.0
-    k = min(len(path) - 1, max(1, bisect.bisect_left([q[0] for q in path], s)))
-    (ta, xa, ya), (tb, xb, yb) = path[k - 1], path[k]
-    f = min(1.0, max(0.0, (s - ta) / max(1e-6, tb - ta)))
-    return xa + f * (xb - xa), ya + f * (yb - ya)
+def oval_point(spec, s: float) -> tuple:
+    """Where the oval puts the finger s seconds into the stroke."""
+    cx, cy, a, b, tilt, period, way = spec
+    phi = way * 2 * math.pi * s / period
+    th = math.radians(tilt)
+    u, v = a * math.cos(phi), b * math.sin(phi)
+    x = cx + u * math.cos(th) - v * math.sin(th)
+    y = (cy * 2.2 + u * math.sin(th) + v * math.cos(th)) / 2.2
+    return min(0.98, max(0.02, x)), min(0.90, max(0.15, y))
 
 
 def first_icon_s(move_id: str) -> float:
@@ -422,8 +418,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
     # curve again and again, and Body Slam rated Great twice).
     route = list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone or ((cx, cy), (spx, spy))))
     leg = 0
-    owner = owner_path(move_type)  # the owner's own swipe, followed in place of the chase and the sweep
-    x, y = owner[0][1:] if owner else route[0]
+    oval = OVALS.get(move_type)  # the owner's way: an oval, in place of the chase and the sweep
+    x, y = oval_point(oval, 0.0) if oval else route[0]
     phone._send(DOWN, x, y)
     start = last_seen = time.perf_counter()
     chased, step = 0, 0.010
@@ -458,7 +454,9 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                 # Anywhere on screen: a round disc of icon size whose ring is the type's colour (grey for Normal).
                 # Water's icons stream right across the screen, over Jellicent's body, which is the same blue but
                 # not a disc of that size; Ghost's sit on a Jellicent dark with smoke.
-                if move_id and has_template(move_id, move_type):
+                if oval and now - start > 1.2:
+                    icons = []  # past the first looks (which move's minigame this is): the oval needs none
+                elif move_id and has_template(move_id, move_type):
                     # the move's or its type's icon cut out (move_icons.py): exact where the colour detectors are not
                     icons = [(x, y) for x, y, v in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]
                     if move_type in COLOUR_BLOBS:
@@ -487,7 +485,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
                         (cx, cy), (spx, spy) = zone
                         route, leg = (list(LANE[move_type]) if move_type in LANE else sweep_path(sweep_box(move_type, zone))), 0
                         predicted, done = list(choreography(alt.id, alt.type)), set()
-                        owner = owner_path(move_type)
+                        oval = OVALS.get(move_type)
                         icons = [(x_, y_) for x_, y_, _ in move_icons(rgb[::2, ::2], move_id, move_type=move_type)]                             if has_template(move_id, move_type) else find_icons(rgb, colour, move_type, zone)
                 if move_type in PREDICTED_FIRST and predicted and ready_at is not None:
                     icons = []  # seen, to tell which move's minigame this is; the learnt icons are chased instead
@@ -523,8 +521,8 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
         if target is None and math.hypot(route[leg][0] - x, (route[leg][1] - y) * 2.2) < 0.01:
             leg = (leg + 1) % len(route)  # this waypoint of the sweep reached: on to the next
         goal = target[:2] if target else route[leg]
-        if owner:
-            goal, target = owner_point(owner, now - start), None  # the owner's swipe, as it went
+        if oval:
+            goal, target = oval_point(oval, now - start), None
         dx, dy = goal[0] - x, goal[1] - y
         dist = math.hypot(dx, dy * 2.2)  # the screen is 2.2 times taller than wide
         move = speed * step

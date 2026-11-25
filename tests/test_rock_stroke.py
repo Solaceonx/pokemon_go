@@ -1,5 +1,5 @@
-"""Rock's minigame follows the owner's own swipe (play_android.owner_path, data/minigame/android/owner_type_rock.json:
-a narrow tilted oval looped mid-screen, Excellent 4 of 4 on 2026-11-24), whatever icons are seen. Below it, two ways
+"""Rock's minigame is a smooth oval the owner's way (play_android.OVALS: fitted to the owner's 4 Stone Edges of
+2026-11-24, all Excellent; their longest kept in data/minigame/android/owner_type_rock.json), whatever icons are seen. Below it, two ways
 of stroking tried for Stone Edge and left off (they did not beat chasing what is seen): a lane
 swept up and down with only icons past it chased (play_android.LANE, CHASE_FROM_X), and the lead that aims at where
 an icon will be (LEAD_TYPES). Both checked here as written, switched on for the test."""
@@ -64,7 +64,7 @@ class StaleFrames(unittest.TestCase):
                 patch.object(pa, "find_icons", side_effect=lambda *a, **k: [pos(shown["t"])]), \
                 patch.object(pa, "has_template", return_value=False), patch.object(pa, "LEAD_LAG", 0.0), \
                 patch.object(pa, "LEAD_TYPES", {"rock"}), patch.object(pa, "CHASE_FROM_X", {}), \
-                patch.object(pa, "LANE", {}), patch.object(pa, "owner_path", return_value=None):
+                patch.object(pa, "LANE", {}), patch.object(pa, "OVALS", {}):
             pa.minigame_stroke(Phone(), seconds=0.5, zone=((0.5, 0.6), (0.3, 0.2)), move_type=move_type)
         late = [(t, x, y) for t, x, y in sent if t - t0 > 0.15]
         return min(math.hypot(x - pos(t)[0], (y - pos(t)[1]) * 2.2) for t, x, y in late)
@@ -90,7 +90,7 @@ class Lane(unittest.TestCase):
         with patch.object(pa.screen, "shield_prompt", return_value=False), \
                 patch.object(pa, "find_icons", return_value=seen), patch.object(pa, "has_template", return_value=False), \
                 patch.object(pa, "LANE", {"rock": ((0.12, 0.22), (0.12, 0.78))}), \
-                patch.object(pa, "CHASE_FROM_X", {"rock": 0.26}), patch.object(pa, "owner_path", return_value=None):
+                patch.object(pa, "CHASE_FROM_X", {"rock": 0.26}), patch.object(pa, "OVALS", {}):
             pa.minigame_stroke(Phone(), seconds=0.6, zone=((0.5, 0.6), (0.3, 0.2)), move_type="rock")
         return sent
 
@@ -106,10 +106,9 @@ class Lane(unittest.TestCase):
         self.assertLess(min(math.hypot(x - 0.40, (y - 0.40) * 2.2) for x, y in sent), 0.03)
 
 
-class OwnerPath(unittest.TestCase):
-    def test_the_owners_swipe_followed_not_the_icons(self):
-        path = pa.owner_path("rock")
-        self.assertIsNotNone(path)
+class Oval(unittest.TestCase):
+    def test_the_oval_followed_not_the_icons(self):
+        spec = pa.OVALS["rock"]
         sent, t0 = [], time.time()
 
         class Phone:
@@ -122,19 +121,23 @@ class OwnerPath(unittest.TestCase):
         with patch.object(pa.screen, "shield_prompt", return_value=False), \
                 patch.object(pa, "find_icons", return_value=[(0.10, 0.30)]), \
                 patch.object(pa, "has_template", return_value=False):
-            pa.minigame_stroke(Phone(), seconds=1.0, zone=((0.5, 0.6), (0.3, 0.2)), move_type="rock")
+            pa.minigame_stroke(Phone(), seconds=1.6, zone=((0.5, 0.6), (0.3, 0.2)), move_type="rock")
         moves = sent[1:-2]  # the touch down, then the lift on the open field
-        off = [math.hypot(x - pa.owner_point(path, t)[0], (y - pa.owner_point(path, t)[1]) * 2.2) for t, x, y in moves]
-        self.assertLess(sorted(off)[int(0.9 * len(off))], 0.05)  # on the owner's path, give or take a step
+        off = [math.hypot(x - pa.oval_point(spec, t)[0], (y - pa.oval_point(spec, t)[1]) * 2.2) for t, x, y in moves]
+        self.assertLess(sorted(off)[int(0.9 * len(off))], 0.05)  # on the oval, give or take a step
         self.assertGreater(min(math.hypot(x - 0.10, (y - 0.30) * 2.2) for _, x, y in moves), 0.15)  # not the icon
 
-    def test_round_again(self):
-        path = [[0.0, 0.1, 0.1], [1.0, 0.9, 0.1]]
-        self.assertAlmostEqual(pa.owner_point(path, 0.5)[0], 0.5)
-        self.assertAlmostEqual(pa.owner_point(path, 1.25)[0], 0.3)
+    def test_the_owners_oval(self):
+        pts = [pa.oval_point(pa.OVALS["rock"], k * 0.74 / 40) for k in range(40)]
+        xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+        self.assertTrue(0.35 < min(xs) and max(xs) < 0.88)  # clear of the bench portraits at 0.90
+        self.assertTrue(0.40 < min(ys) and max(ys) < 0.85)
+        lower_left = max(pts, key=lambda p: p[1])
+        self.assertLess(lower_left[0], 0.5)  # the long axis from the lower left to the upper right
+        self.assertAlmostEqual(pa.oval_point(pa.OVALS["rock"], 0.74)[0], pts[0][0], places=6)  # one loop a period
 
     def test_none_for_other_types(self):
-        self.assertIsNone(pa.owner_path("fire"))
+        self.assertNotIn("fire", pa.OVALS)
 
 
 if __name__ == "__main__":
