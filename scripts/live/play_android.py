@@ -93,6 +93,13 @@ SWITCH_SPAM_S = 3.0  # 9 in 10 switches showed within 3 s of the tap (2026-11-08
 SWITCH_PAUSE_S = 3.5
 PROMPT_PAUSE_S = 6.0
 NAMED_PAUSE_S = 2.0
+# After their charged move (its prompt, countdown or name) the screen is not to be trusted for this long
+# (2026-11-25, 121525: Hydreigon's Brutal Swing, shielded at 179.0 s, played out to its "BLOCKED!" at 188 s; through it
+# the turn clock ran on the header and bars, our count went 39 to 67, Play Rough was tapped on the count at 185.0 s,
+# and the buttons hidden with their bar alone were taken for our minigame: 5.6 s of swiping nothing, no tap when the
+# fight came back, and Hydreigon threw first at 192.8 s and won). Within it: no charged tap on the count alone (the
+# buttons must say it is paid for), and buttons gone with their bar alone are not our move.
+THEIR_MOVE_DOUBT_S = 15.0
 # The owner's shield calls for the battle under way ("this battle you should just double shield the thievul",
 # 2026-11-25): {"shield": {"thievul": true}} shields at every prompt while that one is out and a shield is left
 # (false: never). Read at each prompt; written and cleared by hand, not in git.
@@ -2035,6 +2042,9 @@ class Player:
             sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
                 time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain
                 and (stale or urgent or have >= cost + 40))
+            if sure and time.time() - getattr(self, "their_move_seen", -99.0) < THEIR_MOVE_DOUBT_S and \
+                    self.energy() is None and not (bounds is not None and bounds[0] >= cost):
+                sure = False  # their move just played: the count ran on through it (THEIR_MOVE_DOUBT_S)
             # About to faint (under 10%): on the count at the cost, no margin; a tap not taken costs nothing now
             # (2026-11-24, 213313: Snorlax on 1 HP after Flying Press, Body Slam's 40 counted, the buttons unread over
             # its white for 3.7 s; it fast-tapped on and fainted with the throw in hand)
@@ -2666,7 +2676,8 @@ class Player:
             # buttons with both bars, then the shield prompt; our Leaf Blade, only theirs at 0.949 throughout)
             ours_shown = hidden and "theirs" in bars and "mine" not in bars
             off_since = None if not ours_shown or said == "theirs" else (off_since or when)
-            if paid_seen and off_since is not None and when - off_since >= 0.8 and time.time() - tapped > 0.5:
+            if paid_seen and off_since is not None and when - off_since >= 0.8 and time.time() - tapped > 0.5 \
+                    and time.time() - getattr(self, "their_move_seen", -99.0) > THEIR_MOVE_DOUBT_S:
                 since, started = off_since, True
                 self.log("minigame_seen", self.now(), move=move.id, by="buttons gone, their bar alone 0.8 s")
                 break
@@ -2875,6 +2886,7 @@ class Player:
         """A charged move is under way: no charged tap until it has played out, and a switch tapped and not yet
         seen waits for it, its re-tap window starting afresh (SWITCH_PAUSE_S)."""
         until = time.time() + seconds
+        self.their_move_seen = time.time()  # THEIR_MOVE_DOUBT_S
         self.their_move_until = max(getattr(self, "their_move_until", 0.0), until)
         if self.switching is not None:
             self.switch_pause_until = max(getattr(self, "switch_pause_until", 0.0), until)
