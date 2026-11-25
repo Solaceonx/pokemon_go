@@ -5136,6 +5136,13 @@ owner's two remarks:
   232959 with Stunfisk): Jellicent Hex (+13 a 1.5 s step), Shadow Ball left, Surf right; Vigoroth Scratch (+4 a turn),
   Bulldoze left, Body Slam right; Stunfisk Thunder Shock (or Mud Shot: the same energy), Discharge left, Mud Bomb right.
   First ranked set (233516 to 234944): **5-0**; minigames 34 of 36 Excellent (one Discharge Great, one Surf unread).
+  Second set (235732 to 001016): **4-1**. The loss (000629: Dusknoir, Tinkaton, Corviknight): Stunfisk, switched in
+  against Dusknoir at 2.9 s, took Shadow Punch and Dynamic Punch unshielded and fainted with Dusknoir on 36%; Vigoroth,
+  last, threw Body Slam (27, resisted) into Tinkaton at 147.6 s with 44 energy where Bulldoze (69, super effective,
+  55 energy) was 11 away; asked again the engine holds, 6 of 6, but the throw came from a decision searched ahead
+  during the fast move (`precomputed`), 0.01 s after a held one. At 172.4 s, on 12% with 40 energy, the low-health
+  rule threw Body Slam where Bulldoze would have knocked Tinkaton (58 HP) out: the wait flipped off as two of
+  Tinkaton's fast moves came to Vigoroth's 18 HP. Not yet changed.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
