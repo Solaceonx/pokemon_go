@@ -94,6 +94,27 @@ PREFER: dict[str, str] = {}
 LIVE_ENGINE = "judge=turn,horizon=40"
 
 
+# The owner's rule 5 ("Strategy guidance from the project owner", docs/status.md): out of a bad lead, swap to the safe
+# swap. The engine mostly does (2026-11-24: out of Palossand and Jynx at 1.6 s), not always: it kept Clodsire in against
+# Empoleon (staying worth 0.53 to 0.59 against 0.46 at the start, for Earthquake's one hit), where the one-on-one is
+# -0.55 and Snorlax's -0.08, and the battle was lost (the owner: "it should switch out of an empoleon lead"). At the
+# first look naming their lead: ours LEAD_BAD or worse in agents.duel (mashers, 2 shields each, from the start), and a
+# bench Pokémon LEAD_GAIN better: switch to the best. On the day's 14 ranked leads: Palossand, Jynx, Empoleon only.
+LEAD_BAD, LEAD_GAIN = -0.3, 0.3
+
+
+def safe_swap(team: list, active: int, foe_build):
+    """(the bench slot to switch to, or None; every slot's one-on-one score against their lead)."""
+    from pogo.agents import duel
+    from pogo.battle import Mon
+    scores = {k: duel(Mon(b), Mon(foe_build), 2, 2) for k, b in enumerate(team)}
+    bench = [k for k in scores if k != active]
+    best = max(bench, key=lambda k: scores[k]) if bench else None
+    if best is not None and scores[active] <= LEAD_BAD and scores[best] - scores[active] >= LEAD_GAIN:
+        return best, scores
+    return None, scores
+
+
 def engine_settings(text: str) -> dict:
     """The engine's settings over the website's, from POGO_ENGINE ("judge=turn,horizon=40"): words as they are, whole
     numbers as int, others as float. 2026-11-24 (docs/status.md, the Mega Catch Cup loss): judged at the same turn,
@@ -785,6 +806,7 @@ class Player:
         # Stunfisk for out for 36 s and pressed Stunfisk's moves on Jellicent's buttons).
         self.switching = None
         self.switch_point, self.switch_last_tap = None, 0.0  # where the switch was tapped, and when last (SPAM_SWITCH)
+        self.lead_judged = False  # the owner's bad-lead rule asked (safe_swap)
         self.switch_fight_s, self.switch_fight_last = 0.0, 0.0  # seconds of fight on screen since the switch tap
         self._switch_fits = []  # which Pokémon's costs the energy reading fitted, the last three frames of a switch check
         self.last_not_taken = 0.0  # when a charged tap last came to nothing
@@ -1940,6 +1962,16 @@ class Player:
                 self.unsure_hold = (self.active, time.time() + mon.fast.turns * 0.5 + 0.3, time.time())
                 self.tapping = False
                 self.log("unsure_hold", t, move=mon.charged[k].id, have=have)
+        if not self.lead_judged and view is not None and self.active == 0 and t < 6.0:
+            self.lead_judged = True  # once, at the first look naming their lead
+            try:
+                to, scores = safe_swap(self.team, self.active, view.foe.build)
+            except Exception as error:  # noqa: BLE001
+                to, scores = None, {"error": str(error)}
+            if to is not None and self.decision not in SWITCH and self.switching is None:
+                self.log("bad_lead", t, out=self.team[self.active].name, to=self.team[to].name,
+                         against=view.foe.build.species_id, scores={self.team[k].name: round(v, 2) for k, v in scores.items()})
+                self.decision = SWITCH[0] + to
         # Not before 1.5 s: until then "GO!" is on the screen and the game takes no switch (2026-11-08: the opening
         # switch to Stunfisk at 0.8 s and 0.97 s was ignored both times).
         if self.open_with is not None and (self.open_with == self.active or self.tracker.me.team[self.open_with].hp <= 0):
