@@ -5223,6 +5223,23 @@ runner and engine as the day before.
   Body Slam 32 and 2, Stone Edge 27 and 1, Night Slash 29 and 0. Ground's icons come up in place for 0.7 s along a
   band (0.64 to 0.77 of the height): a fast flat oval over it (centre 0.52, 0.715; semi-axes 0.42 and 0.08 widths;
   0.3 s a loop) went **Excellent 14 of 14** in four team-leader battles (all won); made the default (48e6ccc0).
+- Set 4's last battle (115431, Azumarill, Skeledirge, Bisharp): lost; Thievul's Night Slash into Bisharp one fast move
+  short of Play Rough was the low-health rule declining to wait with no shields left, Dark Pulse (44) able to knock
+  Thievul (43) out by our high estimate of their energy: not changed. **Set 4: 2-3.**
+- Set 5 (120101 to 121525): **3-2**. 120101: a close endgame, Dunsparce on 4 HP throwing first while fast taps were
+  held for a Stone Edge not yet paid for (the arming hold), not changed. 120840 (won): "Aron" read off "Lucario used
+  Aura Sphere!" made a fourth of theirs and the engine failed on 42 decisions over 70 s; fixed in the tracker (a fourth
+  species is a misreading; 1801d1ea; dry run: no errors). 121525 (the owner: "we had a move and we just sat there and
+  let the hydreigon kill us"): Hydreigon's shielded Brutal Swing played out for 9 s after the prompt ("BLOCKED!" at
+  188 s); the turn clock ran on the header and bars, our count went 39 to 67, Play Rough was tapped on the count at
+  185 s, and the buttons hidden with their bar alone were taken for our minigame (the 2026-11-22 rule for moves with
+  no Get Ready!): 5.6 s of swiping nothing, no tap when the fight came back, and Hydreigon threw first. Fixed
+  (7a6d8f04): for 15 s after their move no charged tap on the count alone and no minigame from hidden buttons; dry
+  run: Night Slash tapped on the buttons' word from 187.3 s.
+- Then the daily limit (2026-11-25, 12:40 PT). **Third account: 14-11 in 5 sets** (4-1, 1-4, 4-1, 2-3, 3-2). The owner
+  asked for the losses split by cause: of 10 looked at, 5 the engine's (shields kept, 4 in set 2), 3 ours (rules,
+  tapping, timing), 2 no clear error; the issues the owner saw while watching were all ours (taps, counting, reading,
+  the Earthquake stroke).
 
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
