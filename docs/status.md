@@ -5135,6 +5135,7 @@ owner's two remarks:
   types"). The stored moves (`data/alt_team.json`) confirmed in 3 training wins (232603, 232816 with Vigoroth kept in,
   232959 with Stunfisk): Jellicent Hex (+13 a 1.5 s step), Shadow Ball left, Surf right; Vigoroth Scratch (+4 a turn),
   Bulldoze left, Body Slam right; Stunfisk Thunder Shock (or Mud Shot: the same energy), Discharge left, Mud Bomb right.
+  First ranked set (233516 to 234944): **5-0**; minigames 34 of 36 Excellent (one Discharge Great, one Surf unread).
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
