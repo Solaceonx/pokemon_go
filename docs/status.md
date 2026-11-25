@@ -5013,6 +5013,18 @@ owner's two remarks:
   right after our own throw: the bench taps go during the attack's animation and the game ignores them, the 3 s
   re-tap window runs out in the close-up, and the switch shows only after the 5 s "not taken" and a retry (174318:
   decided 111.1 s, Snorlax in at 117.5 s). Five switches not taken in the three battles.
+
+**Fixes (`ultra-league` 7c964bf3).**
+- Graded per minigame, the Greats were mostly the swapped buttons: all 4 in training were Earthquakes swiped
+  with Stone Edge's pattern or the reverse. In ranked, with the order fixed, Earthquake 3 of 3 and Stone Edge 6 of 8
+  Excellent; Clodsire's body was not being chased (the stroke chases real icons and falls behind them). The rock
+  pattern now keeps the 95 icons of 2026-11-09 and adds 85 learnt on today's 7 ranked Stone Edges: leaving each out
+  in turn, the path passes 86% of its sightings, against 80% for the old icons alone and 79% for today's.
+- Switches: the re-tap window (3 s), the "not taken" verdicts and the 5 s are counted in seconds of fight on screen,
+  not on the clock; the bench strip is taken afresh when the fight is back; and a correction to the Pokémon last
+  tapped for starts the switch timer from that tap (173951: a switch judged not taken had gone in, and the next was
+  tapped ten times while the game's timer ran). Dry run of 174318: re-taps from 114.6 s, as the fight came back,
+  against the retry at 116.5 s live. Tests 428 OK, `check_pvpoke` 108 of 108. Not yet seen live.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
