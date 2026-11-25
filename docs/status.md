@@ -5178,6 +5178,27 @@ above them is the low-rated opponents' play. Nine of the 53 wins fell below 0.30
 the 9 losses was hopeless at the start (0.33 to 0.59), and each was ahead at some point (highest 0.60 to 0.77),
 where the wins mostly passed 0.80.
 
+## Mega Catch Cup on the third account (Claude, 2026-11-25): **5-5 in two sets; the losses are shields kept**
+
+The third account (`--account third`, Clodsire, Thievul, Snorlax, `data/team_third.json` with its IVs), the same
+runner and engine as the day before.
+- Set 1 (094029 to 095615): **4-1**. The loss (Mega Sableye, Hisuian Electrode, Tinkaton): Thievul, 29 of 127 with
+  two shields, threw Night Slash (29) into a shieldless Mega Sableye on 43 with Play Rough (68) three Sucker Punches
+  away; Sableye lived on 14 and threw Foul Play first. `hold_for_better` was off for two reasons: Night Slash's
+  1-in-8 attack boost (any stat chance turned the rule off) and health under 35%. Fixed (`ultra-league` f928deca):
+  only a sure stat change turns it off, and under 35% it holds when ours lives through the wait (their fast moves
+  in it, and a shield for a charged move of theirs that would knock it out). Replayed on the recording: it holds
+  at 87.8 s. The later Night Slash taps that "were not taken" came while Sableye's own move had the game paused.
+- Set 2 (101143 to 102840): **1-4**. In the four losses six of ours fainted to a charged move with both shields up
+  (Snorlax on 79 to Malamar's Superpower, Clodsire on 40 to Foul Play with Malamar on 13, Clodsire on 37 to Mega
+  Sableye, Snorlax on 34 to Jellicent's Surf, Clodsire on 82 to Tinkaton's Gigaton Hammer, Thievul on 56 to Fly);
+  the shields went later on the last one, once on Thievul at 12 health. The engine, asked 6 times on three of
+  those prompts (`engine_view.py`), said no shield every time: its call, not a misread. Over all 90 Mega Catch Cup
+  battles since 2026-11-24 this happened 9 times in 14 losses and 9 times in 76 wins. The owner's guidance
+  (2026-10-11) is that letting a lethal move through with a shield in hand depends on the other matchups, so no
+  blanket rule was added; asked the owner.
+- The engine's start odds (`win_chances.py`) were 0.54 to 0.70 in set 1 and 0.50 to 0.62 in set 2.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
