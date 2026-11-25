@@ -5112,6 +5112,8 @@ owner's two remarks:
   over its white for 3.7 s, and a count-only throw wanted a fast move's margin. Fixed (`ultra-league`, after
   40a7c3de): under 10% health the count at the cost is enough. Dry run: Body Slam tapped at 92.7 s. Thievul then took
   Hawlucha to 6% and lost.
+- **The set finished with the fixes (221014, 221110): both won, the set 3-2.** Minigames 8 of 8 Excellent. The new
+  rules (bad lead, the low one kept in, waiting for a knock-out) did not come up in either.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
