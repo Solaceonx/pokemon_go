@@ -5025,6 +5025,9 @@ owner's two remarks:
   tapped for starts the switch timer from that tap (173951: a switch judged not taken had gone in, and the next was
   tapped ten times while the game's timer ran). Dry run of 174318: re-taps from 114.6 s, as the fight came back,
   against the retry at 116.5 s live. Tests 428 OK, `check_pvpoke` 108 of 108. Not yet seen live.
+- **Live with the fixes, the set's last battle (181307): won, the set 4-0.** Both switches taken: 1.0 s after the tap,
+  and one decided right after Body Slam's minigame in 3.8 s (three re-taps, the attack's animation included), against
+  2.9 to 6.4 s and a retry before. Minigames 4 of 5 Excellent; Stone Edge Great again (6 of 9 in ranked today).
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
