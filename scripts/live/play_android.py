@@ -89,6 +89,24 @@ TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": 
 PREFER: dict[str, str] = {}
 
 
+def engine_settings(text: str) -> dict:
+    """The engine's settings over the website's, from POGO_ENGINE ("judge=turn,horizon=40"): words as they are, whole
+    numbers as int, others as float. 2026-11-24 (docs/status.md, the Mega Catch Cup loss): judged at the same turn,
+    40 on, the engine saved Earthquake for a shieldless Empoleon where the live one threw Body Slam, and played the
+    exam's answers more often (the owner's 16 of 36 against 13, KingMagikarp's 22 against 20)."""
+    out = {}
+    for part in filter(None, (p.strip() for p in text.split(","))):
+        k, v = part.split("=", 1)
+        try:
+            out[k] = int(v)
+        except ValueError:
+            try:
+                out[k] = float(v)
+            except ValueError:
+                out[k] = v
+    return out
+
+
 def load_team(gd: GameData, path: Path):
     by_name = {m.name: m.id for m in gd.moves.values()}
     team = []
@@ -708,7 +726,8 @@ class Player:
         ul = getattr(gd, "league", None) == 2500 and (ROOT / "runs" / "ul-eval" / "eval.npz").exists()
         ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/ul-eval/eval.npz" if ul else "runs/eval/eval.npz"))
         self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
-                               seed=int(time.time()) % 100000, **WEBSITE, turn_ms=500, cap_ms=300, clock=time.perf_counter)
+                               seed=int(time.time()) % 100000, **{**WEBSITE, **engine_settings(_os.environ.get("POGO_ENGINE", ""))},
+                               turn_ms=500, cap_ms=300, clock=time.perf_counter)
         self.names = screen.NameReader(gd)
         self.active = 0
         self.t0 = None
