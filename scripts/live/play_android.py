@@ -89,6 +89,11 @@ TYPE_SWIPE = {"ghost": "dark", "ground": "rock", "dragon": "flying", "psychic": 
 PREFER: dict[str, str] = {}
 
 
+# The live engine's settings over the website's: judged at the same game turn, 40 turns on (the owner's yes,
+# 2026-11-24, after the Mega Catch Cup loss; docs/status.md). POGO_ENGINE="" plays as the website does.
+LIVE_ENGINE = "judge=turn,horizon=40"
+
+
 def engine_settings(text: str) -> dict:
     """The engine's settings over the website's, from POGO_ENGINE ("judge=turn,horizon=40"): words as they are, whole
     numbers as int, others as float. 2026-11-24 (docs/status.md, the Mega Catch Cup loss): judged at the same turn,
@@ -726,7 +731,7 @@ class Player:
         ul = getattr(gd, "league", None) == 2500 and (ROOT / "runs" / "ul-eval" / "eval.npz").exists()
         ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/ul-eval/eval.npz" if ul else "runs/eval/eval.npz"))
         self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
-                               seed=int(time.time()) % 100000, **{**WEBSITE, **engine_settings(_os.environ.get("POGO_ENGINE", ""))},
+                               seed=int(time.time()) % 100000, **{**WEBSITE, **engine_settings(_os.environ.get("POGO_ENGINE", LIVE_ENGINE))},
                                turn_ms=500, cap_ms=300, clock=time.perf_counter)
         self.names = screen.NameReader(gd)
         self.active = 0
