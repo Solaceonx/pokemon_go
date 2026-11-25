@@ -1937,6 +1937,11 @@ class Player:
             sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
                 time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain
                 and (stale or urgent or have >= cost + 40))
+            # About to faint (under 10%): on the count at the cost, no margin; a tap not taken costs nothing now
+            # (2026-11-24, 213313: Snorlax on 1 HP after Flying Press, Body Slam's 40 counted, the buttons unread over
+            # its white for 3.7 s; it fast-tapped on and fainted with the throw in hand)
+            if not sure and view is not None and have >= cost and self.hp_now(t, view) < 0.10:
+                sure = True
             if self.armed is not None:
                 # armed: on the buttons' word only (the count runs ahead of them), the moment the button lights
                 read = self.energy()
