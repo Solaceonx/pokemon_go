@@ -5241,6 +5241,23 @@ runner and engine as the day before.
   tapping, timing), 2 no clear error; the issues the owner saw while watching were all ours (taps, counting, reading,
   the Earthquake stroke).
 
+## Next season on PvPoke, and the third account's catch list (Claude, 2026-11-25)
+
+PvPoke previews next season ("Daydream Destinations", branch `preview-december-2026`, served at
+pvpoke.com/daydream-destinations/). Move changes: Rock Slide 70 power / 40 energy (was 75/45), Mud Bomb 75/50 (was
+65/45), Dig 45 energy, Brutal Swing and Cross Chop 60, Heat Wave 85, the three Storms 70, Triple Axel 40 energy,
+Psystrike 50 energy, Synchronoise 65/40, Rock Throw 4 energy a hit (was 5); new moves include Mystical Fire for
+Clefable. In PvPoke's Great League ranks: Dunsparce 20 to 5, Vigoroth 26 to 8, Marowak 24 to 14, Galarian Stunfisk
+89 to 16, Clefable 90 to 18, shadow Machamp 172 to 33; Clodsire 16 to 22, Thievul 18 to 25, Ninetales 14 to 34,
+Carbink 32 to 125. Ultra: Clefable 36 to 6, Alolan Muk 37 to 12, Ampharos 50 to 20, shadow Greninja 125 to 25,
+Typhlosion 209 to 36; Melmetal 12 to 28, shadow Snorlax 3 to 15. **The bot's `data/gamemaster.json` needs this
+update when the season starts** (not done; check_pvpoke's 108 expected results would change with it).
+
+The third account's storage was read off the phone (the owner's AutoGrind cleanup panel, read-only inspection, then
+Cancel; and a storage search per family for its PvP names, candy and XL candy). The catch list against next
+season's top 40 in each league is in the owner's own workbook (sheet "Next season"), not in the repo. The read-only
+inspection lists only the Pokémon that are not favourites (123 of 289), so the favourites' IVs come from their names.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
