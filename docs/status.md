@@ -6153,3 +6153,12 @@ thread; no tests were suppressed. Logs: `runs/lab-best/exam-baseline-tests.out` 
 `runs/lab-best/exam-tests.out`. No private exam score or strength claim. No commit
 or push; the sandbox denied `git pull --ff-only` when opening external worktree
 metadata. The Mac scoring command is in `runs/lab-best/REPORT.md`.
+
+**Round 5, more search time (2026-11-25, `runs/lab-tune-4.out`, `runs/lab-league/samples-timing/table.md`).** The best engine P
+with more imagined battles against itself at 32 (seed 6201, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke): `samples=48`
+**52.1% ± 1.7** (crowd -0.4 ± 2.2, PvPoke +1.1 ± 2.2), `samples=64` **52.8% ± 1.6** (crowd -0.1 ± 2.2, PvPoke -0.7 ± 2.3); both
+measured without deadlines. Under the website's live deadlines (league timing, 100 battles each, seed 6202): 32 → 99th
+percentile 588 ms, 3.1% cut short; 48 → 776 ms (interval 719-858), 10.6% cut short, inside the release limits but only just;
+64 → 938 ms, 16.9% cut short, over the limit. So 48 imagined battles buy about 2 points if the browser has the time; on
+slower phones more searches would be cut short and the gain would shrink. Left as an option (`samples=48`), not proposed
+as the default. (`scripts/realtime_trial.py --settings` cannot load a `q=PATH` network; the league's timing can.)
