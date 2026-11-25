@@ -5114,6 +5114,15 @@ owner's two remarks:
   Hawlucha to 6% and lost.
 - **The set finished with the fixes (221014, 221110): both won, the set 3-2.** Minigames 8 of 8 Excellent. The new
   rules (bad lead, the low one kept in, waiting for a knock-out) did not come up in either.
+- **Set 5 (223136 to 224530): 4-1.** Minigames 27 of 28 Excellent (one Body Slam Great). With the latest code in the
+  last two (both won): a low one kept in ("it wins the matchup") and Earthquake waited for, in 224243. The loss
+  (223752: Tinkaton, Stunfisk, Skarmory) not yet looked at.
+- **Shield to win (the owner: why not shield Thievul against Trevenant?; `ultra-league` e3bcd2d6).** 223454, 33.4 s:
+  Thievul on 41 HP with two shields, Trevenant on 16 of 131, Seed Bomb (45) knocking Thievul out; the engine let
+  it, 6 of 6, and the answer to a Trevenant our lead only draws (+0.02) was lost. `shield_saves_the_matchup`: when
+  their move knocks us out and, shielded, we win the one on one from here, shield. The 9.0 s Seed Bomb (to 50%,
+  not shielding +0.65 against +0.30) and 213313's Flying Press on Snorlax are left to the engine. Dry run: shielded
+  at 33.4 s (there the engine did, on a lower estimate of Trevenant's energy).
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
