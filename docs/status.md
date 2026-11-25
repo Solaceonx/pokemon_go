@@ -5164,7 +5164,21 @@ owner's two remarks:
   unshielded (75% to 7%) and fell; Stunfisk, last, lost to Tinkaton on 33%. The flagged Body Slam into Tinkaton in
   015640 was at 6% health with Bulldoze six Scratches away: right. Not changed.
   Then the daily limit (2026-11-25, 05:18). **Spare account: 30-5 in 7 sets** (5-0, 4-1, 5-0, 4-1, 4-1, 4-1, 4-1).
-, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
+
+## The engine's win chances in the Mega Catch Cup ranked battles (Claude, 2026-11-25)
+
+The engine's evaluation (`runs/eval/eval.npz`, the value its searches end on) was run again on every position the
+live player logged, for 62 of the 64 ranked battles (two logs hold no positions); the script is
+`.session_scratch/2026-11-24_mcc/win_chances.py` on the Mac. At the start (lead against lead, full health, two
+shields each) it put the battles about even: 0.54 on average for the owner account (15 wins expected of 28, won 24)
+and 0.55 for the spare account (19 of 34, won 29). Over both, 55% expected and 85% ± 9 won. Battles it gave under
+0.45 at the start were won 9 of 10. The evaluation is trained on simulated battles between strong players (the
+trained bot against the crowd and itself), so its start values measure the team matchup against good play; the gap
+above them is the low-rated opponents' play. Nine of the 53 wins fell below 0.30 at some point and came back. None of
+the 9 losses was hopeless at the start (0.33 to 0.59), and each was ahead at some point (highest 0.60 to 0.77),
+where the wins mostly passed 0.80.
+
+## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
 Everything used `POGO_LEAGUE=2500`, including the shipped Great League networks used as the baseline, and
