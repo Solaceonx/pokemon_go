@@ -5059,8 +5059,19 @@ owner's two remarks:
   move's minigame it is). Ranked, the set's last two battles (202109, 202156): both won, the set 5-0; minigames 6 of 6
   Excellent, Stone Edge 2 of 2. Other types still chase what they see (Night Slash Great once in 12 today).
 - **Next set (203157 to 204342): 4-1.** Minigames 32 of 32 Excellent (Body Slam 13, Stone Edge 8, Night Slash 6,
-  Earthquake 5); 9 switches seen, 1 not taken. The loss: Empoleon, Beedrill, Tinkaton (not yet looked at). Rank 11 and
-  its rank rewards claimed before the set, on the owner's word.
+  Earthquake 5); 9 switches seen, 1 not taken. Rank 11 and its rank rewards claimed before the set, on the owner's word.
+- **The loss (204342: Empoleon, Beedrill, Tinkaton).** Mechanics clean (minigames all Excellent, the one switch taken);
+  it was lost on move choice. Damage shares by the simulator, PvPoke default builds:
+  - Lead Clodsire against Empoleon: Poison Sting does 0.8% of Empoleon a hit, Empoleon's Hydro Cannon 50% of
+    Clodsire. Clodsire threw Stone Edge (27%) twice into both shields and fainted to the next throw on 32 energy;
+    its Earthquake (100% of Empoleon, 72% of Tinkaton) was never thrown. The engine never asked to switch it out.
+  - Snorlax against Empoleon with no shields left: Body Slam (25% of Empoleon) at 40 energy, where Earthquake (95%)
+    was 25 energy, about 3 s of Psywave, away, Snorlax on 93% with 2 shields (66.5 s). Asked again on the logged
+    view (`engine_view.py 20261124-204342 66.5 5`): Body Slam 5 times in 5. Snorlax threw Body Slam 4 times in the
+    battle and Earthquake never, Beedrill (Ground super effective) included; it ended on 2%.
+  - Thievul was left against Tinkaton, which resists all three of its moves (Night Slash 15%, Play Rough 23%), and
+    lost. Not yet asked of the owner: switch the lead out of Empoleon to keep Clodsire for Tinkaton; and why the
+    engine takes the cheap resisted move over a near knock-out 3 s away.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
