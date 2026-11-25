@@ -128,13 +128,14 @@ class Oval(unittest.TestCase):
         self.assertGreater(min(math.hypot(x - 0.10, (y - 0.30) * 2.2) for _, x, y in moves), 0.15)  # not the icon
 
     def test_the_owners_oval(self):
-        pts = [pa.oval_point(pa.OVALS["rock"], k * 0.74 / 40) for k in range(40)]
+        period = pa.OVALS["rock"][5]
+        pts = [pa.oval_point(pa.OVALS["rock"], k * period / 40) for k in range(40)]
         xs, ys = [p[0] for p in pts], [p[1] for p in pts]
         self.assertTrue(0.35 < min(xs) and max(xs) < 0.88)  # clear of the bench portraits at 0.90
         self.assertTrue(0.40 < min(ys) and max(ys) < 0.85)
         lower_left = max(pts, key=lambda p: p[1])
         self.assertLess(lower_left[0], 0.5)  # the long axis from the lower left to the upper right
-        self.assertAlmostEqual(pa.oval_point(pa.OVALS["rock"], 0.74)[0], pts[0][0], places=6)  # one loop a period
+        self.assertAlmostEqual(pa.oval_point(pa.OVALS["rock"], period)[0], pts[0][0], places=6)  # one loop a period
 
     def test_none_for_other_types(self):
         self.assertNotIn("fire", pa.OVALS)

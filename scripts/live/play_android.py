@@ -369,7 +369,10 @@ def choreography(move_id: str, move_type: str = "") -> list:
 # data/minigame/android/owner_type_rock.json), all Excellent, were 7 to 9 loops of one oval mid-screen, the rocks
 # let come to it; fitted, centres (0.59 to 0.72, 0.55 to 0.65), semi-axes 0.42 to 0.51 and 0.10 to 0.17, tilt 118 to
 # 125 degrees, 0.61 to 0.88 s a loop. Replaying the longest swipe as recorded rated Great or Nice 6 times in 6.
-OVALS = {"rock": (0.62, 0.62, 0.43, 0.12, 121.0, 0.74, -1)}
+# Drawn faster than the owner's (the owner: "you probably need to do them way faster"): 0.3 s a loop, about 6
+# widths a second, the finger allowed OVAL_SPEED to keep up.
+OVALS = {"rock": (0.62, 0.62, 0.43, 0.12, 121.0, 0.30, -1)}
+OVAL_SPEED = 15.0
 
 
 def oval_point(spec, s: float) -> tuple:
@@ -525,7 +528,7 @@ def minigame_stroke(phone: Android, seconds: float = 4.6, speed: float = 6.5, co
             goal, target = oval_point(oval, now - start), None
         dx, dy = goal[0] - x, goal[1] - y
         dist = math.hypot(dx, dy * 2.2)  # the screen is 2.2 times taller than wide
-        move = speed * step
+        move = (OVAL_SPEED if oval else speed) * step
         if dist > move:
             x, y = x + dx * move / dist, y + dy * move / dist
         else:
