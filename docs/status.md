@@ -5043,6 +5043,21 @@ owner's two remarks:
   worst live: that score does not tell the rating for Rock. A rock template (`cut_icon_template.py`) matched the
   symbol but scored as high on the status bar and the ground. All three are off; the code is kept with tests. The
   rest of the set (3 of 5, all won) waits. Next: learn from the owner's own Stone Edge swipes.
+- **Stone Edge fixed: a fast oval, the owner's way (`ultra-league` 22b0fe30).** `scripts/live/watch_owner.py` records
+  the screen and the owner's touches (adb getevent, read only, nothing sent). The owner's 4 Stone Edges in training,
+  all Excellent, were each one touch of 7 to 9 loops of a narrow tilted oval mid-screen (fitted: centre 0.62, 0.62;
+  semi-axes 0.43 and 0.12 widths; tilt 121 degrees; 0.61 to 0.88 s a loop), letting the rocks come to it, not
+  chasing them. Tried in training (`train_loop.py --practise STONE_EDGE --stay`, no rating):
+
+  | Stroke | Excellent |
+  |---|---|
+  | The owner's longest swipe replayed as recorded | 0 of 6 |
+  | The fitted oval at the owner's pace, 0.74 s a loop | 0 of 6 |
+  | The same oval at 0.3 s a loop (the owner: "do them way faster") | **11 of 11** |
+
+  `OVALS` in play_android.py: Rock swipes the oval from the clock, the detector run only in the first 1.2 s (which
+  move's minigame it is). Ranked, the set's last two battles (202109, 202156): both won, the set 5-0; minigames 6 of 6
+  Excellent, Stone Edge 2 of 2. Other types still chase what they see (Night Slash Great once in 12 today).
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
