@@ -5058,6 +5058,9 @@ owner's two remarks:
   `OVALS` in play_android.py: Rock swipes the oval from the clock, the detector run only in the first 1.2 s (which
   move's minigame it is). Ranked, the set's last two battles (202109, 202156): both won, the set 5-0; minigames 6 of 6
   Excellent, Stone Edge 2 of 2. Other types still chase what they see (Night Slash Great once in 12 today).
+- **Next set (203157 to 204342): 4-1.** Minigames 32 of 32 Excellent (Body Slam 13, Stone Edge 8, Night Slash 6,
+  Earthquake 5); 9 switches seen, 1 not taken. The loss: Empoleon, Beedrill, Tinkaton (not yet looked at). Rank 11 and
+  its rank rewards claimed before the set, on the owner's word.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
