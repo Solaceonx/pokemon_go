@@ -5125,6 +5125,16 @@ owner's two remarks:
   at 33.4 s (there the engine did, on a lower estimate of Trevenant's energy).
 - **Set 6 (225655 to 231000), everything above on: 5-0.** Minigames 29 of 29 Excellent. `waiting_for_better`
   (Earthquake) in 3 battles, `shield_to_win` twice (Super Power, Aerial Ace), `save_the_low_one` twice; all won.
+- **The day on the owner's account: 25-4 in ranked** (sets 4-0, 5-0, 4-1, 3-2, 4-1, 5-0), 13 training wins.
+- **Spare account, Mega Catch Cup (2026-11-24): Jellicent / Vigoroth / Stunfisk.** Order, by simulation against the
+  day's 19 full opposing teams (trained bot piloting, opponents half trained, half varied rulebook; 2,000 paired
+  battles, seed 8, confirming seed 7's 400): Stunfisk lead 88.9% ± 1.4, Jellicent / Vigoroth / Stunfisk 88.7% ± 1.4,
+  Jellicent / Stunfisk / Vigoroth 88.3%, Stunfisk / Vigoroth / Jellicent 84.9%, Vigoroth / Jellicent / Stunfisk
+  78.8% ± 1.8, Vigoroth / Stunfisk / Jellicent 75.6%: a Vigoroth lead about 10 points worse. The owner chose the
+  Jellicent lead (party 1 on the phone, `spare/main`; "stunfisk is always a nice closer, just careful with grass
+  types"). The stored moves (`data/alt_team.json`) confirmed in 3 training wins (232603, 232816 with Vigoroth kept in,
+  232959 with Stunfisk): Jellicent Hex (+13 a 1.5 s step), Shadow Ball left, Surf right; Vigoroth Scratch (+4 a turn),
+  Bulldoze left, Body Slam right; Stunfisk Thunder Shock (or Mud Shot: the same energy), Discharge left, Mud Bomb right.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
