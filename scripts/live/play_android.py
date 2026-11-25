@@ -115,6 +115,28 @@ def safe_swap(team: list, active: int, foe_build):
     return None, scores
 
 
+def shield_saves_the_matchup(us, them, foe_energy: float, shields: int, foe_shields: int):
+    """A shield the engine did not take, that we should: their move (one they are believed to have, paid for at
+    foe_energy) knocks us out, and with it shielded we win the one on one from here (agents.duel, ours as it stands,
+    theirs less the move's cost, one shield fewer). The owner, 2026-11-24, 223454: "why did the bot choose not to
+    shield thievul against trevenant?": Thievul on 41 HP with two shields, Trevenant on 16 of 131, Seed Bomb (45)
+    knocking it out; the engine let it, 6 times in 6, and the answer to a Trevenant our lead does not beat was lost.
+    Not any big hit: an override that shielded every hit of 35% or more cost 7 to 13 points in simulation
+    (2026-11-08). The move it was for, or None."""
+    from pogo.agents import duel
+    from pogo.battle import Mon, damage
+    if shields <= 0:
+        return None
+    for m in sorted((c for c in them.build.charged if foe_energy >= c.energy), key=lambda c: c.energy):
+        if damage(them, m, us) < us.hp:
+            continue
+        a = Mon(us.build, hp=us.hp, energy=us.energy)
+        b = Mon(them.build, hp=them.hp, energy=max(0, int(foe_energy) - m.energy))
+        if duel(a, b, shields - 1, foe_shields) > 0:
+            return m
+    return None
+
+
 def engine_settings(text: str) -> dict:
     """The engine's settings over the website's, from POGO_ENGINE ("judge=turn,horizon=40"): words as they are, whole
     numbers as int, others as float. 2026-11-24 (docs/status.md, the Mega Catch Cup loss): judged at the same turn,
@@ -2732,6 +2754,15 @@ class Player:
             # The engine's own rule: with one Pokémon left there is nothing to save shields for. The tracker can
             # miss that our others have fainted (the header's count lags), so it is applied from our own count.
             shield = True
+        if not shield and view is not None and view.me.shields > 0 and self.tracker.foe is not None:
+            try:
+                saves = shield_saves_the_matchup(view.me.mon, view.foe, self.tracker.foe.hi, view.me.shields, view.foe_shields)
+            except Exception as error:  # noqa: BLE001
+                saves = None
+                self.log("engine_error", t, error=f"shield_saves_the_matchup: {error}")
+            if saves is not None:
+                shield = True
+                self.log("shield_to_win", t, move=saves.id, hp=view.me.mon.hp, their_hp=view.foe.hp)
         seen = None
         if view is not None:
             try:

@@ -79,3 +79,22 @@ class KeepTheLowOneIn(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ShieldToWin(unittest.TestCase):
+    """223454: Thievul on 41 HP, two shields, against Trevenant on 16 of 131 with Seed Bomb paid for."""
+
+    def setUp(self):
+        self.th = GD.build("thievul", ["SUCKER_PUNCH", "NIGHT_SLASH", "PLAY_ROUGH"])
+        self.tr = GD.build("trevenant", ["SHADOW_CLAW", "SEED_BOMB", "SHADOW_BALL"])
+
+    def test_shields_a_knock_out_it_then_wins(self):
+        m = pa.shield_saves_the_matchup(Mon(self.th, hp=41, energy=32), Mon(self.tr, hp=16), 60, 2, 1)
+        self.assertIsNotNone(m)
+
+    def test_not_a_hit_it_survives(self):
+        # 9.0 s: Thievul on 108, Seed Bomb 45: no knock-out, the engine's call stands
+        self.assertIsNone(pa.shield_saves_the_matchup(Mon(self.th, hp=108, energy=26), Mon(self.tr, hp=79), 48, 2, 2))
+
+    def test_no_shield_no_call(self):
+        self.assertIsNone(pa.shield_saves_the_matchup(Mon(self.th, hp=41, energy=32), Mon(self.tr, hp=16), 60, 0, 1))
