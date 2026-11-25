@@ -710,6 +710,13 @@ class Tracker:
             obs = Observation(**{**asdict(obs), "foe_species": sid})
         if obs.foe_species is None or (self.foe and obs.foe_species == self.foe.mon.build.species_id):
             return None
+        if obs.foe_species not in self.foes and len(self.foes) >= 3:
+            # A team holds three: a fourth name is a misreading, and the one out stays out (2026-11-25, 120840:
+            # "Aron" read off "Lucario used Aura Sphere!" made a fourth, and the engine, built for three, failed on
+            # 42 decisions over 70 s; 115431: "Marill" for Azumarill)
+            if self.foe is not None:
+                self._note(obs.t, "foe_misread", species=obs.foe_species)
+            return None
         how = "first"
         if self.foe is not None:
             down = sum(1 for f in self.foes.values() if f is not self.foe and f.mon.hp <= 0)
