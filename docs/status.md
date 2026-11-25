@@ -5104,7 +5104,14 @@ owner's two remarks:
     Earthquake, two Poison Stings away, did 128 to Kingambit's 102: it gave up the wait because Kingambit could reach
     Foul Play meanwhile. Now, with a shield left and the bigger move a knock-out, it waits.
   - Dry run of 213612: Thievul kept in at 94.6 s; Earthquake waited for at 139.7 s. Clodsire's Stone Edge into Palossand
-    at 121 s (resisted) was the engine's and is not changed. The first loss (213313) is not yet looked at.
+    at 121 s (resisted) was the engine's and is not changed.
+- **The first loss (213313: Zoroark, Hawlucha, Meowscarada).** Thievul shielded Zoroark's Sludge Bomb at full health
+  against a Zoroark on 14 HP (67 s); Snorlax, on 74% with the last shield, did not shield Hawlucha's Flying Press
+  (super effective) at 86.9 s and was left on 1 HP; asked again, the engine does the same at both, 6 of 6 (shield
+  calls, the owner's to judge). Snorlax then fainted with Body Slam paid for: the count said 40, the buttons unread
+  over its white for 3.7 s, and a count-only throw wanted a fast move's margin. Fixed (`ultra-league`, after
+  40a7c3de): under 10% health the count at the cost is enough. Dry run: Body Slam tapped at 92.7 s. Thievul then took
+  Hawlucha to 6% and lost.
 , 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
