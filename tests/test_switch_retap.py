@@ -129,6 +129,38 @@ class SwitchRetap(unittest.TestCase):
         self.assertEqual(p.taps, [])
 
 
+class SwitchOverTheirMove(SwitchRetap):
+    """103647, 133.5 s: Thievul to Clodsire tapped as Galarian Stunfisk threw; the re-taps ran out in the move's
+    animation and none went once the fight was back at 138 s."""
+
+    def test_paused_while_their_move_plays_out(self):
+        p = player(self.before)
+        p.switch_fight_s = 2.0
+        p.pause_switch()  # the prompt, or their countdown
+        self.assertEqual(p.switch_fight_s, 0.0)
+        self.check(p, self.before + 20)
+        self.assertEqual(p.taps, [])
+        self.assertNotIn("switch_not_taken", p.logged)
+        self.assertIsNotNone(p.switching)
+
+    def test_tapped_again_once_the_fight_is_back(self):
+        p = player(self.before)
+        p.pause_switch()
+        p.switch_pause_until = time.time() - 0.01  # the move is over
+        p.switch_fight_last = time.time() - 4.0  # no fight counted through it
+        self.check(p, self.before + 60)  # the camera has moved: the strip is taken afresh, not compared with the tap's
+        self.assertEqual(len(p.taps), 1)
+        self.assertLess(p.switch_fight_s, pa.SWITCH_SPAM_S)
+
+    def test_given_up_switch_tried_once_more(self):
+        p = player(self.before)
+        p.switch_fight_s = 5.1
+        self.check(p, self.before + 70)
+        self.assertIn("switch_not_taken", p.logged)
+        self.assertEqual(p.switch_wanted, 1)
+        self.assertTrue(p.switch_retried)
+
+
 class SwitchWentLate(unittest.TestCase):
     """173951: Snorlax tapped at 112.9 s, judged not taken, named by the header at 124.7 s: the timer from the tap."""
 

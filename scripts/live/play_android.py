@@ -78,6 +78,13 @@ SPAM_CHARGED = _os.environ.get("POGO_SPAM_CHARGED", "1") != "0"
 # tap (Player.check_switch); POGO_SPAM_SWITCH=0 goes back to one tap and one retry once it is seen not to be taken
 SPAM_SWITCH = _os.environ.get("POGO_SPAM_SWITCH", "1") != "0"
 SWITCH_SPAM_S = 3.0  # 9 in 10 switches showed within 3 s of the tap (2026-11-08 to 10, 144 switches)
+# A switch under way when a charged move comes in (its countdown, or our shield prompt): the game ignores the taps
+# until the move has played out, and the fight frames of its animation counted as the switch's fight time, so the
+# re-taps were over before the fight came back (2026-11-25, 103647, 133.5 s: Thievul to Clodsire tapped as
+# Stunfisk threw, re-tapped in the animation, no tap once the fight was back at 138 s, Thievul left in to faint; 7
+# of 19 switches not taken on 2026-11-24/25 came just after their move). The switch check waits this long after
+# the move's last countdown frame or the prompt, and its re-tap window starts afresh.
+SWITCH_PAUSE_S = 3.5
 # Fast moves this many turns or longer: no fast taps while the one under way pays for a charged move (Player.slow_pause_for)
 SLOW_FAST_TURNS = int(_os.environ.get("POGO_SLOW_FAST_TURNS", "4"))
 STRIP_SAME = 40  # the bench strip as at the tap: an ignored tap left it within 17 to 31, a switch moves it 60 to 75
@@ -113,6 +120,29 @@ def safe_swap(team: list, active: int, foe_build):
     if best is not None and scores[active] <= LEAD_BAD and scores[best] - scores[active] >= LEAD_GAIN:
         return best, scores
     return None, scores
+
+
+PLAYERS_SHIELD = ROOT / "runs" / "people-shield" / "shield.npz"  # fitted on the creators' calls (pogo/people_shield.py)
+
+
+def players_shield(view, foe_energy: float):
+    """With both shields up and a charged move of theirs paid for (at foe_energy) that knocks ours out: the share of
+    the time strong players shield there, when it is a half or more, else None. The creators' network
+    (pogo/people_shield.py, 560 decisions in 74 creator records, branch people-shields 2026-11-22), here only for that
+    case. The owner, 2026-11-25, after a 1-4 set in which six of ours fainted to a charged move with both shields up
+    (the engine, asked again, let all three it was asked on through, 6 times in 6): "overall we just need the engine
+    to be better about shield choices"; the rule was left to me. Across the 90 Mega Catch Cup battles of 2026-11-24/25
+    the engine let 19 such hits through; the creators' network shields 17 of them. In simulation every way of
+    shielding more lost against bots (status.md, 2026-11-22), which do not bait as people do."""
+    from pogo.battle import damage
+    from pogo.people_shield import cached
+    if view.me.shields < 2:
+        return None
+    us, them = view.me.mon, view.foe
+    if not any(foe_energy >= c.energy and damage(them, c, us) >= us.hp for c in them.build.charged):
+        return None
+    p = cached(PLAYERS_SHIELD).probability(view)
+    return p if p >= 0.5 else None
 
 
 def shield_saves_the_matchup(us, them, foe_energy: float, shields: int, foe_shields: int):
@@ -834,6 +864,7 @@ class Player:
         self.switch_point, self.switch_last_tap = None, 0.0  # where the switch was tapped, and when last (SPAM_SWITCH)
         self.lead_judged = False  # the owner's bad-lead rule asked (safe_swap)
         self.switch_fight_s, self.switch_fight_last = 0.0, 0.0  # seconds of fight on screen since the switch tap
+        self.switch_pause_until = 0.0  # a charged move came in over a switch under way (SWITCH_PAUSE_S)
         self._switch_fits = []  # which Pokémon's costs the energy reading fitted, the last three frames of a switch check
         self.last_not_taken = 0.0  # when a charged tap last came to nothing
         self.fight_frames = 0  # frames in a row with the fight on screen
@@ -992,6 +1023,7 @@ class Player:
                 self.armed = None
                 self.fight_frames = 0
                 self.fight_since = None
+                self.pause_switch()
                 with self.pending_lock:
                     if self.countdown_is_theirs():
                         self.pending_theirs = True
@@ -1370,6 +1402,8 @@ class Player:
         minigame, ignored, no tap when the fight came back 3 s later, Snorlax in 6.4 s late; 173604 and 173951 the
         same, 4.7 and 2.9 s)."""
         slot, tapped, before, since, looked = self.switching
+        if time.time() < getattr(self, "switch_pause_until", 0.0):
+            return  # a charged move is playing out: no fight time, no re-taps, no verdict (SWITCH_PAUSE_S)
         looked += 1
         tapped_t = tapped - (self.t0 or tapped)  # the tap in battle time, as the label readings are timed
         last_tap_t = self.switch_last_tap - (self.t0 or self.switch_last_tap)
@@ -1452,6 +1486,8 @@ class Player:
                 self.switch_ready_at = tapped + 45
                 self.energy_read = self._energy_raw = None
             self.switching = None
+            if not seen and not self.switch_retried:  # once more, as for the other verdicts
+                self.switch_retried, self.switch_wanted = True, slot
             return
         self.switching = (slot, tapped, before, since, looked)
 
@@ -2789,8 +2825,15 @@ class Player:
         with self.at_their_throw(margin=FOE_MARGIN):
             self._prompt_call(t, look, counted)
 
+    def pause_switch(self) -> None:
+        """A charged move is under way: a switch tapped and not yet seen waits for it (SWITCH_PAUSE_S)."""
+        if self.switching is not None:
+            self.switch_pause_until = time.time() + SWITCH_PAUSE_S
+            self.switch_fight_s = 0.0
+
     def _prompt_call(self, t: float, look, counted) -> None:
         """The shield call at their prompt, made on their energy as they throw (at_their_throw)."""
+        self.pause_switch()
         view = self.view()
         shield = False
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
@@ -2825,6 +2868,15 @@ class Player:
             if saves is not None:
                 shield = True
                 self.log("shield_to_win", t, move=saves.id, hp=view.me.mon.hp, their_hp=view.foe.hp)
+        if not shield and view is not None and self.tracker.foe is not None:
+            try:
+                share = players_shield(view, self.tracker.foe.hi)
+            except Exception as error:  # noqa: BLE001
+                share = None
+                self.log("engine_error", t, error=f"players_shield: {error}")
+            if share is not None:
+                shield = True
+                self.log("shield_like_players", t, share=round(share, 2), hp=view.me.mon.hp, their_hp=view.foe.hp)
         seen = None
         if view is not None:
             try:

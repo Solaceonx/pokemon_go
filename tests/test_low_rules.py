@@ -19,7 +19,7 @@ try:
 finally:
     if _stub:
         del sys.modules["cv2"]
-from pogo.battle import Mon  # noqa: E402
+from pogo.battle import Mon, Side  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
 
 GD = GameData()
@@ -154,3 +154,22 @@ class HoldForBetterLow(HoldForBetter):
     def test_throws_when_their_fast_moves_would_knock_it_out_first(self):
         decision, _ = self.thievul(4)
         self.assertEqual(decision, pa.CHARGED[0] + 0)
+
+
+class PlayersShield(unittest.TestCase):
+    """101912, 133.7 s: Clodsire on 82 of 213, both shields up, let Tinkaton's Gigaton Hammer (89) through."""
+
+    def view(self, hp=82, shields=2, foe_energy=90):
+        us = Mon(GD.build("clodsire", ["POISON_STING", "STONE_EDGE", "EARTHQUAKE"]), hp=hp)
+        them = Mon(GD.build("tinkaton", ["FAIRY_WIND", "GIGATON_HAMMER", "BULLDOZE"]), hp=128, energy=foe_energy)
+        me = Side([us, Mon(GD.build("thievul", ["SUCKER_PUNCH", "NIGHT_SLASH", "PLAY_ROUGH"]))], shields)
+        return NS(me=me, foe=them, foe_shields=1, foe_left=1)  # Tinkaton their last
+
+    def test_shields_a_knock_out_with_both_up(self):
+        self.assertIsNotNone(pa.players_shield(self.view(), 90))
+
+    def test_not_with_one_shield(self):
+        self.assertIsNone(pa.players_shield(self.view(shields=1), 90))
+
+    def test_not_when_nothing_paid_for_knocks_out(self):
+        self.assertIsNone(pa.players_shield(self.view(hp=200), 90))
