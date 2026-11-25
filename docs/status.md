@@ -6066,3 +6066,18 @@ cd /d C:\Users\marco\Developer\pokemon_go-lab-search && set "OMP_NUM_THREADS=1" 
 ```bat
 cd /d C:\Users\marco\Developer\pokemon_go-lab-search && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\engine_versus.py --field mixed --pairings 2000 --crowd 2000 --pvpoke 1000 --chunk 3 --workers 2 --seed 2442 --tag lab-search-confirm --baseline website --candidates "website,engine=tree,fix_stay=1,depth=3,root=sh" >> runs\lab-search-confirm.out 2>&1
 ```
+
+**Round 2, tuning the best engine (2026-11-24 evening, `runs/lab-tune-1.out`, seed 5601, 1,000 pairings both ways, 1,000
+crowd, 500 PvPoke, 16 workers, 7,172 s).** Baseline: the confirmed best with the population q, depth 3 (P =
+`website,engine=tree,fix_stay=1,fix_judged=1,root=sh,shield_mix=0,finish_safe=1,q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz,depth=3`).
+Every variant plays level with it, so these settings sit on a plateau:
+
+| Change to P | Head to head against P | Crowd | PvPoke |
+|---|---|---|---|
+| `depth=2` | 50.7% ± 1.7 | -0.5 ± 1.9 | -1.9 ± 2.2 |
+| `depth=4` | 50.2% ± 1.7 | +0.1 ± 1.6 | +0.8 ± 1.6 |
+| the population-refitted evaluation (`eval=runs/lab-results/population/eval.npz`) | 50.1% ± 1.8 | -1.8 ± 2.4 | +0.6 ± 2.8 |
+| `shield_two=0.05,shield_one=0` | 50.4% ± 1.7 | -0.4 ± 1.0 | +0.4 ± 1.5 |
+
+Search time is unchanged (median 125-141 ms, 99th percentile 594-609 ms unhurried). Further gains against bots need a
+different lever than these knobs; the next judge is the owner's exam, against people.
