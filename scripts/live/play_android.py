@@ -2224,15 +2224,22 @@ class Player:
         Earthquake (128) two Poison Stings away; Body Slam (25%) into a shieldless Empoleon with Earthquake (95%) 25
         energy away; Vigoroth's Body Slam (27, resisted) into Tinkaton with Bulldoze (69) 11 away (000629, 147.6 s: the
         engine's search rated the throw 0.03 over holding, a call it makes at any thinking time). With their shields
-        up the cheap move is a bait, the engine's call; below 35% health the low-health rules decide; with no shield
-        of ours, not while a charged move of theirs paid for would knock us out."""
+        up the cheap move is a bait, the engine's call; with no shield of ours, not while a charged move of theirs paid
+        for would knock us out. Below 35% health only when ours lives through the wait: their fast moves in it do
+        not knock it out, and a charged move of theirs that could be paid for in it and would is met by a shield of
+        ours (2026-11-25, 094325, 86.8 s: Thievul, 29 of 127 with two shields, threw Night Slash (29) into a
+        shieldless Mega Sableye on 43 with Play Rough (68) three Sucker Punches away; Sableye lived on 14, threw Foul
+        Play first, and the battle was lost. Thievul then lived 24 s on its 29.)"""
         if self.decision not in CHARGED or self.tracker.foe is None or view is None or view.foe_shields > 0:
             return
         from pogo.battle import damage
         mon = self.team[self.active]
         k = self.decision - CHARGED[0]
-        if k >= len(mon.charged) or getattr(mon.charged[k], "buff_chance", 0) or self.hp_now(t, view) < 0.35:
+        # a move thrown for its sure stat change (Power-Up Punch, Icy Wind) is the engine's call; Night Slash's 1-in-8
+        # attack boost is no reason for it (094325: the chance alone kept this rule off the Night Slash above)
+        if k >= len(mon.charged) or getattr(mon.charged[k], "buff_chance", 0) >= 0.5:
             return
+        low = self.hp_now(t, view) < 0.35
         have = self.energy()
         bounds = self.paid_bounds()
         have = max(have if have is not None else self.tracker.me.mon.energy, bounds[0] if bounds else 0)
@@ -2254,6 +2261,14 @@ class Player:
             if view.me.shields == 0 and any(self.tracker.foe.hi >= c.energy and damage(them, c, us) >= us.hp
                                             for c in them.build.charged):
                 continue
+            if low:
+                fast = them.build.fast
+                hits = math.ceil(turns / fast.turns) + 1  # one may be under way already
+                hurt = hits * damage(them, fast, us)
+                reach = self.tracker.foe.hi + hits * fast.energy_gain
+                if hurt >= us.hp or (view.me.shields == 0 and any(
+                        reach >= c.energy and damage(them, c, us) >= us.hp - hurt for c in them.build.charged)):
+                    continue
             if t - getattr(self, "_held_logged", -9.0) > 1.0:
                 self._held_logged = t
                 self.log("hold_for_better", t, chose=mon.charged[k].id, now=m.id, turns=turns, damage=[now, big])

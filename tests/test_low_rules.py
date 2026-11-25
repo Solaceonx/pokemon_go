@@ -105,11 +105,11 @@ class HoldForBetter(unittest.TestCase):
     Bulldoze (69, 55 energy) 11 away."""
 
     def ask(self, energy=44, foe_shields=0, hp=53, me="vigoroth", moves=("SCRATCH", "BULLDOZE", "BODY_SLAM"),
-            foe="tinkaton", foe_hp=110, k=1):
+            foe="tinkaton", foe_hp=110, k=1, foe_moves=None):
         b = GD.build(me, list(moves))
         p = player()
         p.team, p.active, p.decision = [b], 0, pa.CHARGED[0] + k
-        foe_mon = Mon(GD.default(foe), hp=foe_hp)
+        foe_mon = Mon(GD.build(foe, list(foe_moves)) if foe_moves else GD.default(foe), hp=foe_hp)
         p.tracker = NS(foe=NS(mon=foe_mon, hi=42), me=NS(mon=Mon(b, hp=hp, energy=energy)))
         p.energy = lambda: energy
         p.paid_bounds = lambda: None
@@ -135,3 +135,22 @@ class HoldForBetter(unittest.TestCase):
         decision, _ = self.ask(energy=40, hp=174, me="snorlax", moves=("PSYWAVE", "BODY_SLAM", "EARTHQUAKE"),
                                foe="empoleon", foe_hp=85, k=0)
         self.assertEqual(decision, pa.FAST)
+
+
+class HoldForBetterLow(HoldForBetter):
+    """094325, 86.8 s: Thievul (29 of 127, two shields, 42 energy) threw Night Slash (29) into a shieldless Mega
+    Sableye on 43 with Play Rough (68) three Sucker Punches away; Sableye lived on 14 and won the matchup."""
+
+    def thievul(self, hp):
+        return self.ask(energy=42, hp=hp, me="thievul", moves=("SUCKER_PUNCH", "NIGHT_SLASH", "PLAY_ROUGH"),
+                        foe="sableye_mega", foe_hp=43, k=0,
+                        foe_moves=("SHADOW_CLAW", "FOUL_PLAY", "DAZZLING_GLEAM"))
+
+    def test_holds_for_play_rough_when_it_lives_through_the_wait(self):
+        decision, logged = self.thievul(29)
+        self.assertEqual(decision, pa.FAST)
+        self.assertIn("hold_for_better", logged)
+
+    def test_throws_when_their_fast_moves_would_knock_it_out_first(self):
+        decision, _ = self.thievul(4)
+        self.assertEqual(decision, pa.CHARGED[0] + 0)
