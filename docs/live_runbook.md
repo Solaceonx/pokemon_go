@@ -59,6 +59,8 @@ Below, `PY` is the venv's python and `SC` the scrcpy folder; run from the worktr
   time t of a logged battle.
 - **The loop the owner asked for:** play sets until the daily limit; after each, review, fix only clear bugs (with a
   test in `tests/` and a dry run), collect the rewards, then the next set. Write each set into `docs/status.md`.
+- **Team GO Rocket grunts:** not built yet. The brief, with what carries over and what is new, is task 49 in
+  `docs/tasks.md` on `main`.
 
 ## Teams on the accounts (2026-11-25)
 
