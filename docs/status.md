@@ -5292,6 +5292,24 @@ at Jellicent v Toedscruel, Clodsire v Tinkaton's Gigaton Hammer (set 2) and Snor
 time at 3 more. So P would have let most of the same hits through; the creators' shield call (`players_shield`)
 stays useful with either engine. The other live losses (taps, counting, reading) are the phone code's.
 
+**Marco's engines on the creator exam, and in dry runs on the phone's recordings** (Claude, 2026-11-25). The owner
+thinks the exam is not the best benchmark and suggested the creators' videos. Marco's creator exam
+(`scripts/lab/creator_exam.py`, 657 decisions from task 46's 29 creator records, cached crowd values): share of the
+creators' choices made, ± 3.8: website engine 43.6%, trained bot 53.0%, tree + fix_stay 43.7, tree + both fixes,
+depth 3 44.3, + shield_mix=0, finish_safe 43.7, **P 44.0**. By kind (website / P / bot): switch 46.9 / 49.7 / 55.4,
+shield 68.4 / 64.0 / 68.4, throw 41.5 / about 43 / 57.1, hold 30.0 / about 31 / 39.9. No lab engine plays more like
+the creators than today's engine; the trained bot does (as on the exam). Dry runs (local branch `lab-live-trial`:
+ultra-league with lab-best and a `POGO_LAB` switch building P at the live player's 300 ms limit; not pushed): set 2's
+four losses (101143, 101538, 101912, 102840) replayed with P and with today's engine. No errors with either; P's
+decisions at the 99th percentile 305-310 ms (today's 188-298); P asked to switch 9, 3, 4, 2 times (today's 2, 1, 4, 2)
+and shielded 2 of 8 prompts in 101143 where today's player shielded 5 (both with the creators' call). A replay
+follows the recording, so outcomes are not compared. Not proposed for ranked play: no gain against people's choices,
+more switching (the phone code's weakest part), at its time limit.
+
+**Pull request #18** (game record; tracker charged-move damage when the bar is unread): its tracker fix is already
+on `ultra-league` (3bdadad6, 2026-11-04, refined since: health floored at 1, the least hit while the move is
+unnamed); only `scripts/recording/game_record.py` is not.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
