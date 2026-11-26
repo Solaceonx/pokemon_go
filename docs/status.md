@@ -5273,6 +5273,25 @@ the account has 163). A first run against random threes from the top 50 put Clef
 that always led with the forced Clefable read 71% for the Altaria team (fixed: shuffled). PvPoke default IVs except
 the three built Great League ones; the opponents are a field, not usage.
 
+## Marco's lab engines on the owner's exam, and at the live shield prompts (Claude, 2026-11-25)
+
+**Exam 1** (`lab-best` 71bfdc6d, `scripts/exam_variants.py` with the owner's and the friend's answers, Marco's
+command, one worker; 36 positions replayed, 26 where both players agree; output kept on the Mac). Share of each
+player's answer played (owner / friend / where both agree): website engine 56% / 47% / 54%; trained bot 58 / 58 /
+65; rulebook 67 / 56 / 69; tree + fix_stay 58 / 50 / 58; tree + both fixes, depth 3 47 / 53 / 54; that +
+shield_mix=0, finish_safe 56 / 61 / 65; **the best engine P (that + population q) 53 / 50 / 54**. With 26 agreed
+positions the margin is about ± 19 points: **the exam cannot tell the lab engines from today's engine**; none is
+clearly closer to the two players. Today's website engine picks differently from the exam's key at 10 of 36
+positions (it has changed since the exam was made). The simulated gains (+5 to +10 points against bots and
+imitations of people) are not visible here; the exam is too small to show or rule them out.
+
+**The live shield prompts** (`.session_scratch/2026-11-25_kim/marco_shields.py`, run from `lab-best`): every prompt in the
+2026-11-24/25 logs where a shield was kept, shields were in hand and their paid-for move could knock ours out (35),
+asked 3 times each. The website engine keeps the shield at all 35 (as live). P shields at about 5 of 35: every time
+at Jellicent v Toedscruel, Clodsire v Tinkaton's Gigaton Hammer (set 2) and Snorlax v Galarian Stunfisk, some of the
+time at 3 more. So P would have let most of the same hits through; the creators' shield call (`players_shield`)
+stays useful with either engine. The other live losses (taps, counting, reading) are the phone code's.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
