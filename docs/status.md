@@ -5266,7 +5266,8 @@ Clefable at a random place. Great: the current Clodsire / Thievul / Snorlax **47
 Snorlax / Vigoroth **62.7%** (64%), the best without Elite TMs; Clodsire / Vigoroth / Corviknight (Air Cutter, Iron
 Head) 65.2% (73%); Corviknight / Annihilape / Altaria (Rage Fist, Moonblast) 65.5% but **38% against teams with
 Clefable** (the owner's objection; each of the three loses Clefable one on one). Ultra: Ampharos / Tinkaton /
-Clefable 65.6% (63%) without Elite TMs, 67.8% with Gigaton Hammer; Melmetal (Double Iron Bash) / Clefable / Ampharos
+Clefable 65.6% (63%) without Elite TMs; the account's Tinkaton has Gigaton Hammer (the owner): Tinkaton / Clefable /
+Ampharos 69.2% ± 2.0 (65%), Clefable leading 69.1%, Ampharos leading 67.8%; Melmetal (Double Iron Bash) / Clefable / Ampharos
 66.3%. Clefable is in all the best Ultra teams (Mystical Fire comes as a normal TM; level 47.5 needs about 199 XL,
 the account has 163). A first run against random threes from the top 50 put Clefable in too few teams; a check
 that always led with the forced Clefable read 71% for the Altaria team (fixed: shuffled). PvPoke default IVs except
