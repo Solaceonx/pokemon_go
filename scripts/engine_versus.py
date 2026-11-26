@@ -8,12 +8,29 @@
 A setting is "key=value,key=value" on top of the confirmed engine (samples 4, horizon 20, edge 0.03, the trained bot
 inside the look-ahead, margin 0.02). Keys: samples, horizon, edge, margin, shield_margin (float), shield_toward (0 | 1),
 heads (joined by "+", for example
-"throw+swap+mid_swap+replace+shield"), opponents (bot | mix), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
-temperature, mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
+"throw+swap+mid_swap+replace+shield"), opponents (bot | mix | people), profile (0 | 1), unseen (pool | teams), mix (0 | 1),
+temperature, shield_mix/throw_mix (nonnegative logit temperatures; 0 uses search argmax), shield_floor (0..0.5),
+equilibrium (0 | 1; exact bait/shield game), mix_shield (requires the shield head), mix_switch, random_hold (0 | 1), even_cost (first | best), judge (steps | turn | end), switch_edge, stay_after_replace (0 | 1), mid_swap_search (ready | hit | both), eval (path to an evaluation
 .npz), q (path to the trained bot's networks, q.npz: used for the engine's own picks and inside its look-ahead; task 39),
 team_file (listed unseen-team prior), and style_file (calibrated mixture with optional human_settings
-overrides). Data-file paths are relative to the repository root unless absolute. The setting "bot" is the trained bot alone.
+overrides), and people_shield (shield calls copied from good players, pogo.people_shield; "bot,people_shield=PATH"
+gives the trained bot alone with it). Data-file paths are relative to the repository root unless absolute. The
+setting "bot" is the trained bot alone.
+Tactics lab (opt-in): finish_safe=1 checks survival before a finishing fast move; bait_mix=p draws the cheaper
+of two affordable real-bait moves with probability p (off disables; 0 always chooses dearer); shield_two=a and
+shield_one=b are shield-head margins by shields left (off inherits shield_margin); swap_after_throw=1
+throws before a searched voluntary swap after turn zero (swap or mid_swap head) when it out-hits a fast with shields
+down or threatens a KO with shields up, excluding one-fast finishes. Its next action is reconsidered without this
+override. Rulebook-only swaps and incomplete searches are excluded. --people N adds paired
+battles against the creator exam's human-style opponent; opponents=people uses it inside imagined battles.
+Engine lab (lab-learn, all opt-in): opp_q (path) and opp_policy (path to a pogo.lab.policy.PolicyNet; opp_sample 0 | 1,
+default 1) give the engine a learned imagined opponent (pogo.lab.engines.ModelledEngine); the bot alone also takes q,
+margin, policy (play a PolicyNet; sample 0 | 1), anchor with lam (piKL, pogo.lab.policy.PolicyPlayer) and temperature,
+for example "bot,q=runs/lab-learn/population/q.npz" or "bot,anchor=runs/lab-learn/owner-policy/policy.npz,lam=0.02".
 "website,q=runs/task44/candidate-2/q.npz" uses WEBSITE settings and the website's top-50 unseen pool on a candidate.
+Engine lab (pogo/lab): "website,engine=tree,depth=2,root=sh" plays pogo.lab.tree.TreeEngine; its own keys are depth,
+sims, root (flat | sh), c_puct, prior_temp, k0, gumbel, gscale, adversary, protect_pick, closed, tree_heads,
+fix_stay and fix_judged.
 With --team-pool 50, head-to-head teams are top-50 on both sides; crowd/PvPoke opponents still use --field.
 
 For each candidate, on the same battles for all: head to head against the baseline (every pair of teams both ways
@@ -48,7 +65,9 @@ from pogo.arena import low_priority, mean_and_margin  # noqa: E402
 from pogo.battle import DRAW, SWITCH, Battle  # noqa: E402
 from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.gamedata import GameData  # noqa: E402
+from pogo.lab import KEYS as LAB_KEYS, engine_class as lab_engine, setting as lab_setting  # noqa: E402
 from pogo.learner import Learner, QNet  # noqa: E402
+from pogo.lab.tactics import BOT_KEYS as TACTIC_BOT_KEYS, KEYS as TACTIC_KEYS, setting as tactic_setting  # noqa: E402
 from pogo.pvpoke_ai import PvpokeAI  # noqa: E402
 from pogo.reader import Reader  # noqa: E402
 from pogo.realtime import WEBSITE, RealTime  # noqa: E402
@@ -57,8 +76,9 @@ from scripts.wide_teams import run_jobs  # noqa: E402
 
 CONFIRMED = {"samples": 4, "horizon": 20, "edge": 0.03, "margin": 0.02}
 CACHE_POLICY = "per-player"
-COUNTING = "per-battle-v2"  # shield prompts and mid-matchup swaps, both sides of h2h
+COUNTING = "per-battle-v4-tactics"  # real bait opportunities/throws and throw-before-swap counts
 NO_LIMIT = {k: 1e9 for k in ("turn_ms", "unforeseen_ms", "after_charged_ms", "after_faint_ms", "replace_ms", "start_ms")}
+LAB_BOT_KEYS = ("q", "margin", "policy", "anchor", "lam", "sample", "temperature")  # the bot alone, engine lab (lab-learn)
 _state: dict = {}
 
 
@@ -67,33 +87,66 @@ def parse(spec: str) -> dict | None:
     if spec.strip() == "bot":
         return None
     parts = list(filter(None, (p.strip() for p in spec.split(","))))
+    if parts and parts[0] == "bot":  # the trained bot alone with a setting of its own: "bot,people_shield=PATH"
+        bot = {"_bot": True}
+        for part in parts[1:]:
+            key, value = part.split("=", 1)
+            if key in TACTIC_BOT_KEYS:
+                bot[key] = tactic_setting(key, value)
+                continue
+            if key in LAB_BOT_KEYS:  # engine lab (lab-learn)
+                bot[key] = float(value) if key in ("margin", "lam", "temperature") else (
+                    value not in ("0", "") if key == "sample" else value)
+                continue
+            if key not in ("people_shield", "people_add", "ko_wait"):
+                raise SystemExit(f"the bot alone takes only people_shield, people_add, ko_wait and {', '.join(LAB_BOT_KEYS)}, "
+                                 f"plus {', '.join(TACTIC_BOT_KEYS)}, not {key!r}")
+            bot[key] = float(value) if key == "people_add" else (value not in ("0", "") if key == "ko_wait" else value)
+        return bot
     out = dict(CONFIRMED)
     if parts and parts[0] == "website":
         out.update(WEBSITE, pool=50)
         parts = parts[1:]
     for part in parts:
         key, value = part.split("=", 1)
-        if key == "heads":
+        if key in TACTIC_KEYS:
+            out[key] = tactic_setting(key, value)
+        elif key == "heads":
             out[key] = tuple(value.split("+"))
         elif key in ("samples", "horizon", "pool"):
             out[key] = int(value)
-        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust"):
+        elif key in ("edge", "margin", "shield_margin", "temperature", "switch_edge", "robust", "people_add",
+                     "shield_mix", "throw_mix", "shield_floor"):
             out[key] = float(value)
+            if key in ("shield_mix", "throw_mix", "shield_floor"):
+                if not math.isfinite(out[key]) or out[key] < 0 or (key == "shield_floor" and out[key] > 0.5):
+                    raise SystemExit(f"invalid {key}: {value}")
         elif key == "shield_toward":
             if value not in ("0", "1"):
                 raise SystemExit("shield_toward must be 0 or 1")
             out[key] = bool(int(value))
         elif key in ("profile", "mix", "mix_shield", "mix_switch", "random_hold", "matching", "no_tell_bait",
-                     "stay_after_replace"):
+                     "stay_after_replace", "ko_wait", "equilibrium", "opp_sample"):
             out[key] = value not in ("0", "false", "False", "")
-        elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge"):
+        elif key in ("opponents", "unseen", "eval", "q", "team_file", "style_file", "even_cost", "judge",
+                     "people_shield", "opp_q", "opp_policy"):
             out[key] = value
         elif key == "mid_swap_search":
             if value not in ("ready", "hit", "both"):
                 raise SystemExit(f"unknown mid_swap_search {value!r}")
             out[key] = value
+        elif key in LAB_KEYS:  # engine lab (pogo/lab): engine=tree and its settings
+            try:
+                out[key] = lab_setting(key, value)
+            except ValueError as e:
+                raise SystemExit(f"{e} in {spec!r}")
         else:
             raise SystemExit(f"unknown setting {key!r} in {spec!r}")
+    from pogo.lab.mixed import validate_mixing
+    try:
+        validate_mixing(**out)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     return out
 
 
@@ -120,33 +173,45 @@ def setup(field: str = "standard", pause: str | None = None, team_pool: int | No
                   team_pool=team_pool, pools={})
 
 
-def evaluator(path: str | None) -> Evaluator:
+def evaluator(path: str | None, *, state: dict | None = None) -> Evaluator:
+    s = _state if state is None else state
     path = path or str(ROOT / "runs" / "eval" / "eval.npz")
-    if path not in _state["evals"]:
-        _state["evals"][path] = Evaluator.load(ROOT / path).model
+    if path not in s["evals"]:
+        s["evals"][path] = Evaluator.load(ROOT / path).model
     # Share immutable weights only: the evaluator's outlook cache belongs to one player
     # in one battle, otherwise prior jobs and the opposing player's searches affect it.
-    return Evaluator(_state["evals"][path])
+    return Evaluator(s["evals"][path])
 
 
-def network(path: str | None) -> QNet:
+def network(path: str | None, *, state: dict | None = None) -> QNet:
     """The trained bot's networks: the website's, or those at a path (task 39's rounds)."""
+    s = _state if state is None else state
     if path is None:
-        return _state["net"]
-    nets = _state.setdefault("nets", {})
+        return s["net"]
+    nets = s.setdefault("nets", {})
     if path not in nets:
         nets[path] = QNet.load(str(ROOT / path))
     return nets[path]
 
 
-def pilot(settings: dict | None, seed: int, cls=RealTime):
-    s = _state
-    if settings is None:
-        return Learner(q=s["net"], margin=0.02, seed=seed)
+def pilot(settings: dict | None, seed: int, cls=RealTime, *, state: dict | None = None):
+    """Build a player, optionally using another screen's models and pool instead of the versus worker's."""
+    s = _state if state is None else state
+    if settings is None or settings.get("_bot"):
+        st = settings or {}
+        people = dict(people_shield=st.get("people_shield"), people_add=st.get("people_add"), ko_wait=st.get("ko_wait", False))
+        people.update({k: st[k] for k in TACTIC_BOT_KEYS if k in st})
+        if any(k in st for k in LAB_BOT_KEYS):  # engine lab (lab-learn)
+            from pogo.lab.policy import PolicyPlayer, cached
+            return PolicyPlayer(pnet=cached(st["policy"]) if st.get("policy") else None,
+                                anchor=cached(st["anchor"]) if st.get("anchor") else None, lam=st.get("lam", 0.0),
+                                sample=st.get("sample", False), temperature=st.get("temperature", 0.0),
+                                q=network(st.get("q"), state=s), margin=st.get("margin", 0.02), seed=seed, **people)
+        return Learner(q=s["net"], margin=0.02, seed=seed, **people)
     kw = dict(settings)
     # Share immutable model weights, not the evaluator's matchup cache across teams or opponents.
-    ev = Evaluator(evaluator(kw.pop("eval", None)).model)
-    q = network(kw.pop("q", None))
+    ev = Evaluator(evaluator(kw.pop("eval", None), state=s).model)
+    q = network(kw.pop("q", None), state=s)
     margin = kw.pop("margin")
     n = kw.pop("pool", None)
     pool = s["pool"]
@@ -155,7 +220,22 @@ def pilot(settings: dict | None, seed: int, cls=RealTime):
             s["pools"][n] = s["gd"].meta(n)
         pool = s["pools"][n]
     kw.setdefault("rollout", "bot")
-    extra = NO_LIMIT if cls is RealTime else {}
+    extra = NO_LIMIT if cls is RealTime else {}  # a RealTime subclass passed in keeps its own deadlines
+    lab = kw.pop("engine", None)
+    if lab is not None and issubclass(cls, RealTime):
+        engine = lab_engine(lab)  # engine lab (pogo/lab); with a subclass such as a live-timing one, both
+        cls = engine if cls is RealTime else type(f"{cls.__name__}_{engine.__name__}", (engine, cls), {})
+    elif lab is None and any(key in LAB_KEYS for key in kw):
+        raise SystemExit(f"lab settings {sorted(k for k in kw if k in LAB_KEYS)} need engine=<name>")
+    if issubclass(cls, RealTime) and any(k in kw for k in ("opp_q", "opp_policy", "opp_sample")):
+        from pogo.lab.engines import ModelledEngine
+        from pogo.lab.policy import cached
+        if not issubclass(cls, ModelledEngine):
+            cls = ModelledEngine if cls is RealTime else type(f"{cls.__name__}_Modelled", (cls, ModelledEngine), {})
+        if "opp_q" in kw:
+            kw["opp_q"] = network(kw["opp_q"], state=s)
+        if "opp_policy" in kw:
+            kw["opp_policy"] = cached(kw["opp_policy"])
     return cls(ev, pool, q=q, margin=margin, seed=seed, **kw, **extra)
 
 
@@ -170,12 +250,19 @@ class Counted:
     def __init__(self, inner):
         self.inner, self.mid_swaps = inner, 0
         self.shields, self.prompts = 0, 0
+        self.choice_probability_sum, self.probability_choices = 0.0, 0
 
     def __getattr__(self, name):
         return getattr(self.inner, name)
 
     def act(self, view):
+        if hasattr(self.inner, "last_throw_probability"):
+            self.inner.last_throw_probability = None
         action = self.inner.act(view)
+        probability = getattr(self.inner, "last_throw_probability", None)
+        if probability is not None:
+            self.choice_probability_sum += probability
+            self.probability_choices += 1
         # replace() is a different call; turn zero is the lead decision.
         self.mid_swaps += action in SWITCH and view.turn > 0
         return action
@@ -184,6 +271,10 @@ class Counted:
         answer = self.inner.shield(view, energy, *move)
         self.prompts += 1
         self.shields += bool(answer)
+        probability = getattr(self.inner, "last_shield_probability", None)
+        if probability is not None:
+            self.choice_probability_sum += probability
+            self.probability_choices += 1
         return answer
 
     def counts(self) -> dict:
@@ -191,7 +282,11 @@ class Counted:
                     mid_swap_searches=getattr(self.inner, "mid_swap_searches", 0),
                     searches=getattr(self.inner, "looks", 0),
                     search_seconds=sum(r[3] for r in getattr(self.inner, "rows", [])) / 1000,
-                    shields=self.shields, prompts=self.prompts)
+                    shields=self.shields, prompts=self.prompts,
+                    bait_opportunities=getattr(self.inner, "bait_opportunities", 0),
+                    baits_thrown=getattr(self.inner, "baits_thrown", 0),
+                    swap_after_throws=getattr(self.inner, "swap_after_throws", 0),
+                    choice_probability_sum=self.choice_probability_sum, probability_choices=self.probability_choices)
 
 
 def add_counts(total: dict, counts: dict) -> None:
@@ -200,7 +295,7 @@ def add_counts(total: dict, counts: dict) -> None:
 
 
 def job(task):
-    """kind is h2h (candidate against baseline, both ways), crowd, pvpoke or reader; returns points by battle number."""
+    """kind is h2h (both ways), crowd, people, pvpoke or reader; returns points by battle number."""
     try:
         return _job(task)
     except StopIteration as e:  # raised in a worker it would end the result loop quietly, as if every job were done
@@ -240,7 +335,11 @@ def _job(task):
             out[n] = sum(pair) / 2
         else:
             me = Counted(pilot(parse(spec), dice))
-            them = varied(random.Random(dice), s["pool"]) if kind == "crowd" else PvpokeAI()
+            if kind == "people":
+                from pogo.lab.people import people_player
+                them = people_player(random.Random(dice), s["net"], s["pool"])
+            else:
+                them = varied(random.Random(dice), s["pool"]) if kind == "crowd" else PvpokeAI()
             out[n] = points(Battle(a, b, me, them, seed=dice).run(), 0)
             searches += [r[3] for r in getattr(me, "rows", [])]
             add_counts(counts["ours"], me.counts())
@@ -273,10 +372,15 @@ def activity_summary(rows: dict, side: str = "ours") -> str:
     n = totals.get("battles", 0)
     if not n:
         return "no battles"
+    choices = totals.get("probability_choices", 0)
+    probability = f"{totals['choice_probability_sum'] / choices:.3f}" if choices else "n/a"
     return (f"{totals['mid_swaps'] / n:.3f} mid-matchup swaps/battle, "
             f"{totals['mid_swap_searches'] / n:.3f} mid-matchup searches/battle "
             f"({n} battles; {totals['searches'] / n:.2f} total searches/battle, "
-            f"{totals['search_seconds'] / n:.3f} search seconds/battle)")
+            f"{totals['search_seconds'] / n:.3f} search seconds/battle); "
+            f"mean P(chosen) {probability} ({choices} shield/throw-head choices; legacy random choices excluded); "
+            f"baits {totals.get('baits_thrown', 0)} / {totals.get('bait_opportunities', 0)} mixed opportunities; "
+            f"{totals.get('swap_after_throws', 0)} throws before searched swaps")
 
 
 def estimate(values: list) -> tuple[float, float]:
@@ -298,6 +402,7 @@ def main() -> None:
     parser.add_argument("--candidates", nargs="+", required=True)
     parser.add_argument("--pairings", type=int, default=1000, help="head to head against the baseline, each pair both ways")
     parser.add_argument("--crowd", type=int, default=1000)
+    parser.add_argument("--people", type=int, default=0, help="paired battles against the creator exam's PeopleLike")
     parser.add_argument("--pvpoke", type=int, default=500)
     parser.add_argument("--reader", type=int, default=0, help="pairs of battles against the reader probe")
     parser.add_argument("--chunk", type=int, default=5, help="battles (or pairs) per job")
@@ -315,7 +420,7 @@ def main() -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     saved = json.loads(path.read_text()) if path.exists() else {}
     if saved.get("results") and saved.get("counting") != COUNTING:
-        raise SystemExit(f"{path} has no combined shield and switch counts; use a new tag")
+        raise SystemExit(f"{path} has incompatible decision counts; use a new tag")
     if saved and saved.get("evaluator_cache") not in (CACHE_POLICY, "per_player"):  # task 29 wrote "per_player"
         raise SystemExit(f"{path} does not record isolated evaluator caches; use a new tag")
     if saved and saved.get("seed") != args.seed:
@@ -342,7 +447,7 @@ def main() -> None:
     plan = []
     for name, spec in named.items():
         for kind, count in (("h2h", args.pairings if name != "baseline" else 0), ("crowd", args.crowd),
-                            ("pvpoke", args.pvpoke), ("reader", args.reader)):
+                            ("people", args.people), ("pvpoke", args.pvpoke), ("reader", args.reader)):
             have = results.get(kind, {}).get(spec, {})
             counted = activity.get(kind, {}).get(spec, {})
             missing = [n for n in range(count) if str(n) not in have or str(n) not in counted]
@@ -374,7 +479,7 @@ def main() -> None:
     head_rows = [row for spec in args.candidates for row in activity.get("h2h", {}).get(spec, {}).values()]
     if head_rows:
         print(f"  head to head, all candidates: baseline shields / shield prompts {shield_rate(head_rows, 'baseline')}")
-    base = {kind: values(kind, args.baseline) for kind in ("crowd", "pvpoke", "reader")}
+    base = {kind: values(kind, args.baseline) for kind in ("crowd", "people", "pvpoke", "reader")}
     for kind, v in base.items():
         if v:
             print(f"  against the {kind}: {summary(v)}")
@@ -391,7 +496,7 @@ def main() -> None:
             print(f"    candidate: {activity_summary(rows)}; shields / shield prompts {shield_rate(rows.values())}")
             print(f"    baseline:  {activity_summary(rows, 'baseline')}; shields / shield prompts "
                   f"{shield_rate(rows.values(), 'baseline')}")
-        for kind in ("crowd", "pvpoke", "reader"):
+        for kind in ("crowd", "people", "pvpoke", "reader"):
             v = values(kind, spec)
             if v and len(v) == len(base[kind]):
                 diff = [x - y for x, y in zip(v, base[kind])]

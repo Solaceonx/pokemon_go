@@ -4,7 +4,8 @@
     python3 scripts/exam_variants.py ANSWERS.json [ANSWERS.json ...] [--variants switch_edge=0.05 ...] [--workers 3]
 
 Replays every game the exam's positions come from, as scripts/exam_positions.py does, with the rulebook, the trained bot, the
-website's engine and each variant (engine settings as `key=value,...`) asking at every decision, the variants with the engine's dice.
+website's engine and each variant (engine_versus specs, including `website,engine=tree,...`) asking at every decision,
+the variants with the engine's dice. Bare `key=value,...` specs keep the exam's original 32-sample defaults.
 Shield variants use shield_margin=0.05 (or 0.1, 1) and shield_toward=1.
 The engine's picks must come out as the exam's key has them. Each variant is scored where each person answered and where all of them
 agree. A screen only: the positions were chosen where versions disagree and these answers are already known, so a variant that does
@@ -21,29 +22,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path[:0] = [str(ROOT), str(ROOT / "scripts")]
 import exam_positions as E  # noqa: E402
+import engine_versus as V  # noqa: E402
 from pogo.battle import Battle  # noqa: E402
-from pogo.engine import Engine  # noqa: E402
-from pogo.evaluation import Evaluator  # noqa: E402
 from pogo.review import Logged, Replay  # noqa: E402
 
 _variants: list = []
 
 
-def parse(spec: str) -> dict:
-    out = {}
-    for part in filter(None, spec.split(",")):
-        k, v = part.split("=")
-        if k == "shield_toward":
-            if v not in ("0", "1"):
-                raise SystemExit("shield_toward must be 0 or 1")
-            out[k] = bool(int(v))
-        elif k == "mid_swap_search":
-            if v not in ("ready", "hit", "both"):
-                raise ValueError(f"unknown mid_swap_search {v!r}")
-            out[k] = v
-        else:
-            out[k] = v in ("1", "true", "True") if k == "stay_after_replace" else float(v)
-    return out
+def parse(spec: str) -> dict | None:
+    parts = [p.strip() for p in spec.split(",") if p.strip()]
+    if not parts or parts[0] not in ("website", "bot"):
+        # Preserve the old exam defaults and its narrower stay_after_replace boolean.
+        parts = ["stay_after_replace=" + str(int(p.split("=", 1)[1] in ("1", "true", "True")))
+                 if p.startswith("stay_after_replace=") else p for p in parts]
+        parts.insert(0, "samples=32")
+    try:
+        return V.parse(",".join(parts))
+    except SystemExit as exc:
+        if str(exc).startswith("unknown mid_swap_search"):
+            raise ValueError(str(exc)) from exc
+        raise
 
 
 def setup(variants: list) -> None:
@@ -52,11 +50,13 @@ def setup(variants: list) -> None:
 
 
 def builds(seed: int) -> dict:
-    net, pool = E.L._state["net"], E.L._state["pool"]
+    # The exam owns its model, unseen pool and seed schedule. Share weights only;
+    # pilot gives every variant its own evaluator cache, without changing versus state.
+    state = dict(E.L._state, pools={50: E.L._state["pool"]},
+                 evals={str(V.ROOT / "runs" / "eval" / "eval.npz"): E._s["ev"].model})
     out = {k: v for k, v in E.versions(seed).items() if k != "matching"}
     for spec in _variants:
-        out[spec] = Engine(Evaluator(E._s["ev"].model), pool, rollout="bot", samples=32, edge=0.03, q=net, margin=0.02,
-                           seed=seed + 2, **parse(spec))
+        out[spec] = V.pilot(parse(spec), seed + 2, state=state)
     return out
 
 

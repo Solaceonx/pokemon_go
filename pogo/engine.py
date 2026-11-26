@@ -39,6 +39,9 @@ plays as before (docs/tasks.md, 25, 28 and 29):
   Pokémon came in after a faint (send in the one wanted instead) (task 35).
 - mid_swap_search: ask again in a judged matchup without needing a learned mid_swap head. "ready" uses task 20's
   gate, "hit" asks after their charged move, and "both" uses either gate (task 43). Off by default.
+- shield_mix / throw_mix: optional head-specific logit temperatures (zero: the usual search argmax with edge).
+  shield_floor bounds close shield calls; equilibrium solves bait/big move versus shield/take exactly.
+  These enable shield search at real prompts, preserving the last-Pokemon rule, only when explicitly requested.
 """
 from __future__ import annotations
 
@@ -48,9 +51,9 @@ import random
 import time
 from pathlib import Path
 
-from .agents import _rollout, varied_settings
+from .agents import Planner, _rollout, varied_settings
 from .arena import decisive
-from .battle import ENERGY_CAP, CHARGED, CHARGED_TURNS, FAST, SWITCH, Battle, Mon, View, apply_buffs, damage
+from .battle import DRAW, ENERGY_CAP, CHARGED, CHARGED_TURNS, FAST, SWITCH, Battle, Mon, View, apply_buffs, damage
 from .learner import Learner
 
 DATA = Path(__file__).resolve().parent.parent / "data"
@@ -118,6 +121,21 @@ class _First:
         return self.inner.replace(view)
 
 
+class _FirstShield(_First):
+    """Fix the response to this step's throw, never a later Pokemon's throw after a CMP knockout."""
+
+    def __init__(self, inner, shielded, turn):
+        super().__init__(inner, None)
+        self.shielded, self.turn = shielded, turn
+
+    def shield(self, view, energy, *move):
+        if self.shielded is not None:
+            answer, self.shielded = self.shielded, None
+            if view.turn == self.turn:
+                return answer
+        return super().shield(view, energy, *move)
+
+
 def imagine(view: View, rng: random.Random, pool: list, me_agent, foe_agent, teams: list | None = None,
             team_builds: dict | None = None) -> Battle:
     """A battle standing where this view stands, with the opponent's unseen Pokémon drawn from the pool, or with
@@ -162,10 +180,35 @@ class Engine(Learner):
                  no_tell_bait: bool = False, judge: str = "steps", switch_edge: float = 0.0,
                  stay_after_replace: bool = False, robust: float | None = None,
                  shield_margin: float | None = None, shield_toward: bool = False,
-                 mid_swap_search: str | None = None, **settings):
+                 mid_swap_search: str | None = None, shield_mix: float | None = None,
+                 throw_mix: float | None = None, shield_floor: float = 0.0,
+                 equilibrium: bool = False, swap_after_throw: bool = False, **settings):
         super().__init__(shield_margin=shield_margin, shield_toward=shield_toward, **settings)
+        self.swap_after_throw = swap_after_throw
+        self.swap_after_throws = 0
+        self._swap_throw_pending = False
         self.evaluator, self.pool = evaluator, pool
         self.horizon, self.samples, self.edge, self.heads = horizon, samples, edge, tuple(heads)
+        for name, tau in (("shield_mix", shield_mix), ("throw_mix", throw_mix)):
+            if tau is not None and (not math.isfinite(tau) or tau < 0):
+                raise ValueError(f"{name} must be finite and nonnegative")
+        if not math.isfinite(shield_floor) or not 0 <= shield_floor <= 0.5:
+            raise ValueError("shield_floor must be between 0 and 0.5")
+        self.shield_mix, self.throw_mix = shield_mix, throw_mix
+        self.shield_floor, self.equilibrium = shield_floor, equilibrium
+        self._lab_shield = shield_mix is not None or shield_floor > 0 or equilibrium
+        if self._lab_shield or throw_mix is not None:
+            from .lab.mixed import validate_mixing
+            validate_mixing(shield_mix=shield_mix, throw_mix=throw_mix, shield_floor=shield_floor,
+                            equilibrium=equilibrium, mix=mix, temperature=temperature,
+                            mix_shield=mix_shield, mix_switch=mix_switch)
+        if self._lab_shield and "shield" not in self.heads:
+            self.heads += ("shield",)
+        if (throw_mix is not None or equilibrium) and "throw" not in self.heads:
+            self.heads += ("throw",)
+        self.last_shield_probability = self.last_throw_probability = None
+        self._decision_depth = 0  # shield advice inside another decision is not a real shield prompt
+        self._their_shield = None  # first opposing shield response in a bait matrix cell
         if judge not in ("steps", "turn", "end"):
             raise ValueError(f"unknown judge {judge!r}")
         self.judge = judge
@@ -222,6 +265,11 @@ class Engine(Learner):
         self._loglik = {name: 0.0 for name in (self._styles or {})}
         self._pending = self._pending_shield = self._their_throw = None
         self._mix_rng = random.Random(hash(self.rng.getstate()))  # for mixing only; does not touch self.rng
+        if self._lab_shield or throw_mix is not None or self.bait_mix is not None:
+            # hash(getstate()) contains None, whose hash varies between Python processes. Derive the new
+            # options' private stream from a COPY of the player's RNG so workers and restarts replay.
+            from .lab.mixed import private_rng
+            self._mix_rng = private_rng(self.rng)
         self._their_first = None  # the opponent's first action in each look, when fixed (mixed tables, readers)
         self._foe_energy = None  # the attacker's energy, for shield looks
         self.looks = 0  # decisions searched
@@ -333,6 +381,9 @@ class Engine(Learner):
         return {name: 0.9 * w / total + 0.1 * self._styles[name]["weight"] / prior for name, w in weights.items()}
 
     def _imagined_opponent(self, rng: random.Random):
+        if self.opponents == "people":
+            from .lab.people import people_player
+            return people_player(rng, self.q, self.pool)
         if self.opponents != "mix":
             return Learner(q=self.q, margin=self.margin, seed=rng.getrandbits(32))
         if self._forced_style is not None:
@@ -357,6 +408,7 @@ class Engine(Learner):
     # deciding
 
     def act(self, view: View) -> int:
+        self._decision_depth += 1
         try:
             if self.matching and self._styles:
                 self._watch(view)
@@ -366,7 +418,16 @@ class Engine(Learner):
                 return action
             return self._act(view)
         finally:
+            self._decision_depth -= 1
             self._swap_hit = None  # no delayed hit search when the switch was unavailable
+
+    def _pick_move(self, view: View) -> int:
+        # Also cover direct move probes and Learner's timing post-check, after its throw head returns.
+        self._decision_depth += 1
+        try:
+            return super()._pick_move(view)
+        finally:
+            self._decision_depth -= 1
 
     def _mid_swap_gate(self, view: View) -> bool:
         if not self.mid_swap_search:
@@ -381,7 +442,20 @@ class Engine(Learner):
     def _act(self, view: View) -> int:
         theirs = self._mixed_actions("simultaneous", view) if self.switches and "mid_swap" in self.heads else []
         if not theirs:
-            return super().act(view)
+            self._searched_swap = False
+            pending, self._swap_throw_pending = self._swap_throw_pending, False
+            action = super().act(view)
+            if (self.swap_after_throw and not pending and action in SWITCH and view.turn > 0
+                    and self._searched_swap):
+                from .lab.tactics import before_swap
+                throw = before_swap(view)
+                if throw is not None:
+                    self._swap_throw_pending = True
+                    self.swap_after_throws += 1
+                    self._hold = 0
+                    self._judged = None  # reopen the swap question after our throw
+                    return self._bait_action(view, throw)
+            return action
         # The whole first action is simultaneous: staying can mean a fast move or either ready throw.
         # First obtain the trained bot's fallback and update its remembered matchup/hold as usual.
         self._mix_fallback = True
@@ -395,25 +469,59 @@ class Engine(Learner):
         if choice is None:
             self.looks += 1
             self.fell_back += 1
-            return pick
+            return self._bait_action(view, pick)
+        # The fallback throw head's probability does not describe the simultaneous action mix.
+        self.last_throw_probability = None
         if choice == FAST:
             self._fasted = (view.me.active, view.foe.build.uid)
         else:
             self._hold = 0
-        return choice
+        return self._bait_action(view, choice)
 
     def replace(self, view: View) -> int:
         self._swap_hit = None
+        self._swap_throw_pending = False
         self._replaced_at = view.turn
         return super().replace(view)
 
+    def shield(self, view: View, foe_energy: int) -> bool:
+        if self._lab_shield and self._decision_depth:
+            return super().shield(view, foe_energy)
+        self.last_shield_probability = 1.0
+        if not self._lab_shield or view.me.left() == 1:
+            return super().shield(view, foe_energy)
+        if view.me.shields <= 0:
+            return False
+        # Explicit lab options search real prompts ahead of people_shield shortcuts, but retain
+        # Learner's measured last-Pokemon rule above.
+        return bool(self._decide("shield", view, (True, True),
+                                 lambda: int(Planner.shield(self, view, foe_energy)), foe_energy))
+
     def _decide(self, head: str, view: View, mask: tuple, planner_choice, foe_energy: int | None = None) -> int:
+        if head == "shield" and self._lab_shield and self._decision_depth:
+            # Learner.shield dispatches back here: use its ordinary answer without lab search or dice.
+            return super()._decide(head, view, mask, planner_choice, foe_energy)
+        self._decision_depth += 1
+        try:
+            looks, fallback = self.looks, self.fell_back
+            choice = self._search_decision(head, view, mask, planner_choice, foe_energy)
+            if (self.swap_after_throw and head in ("swap", "mid_swap") and choice
+                    and self.looks > looks and self.fell_back == fallback):
+                self._searched_swap = True
+            return choice
+        finally:
+            self._decision_depth -= 1
+
+    def _search_decision(self, head: str, view: View, mask: tuple, planner_choice,
+                         foe_energy: int | None = None) -> int:
+        if head == "throw":
+            self.last_throw_probability = 1.0
         if self.stay_after_replace and head in ("swap", "mid_swap") and view.turn == self._replaced_at:
             return 0
         if self._mix_fallback or head in self.forced or head not in self.heads:
             return super()._decide(head, view, mask, planner_choice, foe_energy)
         options = [k for k in range(len(mask)) if mask[k]]
-        pick = super()._decide(head, view, mask, planner_choice, foe_energy)  # the trained bot's choice
+        pick = super()._decide(head, view, mask, planner_choice, foe_energy)
         if len(options) < 2:
             return pick
         self.mid_swap_searches += head == "mid_swap"
@@ -459,13 +567,42 @@ class Engine(Learner):
             return pick
         self.cut += rounds < len(seeds)
         worth = self._robust_worth(by_style, options) if by_style else {k: totals[k] / rounds for k in options}
+        return self._choose_worth(view, head, options, pick, worth, seeds)
+
+    def _choose_worth(self, view, head, options, pick, worth, seeds):
+        """Apply the shared choice controls after either flat or tree search values its options."""
         if self.switch_edge and head in ("swap", "mid_swap"):
             worth = {k: v - (self.switch_edge if k else 0.0) for k, v in worth.items()}  # option 0 stays
+        tau = self.shield_mix if head == "shield" else self.throw_mix if head == "throw" else None
+        if tau is not None or (head == "shield" and self.shield_floor) or (head == "throw" and self.equilibrium):
+            from .lab.mixed import logit, shield_floor
+            probabilities = logit(worth, pick, self.edge, tau or 0.0)
+            if head == "shield":
+                probabilities = shield_floor(probabilities, worth, self.edge, self.shield_floor)
+            elif self.equilibrium and all(k in options for k in (1, 2)) and view.foe_shields > 0:
+                moves = view.me.mon.build.charged
+                mass = probabilities[1] + probabilities[2]
+                if mass and moves[0].energy != moves[1].energy:
+                    table, n = self._matrix(view, head, [1, 2], seeds, [True, False], shield_columns=True)
+                    self.cut += n < len(seeds)
+                    if n:
+                        from .lab.mixed import equilibrium
+                        p = equilibrium(table)
+                        probabilities[1], probabilities[2] = mass * p[0], mass * p[1]
+                        self.mixed += 1
+            if head == "throw" and self.no_tell_bait:
+                for k in options:
+                    if self._tell_bait(view, k):
+                        probabilities[0] += probabilities[k]
+                        probabilities[k] = 0.0
+            return self._draw(head, probabilities, pick)
         if self.temperature > 0:
             # Close calls at random, weighted by worth; the trained bot's pick keeps its edge as a head start.
             scores = {k: worth[k] + (self.edge if k == pick else 0.0) for k in options}
             top = max(scores.values())
             choice = self._mix_rng.choices(options, [math.exp((scores[k] - top) / self.temperature) for k in options])[0]
+            if head in ("shield", "throw"):
+                setattr(self, f"last_{head}_probability", None)  # legacy random choices are excluded
             self.changed += choice != pick
             return choice
         best = max(options, key=lambda k: (worth[k], k == pick))
@@ -504,7 +641,7 @@ class Engine(Learner):
     def _mixed_actions(self, head: str, view: View) -> list:
         if self.mix and head == "throw":
             return self._their_throws(view)
-        if self.mix_shield and head == "shield":
+        if (self.mix_shield or self.equilibrium) and head == "shield":
             energy = self._foe_energy if self._foe_energy is not None else view.foe.energy
             ready = [CHARGED[k] for k, m in enumerate(view.foe.build.charged) if energy >= m.energy]
             return ready if len(ready) > 1 else []  # a known incoming move has no opposing choice to mix against
@@ -536,9 +673,17 @@ class Engine(Learner):
         choices = [j for j in range(room + 1) if (phase + j * mine) % theirs == best_phase]
         return self._mix_rng.choice(choices)
 
-    def _mixed(self, view: View, head: str, options: list, seeds: list, theirs: list, pick: int) -> int | None:
+    def _draw(self, head: str, probabilities: dict, pick: int) -> int:
+        pure = next((k for k, p in probabilities.items() if p == 1.0), None)
+        choice = pure if pure is not None else self._mix_rng.choices(list(probabilities), list(probabilities.values()))[0]
+        if head in ("shield", "throw"):
+            setattr(self, f"last_{head}_probability", probabilities[choice])
+        self.changed += choice != pick
+        return choice
+
+    def _matrix(self, view: View, head: str, options: list, seeds: list, theirs: list,
+                shield_columns: bool = False) -> tuple[list, int]:
         """Our options against their fixed first choices, with the same imagined state and dice in every cell."""
-        from .sixes import solve
         totals = [[0.0] * len(theirs) for _ in options]
         rounds = 0
         for s in seeds:
@@ -547,25 +692,41 @@ class Engine(Learner):
                 for j, action in enumerate(theirs):
                     if self._out_of_time():
                         break
-                    self._their_first = action
+                    old_first, old_shield = self._their_first, self._their_shield
+                    if shield_columns:
+                        self._their_shield = action
+                    else:
+                        self._their_first = action
                     try:
                         cells[i, j] = self._timed_look(view, head, k, s)
                     finally:
-                        self._their_first = None
+                        self._their_first, self._their_shield = old_first, old_shield
             if len(cells) < len(options) * len(theirs):
                 break
             for (i, j), v in cells.items():
                 totals[i][j] += v
             rounds += 1
+        return ([[v / rounds for v in row] for row in totals] if rounds else []), rounds
+
+    def _mixed(self, view: View, head: str, options: list, seeds: list, theirs: list, pick: int) -> int | None:
+        table, rounds = self._matrix(view, head, options, seeds, theirs)
         if rounds == 0:
             return None
-        import numpy as np
-        table = np.array(totals) / rounds
-        _, p, _ = solve(table, rounds=3000)
         self.looks += 1
         self.mixed += 1
         self.cut += rounds < len(seeds)
+        if self.equilibrium and head == "shield":
+            from .lab.mixed import equilibrium, shield_floor
+            probabilities = dict(zip(options, equilibrium(table)))
+            # For an equilibrium, closeness means the two rows' security values (worst column).
+            worth = {k: min(row) for k, row in zip(options, table)}
+            return self._draw(head, shield_floor(probabilities, worth, self.edge, self.shield_floor), pick)
+        import numpy as np
+        from .sixes import solve
+        _, p, _ = solve(np.array(table), rounds=3000)
         choice = self._mix_rng.choices(options, list(p))[0]
+        if head in ("shield", "throw"):
+            setattr(self, f"last_{head}_probability", None)  # legacy random choices are excluded
         self.changed += choice != pick
         return choice
 
@@ -605,6 +766,8 @@ class Engine(Learner):
             us, them = _rollout(), _rollout()
         if self._their_first is not None and head != "shield":
             them = _First(them, self._their_first)
+        if self._their_shield is not None:
+            them = _FirstShield(them, self._their_shield, view.turn)
         battle = imagine(view, rng, self.pool, _First(us, first), them, teams=self._teams,
                          team_builds=self._team_builds)
         if head == "replace":
@@ -647,23 +810,45 @@ class Engine(Learner):
         if not ready:
             return
         bait = self._bait_seen[0] / self._bait_seen[1] if self._bait_seen[1] else 0.5
-        if self.mix_shield and self._their_first in CHARGED:
+        if (self.mix_shield or self.equilibrium) and self._their_first in CHARGED:
             move = thrower.build.charged[self._their_first - CHARGED[0]]
         else:
             move = ready[0] if len(ready) == 1 or rng.random() < bait else ready[-1]
-        thrower.energy = energy - move.energy
-        if shielded:
-            ours.shields -= 1
-            target.hp -= 1
+        if self._lab_shield:
+            # The old task-25 landing predates form rules. The opt-in path uses the battle's real hit
+            # resolution (Disguise, Gulp Missile, shield/charged form changes and buffs included).
+            thrower.energy = energy
+            player = battle.agents[0]
+            battle.agents[0] = _FirstShield(player, shielded, battle.turn)
+            try:
+                battle._throw(1, thrower.build.charged.index(move))
+            finally:
+                battle.agents[0] = player
         else:
-            target.hp -= damage(thrower, move, target)
-        if move.buff_chance and (move.buff_chance >= 1 or rng.random() < move.buff_chance):
-            apply_buffs(thrower, target, move)
+            thrower.energy = energy - move.energy
+            if shielded:
+                ours.shields -= 1
+                target.hp -= 1
+            else:
+                target.hp -= damage(thrower, move, target)
+            if move.buff_chance and (move.buff_chance >= 1 or rng.random() < move.buff_chance):
+                apply_buffs(thrower, target, move)
         ours.busy = foes.busy = 0
         elapsed = 1 + CHARGED_TURNS
         battle.turn += elapsed
         for side in (ours, foes):
             side.switch_wait = max(0, side.switch_wait - elapsed)
+        if self._lab_shield:
+            out = [i for i, side in enumerate(battle.sides) if side.left() == 0]
+            if out:
+                battle.winner = DRAW if len(out) == 2 else 1 - out[0]
+            else:
+                # As in Battle.step, both choices precede either entry (Gulp Missile can faint both).
+                picks = [(i, battle.agents[i].replace(battle.views[i]))
+                         for i, side in enumerate(battle.sides) if side.mon.hp <= 0]
+                for i, slot in picks:
+                    battle._enter(i, slot)
+            return
         if target.hp <= 0:
             if ours.left() == 0:
                 battle.winner = 1

@@ -5646,3 +5646,541 @@ set "PY=C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe"
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-confirm --baseline website --candidates "website,eval=runs/ul-eval/eval.npz" --pairings 2000 --crowd 1000 --pvpoke 0 --workers 30 --seed 4802 >> runs\task48_confirm.out 2>&1
 "%PY%" -X utf8 -u scripts\engine_versus.py --tag ul-nets-nomid --baseline website --candidates "website,q=runs/ul-decide/q-no-midswap.npz,eval=runs/ul-eval/eval.npz" --pairings 1500 --crowd 1500 --pvpoke 0 --workers 30 --seed 4801 >> runs\task48_nomid.out 2>&1
 ```
+
+
+## Mixed engine lab (2026-11-24): opt-in controls built; smoke only, no gain established
+
+Branch `lab-mixed`: `shield_mix=tau`, `shield_floor=p`, `throw_mix=tau`, and `equilibrium=1`, with defaults
+unchanged. Head-specific softmax uses searched worth plus the existing edge bonus for the bot's pick;
+tau zero keeps the strict deterministic search rule. The floor bounds only close shield calls. Exact 2x2
+bait/shield play reuses task 29's paired cell searches and `agents.solve_2x2`; ordinary search keeps the
+hold/throw decision. After review, shield controls search real prompts and preserve the last-Pokemon rule. New dice replay
+across processes, and `engine_versus` prints average probability assigned to the chosen shield/throw option.
+The full design, limitations, raw smoke output, fixtures and test logs are in
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md).
+
+**Initial one-worker functionality smoke (before review, retained for history)**, Great League, WEBSITE models
+and 32 samples, mixed field, seed 5100:
+two H2H pairings both ways, two crowd battles, two PvPoke battles, three reader pairings both ways per
+candidate. All margins printed below are 95%; this tiny normal-approximation sample is not strength evidence.
+
+| Setting on website | H2H score | Crowd | PvPoke | Reader |
+|---|---:|---:|---:|---:|
+| Default | — | 100.0% ± 0.0 | 100.0% ± 0.0 | 66.7% ± 32.7 |
+| `shield_mix=0.05` | 50.0% ± 98.0 | 100.0% ± 0.0 | 100.0% ± 0.0 | 33.3% ± 32.7 |
+| `shield_mix=0.05,throw_mix=0.03` | 25.0% ± 49.0 | 100.0% ± 0.0 | 50.0% ± 98.0 | 33.3% ± 32.7 |
+| `equilibrium=1` | 25.0% ± 49.0 | 100.0% ± 0.0 | 100.0% ± 0.0 | 66.7% ± 32.7 |
+
+Reader paired differences versus baseline in candidate order: -33.3 ± 32.7, -33.3 ± 65.3, +0.0 ± 56.6 points.
+All-smoke candidate shields/prompts: 27/61, 27/62, 27/62; mean assigned choice probabilities: 0.9486, 0.6955,
+0.9936. Baseline outside opponents: 20/50 shields, probability 1.0000. The combination randomizes much more,
+but no reader benefit is established; equilibrium is nearly pure in these positions. These negative/inconclusive
+results are retained. Three resumed invocations took 98.1 + 62.0 + 70.8 seconds (52 actual battles).
+
+Before/after: 422/436 tests, zero assertion failures, three expected missing-OCR errors and seven skips after
+a test-process-only workaround for Windows sandbox temporary-directory ACLs. Literal suite runs had those
+three plus 15 temporary-directory permission errors; no tests were omitted. All 14 new tests pass, including
+three game digests recorded before editing, empirical frequencies and exact equilibrium fixtures. Before and
+after: `108 of 108 PvPoke battles reproduced exactly`.
+
+Full screen **not run here**: `runs/lab-mixed-screen.cmd`, updated after review to 10 workers, seed 5101,
+1,500 H2H pairings both ways, 1,500 crowd, 750 PvPoke, 250 reader pairs, seven candidates including the
+deterministic `website,shield_mix=0` control first (43,000 actual battles).
+A winner needs fresh-seed confirmation. No defaults, models or website changed; no commit or push.
+
+**Independent-review fixes, 2026-11-24.** Engine decision-depth guards keep hypothetical shields on the ordinary
+Learner answer without lab search or mixing draws, including the throw planner and Learner timing post-check.
+The last-Pokemon rule is retained. A fixed shield response expires after its intended throw's step, including
+CMP knockouts. Shield landing chooses both replacements before either enters; a Gulp Missile double-faint
+test matches `Battle.step`. Legacy random decisions are excluded from `mean P(chosen)` and the printout
+labels the exclusion. Legacy/lab key conflicts raise clear errors, and the counting version rejects old totals.
+All 23 mixed tests pass, including 30-seed regressions and unchanged default game digests. Full suite before/after
+review: 436/445 tests (42.111/40.948 seconds), no assertion failures, three expected missing-OCR errors and seven
+skips using the test-process temp-directory workaround. PvPoke before/after: `108 of 108 PvPoke battles reproduced
+exactly`. The initial targeted post-check regression failed because its fixture had not enabled `respect_timing`;
+enabling that existing option made the intended branch execute and the regression pass.
+
+**Post-review smoke**, seed 5102, tag `lab-mixed-review-smoke`, one worker and one NumPy thread, mixed field,
+WEBSITE models and 32 samples. All seven screen candidates ran with two H2H pairings both ways, two crowd,
+two PvPoke and two reader pairings both ways: 62 jobs, **92 actual battles in 455.7 seconds**, completed without
+errors. Percentages below include the script's printed 95% margins; tiny-sample zero margins or intervals
+outside 0..100% do not indicate precision. No strength gain is established.
+
+| Setting on website | H2H | Crowd | PvPoke | Reader | Mean P(chosen), pooled candidate choices |
+|---|---:|---:|---:|---:|---:|
+| Default | — | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 1.0000 |
+| `shield_mix=0` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 1.0000 |
+| `shield_mix=0.02` | 25.0 ± 49.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.9767 |
+| `shield_mix=0.05` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.9563 |
+| `shield_mix=0.1` | 50.0 ± 0.0 | 50.0 ± 98.0 | 100.0 ± 0.0 | 75.0 ± 49.0 | 0.9343 |
+| `throw_mix=0.03` | 50.0 ± 98.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.7758 |
+| `equilibrium=1` | 25.0 ± 49.0 | 100.0 ± 0.0 | 50.0 ± 98.0 | 0.0 ± 0.0 | 0.9855 |
+| `shield_mix=0.05,throw_mix=0.03` | 50.0 ± 0.0 | 50.0 ± 98.0 | 50.0 ± 98.0 | 75.0 ± 49.0 | 0.7170 |
+
+Equilibrium's paired reader change is -75.0 ± 49.0 points (four losses in two pairings); every other candidate's
+reader change is +0.0 ± 0.0 in this smoke. Candidate shields/prompts in table order are 21/54, 21/53, 22/57,
+23/52, 22/69, 22/53 and 24/57. Full output, timings, counts and commands:
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md), `runs/lab-mixed/smoke-review.out`, and
+`runs/lab-mixed/smoke-review-scores.json`. The screen ran later as a league screen (seed 5301): see "Engine lab (2026-11-24)" below. This smoke had estimated 6–9 hours on
+10 workers from this smoke; shared-PC overhead is unknown. No code was edited during the smoke.
+
+## Tactics engine lab (2026-11-24): opt-in controls built; screened in "Engine lab (2026-11-24)" below
+
+On `lab-tactics`, built `finish_safe=1`, `bait_mix=p`, `shield_two=a,shield_one=b`, `swap_after_throw=1`,
+`engine_versus --people N`, and `opponents=people`. No default/model/website change or commit.
+Exact gates, changed functions, every command/result and limitations:
+[`runs/lab-tactics/REPORT.md`](../runs/lab-tactics/REPORT.md).
+
+The Henry Empoleon–Diggersby fixture holds by default and throws Hydro Cannon with `finish_safe`, for both bot
+and website; website now reaches one throw search. All three old game digests also match with the new keys off.
+Full discovery: 485 tests, no failures, 3 expected missing-OCR errors, 7 skips. A process-local temporary-directory
+ACL workaround avoids 16 additional Windows sandbox errors seen in the plain baseline run (469 tests).
+Before and after: `108 of 108 PvPoke battles reproduced exactly`.
+
+Shield selection count (200 bot-v-bot battles, seed 5400): non-final-Pokemon shields were 34% ± 3 by default,
+35% ± 3 at margins .05/0, 36% ± 3 at .1/0. Picked .05/0 for the closer total-rate match. Fresh seed 5402,
+400 battles each: both total rates 34% ± 2; two-shield rate 32% ± 3 to 35% ± 3, one-shield rate 36% ± 4 to
+32% ± 3. First-move shielding 27% ± 4 to 30% ± 5. These are prompt-level margins, not battle-clustered;
+this supports a rate-matching guess, not a strength improvement.
+
+One-worker mixed-field engine-versus smoke, seed 5403: 80 battles in 434.2 seconds, all keys and the combination
+completed, including people as both field and imagined opponent. Only two H2H pairings / crowd / people / PvPoke
+observations and one reader pairing per candidate: no improvement can be established. H2H scores in order
+finish, bait, shield, swap, combination, imagined people: 50% ± 0, 50% ± 98, 75% ± 49, 50% ± 0, 100% ± 0,
+75% ± 49. Full field and paired tables are in the report and `smoke.out`; these tiny normal margins are not
+evidence of precision. Bait chose cheap 9/19 times alone and 10/20 combined; throw-before-swap fired once in
+the combination and zero times standalone. The conservative swap rule still needs a larger activity count.
+
+Both requested 60-decision creator smokes against people passed. Initial seed-1 results reused a website cache
+with three asks against one for each candidate; retained but not treated as controlled comparisons. Reran on fresh
+engine seed 5404 with one ask each: finish_safe value change on website +0.2 ± 1.7 points; bait_mix +0.3 ± 1.8.
+Near-best shares: website 76.7% ± 10.8, finish 73.3% ± 11.3, bait 75.0% ± 11.0. No gain established. Positions and
+values are paired, but creator_exam seeds search dice by spec; some answer differences are search noise.
+
+The eight-worker screen is written as one line in [`runs/lab-tactics-league.cmd`](../runs/lab-tactics-league.cmd),
+seed 5401, website reference, four single-key candidates and their combination. Roughly 4–6 hours from the smoke,
+subject to contention. It has not been launched; no default is promoted. The report records the exact
+throw-before-swap condition and remaining questions about reader resistance, energy use and live timing.
+
+## Combined engine lab (2026-11-24): tree, mixed, learned and tactic keys integrated
+
+`lab-best` starts at `57116741` (the integrated league, creator exam, mixed and
+learning branches), then merges `lab-search` and `lab-tactics`. The search merge
+conflicted in the lab key registry and `engine_versus.py`'s player factory; both
+the tree settings and learned-opponent construction are retained. Tactics merged
+without conflicts. Defaults, shipped models and the website are unchanged.
+
+TreeEngine's `_decide` override bypassed the shared hypothetical-shield guard and
+the completed-swap marker, making `swap_after_throw` inert. Moving its search to
+`_search_decision` restores both. Tree and flat searches share final mixed-choice
+handling; shield priors now use the per-shield-count margins. `finish_safe` and
+`bait_mix` already acted through inherited methods and are covered by the new
+tests. `fix_judged` now includes mid-matchup looks, and direct looks also honor
+`fix_stay`/`fix_judged`. Learned opponents and fixed shield matrix columns work
+inside tree looks. Existing game digests and two pre-fix tree games still match
+with the tactic keys off.
+
+Baseline: 469 tests, zero failures, three expected missing-OCR errors, seven
+skips after the documented temporary-directory ACL workaround (the first plain
+run had 16 additional sandbox ACL errors). First merged verification: 504 full
+tests with the same three errors/seven skips, and 82 lab tests passed. A final
+regression confines `switch_edge`/`no_tell_bait` to their decision heads: **505
+full tests, zero failures, three expected OCR errors, seven skips; all 83 lab
+tests pass**, including 8 tree, 16 tactics and 12 new integration tests.
+Before and after: **108 of 108 PvPoke battles reproduced exactly**.
+
+One-worker smoke, seed 5502, mixed field, website baseline, two pairings both ways
+per candidate; no crowd/people/PvPoke/reader battles in this smoke:
+
+| Candidate | Spec additions, cumulative | H2H, 95% margin | Shields/prompts |
+|---|---|---|---|
+| A | `website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh` | 75.0% ± 49.0 | 7/17 |
+| B | `shield_mix=0` | 75.0% ± 49.0 | 8/19 |
+| C | `finish_safe=1` | 75.0% ± 49.0 | 8/19 |
+| D | `shield_two=0.05,shield_one=0` | 75.0% ± 49.0 | 8/19 |
+| E | `swap_after_throw=1` | 75.0% ± 49.0 | 8/19 |
+
+Exit 0: **20 battles in 123.9 s**. E's swap override did not fire in its four
+games; targeted tests exercise both searched swap heads. These tiny samples
+establish no gain. The requested one-line `runs/lab-best-screen.cmd` uses 16
+workers, seed 5501 and all eight requested measures; it was not launched.
+Estimated 3-5 hours on 16 workers, subject to contention. Full report, command,
+timings and output: [`runs/lab-best/REPORT.md`](../runs/lab-best/REPORT.md).
+
+The sandbox denied writes to the registered worktree's Git metadata outside
+this directory. The merges and final commit use local metadata under
+`runs/lab-best/git`, with a delivery bundle and import instructions in the
+report. The registered `lab-best` branch still needs that import. No push.
+
+## Engine lab (2026-11-24): **tree search with both look-ahead fixes, searched shields and finish_safe beats website 65.0% ± 1.3 on a fresh seed**
+
+The overnight work spans `engine-lab`, `lab-bench`, `lab-creators`, `lab-mixed`, `lab-learn`, `lab-search`, `lab-tactics`, `lab-int` and `lab-best`.
+It adds a benchmark suite, creator review and decision exam, probabilistic decisions, learned opponent models and
+population training, tree search, creator-inspired tactics, and their integration. All changes are opt-in; no default,
+shipped model or website setting changed. This entry records the completed screens that were still pending in the
+earlier entries, using the saved reports and output; no battles or tests were rerun for this write-up.
+
+**The confirmed result.** On fresh seed 2442, the tree with both look-ahead fixes beats the website engine
+**60.7% ± 1.3** head to head over **2,000 pairings played both ways**, gains **+5.0 ± 1.8 points** against the
+crowd and changes PvPoke by **−0.4 ± 2.0**. It also fits the league's live timing limits, measured separately below.
+The stay fix alone reaches **52.8% ± 1.2**. All score margins here are 95%; scores count a draw as half a win,
+and field changes are paired differences on the same battles. Seeds, counts, settings and descriptive timings are
+not score estimates; timing intervals are given where the source reports them.
+
+`fix_stay=1`: the flat look-ahead scored “stay” with a fresh bot that immediately reconsidered switching, so when
+the bot wanted to switch the stay option was scored as that same switch and the engine could not choose to stay.
+The fix makes the first imagined action actually stay, marking the matchup as judged and choosing a fast move or throw.
+
+`fix_judged=1`: fresh imagined players forgot that a matchup had already been settled, so the opponent could switch
+before our throw landed, or our own continuation could switch immediately afterward, for reasons absent from the real position.
+The fix carries our settled matchup into the look-ahead and treats theirs as settled when it persisted across our
+previous decision with their switch available; the integration also covers mid-matchup looks.
+
+`engine=tree,depth=3,root=sh` searches our later choices inside each imagined battle instead of leaving every
+continuation to the trained bot. Depth counts our decision nodes below the root, not battle turns; the trained bot
+supplies the initial advice, and subsequent visits explore alternatives. Sequential halving at the root spends the
+same total simulation budget on progressively fewer candidates, with paired dice and the bot's pick protected.
+The tree is rebuilt per decision. See [the tree docstrings](../pogo/lab/tree.py).
+
+The search screen (seed 2441, 800 pairings, 800 crowd and 400 PvPoke battles) selected the deeper tree for the fresh
+confirmation (seed 2442, 2,000 pairings, 2,000 crowd and 1,000 PvPoke battles). The stay-only control has the flat
+search defaults; it does not include depth or halving.
+
+| Run | Additions to website | H2H % | Crowd Δ, points | PvPoke Δ, points |
+|---|---|---|---|---|
+| Screen 2441 | `engine=tree,fix_stay=1` | 52.8 ± 1.8 | +0.1 ± 1.6 | +0.4 ± 1.4 |
+| Screen 2441 | above + `depth=3,root=sh` | 61.7 ± 2.0 | +2.7 ± 3.1 | +0.4 ± 3.1 |
+| Screen 2441 | above + `fix_judged=1` | 61.9 ± 2.0 | +3.7 ± 3.1 | +2.6 ± 3.1 |
+| Confirm 2442 | stay fix only | 52.8 ± 1.2 | +0.2 ± 1.0 | −0.9 ± 1.0 |
+| Confirm 2442 | tree, depth, halving and both fixes | **60.7 ± 1.3** | **+5.0 ± 1.8** | −0.4 ± 2.0 |
+
+Sources: [search screen](../runs/lab-results/search/lab-search-screen.out) and
+[search confirmation](../runs/lab-results/search/lab-search-confirm.out). This confirms the combined search change;
+it does not isolate a separate gain from `fix_judged`.
+
+**Combining the pieces.** Seed 5501, mixed field: each candidate has 500 pairings against website, 1,000 crowd
+battles and 500 PvPoke battles. A is `website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh`; each later
+row adds to the previous row. All H2H and field comparisons below are against website, not against the preceding
+candidate; the saved table gives no paired margins for incremental gains between candidates.
+
+| Candidate | Addition to previous row | H2H % | Crowd Δ | PvPoke Δ | Exact endgame points lost ↓ | Creator exam near-best % |
+|---|---|---|---|---|---|---|
+| Website | reference | — | — | — | 5.77 ± 2.54 | 75.3 ± 3.3 |
+| A | tree, both fixes, depth and halving | 60.7 ± 2.5 | +6.9 ± 2.7 | +0.5 ± 3.3 | 4.95 ± 2.34 | 76.0 ± 3.3 |
+| B | `shield_mix=0` | 63.8 ± 2.5 | +5.2 ± 2.9 | +0.9 ± 3.3 | 4.95 ± 2.34 | 76.1 ± 3.3 |
+| C | `finish_safe=1` | 64.2 ± 2.5 | +5.5 ± 2.9 | +0.9 ± 3.3 | 4.01 ± 1.96 | 76.0 ± 3.3 |
+| D | `shield_two=0.05,shield_one=0` | 64.1 ± 2.4 | +5.5 ± 2.9 | +0.6 ± 3.3 | 3.85 ± 1.95 | 76.4 ± 3.2 |
+| E | `swap_after_throw=1` | 63.0 ± 2.5 | +4.3 ± 2.9 | +0.3 ± 3.3 | 3.91 ± 2.01 | 76.4 ± 3.2 |
+
+Deterministic shield search raises the H2H point estimate; the safe-finish fix adds little to wins here but corrects
+a real losing decision. Retiming shields adds no clear strength, and throwing before switching brings the point
+estimate down. C's exact-endgame loss relative to website improves by **−1.76 ± 1.49 points per decision** on the
+318 frozen positions; its extra benefit over B is not separately established. All rows pass the screen's bot rule,
+but this is selection data. [Combined table](../runs/lab-results/best-screen/table.md);
+[integration report](../runs/lab-best/REPORT.md).
+
+The confirmation compares C and C with `q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz` against website,
+keeping the shipped imagined opponent when testing the population network. Its table belongs here:
+
+**Confirmation, fresh seed 5502** (`runs/lab-best-confirm.out`, `engine_versus.py --field mixed`, 2,000 pairings both ways,
+2,000 crowd, 1,000 PvPoke, 16 workers, 6,200 s), against website (crowd 75.9% ± 1.9, PvPoke 85.3% ± 2.2):
+
+| Engine | Head to head | Crowd | PvPoke | Search ms, median / 99th / worst |
+|---|---|---|---|---|
+| C: tree + fix_stay + fix_judged + `shield_mix=0` + `finish_safe=1` | **65.0% ± 1.3** | 80.2% ± 1.7, **+4.2 ± 2.0** | 86.2% ± 2.1, +0.9 ± 2.4 | 125 / 547 / 1,453 |
+| C with the population q (`q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz`) | **65.8% ± 1.3** | 82.6% ± 1.7, **+6.7 ± 2.0** | 87.0% ± 2.1, +1.7 ± 2.4 | 125 / 562 / 1,312 |
+
+Both pass the adoption rule on the fresh seed: above 50% head to head beyond the margin, and no loss beyond the margin
+against the crowd or PvPoke's AI (both gain against the crowd beyond it). Search times are unhurried, on this PC; the
+league's live timing for C under the website's deadlines was 141 ms median, 547 ms 99th percentile, 5.7% cut short.
+
+
+**Mixed decisions.** The mixed league (seed 5301, same screen sizes) separates deterministic shield search from
+randomizing its answer. `shield_mix=0` turns on shield search with a deterministic final choice; the website
+normally leaves shields to the trained bot. Positive temperatures sample choices by their searched worth, and
+`equilibrium=1` solves the local bait/shield game, not the whole battle.
+
+| Website addition | H2H % | Crowd Δ | PvPoke Δ | Reader's gain ↓, points | Predictable modal share % |
+|---|---|---|---|---|---|
+| None | — | — | — | +3.8 ± 3.0 | 97.7 ± 1.2 |
+| `shield_mix=0` | 54.1 ± 2.4 | −0.1 ± 2.6 | +0.2 ± 2.7 | +3.1 ± 3.0 | 97.8 ± 0.9 |
+| `shield_mix=0.05` | 50.6 ± 2.6 | −2.6 ± 2.7 | −0.5 ± 3.1 | +2.2 ± 3.0 | 92.8 ± 1.7 |
+| `shield_mix=0.1` | 46.7 ± 2.6 | −5.9 ± 3.0 | −5.5 ± 3.4 | +1.5 ± 3.2 | 87.9 ± 2.1 |
+| `throw_mix=0.03` | 46.9 ± 2.5 | −5.3 ± 2.7 | −3.0 ± 3.2 | +2.2 ± 3.0 | 90.3 ± 1.9 |
+| `equilibrium=1` | 48.6 ± 2.7 | −2.8 ± 2.9 | −0.1 ± 3.0 | +2.5 ± 2.5 | 94.9 ± 1.8 |
+| `temperature=0.02` | 45.6 ± 2.4 | −7.6 ± 2.8 | −5.2 ± 3.3 | +0.5 ± 3.2 | 89.0 ± 2.1 |
+
+Mixing makes the engine less predictable and slightly less readable on the point estimates, but loses against bots,
+more so as shield randomness rises. Even the largest apparent reduction in the reader's gain,
+**−3.3 ± 3.9 points** for temperature, is within its margin. The gain to pursue is deterministic shield search,
+not the randomness; its standalone result is still a screen. The reader predicts throws only, while predictability
+re-asks each engine's own positions with fresh dice, so those position samples are not paired between engines.
+[Mixed table](../runs/lab-results/mixed-league/table.md); [mixed controls](../runs/lab-mixed/REPORT.md).
+
+**Creator review and exam.** Creators shield earlier: with two shields **43% ± 8**, with one **30% ± 8**,
+against website's **27% ± 6** and **35% ± 10**. Real bait opportunities are mixed: creators choose the cheaper
+move **32% ± 9**, their opponents **49% ± 11**, website **22% ± 10**. Creators hold more spare energy,
+often throw before switching (**61% ± 8** of switches soon after their own throw, website **46% ± 10**),
+and use sacrificial switch-ins. These are patterns to test, not rules proved by imitation.
+
+Coarse situation matching makes creators' shields look rule-like; it cannot distinguish hidden state from deliberate
+mixing. Baits remain hard to predict from those features and look mixed. The review does not establish deliberate
+shield randomization. The automated creator exam covers **657 decisions from 29 passing records**, with **100
+play-outs per legal action**, value and engine seed **1**. The people-like judge is still a bot continuation;
+“near best” means within **0.03** of its highest-valued action.
+
+| Engine | Agrees with creator % | Value minus creator, points | Near best % |
+|---|---|---|---|
+| Website | 43.7 ± 3.8 | +4.0 ± 1.6 | 73.5 ± 3.4 |
+| Shipped bot | 53.0 ± 3.8 | +2.0 ± 1.3 | 70.3 ± 3.5 |
+| Website with searched shields | 44.0 ± 3.8 | +4.5 ± 1.6 | 76.0 ± 3.3 |
+| Bot with copied creator shields (in-sample) | 54.6 ± 3.8 | +2.1 ± 1.3 | 71.7 ± 3.4 |
+| `website,temperature=0.02` (3 asks) | 38.4 ± 3.3 | +3.7 ± 1.6 | 68.5 ± 3.6 |
+
+Creators themselves score **66.7% ± 3.6** near best under this judge. That does not mean bots play better than
+creators: the judge continues with our bot, as the website search does, and cannot value a human read or threat.
+
+The review found that `real_decisions.py` / `advise.rebuild` leaves `Side.shown` at the lead on both sides,
+corrupting bench/unseen inputs after a switch and sometimes making imagination fail; only the exam's position
+reconstruction fixes it, so the older real-decisions table needs rebuilding. It also found the unsafe finishing-fast
+shortcut: the bot can choose a fast move that would knock out the opponent even though their charged move lands first.
+`finish_safe=1` checks whether we are doomed before that fast move finishes and, if so, reaches the ordinary
+throw decision and engine search instead of returning FAST; it does not force a charged move regardless of search.
+The Henry Empoleon/Diggersby position demonstrates this bug. [Creator report](../runs/lab-creators/REPORT.md).
+
+Creator tactics did not help against bots in the full seed-5401 screen (500 pairings, 1,000 crowd, 500 PvPoke).
+The shield margins retime shield use, bait mixing randomizes eligible throws, and throw-before-switch spends an
+eligible charged move before reconsidering a searched voluntary switch.
+
+| Website addition | H2H % | Crowd Δ | PvPoke Δ |
+|---|---|---|---|
+| `finish_safe=1` | 49.8 ± 2.1 | +0.4 ± 0.5 | +0.0 ± 0.0 |
+| `bait_mix=0.4` | 45.3 ± 2.4 | −1.0 ± 1.6 | +0.9 ± 1.3 |
+| `shield_two=0.05,shield_one=0` | 49.7 ± 2.4 | −2.1 ± 1.6 | −1.2 ± 2.1 |
+| `swap_after_throw=1` | 48.9 ± 2.2 | −1.2 ± 0.9 | +0.8 ± 1.0 |
+| All four | 46.0 ± 2.5 | −3.5 ± 2.2 | +0.1 ± 2.6 |
+
+[Full tactics table](../runs/lab-results/tactics-league/table.md); [implementation and checks](../runs/lab-tactics/REPORT.md).
+A specific bug fix can still merit Luke's exam even when it barely changes aggregate bot wins; the other tactics
+have no supported strength gain here.
+
+**Learning.** The imagined-opponent finding is a proxy, at `samples=8`, seed 7211. Changing both our network
+and the imagined opponent to the earlier round-2 network scored **44.2% ± 4.7** against website (160 pairings).
+Keeping that new network on our side but restoring the shipped imagined opponent scored **49.1% ± 3.3**;
+keeping our shipped network and changing only the imagined opponent scored **43.4% ± 3.1** (320 pairings each).
+The latter two are **+5.6 ± 4.3 points** apart on the same pairings. This points to the imagined opponent as a
+cause of earlier new-network regressions; it is not a full-strength confirmation. Future q comparisons should
+hold `opp_q=runs/general-decide/q.npz` fixed as a control.
+
+Population training draws opponents from varied rules, past networks and people-like players, retains examples
+across generations, and includes both sides and PvPoke duels. Its saved checks against the shipped bot use 2,000
+pairings both ways and the same 2,000 crowd battles per generation:
+
+| Generation | Check seed | H2H vs shipped bot % | Crowd Δ, points |
+|---|---|---|---|
+| 1 | 4250 | 51.3 ± 1.3 | +2.1 ± 2.2 |
+| 2 | 4251 | 53.2 ± 1.3 | +0.9 ± 2.2 |
+| 3 | 4252 | 53.8 ± 1.3 | +1.7 ± 2.2 |
+
+The later generations gain head to head; none establishes a crowd gain. These are generation checks, not a fresh
+confirmation of a selected model inside the website engine. The run also fitted an evaluation; no playing-strength
+gain for that evaluation is established by its prediction checks. [Population output](../runs/lab-results/population/lab-learn-population.out).
+
+piKL adds `lam * log P(person's choice)` to the bot's values using a fitted owner-policy anchor. Against the
+human-style bot, `lam=0.03` changes score by **+0.5 ± 5.2 points** and `lam=0.1` by **−9.0 ± 5.0**;
+small anchoring is neutral and stronger anchoring loses. A sampled learned engine policy also loses there,
+**−14.0 ± 7.3 points**; learning where the engine departs from the bot is not enough to replace its search.
+[Learning report](../runs/lab-learn/REPORT.md).
+
+**Timing and what Luke decides.** Unrestricted seed-2442 search timings, median / p99 / worst per searched
+decision: tree plus both fixes **109 / 578 / 1,203 ms**; stay fix alone **109 / 562 / 1,312 ms**. These are
+descriptive measurements with no margins supplied, and engine-versus lifts live deadlines. The separate seed-5501
+league timing uses the website's real deadlines, 100 battles per setting, on this PC's CPU clock:
+
+| Setting | Median ms | p99 ms (95% interval) | Cut short % (95% interval) | No complete round % |
+|---|---|---|---|---|
+| Website | 125 | 532 (516–578) | 5.6 (3.9–7.7) | 0.1 |
+| A: tree and both fixes | 125 | 547 (531–594) | 6.4 (4.5–8.2) | 0.3 |
+| C: plus searched shields and safe finish | 141 | 547 (516–573) | 5.7 (4.1–7.3) | 0.2 |
+
+All combined candidates meet the release limits: p99 below 800 ms, cuts below 20%, and no complete round below
+0.5%. The source supplies no interval for the median or no-round share. These timings support live feasibility,
+not a claim about another machine or live-game win rate.
+
+Luke has a confirmed search candidate A and a combined candidate C for his exam, with C plus the population q
+awaiting the seed-5502 comparison. After filling that table, compare the candidates on his exam and check the
+standard field as well as mixed before he chooses what to put on the website. Shield retiming, bait mixing,
+throw-before-switch and piKL have not earned promotion. Every strength number here is against bots or a bot-based
+judge; creator habit rates are observations, and **people are judged only by Luke's exam**.
+
+The league in `scripts/lab/league.py` makes those checks repeatable: paired H2H and fields, optional round robin,
+throw-reader probe, predictability, live timing, exact endgames and the creator exam, with resumable output.
+The [league report](../runs/lab-league/REPORT.md) defines the measures and their limits. Missing here: completed
+combined confirmation, the standard-field cross-check, Luke's exam on these candidates, a full-strength confirmation
+of the imagined-opponent proxy, and a shield-specific reader. No larger-network experiment, live-account action,
+default change or website deployment is part of these results.
+
+**Commands and provenance.** The command lines below are copied verbatim from the named `.cmd` files.
+The best screen, tactics screen and population command settings match the saved run records; the best-confirm
+command is the confirmation run. The older search command files are stale: the screen file says 2 workers while its
+output says 8, and the confirm file also lacks `fix_judged=1` and the stay-only control present in the output.
+They are retained as recorded commands, not passed off as exact reproductions of those completed runs.
+
+There is no seed-5301 league command in the supplied `.cmd` files: `runs/lab-mixed-screen.cmd` is an earlier
+seed-5101 `engine_versus.py` command with different candidates and counts. The source for the reported mixed
+results is the seed-5301 table. The proxy and original creator exam commands/results are in their reports;
+`runs/lab-creators-exam.cmd` proposes a later exam run and is not evidence that it completed.
+
+`runs/lab-best-screen.cmd`:
+
+```bat
+cd /d C:\Users\marco\Developer\pokemon_go-lab-best && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\lab\league.py --reference website "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,shield_two=0.05,shield_one=0,swap_after_throw=1" --preset screen --workers 16 --tag best-screen --seed 5501 --measures h2h,crowd,pvpoke,reader,predict,timing,endgame,creator >> runs\lab-best-screen.out 2>&1
+```
+
+`runs/lab-tactics-league.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-lab-tactics" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\lab\league.py --reference website "website,finish_safe=1" "website,bait_mix=0.4" "website,shield_two=0.05,shield_one=0" "website,swap_after_throw=1" "website,finish_safe=1,bait_mix=0.4,shield_two=0.05,shield_one=0,swap_after_throw=1" --preset screen --workers 8 --tag tactics-screen --seed 5401 --measures h2h,crowd,pvpoke,reader,predict,timing,endgame,creator >> runs\lab-tactics-league.out 2>&1
+```
+
+`runs/lab-learn-population.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-lab-learn" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\lab\train_population.py --run lab-learn/population --generations 3 --minutes 180 --workers 8 --check 2000 >> runs\lab-learn-population.out 2>&1 && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\train_eval.py --wide --battles 40000 --workers 8 --q runs/lab-learn/population/q.npz --out runs/lab-learn/population/eval.npz >> runs\lab-learn-population.out 2>&1
+```
+
+`runs/lab-best-confirm.cmd`:
+
+```bat
+cd /d "C:\Users\marco\Developer\pokemon_go-lab-best" && set "OMP_NUM_THREADS=1" && "C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe" -X utf8 -u scripts\engine_versus.py --field mixed --pairings 2000 --crowd 2000 --pvpoke 1000 --workers 16 --seed 5502 --tag best-confirm --baseline website --candidates "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz" >> runs\lab-best-confirm.out 2>&1
+```
+
+`runs/lab-search-screen.cmd` (stale local copy; differences noted above):
+
+```bat
+cd /d C:\Users\marco\Developer\pokemon_go-lab-search && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\engine_versus.py --field mixed --pairings 800 --crowd 800 --pvpoke 400 --chunk 3 --workers 2 --seed 2441 --tag lab-search-screen --baseline website --candidates "website,engine=tree,fix_stay=1" "website,engine=tree,fix_stay=1,depth=3,root=sh" "website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh" >> runs\lab-search-screen.out 2>&1
+```
+
+`runs/lab-search-confirm.cmd` (stale local copy; differences noted above):
+
+```bat
+cd /d C:\Users\marco\Developer\pokemon_go-lab-search && set "OMP_NUM_THREADS=1" && C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts\engine_versus.py --field mixed --pairings 2000 --crowd 2000 --pvpoke 1000 --chunk 3 --workers 2 --seed 2442 --tag lab-search-confirm --baseline website --candidates "website,engine=tree,fix_stay=1,depth=3,root=sh" >> runs\lab-search-confirm.out 2>&1
+```
+
+**Round 2, tuning the best engine (2026-11-24 evening, `runs/lab-tune-1.out`, seed 5601, 1,000 pairings both ways, 1,000
+crowd, 500 PvPoke, 16 workers, 7,172 s).** Baseline: the confirmed best with the population q, depth 3 (P =
+`website,engine=tree,fix_stay=1,fix_judged=1,root=sh,shield_mix=0,finish_safe=1,q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz,depth=3`).
+Every variant plays level with it, so these settings sit on a plateau:
+
+| Change to P | Head to head against P | Crowd | PvPoke |
+|---|---|---|---|
+| `depth=2` | 50.7% ± 1.7 | -0.5 ± 1.9 | -1.9 ± 2.2 |
+| `depth=4` | 50.2% ± 1.7 | +0.1 ± 1.6 | +0.8 ± 1.6 |
+| the population-refitted evaluation (`eval=runs/lab-results/population/eval.npz`) | 50.1% ± 1.8 | -1.8 ± 2.4 | +0.6 ± 2.8 |
+| `shield_two=0.05,shield_one=0` | 50.4% ± 1.7 | -0.4 ± 1.0 | +0.4 ± 1.5 |
+
+Search time is unchanged (median 125-141 ms, 99th percentile 594-609 ms unhurried). Further gains against bots need a
+different lever than these knobs; the next judge is the owner's exam, against people.
+
+**Round 3, more population training (2026-11-24 night, `runs/lab-learn-population-2.out` on lab-learn, `runs/lab-tune-2.out`).**
+Generations 4-6 (60 min of examples each, 14 workers, resumed after generation 3): against the shipped bot 52.9 / 53.5 /
+53.3% ± 1.3 (2,000 pairs both ways; generation 3 was 53.8%), crowd +3.4 / +0.8 / +1.6 ± 2.2. Inside the best engine,
+generation 6's q against generation 3's (seed 5701, 1,000 pairings both ways): 50.2% ± 1.9, crowd -0.4 ± 2.3, PvPoke -0.8
+± 2.7. The population training has plateaued at generation 3 too; generation 3 (`runs/lab-pop-q.npz`) stays the network
+of the best engine.
+
+**The set of engines judged together (2026-11-24 night, `runs/lab-league/engine-set/table.md`, fresh seed 5801, league
+screen preset, every measure, 14 workers).** Reference: website. Engines: 1 bot; 2 tree + fix_stay; 3 + fix_judged, depth 3,
+root sh; 4 + shield_mix=0, finish_safe; 5 + the population q (opp_q on the shipped q).
+
+| # | Head to head vs website | Crowd Δ | PvPoke Δ | Round robin (mean) | Reader's gain ↓ | Predictable | Live ms median / p99, cut | Endgame points lost Δ | Creator exam |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 bot | 26.6 ± 2.4 | -10.2 ± 3.2 | -0.7 ± 3.7 | 21.9 ± 2.3 | +1.0 ± 1.3 | 100.0% | – | – | – |
+| 2 | 52.2 ± 2.3 | -0.2 ± 1.4 | +0.4 ± 1.4 | 48.7 ± 1.8 | +2.4 ± 3.2 | 98.3% | 109 / 516, 4.3% | +0.00 | 75.2 ± 3.3 |
+| 3 | 60.5 ± 2.4 | +4.0 ± 2.7 | +5.9 ± 3.0 | 57.6 ± 2.2 | +2.4 ± 3.1 | 97.8% | 109 / 516, 3.6% | -0.81 ± 1.20 | 75.0 ± 3.3 |
+| 4 | 62.6 ± 2.5 | +4.0 ± 2.9 | +6.0 ± 3.1 | 61.3 ± 2.2 | +0.0 ± 3.1 | 97.1% | 125 / 531, 4.5% | -1.76 ± 1.49 | 76.9 ± 3.2 |
+| 5 | 65.5 ± 2.5 | +5.7 ± 3.0 | +4.4 ± 3.1 | 63.7 ± 2.7 (best) | +3.8 ± 3.0 | 95.5% | 125 / 543, 5.0% | -2.18 ± 1.71 | 74.7 ± 3.3 |
+
+Website itself: crowd 76.0 ± 2.6, PvPoke 84.1 ± 3.2, creator exam 74.4 ± 3.3, live 109 / 531 ms, 3.9% cut. The round robin is
+ordered with no cycle: each engine beats every earlier one (5 against 4: 52.1 ± 3.9; 4 against 3: 54.9 ± 4.1; 3 against 2:
+58.2 ± 3.7). All four tree engines stay inside the release limits (p99 under 800 ms, cut short under 20%) and give away
+fewer exact-endgame points the more of the lab's changes they carry. The creator exam (decision quality on the creators'
+positions, a bot-continued judge) is level across them (74.4-76.9 ± 3.3). The reader gains about as much against each
+(+0.0 to +3.8 ± 3.1): these engines are not much easier or harder to read than today's.
+
+**Round 4 (2026-11-25 night, `runs/lab-tune-3.out`, `runs/lab-people-set.out`, 14 workers).**
+
+Tree settings against the best engine P (seed 5901, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke): `c_puct=1.0` 49.2%
+± 1.8 (PvPoke -3.1 ± 2.5), `c_puct=0.25` 47.7% ± 1.7 (worse beyond the margin), `prior_temp=0.05` 50.1% ± 1.7, `prior_temp=0.2`
+50.1% ± 1.6. The defaults (c_puct 0.5, prior_temp 0.1) stay; with rounds 2 and 3 this is the plateau against bots.
+
+Against person-like opponents (`scripts/lab/versus_people.py`, seed 6101, 1,000 battles per engine over three opponents:
+`human` = the bot with human settings and the creators' shield calls; `owner` / `owner_top` = an imitation of the owner's
+own website games, drawn / likeliest), points on the website engine:
+
+| Engine | human | owner (drawn) | owner (likeliest) |
+|---|---|---|---|
+| website (score) | 71.9% ± 4.8 | 88.6% ± 3.4 | 88.1% ± 3.5 |
+| tree + fix_stay + fix_judged | **+10.0 ± 4.5** | **+4.2 ± 3.4** | +1.1 ± 3.5 |
+| + shield_mix=0, finish_safe | +4.3 ± 5.0 | +3.5 ± 3.7 | **+5.3 ± 3.6** |
+| + population q (best) | **+7.0 ± 5.1** | **+5.1 ± 3.9** | **+5.1 ± 3.6** |
+
+The tree engines' gain is not only against bots: against these person-like opponents too they win more often than the
+website engine. These opponents are imitations (the owner's is a weak player in the simulator, `runs/lab-learn/REPORT.md`),
+so the owner's exam remains the real judge against people.
+
+## Exam variant factory (2026-11-25): lab engines supported, private exam not scored here
+
+`scripts/exam_variants.py` now uses `engine_versus.parse()`/`pilot()` for variants,
+including tree/tactic keys and separate `q`/`opp_q` models. The shared factory can
+receive the exam's model/pool state without changing the versus worker's state.
+The exam's website reference, `seed + 2` variant dice, replay logic and key checks
+are unchanged; bare specs still use 32 samples and the legacy `stay_after_replace`
+interpretation. Each engine retains its own evaluator cache.
+
+Two new tests need no answer files. All five requested variants build and search
+a constructed position (standalone smoke: 1.432 s). Twelve old-style settings at
+both exam side offsets match the previous direct Engine construction for action,
+shield, replacement, search count and random states (24 comparisons). Both tests
+pass, 11.797 s together. Full suite before/after: 511/513 tests, zero failures,
+three expected `rapidocr_onnxruntime` import errors and seven skips; final 56.238 s.
+PvPoke before/after: **108 of 108 reproduced exactly**.
+
+The first plain baseline had 19 errors: those three OCR errors plus 16 documented
+Windows temporary-directory permission errors. Baseline and final discovery used
+the existing process-local inherited-ACL workaround, one worker and one NumPy
+thread; no tests were suppressed. Logs: `runs/lab-best/exam-baseline-tests.out` and
+`runs/lab-best/exam-tests.out`. No private exam score or strength claim. No commit
+or push; the sandbox denied `git pull --ff-only` when opening external worktree
+metadata. The Mac scoring command is in `runs/lab-best/REPORT.md`.
+
+**Round 5, more search time (2026-11-25, `runs/lab-tune-4.out`, `runs/lab-league/samples-timing/table.md`).** The best engine P
+with more imagined battles against itself at 32 (seed 6201, 1,000 pairings both ways, 1,000 crowd, 500 PvPoke): `samples=48`
+**52.1% ± 1.7** (crowd -0.4 ± 2.2, PvPoke +1.1 ± 2.2), `samples=64` **52.8% ± 1.6** (crowd -0.1 ± 2.2, PvPoke -0.7 ± 2.3); both
+measured without deadlines. Under the website's live deadlines (league timing, 100 battles each, seed 6202): 32 → 99th
+percentile 588 ms, 3.1% cut short; 48 → 776 ms (interval 719-858), 10.6% cut short, inside the release limits but only just;
+64 → 938 ms, 16.9% cut short, over the limit. So 48 imagined battles buy about 2 points if the browser has the time; on
+slower phones more searches would be cut short and the gain would shrink. Left as an option (`samples=48`), not proposed
+as the default. (`scripts/realtime_trial.py --settings` cannot load a `q=PATH` network; the league's timing can.)
+
+**Fresh-seed check of 32 against 48 imagined battles (2026-11-25, `runs/lab-best48-confirm.out`, seed 6301, 2,000 pairings
+both ways, 2,000 crowd, 1,000 PvPoke, 14 workers), against the website engine:** P (32) **65.7% ± 1.3**, crowd +5.4 ± 2.1,
+PvPoke +3.2 ± 2.5, search 125 / 594 ms; P with `samples=48` **66.1% ± 1.3**, crowd +6.2 ± 2.1, PvPoke +4.2 ± 2.5, search 188 /
+844 ms (unhurried). The extra search buys about half a point against the website engine for half again the search time
+and a 99th percentile at the edge of the release limit, so the recommendation stays at 32. P is confirmed a third time
+(65.0-65.8% on seeds 5502, 5801 and 6301).
+
+**Mixed decisions and creator tactics judged against person-like opponents (2026-11-25, `runs/lab-people-mixed.out`,
+`scripts/lab/versus_people.py`, seed 6401, 1,500 battles per engine over `human` / `owner` / `owner_top`, 500 each).**
+Baseline: the best engine P (human 77.6% ± 3.6, owner 89.9% ± 2.6, owner_top 92.9% ± 2.2). Points on P:
+
+| On top of P | human | owner (drawn) | owner (likeliest) |
+|---|---|---|---|
+| `shield_mix=0.05` (instead of 0) | -1.1 ± 3.2 | **-2.9 ± 2.2** | **-3.2 ± 2.0** |
+| `throw_mix=0.03` | **-4.5 ± 3.4** | -1.5 ± 2.6 | -0.8 ± 2.3 |
+| `bait_mix=0.4` | **-2.7 ± 2.6** | -1.1 ± 1.6 | -0.3 ± 1.4 |
+| `shield_two=0.05,shield_one=0` | -0.7 ± 1.6 | -0.2 ± 1.0 | -0.8 ± 1.0 |
+
+Mixing (probabilistic shields, throws or baits) costs points against these person-like opponents too, not only against
+bots; front-loaded shield margins are level. The opponents are imitations and cannot punish predictability the way a
+person who learns the engine over many games can, so the owner's exam and live games remain the test of that.

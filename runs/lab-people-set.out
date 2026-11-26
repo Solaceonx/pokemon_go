@@ -1,0 +1,21 @@
+400 jobs on 14 workers
+
+person-like opponents, 1000 battles, seed 6101, field mixed; baseline: website
+  website
+    human 71.9% ± 4.8 (334)
+    owner 88.6% ± 3.4 (333)
+    owner_top 88.1% ± 3.5 (333)
+  website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh
+    human 81.9% ± 4.1 (334), +10.0 ± 4.5 on the baseline
+    owner 92.8% ± 2.8 (333), +4.2 ± 3.4 on the baseline
+    owner_top 89.2% ± 3.3 (333), +1.1 ± 3.5 on the baseline
+  website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1
+    human 76.2% ± 4.6 (334), +4.3 ± 5.0 on the baseline
+    owner 92.0% ± 2.9 (333), +3.5 ± 3.7 on the baseline
+    owner_top 93.4% ± 2.7 (333), +5.3 ± 3.6 on the baseline
+  website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz
+    human 78.9% ± 4.4 (334), +7.0 ± 5.1 on the baseline
+    owner 93.7% ± 2.6 (333), +5.1 ± 3.9 on the baseline
+    owner_top 93.2% ± 2.7 (333), +5.1 ± 3.6 on the baseline
+
+elapsed 1250 s; results: runs/lab-learn/versus_people/people-set.json

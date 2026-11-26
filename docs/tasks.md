@@ -4,6 +4,36 @@ Open work on the bot, each brief self-contained. Read `AGENTS.md` first (setup, 
 task), then `docs/status.md` for every result so far. To take a task, put your name after its title here
 and push that before starting.
 
+## Exam screen: lab engine variants (2026-11-25) — complete locally
+
+`scripts/exam_variants.py` now delegates variant parsing and construction to
+`engine_versus`, supplying the exam's existing evaluator, pool and seed offsets.
+The website reference and replay/key checks remain unchanged. Bare settings keep
+32 samples and their legacy boolean interpretation. Two answer-free tests cover
+the four requested lab engines plus `switch_edge=0.1`, and legacy decision/dice
+parity. Full suite: 513 tests, zero failures, three expected OCR errors, seven
+skips; PvPoke 108/108. No commit or push. Luke's private exam scoring remains to
+be run on his Mac; command and validation details: `runs/lab-best/REPORT.md`,
+"Exam variant factory follow-up".
+
+## Engine lab: combine best pieces (2026-11-24) — built and validated locally; branch import pending
+
+Merged `lab-search`, then `lab-tactics`, onto the `lab-best`/`lab-int` starting
+point. The A-E tree/tactics specs compose, with opt-in fixes for shield advice,
+shield priors, searched swap marking and mid-matchup look state. Defaults stay
+unchanged. Final checks: 505 tests, no failures, three expected OCR errors and
+seven skips; all 83 lab tests pass; PvPoke 108/108. One-worker smoke: two pairings
+both ways for each of A-E against website, all 75.0% ± 49.0, 20 battles in 123.9 s.
+No strength gain established. The requested 16-worker screen is written, not run,
+in `runs/lab-best-screen.cmd` (seed 5501).
+
+The sandbox cannot write this worktree's external Git metadata. Merges and the
+integration commit are on `lab-best` in `runs/lab-best/git`, supplied in a local
+bundle for import; the registered branch has not advanced. Report, exact specs,
+checks, smoke output and import instructions: `runs/lab-best/REPORT.md`.
+No push. Remaining work: import the bundle, run the screen, then confirm any
+selected candidate on fresh battles before considering adoption.
+
 ## Where things stand (2026-10-17)
 
 - **The bot**: hand-written rules (`Planner`, `pogo/agents.py`) plus a learned layer that may overrule
@@ -37,6 +67,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| Lab tactics | Creator-inspired opt-in tactics and PeopleLike field, branch `lab-tactics` (2026-11-24): built and smoke-tested; brief and results in `runs/lab-tactics/REPORT.md` | Coordinator screen pending; `runs/lab-tactics-league.cmd`, 8 workers |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
 | **41** | **Shield calls the way strong players make them: how far the trained bot may overrule the rulebook's shield call** — Marco; measured 2026-11-04, no gain against bots; merged 2026-11-05 as a record; exam screen 2026-11-05: `shield_margin=0.05` better for both players on 3 picks, into exam 2 | Done; exam 2 |
 | **42** | **Opponents fitted to people: the rulebook's settings fitted to human decisions, as imagined and test opponents** — for Marco after task 41; **data ready on branch `task42-export` (2026-11-05)** | Marco's machine; small data |
@@ -733,6 +764,18 @@ edge against the bot itself; report it).
 
 ## 29. Mixed choices at simultaneous moments, and plenty of randomisation: measured; no confirmed gain — Marco
 
+**2026-11-24 engine lab follow-up, branch `lab-mixed`: review fixes validated; full screen pending.** Added opt-in
+`shield_mix`, `shield_floor`, `throw_mix`, and exact bait/shield `equilibrium`, seeded private dice, probability
+counters and 23 tests. Hypothetical shields retain the Learner answer, last-Pokemon shields retain the rulebook,
+CMP cannot carry a fixed shield into a later turn, and double-faint replacements are simultaneous. Legacy random
+choices are excluded from the probability counter; conflicting legacy/lab keys fail clearly. Full suite: 445 tests,
+no assertion failures, three expected missing-OCR errors, seven skips; PvPoke 108/108.
+All seven screen candidates completed a fresh-seed one-worker smoke (92 battles, 455.7 seconds); no strength
+gain established, and equilibrium lost its four reader smoke battles. Details and all results:
+[`runs/lab-mixed/REPORT.md`](../runs/lab-mixed/REPORT.md); the coordinator's 10-worker screen, now including
+the deterministic `website,shield_mix=0` control first, is
+`runs/lab-mixed-screen.cmd`. No commit or push from this worktree.
+
 **Why.** Both players choose at once, every turn. The engine always takes the single best-looking option, so a player
 who reads it (when it baits, when it shields, when it throws) can exploit it. The owner wants it hard to read: mix at
 the mind-game moments and randomise a lot elsewhere.
@@ -1003,4 +1046,19 @@ camera, on the same battles.
 **Done when.** From the rough camera the new bot scores higher than the current bot by
 more than the margin, and from the perfect camera it is not worse beyond the margin.
 Both conditions, with numbers. If only one holds, say so.
+
+## Engine lab tactics (2026-11-24, branch `lab-tactics`)
+
+**State:** implementation and local verification complete; full league screen pending. No commits or default changes.
+The assigned work was opt-in `finish_safe`, `bait_mix`, separate `shield_two`/`shield_one` margins,
+`swap_after_throw`, and the creator exam's PeopleLike as an engine-versus field and imagined opponent.
+All are built. Regression tests include the Henry finishing-fast position and pre-mixed default game digests.
+The selected shield-rate guess is `shield_two=0.05,shield_one=0`, checked on fresh seed 5402.
+Full measurements, commands, assumptions and files/functions are in
+[`runs/lab-tactics/REPORT.md`](../runs/lab-tactics/REPORT.md).
+
+**Next:** the coordinator runs [`runs/lab-tactics-league.cmd`](../runs/lab-tactics-league.cmd): website reference,
+four individual candidates and all four together, screen preset, seed 5401, eight workers, about 4–6 hours.
+It measures h2h, crowd, PvPoke, reader, predictability, timing, endgame and creator decisions. No screen or adoption
+is claimed; any selected candidate still needs confirmation on a fresh seed and the owner's usual field checks.
 

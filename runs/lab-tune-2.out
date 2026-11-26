@@ -1,0 +1,57 @@
+800 jobs to run on 14 workers
+  140 results, 1 min
+  305 results, 2 min
+  475 results, 3 min
+  655 results, 4 min
+  835 results, 5 min
+  1005 results, 6 min
+  1190 results, 7 min
+  1375 results, 8 min
+  1505 results, 10 min
+  1570 results, 11 min
+  1615 results, 12 min
+  1665 results, 13 min
+  1715 results, 14 min
+  1760 results, 15 min
+  1815 results, 17 min
+  1875 results, 18 min
+  1920 results, 19 min
+  1960 results, 20 min
+  2015 results, 21 min
+  2075 results, 22 min
+  2115 results, 23 min
+  2170 results, 25 min
+  2225 results, 26 min
+  2260 results, 27 min
+  2310 results, 28 min
+  2355 results, 29 min
+  2400 results, 30 min
+  2465 results, 31 min
+  2605 results, 32 min
+  2765 results, 33 min
+  2950 results, 34 min
+  3115 results, 35 min
+  3290 results, 36 min
+  3460 results, 37 min
+  3645 results, 38 min
+  3825 results, 39 min
+
+baseline: website,engine=tree,fix_stay=1,fix_judged=1,root=sh,shield_mix=0,finish_safe=1,opp_q=runs/general-decide/q.npz,depth=3,q=runs/lab-pop-q.npz
+  head to head, all candidates: baseline shields / shield prompts 3749 / 10106 (37.1%)
+  against the crowd: 81.5% ± 2.4
+    baseline: 1.488 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1000 battles; 28.92 total searches/battle, 4.881 search seconds/battle); mean P(chosen) 1.000 (24065 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1778 / 5452 (32.6%)
+  against the pvpoke: 86.2% ± 3.0
+    baseline: 1.062 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (500 battles; 29.53 total searches/battle, 4.651 search seconds/battle); mean P(chosen) 1.000 (12501 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 829 / 2620 (31.6%)
+
+candidate 1: website,engine=tree,fix_stay=1,fix_judged=1,root=sh,shield_mix=0,finish_safe=1,opp_q=runs/general-decide/q.npz,depth=3,q=runs/lab-pop6-q.npz
+  head to head against the baseline, 1000 pairings both ways: 50.2% ± 1.9
+    candidate: 1.732 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2000 battles; 27.44 total searches/battle, 4.705 search seconds/battle); mean P(chosen) 1.000 (45193 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3746 / 10080 (37.2%)
+    baseline:  1.705 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2000 battles; 27.23 total searches/battle, 4.675 search seconds/battle); mean P(chosen) 1.000 (44880 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3749 / 10106 (37.1%)
+  against the crowd: 81.1% ± 2.4, -0.4 ± 2.3 points on the baseline
+    candidate: 1.585 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (1000 battles; 29.24 total searches/battle, 5.020 search seconds/battle); mean P(chosen) 1.000 (24364 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1785 / 5400 (33.1%)
+  against the pvpoke: 85.4% ± 3.1, -0.8 ± 2.7 points on the baseline
+    candidate: 1.122 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (500 battles; 29.52 total searches/battle, 4.596 search seconds/battle); mean P(chosen) 1.000 (12473 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 846 / 2616 (32.3%)
+  search time per searched decision: median 125 ms, 99th percentile 594, worst 1188 (this machine)
+
+elapsed: 2409.1 seconds
+results: runs\engine_versus\tune-2.json

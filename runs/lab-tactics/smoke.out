@@ -1,0 +1,106 @@
+COMMAND: C:\Users\marco\Developer\pokemon_go\.venv\Scripts\python.exe -X utf8 -u scripts/engine_versus.py --baseline website --candidates website,finish_safe=1 website,bait_mix=0.4 website,shield_two=0.05,shield_one=0 website,swap_after_throw=1 website,finish_safe=1,bait_mix=0.4,shield_two=0.05,shield_one=0,swap_after_throw=1 website,opponents=people --pairings 2 --crowd 2 --people 2 --pvpoke 2 --reader 1 --workers 1 --seed 5403 --field mixed --tag lab-tactics-smoke
+34 jobs to run on 1 workers
+  9 results, 1 min
+  18 results, 2 min
+  27 results, 3 min
+  36 results, 5 min
+  45 results, 6 min
+  54 results, 7 min
+
+baseline: website
+  head to head, all candidates: baseline shields / shield prompts 47 / 125 (37.6%)
+  against the crowd: 50.0% ± 98.0
+    baseline: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 26.50 total searches/battle, 4.742 search seconds/battle); mean P(chosen) 1.000 (54 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0
+    baseline: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.547 search seconds/battle); mean P(chosen) 1.000 (46 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  against the pvpoke: 50.0% ± 98.0
+    baseline: 0.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.609 search seconds/battle); mean P(chosen) 1.000 (45 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 8 (37.5%)
+  against the reader: 50.0% (one result; margin unavailable)
+    baseline: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 19.50 total searches/battle, 3.141 search seconds/battle); mean P(chosen) 1.000 (40 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 12 (25.0%)
+
+candidate 1: website,finish_safe=1
+  head to head against the baseline, 2 pairings both ways: 50.0% ± 0.0
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 32.00 total searches/battle, 5.273 search seconds/battle); mean P(chosen) 1.000 (130 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 7 / 25 (28.0%)
+    baseline:  1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 22.00 total searches/battle, 3.625 search seconds/battle); mean P(chosen) 1.000 (90 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 20 (40.0%)
+  against the crowd: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 27.50 total searches/battle, 5.414 search seconds/battle); mean P(chosen) 1.000 (56 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.648 search seconds/battle); mean P(chosen) 1.000 (46 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  against the pvpoke: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 0.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.641 search seconds/battle); mean P(chosen) 1.000 (45 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 8 (37.5%)
+  against the reader: 50.0% (one result; margin unavailable), +0.0 (margin unavailable) points on the baseline
+    candidate: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 19.50 total searches/battle, 3.266 search seconds/battle); mean P(chosen) 1.000 (40 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 12 (25.0%)
+  search time per searched decision: median 109 ms, 99th percentile 554, worst 641 (this machine)
+
+candidate 2: website,bait_mix=0.4
+  head to head against the baseline, 2 pairings both ways: 50.0% ± 98.0
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 29.75 total searches/battle, 5.109 search seconds/battle); mean P(chosen) 1.000 (116 shield/throw-head choices; legacy random choices excluded); baits 3 / 7 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 6 / 25 (24.0%)
+    baseline:  1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 20.75 total searches/battle, 3.152 search seconds/battle); mean P(chosen) 1.000 (79 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 7 / 21 (33.3%)
+  against the crowd: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 26.50 total searches/battle, 5.109 search seconds/battle); mean P(chosen) 1.000 (52 shield/throw-head choices; legacy random choices excluded); baits 1 / 2 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 24.00 total searches/battle, 4.094 search seconds/battle); mean P(chosen) 1.000 (42 shield/throw-head choices; legacy random choices excluded); baits 3 / 6 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 11 (36.4%)
+  against the pvpoke: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 0.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.750 search seconds/battle); mean P(chosen) 1.000 (45 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 8 (37.5%)
+  against the reader: 100.0% (one result; margin unavailable), +50.0 (margin unavailable) points on the baseline
+    candidate: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 16.50 total searches/battle, 2.836 search seconds/battle); mean P(chosen) 1.000 (29 shield/throw-head choices; legacy random choices excluded); baits 2 / 4 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  search time per searched decision: median 125 ms, 99th percentile 547, worst 672 (this machine)
+
+candidate 3: website,shield_two=0.05,shield_one=0
+  head to head against the baseline, 2 pairings both ways: 75.0% ± 49.0
+    candidate: 2.250 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 27.50 total searches/battle, 5.305 search seconds/battle); mean P(chosen) 1.000 (111 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 5 / 24 (20.8%)
+    baseline:  1.250 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 22.50 total searches/battle, 3.555 search seconds/battle); mean P(chosen) 1.000 (91 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 20 (40.0%)
+  against the crowd: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 26.50 total searches/battle, 5.289 search seconds/battle); mean P(chosen) 1.000 (54 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.711 search seconds/battle); mean P(chosen) 1.000 (46 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  against the pvpoke: 100.0% ± 0.0, +50.0 ± 98.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 21.50 total searches/battle, 4.055 search seconds/battle); mean P(chosen) 1.000 (42 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 2 / 9 (22.2%)
+  against the reader: 100.0% (one result; margin unavailable), +50.0 (margin unavailable) points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 17.00 total searches/battle, 3.172 search seconds/battle); mean P(chosen) 1.000 (35 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 11 (36.4%)
+  search time per searched decision: median 156 ms, 99th percentile 609, worst 672 (this machine)
+
+candidate 4: website,swap_after_throw=1
+  head to head against the baseline, 2 pairings both ways: 50.0% ± 0.0
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 32.00 total searches/battle, 5.398 search seconds/battle); mean P(chosen) 1.000 (130 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 7 / 25 (28.0%)
+    baseline:  1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 22.00 total searches/battle, 3.680 search seconds/battle); mean P(chosen) 1.000 (90 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 20 (40.0%)
+  against the crowd: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 26.50 total searches/battle, 5.297 search seconds/battle); mean P(chosen) 1.000 (54 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.711 search seconds/battle); mean P(chosen) 1.000 (46 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  against the pvpoke: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 0.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.812 search seconds/battle); mean P(chosen) 1.000 (45 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 8 (37.5%)
+  against the reader: 50.0% (one result; margin unavailable), +0.0 (margin unavailable) points on the baseline
+    candidate: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 19.50 total searches/battle, 3.188 search seconds/battle); mean P(chosen) 1.000 (40 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 12 (25.0%)
+  search time per searched decision: median 109 ms, 99th percentile 606, worst 672 (this machine)
+
+candidate 5: website,finish_safe=1,bait_mix=0.4,shield_two=0.05,shield_one=0,swap_after_throw=1
+  head to head against the baseline, 2 pairings both ways: 100.0% ± 0.0
+    candidate: 2.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 28.75 total searches/battle, 5.418 search seconds/battle); mean P(chosen) 1.000 (103 shield/throw-head choices; legacy random choices excluded); baits 4 / 9 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 22 (36.4%)
+    baseline:  1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 23.50 total searches/battle, 3.234 search seconds/battle); mean P(chosen) 1.000 (92 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 21 (38.1%)
+  against the crowd: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 27.50 total searches/battle, 5.445 search seconds/battle); mean P(chosen) 1.000 (54 shield/throw-head choices; legacy random choices excluded); baits 1 / 2 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 13 (30.8%)
+  against the people: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 24.00 total searches/battle, 4.156 search seconds/battle); mean P(chosen) 1.000 (42 shield/throw-head choices; legacy random choices excluded); baits 3 / 6 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 11 (36.4%)
+  against the pvpoke: 100.0% ± 0.0, +50.0 ± 98.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.00 total searches/battle, 4.156 search seconds/battle); mean P(chosen) 1.000 (43 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 1 throws before searched swaps; shields / shield prompts 3 / 10 (30.0%)
+  against the reader: 100.0% (one result; margin unavailable), +50.0 (margin unavailable) points on the baseline
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 19.00 total searches/battle, 3.094 search seconds/battle); mean P(chosen) 1.000 (34 shield/throw-head choices; legacy random choices excluded); baits 2 / 3 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 10 (40.0%)
+  search time per searched decision: median 156 ms, 99th percentile 530, worst 594 (this machine)
+
+candidate 6: website,opponents=people
+  head to head against the baseline, 2 pairings both ways: 75.0% ± 49.0
+    candidate: 1.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 25.50 total searches/battle, 3.059 search seconds/battle); mean P(chosen) 1.000 (102 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 21 (38.1%)
+    baseline:  1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (4 battles; 23.00 total searches/battle, 4.188 search seconds/battle); mean P(chosen) 1.000 (97 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 8 / 23 (34.8%)
+  against the crowd: 100.0% ± 0.0, +50.0 ± 98.0 points on the baseline
+    candidate: 2.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 22.50 total searches/battle, 3.242 search seconds/battle); mean P(chosen) 1.000 (44 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 12 (25.0%)
+  against the people: 100.0% ± 0.0, +50.0 ± 98.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 26.50 total searches/battle, 3.609 search seconds/battle); mean P(chosen) 1.000 (52 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 11 (36.4%)
+  against the pvpoke: 50.0% ± 98.0, +0.0 ± 0.0 points on the baseline
+    candidate: 1.000 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 23.50 total searches/battle, 3.039 search seconds/battle); mean P(chosen) 1.000 (47 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 4 / 9 (44.4%)
+  against the reader: 50.0% (one result; margin unavailable), +0.0 (margin unavailable) points on the baseline
+    candidate: 2.500 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (2 battles; 18.50 total searches/battle, 2.406 search seconds/battle); mean P(chosen) 1.000 (39 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 3 / 11 (27.3%)
+  search time per searched decision: median 125 ms, 99th percentile 400, worst 766 (this machine)
+
+elapsed: 434.2 seconds
+results: runs\engine_versus\lab-tactics-smoke.json

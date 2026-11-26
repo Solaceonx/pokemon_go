@@ -1,0 +1,177 @@
+league smoke-1: 4 specs, preset smoke, seed 2611, field mixed; 42 jobs on 2 workers (pause file: C:\Users\marco\Developer\pokemon_go-lab-bench\runs\lab-league\smoke-1\pause)
+  0: website  (reference)
+  1: bot
+  2: website,temperature=0.02
+  3: website,mix=1
+  0.7 min, 8 units done
+  1.5 min, 16 units done
+  2.0 min, 30 units done
+  2.5 min, 43 units done
+  3.1 min, 116 units done
+  3.9 min, 159 units done
+  4.4 min, 174 units done
+  4.9 min, 235 units done
+
+# League smoke-1: smoke preset, seed 2611, field mixed
+
+Reference: `website`. Shares and points are in percent with 95% margins; Δ is paired on the reference (same battles). Verdict: Luke's rule (above 50% head to head beyond the margin, no loss beyond the margin against the crowd or PvPoke's AI). ↓ lower is better.
+
+| # | spec | verdict | head to head vs ref | crowd, Δ ref | PvPoke, Δ ref | round robin | reader's gain ↓, Δ ref | predictable (modal share) | live ms median / p99, cut | endgame points lost ↓, Δ ref | creator exam |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | `website` | reference | — | 70.0 ± 29.9 | 83.3 ± 32.7 | 45.8 ± 8.2 | +0.0 ± 0.0 | 100.0 ± 0.0, varies 0.0 (12) | 156 / 466, cut 14.9 | 14.44 ± 11.29 | — |
+| 1 | `bot` | no gain shown: head to head within margin | 75.0 ± 28.3 (4) | 50.0, -20.0 ± 39.2 | 100.0, +16.7 ± 32.7 | 62.5 ± 33.7 | +0.0 ± 0.0, +0.0 ± 0.0 | 100.0 ± 0.0, varies 0.0 (12) | 0 / 1 (no deadline) | 14.44 ± 11.29, +0.00 ± 0.00 | — |
+| 2 | `website,temperature=0.02` | no gain shown: head to head within margin | 37.5 ± 24.5 (4) | 50.0, -20.0 ± 26.1 | 83.3, +0.0 ± 0.0 | 54.2 ± 24.5 | +0.0 ± 0.0, +0.0 ± 0.0 | 91.7 ± 5.8, varies 25.0 (12) | 125 / 518, cut 5.2 | 19.44 ± 12.61, +5.00 ± 7.08 | — |
+| 3 | `website,mix=1` | no gain shown: head to head within margin | 50.0 ± 0.0 (4) | 70.0, +0.0 ± 0.0 | 83.3, +0.0 ± 0.0 | 37.5 ± 8.2 | +0.0 ± 0.0, +0.0 ± 0.0 | 97.9 ± 3.5, varies 8.3 (12) | 172 / 564, cut 20.6 | 14.44 ± 11.29, +0.00 ± 0.00 | — |
+
+## Round robin (row's score against the column, %)
+
+| | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| 0 | · | 25.0 ± 28.3 | 62.5 ± 24.5 | 50.0 ± 0.0 |
+| 1 | 75.0 ± 28.3 | · | 37.5 ± 46.9 | 75.0 ± 28.3 |
+| 2 | 37.5 ± 24.5 | 62.5 ± 46.9 | · | 62.5 ± 24.5 |
+| 3 | 50.0 ± 0.0 | 25.0 ± 28.3 | 37.5 ± 24.5 | · |
+
+Cycle: 0 beats 2 beats 1 beats 0 (62.5%, 62.5%, 75.0%), within the margins
+
+## Predictability by kind of decision (modal share; varies = positions with more than one answer)
+
+| # | throw | switch | shield | replace | asks | battles |
+|---|---|---|---|---|---|---|
+| 0 | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 1 | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 2 | 81.2 (varies 50.0, 4) | 93.8 (varies 25.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 3 | 93.8 (varies 25.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+
+## Live timing (searched decisions, CPU clock, the website's deadlines; † no deadline: CPU time per searched decision, or per decision if it does not count searches)
+
+| # | battles | decisions | median ms | p99 ms (95%) | worst | cut short (95%) | no round | release limits | crowd under deadlines |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | 3 | 87 | 156 | 466 (406–547) | 547 | 14.9 (0.0–27.5) | 0.0 | ok | 100.0 ± 0.0 |
+| 1 † | 3 | 236 | 0 | 1 (1–2) | 2 | 0.0 (0.0–0.0) | 0.0 | n/a | 100.0 ± 0.0 |
+| 2 | 3 | 77 | 125 | 518 (359–625) | 625 | 5.2 (0.0–9.1) | 0.0 | ok | 100.0 ± 0.0 |
+| 3 | 3 | 97 | 172 | 564 (438–594) | 594 | 20.6 (0.0–35.0) | 0.0 | over | 100.0 ± 0.0 |
+
+## Exact endgames (points lost a decision ×100, clustered by game)
+
+| # | all | moves | shields | blunders ≥ 0.1 | positions |
+|---|---|---|---|---|---|
+| 0 | 14.44 ± 11.29 | 14.74 | 12.50 | 20.0% | 30 |
+| 1 | 14.44 ± 11.29 | 14.74 | 12.50 | 20.0% | 30 |
+| 2 | 19.44 ± 12.61 | 20.51 | 12.50 | 26.7% | 30 |
+| 3 | 14.44 ± 11.29 | 14.74 | 12.50 | 20.0% | 30 |
+
+## Exploitability detail (score against the probe, not reading / reading)
+
+| # | not read | read | gain ↓ | pairs |
+|---|---|---|---|---|
+| 0 | 50.0 | 50.0 | +0.0 ± 0.0 | 3 |
+| 1 | 16.7 | 16.7 | +0.0 ± 0.0 | 3 |
+| 2 | 33.3 | 33.3 | +0.0 ± 0.0 | 3 |
+| 3 | 50.0 | 50.0 | +0.0 ± 0.0 | 3 |
+
+Creator exam: skipped: scripts/lab/creator_exam.py not found
+
+Sizes: pairings 4, rr_pairings 4, crowd 10, pvpoke 6, reader 3, predict 4, positions 3, asks 4, timing 3, endgame 30
+
+## Cost (CPU seconds per unit, this machine) and projected times
+
+- h2h: `bot | website` 6.69; `website,temperature=0.02 | website` 11.04; `website,temperature=0.02 | bot` 6.38; `website,mix=1 | bot` 8.86; `website,mix=1 | website` 11.07; `website,mix=1 | website,temperature=0.02` 11.46
+- crowd: `website` 3.31; `bot` 0.02; `website,temperature=0.02` 3.31; `website,mix=1` 4.05
+- pvpoke: `website` 2.71; `bot` 0.01; `website,temperature=0.02` 2.95; `website,mix=1` 2.88
+- timing: `website` 4.66; `bot` 0.02; `website,temperature=0.02` 3.83; `website,mix=1` 6.08
+- reader: `website` 13.82; `bot` 0.90; `website,temperature=0.02` 10.10; `website,mix=1` 16.23
+- endgame: `website` 0.01; `bot` 0.00; `website,temperature=0.02` 0.01; `website,mix=1` 0.02
+- predict: `bot` 0.01; `website` 4.92; `website,temperature=0.02` 4.41; `website,mix=1` 5.35
+- smoke: 0.17 CPU hours, about 0.01 h on 14 workers, 0.08 h on 2
+- screen: 13.39 CPU hours, about 0.96 h on 14 workers, 6.70 h on 2
+- confirm: 41.47 CPU hours, about 2.96 h on 14 workers, 20.74 h on 2
+
+Elapsed: 5.1 min on 2 workers.
+
+results: C:\Users\marco\Developer\pokemon_go-lab-bench\runs\lab-league\smoke-1
+--- resumed with all 318 endgames (smoke preset now endgame=None)
+league smoke-1: 4 specs, preset smoke, seed 2611, field mixed; 60 jobs on 2 workers (pause file: C:\Users\marco\Developer\pokemon_go-lab-bench\runs\lab-league\smoke-1\pause)
+  0: website  (reference)
+  1: bot
+  2: website,temperature=0.02
+  3: website,mix=1
+
+# League smoke-1: smoke preset, seed 2611, field mixed
+
+Reference: `website`. Shares and points are in percent with 95% margins; Δ is paired on the reference (same battles). Verdict: Luke's rule (above 50% head to head beyond the margin, no loss beyond the margin against the crowd or PvPoke's AI). ↓ lower is better.
+
+| # | spec | verdict | head to head vs ref | crowd, Δ ref | PvPoke, Δ ref | round robin | reader's gain ↓, Δ ref | predictable (modal share) | live ms median / p99, cut | endgame points lost ↓, Δ ref | creator exam |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | `website` | reference | — | 70.0 ± 29.9 | 83.3 ± 32.7 | 45.8 ± 8.2 | +0.0 ± 0.0 | 100.0 ± 0.0, varies 0.0 (12) | 156 / 466, cut 14.9 | 5.77 ± 2.54 | — |
+| 1 | `bot` | no gain shown: head to head within margin | 75.0 ± 28.3 (4) | 50.0, -20.0 ± 39.2 | 100.0, +16.7 ± 32.7 | 62.5 ± 33.7 | +0.0 ± 0.0, +0.0 ± 0.0 | 100.0 ± 0.0, varies 0.0 (12) | 0 / 1 (no deadline) | 7.21 ± 2.97, +1.45 ± 1.28 | — |
+| 2 | `website,temperature=0.02` | no gain shown: head to head within margin | 37.5 ± 24.5 (4) | 50.0, -20.0 ± 26.1 | 83.3, +0.0 ± 0.0 | 54.2 ± 24.5 | +0.0 ± 0.0, +0.0 ± 0.0 | 91.7 ± 5.8, varies 25.0 (12) | 125 / 518, cut 5.2 | 6.75 ± 2.78, +0.99 ± 1.45 | — |
+| 3 | `website,mix=1` | no gain shown: head to head within margin | 50.0 ± 0.0 (4) | 70.0, +0.0 ± 0.0 | 83.3, +0.0 ± 0.0 | 37.5 ± 8.2 | +0.0 ± 0.0, +0.0 ± 0.0 | 97.9 ± 3.5, varies 8.3 (12) | 172 / 564, cut 20.6 | 5.61 ± 2.54, -0.16 ± 0.30 | — |
+
+## Round robin (row's score against the column, %)
+
+| | 0 | 1 | 2 | 3 |
+|---|---|---|---|---|
+| 0 | · | 25.0 ± 28.3 | 62.5 ± 24.5 | 50.0 ± 0.0 |
+| 1 | 75.0 ± 28.3 | · | 37.5 ± 46.9 | 75.0 ± 28.3 |
+| 2 | 37.5 ± 24.5 | 62.5 ± 46.9 | · | 62.5 ± 24.5 |
+| 3 | 50.0 ± 0.0 | 25.0 ± 28.3 | 37.5 ± 24.5 | · |
+
+Cycle: 0 beats 2 beats 1 beats 0 (62.5%, 62.5%, 75.0%), within the margins
+
+## Predictability by kind of decision (modal share; varies = positions with more than one answer)
+
+| # | throw | switch | shield | replace | asks | battles |
+|---|---|---|---|---|---|---|
+| 0 | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 1 | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 2 | 81.2 (varies 50.0, 4) | 93.8 (varies 25.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+| 3 | 93.8 (varies 25.0, 4) | 100.0 (varies 0.0, 4) | 100.0 (varies 0.0, 4) | — | 4 | 4 |
+
+## Live timing (searched decisions, CPU clock, the website's deadlines; † no deadline: CPU time per searched decision, or per decision if it does not count searches)
+
+| # | battles | decisions | median ms | p99 ms (95%) | worst | cut short (95%) | no round | release limits | crowd under deadlines |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | 3 | 87 | 156 | 466 (406–547) | 547 | 14.9 (0.0–27.5) | 0.0 | ok | 100.0 ± 0.0 |
+| 1 † | 3 | 236 | 0 | 1 (1–2) | 2 | 0.0 (0.0–0.0) | 0.0 | n/a | 100.0 ± 0.0 |
+| 2 | 3 | 77 | 125 | 518 (359–625) | 625 | 5.2 (0.0–9.1) | 0.0 | ok | 100.0 ± 0.0 |
+| 3 | 3 | 97 | 172 | 564 (438–594) | 594 | 20.6 (0.0–35.0) | 0.0 | over | 100.0 ± 0.0 |
+
+## Exact endgames (points lost a decision ×100, clustered by game)
+
+| # | all | moves | shields | blunders ≥ 0.1 | positions |
+|---|---|---|---|---|---|
+| 0 | 5.77 ± 2.54 | 6.24 | 3.12 | 8.8% | 318 |
+| 1 | 7.21 ± 2.97 | 7.94 | 3.12 | 10.7% | 318 |
+| 2 | 6.75 ± 2.78 | 7.40 | 3.12 | 9.7% | 318 |
+| 3 | 5.61 ± 2.54 | 6.05 | 3.12 | 8.5% | 318 |
+
+## Exploitability detail (score against the probe, not reading / reading)
+
+| # | not read | read | gain ↓ | pairs |
+|---|---|---|---|---|
+| 0 | 50.0 | 50.0 | +0.0 ± 0.0 | 3 |
+| 1 | 16.7 | 16.7 | +0.0 ± 0.0 | 3 |
+| 2 | 33.3 | 33.3 | +0.0 ± 0.0 | 3 |
+| 3 | 50.0 | 50.0 | +0.0 ± 0.0 | 3 |
+
+Creator exam: skipped: scripts/lab/creator_exam.py not found
+
+Sizes: pairings 4, rr_pairings 4, crowd 10, pvpoke 6, reader 3, predict 4, positions 3, asks 4, timing 3, endgame None
+
+## Cost (CPU seconds per unit, this machine) and projected times
+
+- h2h: `bot | website` 6.69; `website,temperature=0.02 | website` 11.04; `website,temperature=0.02 | bot` 6.38; `website,mix=1 | bot` 8.86; `website,mix=1 | website` 11.07; `website,mix=1 | website,temperature=0.02` 11.46
+- crowd: `website` 3.31; `bot` 0.02; `website,temperature=0.02` 3.31; `website,mix=1` 4.05
+- pvpoke: `website` 2.71; `bot` 0.01; `website,temperature=0.02` 2.95; `website,mix=1` 2.88
+- timing: `website` 4.66; `bot` 0.02; `website,temperature=0.02` 3.83; `website,mix=1` 6.08
+- reader: `website` 13.82; `bot` 0.90; `website,temperature=0.02` 10.10; `website,mix=1` 16.23
+- endgame: `website` 0.01; `bot` 0.00; `website,temperature=0.02` 0.01; `website,mix=1` 0.01
+- predict: `bot` 0.01; `website` 4.92; `website,temperature=0.02` 4.41; `website,mix=1` 5.35
+- smoke: 0.17 CPU hours, about 0.01 h on 14 workers, 0.09 h on 2
+- screen: 13.39 CPU hours, about 0.96 h on 14 workers, 6.70 h on 2
+- confirm: 41.47 CPU hours, about 2.96 h on 14 workers, 20.73 h on 2
+
+Elapsed: 5.2 min in all; this invocation 0.1 min on 2 workers.
+
+results: C:\Users\marco\Developer\pokemon_go-lab-bench\runs\lab-league\smoke-1

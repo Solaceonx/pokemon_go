@@ -21,11 +21,13 @@ Training is in two stages: imitate the Planner, then improve by self-play
 from __future__ import annotations
 
 from pathlib import Path
+import math
 
 import numpy as np
 
 from .agents import Planner, _matchup_table, disguised, duel, fasts_to_wait
 from .battle import CHARGED, ENERGY_CAP, FAST, MAX_TURNS, SWITCH, SWITCH_TURNS, View, damage
+from .people_shield import cached as people
 
 # Decisions judged option by option. For a throw: hold for one more fast move, throw the first
 # charged move, throw the second, hold for four fast moves, hold for ten.
@@ -270,8 +272,30 @@ class Learner(Planner):
     def __init__(self, policy: Policy | None = None, log: list | None = None, greedy: bool = False,
                  q: QNet | None = None, margin: float = 0.03, mid_swap: bool = True, wide: bool | None = None,
                  forms: bool | None = None, respect_hold: bool = False, respect_timing: bool = False,
-                 shield_margin: float | None = None, shield_toward: bool = False, **settings):
+                 shield_margin: float | None = None, shield_toward: bool = False,
+                 people_shield: str | None = None, people_add: float | None = None, ko_wait: bool = False,
+                 finish_safe: bool = False, bait_mix: float | None = None,
+                 shield_two: float | None = None, shield_one: float | None = None,
+                 **settings):
         super().__init__(**settings)
+        for name, value in (("shield_two", shield_two), ("shield_one", shield_one), ("bait_mix", bait_mix)):
+            if value is not None and (not math.isfinite(value) or value < 0 or (name == "bait_mix" and value > 1)):
+                raise ValueError(f"invalid {name}: {value}")
+        self.finish_safe, self.bait_mix = finish_safe, bait_mix
+        self.shield_two, self.shield_one = shield_two, shield_one
+        self.bait_opportunities = self.baits_thrown = 0
+        if bait_mix is not None:
+            from .lab.mixed import private_rng
+            self._mix_rng = private_rng(self.rng)
+        # Shield calls copied from good players (pogo.people_shield, task 46's creator records): the path to its
+        # fitted network; None keeps the shield head. With people_add, the shield head still decides and a shield is
+        # added where players shield at least this often
+        self.people = people(people_shield) if people_shield else None
+        self.people_add = people_add
+        # With their shields down: a charged move that does not knock out is not thrown when another knocks out
+        # sooner, counting the fast moves to pay for it against those needed to finish after the throw (2026-11-22,
+        # the live views of 2026-11-09: Night Slash into Morpeko with Play Rough one fast move from a knock-out)
+        self.ko_wait = ko_wait
         # The owner: farm right up until they have a move. True: when the rulebook is still farming towards that
         # moment (Planner._hold_plan), the networks may not throw early.
         self.respect_hold = respect_hold
@@ -299,7 +323,17 @@ class Learner(Planner):
     def clone(self) -> Learner:
         twin = super().clone()
         twin.log, twin.forced = None, dict(self.forced)
+        if self.bait_mix is not None:
+            from .lab.mixed import private_rng
+            twin._mix_rng = private_rng(self.rng)
+            twin._mix_rng.setstate(self._mix_rng.getstate())
         return twin
+
+    def _head_margin(self, head: str, view: View) -> float:
+        if head != "shield":
+            return self.margin
+        margin = self.shield_two if view.me.shields == 2 else self.shield_one if view.me.shields == 1 else None
+        return self.shield_margin if margin is None else margin
 
     def force(self, head: str, option: int) -> None:
         """Make its next decision of this kind come out as the given option (numbered as in Q_HEADS)."""
@@ -334,7 +368,7 @@ class Learner(Planner):
             if head == "throw":  # holding is worth whatever the best length of hold is worth
                 v = [max(v[0], v[3], v[4]), v[1], v[2]]
             best = max((k for k in range(len(mask)) if mask[k]), key=lambda k: v[k])
-            margin = self.shield_margin if head == "shield" else self.margin
+            margin = self._head_margin(head, view)
             choice = best if v[best] - v[advice] > margin else advice
             if head == "shield" and self.shield_toward and advice:
                 choice = advice
@@ -352,17 +386,42 @@ class Learner(Planner):
     def shield(self, view: View, foe_energy: int) -> bool:
         if view.me.left() == 1:  # never part of the networks' training: the rulebook decides (Planner.last_always)
             return True if self.last_always else bool(Planner.shield(self, view, foe_energy))
+        if self.people is not None and self.people_add is None:
+            return self.people(view)
+        if self.people is not None and self.people.probability(view) >= self.people_add:
+            return True
         return bool(self._decide("shield", view, (True, True),
                                  lambda: int(Planner.shield(self, view, foe_energy)), foe_energy))
 
     def _pick_move(self, view: View) -> int:
+        return self._bait_action(view, self._choose_move(view))
+
+    def _bait_action(self, view: View, action: int) -> int:
+        # The fallback of a simultaneous engine search is advice, not its final action.
+        if self.bait_mix is None or action not in CHARGED or getattr(self, "_mix_fallback", False):
+            return action
+        from .lab.mixed import bait_pair
+        pair = bait_pair(view)
+        if pair is None:
+            return action
+        bait = self._mix_rng.random() < self.bait_mix
+        self.bait_opportunities += 1
+        self.baits_thrown += bait
+        # A preceding search's P(chosen) no longer describes the final charged move.
+        self.last_throw_probability = None
+        return CHARGED[pair[0 if bait else 1]]
+
+    def _choose_move(self, view: View) -> int:
         if self._hold > 0:
             self._hold -= 1
             return FAST
         mon, foe = view.me.mon, view.foe
         moves = mon.build.charged
         ready = [mon.energy >= move.energy for move in moves]
-        if not any(ready) or foe.hp <= damage(mon, mon.build.fast, foe):
+        if not any(ready):
+            return FAST
+        if foe.hp <= damage(mon, mon.build.fast, foe) and not (
+                self.finish_safe and self._doomed(view, mon.build.fast.turns)):
             return FAST
         if self.disguise and disguised(foe):  # the owner's rule, not the head's: the Disguise takes any hit
             return CHARGED[min((k for k in range(len(moves)) if ready[k]), key=lambda k: moves[k].energy)]
@@ -387,7 +446,38 @@ class Learner(Planner):
                 and damage(mon, moves[choice - 1], foe) < foe.hp and self._hold_plan(view):
             self.overruled_hold = getattr(self, "overruled_hold", 0) + 1
             return FAST  # the rulebook is still farming until they are about to have a move
+        if choice and self.ko_wait and view.foe_shields == 0:
+            sooner = self._ko_sooner(view, choice - 1)
+            if sooner is not None:
+                self.ko_waits = getattr(self, "ko_waits", 0) + 1
+                return sooner
         return FAST if choice == 0 else CHARGED[choice - 1]
+
+    def _ko_sooner(self, view: View, k: int) -> int | None:
+        """A knock-out sooner than throwing charged move k and finishing with fast moves: that move (paid for) or a
+        fast move towards it, when we cannot faint meanwhile. None when move k is as good."""
+        mon, foe = view.me.mon, view.foe
+        moves, fast = mon.build.charged, mon.build.fast
+        hit = damage(mon, moves[k], foe)
+        if hit >= foe.hp:
+            return None
+        per = damage(mon, fast, foe)
+        after = -(-(foe.hp - hit) // per) * fast.turns if per > 0 else 10 ** 6  # turns to finish after the throw
+        best = None
+        for j, move in enumerate(moves):
+            if j == k or damage(mon, move, foe) < foe.hp:
+                continue
+            need = max(0, -(-(move.energy - mon.energy) // fast.energy_gain)) if fast.energy_gain > 0 else 10 ** 6
+            wait = need * fast.turns
+            if wait + fast.turns > after or mon.energy + need * fast.energy_gain > ENERGY_CAP:
+                continue  # not at least a fast move sooner
+            if need and self._may_faint(view, wait):
+                continue
+            if best is None or wait < best[0]:
+                best = (wait, j, need)
+        if best is None:
+            return None
+        return FAST if best[2] else CHARGED[best[1]]
 
     def _swap_choice(self, view: View) -> int | None:
         me = view.me
