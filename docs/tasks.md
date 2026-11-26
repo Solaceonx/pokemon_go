@@ -37,6 +37,7 @@ and push that before starting.
 
 | # | Task | Needs |
 |---|---|---|
+| **49** | **Team GO Rocket grunts with the phone player: the swipe and the shields carry over; getting to the grunt, their uncapped shadow Pokémon and the after-fight screens are new** — for the owner's other agent (the owner, 2026-11-25) | The owner's Mac and Android phone, the owner present |
 | **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — Claude on the owner's PC; done 2026-11-18: **stronger in the simulator** (55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, level against PvPoke at −1.3 ± 3.4; seed 4701, about the same search cost), and it throws Stone Edge in the Azumarill position. Benched energy counts too much in it. **Adopted 2026-11-19 on branch `task40-android`** (the owner: "Yes, adopt it"): `runs/eval/eval.npz` is the wide model there, the old one kept as `eval-42.npz`; release check passed; on the website since 2026-11-19. `main` keeps the old model until the branch is merged (`status.md`) | Done; adopted on `task40-android` |
 | **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
 | **45** | **Store the live league battles well for later analysis: raw log beside each record on `main`, rating and bot version per battle, exact team stats, clear results, one copy of the notes, line-up odds in the index, a check** — for the Claude agent on the owner's PC (the owner, 2026-11-08) | Owner's PC; small data |
@@ -72,6 +73,70 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 49. Team GO Rocket grunts with the phone player — for the owner's other agent (the owner, 2026-11-25)
+
+**Why.** The owner wants the live player's swiping and shielding used against Team GO Rocket grunts, easier
+opponents than ranked players. Nothing in the repo handles Rocket battles yet. The fight itself is on the same game
+screen as GO Battle League and Team Leader battles, so most of the player should carry over. What does not is
+listed below.
+
+**Read first.** `AGENTS.md`; then, on branch **`ultra-league`** (where the live code is), `docs/live_runbook.md`
+(rules, set-up, commands) and `docs/android_play.md` (how the screen is read, the minigame, the prompts). Work on a
+branch made from `ultra-league`, e.g. `task49-rocket`.
+
+**What carries over** (in `scripts/live/play_android.py` unless named):
+- **The charged-move swipe:** `minigame_stroke`, with each type's stroke path in `data/minigame/`. Every GO Battle
+  League minigame since the fixes has rated Excellent (`android_play.md`, "The charged-move minigame").
+- **Shields:** the prompt taps (shield at (0.50, 0.842), NOT NOW at (0.50, 0.950), tapped again every 0.4 s until
+  the prompt goes) in `on_shield_prompt`. The call is made in `players_shield`, `shield_saves_the_matchup` and
+  `owner_shield`. The owner's call for a battle under way goes through `runs/live/override.json` (runbook).
+- **The rest of the fight:** fast-move taps from their own thread, switches, replacements, our energy from the
+  move buttons, health bars, our Pokémon by name (`android_play.md`, one section each). Crash guards: taps only while
+  the game is the app in front, and a stop after 20 s with no fight on screen.
+- **Dry runs:** without `--live`, `play_android.py` reads the screen and logs but sends nothing.
+  `scripts/live/watch_owner.py` records the screen and the owner's own touches while they play, sending nothing.
+  `scripts/live/replay.py` replays a recorded battle through the current player.
+
+**What is new:**
+1. **Getting to a grunt.** Grunts are at invaded PokéStops or come on balloons. Finding one is the owner's job
+   (their phones also run their own app, AutoGrind, whose overlay stays paused while the bot plays). Like
+   `scripts/live/train_loop.py` does for Team Leaders, a new runner starts from a screen the owner puts the phone on
+   (the grunt's first words, or the party screen). It taps through by fixed positions checked by colour, and it saves
+   the screen and stops when anything is not where it should be.
+2. **Their Pokémon's stats.** `GameData` has Great and Ultra League data only (`data/rankings-1500.json`,
+   `-2500.json`, chosen by `POGO_LEAGUE`). The tracker builds their Pokémon from the species read on screen, at the
+   league's cap (`gd.default` / `gd.build` in `pogo/tracker.py`). A grunt's shadow Pokémon are not built that way,
+   so damage, health and win estimates will be off. The CP read off the screen (`obs.foe_cp`) is stored but not used
+   for stats. The choices are to build their Pokémon from the CP shown (task 7 is about that) or to play grunts with
+   a simple rule and no engine. **Ask the owner which.**
+3. **Our party.** The team file (the format of `data/team_third.json`, with levels and IVs) must be the party used
+   against the grunt. `play_android.py --cp` accepts only 1500 and 2500 today.
+4. **After the fight.** `play_android.py` stops at the ranked result screen. After a grunt, the game shows the
+   grunt's words, rewards, and an encounter with the shadow Pokémon. **The encounter uses Poké Balls: ask the owner
+   before throwing any.** Never Purify (it costs Stardust and candy). Put PURIFY in the new runner's list of screens
+   it refuses (like `NEVER` in `scripts/live/run_gbl.py`).
+5. **Strategy.** How grunts throw and shield, and whether to bait them, is for the owner to say. They are an expert
+   player; their calls are in `docs/status.md` ("Strategy guidance from the project owner"). Do not invent rules.
+
+**Order.** Each step is tried on recordings first. The owner is present for anything live.
+1. **Watch:** the owner plays one grunt battle by hand while `watch_owner.py` records it. Replay the recording
+   through the player (`replay.py`) and check its log: their species, both health bars, our energy, the shield
+   prompts, the switch and replacement prompts.
+2. **Fix** what it misreads, with a test in `tests/` and the replay again.
+3. **Their stats** from the CP, or the simple rule (the owner's choice).
+4. **The runner**, from the grunt's first words to the end of the rewards (no encounter throws unless the owner
+   says so). Then live, with the owner's say-so, one battle at a time.
+
+**Rules.**
+- **Taps:** never send a tap to the game without the owner's say-so (`AGENTS.md`). Never tap Purify, power-up,
+  evolve, transfer, the shop, Manage Items, or any item (Rocket Radar included).
+- **Privacy:** trainer names stay out of git and logs.
+- **The owner's Mac:** keep it cool (`nice`, no forgotten background jobs).
+
+**Done when** the bot has won a grunt battle on the phone and every charged move was swiped
+(`scripts/live/grade_each.py` grades each one). The battle's log has been reviewed with `scripts/live/set_review.py`,
+the result is in `docs/status.md`, and the runner and the fixes are on the branch with the tests passing.
 
 ## 48. Ultra League networks — for Marco's PC (the owner, 2026-11-22)
 
