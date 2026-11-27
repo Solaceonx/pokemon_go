@@ -935,6 +935,7 @@ class Player:
         self.prompt_seen = 0.0  # the last frame with a shield prompt
         # Which moves' names show under the buttons (shown = paid for): (names, time) when two frames in a row agree
         self.names_seen = None
+        self._paid_floor: dict[int, float] = {}  # by team slot: what the names have shown paid for since its last throw (note_paid)
         self.names_blocked_until = 0.0
         self.queued_retapped = False
         self._names_raw = None
@@ -1579,6 +1580,8 @@ class Player:
                 self.reading_new_at, self.reading_base = when, e
             self.energy_read = (e, when)
             self.last_reading_t = when - (self.t0 or when)  # battle time of the last reading
+            if e < self._floors().get(self.active, 0.0) - 3:
+                self._floors().pop(self.active, None)  # the fill says less: it is the buttons' word that counts
         names = screen.button_labels(rgb)
         # Only with both buttons drawn, and not while our move's attack plays after its minigame (2026-11-08,
         # 231958: right after Surf's and Discharge's minigames the attack's white streaks filled the name boxes, both
@@ -1590,6 +1593,29 @@ class Player:
             prev, self._names_raw = self._names_raw, (tuple(names), when)
             if prev is not None and prev[0] == tuple(names) and when - prev[1] < 0.25:
                 self.names_seen = (tuple(names), when)
+                self.note_paid(names, costs)
+
+    def _floors(self) -> dict:
+        """By team slot, what the names showed paid for since its last throw (note_paid)."""
+        return self.__dict__.setdefault("_paid_floor", {})
+
+    def note_paid(self, names, costs) -> None:
+        """Keep the most energy the names under the buttons have shown paid for, for the one out, until it throws
+        (minigame) or faints: our energy falls only when we throw. The names and the fill go unread for seconds at a time
+        (a paid button flashes; Body Slam's grey over Snorlax's white), and both count for under a second (paid_bounds,
+        energy). 2026-11-26, 170435: Body Slam's name showed at 123.2 s; Snorlax, on 36 HP, wanted to throw it before
+        fainting from 122.7 s, but within THEIR_MOVE_DOUBT_S of Minior's Power Gems (four in 30 s) only a fresh reading
+        or name would do, none came in the gaps between them, and it fainted at 154 s with the move unthrown.
+        Not within a second of a change of who is out, whose names these may not be."""
+        if self.switching is not None or self.now() - self.active_changed_at < 1.0:
+            return
+        shown = [c for c, n in zip(costs, names) if n]
+        if shown:
+            self._floors()[self.active] = max(self._floors().get(self.active, 0.0), float(max(shown)))
+
+    def paid_floor_now(self) -> float:
+        """Our energy is at least this: what the names have shown paid for since the one out last threw (note_paid)."""
+        return self._floors().get(self.active, 0.0)
 
     def paid_bounds(self):
         """(least, most) our energy can be by which moves' names show under the buttons in the last 0.6 s (a name
@@ -1754,14 +1780,18 @@ class Player:
                 self.log("energy_read", t, counted=mon_now.energy, read=round(obs.my_energy, 1))
             mon_now.energy = int(round(obs.my_energy))
         bounds = self.paid_bounds()
-        if bounds is not None and self.tracker.foe is not None:
+        floor = self.paid_floor_now()
+        if (bounds is not None or floor > 0) and self.tracker.foe is not None:
             # The names only ever raise it: a name that shows says that move is paid for, but a name can be missing
             # without the move being unpaid (just after a charged move the buttons are dim and show no names:
-            # 2026-11-08, Stunfisk with 49 was taken for 39 and did not throw).
+            # 2026-11-08, Stunfisk with 49 was taken for 39 and did not throw). What they showed since our last throw
+            # still holds (note_paid).
             mon_now = self.tracker.me.mon
-            kept = max(mon_now.energy, bounds[0])
+            least = max(bounds[0] if bounds is not None else 0, floor)
+            kept = max(mon_now.energy, least)
             if kept != mon_now.energy:
-                self.log("energy_from_names", t, counted=mon_now.energy, least=bounds[0], most=bounds[1])
+                self.log("energy_from_names", t, counted=mon_now.energy, least=least,
+                         most=bounds[1] if bounds is not None else None, kept=bounds is None)
                 mon_now.energy = kept
         b = look.buttons
         f = self.tracker.foe
@@ -1985,6 +2015,8 @@ class Player:
             have = counted
         if bounds is not None:
             have = max(have, bounds[0])
+        floor = self.paid_floor_now()  # shown paid since our last throw: still paid (note_paid)
+        have = max(have, floor)
         if view is not None and (self.decision == FAST or self.armed is not None):
             # Never faint with a charged move in hand (the owner, 2026-11-07): when our health is low and a move is
             # paid for, throw the hardest-hitting one now, whatever the engine planned.
@@ -2064,11 +2096,11 @@ class Player:
             # Or far over the cost: after the count's fix, count-only taps not taken were 4 to 31 over it, and one
             # held back at 43 over (134115: Snorlax on 83 to 91 for Body Slam's 40, the reading 90) let Lapras's
             # Sparkling Aria go first.
-            sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or (
+            sure = self.energy() is not None or (bounds is not None and bounds[0] >= cost) or floor >= cost or (
                 time.time() - self.last_not_taken > 3.0 and have >= cost + mon.fast.energy_gain
                 and (stale or urgent or have >= cost + 40))
             if sure and time.time() - getattr(self, "their_move_seen", -99.0) < THEIR_MOVE_DOUBT_S and \
-                    self.energy() is None and not (bounds is not None and bounds[0] >= cost):
+                    self.energy() is None and not (bounds is not None and bounds[0] >= cost) and floor < cost:
                 sure = False  # their move just played: the count ran on through it (THEIR_MOVE_DOUBT_S)
             # About to faint (under 10%): on the count at the cost, no margin; a tap not taken costs nothing now
             # (2026-11-24, 213313: Snorlax on 1 HP after Flying Press, Body Slam's 40 counted, the buttons unread over
@@ -2086,8 +2118,19 @@ class Player:
                              waited=round(time.time() - self.armed_at, 2))
                 self.armed = None
                 # on the count alone: no reading and no name under the buttons saying it is paid for
-                count_only = self.energy() is None and not (bounds is not None and bounds[0] >= mon.charged[k].energy)
-                if time.time() < getattr(self, "their_move_until", 0.0):
+                count_only = self.energy() is None and not (bounds is not None and bounds[0] >= mon.charged[k].energy) \
+                    and floor < mon.charged[k].energy
+                # Ours low, paid for, and both buttons drawn (only in the fight, not in their move's close-ups): the
+                # fight is back, whatever the pause after their move says. 2026-11-26, 170435: Minior's moves came so
+                # close that the pauses after them (PROMPT_PAUSE_S, SWITCH_PAUSE_S) covered nearly all of 123-150 s,
+                # and Snorlax, on a fifth of its health with Body Slam paid for, never threw; a tap not taken costs little then.
+                both_up = look is not None and bool(look.buttons) and all(
+                    look.buttons[s]["present"] for s in ("left", "right"))
+                back = urgent and both_up and not count_only
+                if back and time.time() < getattr(self, "their_move_until", 0.0):
+                    self.log("throw_fight_back", t, move=mon.charged[k].id,
+                             paused_s=round(self.their_move_until - time.time(), 1))
+                if time.time() < getattr(self, "their_move_until", 0.0) and not back:
                     # their move is playing out: a tap now would come to nothing (PROMPT_PAUSE_S); decided again after
                     if t - getattr(self, "_waits_logged", -9.0) > 1.0:
                         self._waits_logged = t
@@ -2636,6 +2679,7 @@ class Player:
         costs = [m.energy for m in self.team[self.active].charged]
         short = 0  # frames in a row on which the buttons say the move is not paid for
         paid_seen, taps_sent = False, 1  # for the log: did the buttons ever say paid for, and taps sent
+        floor_paid = self.paid_floor_now() >= move.energy  # the names showed it paid for since our last throw (note_paid)
         # A tapped move waits for the fast move under way to end (1.5 s for Hex). The game says "Get Ready!" when our move starts and "Attack incoming!" for theirs, so the
         # box at the top is read until one shows. Fight bars going missing is not enough (ours hides behind
         # Jellicent often).
@@ -2648,7 +2692,7 @@ class Player:
         # wrongly said was paid for stopped the fast taps for the whole wait (37 times in 13 battles)
         wait = 2.3 if count_only else 3.0
         off_since = None  # the fight off the screen since (a frame time), with no word of theirs
-        while time.time() - tapped < (4.0 if paid_seen else wait):  # paid for: it can start 3 s after the tap
+        while time.time() - tapped < (4.0 if paid_seen or floor_paid else wait):  # paid for: it can start 3 s after the tap
             rgb, when = self.phone.next_frame(last, timeout=0.3)
             if when <= last:
                 continue
@@ -2737,6 +2781,9 @@ class Player:
                 break
         if not started:
             self.last_not_taken = time.time()
+            if short >= 3:  # the buttons say not paid for: what the names showed earlier does not hold
+                self._floors().pop(self.active, None)
+                floor_paid = False
             # It may still go off a moment later (2026-11-07: four of 39 moves had Get Ready! up to half a second
             # after the wait, and went unswiped), or after theirs: the loop watches for it.
             self.queued, self.cue_found = (k, move, tapped, time.time() + 40, self.now()), None
@@ -2744,7 +2791,7 @@ class Player:
             read = self.energy()
             self.log("throw_not_taken", self.now(), move=move.id, counted=self.tracker.me.mon.energy, count_only=count_only,
                      read=None if read is None else round(read, 1), paid_seen=paid_seen, taps=taps_sent)
-            if not paid_seen and time.time() > getattr(self, "their_move_until", 0.0) + 3.0:
+            if not paid_seen and not floor_paid and time.time() > getattr(self, "their_move_until", 0.0) + 3.0:
                 # the button says not yet; not when it showed the move paid for, or their move had just played out
                 # (the game was taking no taps: 105943, the count put under Body Slam's cost and 3 s of fast taps)
                 self.tracker.me.mon.energy = min(self.tracker.me.mon.energy, move.energy - 1)
@@ -2839,6 +2886,7 @@ class Player:
             self._minigame(k, move, since)
         finally:
             self.names_seen = self._names_raw = None  # the names read before the move no longer hold
+            self._floors().pop(self.active, None)  # nor what they showed paid for: the move spent it
             self.names_blocked_until = time.time() + 1.5  # its attack plays now, over the buttons
 
     def _minigame(self, k: int, move, since: float) -> None:
