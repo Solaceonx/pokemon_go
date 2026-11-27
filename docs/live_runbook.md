@@ -61,6 +61,16 @@ Below, `PY` is the venv's python and `SC` the scrcpy folder; run from the worktr
   mistakes); `scripts/live/win_chances.py` (the engine's own odds through each battle); `scripts/live/grade_each.py
   <media folder> <logs>` (each minigame's rating). Then look at each loss: is it the engine's (strategy, shields) or
   ours (reading, counting, tapping, timing)? The owner wants that split.
+- **At the end of each day, store the battles** (on `main`; task 45): in a checkout of `main`,
+  `python3 scripts/live/live_record.py --from <this worktree>/runs/live`, add what went wrong in each loss to
+  `games/live/notes.json`, `nice python3 scripts/live/odds.py`, `python3 -m unittest tests.test_live_records`, commit
+  and push to `main`.
+- **Then the battle page** (unlisted: solaceonx.github.io/bot-battles-7924a775.html; not linked from the site,
+  `noindex`, but the site's repo is public): here, `nice $PY scripts/live/battle_review.py --out <main checkout>/games/live`
+  (reviews the battles not yet reviewed, about 5 s each, 3 workers); in the `main` checkout commit the new `review.json`
+  files and `python3 scripts/live/battle_page.py <site clone>/bot-battles-7924a775.html`; in a fresh clone of the site
+  (`git clone --depth 1 git@github.com:Solaceonx/solaceonx.github.io.git`; the owner's `~/Projects/site` has its own
+  unpushed work, leave it) commit only that page and push. Engine changes go into `data/engine_history.json` on `main`.
 - **Dry run before going live:** `scripts/live/replay.py <stamp> <media folder> data/team_third.json` replays a
   recorded battle through the current player; `scripts/live/engine_view.py <stamp> <t> 6 2` asks the engine again at
   time t of a logged battle.

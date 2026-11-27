@@ -258,6 +258,9 @@ def engine_settings(text: str) -> dict:
     out = {}
     for part in filter(None, (p.strip() for p in text.split(","))):
         k, v = part.split("=", 1)
+        if k == "heads":  # joined by "+", as engine_versus.py takes them: "throw+swap+mid_swap+replace+shield"
+            out[k] = tuple(v.split("+"))
+            continue
         try:
             out[k] = int(v)
         except ValueError:

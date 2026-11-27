@@ -22,6 +22,10 @@ class EngineSettings(unittest.TestCase):
         self.assertEqual(pa.engine_settings("judge=turn,horizon=40,edge=0.05"),
                          {"judge": "turn", "horizon": 40, "edge": 0.05})
 
+    def test_heads(self):
+        self.assertEqual(pa.engine_settings("judge=end,heads=throw+swap+shield,opponents=people,samples=16"),
+                         {"judge": "end", "heads": ("throw", "swap", "shield"), "opponents": "people", "samples": 16})
+
     def test_empty(self):
         self.assertEqual(pa.engine_settings(""), {})
 
