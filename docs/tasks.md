@@ -33,10 +33,35 @@ and push that before starting.
   solaceonx.github.io/pokemon_go_pvpbot (built by `scripts/build_pvpbot_site.py`; games played there come back
   through `scripts/import_played.py`).
 
+## The goal: #1 in the world (the owner, 2026-11-27)
+
+The owner: "our goal is to get to #1 in the world. how do we get there". **Where we stand:** our accounts are still in
+GO Battle League's unrated ranks (the owner's at rank 11 on 2026-11-24), where opponents are weak: in the Mega Catch Cup
+the engine's evaluation expected 55% and the player won 85%, and the third account went 14-11, then 1-4. Rated play
+starts at rank 21, Legend is 3,000, and the top of the leaderboard is well above that (read it off the leaderboard at the
+season's end). Holding it means winning about two battles in three against the best players over a season, at 25 battles a
+day. In the simulator the engine wins 80-100% against bots; against strong players' decisions (the owner's and
+KingMagikarp's exams, the creator exam) it is no better than the trained bot, and it agrees with the creators on 68% of
+shield calls. So the gap is how we play people, and it cannot be measured until our test opponents play like strong people.
+
+**The order** (briefs below): **50**, opponents that play like strong players, and a test bench of them (every other
+step is measured on it); **51**, the engine's search against them, shields and baits first; **52**, team choice for the
+rated field, and the roster it needs; **53**, rated games, the real yardstick and the data for 50, every set reviewed
+until no mechanics errors remain.
+
+**The risk, the owner's call:** the top of the leaderboard is the most watched place in the game. Niantic reviews top
+accounts and has removed cheating ones, and automating the game breaks its terms (`AGENTS.md`); a ban there costs the
+account. Which account climbs is the owner's decision. The in-house form of the goal, which needs no ladder: beat the
+strongest players' decisions on the exams.
+
 ## Open tasks
 
 | # | Task | Needs |
 |---|---|---|
+| **50** | **Opponents that play like strong players, and a test bench of them: a policy fitted on the creators' records and rated opponents, scored on players held out** — open (the owner, 2026-11-27; the goal: #1) | Python, numpy; small data |
+| **51** | **The engine's search against strong players: shields and baits first, played to the end with task 50's opponent inside** — open (the owner, 2026-11-27); first step measured 2026-11-27 (`status.md`) | Task 50; 3 workers, hours per comparison |
+| **52** | **Team choice for the rated field, and the roster it needs: the field from rated battles, a picker over the owner's roster, a power-up list** — open (the owner, 2026-11-27) | Python; hours of computing |
+| **53** | **Rated games: where we really stand, and no mechanics errors (rating, record and errors per day; every loss's turning points played out)** — the owner's call (2026-11-27) | The owner's Mac and phone, the owner present |
 | **49** | **Team GO Rocket grunts with the phone player: the swipe and the shields carry over; getting to the grunt, their uncapped shadow Pokémon and the after-fight screens are new** — for the owner's other agent (the owner, 2026-11-25) | The owner's Mac and Android phone, the owner present |
 | **47** | **An evaluation that sees their bench: the engine's evaluation also reads their Pokémon seen and off the field (`known_foes`), trained and measured against today's** — Claude on the owner's PC; done 2026-11-18: **stronger in the simulator** (55.7% ± 1.9 head to head against today's, +5.5 ± 3.0 points on the crowd, level against PvPoke at −1.3 ± 3.4; seed 4701, about the same search cost), and it throws Stone Edge in the Azumarill position. Benched energy counts too much in it. **Adopted 2026-11-19 on branch `task40-android`** (the owner: "Yes, adopt it"): `runs/eval/eval.npz` is the wide model there, the old one kept as `eval-42.npz`; release check passed; on the website since 2026-11-19. `main` keeps the old model until the branch is merged (`status.md`) | Done; adopted on `task40-android` |
 | **46** | **Comb the creators' footage: every battle in reis2occasion's, HomeSliceHenry's and ItsAXN's YouTube videos and Twitch VODs, cut, tracked, stored as game records, and their decisions compared with the bot's** — for Codex on the owner's PC (the owner, 2026-11-09) | Owner's PC; tens of GB of downloads, deleted after cutting |
@@ -73,6 +98,85 @@ and push that before starting.
 19 (retrain, adopted), 20 (mid-matchup swap head, not adopted), 26 (losses: 72% had a decisive decision in
 hindsight, but no change helps once wins are counted). Task 1 (catalogue of videos) is partly
 covered by `data/video_sources.csv`; task 3 (fast frame recognition for live play) waits on task 13.
+
+## 50. Opponents that play like strong players, and a test bench of them — open (the owner, 2026-11-27)
+
+**Why.** Every gain so far was measured against bots or a hand-made people-like opponent, and it does not carry over:
+today's engine beats the real Mega Catch Cup teams 80-100% when bots play them (`scripts/cup_versus.py`, 2026-11-26),
+while the phone wins about half its games against good players; and every look-ahead that imagines bots finds "don't
+shield" more often than strong players do. Task 42 fits the rulebook to the owner; this task fits the strong players
+that #1 has to beat.
+
+**Data** (on `ultra-league`, where the lab and live code are):
+- The creators' records from task 46 (reis2occasion, HomeSliceHenry, ItsAXN; 29 pass every check, 84 in all): the 657
+  checked decisions in `scripts/lab/creator_exam.py` (switch 157, shield 114, throw 168, hold 218).
+- Opponents in our ranked battles, `runs/live/2*.jsonl`: their throws, their shields at our charged moves, their switches,
+  as the tracker saw them, and the rating per battle once task 45 is in. Weak at the low ranks: weight by rank, or keep
+  rank 20 and up as those battles come (task 53).
+- Held out, never fitted: the owner's and KingMagikarp's exams, and one whole creator at a time (leave one creator out).
+
+**Build.** A policy for their side, fitted on these decisions: start from `pogo/lab/policy.py` (`PolicyNet`,
+`scripts/lab/fit_policy.py`) and `pogo/lab/people.py` (`PeopleLike`, the human style with the creators' shield
+network). Score it by how often it picks the held-out player's choice, kind by kind, against the trained bot,
+`PeopleLike` and the rulebook. Then make it playable inside the engine (`opp_policy=PATH`, `engine_versus.py`) and as a
+test opponent.
+
+**Done when** (numbers in `status.md`): (1) on each held-out creator it picks their choice more often than the trained
+bot and `PeopleLike`, beyond the margin, kind by kind; (2) a test bench: `engine_versus.py` plays any engine against a
+model fitted on some players while the engine imagines one fitted on others (never judge an engine against the model
+it imagines: task 42's warning about `matching`), with today's live engine (`website,judge=turn,horizon=40`) scored
+on it as the baseline.
+
+## 51. The engine's search against strong players: shields and baits first — open (the owner, 2026-11-27)
+
+**Why.** Most of our losses are shield calls: Pokémon fainting with both shields up, and shields spent on hits that were
+not dangerous (`status.md`, the Mega Catch Cup sets of 2026-11-24 to 26). The live engine's shield calls are the trained
+bot's quick ones. Searching them at the live settings did not help (2026-11-26: 53.5% ± 2.3 head to head, crowd -1.6 ±
+2.8, people-like -1.6 ± 2.8), because the search stops 40 turns on, judges with the learned evaluation, and imagines
+bots. Played to the end instead, with people-like imagined opponents (`judge=end,heads=throw+swap+mid_swap+replace+shield,
+opponents=people,samples=16`), it made the play-outs' call at 49-51 of 60 asks at the ten turning points of the
+2026-11-26 set, against today's engine's 32. Those spots were chosen, so that is tuning; its measurement on fresh battles
+is in `status.md` (2026-11-27).
+
+**Build.** The same engine with task 50's opponent inside the imagined battles, the shield head on, judged to the end.
+The phone's cap is 300 ms a decision: 16 imagined battles fit, and `RealTime` stops sampling at the deadline.
+`POGO_ENGINE` takes the same settings (`heads` joined by "+", since `ultra-league` 2026-11-27).
+
+**Done when:** on task 50's bench, the crowd and the creator exam it beats today's live engine beyond the margin, on a
+fresh seed; then a dry run on a recording (`scripts/live/replay.py`) before it plays on the phone.
+
+## 52. Team choice for the rated field, and the roster it needs — open (the owner, 2026-11-27)
+
+**Why.** In one set (2026-11-26) the same team's matchups ran from 4% to 97% (bot against bot,
+`pogo.lineup.win_chance`). At the top, the team is half the game. Today it is picked by hand, and the engines imagine
+the open Great League top 50 even in cups, which held a quarter of the Mega Catch Cup opponents we met.
+
+**Build.**
+- The field: what rated players run, per league and cup, from our ranked logs (`scripts/live/cup_field.py` on
+  `ultra-league`: species, teams and moves met) and the creators' records, weighted toward the highest ranks; PvPoke's
+  rankings where we have too few battles.
+- A picker: every team the owner's rosters can field (`scripts/roster_teams.py`), scored with today's live engine
+  against that field (`scripts/cup_versus.py` does this for given teams; task 21's warning: the opposing list must be
+  self-consistent), on battles not used to pick it.
+- A short list for the owner: which Pokémon to power up, Elite TM or catch next, by points gained. The rosters are the
+  owner's: read them, never change anything in the game.
+
+**Done when:** for the next cup and for open Great League, the picked team beats the team now played beyond the margin on
+battles not used to choose it, and the owner has the list.
+
+## 53. Rated games: where we really stand, and no mechanics errors — the owner's call (2026-11-27)
+
+**Why.** Rank 21 and up is the only place our real level shows (the rating), and the only source of strong opponents'
+decisions for task 50. At the top, one mechanics error a set (a held throw, a dropped tap, a misread) is enough to lose.
+
+**How.** On the account the owner chooses (see "The goal" above), with the owner's say-so for every session, following
+`docs/live_runbook.md` on `ultra-league`; sets only with the engine measured best so far. After each set: the runbook's
+review, and every loss's turning points played out from the logged positions, each option to the end of the battle
+(`whatif.py` and `turning.py` in the owner's `.session_scratch/2026-11-26_lab/`; make them scripts on `ultra-league`
+when first needed). At the season's end stop when ahead, to keep the rating.
+
+**Done when:** ongoing. `status.md` gets a line per day: rating before and after, record, mechanics errors by kind (goal:
+none in 25 battles), and each loss's deciding call, which goes to tasks 50 to 52.
 
 ## 49. Team GO Rocket grunts with the phone player — for the owner's other agent (the owner, 2026-11-25)
 
