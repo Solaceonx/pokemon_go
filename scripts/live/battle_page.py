@@ -69,6 +69,12 @@ def engine_label(rec: dict, start: dict, versions: list, cache: dict) -> str:
     return versions[-1]["label"]
 
 
+def odds() -> dict:
+    """Each league battle's chance before it began (scripts/live/odds.py): {stamp: {"chance", "margin", ...}}."""
+    path = GAMES / "odds.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
 def load() -> list:
     out = []
     for path in sorted(GAMES.glob("2*/game.json")):
@@ -141,6 +147,10 @@ def worst(side: dict | None) -> str:
 def build() -> str:
     hist = json.loads((ROOT / "data" / "engine_history.json").read_text(encoding="utf-8"))
     battles = load()
+    chances = odds()
+    for b in battles:
+        o = chances.get(b["stamp"]) or {}
+        b["chance"] = o.get("chance")
     ranks(battles)
     cache: dict = {}
     for b in battles:
@@ -228,16 +238,29 @@ def build() -> str:
                           f"{sum(x['blunder'] for x in t) / len(bs):.2f}"])
         parts.append(table(["League", "Battles reviewed", "Our accuracy", "Their accuracy", "Our blunders a battle",
                             "Their blunders a battle"], srows, {1, 2, 3, 4, 5}))
+    erows = []
+    for league in sorted({b["league"] for b in battles}):
+        bs = [b for b in battles if b["league"] == league and b["chance"] is not None and result(b) in ("win", "loss", "draw")]
+        if bs:
+            exp = sum(b["chance"] for b in bs)
+            won = sum(result(b) == "win" for b in bs) + 0.5 * sum(result(b) == "draw" for b in bs)
+            erows.append([esc(league), len(bs), f"{exp:.1f}", f"{won:g}", f"{won - exp:+.1f}"])
+    parts.append("<h3>Wins expected from the line-ups</h3><p>Each battle's chance before it began: our team against "
+                 "theirs as seen (a Pokémon not seen filled at random from PvPoke's Great League ranks 101 to 400), "
+                 "300 battles of two equally good bots (<code>scripts/live/odds.py</code>). Above the expected: we "
+                 "played better than the bots, or met weaker players; below: the reverse.</p>"
+                 + table(["League", "Battles with odds", "Wins expected", "Wins", "Difference"], erows, {1, 2, 3, 4}))
     rows = []
     for b in sorted(battles, key=when, reverse=True):
         rv = b["review"] or {}
         m, t = (rv.get("sides") or {}).get("mine") or {}, (rv.get("sides") or {}).get("theirs") or {}
         rows.append([f"{when(b):%m-%d %H:%M}", esc(b["league"]), esc(b["rec"]["source"].get("account")),
                      esc(b["rank"] if b["rank"] else ""), esc(names(b["rec"]["teams"]["theirs"])), esc(result(b)),
+                     esc(f"{100 * b['chance']:.0f}%" if b["chance"] is not None else ""),
                      esc(m.get("accuracy", "")), esc(t.get("accuracy", "")),
                      esc(f"{m.get('blunder', '')}/{t.get('blunder', '')}" if rv else ""), worst(m), worst(t)])
-    parts.append(table(["Date (PT)", "League", "Account", "Rank", "Their team", "Result", "Our accuracy",
-                        "Their accuracy", "Blunders (ours/theirs)", "Our worst moment", "Their worst moment"], rows, {3, 6, 7}))
+    parts.append(table(["Date (PT)", "League", "Account", "Rank", "Their team", "Result", "Chance before", "Our accuracy",
+                        "Their accuracy", "Blunders (ours/theirs)", "Our worst moment", "Their worst moment"], rows, {3, 6, 7, 8}))
     return ("<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\"width=device-width,"
             "initial-scale=1\"><meta name=robots content=\"noindex,nofollow\"><title>Bot battles</title>"
             f"<style>{STYLE}</style></head><body>" + "".join(parts) + "</body></html>\n")

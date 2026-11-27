@@ -5702,3 +5702,51 @@ this on my personal site as an unlisted page", "relatively simple and bland". **
    It finds the calls the play-outs found by hand (170435: Body Slam at 78 s gave up 35; 171853: the Rock Slide shield
    at 110 s gave up 50). Not scored yet: holding energy and replacements; no estimated rating until rated battles can
    calibrate it. The bot judges both sides, so the scores lean towards play like its own.
+
+## The spare account's day in the Mega Catch Cup: 16-14 in 30, and what to fix (Claude, 2026-11-27)
+
+The owner: "play all the battles on this account ... jellicent vigoroth ufisk, you pick the order. after each battle,
+see what went wrong. take notes on how to improve the engine ... score them and put them on the site". `ultra-league`
+3945d750 and later, today's engine (`judge=turn,horizon=40`), Jellicent / Vigoroth / Stunfisk with Jellicent leading
+(the lead orders against the cup's real teams, bot against bot, 30 battles each over 234 team-leads: Jellicent lead
+76.8%, Stunfisk 76.0 / 75.5, Vigoroth 74.9: the lead does not matter much). **Team Leader calibration first: 3-0,
+14 of 15 minigames Excellent.** Then six sets from rank 16 to 18: **1-4, 4-1, 4-1, 2-3, 2-3, 3-2 = 16-14.** Every
+battle reviewed for both sides and its line-up odds computed (`games/live/<STAMP>/review.json`, `games/live/odds.json`,
+the battle page); notes per battle in the owner's `.session_scratch/2026-11-27_spare/notes.md`.
+- **Below the line-ups:** 15 of 30 wins counted with odds against 17.6 expected (two equal bots, `odds.py`); our
+  review accuracy 91.6, theirs 89.4. On 2026-11-25 (rank 14) the same team went 24 of 29.
+- **Rewards:** collected after each set on the owner's word; the encounters (Inkay, Honedge, Beldum) with one Ultra
+  Ball each (the account had no plain Poké Balls; the owner: "Use Ultra Balls").
+
+**What to fix, in order** (measured where it says so):
+1. **Who is out, wrong for long stretches: a regression.** Corrections of the active Pokémon 0.67 a battle today
+   against 0.23 on 11-24/25 (13 of 20 over 20 s late, median 37 s); faints with no replacement prompt seen 0.50 a
+   battle against 0.23; charged taps in the 2 s before a replacement 3 of 26 against 0 of 22; throw-before-fainting
+   attempts 6.0 a battle against 3.0. Today was the first live day of 0ad7b343 (paid energy kept; low throws once both
+   buttons show), which puts more charged taps on the screen as ours faints, where the replacement cards come up. It
+   lost a 99.5% matchup (092340: "send in Stunfisk" at 23.1 s, Jellicent came in, the player believed Stunfisk for
+   45 s). This account's Pokémon are nicknamed (GL1, GL1, GL5), so the header cannot name the species; only the type
+   icons and the names under the buttons can correct it. Fix: no charged tap with our bar near empty or a
+   replacement prompt possible; confirm every replacement from the button names or type icons within 2 s; dry run.
+2. **Throws a fast move late** (the owner: "the stunfisk is throwing after 3 moves every time"; "against drifblim
+   its optimal to throw after 1, 4, 7": the simulator agrees, a charged move lands their fast move in progress at
+   once). In the simulator (`late_throw.py`, scratch; our team the bot against the cup's 60 commonest real teams, same
+   dice): every throw one fast move late **-31.0 ± 2.9 points** (80.1% to 49.2%, 1200 paired), two late -43.2 ± 3.0,
+   both sides late -1.5 ± 3.3. Live the throw goes out 0.8 to 0.95 fast moves after the decision on average (the
+   queued fast tap), and Stunfisk's energy reading stuck near 33 while the count was 42 or more delayed decisions by
+   two more. `look_ahead`, built for this on 2026-11-08, armed 110 times against 1,050 refusals (11-25 and today),
+   most for "no reading". Tried on branch `arm-on-count` (not kept): the count stands in for short fast moves too when
+   the buttons were read within 1.5 s; replayed on 021006 it armed 1 time against 2 and refused 10 against 14, and its
+   arms started from the stuck 33 and expired. Next: why Stunfisk's buttons read 33, then arm from a trusted energy.
+3. **Their charged move first** 3.7 times a battle against 1.4 on 11-25: our three have low attack and lose every
+   tie on charged-move priority; better timing (point 2) avoids some ties.
+4. **Switches need re-tapping** 6.9 times a battle against 3.4.
+5. **The opening switch out of Jellicent:** to Vigoroth 8 times (3 won), to Stunfisk 4 (2 won), stayed 18 (11 won);
+   their answer to Vigoroth was a Fighting type three times (Lucario, Hitmontop, Pangoro), and the reviews put the
+   switch below staying in four battles. The switch rate is the same as on 11-25 (6 of 29), so this is a question for
+   the owner's judgement, not a measured fault.
+6. **Stunfisk's Mud Bomb** chosen where the play-outs preferred Discharge or fast moves four times (-21 to -29).
+7. **The runner:** a wait longer than the player's 90 s for matchmaking counted as a battle: fixed (`run_gbl`, a
+   no-battle result does not count; the fight is picked up when it shows). Starting the player by hand while the
+   runner's may still be alive put two players on one battle (022134 marked a fragment of 022137): do not.
+
