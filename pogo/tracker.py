@@ -74,6 +74,10 @@ class Foe:
         self.mon = Mon(build)
         self.lo = self.hi = 0  # range their energy must lie in
         self.used: dict[str, int] = {}  # charged moves we have seen them throw, and how often
+        # their last throw: the move it was put down to by the energy count (None: both were paid for, not yet known);
+        # the name on screen, when it comes, is the truth and moves it (their_move_named)
+        self.unattributed = False
+        self.attributed: str | None = None
         self.cp: int | None = None
         self.fast_from = "guessed"  # "inferred" once the steps in our health bar have shown which fast move it is
         # Quiet looks, for working out the fast move: my Pokémon hit, fighting turns covered, health lost,
@@ -772,8 +776,18 @@ class Tracker:
             return
         known = next((m for m in foe.mon.build.charged if name in (m.id, m.name)), None)
         move = known or self._learn_move(t, foe, name)
-        if move is not None and known is None:
+        # A move in the guessed build named now is a move seen: counted, so a move learned later replaces a guess and
+        # not it (2026-11-27, 124932: Quagsire's Stone Edge, guessed and named at 45.6 s, was dropped when Drain Punch
+        # was learned at 67.6 s; the shield call at 88.3 s took the move coming for Drain Punch or Aqua Tail, both
+        # resisted, and let Stone Edge through: 23 of Araquanid's 24 HP).
+        # And the count's attribution gives way to the name (124932 again: Quagsire counted at 48 to 54 could pay only
+        # for Aqua Tail, 35, so the throw at 38.8 s was put down to it; the screen then named Stone Edge, 55).
+        wrong = foe.attributed if move is not None and foe.attributed not in (None, move.id) else None
+        if wrong is not None and foe.used.get(wrong):
+            foe.used[wrong] -= 1
+        if move is not None and (known is None or foe.unattributed or wrong is not None):
             foe.used[move.id] = foe.used.get(move.id, 0) + 1
+        foe.unattributed, foe.attributed = False, None
         check = self._hit_check
         if move is not None and check is not None and check["move"] is None and check["foe"] is foe:
             check["move"] = move.id
@@ -1156,6 +1170,8 @@ class Tracker:
         foe.base, foe.lost, foe.clock = (foe.lo, foe.hi), [], 0
         if len(moves) == 1:
             foe.used[moves[0].id] = foe.used.get(moves[0].id, 0) + 1
+        foe.unattributed = len(moves) != 1
+        foe.attributed = moves[0].id if len(moves) == 1 else None
         if len(moves) == 1 and moves[0].buff_chance >= 1:
             apply_buffs(foe.mon, mon, moves[0])
         self._note(obs.t, "foe_charged", move=moves[0].id if len(moves) == 1 else None, shielded=shielded,
