@@ -5354,6 +5354,39 @@ a replay follows the recording, so whether the game took them is not shown. Repl
 engine: the new rule never fires, no errors, switch asks and swipes as before. Tests: 573 pass (5 new in
 `tests/test_paid_floor.py`), PvPoke 108 of 108. Not yet found: what started the pause at 122.4 s.
 
+**What would have won the four losses** (Claude, 2026-11-26; the owner: "keep working ... until you know what you
+could've done to win those games. what were the probability of those matchups in sims?"). Scripts in
+`.session_scratch/2026-11-26_lab/` (not in git): `matchups.py`, `whatif.py`, `diag_replay*.py`.
+*The matchups* (`pogo.lineup.win_chance`, our real builds against each team as the log saw it, its lead first, the
+trained bot on both sides with habits varied, 400 battles): Crobat / Minior / Azumarill **97.2% ± 1.6** (lost),
+Clefable / Jellicent / Kingambit 83.4 ± 3.6 (won), Marowak / Kingambit / Wigglytuff 30.5 ± 4.5, Excadrill / shadow
+Gyarados / Tinkaton **4.2 ± 2.0**, Galarian Stunfisk / Turtonator / Lapras 59.4 ± 4.8.
+*Each turning point* (`whatif.py`: from the logged position, every option played to the end, 100-300 times, the same
+dice and habits for each option, the bot on both sides after it; "real" = their actual team, which is hindsight;
+"cup" = their unseen ones drawn from the 45 species met twice or more in our 94 Mega Catch Cup battles). Caveat: the
+opponents are bots, and bots do not bait as people do, so shield results lean against shielding (status, 2026-11-22).
+- 170435 (97%): 84-95% until 46 s; their Crobat shielded Clodsire's Stone Edge and Clodsire fainted: 42% at 65 s.
+  Body Slam into Crobat on 56 HP at 78 s (P's call) **23%; fast moves 54% (-31 ± 10)**; switching to Thievul (today's
+  engine, 6 of 6) 31%. The shield on Power Gem at 109 s costs 80 points if Azumarill is known to be last, nothing
+  against an unknown cup third (90 vs 86%): a fair call then. From 123 s every play-out was lost, Body Slam or not:
+  the held throw (fixed above) was real but did not lose this one (the evaluation network's 0.70 there was wrong).
+- 171147 (30%): the live calls were the play-outs' best or level (lead switch, Icy Wind shielded +8 ± 7, switch to
+  Thievul at 116 s +34 ± 12, Swift shielded +12 ± 13); lost by 140 s. Mostly the matchup.
+- 171528 (4%): the first decision. Clodsire out to **Snorlax 60%** against the cup field, Thievul (as played) 49%
+  (real team: 63 vs 5%); against the open top 50 the engines imagine, 39 vs 30%. Both engines switch to Thievul (today's
+  5 of 6). Twister on Thievul at 24 s: not shielding (as played) 42%, shielding 26%. Lost by 117 s.
+- 171853 (59%): lead switch to Snorlax fair without hindsight (cup 61% vs stay 55%; real team: stay 63 vs 41%). Not
+  shielding Brutal Swing twice: right (+56, +44). **Rock Slide on Thievul (48 of 127) shielded at 110 s: 12%; not
+  shielding 56% (-44 ± 7, all three of theirs known)**; both engines shield there 6 of 6. Lost by 134 s.
+*Two things to change, both to measure first:* (1) the engines imagine unseen opponents from the open Great League
+top 50 (`gd.meta(50)`), not the cup's field (Minior, Toxtricity, Tinkaton, Turtonator, Wigglytuff are cup regulars);
+(2) shielding a moderate hit on a Pokémon at about a third of its health with both shields up (171853 110 s); the
+owner's call. *The unexplained shields:* replaying 171853, P itself shielded at 134.4 s, and fresh P engines shield
+there 2 times in 6 on the replayed view (on the live log's view, 0 of 30): P's shield is a search (`shield_mix=0`),
+noisy and sensitive to small changes in the view. 171147's at 118.9 s did not recur in the replay. Neither changed the
+result (both 0-43% either way). Every shield prompt now logs the engine's own call and the last-Pokémon rule's inputs
+(`ultra-league` 531863bd).
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
