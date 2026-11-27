@@ -154,7 +154,9 @@ class Runner:
         line = next((l for l in reversed(done.stdout.splitlines()) if l.startswith("{")), None)
         result = json.loads(line)["result"] if line else None
         self.last_log = Path(json.loads(line)["log"]) if line else None
-        self.battles += 1
+        # No battle (matchmaking outlasted the player's wait, 2026-11-27): not one of the set's five; the fight is
+        # picked up when it shows ("a battle already under way").
+        self.battles += not (line and result is None and not json.loads(line).get("opponents"))
         self.wins += result == "win"
         self.losses += result == "loss"
         self.log("battle_end", result=result, wins=self.wins, losses=self.losses, stderr=done.stderr[-300:] if not line else "")
