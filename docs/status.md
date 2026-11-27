@@ -5785,3 +5785,43 @@ Snorlax leading 79.4 / 79.2; for Snorlax 76.4 (Clodsire / Thievul / Araquanid); 
 Araquanid **80.8% ± 0.5** against 75.9% ± 0.5, **+4.9 ± 0.8** (an unpaired margin, wider than the paired truth).
 Bot against bot on the field we met, so it says the line-up is better, not by how much against people.
 
+## The third account with Araquanid: 4-5, and what stopped the taps (Claude, 2026-11-27)
+
+The owner: "let's do this team now Clodsire / Snorlax / Araquanid ... the phone is ready to go". Araquanid read off its
+page (Infestation / Mirror Coat / Water Pulse, CP 1500, 140 HP: the rank-1 build), swapped into Thievul's place on the
+cup's party screen (Clodsire / Araquanid / Snorlax, `data/team_third_araquanid.json`, party `araquanid`). Team Leader
+check skipped (the training party still holds Thievul). **Set 1 3-2, set 2 1-3** (and one empty matchmaking wait), then
+stopped on the owner's word ("stop battling, go back and look at the battles, and figure out what's happening").
+Minigames 10 of 10 Excellent in the first two battles, Mirror Coat (Psychic, on Fairy's swipe) and Water Pulse included.
+
+**What the owner saw, and why:**
+- 112647, "why throw body slam into the kinggambit at the end of the game?? we had an earthquake": the instant the
+  switch to Snorlax showed (195.59 s), `throw_before_fainting` read Clodsire's bar (12%, the frame before) and threw
+  Snorlax's Body Slam into Kingambit (their last, 85 HP, no shields); Snorlax had 84 HP and about 60 energy, Earthquake
+  (65) a fast move away. Not the engine (it had chosen the switch): the player's low-health rule.
+- "you stopped tapping when it was araquanid vs. the gourgeist" (113244): Araquanid on 19% with 69 energy wanted
+  Mirror Coat from 76 s; Gourgeist's back-to-back Seed Bombs kept the throw in the pauses after their moves
+  (`throw_waits` up to 4.9 s), its one tap at 80 s was beaten, and it fainted at 95 s with the move unthrown and no fast
+  moves for most of it. "you stopped tapping again in snorlax vs gastrodon" (113626, won): Body Slam tapped at 152 s
+  was not taken, and the player waited 4 s with no fast taps.
+
+**Measured over the logs** (`.session_scratch/2026-11-27_third/faults.py`, `stalls.py`):
+
+| | Battles | Paid move held at low health over 3 s | Fainted holding it | Low throw within 1 s of a switch | Charged taps not taken | Seconds without fast taps around them |
+|---|---|---|---|---|---|---|
+| 2026-11-22/23 | 82 | 0.06 a battle | 1 | 0.07 | | |
+| 2026-11-24/25 | 82-92 | 0.25 | 1 | 0.20 | 0.62 | 1.8 |
+| 2026-11-27 (both accounts) | 39-43 | **0.93** | **6** | 0.26 | **1.92** | **5.2** |
+
+Today was the first live day of 0ad7b343 (2026-11-26: a move the names showed paid for stays paid until we throw; a
+paid tap waits 4 s for the throw instead of about 2.3 s; low throws go past the pause after their move): more taps on a
+belief of "paid" that the game does not take, each one stopping the fast taps for longer. **Fixed on `ultra-league`
+(9a9720ec):** all three off by default (`POGO_PAID_FLOOR=1` turns them back on), the player of 2026-11-25; and the
+low-health rules (throw before fainting, throw before theirs with no shields) act only once the one out has been out
+1 s and the view is of it (`settled_out`; `hp_now` reads only its own bar; `tests/test_settled_out.py`). Full tests pass,
+PvPoke 108 of 108; replays of 112647 and 113244 clean (no Body Slam at 195.6 s). **Not yet measured live:** next, Team
+Leader battles, checking charged taps not taken and the seconds without fast taps against the table. Not fixed: one
+switch re-tapped for about 20 s (113244, 166-185 s, to Clodsire on 7 HP, not taken). This also changes the reading of
+the spare account's 16-14 above: it carries a player fault the battle reviews cannot see (they score decisions, not taps
+that never went in).
+

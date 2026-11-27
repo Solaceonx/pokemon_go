@@ -288,7 +288,9 @@ class Battle:
         if "league" in start_row:
             # logs from task 45 on say it: the league runner passes the league, training does not (2026-11-09: a
             # league opponent's Flareon made the Team Leaders' rule below call a league battle training)
-            mode = "league" if start_row.get("league") else "training"
+            # or context.json names the league (2026-11-27, 105649: the runner started on the cup's party screen and
+            # read no league card)
+            mode = "league" if start_row.get("league") or (context or {}).get("league") else "training"
         else:
             mode = "training" if set(foes_final) & LEADERS else "league"
         bot = Counter(r["kind"] for r in rows if r["kind"] in BOT_EVENTS)
