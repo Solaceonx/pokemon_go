@@ -5387,6 +5387,28 @@ noisy and sensitive to small changes in the view. 171147's at 118.9 s did not re
 result (both 0-43% either way). Every shield prompt now logs the engine's own call and the last-Pokémon rule's inputs
 (`ultra-league` 531863bd).
 
+**The engines with the Mega Catch Cup's field: no measurable gain** (Claude, 2026-11-26, `ultra-league` cdb727fb and
+99bf311d; the owner: "Yes, do it"). The engines imagine the opponents' unseen Pokémon from the open Great League top 50,
+which holds 25% of the 275 opponent appearances in our 94 cup battles; PvPoke's "Catch Cup" is a different cup (its top
+50 holds 23%: no Toxtricity, Minior, Lucario or Kingambit), so the field comes from our own logs:
+`scripts/live/cup_field.py` (species met, real teams met with weights, the moves seen; Minior and the Megas have no
+default moves), opt-in with `POGO_FIELD` for both engines (pool; teams through `Engine._teams`).
+`scripts/cup_versus.py`: today's live engine (no time cap) with our third-account team against the third account's 25
+real teams of 2026-11-25/26 (held out: the field from the owner's and spare's 64 battles,
+`data/fields/mega_catch_cup_owner_spare.json`), the trained bot with varied habits on their side, 40 seeds each, all
+arms on the same seeds (1000 paired opponent-seeds, seed 4911, `runs/cup-field/mcc-1.json`): open top 50 **79.8% ±
+2.5**; cup pool 80.7 ± 2.4 (**+0.9 ± 2.4** paired); cup pool and real teams 78.1 ± 2.6 (**-1.7 ± 2.4**). Neither beats
+the open pool beyond the margin: not adopted, the default unchanged (nothing to confirm on a fresh seed). Per team the
+differences are noise (± 10-20 each); against the Excadrill team the pool did worse (-40 ± 18), although with the field
+the live player, replayed on 171528, opened with the switch to Snorlax that the play-outs favoured. Also seen: with
+today's engine on our side these teams are 82-100% in simulation (bot opponents, which the engine imagines exactly,
+so flattered), against 4-97% bot against bot (`pogo.lineup.win_chance`, above). Not tried: the rulebook's own prior for
+an unseen last Pokémon (`agents._sweeper_field`, the open top 50 too).
+
+**Fix found in the dry run:** the paid-energy memory (0ad7b343) put 65.0 into the tracker's count and the engine's
+searches failed ("'float' object cannot be interpreted as an integer"), four times in one replay; kept whole since
+cdb727fb (test added). No live battle has run on 0ad7b343.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
