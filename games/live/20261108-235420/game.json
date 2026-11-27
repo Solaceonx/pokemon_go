@@ -1,0 +1,615 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261108-235420",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/main",
+  "league": "Great League: Mega",
+  "season": null,
+  "context_from": null,
+  "log": "games/live/20261108-235420/log.jsonl",
+  "recording": "battle-20261108-235420.h264 / .mp4 with .times (not in git)",
+  "epoch": 1794210884.601,
+  "started_utc": "2026-11-09T07:54:44+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "afd850ccfb6a7dba45aa310aab71d8ac5747e017",
+   "dirty": false
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "loss",
+  "from": "result screen"
+ },
+ "seconds": 124.085,
+ "teams": {
+  "mine": [
+   {
+    "species": "jellicent",
+    "name": "Jellicent",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "HEX",
+     "name": "Hex",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SURF",
+      "name": "Surf",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1496
+   },
+   {
+    "species": "vigoroth",
+    "name": "Vigoroth",
+    "known_from": "team_sheet",
+    "cp": 1497,
+    "fast_move": {
+     "id": "SCRATCH",
+     "name": "Scratch",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1499
+   },
+   {
+    "species": "stunfisk",
+    "name": "Stunfisk",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "MUD_BOMB",
+      "name": "Mud Bomb",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": true,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": 1492
+   }
+  ],
+  "theirs": [
+   {
+    "species": "morpeko_full_belly",
+    "name": "Morpeko (Full Belly)",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "AURA_WHEEL_ELECTRIC",
+      "name": "Aura Wheel",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 3
+     }
+    ],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "gastrodon",
+    "name": "Gastrodon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "EARTH_POWER",
+      "name": "Earth Power",
+      "energy": 50,
+      "known_from": "seen",
+      "times_used": 2
+     }
+    ],
+    "fast_move": {
+     "id": "MUD_SLAP",
+     "name": "Mud Slap",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 3,
+   "theirs": 5
+  },
+  "we_shielded": 2,
+  "shield_prompts": 3,
+  "fast_taps": 243,
+  "looks": 73
+ },
+ "bot": {
+  "armed": 1,
+  "armed_fired": 1,
+  "throw_beaten": 2,
+  "throw_fainted": 1,
+  "active_corrected": 2
+ },
+ "notes": {
+  "went_wrong": "The engine switched Jellicent out for Stunfisk at once against a Morpeko lead (Mud Bomb 86 of its 118); they switched to Gastrodon at about 6 s (Earth Power 101 of Stunfisk's 172), with our switch timer running. Stunfisk threw Discharge into Gastrodon twice (27 damage; Mud Bomb 50, costing 45 against 40) and took Earth Power unshielded with both shields (62% to 3%), fainting with Discharge in hand. Their bar read 0.013 and 0.027 on single frames at 21 and 23 s (Gastrodon at about 95%).",
+  "fixed": "the false low readings: task40-android ac7fa72 (a big drop given out only once it repeats; replayed, none); the Discharge into Gastrodon is the engine's own choice (it still made it in the replay), and so are the shields",
+  "from": "the analysis on 2026-11-09 early morning"
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "jellicent",
+   "theirs": "morpeko_full_belly"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 2.815,
+   "from": "jellicent",
+   "to": "stunfisk",
+   "seconds_after_tap": 0.84,
+   "state": {
+    "look_t": 2.52,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.946,
+     "shields": 2,
+     "left": 3,
+     "energy": 12,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 6.271,
+   "side": "theirs",
+   "from": "morpeko_full_belly",
+   "to": "gastrodon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 6.271,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.976,
+     "shields": 2,
+     "left": 3,
+     "energy": 23,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 9.562,
+   "pokemon": "stunfisk",
+   "move": "Discharge",
+   "move_id": "DISCHARGE",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.25,
+   "state": {
+    "look_t": 7.815,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.902,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": 0.987,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      10,
+      10
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "icons_chased": 66
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 25.833,
+   "pokemon": "gastrodon",
+   "move": "Earth Power",
+   "move_id": "EARTH_POWER",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    40,
+    40
+   ],
+   "state": {
+    "look_t": 22.75,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": 0.62,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": 0.027,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "cost": 50
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 36.506,
+   "pokemon": "stunfisk",
+   "next": "vigoroth",
+   "state": {
+    "look_t": 34.341,
+    "mine": {
+     "active": "stunfisk",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": 0.889,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      0,
+      10
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 45.872,
+   "pokemon": "gastrodon",
+   "move": "Earth Power",
+   "move_id": "EARTH_POWER",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    30,
+    40
+   ],
+   "state": {
+    "look_t": 41.766,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.808,
+     "shields": 2,
+     "left": 2,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": 0.781,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      30,
+      40
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "cost": 50
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 55.003,
+   "pokemon": "jellicent",
+   "move": "Surf",
+   "move_id": "SURF",
+   "cost": 45,
+   "seen_by": "queued",
+   "seconds_after_tap": 12.37,
+   "state": {
+    "look_t": 52.783,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "gastrodon",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      0,
+      10
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "icons_chased": 32
+  },
+  {
+   "kind": "switch",
+   "t": 64.584,
+   "side": "theirs",
+   "from": "gastrodon",
+   "to": "morpeko_full_belly",
+   "known_from": "seen",
+   "state": {
+    "look_t": 64.584,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.714,
+     "shields": 1,
+     "left": 2,
+     "energy": 18,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 66.826,
+   "pokemon": "morpeko_full_belly",
+   "move": "Aura Wheel",
+   "move_id": "AURA_WHEEL_ELECTRIC",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    45,
+    45
+   ],
+   "state": {
+    "look_t": 65.1,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.721,
+     "shields": 1,
+     "left": 2,
+     "energy": 30,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 82.468,
+   "pokemon": "jellicent",
+   "move": "Surf",
+   "move_id": "SURF",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.33,
+   "state": {
+    "look_t": 79.85,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": 0.606,
+     "shields": 0,
+     "left": 2,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": 0.848,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      18,
+      18
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 38
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 100.373,
+   "pokemon": "morpeko_full_belly",
+   "move": "Aura Wheel",
+   "move_id": "AURA_WHEEL_ELECTRIC",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 92.501,
+    "mine": {
+     "active": "jellicent",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 25,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": 0.768,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      63,
+      63
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 116.775,
+   "pokemon": "morpeko_full_belly",
+   "move": "Aura Wheel",
+   "move_id": "AURA_WHEEL_ELECTRIC",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 109.291,
+    "mine": {
+     "active": "vigoroth",
+     "hp_share": 0.835,
+     "shields": 0,
+     "left": 1,
+     "energy": 30,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "morpeko_full_belly",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 124.085,
+   "result": "loss",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "games/live/20261108-235420/log.jsonl"
+ ]
+}

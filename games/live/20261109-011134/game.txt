@@ -1,0 +1,37 @@
+live-20261109-011134 . league . LOSS . 191 s
+What went wrong: Both. Reading: after their Icy Wind the fight came back with the buttons hidden under the stat words, our bar under "ATTACK FELL!" and theirs a 1% sliver: about 7 s without fast taps while Wigglytuff hung on (the bar's place, 6 s old, was past the fallback's 3 s). Engine: Vigoroth took three Swifts unshielded; the shields went on Drifblim's Icy Wind and Floragato's Grass Knot.
+Fixed: the reading: task40-android b264f58 (the bar's place kept 10 s)
+
+Mine
+  Jellicent      Hex | Shadow Ball x1, Surf x2
+  Vigoroth       Scratch | Bulldoze x1, Body Slam x0  [fainted]
+  Stunfisk       Thunder Shock | Discharge x3, Mud Bomb x0
+Theirs
+  Wigglytuff     Charm* | Swift x2, Icy Wind x1  [fainted]
+  Drifblim       Hex* | Icy Wind x1, Mystical Fire x1
+  Floragato      Charm* | Grass Knot x1
+
+Charged moves: ours 7, theirs 7; shield prompts 6, shielded 2; fast taps 380
+Player events: active_corrected 1, armed 5, armed_expired 2, armed_fired 1, their_charged_unprompted 1, throw_before_fainting 3
+
+    0.0  start: Jellicent v Wigglytuff
+    3.0  mine   switch Jellicent -> Vigoroth
+   10.4  theirs Wigglytuff Swift (not shielded; their energy believed [32, 32]; our health 73%)
+   23.0  ours   Vigoroth Bulldoze (cost 55; energy 59 by count; theirs believed [8, 21]), swipe chased icons 101
+   35.4  theirs Wigglytuff Swift (not shielded; their energy believed [32, 45]; our health 16%)
+   42.1  theirs Wigglytuff (move not named) (not shielded; their energy believed [0, 10]; our health ?)
+   44.8  mine   Vigoroth fainted -> Stunfisk
+   57.3  theirs Wigglytuff Icy Wind (not shielded; their energy believed [48, 48]; our health 72%)
+   72.2  theirs Wigglytuff fainted -> Drifblim
+   74.2  ours   Stunfisk Discharge (cost 40; energy 93 by buttons; theirs believed [0, 0]), swipe chased icons 68
+   83.5  ours   Stunfisk Discharge (cost 40; energy 60 by count; theirs believed [26, 26]), swipe chased icons 68
+   97.6  ours   Stunfisk Discharge (cost 40; energy 35 by buttons; theirs believed [78, 78]), swipe chased icons 67
+  112.4  theirs Drifblim Icy Wind (we shielded; their energy believed [60, 60]; our health 84%)
+  121.2  theirs switch Drifblim -> Floragato
+  122.9  ours   Jellicent Surf (cost 45; energy 36 by buttons; theirs believed [0, 0]), swipe chased icons 33
+  138.5  ours   Jellicent Shadow Ball (cost 50; energy 58 by count; theirs believed [32, 32]), swipe chased icons 70
+  151.4  theirs Floragato Grass Knot (we shielded; their energy believed [56, 56]; our health ?)
+  161.5  ours   Jellicent Surf (cost 45; energy 32 by buttons; theirs believed [11, 11]), swipe chased icons 35
+  173.4  theirs switch Floragato -> Drifblim
+  183.4  theirs Drifblim Mystical Fire (not shielded; their energy believed [0, 1]; our health ?)
+  191.2  end: loss

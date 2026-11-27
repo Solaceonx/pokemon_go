@@ -1,0 +1,38 @@
+live-20261109-120903 . league . LOSS . 199 s
+What went wrong: Minigame: all three Stone Edges rated Great; the icons were found but many come up in the top-left corner, which the stroke kept out of for the flee button. Player rule: throw_before_theirs threw Body Slam (20 damage) into Skeledirge twice, the first with Snorlax on 172 of 192 where Torch Song does 65; Earthquake would have done 122. Close call: the farm-down on Tsareena (6 HP) was refused because Triple Axel had raised its attack and two Razor Leafs could land before the second Poison Sting; the owner's line (farm, then Earthquake one-shots Skeledirge at 72%) would have worked, only one landing.
+Fixed: 94b8c31: the stroke keeps 0.09 of the width from the flee button only; throw_before_theirs only when theirs would knock us out or the move is worth its energy
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x3, Earthquake x0  [fainted]
+  Thievul        Sucker Punch | Night Slash x2, Play Rough x0  [fainted]
+  Snorlax        Psywave | Body Slam x2, Earthquake x0
+Theirs
+  Skeledirge     Incinerate* | Disarming Voice x3
+  Quaquaval      Low Kick? | Liquidation x2
+  Tsareena       Razor Leaf* | Triple Axel x1
+
+Charged moves: ours 7, theirs 6; shield prompts 4, shielded 2; fast taps 530
+Player events: active_corrected 1, armed 1, fainted_unprompted 1, switch_not_taken 2, their_charged_unprompted 2, throw_beaten 1, throw_before_fainting 1, throw_before_theirs 2, throw_fainted 1, throw_not_taken 1, waiting_for_better 19
+
+    0.0  start: Clodsire v Skeledirge
+    3.1  mine   switch Clodsire -> Thievul
+    7.6  theirs switch Skeledirge -> Quaquaval
+   10.4  ours   Thievul Night Slash (cost 35; energy 35 by count; theirs believed [0, 0]), swipe chased icons 23
+   25.2  theirs Quaquaval Liquidation (we shielded; their energy believed [56, 56]; our health 56%)
+   36.1  ours   Thievul Night Slash (cost 35; energy 41 by count; theirs believed [51, 56]), swipe chased icons 34
+   50.1  theirs Quaquaval Liquidation (not shielded; their energy believed [83, 88]; our health 29%)
+   59.7  mine   Thievul fainted -> Clodsire
+   68.6  theirs switch Quaquaval -> Tsareena
+   72.2  ours   Clodsire Stone Edge (cost 55; energy 86 by count; theirs believed [10, 10]), swipe chased icons 95
+   90.4  ours   Clodsire Stone Edge (cost 55; energy 65 by count; theirs believed [36, 36]), swipe chased icons 92
+  103.1  theirs Tsareena Triple Axel (not shielded; their energy believed [52, 52]; our health ?)
+  114.5  ours   Clodsire Stone Edge (cost 55; energy 48 by buttons; theirs believed [11, 11]), swipe chased icons 96
+  125.4  theirs switch Tsareena -> Skeledirge
+  129.7  mine   switch Clodsire -> Snorlax
+  129.7  mine   Clodsire fainted -> Clodsire
+  135.6  theirs Skeledirge Disarming Voice (we shielded; their energy believed [80, 80]; our health 90%)
+  146.3  ours   Snorlax Body Slam (cost 40; energy 33 by buttons; theirs believed [30, 35]), swipe chased icons 47
+  166.0  theirs Skeledirge Disarming Voice (not shielded; their energy believed [25, 30]; our health ?)
+  170.6  ours   Snorlax Body Slam (cost 40; energy 33 by buttons; theirs believed [25, 30]), swipe chased icons 46
+  187.6  theirs Skeledirge Disarming Voice (not shielded; their energy believed [0, 5]; our health ?)
+  198.9  end: loss

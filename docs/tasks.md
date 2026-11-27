@@ -359,7 +359,7 @@ own); channel names as source labels are fine. Do not touch or tune on the twent
 `docs/status.md`. Report per channel: videos, battles found, battles whose checks pass, wins and losses where the result
 screen shows.
 
-## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **taken: Claude on the owner's PC, 2026-11-08 (branch `task45-live-records`)**
+## 45. Store the live league battles well for later analysis — for the Claude agent on the owner's PC (the owner, 2026-11-08) — **done 2026-11-08 (Claude on the owner's PC, branch `task45-live-records`), except our levels and IVs: `games/live/our_teams.json` waits on the owner (the test skips until then)**
 
 **Why.** The owner wants the live data "very well stored for future analysis". The records in `games/live/` are good
 (one folder per battle, every action with what the bot believed, raw logs with every tap and look, no account names),

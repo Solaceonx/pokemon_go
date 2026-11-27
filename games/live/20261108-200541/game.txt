@@ -1,0 +1,40 @@
+live-20261108-200541 . league . LOSS . 196 s
+What went wrong: The owner's account's first league battle. Two shields on Mimikyu's Shadow Sneak at 84% and 69% health (13.4, 38.8 s: the rule shields a hit of a third of our health or more). Stunfisk threw Discharge into Talonflame on 5% at 115.8 s; two Thunder Shocks would have finished it (the owner: farm down). When Lickilicky came in (142 s) Stunfisk at 4% stayed in and fainted farming instead of going to Jellicent (the owner): the tracker had taken Vigoroth's faint (102 s) for a switch, the Pokemon-left counter lagging the header by 1.1 s, and believed the switch timer ran to 148 s.
+Fixed: partly: farm_down and save_the_low_one added and the faint taken for a switch fixed (task40-android 9dbeb69); farm_down misfired in the next battle and was narrowed (cf042c3); the shield rule is the owner's call
+
+Mine
+  Jellicent      Hex | Surf x1, Shadow Ball x0
+  Vigoroth       Scratch | Bulldoze x0, Body Slam x2  [fainted]
+  Stunfisk       Thunder Shock | Discharge x4, Mud Bomb x0  [fainted]
+Theirs
+  Talonflame     Incinerate* | Flame Charge x2
+  Mimikyu        Shadow Claw* | Shadow Sneak x3
+  Lickilicky     Rollout? | Shadow Ball x1
+
+Charged moves: ours 7, theirs 6; shield prompts 2, shielded 2; fast taps 368
+Player events: active_corrected 2, armed 5, armed_expired 1, decision_dropped 2, fainted_unprompted 1, queued_dropped 1, shield_override 2, switch_not_taken 1, their_charged_unprompted 2, throw_beaten 2, throw_before_fainting 5, throw_before_theirs 3, throw_fainted 1
+
+    0.0  start: Jellicent v Talonflame
+    5.2  theirs switch Talonflame -> Mimikyu
+    6.6  mine   switch Jellicent -> Stunfisk
+   13.4  theirs Mimikyu Shadow Sneak (we shielded; their energy believed [48, 48]; our health 84%)
+   23.6  ours   Stunfisk Discharge (cost 40; energy 33 by count; theirs believed [0, 6]), swipe chased icons 61
+   38.8  theirs Mimikyu Shadow Sneak (we shielded; their energy believed [40, 46]; our health 69%)
+   47.6  ours   Stunfisk Discharge (cost 40; energy 40 by count; theirs believed [40, 46]), swipe chased icons 62, seen queued
+   59.8  mine   switch Stunfisk -> Vigoroth
+   64.1  theirs switch Mimikyu -> Talonflame
+   66.5  ours   Vigoroth Body Slam (cost 40; energy 33 by buttons; theirs believed [20, 20]), swipe chased icons 50
+   86.2  theirs Talonflame Flame Charge (not shielded; their energy believed [5, 15]; our health ?)
+   91.6  ours   Vigoroth Body Slam (cost 40; energy 33 by buttons; theirs believed [5, 15]), swipe chased icons 57
+  102.3  mine   Vigoroth fainted -> Stunfisk
+  111.1  theirs Talonflame Flame Charge (not shielded; their energy believed [0, 10]; our health ?)
+  117.1  ours   Stunfisk Discharge (cost 40; energy 34 by buttons; theirs believed [20, 30]), swipe chased icons 65
+  129.4  theirs switch Talonflame -> Mimikyu
+  134.5  ours   Stunfisk Discharge (cost 40; energy 31 by buttons; theirs believed [40, 44]), swipe chased icons 64
+  142.2  theirs switch Mimikyu -> Lickilicky
+  149.2  mine   Stunfisk fainted -> Stunfisk
+  152.5  ours   Jellicent Surf (cost 45; energy 36 by buttons; theirs believed [52, 52]), swipe chased icons 31
+  169.1  theirs Lickilicky Shadow Ball (not shielded; their energy believed [65, 65]; our health ?)
+  179.7  theirs switch Lickilicky -> Mimikyu
+  186.8  theirs Mimikyu Shadow Sneak (not shielded; their energy believed [56, 60]; our health ?)
+  195.6  end: loss

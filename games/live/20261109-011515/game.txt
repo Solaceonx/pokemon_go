@@ -1,0 +1,39 @@
+live-20261109-011515 . league . LOSS . 196 s
+What went wrong: Both. Reading: after Ice Punch ("SUPER EFFECTIVE!" over our bar, buttons hidden) the fight was taken up 3 s late, likewise after other charged moves (3 to 4 s). Engine: two Mud Bombs beaten by their throws; Ice Punch twice unshielded on Stunfisk.
+Fixed: the reading: task40-android b264f58
+
+Mine
+  Jellicent      Hex | Shadow Ball x0, Surf x3
+  Vigoroth       Scratch | Bulldoze x0, Body Slam x2  [fainted]
+  Stunfisk       Thunder Shock | Discharge x0, Mud Bomb x2
+Theirs
+  Toedscruel     Mud Slap* | Wrap x3
+  Dusclops       Hex* | Ice Punch x2
+  Dunsparce      Bite? | Rock Slide x2
+
+Charged moves: ours 7, theirs 7; shield prompts 7, shielded 2; fast taps 315
+Player events: active_corrected 1, armed 2, queued_dropped 1, switch_not_taken 1, throw_beaten 2, throw_before_fainting 6, throw_not_taken 1
+
+    0.0  start: Jellicent v Toedscruel
+    4.3  mine   switch Jellicent -> Vigoroth
+    9.7  theirs Toedscruel Wrap (not shielded; their energy believed [40, 40]; our health 82%)
+   19.8  ours   Vigoroth Body Slam (cost 40; energy 45 by count; theirs believed [0, 0]), swipe chased icons 52
+   34.2  ours   Vigoroth Body Slam (cost 40; energy 33 by buttons; theirs believed [40, 40]), swipe chased icons 57
+   47.2  mine   Vigoroth fainted -> Jellicent
+   52.1  theirs Toedscruel Wrap (not shielded; their energy believed [90, 90]; our health 85%)
+   63.8  ours   Jellicent Surf (cost 45; energy 50 by count; theirs believed [55, 60]), swipe chased icons 33
+   70.5  theirs switch Toedscruel -> Dusclops
+   76.0  mine   switch Jellicent -> Stunfisk
+   79.9  theirs Dusclops Ice Punch (not shielded; their energy believed [39, 39]; our health 90%)
+   91.2  theirs Dusclops Ice Punch (not shielded; their energy believed [0, 12]; our health 51%)
+  102.4  ours   Stunfisk Mud Bomb (cost 45; energy 45 by count; theirs believed [0, 0]), swipe chased icons 91
+  112.6  theirs switch Dusclops -> Dunsparce
+  115.3  ours   Stunfisk Mud Bomb (cost 45; energy 33 by buttons; theirs believed [8, 8]), swipe chased icons 92
+  125.5  mine   switch Stunfisk -> Jellicent
+  128.2  ours   Jellicent Surf (cost 45; energy 45 by count; theirs believed [28, 28]), swipe chased icons 30
+  139.2  theirs Dunsparce Rock Slide (not shielded; their energy believed [44, 44]; our health ?)
+  152.1  theirs Dunsparce Rock Slide (we shielded; their energy believed [31, 31]; our health 18%)
+  162.2  ours   Jellicent Surf (cost 45; energy 37 by buttons; theirs believed [4, 4]), swipe chased icons 34
+  172.9  theirs switch Dunsparce -> Toedscruel
+  182.1  theirs Toedscruel Wrap (we shielded; their energy believed [95, 100]; our health 4%)
+  196.1  end: loss

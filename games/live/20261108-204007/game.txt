@@ -1,0 +1,38 @@
+live-20261108-204007 . league . LOSS . 208 s
+What went wrong: Both shields on Obstagoon's Night Slash with Jellicent at 92% and 82% health (59.1, 84.6 s: 56 of 156, over the third-of-health rule). The engine switched Jellicent into Obstagoon at 53 s though Night Slash is super effective on it and Hex is resisted twice. The new farm_down rule held Surf for 17 s (94 to 111 s) at 97 to 98 energy, capped, against an Obstagoon on 1 to 5% that Hex could not finish, overrode the throw-first guard at 98 s, and Jellicent took an unshielded Night Slash at 105 s. The owner stopped play at 208 s; the battle ended untouched in a loss (the result screen, GOOD EFFORT!).
+Fixed: farm_down narrowed (task40-android cf042c3); the shield rule and the engine's switch are open
+
+Mine
+  Jellicent      Hex | Surf x3, Shadow Ball x3
+  Vigoroth       Scratch | Bulldoze x0, Body Slam x0  [fainted]
+  Stunfisk       Thunder Shock | Discharge x1, Mud Bomb x1
+Theirs
+  Obstagoon      Counter? | Obstruct x1, Night Slash x3
+  Azumarill      Bubble* | Play Rough x2
+  Tinkaton       Fairy Wind* | 
+
+Charged moves: ours 8, theirs 7; shield prompts 4, shielded 2; fast taps 421
+Player events: armed 2, armed_expired 1, queued_dropped 1, shield_override 2, their_charged_unprompted 2, throw_before_fainting 6, throw_before_theirs 8, throw_not_taken 1, waiting_for_better 9
+
+    0.0  start: Jellicent v Obstagoon
+    4.5  mine   switch Jellicent -> Stunfisk
+    9.2  theirs Obstagoon Obstruct (not shielded; their energy believed [30, 30]; our health 89%)
+   20.3  ours   Stunfisk Mud Bomb (cost 45; energy 45 by count; theirs believed [6, 13]), swipe chased icons 88
+   34.3  theirs Obstagoon (move not named) (not shielded; their energy believed [30, 37]; our health 62%)
+   43.2  ours   Stunfisk Discharge (cost 40; energy 51 by count; theirs believed [6, 8]), swipe chased icons 62
+   54.9  mine   switch Stunfisk -> Jellicent
+   59.1  theirs Obstagoon Night Slash (we shielded; their energy believed [30, 32]; our health 92%)
+   72.3  ours   Jellicent Surf (cost 45; energy 61 by count; theirs believed [12, 15]), swipe chased icons 32
+   84.6  theirs Obstagoon Night Slash (we shielded; their energy believed [24, 27]; our health 82%)
+  105.1  theirs Obstagoon Night Slash (not shielded; their energy believed [0, 5]; our health ?)
+  112.8  ours   Jellicent Surf (cost 45; energy 98 by count; theirs believed [12, 17]), swipe chased icons 36
+  125.0  theirs switch Obstagoon -> Azumarill
+  128.3  ours   Jellicent Shadow Ball (cost 50; energy 55 by count; theirs believed [0, 0]), swipe chased icons 73
+  140.1  mine   switch Jellicent -> Vigoroth
+  149.6  theirs Azumarill Play Rough (not shielded; their energy believed [0, 0]; our health ?)
+  167.2  theirs Azumarill Play Rough (not shielded; their energy believed [33, 33]; our health 34%)
+  170.8  mine   Vigoroth fainted -> Jellicent
+  175.8  ours   Jellicent Shadow Ball (cost 50; energy 40 by buttons; theirs believed [0, 0]), swipe chased icons 65
+  189.1  ours   Jellicent Surf (cost 45; energy 45 by count; theirs believed [44, 44]), swipe chased icons 31
+  199.3  theirs switch Azumarill -> Tinkaton
+  207.4  ours   Jellicent Shadow Ball (cost 50; energy 37 by buttons; theirs believed [63, 63])

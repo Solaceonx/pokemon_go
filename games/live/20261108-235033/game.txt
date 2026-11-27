@@ -1,0 +1,37 @@
+live-20261108-235033 . league . LOSS . 200 s
+What went wrong: Fast taps came back within 0.1 to 0.7 s after every charged move (the fixes of afd850c held); no throw was lost. Lost on matchups and shields, the engine's: Jellicent led into Talonflame and was switched to Vigoroth; shields went on Flame Charge (Vigoroth at 58%, 25 s) and Rock Tomb (Jellicent, 105 s); Stunfisk ended against Whiscash, whose Scald is super effective on it.
+
+Mine
+  Jellicent      Hex | Surf x2, Shadow Ball x1
+  Vigoroth       Scratch | Bulldoze x1, Body Slam x1  [fainted]
+  Stunfisk       Thunder Shock | Discharge x0, Mud Bomb x2
+Theirs
+  Cradily        Bullet Seed* | Rock Tomb x3
+  Talonflame     Incinerate* | Flame Charge x2
+  Whiscash       Mud Shot* | Scald x1, Mud Bomb x1
+
+Charged moves: ours 7, theirs 7; shield prompts 4, shielded 2; fast taps 421
+Player events: armed 3, armed_expired 2, armed_fired 1, decision_dropped 1, their_charged_unprompted 2, throw_beaten 1, throw_before_fainting 2, waiting_for_better 1
+
+    0.0  start: Jellicent v Cradily
+    3.6  mine   switch Jellicent -> Vigoroth
+    6.7  theirs switch Cradily -> Talonflame
+   13.2  ours   Vigoroth Bulldoze (cost 55; energy 60 by buttons; theirs believed [40, 40]), swipe chased icons 102
+   25.1  theirs Talonflame Flame Charge (we shielded; their energy believed [60, 60]; our health 58%)
+   38.2  ours   Vigoroth Body Slam (cost 40; energy 40 by count; theirs believed [30, 30]), swipe chased icons 40
+   50.1  theirs Talonflame Flame Charge (not shielded; their energy believed [50, 50]; our health ?)
+   59.3  mine   Vigoroth fainted -> Jellicent
+   68.1  theirs switch Talonflame -> Cradily
+   70.7  theirs Cradily Rock Tomb (not shielded; their energy believed [40, 40]; our health ?)
+   80.3  ours   Jellicent Surf (cost 45; energy 87 by count; theirs believed [0, 2]), swipe chased icons 38
+   94.2  ours   Jellicent Shadow Ball (cost 50; energy 58 by count; theirs believed [26, 28]), swipe chased icons 70
+  105.0  theirs Cradily Rock Tomb (we shielded; their energy believed [65, 67]; our health ?)
+  116.9  ours   Jellicent Surf (cost 45; energy 32 by buttons; theirs believed [28, 30]), swipe chased icons 35
+  135.1  theirs Cradily Rock Tomb (not shielded; their energy believed [4, 6]; our health ?)
+  138.9  mine   switch Jellicent -> Stunfisk
+  144.7  theirs switch Cradily -> Whiscash
+  148.7  ours   Stunfisk Mud Bomb (cost 45; energy 49 by buttons; theirs believed [18, 18]), swipe chased icons 91
+  167.3  theirs Whiscash Scald (not shielded; their energy believed [4, 9]; our health ?)
+  171.7  ours   Stunfisk Mud Bomb (cost 45; energy 42 by count; theirs believed [4, 9]), swipe chased icons 88
+  191.4  theirs Whiscash Mud Bomb (not shielded; their energy believed [49, 54]; our health 16%)
+  199.6  end: loss

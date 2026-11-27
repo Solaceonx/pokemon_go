@@ -1,0 +1,39 @@
+live-20261109-123923 . league . LOSS . 177 s
+What went wrong: Reading: Clodsire, our last Pokémon, one shield up, took two Aerial Aces and the final Liquidation unshielded: the last-Pokémon rule read our shields off the prompt's frame, where the header is dimmed. Also who was out flipped between Snorlax and Clodsire at 104-121 s. Engine: no shield on Dondozo's Liquidation early.
+Fixed: 2136026: the rule takes the header's counts as last seen
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x1, Earthquake x1
+  Thievul        Sucker Punch | Night Slash x1, Play Rough x0  [fainted]
+  Snorlax        Psywave | Body Slam x2, Earthquake x0  [fainted]
+Theirs
+  Togetic        Fairy Wind? | Aerial Ace x2
+  Dondozo        Waterfall* | Liquidation x2
+  Lucario (Mega) Force Palm* | 
+
+Charged moves: ours 6, theirs 5; shield prompts 5, shielded 1; fast taps 441
+Player events: active_corrected 2, armed 2, decision_dropped 1, fainted_unprompted 1, queued_dropped 1, throw_beaten 2, throw_before_fainting 7, throw_not_taken 3, waiting_for_better 11
+
+    0.0  start: Clodsire v Togetic
+    4.5  theirs switch Togetic -> Dondozo
+    6.7  mine   switch Clodsire -> Snorlax
+   14.8  theirs Dondozo Liquidation (not shielded; their energy believed [50, 50]; our health 82%)
+   24.6  ours   Snorlax Body Slam (cost 40; energy 44 by count; theirs believed [5, 5]), swipe chased icons 46, seen queued
+   39.4  ours   Snorlax Body Slam (cost 40; energy 35 by count; theirs believed [45, 45]), swipe chased icons 62
+   52.6  theirs switch Dondozo -> Lucario (Mega)
+   55.0  mine   switch Snorlax -> Thievul
+   61.8  theirs Lucario (Mega) (move not named) (we shielded; their energy believed [49, 49]; our health ?)
+   72.7  ours   Thievul Night Slash (cost 35; energy 34 by count; theirs believed [20, 25]), swipe chased icons 29
+   83.3  mine   Thievul fainted -> Clodsire
+   93.4  ours   Clodsire Earthquake (cost 65; energy 83 by count; theirs believed [80, 85]), swipe chased icons 87
+  101.8  theirs switch Lucario (Mega) -> Dondozo
+  104.7  mine   switch Clodsire -> Snorlax
+  106.9  ours   Clodsire Body Slam (cost 40; energy 55 by count; theirs believed [85, 85]), swipe chased icons 51
+  115.1  theirs switch Dondozo -> Togetic
+  121.0  mine   Snorlax fainted -> Snorlax
+  122.9  theirs Togetic Aerial Ace (not shielded; their energy believed [45, 45]; our health 75%)
+  137.9  theirs Togetic Aerial Ace (not shielded; their energy believed [45, 45]; our health ?)
+  149.0  ours   Clodsire Stone Edge (cost 55; energy 66 by count; theirs believed [18, 18]), swipe chased icons 97
+  160.5  theirs switch Togetic -> Dondozo
+  162.5  theirs Dondozo Liquidation (not shielded; their energy believed [95, 95]; our health ?)
+  176.6  end: loss
