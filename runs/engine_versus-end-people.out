@@ -1,0 +1,98 @@
+480 jobs to run on 3 workers
+  80 results, 1 min
+  170 results, 2 min
+  265 results, 3 min
+  360 results, 4 min
+  455 results, 5 min
+  560 results, 6 min
+  605 results, 7 min
+  625 results, 8 min
+  645 results, 10 min
+  665 results, 11 min
+  685 results, 12 min
+  710 results, 14 min
+  725 results, 15 min
+  745 results, 16 min
+  770 results, 17 min
+  790 results, 18 min
+  810 results, 19 min
+  830 results, 20 min
+  850 results, 22 min
+  870 results, 23 min
+  890 results, 24 min
+  925 results, 25 min
+  975 results, 26 min
+  1025 results, 27 min
+  1080 results, 28 min
+  1135 results, 29 min
+  1185 results, 30 min
+  1235 results, 31 min
+  1295 results, 32 min
+  1345 results, 34 min
+  1405 results, 35 min
+  1460 results, 36 min
+  1505 results, 37 min
+  1525 results, 39 min
+  1540 results, 40 min
+  1555 results, 41 min
+  1570 results, 42 min
+  1585 results, 43 min
+  1600 results, 44 min
+  1615 results, 45 min
+  1625 results, 47 min
+  1640 results, 48 min
+  1660 results, 49 min
+  1675 results, 50 min
+  1690 results, 51 min
+  1710 results, 52 min
+  1720 results, 53 min
+  1735 results, 54 min
+  1750 results, 55 min
+  1765 results, 56 min
+  1780 results, 58 min
+  1795 results, 59 min
+  1830 results, 60 min
+  1865 results, 61 min
+  1910 results, 62 min
+  1940 results, 63 min
+  1980 results, 64 min
+  2020 results, 65 min
+  2065 results, 67 min
+  2100 results, 68 min
+  2140 results, 69 min
+  2185 results, 70 min
+  2225 results, 71 min
+  2270 results, 72 min
+  2310 results, 73 min
+  2350 results, 74 min
+  2390 results, 75 min
+
+baseline: website,judge=turn,horizon=40
+  head to head, all candidates: baseline shields / shield prompts 2210 / 6173 (35.8%)
+  against the crowd: 74.8% ± 4.9
+    baseline: 1.540 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 25.82 total searches/battle, 2.122 search seconds/battle); mean P(chosen) 1.000 (7736 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 548 / 1482 (37.0%)
+  against the people: 73.3% ± 5.0
+    baseline: 1.567 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 24.72 total searches/battle, 1.889 search seconds/battle); mean P(chosen) 1.000 (7313 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 546 / 1416 (38.6%)
+
+candidate 1: website,judge=end,heads=throw+swap+mid_swap+replace+shield,opponents=people,samples=16
+  head to head against the baseline, 300 pairings both ways: 42.6% ± 3.2
+    candidate: 1.817 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 27.29 total searches/battle, 3.413 search seconds/battle); mean P(chosen) 1.000 (12744 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1121 / 2954 (37.9%)
+    baseline:  1.947 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 26.06 total searches/battle, 1.911 search seconds/battle); mean P(chosen) 1.000 (15591 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1092 / 3148 (34.7%)
+  against the crowd: 73.8% ± 5.0, -1.0 ± 6.0 points on the baseline
+    candidate: 1.507 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 29.57 total searches/battle, 3.634 search seconds/battle); mean P(chosen) 1.000 (7040 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 547 / 1485 (36.8%)
+  against the people: 73.8% ± 5.0, +0.5 ± 5.5 points on the baseline
+    candidate: 1.507 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 28.79 total searches/battle, 3.446 search seconds/battle); mean P(chosen) 1.000 (6894 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 558 / 1412 (39.5%)
+  search time per searched decision: median 79 ms, 99th percentile 609, worst 1108 (this machine)
+
+candidate 2: website,judge=end,heads=throw+swap+mid_swap+replace+shield,samples=16
+  head to head against the baseline, 300 pairings both ways: 52.2% ± 3.3
+    candidate: 1.795 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 29.01 total searches/battle, 4.814 search seconds/battle); mean P(chosen) 1.000 (13641 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1119 / 2949 (37.9%)
+    baseline:  1.957 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (600 battles; 24.38 total searches/battle, 1.803 search seconds/battle); mean P(chosen) 1.000 (14537 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 1118 / 3025 (37.0%)
+  against the crowd: 71.8% ± 5.1, -3.0 ± 5.8 points on the baseline
+    candidate: 1.483 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 29.90 total searches/battle, 5.265 search seconds/battle); mean P(chosen) 1.000 (7099 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 553 / 1506 (36.7%)
+  against the people: 70.8% ± 5.1, -2.5 ± 5.5 points on the baseline
+    candidate: 1.483 mid-matchup swaps/battle, 0.000 mid-matchup searches/battle (300 battles; 29.13 total searches/battle, 4.932 search seconds/battle); mean P(chosen) 1.000 (6947 shield/throw-head choices; legacy random choices excluded); baits 0 / 0 mixed opportunities; 0 throws before searched swaps; shields / shield prompts 539 / 1437 (37.5%)
+  search time per searched decision: median 89 ms, 99th percentile 910, worst 1614 (this machine)
+
+elapsed: 4548.0 seconds
+results: runs/engine_versus/end-people.json

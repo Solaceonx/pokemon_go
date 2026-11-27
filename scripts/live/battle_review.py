@@ -216,6 +216,15 @@ def land(battle, thrower: int, move_id: str, energy, shielded: bool) -> bool:
 
 
 def playout(job: tuple) -> float:
+    """One play-out's points for the deciding side; NaN when this choice cannot be played here (the decision is then
+    left out)."""
+    try:
+        return _playout(job)
+    except (IndexError, KeyError, ValueError, StopIteration):
+        return float("nan")
+
+
+def _playout(job: tuple) -> float:
     from pogo.agents import varied_settings
     from pogo.battle import DRAW, FAST, SWITCH
     from pogo.engine import _First, imagine
@@ -282,7 +291,8 @@ def name(option) -> str:
 
 def review(stamp: str, playouts: int, rec: dict) -> dict | None:
     rows = [json.loads(l) for l in open(LOGS / f"{stamp}.jsonl", encoding="utf-8") if l.strip()]
-    if not league_battle(rows):
+    end = next((r for r in rows if r["kind"] == "end"), {})
+    if rec["source"]["mode"] != "league" or not end.get("foes") or not any(r["kind"] == "decision" for r in rows):
         return None
     order, builds = foe_builds(rows)
     teams = [(1.0, tuple(order))] if len(order) == 3 else None
