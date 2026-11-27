@@ -5825,3 +5825,23 @@ switch re-tapped for about 20 s (113244, 166-185 s, to Clodsire on 7 HP, not tak
 the spare account's 16-14 above: it carries a player fault the battle reviews cannot see (they score decisions, not taps
 that never went in).
 
+**The fix checked on the phone** (Claude, 2026-11-27; the owner: "ok do team leader battles to check it. you may do
+actual battles if you feel confident"). `ultra-league` 9a9720ec, third account, Clodsire / Araquanid / Snorlax. Team
+Leaders 4-0, no errors, no charged tap not taken; but training never showed the fault (0 not taken in its 23 battles
+of 11-24/25/27), so the test is ranked: the last battle of set 2 and set 3, **6 battles, 4-2** (set 3 3-2). Per battle,
+against the table above:
+
+| | Battles | Charged taps not taken | Seconds without fast taps around them |
+|---|---|---|---|
+| 2026-11-24/25 ranked | 89 | 0.58 | 1.8 |
+| 2026-11-27 before the fix | 46 | 1.83 | 5.1 |
+| **2026-11-27 after the fix** | 6 | **0.67** | **2.0** |
+
+Back to the old level (six battles: a small sample, but the earlier gap was three-fold). What is left is the player of
+2026-11-25: a throw on the count alone waits out THEIR_MOVE_DOUBT_S (15 s) after their charged move unless a reading or
+a name says paid, while fast-tapping (130547: Araquanid on 23% with 53 counted for Water Pulse, from 137 s; it did not
+freeze). The two losses: 124932 (93.5% bot against bot) on `farm_down`: Araquanid on 24 HP with Mirror Coat paid kept
+fast-moving to finish Quagsire on 17 HP, counting on our one shield against its ready move, and Stone Edge went in with
+the prompt not answered (logged `their_charged_unprompted`); 125313 (60.2%) on matchups. Fix next: `farm_down` must not
+rely on a shield the prompt may not give us; then the count-only wait; then the late throws.
+
