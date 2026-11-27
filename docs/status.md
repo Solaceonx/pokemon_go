@@ -5341,6 +5341,19 @@ Turtonator's two Brutal Swings took Snorlax unshielded (both engines agree); Thi
 agree) and again on 38 HP (neither engine shields when asked again, 0 of 6); at the end Clodsire had only Stone Edge
 (19, resisted twice) against Galarian Stunfisk. Every other shield call matched what both engines say.
 
+**The held throw, fixed** (Claude, 2026-11-26, `ultra-league` 0ad7b343; the owner: "Yes, fix it"). Two gates held
+Snorlax's Body Slam in 170435. (1) Within `THEIR_MOVE_DOUBT_S` (15 s) of their charged move only a fresh reading or
+name (under 0.35 / 0.6 s old) counts as paid, and a paid button flashes, so neither came in the gaps between Minior's
+moves although the name had shown at 123.2 s. Now what the names showed paid for is kept per Pokémon until it throws
+(`note_paid`, `paid_floor_now`; dropped when a reading or three frames in a throw say less). (2) The pauses after
+their moves (prompt 6 s, countdown 3.5 s, name 2 s) covered nearly all of 123-150 s; one began at 122.4 s with the
+fight on screen (the frames at 122.4 and 122.9 s show Body Slam lit and named, the buttons gone only at 124.2 s with
+"Attack incoming!"). Now a throw with ours under 35% and the move known paid for goes as soon as both buttons are drawn
+(`throw_fight_back`). Replayed on 170435 with P: Body Slam tapped at 122.9, 136.9 and 142.3 s (live: only at 150 s);
+a replay follows the recording, so whether the game took them is not shown. Replayed on 20261125-121525 with today's
+engine: the new rule never fires, no errors, switch asks and swipes as before. Tests: 573 pass (5 new in
+`tests/test_paid_floor.py`), PvPoke 108 of 108. Not yet found: what started the pause at 122.4 s.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
