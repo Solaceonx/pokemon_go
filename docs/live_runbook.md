@@ -51,6 +51,10 @@ Below, `PY` is the venv's python and `SC` the scrcpy folder; run from the worktr
 - **Marco's lab engine instead of today's** (opt-in, the owner's trial from 2026-11-26): put `POGO_LAB=P` in front
   of `run_gbl.py`, `train_loop.py` or `replay.py` (`P` is `play_android.LAB_P`; any `scripts/engine_versus.py` spec
   works). The battle log's start row then says `engine: lab:P`. Unset, today's engine plays.
+- **A cup's field for the engines** (opt-in, measured 2026-11-26: no gain): `POGO_FIELD=data/fields/mega_catch_cup.json`
+  makes both engines imagine their unseen Pokémon from the Mega Catch Cup opponents we met (and their real teams)
+  instead of the open top 50; `scripts/live/cup_field.py` builds such a file from the logs, `scripts/cup_versus.py`
+  measures it. Unset, as before.
 - **The owner's shield call for the battle under way:** write `runs/live/override.json` as
   `{"shield": {"thievul": true}}` (shield at every prompt while it is out; `false`: never); delete it after.
 - **After each set:** `nice $PY scripts/live/set_review.py runs/live/<stamp>.jsonl ...` (results, rules fired, likely
