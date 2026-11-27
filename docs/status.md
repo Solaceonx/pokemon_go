@@ -5409,6 +5409,23 @@ an unseen last Pokémon (`agents._sweeper_field`, the open top 50 too).
 searches failed ("'float' object cannot be interpreted as an integer"), four times in one replay; kept whole since
 cdb727fb (test added). No live battle has run on 0ad7b343.
 
+**Shield search at today's settings: not adopted** (Claude, 2026-11-26; the owner, asked whether to shield a moderate
+hit on a Pokémon at a third of its health with both shields up: "idk that's up to you to decide. shouldn't the engine
+be able to analyze the rest of the battle and decide?"). Task 25 measured it in October at the old settings (4 imagined
+battles, 20 turns): no gain. Again at today's live settings (`website,judge=turn,horizon=40`, 32 battles, 40 turns),
+candidate `+heads=throw+swap+mid_swap+replace+shield`, `engine_versus.py --tag shields-now --pairings 600 --crowd 600
+--people 600 --pvpoke 0 --workers 3 --seed 5101` (41 min, `runs/engine_versus/shields-now.json`): head to head **53.5%
+± 2.3**; against the crowd **-1.6 ± 2.8** points; against the people-like opponent **-1.6 ± 2.8**; search 40 ms median,
+99th percentile 229. The creator exam's 114 shield decisions (`scripts/lab/creator_exam.py --kinds shield`): both agree
+with the creators 68.4% ± 8.6 (they choose alike 82.5%); by play-outs, shield search minus today's **-0.8 ± 2.6** points
+(people-like) and **-1.1 ± 2.7** (crowd). Only the head to head favours it, and that is the flattering test (each side
+imagines the other as the bot it is); every test against other opponents leans the other way. Not adopted, not taken to a
+fresh seed. It would not have changed 171853's Rock Slide call either: asked there, it shields 6 of 6, where the
+play-outs to the end with varied bots say not shielding wins 56% to 12% (the search judges 40 turns on with the learned
+evaluation). So the engine can look at the rest of the battle for shields, but its look is only as good as the opponents
+it imagines and the evaluation it ends on; against people that has not beaten the trained bot's quick call. Untried:
+the same with `opponents=people` inside the imagined battles.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
