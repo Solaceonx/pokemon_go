@@ -5310,6 +5310,20 @@ more switching (the phone code's weakest part), at its time limit.
 on `ultra-league` (3bdadad6, 2026-11-04, refined since: health floored at 1, the least hit while the move is
 unnamed); only `scripts/recording/game_record.py` is not.
 
+**Marco's engine P on the phone** (Claude, 2026-11-26; the owner: "try marco's engine in team leader training, and
+then if it's fine, do it in real games"). `POGO_LAB=P` on `ultra-league` (2e98a9c3, opt-in; unset, today's engine
+plays; the log's start row says `engine: lab:P`). Dry run first on 20261125-121525: no errors, slowest decision 299 ms,
+2 switch asks (today's engine also 2). **Team Leader training, third account, Clodsire / Thievul / Snorlax:** 3 of 3
+won, 14 of 14 minigames Excellent, no errors; 6 of 371 decisions over the 300 ms cap (slowest 323 ms). **Mega Catch
+Cup set, same team: 1-4** (logs 20261126-170435 to 171853, eba7a6fa). Mechanics clean: no errors, 31 of 32
+minigames Excellent (one rating unread), every switch taken (one confirmed after 5.6 s with a re-tap, the engine asking
+again every half second meanwhile), 2 of 1,311 decisions over 300 ms (305 ms). Losses: Crobat / Minior / Azumarill,
+Kingambit / Marowak / Wigglytuff, Excadrill / shadow Gyarados / Tinkaton, Galarian Stunfisk / Turtonator / Lapras; win
+against Clefable / Jellicent / Kingambit. Of the "weak throw" flags, all but one were throws before fainting or with the
+stronger move not paid for (`set_review.py` does not check energy). The one judgement call: Clodsire threw Stone Edge
+(31) into Excadrill on 38 HP, two turns before Earthquake (178) was paid for (171528, 117 s). Yesterday the same team
+with today's engine went 14-11. One set of five cannot tell the engines apart (a margin of about ± 35 points).
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
