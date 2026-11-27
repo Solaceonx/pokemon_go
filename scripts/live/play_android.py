@@ -126,12 +126,13 @@ LAB_P = ("website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix
          "q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz")
 
 
-def lab_engine(gd: GameData, spec: str, seed: int):
-    """The lab engine of `spec` ("P" for LAB_P), with the live player's turn length, search cap and clock."""
+def lab_engine(gd: GameData, spec: str, seed: int, pool: list | None = None):
+    """The lab engine of `spec` ("P" for LAB_P), with the live player's turn length, search cap and clock; `pool`: the
+    field it imagines their unseen Pokémon from (cup_field), else the open top 50."""
     sys.path.insert(0, str(ROOT / "scripts"))
     import engine_versus as V
 
-    state = dict(gd=gd, pool=gd.meta(50), net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
+    state = dict(gd=gd, pool=pool or gd.meta(50), net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
                  evals={}, pools={})
 
     class LiveRT(RealTime):  # the live deadlines, whatever the spec says
@@ -140,6 +141,33 @@ def lab_engine(gd: GameData, spec: str, seed: int):
             super().__init__(*a, **k)
 
     return V.pilot(V.parse(LAB_P if spec == "P" else spec), seed, cls=LiveRT, state=state)
+
+
+# POGO_FIELD=<a cup's field file, scripts/live/cup_field.py, e.g. data/fields/mega_catch_cup.json>: the engines imagine
+# the Pokémon of theirs not yet seen from that cup's field and the real teams met, in place of the open Great League top
+# 50, which held a quarter of the Mega Catch Cup opponents met (2026-11-26, docs/status.md). Unset: as before.
+def cup_field(gd: GameData, path: str | None = None):
+    """(pool, teams, builds): the field's species met `min_seen` times or more as builds (the moves seen, else PvPoke's
+    defaults), its teams whose species all build, as (weight, species) for Engine._teams, and the builds by species;
+    (gd.meta(50), None, None) with no file."""
+    path = path if path is not None else _os.environ.get("POGO_FIELD")
+    if not path:
+        return gd.meta(50), None, None
+    p = Path(path) if Path(path).is_absolute() else ROOT / path
+    data = json.loads(p.read_text(encoding="utf-8"))
+    moves, builds = data.get("moves", {}), {}
+    for sp, _ in data["species"]:
+        if sp not in gd.species or not gd.supported(sp):
+            continue  # unknown, or form-changing (left out of every pool so far, as in GameData.meta)
+        m = moves.get(sp)
+        try:
+            builds[sp] = gd.build(sp, [m["fast"], *m["charged"]]) if m else gd.default(sp)
+        except (KeyError, ValueError):
+            continue
+    least = data.get("min_seen", 2)
+    pool = [builds[sp] for sp, k in data["species"] if k >= least and sp in builds]
+    teams = [(float(e["weight"]), list(e["team"])) for e in data.get("teams", []) if all(sp in builds for sp in e["team"])]
+    return pool, teams or None, builds
 
 
 # The owner's rule 5 ("Strategy guidance from the project owner", docs/status.md): out of a bad lead, swap to the safe
@@ -866,12 +894,15 @@ class Player:
         # one sent Skeledirge on 17 HP into Charizard, it sent Blastoise)
         ul = getattr(gd, "league", None) == 2500 and (ROOT / "runs" / "ul-eval" / "eval.npz").exists()
         ev = Evaluator.load(ROOT / _os.environ.get("POGO_EVAL", "runs/ul-eval/eval.npz" if ul else "runs/eval/eval.npz"))
-        self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
+        pool, teams, builds = cup_field(gd)  # POGO_FIELD: a cup's field, else the open top 50
+        self.engine = RealTime(Evaluator(ev.model), pool, q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
                                seed=int(time.time()) % 100000, **{**WEBSITE, **engine_settings(_os.environ.get("POGO_ENGINE", LIVE_ENGINE))},
                                turn_ms=500, cap_ms=300, clock=time.perf_counter)
         self.lab = _os.environ.get("POGO_LAB") or None
         if self.lab:
-            self.engine = lab_engine(gd, self.lab, int(time.time()) % 100000)
+            self.engine = lab_engine(gd, self.lab, int(time.time()) % 100000, pool=pool)
+        if teams:  # their bench imagined from the real teams that hold the ones seen (pogo.engine.imagine)
+            self.engine._teams, self.engine._team_builds = teams, builds
         self.names = screen.NameReader(gd)
         self.active = 0
         self.t0 = None
@@ -1611,11 +1642,11 @@ class Player:
             return
         shown = [c for c, n in zip(costs, names) if n]
         if shown:
-            self._floors()[self.active] = max(self._floors().get(self.active, 0.0), float(max(shown)))
+            self._floors()[self.active] = max(self._floors().get(self.active, 0), int(max(shown)))  # whole energy, as the tracker counts
 
-    def paid_floor_now(self) -> float:
+    def paid_floor_now(self) -> int:
         """Our energy is at least this: what the names have shown paid for since the one out last threw (note_paid)."""
-        return self._floors().get(self.active, 0.0)
+        return self._floors().get(self.active, 0)
 
     def paid_bounds(self):
         """(least, most) our energy can be by which moves' names show under the buttons in the last 0.6 s (a name
@@ -1787,7 +1818,7 @@ class Player:
             # 2026-11-08, Stunfisk with 49 was taken for 39 and did not throw). What they showed since our last throw
             # still holds (note_paid).
             mon_now = self.tracker.me.mon
-            least = max(bounds[0] if bounds is not None else 0, floor)
+            least = int(max(bounds[0] if bounds is not None else 0, floor))  # the engine's searches need whole energy
             kept = max(mon_now.energy, least)
             if kept != mon_now.energy:
                 self.log("energy_from_names", t, counted=mon_now.energy, least=least,
@@ -3239,6 +3270,7 @@ def main() -> None:
     player.start_info = {"commit": commit, "dirty": dirty, "version_error": version_error,
                          "account": a.account, "team_key": a.team_key,
                          "engine": f"lab:{player.lab}" if player.lab else _os.environ.get("POGO_ENGINE", LIVE_ENGINE),
+                         "field": _os.environ.get("POGO_FIELD") or None,
                          "league": a.league, "season": a.season,
                          "standing": json.loads(a.standing) if a.standing else None}
     if a.open_with:

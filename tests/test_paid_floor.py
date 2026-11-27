@@ -39,6 +39,13 @@ class PaidFloor(unittest.TestCase):
         p.names_seen = None  # the names unread for seconds
         self.assertEqual(p.paid_floor_now(), 40)
 
+    def test_whole_energy(self):
+        # 2026-11-26: a floor of 65.0 put into the tracker's count made the engine's searches fail ("'float' object
+        # cannot be interpreted as an integer"), four times in a dry run
+        p = player()
+        p.note_paid([False, True], COSTS)
+        self.assertIsInstance(p.paid_floor_now(), int)
+
     def test_only_ever_raised(self):
         p = player()
         p.note_paid([True, True], COSTS)
