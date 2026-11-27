@@ -5324,6 +5324,23 @@ stronger move not paid for (`set_review.py` does not check energy). The one judg
 (31) into Excadrill on 38 HP, two turns before Earthquake (178) was paid for (171528, 117 s). Yesterday the same team
 with today's engine went 14-11. One set of five cannot tell the engines apart (a margin of about ± 35 points).
 
+**The four losses, looked at** (timelines from the logs; both engines asked again 6 times at every shield prompt,
+`.session_scratch/2026-11-26_lab/ask_both.py`). Three of the four began with Clodsire led into a Ground or Steel lead
+(Marowak, Excadrill, Galarian Stunfisk), switched out at once. **170435, the phone's:** Snorlax on 36 HP with Body Slam
+paid for and the engine's win chance at 0.70 wanted to throw before fainting from 123 s; the player held the tap while
+Minior's Power Gems played (four in 30 s, `throw_waits`) and did not tap in the gaps either. Its one tap, at 150 s,
+came during another Power Gem and was dropped; Snorlax fainted with the move unthrown (win chance 0.25). Either engine
+would have lost it the same way; why no tap went in the gaps is not yet found. **171147, shields:** both shields went
+on hits that were not dangerous, Icy Wind into Clodsire on 168 of 213 (both engines shield there, 6 of 6) and Swift
+into a full Thievul. At the Swift neither engine shields when asked again (0 of 6 each), and no rule fired (header: two
+left), so the live engine's own call, from state carried over in the battle. Kingambit's Iron Head then took Thievul
+unshielded, and Kingambit won on 19 HP. **171528, P's own:** Twister into Thievul on 66 HP unshielded (today's engine
+shields 6 of 6, P 0 of 6), and Stone Edge (31) into Excadrill on 38 HP two turns before Earthquake (today's engine waits
+6 of 6, P throws 3 of 6); Excadrill lived and finished Clodsire with Scorching Sands. **171853, mostly the matchups:**
+Turtonator's two Brutal Swings took Snorlax unshielded (both engines agree); Thievul shielded Rock Slide on 48 HP (both
+agree) and again on 38 HP (neither engine shields when asked again, 0 of 6); at the end Clodsire had only Stone Edge
+(19, resisted twice) against Galarian Stunfisk. Every other shield call matched what both engines say.
+
 ## Ultra League networks (task 48, 2026-11-22–23, Marco): **evaluation alone passes on the fresh seed; the new bot adds no measurable gain**
 
 Ran the brief from `origin/main:docs/tasks.md` on branch `task48-ul-networks`, based on `ultra-league`.
