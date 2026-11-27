@@ -1,0 +1,109 @@
+{
+ "about": "Engine changes measured in the simulator, newest first, for the battle page (scripts/live/battle_page.py). Details and margins in docs/status.md. 'kept': yes (on the phone), no, or testing. 'now': what the phone plays unless told otherwise (POGO_LAB, POGO_ENGINE).",
+ "now": "Today's engine: judged at the same turn, 40 turns on",
+ "versions": [
+  {
+   "commit": "2e98a9c3",
+   "label": "Marco's lab engine P (tree search)",
+   "lab": "P"
+  },
+  {
+   "commit": "d81dea84",
+   "label": "Today's engine: judged at the same turn, 40 turns on"
+  },
+  {
+   "commit": "62231586",
+   "label": "Website engine with the evaluation that sees their bench"
+  },
+  {
+   "commit": null,
+   "label": "Website engine (32 imagined battles, 20 steps on)"
+  }
+ ],
+ "changes": [
+  {
+   "date": "2026-11-27",
+   "change": "Play every option to the end of the battle, imagining people-like opponents, shields searched",
+   "result": "Right at 51 of 60 asks at the 1-4 set's turning points (today's 32), but on fresh battles 42.6% ± 3.2 head to head, -1.0 ± 6.0 crowd, +0.5 ± 5.5 people-like; imagining bots instead: 52.2% ± 3.3, -3.0 ± 5.8, -2.5 ± 5.5",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-26",
+   "change": "Search shield calls at today's settings",
+   "result": "53.5% ± 2.3 head to head; -1.6 ± 2.8 against the crowd; -1.6 ± 2.8 against the people-like opponent",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-26",
+   "change": "Imagine unseen opponents from the Mega Catch Cup's field, not the open top 50",
+   "result": "+0.9 ± 2.4 points against the cup's real teams (pool); -1.7 ± 2.4 (pool and teams)",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-26",
+   "change": "Marco's lab engine P on the phone",
+   "result": "3-0 in Team Leader training, 1-4 in one Mega Catch Cup set; level with today's engine on the creator exam",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-24",
+   "change": "Judge every option at the same turn, 40 turns on (was 20 steps)",
+   "result": "Saved Earthquake where Body Slam lost a cup battle; played the exam answers more often (owner 16 of 36 against 13, KingMagikarp 22 against 20)",
+   "kept": "yes"
+  },
+  {
+   "date": "2026-11-23",
+   "change": "Ultra League networks (task 48)",
+   "result": "The Ultra League evaluation alone passes on a fresh seed; the new bot adds no measurable gain",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-19",
+   "change": "An evaluation that also sees their bench (task 47)",
+   "result": "55.7% ± 1.9 head to head; +5.5 ± 3.0 points against the crowd; level against PvPoke's AI",
+   "kept": "yes"
+  },
+  {
+   "date": "2026-11-04",
+   "change": "Search swaps in the middle of a matchup (task 43)",
+   "result": "No gain against bots; no gate helps on the exam",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-04",
+   "change": "Shield margins for the trained bot (task 41)",
+   "result": "No gain against bots; a 0.05 margin better on 3 exam picks",
+   "kept": "no"
+  },
+  {
+   "date": "2026-11-03",
+   "change": "Train the engine on its own games (task 39)",
+   "result": "Round 1 48.6% ± 1.5, round 2 46.9% ± 1.5 head to head: no gain",
+   "kept": "no"
+  },
+  {
+   "date": "2026-10-30",
+   "change": "Varied imagined opponents (task 35)",
+   "result": "51.7% ± 1.2 head to head, +3.2 crowd, +8.9 PvPoke; ranked last on the exam",
+   "kept": "no"
+  },
+  {
+   "date": "2026-10-19",
+   "change": "The evolved rulebook (task 30)",
+   "result": "54.0% ± 0.9 alone",
+   "kept": "yes"
+  },
+  {
+   "date": "2026-10-18",
+   "change": "32 imagined battles per decision (task 27)",
+   "result": "53.4% ± 1.2 head to head, +1.7 crowd, +5.5 PvPoke",
+   "kept": "yes"
+  },
+  {
+   "date": "2026-10-18",
+   "change": "Search shield calls (task 25)",
+   "result": "No gain",
+   "kept": "no"
+  }
+ ]
+}

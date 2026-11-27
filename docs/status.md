@@ -5658,3 +5658,47 @@ branch (`task45-live-records`, records to 2026-11-10) was never merged. Now on `
 Not done yet: line-up odds for the league battles after 2026-11-10 (`nice python3 scripts/live/odds.py`, once the
 engine test is off the CPU). The rating per battle is patchy: the runner reads the league card only at a set's start,
 so 28 of the 200 logs since 2026-11-22 have it.
+
+## Playing every option to the end, with people-like imagined opponents: not adopted (Claude, 2026-11-27)
+
+The owner, after the 1-4 Mega Catch Cup set: "i want some engie or something that could've beat the opponents that it
+had good matchups against". At the ten turning points of that set where full play-outs found a clear best call
+(`.session_scratch/2026-11-26_lab/turning.py`, each engine asked 6 times), today's engine made the play-outs' call 32
+times in 60, Marco's P 48, and judging every option at the battle's end instead of 40 turns on (`judge=end`, shield head
+on) 47; with people-like imagined opponents (`opponents=people`) **51**, the only one right at all three calls that lost
+the good matchups (fast moves at 78 s in 170435, the Snorlax lead in 171528, no shield on Rock Slide at 110 s in 171853).
+At 16 imagined battles it was still right at 49 and takes 0.2 s a decision. Those spots were chosen, so on fresh battles
+(`engine_versus.py --tag end-people --baseline "website,judge=turn,horizon=40" --pairings 300 --crowd 300 --people 300
+--pvpoke 0 --workers 3 --seed 5207`, 76 min, `runs/engine_versus-end-people.out` on `ultra-league`):
+
+| Candidate (16 imagined battles, shield head on) | Head to head | Crowd (points) | People-like (points) | Search median / 99th pct |
+|---|---|---|---|---|
+| `judge=end,opponents=people` | **42.6% ± 3.2** | -1.0 ± 6.0 | +0.5 ± 5.5 | 79 / 609 ms |
+| `judge=end` | 52.2% ± 3.3 | -3.0 ± 5.8 | -2.5 ± 5.5 | 89 / 910 ms |
+
+Neither beats today's engine: the first loses head to head beyond the margin and is level elsewhere (the people-like
+result flatters it, as it imagines that opponent); the second is level head to head and leans worse against the others.
+Not adopted; nothing to confirm on a fresh seed. Getting a few hand-picked moments right was tuning to five games. The
+lesson for task 51: score candidates on fresh battles from the start, and use the turning points only to explain.
+`POGO_ENGINE` now takes `heads` joined by "+" (`ultra-league` 3945d750, test added), so a candidate can be tried on
+the phone when one passes.
+
+## The battle page, with a review of every league battle for both sides (Claude, 2026-11-27)
+
+The owner: "we should have multiple components: 1) updating the engine 2) list of all the teams we've fought (lower
+ranks should have lower priority) 3) performance ratings for both us and our opponent after each battle ... put a lot of
+this on my personal site as an unlisted page", "relatively simple and bland". **solaceonx.github.io/bot-battles-7924a775.html**
+(not linked from the site, `noindex`; the site's repo is public), built by `scripts/live/battle_page.py` from the records:
+1. The engine: the live record by engine version (from each battle's commit and start row) and the changes tested
+   (`data/engine_history.json`, kept by hand).
+2. Teams and Pokémon met, per league, weighted by our rank then (rank 20 and up 1, below rank / 20, not read: the
+   account's last reading, none yet 0.5).
+3. A review of each battle for both sides (`scripts/live/battle_review.py` on `ultra-league`, written as
+   `games/live/<STAMP>/review.json`): every throw, shield and voluntary switch either side made played to the end
+   against the other choices (24 play-outs each, the trained bot on both sides with varied habits, both teams as known
+   at the end), win chance given up counted beyond the 95% margin, a chess site's accuracy curve. 237 of 239 league
+   battles reviewed (5 s each). Mean accuracy, ours / theirs: Great League Mega Edition 95.1 / 93.0 (103 battles), Mega
+   Catch Cup 92.7 / 91.6 (94), Ultra League 94.9 / 93.4 (35); blunders a battle 0.15 / 0.14, 0.68 / 0.53, 0.54 / 0.49.
+   It finds the calls the play-outs found by hand (170435: Body Slam at 78 s gave up 35; 171853: the Rock Slide shield
+   at 110 s gave up 50). Not scored yet: holding energy and replacements; no estimated rating until rated battles can
+   calibrate it. The bot judges both sides, so the scores lean towards play like its own.
