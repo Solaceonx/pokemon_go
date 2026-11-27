@@ -5860,3 +5860,11 @@ answered in that state twice (this one, and 112303 against Lokix, Trailblaze, wh
 shield). Rare, but it decided a 93.5% battle. Full tests pass, PvPoke 108 of 108. Not yet played live. Not changed:
 the energy the count took off for the wrongly attributed move (20 short here) is not put right when the name comes.
 
+**Set 4 with both fixes: 4-1** (Claude, 2026-11-27; `ultra-league` 07ff7371; the owner: "Yes, play a set"). Third
+account, Clodsire / Araquanid / Snorlax. Wins against Tinkaton / Toxapex / Marowak (63.7% bot against bot), Ferrothorn /
+Cramorant / Toxtricity (93.5%, they left), Steelix / Palossand / Throh (99.0%), Primarina / Clodsire / Vigoroth (87.2%);
+loss to Walrein / Pinsir / Greninja (77.2%). Taps: 1.00 not taken a battle, 1.4 s a battle without fast taps around
+them (11-24/25: 0.58, 1.8), all 5 of them in the loss, where their seven charged moves in 168 s cut tapped throws off;
+no named move dropped. The loss's deciding call: Araquanid on 21% did not shield Walrein's Water Pulse at 95.9 s
+(the review: shield 79%, no shield 33%). The account today with Araquanid: **12-8** (sets 3-2, 2-3, 3-2, 4-1).
+
