@@ -32,6 +32,18 @@ def player(active=2, changed_at=-1.0):
 
 
 class PaidFloor(unittest.TestCase):
+    def setUp(self):
+        self._was, pa.PAID_FLOOR = pa.PAID_FLOOR, True  # off by default since 2026-11-27; these test the memory itself
+
+    def tearDown(self):
+        pa.PAID_FLOOR = self._was
+
+    def test_off_by_default_reads_zero(self):
+        pa.PAID_FLOOR = False
+        p = player()
+        p.note_paid([True, False], COSTS)
+        self.assertEqual(p.paid_floor_now(), 0)
+
     def test_kept_after_the_names_go(self):
         p = player()
         p.note_paid([True, False], COSTS)

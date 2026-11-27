@@ -117,6 +117,11 @@ PREFER: dict[str, str] = {}
 
 # The live engine's settings over the website's: judged at the same game turn, 40 turns on (the owner's yes,
 # 2026-11-24, after the Mega Catch Cup loss; docs/status.md). POGO_ENGINE="" plays as the website does.
+# The paid-energy memory and low throws past the pause after their move (2026-11-26, 0ad7b343), off since 2026-11-27:
+# on its first live day charged taps not taken rose from 0.62 to 1.92 a battle and the seconds without fast taps around
+# them from 1.8 to 5.2 (docs/status.md). POGO_PAID_FLOOR=1 turns it back on.
+PAID_FLOOR = _os.environ.get("POGO_PAID_FLOOR") == "1"
+SETTLE_S = 1.0  # the low-health rules wait this long after a change of who is out (settled_out)
 DEBUG_ACTIVE = _os.environ.get("POGO_DEBUG_ACTIVE") == "1"  # log what check_active sees (replays)
 LIVE_ENGINE = "judge=turn,horizon=40"
 
@@ -1658,8 +1663,9 @@ class Player:
             self._floors()[self.active] = max(self._floors().get(self.active, 0), int(max(shown)))  # whole energy, as the tracker counts
 
     def paid_floor_now(self) -> int:
-        """Our energy is at least this: what the names have shown paid for since the one out last threw (note_paid)."""
-        return self._floors().get(self.active, 0)
+        """Our energy is at least this: what the names have shown paid for since the one out last threw (note_paid);
+        0 unless PAID_FLOOR."""
+        return self._floors().get(self.active, 0) if PAID_FLOOR else 0
 
     def paid_bounds(self):
         """(least, most) our energy can be by which moves' names show under the buttons in the last 0.6 s (a name
@@ -2061,10 +2067,13 @@ class Player:
             have = max(have, bounds[0])
         floor = self.paid_floor_now()  # shown paid since our last throw: still paid (note_paid)
         have = max(have, floor)
-        if view is not None and (self.decision == FAST or self.armed is not None):
+        if view is not None and (self.decision == FAST or self.armed is not None) and self.settled_out(t, view):
             # Never faint with a charged move in hand (the owner, 2026-11-07): when our health is low and a move is
-            # paid for, throw the hardest-hitting one now, whatever the engine planned.
-            recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
+            # paid for, throw the hardest-hitting one now, whatever the engine planned. Only once the one out has
+            # settled (settled_out): 2026-11-27, 112647, the moment the switch to Snorlax showed, this read Clodsire's
+            # bar (12%) and threw Snorlax's Body Slam into Kingambit, Earthquake a fast move away (the owner: "we had
+            # an earthquake and we would've easily won").
+            recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4 and at > self.active_changed_at + 0.3)
             hp_share = recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
             affordable = [k for k, m in enumerate(mon.charged) if have >= m.energy]
             if hp_share < 0.35 and affordable and self.better_soon(t, view, mon, have, affordable, hp_share):
@@ -2170,7 +2179,7 @@ class Player:
                 # and Snorlax, on a fifth of its health with Body Slam paid for, never threw; a tap not taken costs little then.
                 both_up = look is not None and bool(look.buttons) and all(
                     look.buttons[s]["present"] for s in ("left", "right"))
-                back = urgent and both_up and not count_only
+                back = PAID_FLOOR and urgent and both_up and not count_only
                 if back and time.time() < getattr(self, "their_move_until", 0.0):
                     self.log("throw_fight_back", t, move=mon.charged[k].id,
                              paused_s=round(self.their_move_until - time.time(), 1))
@@ -2297,10 +2306,21 @@ class Player:
                 return True
         return False
 
+    def settled_out(self, t: float, view) -> bool:
+        """The view is of the one out, and it has been out for SETTLE_S or more: our bar's readings are its own (in the
+        first frames after a switch the bar, the buttons and the view can still be the last one's)."""
+        if view.me.mon.build.species_id != self.team[self.active].species_id:
+            return False
+        return t - getattr(self, "active_changed_at", -99.0) >= SETTLE_S
+
     def hp_now(self, t: float, view) -> float:
-        """Our health as a share: the median of the bar's last readings, else the tracker's."""
-        recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4)
-        return recent[len(recent) // 2] if len(recent) >= 3 else view.me.mon.hp / view.me.mon.build.hp
+        """Our health as a share: the median of the bar's last readings since the one out came out, else the tracker's."""
+        if view.me.mon.build.species_id != self.team[self.active].species_id:
+            return 1.0  # the view, and the bar's last readings, are still the last one's: nothing known about this one
+        recent = sorted(v for at, v in self.my_bar_seen if t - at < 0.4 and at > getattr(self, "active_changed_at", -99.0) + 0.3)
+        if len(recent) >= 3:
+            return recent[len(recent) // 2]
+        return view.me.mon.hp / view.me.mon.build.hp
 
     def hardest(self, view, mon, affordable: list):
         """Of the charged moves we can pay for, the one that hits their Pokémon hardest."""
