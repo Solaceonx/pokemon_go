@@ -2970,6 +2970,8 @@ class Player:
         self.pause_switch(PROMPT_PAUSE_S)
         view = self.view()
         shield = False
+        engine_said = None  # for the log: the engine's own call, before the rules below (2026-11-26: two shields
+        # were not the engine's when asked again, and no rule had logged; the log could not say which made them)
         last = self.replacements >= 2  # we have sent in both replacements: this is our last Pokémon
         if view is not None and view.me.shields > 0:
             # The engine's own call on the tracker's estimate of their energy as they throw (at_their_throw, with
@@ -2977,7 +2979,7 @@ class Player:
             # docs/status.md "Live shield calls measured": the owner withdrew the override that shielded any hit of
             # 35% or more, which cost 7 to 13 points in simulation)
             try:
-                shield = bool(self.engine.shield(view, self.tracker.foe.hi))
+                shield = engine_said = bool(self.engine.shield(view, self.tracker.foe.hi))
                 self.engine_calls += 1
             except Exception as error:  # noqa: BLE001
                 self.log("engine_error", t, error=str(error))
@@ -3022,7 +3024,8 @@ class Player:
             except Exception as error:  # noqa: BLE001
                 seen = {"error": str(error)}
         self.log("shield_prompt", t, shield=shield, foe_energy=(self.tracker.foe.lo, self.tracker.foe.hi) if self.tracker.foe else None,
-                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None, counted=counted)
+                 view=seen, foe_hi=self.tracker.foe.hi if self.tracker.foe else None, counted=counted,
+                 engine=engine_said, last=last, my_left_seen=my_left_seen, replacements=self.replacements)
         self.prompt_shield, self.prompt_tapped = shield, time.time()
         self.prompt_first = self.prompt_tapped  # answers are tapped again for 5 s at most
         if shield:
