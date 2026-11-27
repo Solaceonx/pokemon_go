@@ -5845,3 +5845,18 @@ fast-moving to finish Quagsire on 17 HP, counting on our one shield against its 
 the prompt not answered (logged `their_charged_unprompted`); 125313 (60.2%) on matchups. Fix next: `farm_down` must not
 rely on a shield the prompt may not give us; then the count-only wait; then the late throws.
 
+**The Quagsire loss was the tracker forgetting a move, not farming down** (Claude, 2026-11-27; the owner, asked to
+fix "finishing a low enemy instead of throwing": "Yes, fix it"). 124932: farming Quagsire (17 HP) down with fast moves,
+Mirror Coat paid and one shield up, is sound play; the shield was the plan. But at the 88.3 s prompt the player
+believed Quagsire's moves were Drain Punch and Aqua Tail, both resisted by Araquanid, so it did not shield; it was Stone
+Edge (super effective on Bug), 23 of 24 HP. Why: at the 38.8 s prompt the energy count (48 to 54) afforded only Aqua
+Tail (35), so the tracker put that throw down to Aqua Tail; the screen then named Stone Edge (55), already in the
+guessed build, and nothing corrected the attribution; when Drain Punch was learned at 67.6 s, `_learn_move` kept the
+"used" Aqua Tail and dropped Stone Edge. **Fixed on `ultra-league` (07ff7371):** a named move is a move seen and
+overrules the count's attribution (`Foe.attributed`), so a learned move replaces a guess; `tests/test_seen_moves.py`
+(fails on the old code). Replayed on 124932: at 88.3 s the player knows Drain Punch and Stone Edge and **shields**.
+How often: over 252 battles since 2026-11-22, a named move later missing from their moveset in 5, and a shield prompt
+answered in that state twice (this one, and 112303 against Lokix, Trailblaze, where the fixed player still does not
+shield). Rare, but it decided a 93.5% battle. Full tests pass, PvPoke 108 of 108. Not yet played live. Not changed:
+the energy the count took off for the wrongly attributed move (20 short here) is not put right when the name comes.
+
