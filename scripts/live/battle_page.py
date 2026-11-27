@@ -261,6 +261,33 @@ def build() -> str:
                      esc(f"{m.get('blunder', '')}/{t.get('blunder', '')}" if rv else ""), worst(m), worst(t)])
     parts.append(table(["Date (PT)", "League", "Account", "Rank", "Their team", "Result", "Chance before", "Our accuracy",
                         "Their accuracy", "Blunders (ours/theirs)", "Our worst moment", "Their worst moment"], rows, {3, 6, 7, 8}))
+    # 4. the creators' battles (scripts/lab/creator_accuracy.py on ultra-league, copied to data/creator_accuracy.json)
+    ca = ROOT / "data" / "creator_accuracy.json"
+    if ca.exists():
+        acc = json.loads(ca.read_text(encoding="utf-8"))
+        label = {"player": "The creators (all three)", "website": "Today's website engine", "bot": "The trained bot alone"}
+        parts.append("<h2>4. The creators' battles</h2><p>The same accuracy, on the "
+                     f"{acc['decisions']} checked decisions of three strong players' recorded battles (reis2occasion, "
+                     "HomeSliceHenry, ItsAXN; the creator exam, <code>scripts/lab/creator_exam.py</code>): every legal "
+                     "choice at each decision played to the end 100 times, our bot continuing for them, against two kinds "
+                     f"of opponent; a loss under {acc['noise']:g} points counts as none. Our engines are scored on the "
+                     "same decisions. <b>The judge is our own simulator and bot, which favour bot-like choices:</b> that "
+                     "the engines score above the creators here says the creators often choose what our bot would not, "
+                     "not that the engines play better; the creators win far more against people. Not comparable with "
+                     "section 3's numbers (24 play-outs there, both teams as known at the end).</p>")
+        for opp, tab in acc["tables"].items():
+            order = ["player"] + sorted(k for k in tab if k not in ("player", "website", "bot")) + ["website", "bot"]
+            rows = []
+            for who in order:
+                if who not in tab:
+                    continue
+                t = tab[who]
+                cell = lambda k: f"{t[k]['accuracy']:.1f}" if k in t else ""
+                rows.append([esc(label.get(who, who)), f"{t['all']['accuracy']:.1f} ± {t['all']['margin']:.1f}", t["all"]["n"],
+                             cell("switch"), cell("shield"), cell("throw"), cell("hold")])
+            parts.append(f"<h3>Judged against {'people-like' if opp == 'people' else 'the bot crowd as'} opponents</h3>"
+                         + table(["Player", "Accuracy (all)", "Decisions", "Switch", "Shield", "Throw", "Hold"], rows,
+                                 {1, 2, 3, 4, 5, 6}))
     return ("<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content=\"width=device-width,"
             "initial-scale=1\"><meta name=robots content=\"noindex,nofollow\"><title>Bot battles</title>"
             f"<style>{STYLE}</style></head><body>" + "".join(parts) + "</body></html>\n")

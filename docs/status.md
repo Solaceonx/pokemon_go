@@ -5750,3 +5750,20 @@ the battle page); notes per battle in the owner's `.session_scratch/2026-11-27_s
    no-battle result does not count; the fight is picked up when it shows). Starting the player by hand while the
    runner's may still be alive put two players on one battle (022134 marked a fragment of 022137): do not.
 
+**The creators' accuracy** (the owner: "if you finish all 25 or 30 battles, go ahead and try to analyze the creator
+battles too, to see their accuracy"). `scripts/lab/creator_accuracy.py` (on `ultra-league`; result
+`data/creator_accuracy.json`, section 4 of the battle page): the creator exam's 657 checked decisions (task 46's
+records), every legal choice already played to the end 100 times in its cache, scored as the battle page scores us
+(the chess-site curve on win share given up against the best choice; under 10 points counts as none):
+
+| Judged against | The creators | HomeSliceHenry | ItsAXN | reis2occasion | Website engine | Trained bot |
+|---|---|---|---|---|---|---|
+| people-like opponents | **83.3 ± 2.4** | 86.2 | 82.7 | 82.3 | 89.7 ± 1.8 | 86.9 ± 2.1 |
+| the bot crowd | 83.7 ± 2.4 | 82.6 | 84.6 | 82.7 | 90.6 ± 1.9 | 87.1 ± 2.2 |
+
+The creators' weakest kind is throws (about 80), their best shields (88 to 92). The judge is our simulator continued
+by our bot, which favours bot-like choices, so the engines' higher numbers say the creators often choose what our bot
+would not, not that the engines play better: by results against people the creators are far stronger (task 50's
+reason for an opponent model fitted to strong players). Not comparable with the live reviews (24 play-outs there,
+hindsight teams).
+
