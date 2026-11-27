@@ -1,0 +1,427 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261122-142646",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261122-142646.jsonl",
+  "recording": "battle-20261122-142646.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795386415.566,
+  "started_utc": "2026-11-22T22:26:55+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "23f7eebe3aff08423c69f9c84fa2e2d8227569e7",
+   "dirty": false,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 75.958,
+ "teams": {
+  "mine": [
+   {
+    "species": "virizion",
+    "name": "Virizion",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "DOUBLE_KICK",
+     "name": "Double Kick",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SACRED_SWORD",
+      "name": "Sacred Sword",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "LEAF_BLADE",
+      "name": "Leaf Blade",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "snorlax_shadow",
+    "name": "Snorlax (Shadow)",
+    "known_from": "team_sheet",
+    "cp": 2495,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "feraligatr",
+    "name": "Feraligatr",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "typhlosion",
+    "name": "Typhlosion",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "SOLAR_BEAM",
+      "name": "Solar Beam",
+      "energy": 80,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 3,
+   "theirs": 1
+  },
+  "we_shielded": 0,
+  "shield_prompts": 1,
+  "fast_taps": 234,
+  "looks": 76
+ },
+ "bot": {
+  "switch_not_taken": 1,
+  "throw_not_taken": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "virizion",
+   "theirs": "flareon"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 3.388,
+   "from": "virizion",
+   "to": "feraligatr",
+   "seconds_after_tap": 0.37,
+   "state": {
+    "look_t": 3.181,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.909,
+     "shields": 2,
+     "left": 3,
+     "energy": 22,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.889,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      18,
+      18
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 9.236,
+   "pokemon": "feraligatr",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.92,
+   "state": {
+    "look_t": 7.868,
+    "mine": {
+     "active": "feraligatr",
+     "hp_share": 0.956,
+     "shields": 2,
+     "left": 3,
+     "energy": 37,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.731,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      54,
+      54
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 47
+  },
+  {
+   "kind": "switch",
+   "t": 18.84,
+   "side": "theirs",
+   "from": "flareon",
+   "to": "typhlosion",
+   "known_from": "seen",
+   "state": {
+    "look_t": 18.84,
+    "mine": {
+     "active": "feraligatr",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 8,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "INCINERATE"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 27.754,
+   "pokemon": "feraligatr",
+   "move": "Ice Beam",
+   "move_id": "ICE_BEAM",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.27,
+   "state": {
+    "look_t": 25.988,
+    "mine": {
+     "active": "feraligatr",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 55,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": 0.761,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "icons_chased": 86
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 46.706,
+   "pokemon": "typhlosion",
+   "move": "Solar Beam",
+   "move_id": "SOLAR_BEAM",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 45.246,
+    "mine": {
+     "active": "feraligatr",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "cost": 80
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 50.314,
+   "pokemon": "feraligatr",
+   "next": "snorlax_shadow",
+   "state": {
+    "look_t": 49.907,
+    "mine": {
+     "active": "feraligatr",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 39,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      50,
+      50
+     ],
+     "fast_move": "INCINERATE"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 63.152,
+   "pokemon": "snorlax_shadow",
+   "move": "Earthquake",
+   "move_id": "EARTHQUAKE",
+   "cost": 65,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.14,
+   "state": {
+    "look_t": 61.862,
+    "mine": {
+     "active": "snorlax_shadow",
+     "hp_share": 0.929,
+     "shields": 2,
+     "left": 2,
+     "energy": 69,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": 0.795,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "icons_chased": 99
+  },
+  {
+   "kind": "end",
+   "t": 75.958,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261122-142646.jsonl"
+ ]
+}

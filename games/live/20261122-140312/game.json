@@ -1,0 +1,514 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261122-140312",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261122-140312.jsonl",
+  "recording": "battle-20261122-140312.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795385001.698,
+  "started_utc": "2026-11-22T22:03:21+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "fa8f0335713551300851d74e57b293113bf6617e",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 104.797,
+ "teams": {
+  "mine": [
+   {
+    "species": "virizion",
+    "name": "Virizion",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "DOUBLE_KICK",
+     "name": "Double Kick",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "LEAF_BLADE",
+      "name": "Leaf Blade",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 4
+     },
+     {
+      "id": "SACRED_SWORD",
+      "name": "Sacred Sword",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "snorlax_shadow",
+    "name": "Snorlax (Shadow)",
+    "known_from": "team_sheet",
+    "cp": 2495,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "feraligatr",
+    "name": "Feraligatr",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "jolteon",
+    "name": "Jolteon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "THUNDERBOLT",
+      "name": "Thunderbolt",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "luxray",
+    "name": "Luxray",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "SNARL",
+     "name": "Snarl",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "magnezone",
+    "name": "Magnezone",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 6,
+   "theirs": 1
+  },
+  "we_shielded": 0,
+  "shield_prompts": 1,
+  "fast_taps": 244,
+  "looks": 77
+ },
+ "bot": {
+  "throw_beaten": 1,
+  "armed": 5,
+  "armed_fired": 2,
+  "armed_replaced": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "virizion",
+   "theirs": "jolteon"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 10.59,
+   "pokemon": "jolteon",
+   "move": "Thunderbolt",
+   "move_id": "THUNDERBOLT",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    63,
+    63
+   ],
+   "state": {
+    "look_t": 10.254,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.902,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.687,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      63,
+      63
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 15.276,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.06,
+   "state": {
+    "look_t": 13.91,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.626,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.68,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      24,
+      24
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 49
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 26.79,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.0,
+   "state": {
+    "look_t": 25.375,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.626,
+     "shields": 2,
+     "left": 3,
+     "energy": 43,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      56,
+      56
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 48
+  },
+  {
+   "kind": "switch",
+   "t": 36.843,
+   "side": "theirs",
+   "from": "jolteon",
+   "to": "luxray",
+   "known_from": "seen",
+   "state": {
+    "look_t": 36.843,
+    "mine": {
+     "active": "virizion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 20,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "luxray",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "SNARL"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 39.664,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.28,
+   "state": {
+    "look_t": 37.874,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.633,
+     "shields": 2,
+     "left": 3,
+     "energy": 24,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "luxray",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "SNARL"
+    }
+   },
+   "icons_chased": 50
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 54.181,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.19,
+   "state": {
+    "look_t": 52.65,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.626,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "luxray",
+     "hp_share": 0.492,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      39,
+      39
+     ],
+     "fast_move": "SNARL"
+    }
+   },
+   "icons_chased": 41
+  },
+  {
+   "kind": "faint",
+   "t": 69.368,
+   "side": "theirs",
+   "pokemon": "luxray",
+   "next": "magnezone",
+   "known_from": "seen",
+   "state": {
+    "look_t": 69.368,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.566,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 72.166,
+   "pokemon": "virizion",
+   "move": "Sacred Sword",
+   "move_id": "SACRED_SWORD",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.05,
+   "state": {
+    "look_t": 69.871,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.566,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 72
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 84.179,
+   "pokemon": "virizion",
+   "move": "Sacred Sword",
+   "move_id": "SACRED_SWORD",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.61,
+   "state": {
+    "look_t": 82.224,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.566,
+     "shields": 2,
+     "left": 3,
+     "energy": 27,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.593,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 52
+  },
+  {
+   "kind": "end",
+   "t": 104.797,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261122-140312.jsonl"
+ ]
+}

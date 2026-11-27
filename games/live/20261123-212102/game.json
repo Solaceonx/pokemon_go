@@ -1,0 +1,391 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261123-212102",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261123-212102.jsonl",
+  "recording": "battle-20261123-212102.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795497671.513,
+  "started_utc": "2026-11-24T05:21:11+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "a0059cd0f0b6508da503ec899eb697ca5294e36b",
+   "dirty": false,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 62.523,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "DYNAMIC_PUNCH",
+      "name": "Dynamic Punch",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "blastoise",
+    "name": "Blastoise",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 3
+     },
+     {
+      "id": "SKULL_BASH",
+      "name": "Skull Bash",
+      "energy": 75,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "skeledirge",
+    "name": "Skeledirge",
+    "known_from": "team_sheet",
+    "cp": 2500,
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "TORCH_SONG",
+      "name": "Torch Song",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "flareon",
+    "name": "Flareon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "EMBER",
+     "name": "Ember",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "typhlosion",
+    "name": "Typhlosion",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "magmortar",
+    "name": "Magmortar",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "KARATE_CHOP",
+     "name": "Karate Chop",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 3,
+   "theirs": 0
+  },
+  "we_shielded": 0,
+  "shield_prompts": 0,
+  "fast_taps": 205,
+  "looks": 70
+ },
+ "bot": {},
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "flareon"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 2.39,
+   "from": "melmetal",
+   "to": "blastoise",
+   "seconds_after_tap": 0.72,
+   "state": {
+    "look_t": 2.284,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 16,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.943,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      18,
+      18
+     ],
+     "fast_move": "EMBER"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 9.441,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.81,
+   "state": {
+    "look_t": 8.423,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.976,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "flareon",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      72,
+      72
+     ],
+     "fast_move": "EMBER"
+    }
+   },
+   "icons_chased": 48
+  },
+  {
+   "kind": "switch",
+   "t": 18.785,
+   "side": "theirs",
+   "from": "flareon",
+   "to": "typhlosion",
+   "known_from": "seen",
+   "state": {
+    "look_t": 18.785,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 3,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "INCINERATE"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 29.955,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.31,
+   "state": {
+    "look_t": 28.146,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.862,
+     "shields": 2,
+     "left": 3,
+     "energy": 78,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "typhlosion",
+     "hp_share": 0.758,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "icons_chased": 48
+  },
+  {
+   "kind": "switch",
+   "t": 40.824,
+   "side": "theirs",
+   "from": "typhlosion",
+   "to": "magmortar",
+   "known_from": "seen",
+   "state": {
+    "look_t": 40.824,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.788,
+     "shields": 2,
+     "left": 3,
+     "energy": 53,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magmortar",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "KARATE_CHOP"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 45.396,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.06,
+   "state": {
+    "look_t": 44.169,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.788,
+     "shields": 2,
+     "left": 3,
+     "energy": 100,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magmortar",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "KARATE_CHOP"
+    }
+   },
+   "icons_chased": 44
+  },
+  {
+   "kind": "end",
+   "t": 62.523,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261123-212102.jsonl"
+ ]
+}

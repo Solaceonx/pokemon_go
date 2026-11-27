@@ -1,0 +1,653 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261122-173614",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261122-173614.jsonl",
+  "recording": "battle-20261122-173614.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795397783.549,
+  "started_utc": "2026-11-23T01:36:23+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "9c172cae4f723e9d651c41aeaefd944e0829f9ca",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 149.766,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 7
+     },
+     {
+      "id": "DYNAMIC_PUNCH",
+      "name": "Dynamic Punch",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "blastoise",
+    "name": "Blastoise",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "SKULL_BASH",
+      "name": "Skull Bash",
+      "energy": 75,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "skeledirge",
+    "name": "Skeledirge",
+    "known_from": "team_sheet",
+    "cp": 2500,
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "TORCH_SONG",
+      "name": "Torch Song",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "jolteon",
+    "name": "Jolteon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "magnezone",
+    "name": "Magnezone",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "WILD_CHARGE",
+      "name": "Wild Charge",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 9,
+   "theirs": 2
+  },
+  "we_shielded": 0,
+  "shield_prompts": 2,
+  "fast_taps": 307,
+  "looks": 105
+ },
+ "bot": {
+  "throw_beaten": 1,
+  "move_corrected": 1,
+  "active_corrected": 1,
+  "armed": 9,
+  "armed_fired": 2,
+  "armed_expired": 3,
+  "throw_before_fainting": 2,
+  "armed_replaced": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "jolteon"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 7.68,
+   "pokemon": "jolteon",
+   "move": "Discharge",
+   "move_id": "DISCHARGE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    45,
+    45
+   ],
+   "state": {
+    "look_t": 6.296,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.869,
+     "shields": 2,
+     "left": 3,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.916,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      45,
+      45
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "cost": 40
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 12.134,
+   "pokemon": "melmetal",
+   "move": "Dynamic Punch",
+   "move_id": "DYNAMIC_PUNCH",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.94,
+   "state": {
+    "look_t": 11.002,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.559,
+     "shields": 2,
+     "left": 3,
+     "energy": 61,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.896,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      14,
+      14
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 74
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 26.317,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.58,
+   "state": {
+    "look_t": 24.365,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.559,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.067,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      50,
+      50
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 62
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 37.818,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.75,
+   "state": {
+    "look_t": 35.921,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.512,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.027,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      86,
+      86
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 57
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 52.803,
+   "pokemon": "melmetal",
+   "move": "Skull Bash",
+   "move_id": "SKULL_BASH",
+   "cost": 75,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.26,
+   "state": {
+    "look_t": 51.253,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.512,
+     "shields": 2,
+     "left": 3,
+     "energy": 41,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.949,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 37
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 67.224,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.48,
+   "state": {
+    "look_t": 65.375,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 18,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.505,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 57
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 81.723,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.16,
+   "state": {
+    "look_t": 80.096,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.337,
+     "shields": 2,
+     "left": 3,
+     "energy": 28,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 56
+  },
+  {
+   "kind": "switch",
+   "t": 91.461,
+   "side": "theirs",
+   "from": "jolteon",
+   "to": "magnezone",
+   "known_from": "seen",
+   "state": {
+    "look_t": 91.461,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 12,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 96.702,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.23,
+   "state": {
+    "look_t": 95.16,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.283,
+     "shields": 2,
+     "left": 3,
+     "energy": 29,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.949,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 60
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 110.721,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.86,
+   "state": {
+    "look_t": 108.714,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.242,
+     "shields": 2,
+     "left": 3,
+     "energy": 29,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      64,
+      64
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 72
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 123.732,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.9,
+   "state": {
+    "look_t": 122.646,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.182,
+     "shields": 2,
+     "left": 3,
+     "energy": 30,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.448,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 52
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 137.712,
+   "pokemon": "magnezone",
+   "move": "Wild Charge",
+   "move_id": "WILD_CHARGE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 135.98,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.141,
+     "shields": 2,
+     "left": 3,
+     "energy": 31,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 140.958,
+   "pokemon": "melmetal",
+   "next": "skeledirge",
+   "state": {
+    "look_t": 138.845,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.138,
+     "shields": 2,
+     "left": 3,
+     "energy": 31,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.256,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      55,
+      55
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 149.766,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261122-173614.jsonl"
+ ]
+}

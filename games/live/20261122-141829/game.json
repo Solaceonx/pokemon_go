@@ -1,0 +1,528 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261122-141829",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261122-141829.jsonl",
+  "recording": "battle-20261122-141829.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795385918.91,
+  "started_utc": "2026-11-22T22:18:38+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "80d17fbfae873530766a36353ccc31a26df8e1e1",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 99.024,
+ "teams": {
+  "mine": [
+   {
+    "species": "virizion",
+    "name": "Virizion",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "DOUBLE_KICK",
+     "name": "Double Kick",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SACRED_SWORD",
+      "name": "Sacred Sword",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "LEAF_BLADE",
+      "name": "Leaf Blade",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 3
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "snorlax_shadow",
+    "name": "Snorlax (Shadow)",
+    "known_from": "team_sheet",
+    "cp": 2495,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "feraligatr",
+    "name": "Feraligatr",
+    "known_from": "team_sheet",
+    "cp": 2496,
+    "fast_move": {
+     "id": "SHADOW_CLAW",
+     "name": "Shadow Claw",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "ICE_BEAM",
+      "name": "Ice Beam",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "jolteon",
+    "name": "Jolteon",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "energy": 40,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "luxray",
+    "name": "Luxray",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "SNARL",
+     "name": "Snarl",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   },
+   {
+    "species": "magnezone",
+    "name": "Magnezone",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "WILD_CHARGE",
+      "name": "Wild Charge",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 5,
+   "theirs": 2
+  },
+  "we_shielded": 0,
+  "shield_prompts": 2,
+  "fast_taps": 224,
+  "looks": 80
+ },
+ "bot": {
+  "throw_beaten": 1,
+  "armed": 4,
+  "armed_fired": 2,
+  "armed_expired": 2,
+  "throw_before_fainting": 1,
+  "throw_not_taken": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "virizion",
+   "theirs": "jolteon"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 7.619,
+   "pokemon": "jolteon",
+   "move": "Discharge",
+   "move_id": "DISCHARGE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    27,
+    27
+   ],
+   "state": {
+    "look_t": 4.358,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.96,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.848,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "cost": 40
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 14.085,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.34,
+   "state": {
+    "look_t": 11.295,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": 59,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.741,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      14,
+      14
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 85
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 25.325,
+   "pokemon": "virizion",
+   "move": "Sacred Sword",
+   "move_id": "SACRED_SWORD",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.08,
+   "state": {
+    "look_t": 22.88,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": 36,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.249,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      41,
+      41
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 63
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 38.799,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.3,
+   "state": {
+    "look_t": 37.003,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 3,
+     "energy": 24,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.949,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      77,
+      77
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 86
+  },
+  {
+   "kind": "switch",
+   "t": 46.099,
+   "side": "theirs",
+   "from": "jolteon",
+   "to": "luxray",
+   "known_from": "seen",
+   "state": {
+    "look_t": 46.099,
+    "mine": {
+     "active": "virizion",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 1,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "luxray",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "SNARL"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 55.279,
+   "pokemon": "virizion",
+   "move": "Sacred Sword",
+   "move_id": "SACRED_SWORD",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.11,
+   "state": {
+    "look_t": 52.963,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.714,
+     "shields": 2,
+     "left": 3,
+     "energy": 25,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "luxray",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      39,
+      39
+     ],
+     "fast_move": "SNARL"
+    }
+   },
+   "icons_chased": 66
+  },
+  {
+   "kind": "switch",
+   "t": 65.647,
+   "side": "theirs",
+   "from": "luxray",
+   "to": "magnezone",
+   "known_from": "seen",
+   "state": {
+    "look_t": 65.647,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.646,
+     "shields": 2,
+     "left": 3,
+     "energy": 6,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 71.329,
+   "pokemon": "virizion",
+   "move": "Leaf Blade",
+   "move_id": "LEAF_BLADE",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.96,
+   "state": {
+    "look_t": 70.194,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.606,
+     "shields": 2,
+     "left": 3,
+     "energy": 35,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.768,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 86
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 89.605,
+   "pokemon": "magnezone",
+   "move": "Wild Charge",
+   "move_id": "WILD_CHARGE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    100,
+    100
+   ],
+   "state": {
+    "look_t": 89.565,
+    "mine": {
+     "active": "virizion",
+     "hp_share": 0.519,
+     "shields": 2,
+     "left": 3,
+     "energy": 68,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "magnezone",
+     "hp_share": 0.054,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      100,
+      100
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "end",
+   "t": 99.024,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261122-141829.jsonl"
+ ]
+}

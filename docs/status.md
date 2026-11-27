@@ -5634,3 +5634,27 @@ Every GO Battle League battle the bot has played on the phone (38, and an 11 s f
   battles, and the rating where shown. It passes them to the next battle, and appends them to the battle before as
   its `standing_after`. It also no longer logs the matchmaking screen's text, which shows the opponent's trainer
   name, and it strips our trainer names from what it logs.
+
+## The live battles stored again, to 2026-11-26 (Claude, 2026-11-27)
+
+The owner: "are we still storing all the games correctly?", then "Yes, build them". Every phone battle's raw log was
+safe (all on `ultra-league`, pushed), but the records had stopped: `main` held them to 2026-11-08, and task 45's
+branch (`task45-live-records`, records to 2026-11-10) was never merged. Now on `main`:
+- **Task 45 merged** (records version 2: each league battle's raw log beside its record, `notes.json` the one place
+  for what went wrong, `tests/test_live_records.py`). Conflicts only in `status.md` and `tasks.md`, both sides kept.
+- **The 266 logs missing from `main`** copied from `ultra-league` byte for byte (the 187 already here were
+  identical), and every record built: **447 records** (222 before), 240 league battles with their logs beside them,
+  training logs in `runs/live/`. New league records: 2026-11-22 27 (Ultra League), 11-23 9, 11-24 35, 11-25 54,
+  11-26 5. The 2026-11-22 battle 143551, stopped by the owner at 90 s, was a loss: the league card read 76 of 118 won
+  before 143239 (a win) and 77 of 120 after the two.
+- **Notes** for that battle and the four losses of 2026-11-26 (from the analyses above). The other losses since
+  2026-11-22 have no notes yet; their analyses are in this file.
+- The 112 older training records left as they were (the owner's rule for task 45); the 45 older league records
+  gained only `version_error: null`.
+- **One command a day from now on:** `python3 scripts/live/live_record.py --from ../ultra-league/runs/live` (in a
+  checkout of `main`) copies in the new logs, builds the records and keeps each league log once, beside its record
+  (test added).
+
+Not done yet: line-up odds for the league battles after 2026-11-10 (`nice python3 scripts/live/odds.py`, once the
+engine test is off the CPU). The rating per battle is patchy: the runner reads the league card only at a set's start,
+so 28 of the 200 logs since 2026-11-22 have it.

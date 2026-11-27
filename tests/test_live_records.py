@@ -87,5 +87,31 @@ class LiveRecords(unittest.TestCase):
         self.assertEqual(done.returncode, 0, done.stdout)
 
 
+
+class TakeIn(unittest.TestCase):
+    """--from: the live branch's new logs come in once, and a league log is kept once, beside its record."""
+
+    def test_new_logs_copied_once_and_league_logs_moved(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            src, logs, out = tmp / "src", tmp / "runs", tmp / "games"
+            src.mkdir(); (out / "20261101-000001").mkdir(parents=True)
+            (src / "20261101-000001.jsonl").write_text("beside\n")
+            (out / "20261101-000001" / "log.jsonl").write_text("beside\n")
+            (src / "20261101-000002.jsonl").write_text("new\n")
+            (src / "runner-20261101-000000.jsonl").write_text("runner\n")
+            saved = live_record.LOGS, live_record.OUT
+            live_record.LOGS, live_record.OUT = logs, out
+            try:
+                self.assertEqual(live_record.take_in(src), ["20261101-000002"])
+                self.assertEqual(live_record.take_in(src), [])
+            finally:
+                live_record.LOGS, live_record.OUT = saved
+            self.assertEqual((logs / "20261101-000002.jsonl").read_text(), "new\n")
+            self.assertFalse((logs / "20261101-000001.jsonl").exists())
+            self.assertFalse((logs / "runner-20261101-000000.jsonl").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

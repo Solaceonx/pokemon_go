@@ -4,6 +4,11 @@
 
     python3 scripts/live/live_record.py                 every battle log there is
     python3 scripts/live/live_record.py STAMP [STAMP ...]
+    python3 scripts/live/live_record.py --from ../ultra-league/runs/live     the live branch's new logs first
+
+--from copies in, byte for byte, every battle log in that folder not here yet (the live player runs on `ultra-league`
+and logs there), then builds as above. A league battle's copy in runs/live/ is removed once the same bytes are beside
+its record, so each raw log is kept once.
 
 A league battle's log is games/live/<STAMP>/log.jsonl (task 45: the raw log beside its record, copied there from
 runs/live/ the first time); a training battle's stays in runs/live/<STAMP>.jsonl. For each it writes
@@ -399,6 +404,18 @@ def write_index() -> list:
     return index
 
 
+def take_in(source: Path) -> list:
+    """Copy the battle logs in `source` that are not here yet (beside a record or in runs/live/) into runs/live/."""
+    new = []
+    for path in sorted(Path(source).glob("2026*.jsonl")):
+        if (OUT / path.stem / "log.jsonl").exists() or (LOGS / path.name).exists():
+            continue
+        LOGS.mkdir(parents=True, exist_ok=True)
+        (LOGS / path.name).write_bytes(path.read_bytes())
+        new.append(path.stem)
+    return new
+
+
 def build(stamp: str, notes: dict, context: dict, teams: dict):
     """Write one battle's record (and, for a league battle, its log beside it); None if there is no battle."""
     path = log_path(stamp)
@@ -413,12 +430,19 @@ def build(stamp: str, notes: dict, context: dict, teams: dict):
     beside = folder / "log.jsonl"
     if rec["source"]["mode"] == "league" and not beside.exists():
         beside.write_bytes(path.read_bytes())  # the raw log beside its record, byte for byte
+    raw = LOGS / f"{stamp}.jsonl"
+    if rec["source"]["mode"] == "league" and raw.exists() and raw.read_bytes() == beside.read_bytes():
+        raw.unlink()  # moved beside its record: one copy of each raw log
     (folder / "game.json").write_text(json.dumps(rec, indent=1), encoding="utf-8")
     (folder / "game.txt").write_text(text(rec), encoding="utf-8")
     return rec
 
 
 def main(argv):
+    if argv[:1] == ["--from"]:
+        new = take_in(Path(argv[1]))
+        print(f"{len(new)} new logs from {argv[1]}")
+        argv = argv[2:]
     notes, context, teams = read_json("notes.json"), read_json("context.json"), read_json("our_teams.json")
     stamps = argv or sorted({p.stem for p in LOGS.glob("2026*.jsonl") if not p.stem.startswith("runner")}
                             | {p.parent.name for p in OUT.glob("*/log.jsonl")})

@@ -1,0 +1,754 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261122-175019",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone",
+  "account": "owner",
+  "team": "owner/ultra",
+  "league": "Ultra League",
+  "season": null,
+  "context_from": null,
+  "log": "games/live/20261122-175019/log.jsonl",
+  "recording": "battle-20261122-175019.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795398630.631,
+  "started_utc": "2026-11-23T01:50:30+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "0fb31f83cccd4e39347e92a275b4dbec0d125fef",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 160.13,
+ "teams": {
+  "mine": [
+   {
+    "species": "melmetal",
+    "name": "Melmetal",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "DOUBLE_IRON_BASH",
+      "name": "Double Iron Bash",
+      "energy": 35,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "DYNAMIC_PUNCH",
+      "name": "Dynamic Punch",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "blastoise",
+    "name": "Blastoise",
+    "known_from": "team_sheet",
+    "cp": 2498,
+    "fast_move": {
+     "id": "WATER_GUN",
+     "name": "Water Gun",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "HYDRO_CANNON",
+      "name": "Hydro Cannon",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 3
+     },
+     {
+      "id": "SKULL_BASH",
+      "name": "Skull Bash",
+      "energy": 75,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "skeledirge",
+    "name": "Skeledirge",
+    "known_from": "team_sheet",
+    "cp": 2500,
+    "fast_move": {
+     "id": "INCINERATE",
+     "name": "Incinerate",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "SHADOW_BALL",
+      "name": "Shadow Ball",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 1
+     },
+     {
+      "id": "TORCH_SONG",
+      "name": "Torch Song",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "darmanitan_standard",
+    "name": "Darmanitan (Standard)",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "ACID_SPRAY",
+      "name": "Acid Spray",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 2
+     },
+     {
+      "id": "DARK_PULSE",
+      "name": "Dark Pulse",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 2
+     },
+     {
+      "id": "ROCK_SLIDE",
+      "name": "Rock Slide",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "FIRE_FANG",
+     "name": "Fire Fang",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "excadrill",
+    "name": "Excadrill",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "MUD_SHOT",
+     "name": "Mud Shot",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 6,
+   "theirs": 5
+  },
+  "we_shielded": 2,
+  "shield_prompts": 4,
+  "fast_taps": 286,
+  "looks": 112
+ },
+ "bot": {
+  "throw_before_fainting": 2,
+  "armed": 1,
+  "switch_not_taken": 2,
+  "throw_beaten": 1
+ },
+ "notes": null,
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "melmetal",
+   "theirs": "darmanitan_standard"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 2.417,
+   "from": "melmetal",
+   "to": "blastoise",
+   "seconds_after_tap": 0.72,
+   "state": {
+    "look_t": 2.173,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.99,
+     "shields": 2,
+     "left": 3,
+     "energy": 8,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.963,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "INCINERATE"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 9.469,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.48,
+   "state": {
+    "look_t": 7.701,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.808,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.956,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "INCINERATE"
+    }
+   },
+   "icons_chased": 41
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 22.373,
+   "pokemon": "darmanitan_standard",
+   "move": "Acid Spray",
+   "move_id": "ACID_SPRAY",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    60,
+    60
+   ],
+   "state": {
+    "look_t": 20.623,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.714,
+     "shields": 2,
+     "left": 3,
+     "energy": 21,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.923,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      60,
+      60
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 34.554,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.72,
+   "state": {
+    "look_t": 32.624,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.552,
+     "shields": 2,
+     "left": 3,
+     "energy": 40,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.896,
+     "shields": 1,
+     "left": 3,
+     "energy": [
+      17,
+      27
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "icons_chased": 44
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 47.34,
+   "pokemon": "darmanitan_standard",
+   "move": "Acid Spray",
+   "move_id": "ACID_SPRAY",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    41,
+    51
+   ],
+   "state": {
+    "look_t": 45.631,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 26,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.855,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      41,
+      51
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 58.412,
+   "pokemon": "blastoise",
+   "move": "Hydro Cannon",
+   "move_id": "HYDRO_CANNON",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.59,
+   "state": {
+    "look_t": 56.162,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.202,
+     "shields": 2,
+     "left": 3,
+     "energy": 29,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.842,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      0,
+      6
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "icons_chased": 43
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 67.689,
+   "from": "blastoise",
+   "to": "skeledirge",
+   "seconds_after_tap": 2.43,
+   "state": {
+    "look_t": 67.643,
+    "mine": {
+     "active": "blastoise",
+     "hp_share": 0.044,
+     "shields": 2,
+     "left": 3,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.485,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      18,
+      24
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 73.424,
+   "pokemon": "darmanitan_standard",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    42,
+    48
+   ],
+   "state": {
+    "look_t": 71.219,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": 0.936,
+     "shields": 2,
+     "left": 3,
+     "energy": 18,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.542,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      42,
+      48
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "switch",
+   "t": 82.365,
+   "side": "theirs",
+   "from": "darmanitan_standard",
+   "to": "excadrill",
+   "known_from": "seen",
+   "state": {
+    "look_t": 82.365,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": 0.781,
+     "shields": 1,
+     "left": 3,
+     "energy": 37,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "excadrill",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 84.903,
+   "pokemon": "skeledirge",
+   "move": "Torch Song",
+   "move_id": "TORCH_SONG",
+   "cost": 45,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.84,
+   "state": {
+    "look_t": 83.921,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": 0.66,
+     "shields": 1,
+     "left": 3,
+     "energy": 52,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "excadrill",
+     "hp_share": 0.741,
+     "shields": 0,
+     "left": 3,
+     "energy": [
+      9,
+      9
+     ],
+     "fast_move": "MUD_SHOT"
+    }
+   },
+   "icons_chased": 89
+  },
+  {
+   "kind": "faint",
+   "t": 96.195,
+   "side": "theirs",
+   "pokemon": "excadrill",
+   "next": "darmanitan_standard",
+   "known_from": "seen",
+   "state": {
+    "look_t": 96.195,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": 0.66,
+     "shields": 1,
+     "left": 3,
+     "energy": 27,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.067,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      0,
+      3
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 103.903,
+   "pokemon": "darmanitan_standard",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    24,
+    27
+   ],
+   "state": {
+    "look_t": 101.934,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": null,
+     "shields": 1,
+     "left": 3,
+     "energy": 32,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.088,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      24,
+      27
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 115.545,
+   "pokemon": "skeledirge",
+   "move": "Shadow Ball",
+   "move_id": "SHADOW_BALL",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.58,
+   "state": {
+    "look_t": 113.863,
+    "mine": {
+     "active": "skeledirge",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.64,
+     "shields": 0,
+     "left": 2,
+     "energy": [
+      6,
+      6
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "icons_chased": 84
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 129.782,
+   "from": "skeledirge",
+   "to": "melmetal",
+   "seconds_after_tap": 0.41,
+   "state": {
+    "look_t": 129.782,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": null,
+     "shields": 0,
+     "left": 3,
+     "energy": 8,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.175,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      30,
+      30
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 140.666,
+   "pokemon": "darmanitan_standard",
+   "move": "Dark Pulse",
+   "move_id": "DARK_PULSE",
+   "cost": 45,
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "words",
+   "state": {
+    "look_t": 134.398,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.936,
+     "shields": 0,
+     "left": 3,
+     "energy": 25,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.114,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      54,
+      54
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 146.597,
+   "pokemon": "melmetal",
+   "move": "Double Iron Bash",
+   "move_id": "DOUBLE_IRON_BASH",
+   "cost": 35,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.09,
+   "state": {
+    "look_t": 145.282,
+    "mine": {
+     "active": "melmetal",
+     "hp_share": 0.566,
+     "shields": 0,
+     "left": 3,
+     "energy": 53,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "darmanitan_standard",
+     "hp_share": 0.081,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      27,
+      27
+     ],
+     "fast_move": "FIRE_FANG"
+    }
+   },
+   "icons_chased": 66
+  },
+  {
+   "kind": "end",
+   "t": 160.13,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "games/live/20261122-175019/log.jsonl"
+ ]
+}
