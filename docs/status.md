@@ -5719,15 +5719,9 @@ the battle page); notes per battle in the owner's `.session_scratch/2026-11-27_s
   Ball each (the account had no plain Poké Balls; the owner: "Use Ultra Balls").
 
 **What to fix, in order** (measured where it says so):
-1. **Who is out, wrong for long stretches: a regression.** Corrections of the active Pokémon 0.67 a battle today
-   against 0.23 on 11-24/25 (13 of 20 over 20 s late, median 37 s); faints with no replacement prompt seen 0.50 a
-   battle against 0.23; charged taps in the 2 s before a replacement 3 of 26 against 0 of 22; throw-before-fainting
-   attempts 6.0 a battle against 3.0. Today was the first live day of 0ad7b343 (paid energy kept; low throws once both
-   buttons show), which puts more charged taps on the screen as ours faints, where the replacement cards come up. It
-   lost a 99.5% matchup (092340: "send in Stunfisk" at 23.1 s, Jellicent came in, the player believed Stunfisk for
-   45 s). This account's Pokémon are nicknamed (GL1, GL1, GL5), so the header cannot name the species; only the type
-   icons and the names under the buttons can correct it. Fix: no charged tap with our bar near empty or a
-   replacement prompt possible; confirm every replacement from the button names or type icons within 2 s; dry run.
+1. ~~Who is out, wrong for long stretches~~ **Not a fault: corrected the same day (below).** The "late corrections"
+   were measured from the last switch, not from when the belief went wrong; replayed with POGO_DEBUG_ACTIVE=1, none of
+   13 battles had the belief wrong for 1 s or more (the 092340 loss included: Stunfisk did come in at 23 s).
 2. **Throws a fast move late** (the owner: "the stunfisk is throwing after 3 moves every time"; "against drifblim
    its optimal to throw after 1, 4, 7": the simulator agrees, a charged move lands their fast move in progress at
    once). In the simulator (`late_throw.py`, scratch; our team the bot against the cup's 60 commonest real teams, same
@@ -5737,7 +5731,7 @@ the battle page); notes per battle in the owner's `.session_scratch/2026-11-27_s
    two more. `look_ahead`, built for this on 2026-11-08, armed 110 times against 1,050 refusals (11-25 and today),
    most for "no reading". Tried on branch `arm-on-count` (not kept): the count stands in for short fast moves too when
    the buttons were read within 1.5 s; replayed on 021006 it armed 1 time against 2 and refused 10 against 14, and its
-   arms started from the stuck 33 and expired. Next: why Stunfisk's buttons read 33, then arm from a trusted energy.
+   arms started from the stuck 33 and expired. Next: why Stunfisk's buttons read 33, then arm from a trusted energy. **This is the first thing to fix.**
 3. **Their charged move first** 3.7 times a battle against 1.4 on 11-25: our three have low attack and lose every
    tie on charged-move priority; better timing (point 2) avoids some ties.
 4. **Switches need re-tapping** 6.9 times a battle against 3.4.
@@ -5766,4 +5760,28 @@ by our bot, which favours bot-like choices, so the engines' higher numbers say t
 would not, not that the engines play better: by results against people the creators are far stronger (task 50's
 reason for an opponent model fitted to strong players). Not comparable with the live reviews (24 play-outs there,
 hindsight teams).
+
+**Correction: who is out was never wrong for long** (Claude, 2026-11-27; the owner: "Yes, fix it"). Before fixing
+it I replayed the failed battle (092340) with `POGO_DEBUG_ACTIVE=1` (`ultra-league` c03beff0: logs what the
+who-is-out checks see, off by default): from 23.6 s the header read "Stunfisk", the type icons electric / ground and the
+names under the buttons Discharge / Mud Bomb, so Stunfisk had come in as tapped and the player knew it; at 66.9 s
+Stunfisk fainted with no prompt seen (Jellicent, the last, came in by itself) and the player said so at 68.9 s. Then
+12 more of the day's battles with the corrections that came longest after a switch: `scripts/live/wrong_belief.py`
+(the screen's evidence against the player's belief, spans of 1 s or more) finds **none in any of the 13**. The "0.67
+corrections a battle, median 37 s late" above measured the time since the last switch or replacement, which is long
+whenever the last one of ours comes in without a prompt after a faint. The doubled throw-before-fainting attempts and
+faints without a prompt are real counts but did not cost a wrong Pokémon. Nothing was changed for it. The 092340
+loss to Mightyena: Vigoroth fainted at 22.7 s, its Body Slam tapped about 9 s and thrown only at 15.9 s.
+
+**Araquanid for the third account's Mega Catch Cup team** (Claude, 2026-11-27; the owner: "i have built a rank 1
+araquanid. should we swap that in in place of one of the three?"). Eligible if caught in the Twilight Trails season (the
+cup's rule, through 2026-12-01). Rank 1 for Great League with a level-50 cap: level 35, IVs 0/10/15, CP 1500; PvPoke's
+default moves (Infestation / Water Pulse / Mirror Coat) as the owner's are not known. Scratch
+`.session_scratch/2026-11-27_spare/teams.py`: each team with each lead (the other two in party order) against the
+cup's real teams (`data/fields/mega_catch_cup.json`, each of theirs leading, weight split), the trained bot both
+sides with varied habits, 20 battles per team-lead (234): **Clodsire / Snorlax / Araquanid 81.2%** best, Araquanid or
+Snorlax leading 79.4 / 79.2; for Snorlax 76.4 (Clodsire / Thievul / Araquanid); the current Clodsire / Thievul / Snorlax
+75.4; without Clodsire 68 to 71. **Confirmed on a fresh seed** (6202, 60 battles per team-lead): Clodsire / Snorlax /
+Araquanid **80.8% ± 0.5** against 75.9% ± 0.5, **+4.9 ± 0.8** (an unpaired margin, wider than the paired truth).
+Bot against bot on the field we met, so it says the line-up is better, not by how much against people.
 
