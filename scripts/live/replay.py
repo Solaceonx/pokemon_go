@@ -76,7 +76,7 @@ class ReplayPhone:
 
 gd = GameData(league=int(__import__("os").environ.get("POGO_CP", "1500")))  # POGO_CP=2500: Ultra League
 team = pa.load_team(gd, Path(sys.argv[3]) if len(sys.argv) > 3 else ROOT / "data" / "alt_team.json")  # [TEAM_FILE]
-log = pa.Log(ROOT / "runs" / "replay" / f"{stem}-replay.jsonl")
+log = pa.Log(ROOT / "runs" / "replay" / f"{stem}-replay{__import__('os').environ.get('POGO_REPLAY_TAG', '')}.jsonl")  # POGO_REPLAY_TAG=-P: kept apart
 phone = ReplayPhone()
 player = pa.Player(phone, gd, team, False, log, None)
 result = player.run(timeout=(phone.times[-1] - phone.times[0]) + 5)

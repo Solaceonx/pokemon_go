@@ -119,6 +119,28 @@ PREFER: dict[str, str] = {}
 # 2026-11-24, after the Mega Catch Cup loss; docs/status.md). POGO_ENGINE="" plays as the website does.
 LIVE_ENGINE = "judge=turn,horizon=40"
 
+# Marco's engine lab (branch lab-best, PR 24): POGO_LAB=<a scripts/engine_versus.py spec> plays that engine instead,
+# at the live player's deadlines; POGO_LAB=P is his best one (docs/status.md, 2026-11-25: no closer to people on the
+# exams, more switch asks, at the 300 ms limit). Unset, the engine above plays. Opt-in, for the owner's trial.
+LAB_P = ("website,engine=tree,fix_stay=1,fix_judged=1,depth=3,root=sh,shield_mix=0,finish_safe=1,"
+         "q=runs/lab-pop-q.npz,opp_q=runs/general-decide/q.npz")
+
+
+def lab_engine(gd: GameData, spec: str, seed: int):
+    """The lab engine of `spec` ("P" for LAB_P), with the live player's turn length, search cap and clock."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import engine_versus as V
+
+    state = dict(gd=gd, pool=gd.meta(50), net=QNet.load(str(ROOT / "runs" / "general-decide" / "q.npz")),
+                 evals={}, pools={})
+
+    class LiveRT(RealTime):  # the live deadlines, whatever the spec says
+        def __init__(self, *a, **k):
+            k.update(turn_ms=500, cap_ms=300, clock=time.perf_counter)
+            super().__init__(*a, **k)
+
+    return V.pilot(V.parse(LAB_P if spec == "P" else spec), seed, cls=LiveRT, state=state)
+
 
 # The owner's rule 5 ("Strategy guidance from the project owner", docs/status.md): out of a bad lead, swap to the safe
 # swap. The engine mostly does (2026-11-24: out of Palossand and Jynx at 1.6 s), not always: it kept Clodsire in against
@@ -847,6 +869,9 @@ class Player:
         self.engine = RealTime(Evaluator(ev.model), gd.meta(50), q=QNet.load(str(ROOT / _os.environ.get("POGO_Q", "runs/general-decide/q.npz"))),
                                seed=int(time.time()) % 100000, **{**WEBSITE, **engine_settings(_os.environ.get("POGO_ENGINE", LIVE_ENGINE))},
                                turn_ms=500, cap_ms=300, clock=time.perf_counter)
+        self.lab = _os.environ.get("POGO_LAB") or None
+        if self.lab:
+            self.engine = lab_engine(gd, self.lab, int(time.time()) % 100000)
         self.names = screen.NameReader(gd)
         self.active = 0
         self.t0 = None
@@ -3162,6 +3187,7 @@ def main() -> None:
     commit, dirty, version_error = bot_version()
     player.start_info = {"commit": commit, "dirty": dirty, "version_error": version_error,
                          "account": a.account, "team_key": a.team_key,
+                         "engine": f"lab:{player.lab}" if player.lab else _os.environ.get("POGO_ENGINE", LIVE_ENGINE),
                          "league": a.league, "season": a.season,
                          "standing": json.loads(a.standing) if a.standing else None}
     if a.open_with:

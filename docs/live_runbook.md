@@ -48,6 +48,9 @@ Below, `PY` is the venv's python and `SC` the scrcpy folder; run from the worktr
 - **Team Leader training** (no rating at stake): `scripts/live/train_loop.py --serial ZY22JPBNMW --battles 3
   --account third --party-key main --media <folder>`; add `--practise EARTHQUAKE --stay` to throw one move again and
   again (to test a minigame stroke).
+- **Marco's lab engine instead of today's** (opt-in, the owner's trial from 2026-11-26): put `POGO_LAB=P` in front
+  of `run_gbl.py`, `train_loop.py` or `replay.py` (`P` is `play_android.LAB_P`; any `scripts/engine_versus.py` spec
+  works). The battle log's start row then says `engine: lab:P`. Unset, today's engine plays.
 - **The owner's shield call for the battle under way:** write `runs/live/override.json` as
   `{"shield": {"thievul": true}}` (shield at every prompt while it is out; `false`: never); delete it after.
 - **After each set:** `nice $PY scripts/live/set_review.py runs/live/<stamp>.jsonl ...` (results, rules fired, likely
