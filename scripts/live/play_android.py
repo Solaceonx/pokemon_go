@@ -117,6 +117,7 @@ PREFER: dict[str, str] = {}
 
 # The live engine's settings over the website's: judged at the same game turn, 40 turns on (the owner's yes,
 # 2026-11-24, after the Mega Catch Cup loss; docs/status.md). POGO_ENGINE="" plays as the website does.
+DEBUG_ACTIVE = _os.environ.get("POGO_DEBUG_ACTIVE") == "1"  # log what check_active sees (replays)
 LIVE_ENGINE = "judge=turn,horizon=40"
 
 # Marco's engine lab (branch lab-best, PR 24): POGO_LAB=<a scripts/engine_versus.py spec> plays that engine instead,
@@ -1353,6 +1354,9 @@ class Player:
         self.types_hist = (getattr(self, "types_hist", []) + [slot])[-3:]
         if slot is not None and self.types_hist.count(slot) == 3:
             self.types_seen = (slot, t)
+        if DEBUG_ACTIVE and t - getattr(self, "_dbg_types_t", -9.0) > 0.5:
+            self._dbg_types_t = t
+            self.log("dbg_types", t, types=sorted(types), slot=slot, hist=self.types_hist)
 
     def header_says(self):
         """The team slot our header names (GO Battle League shows the species), or None."""
@@ -1375,6 +1379,12 @@ class Player:
     def check_active(self, t: float) -> None:
         """Which of ours is out, from the move names under the buttons (our header shows nicknames). While a switch
         is being checked, check_switch reads them."""
+        if DEBUG_ACTIVE and t - getattr(self, "_dbg_active_t", -9.0) > 0.5:
+            self._dbg_active_t = t
+            self.log("dbg_active", t, active=self.team[self.active].name, header=self.names.my_name,
+                     header_at=self.names.my_name_at, labels=self.names.labels, labels_at=self.names.labels_at,
+                     types_seen=getattr(self, "types_seen", None), changed_at=getattr(self, "active_changed_at", None),
+                     switching=self.switching is not None)
         if self.switching is not None:
             return
         if self.active != self._last_active:  # the belief changed (a switch, a replacement): older readings are stale
