@@ -1,0 +1,31 @@
+live-20261128-001327 . league . WIN . 150 s
+What went wrong: Araquanid fainted with charged energy. Its first Mirror Coat was interrupted by Rock Slide. Both charged buttons were visibly lit around 46.0 s, but the bot used a 45-energy count and retried Mirror Coat. It timed out at 50.34 s. A stale Mirror Coat was tapped at 50.67 s during the transition. Both buttons were lit again at 51.55 s against Tinkaton, but no charged tap was sent before Araquanid fainted. Water Pulse was only selected at the replacement prompt. The model also preferred switching to Snorlax on the lead.
+
+Mine
+  Clodsire       Poison Sting | Stone Edge x0, Earthquake x0
+  Araquanid      Infestation | Mirror Coat x0, Water Pulse x1  [fainted]
+  Snorlax        Psywave | Body Slam x2, Earthquake x1
+Theirs
+  Marowak        Mud Slap* | Rock Slide x2
+  Tinkaton       Fairy Wind* | Bulldoze x2, Gigaton Hammer x1
+  Dartrix        Peck? |
+
+Charged moves: ours 4, theirs 5; shield prompts 5, shielded 2; fast taps 379
+Player events: throw_beaten 1, throw_before_fainting 8, throw_cancelled 1, throw_fainted 1, throw_not_taken 2
+
+    0.0  start: Clodsire v Marowak
+    2.7  mine   switch Clodsire -> Araquanid
+   10.2  theirs Marowak Rock Slide (not shielded; their energy believed [50, 60]; our health ?)
+   22.2  ours   Araquanid Water Pulse (cost 50; energy 50 by count; theirs believed [0, 15]), swipe chased icons 38
+   37.2  theirs Marowak Rock Slide (not shielded; their energy believed [50, 75]; our health ?)
+   53.0  mine   Araquanid fainted -> Snorlax
+   54.6  theirs switch Marowak -> Tinkaton
+   63.2  theirs Tinkaton Bulldoze (not shielded; their energy believed [63, 72]; our health ?)
+   75.3  ours   Snorlax Earthquake (cost 65; energy 61 by buttons; theirs believed [26, 26]), swipe chased icons 92
+   89.3  theirs Tinkaton Bulldoze (we shielded; their energy believed [80, 89]; our health 47%)
+  100.1  ours   Snorlax Body Slam (cost 40; energy 40 by count; theirs believed [25, 25]), swipe chased icons 37
+  114.2  theirs Tinkaton Gigaton Hammer (we shielded; their energy believed [79, 88]; our health ?)
+  126.1  ours   Snorlax Body Slam (cost 40; energy 44 by buttons; theirs believed [10, 10]), swipe chased icons 35
+  135.5  mine   switch Snorlax -> Clodsire
+  139.5  theirs switch Tinkaton -> Dartrix
+  149.7  end: win

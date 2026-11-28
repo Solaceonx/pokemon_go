@@ -1,0 +1,708 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261128-001327",
+ "source": {
+  "kind": "live_bot",
+  "mode": "league",
+  "device": "android phone",
+  "account": "third",
+  "team": "third/araquanid",
+  "league": "Great League Edition",
+  "season": null,
+  "context_from": null,
+  "log": "games/live/20261128-001327/log.jsonl",
+  "recording": "battle-20261128-001327.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795853623.942,
+  "started_utc": "2026-11-28T08:13:43+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "07ff7371cf0df1cfdbe396b64f7b48800116e400",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 149.688,
+ "teams": {
+  "mine": [
+   {
+    "species": "clodsire",
+    "name": "Clodsire",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "POISON_STING",
+     "name": "Poison Sting",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "araquanid",
+    "name": "Araquanid",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "INFESTATION",
+     "name": "Infestation",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "MIRROR_COAT",
+      "name": "Mirror Coat",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "WATER_PULSE",
+      "name": "Water Pulse",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": true,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "snorlax",
+    "name": "Snorlax",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 1
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "marowak",
+    "name": "Marowak",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "ROCK_SLIDE",
+      "name": "Rock Slide",
+      "energy": 45,
+      "known_from": "seen",
+      "times_used": 2
+     }
+    ],
+    "fast_move": {
+     "id": "MUD_SLAP",
+     "name": "Mud Slap",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "tinkaton",
+    "name": "Tinkaton",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "energy": 55,
+      "known_from": "seen",
+      "times_used": 2
+     },
+     {
+      "id": "GIGATON_HAMMER",
+      "name": "Gigaton Hammer",
+      "energy": 60,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "FAIRY_WIND",
+     "name": "Fairy Wind",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "dartrix",
+    "name": "Dartrix",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "PECK",
+     "name": "Peck",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 4,
+   "theirs": 5
+  },
+  "we_shielded": 2,
+  "shield_prompts": 5,
+  "fast_taps": 379,
+  "looks": 121
+ },
+ "bot": {
+  "throw_beaten": 1,
+  "throw_before_fainting": 8,
+  "throw_not_taken": 2,
+  "throw_fainted": 1,
+  "throw_cancelled": 1
+ },
+ "notes": {
+  "went_wrong": "Araquanid fainted with charged energy. Its first Mirror Coat was interrupted by Rock Slide. Both charged buttons were visibly lit around 46.0 s, but the bot used a 45-energy count and retried Mirror Coat. It timed out at 50.34 s. A stale Mirror Coat was tapped at 50.67 s during the transition. Both buttons were lit again at 51.55 s against Tinkaton, but no charged tap was sent before Araquanid fainted. Water Pulse was only selected at the replacement prompt. The model also preferred switching to Snorlax on the lead.",
+  "tap_review": "379 fast taps with a 0.156 s median gap. Snorlax resumed at 68.804, 94.753, and 119.746 s after Tinkaton\u2019s charged moves. A 0.745 s gap at 96.922 to 97.667 s occurred in the aftermath of the shielded Bulldoze, with no separate transport error logged. Four charged moves started. Araquanid Mirror Coat timed out, and Clodsire\u2019s Stone Edge timed out as the battle ended. The video cuts from combat to the result, so the cause of the early end is unconfirmed.",
+  "switch_review": "Opening Araquanid switch confirmed by header after 1.05 s; first following fast tap within 0.08 s. Late Clodsire switch confirmed by header after 2.71 s (tap issued as the prior charged animation ended); first following fast tap within 0.06 s. The 128-playout decision review preferred Snorlax as the opening switch, 54% vs 16% simulated wins, with an 11 to 64 point paired interval.",
+  "shield_review": "No-shields on the second Rock Slide and first Bulldoze were preferred by the simulation. The first Rock Slide no-shield and second Bulldoze shield were inconclusive. Shielding Gigaton Hammer at 60 HP was appropriate: damage estimate 158. The second Rock Slide was estimated at 50 damage against 55 HP, which left Araquanid in a narrow timing window. These scores depend on the reconstructed state and model."
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "clodsire",
+   "theirs": "marowak"
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 2.675,
+   "from": "clodsire",
+   "to": "araquanid",
+   "seconds_after_tap": 1.05,
+   "state": {
+    "look_t": 2.242,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 17,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "marowak",
+     "hp_share": 0.976,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 10.218,
+   "pokemon": "marowak",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    50,
+    60
+   ],
+   "state": {
+    "look_t": 8.437,
+    "mine": {
+     "active": "araquanid",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 33,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "marowak",
+     "hp_share": 0.822,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      40
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 22.244,
+   "pokemon": "araquanid",
+   "move": "Water Pulse",
+   "move_id": "WATER_PULSE",
+   "cost": 50,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 2.19,
+   "state": {
+    "look_t": 19.55,
+    "mine": {
+     "active": "araquanid",
+     "hp_share": 0.539,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "marowak",
+     "hp_share": 0.734,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      0,
+      15
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "icons_chased": 38
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 37.229,
+   "pokemon": "marowak",
+   "move": "Rock Slide",
+   "move_id": "ROCK_SLIDE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    50,
+    75
+   ],
+   "state": {
+    "look_t": 36.615,
+    "mine": {
+     "active": "araquanid",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 45,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "marowak",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      40,
+      55
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   },
+   "cost": 45
+  },
+  {
+   "kind": "faint",
+   "side": "mine",
+   "t": 53.001,
+   "pokemon": "araquanid",
+   "next": "snorlax",
+   "state": {
+    "look_t": 52.493,
+    "mine": {
+     "active": "araquanid",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "marowak",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      30,
+      40
+     ],
+     "fast_move": "MUD_SLAP"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 54.551,
+   "side": "theirs",
+   "from": "marowak",
+   "to": "tinkaton",
+   "known_from": "seen",
+   "state": {
+    "look_t": 54.551,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": 0,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 63.217,
+   "pokemon": "tinkaton",
+   "move": "Bulldoze",
+   "move_id": "BULLDOZE",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    63,
+    72
+   ],
+   "state": {
+    "look_t": 61.157,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": 43,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      54,
+      54
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 75.345,
+   "pokemon": "snorlax",
+   "move": "Earthquake",
+   "move_id": "EARTHQUAKE",
+   "cost": 65,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.63,
+   "state": {
+    "look_t": 73.337,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": 0.579,
+     "shields": 2,
+     "left": 2,
+     "energy": 61,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": 0.896,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      26,
+      26
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "icons_chased": 92
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 89.311,
+   "pokemon": "tinkaton",
+   "move": "Bulldoze",
+   "move_id": "BULLDOZE",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    80,
+    89
+   ],
+   "state": {
+    "look_t": 87.472,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": 0.471,
+     "shields": 2,
+     "left": 2,
+     "energy": 32,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      71,
+      71
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "cost": 55
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 100.149,
+   "pokemon": "snorlax",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.35,
+   "state": {
+    "look_t": 98.696,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": 0.418,
+     "shields": 1,
+     "left": 2,
+     "energy": 40,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      25,
+      25
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "icons_chased": 37
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 114.24,
+   "pokemon": "tinkaton",
+   "move": "Gigaton Hammer",
+   "move_id": "GIGATON_HAMMER",
+   "move_known_from": "seen",
+   "shielded": true,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    79,
+    88
+   ],
+   "state": {
+    "look_t": 112.296,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": 29,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": [
+      70,
+      70
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "cost": 60
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 126.137,
+   "pokemon": "snorlax",
+   "move": "Body Slam",
+   "move_id": "BODY_SLAM",
+   "cost": 40,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.58,
+   "state": {
+    "look_t": 124.291,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": 0.276,
+     "shields": 0,
+     "left": 2,
+     "energy": 44,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": [
+      10,
+      10
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   },
+   "icons_chased": 35
+  },
+  {
+   "kind": "switch",
+   "side": "mine",
+   "t": 135.538,
+   "from": "snorlax",
+   "to": "clodsire",
+   "seconds_after_tap": 2.71,
+   "state": {
+    "look_t": 133.314,
+    "mine": {
+     "active": "snorlax",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 12,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "tinkaton",
+     "hp_share": null,
+     "shields": 1,
+     "left": 2,
+     "energy": [
+      28,
+      28
+     ],
+     "fast_move": "FAIRY_WIND"
+    }
+   }
+  },
+  {
+   "kind": "switch",
+   "t": 139.507,
+   "side": "theirs",
+   "from": "tinkaton",
+   "to": "dartrix",
+   "known_from": "seen",
+   "state": {
+    "look_t": 139.507,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 0,
+     "left": 2,
+     "energy": 41,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "dartrix",
+     "hp_share": null,
+     "shields": 0,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "PECK"
+    }
+   }
+  },
+  {
+   "kind": "end",
+   "t": 149.688,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "games/live/20261128-001327/log.jsonl"
+ ]
+}
