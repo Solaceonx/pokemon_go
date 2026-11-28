@@ -1,0 +1,444 @@
+{
+ "schema": "game-record-v1",
+ "variant": "live-log",
+ "variant_version": 2,
+ "game": "live-20261127-234835",
+ "source": {
+  "kind": "live_bot",
+  "mode": "training",
+  "device": "android phone",
+  "account": "third",
+  "team": "third/araquanid",
+  "league": null,
+  "season": null,
+  "context_from": null,
+  "log": "runs/live/20261127-234835.jsonl",
+  "recording": "battle-20261127-234835.h264 / .mp4 with .times (not in git)",
+  "epoch": 1795852125.047,
+  "started_utc": "2026-11-28T07:48:45+00:00",
+  "started_from": "epoch",
+  "bot": {
+   "commit": "07ff7371cf0df1cfdbe396b64f7b48800116e400",
+   "dirty": true,
+   "version_error": null
+  }
+ },
+ "standing": {
+  "before": null,
+  "after": null
+ },
+ "result": {
+  "value": "win",
+  "from": "result screen"
+ },
+ "seconds": 76.595,
+ "teams": {
+  "mine": [
+   {
+    "species": "clodsire",
+    "name": "Clodsire",
+    "known_from": "team_sheet",
+    "cp": 1499,
+    "fast_move": {
+     "id": "POISON_STING",
+     "name": "Poison Sting",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "energy": 55,
+      "known_from": "team_sheet",
+      "times_used": 2
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 2
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "araquanid",
+    "name": "Araquanid",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "INFESTATION",
+     "name": "Infestation",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "MIRROR_COAT",
+      "name": "Mirror Coat",
+      "energy": 45,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "WATER_PULSE",
+      "name": "Water Pulse",
+      "energy": 50,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   },
+   {
+    "species": "snorlax",
+    "name": "Snorlax",
+    "known_from": "team_sheet",
+    "cp": 1500,
+    "fast_move": {
+     "id": "PSYWAVE",
+     "name": "Psywave",
+     "known_from": "team_sheet"
+    },
+    "charged_moves": [
+     {
+      "id": "BODY_SLAM",
+      "name": "Body Slam",
+      "energy": 40,
+      "known_from": "team_sheet",
+      "times_used": 0
+     },
+     {
+      "id": "EARTHQUAKE",
+      "name": "Earthquake",
+      "energy": 65,
+      "known_from": "team_sheet",
+      "times_used": 0
+     }
+    ],
+    "fainted": false,
+    "level": null,
+    "ivs": null,
+    "cp_on_screen": null
+   }
+  ],
+  "theirs": [
+   {
+    "species": "plusle",
+    "name": "Plusle",
+    "known_from": "seen",
+    "charged_moves": [
+     {
+      "id": "SWIFT",
+      "name": "Swift",
+      "energy": 35,
+      "known_from": "seen",
+      "times_used": 1
+     }
+    ],
+    "fast_move": {
+     "id": "SPARK",
+     "name": "Spark",
+     "known_from": "inferred"
+    },
+    "fainted": false
+   },
+   {
+    "species": "electrode",
+    "name": "Electrode",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "VOLT_SWITCH",
+     "name": "Volt Switch",
+     "known_from": "guessed"
+    },
+    "fainted": true
+   },
+   {
+    "species": "jolteon",
+    "name": "Jolteon",
+    "known_from": "seen",
+    "charged_moves": [],
+    "fast_move": {
+     "id": "THUNDER_SHOCK",
+     "name": "Thunder Shock",
+     "known_from": "guessed"
+    },
+    "fainted": false
+   }
+  ]
+ },
+ "summary": {
+  "charged": {
+   "mine": 4,
+   "theirs": 1
+  },
+  "we_shielded": 0,
+  "shield_prompts": 1,
+  "fast_taps": 203,
+  "looks": 66
+ },
+ "bot": {},
+ "notes": {
+  "went_wrong": "Possible missed one-hit knockout at 46.8 s. Clodsire used Stone Edge on Jolteon at about 92 HP. The tracked state showed 65 energy and estimated 122 damage for Earthquake versus 53 for Stone Edge. Stone Edge needed a second charged attack. The Earthquake button was borderline on the recording, so its availability was not independently confirmed.",
+  "training_review": "Spark, Great League training, won in 76.6 s with Clodsire still active. 203 fast taps, median gap 0.156 s. The 2.13 s post-Earthquake gap was Electrode fainting and Jolteon entering on video. All four charged attacks started after retries, 0.79 to 1.63 s from first tap. All four minigames were Excellent. No tap transport, tracker, or engine errors. The only shield prompt was Plusle Swift at 8.4 s, which Clodsire survived comfortably. First two Earthquakes knocked out Plusle and Electrode."
+ },
+ "actions": [
+  {
+   "kind": "start",
+   "t": 0.0,
+   "mine": "clodsire",
+   "theirs": "plusle"
+  },
+  {
+   "kind": "charged",
+   "side": "theirs",
+   "t": 8.391,
+   "pokemon": "plusle",
+   "move": "Swift",
+   "move_id": "SWIFT",
+   "move_known_from": "seen",
+   "shielded": false,
+   "seen_by": "shield prompt",
+   "their_energy_believed": [
+    35,
+    42
+   ],
+   "state": {
+    "look_t": 6.497,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.956,
+     "shields": 2,
+     "left": 3,
+     "energy": 50,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "plusle",
+     "hp_share": 0.869,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      28,
+      28
+     ],
+     "fast_move": "SPARK"
+    }
+   },
+   "cost": 35
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 16.929,
+   "pokemon": "clodsire",
+   "move": "Earthquake",
+   "move_id": "EARTHQUAKE",
+   "cost": 65,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.63,
+   "state": {
+    "look_t": 15.118,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.815,
+     "shields": 2,
+     "left": 3,
+     "energy": 86,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "plusle",
+     "hp_share": 0.754,
+     "shields": 2,
+     "left": 3,
+     "energy": [
+      7,
+      14
+     ],
+     "fast_move": "SPARK"
+    }
+   },
+   "icons_chased": 93
+  },
+  {
+   "kind": "switch",
+   "t": 26.212,
+   "side": "theirs",
+   "from": "plusle",
+   "to": "electrode",
+   "known_from": "seen",
+   "state": {
+    "look_t": 26.212,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 30,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": null,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 33.368,
+   "pokemon": "clodsire",
+   "move": "Earthquake",
+   "move_id": "EARTHQUAKE",
+   "cost": 65,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 0.79,
+   "state": {
+    "look_t": 32.391,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.788,
+     "shields": 2,
+     "left": 3,
+     "energy": 83,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "electrode",
+     "hp_share": 0.842,
+     "shields": 2,
+     "left": 2,
+     "energy": [
+      32,
+      32
+     ],
+     "fast_move": "VOLT_SWITCH"
+    }
+   },
+   "icons_chased": 93
+  },
+  {
+   "kind": "faint",
+   "t": 42.878,
+   "side": "theirs",
+   "pokemon": "electrode",
+   "next": "jolteon",
+   "known_from": "seen",
+   "state": {
+    "look_t": 42.878,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": null,
+     "shields": 2,
+     "left": 3,
+     "energy": 21,
+     "energy_from": "buttons"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": null,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      0,
+      0
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   }
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 48.471,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.46,
+   "state": {
+    "look_t": 46.791,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.788,
+     "shields": 2,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.896,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      36,
+      36
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 95
+  },
+  {
+   "kind": "charged",
+   "side": "mine",
+   "t": 63.923,
+   "pokemon": "clodsire",
+   "move": "Stone Edge",
+   "move_id": "STONE_EDGE",
+   "cost": 55,
+   "seen_by": "Get Ready!",
+   "seconds_after_tap": 1.36,
+   "state": {
+    "look_t": 62.362,
+    "mine": {
+     "active": "clodsire",
+     "hp_share": 0.741,
+     "shields": 2,
+     "left": 3,
+     "energy": 65,
+     "energy_from": "count"
+    },
+    "theirs": {
+     "active": "jolteon",
+     "hp_share": 0.168,
+     "shields": 2,
+     "left": 1,
+     "energy": [
+      99,
+      99
+     ],
+     "fast_move": "THUNDER_SHOCK"
+    }
+   },
+   "icons_chased": 96
+  },
+  {
+   "kind": "end",
+   "t": 76.595,
+   "result": "win",
+   "result_from": "result screen"
+  }
+ ],
+ "built_from": [
+  "runs/live/20261127-234835.jsonl"
+ ]
+}
